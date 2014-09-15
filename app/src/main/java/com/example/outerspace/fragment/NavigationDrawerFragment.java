@@ -1,4 +1,4 @@
-package com.example.outerspace.fragments;
+package com.example.outerspace.fragment;
 
 
 import android.app.Activity;
@@ -28,6 +28,7 @@ import com.example.outerspace.R;
  * Fragment used for managing interactions for and presentation of a navigation drawer.
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
+ * Created by NashLegend on 2014/9/15 0015.
  */
 public class NavigationDrawerFragment extends Fragment {
 
