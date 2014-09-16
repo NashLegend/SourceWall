@@ -1,48 +1,36 @@
 package com.example.outerspace.model;
 import java.util.ArrayList;
 
-public class PostDetail {
+public class Post {
 
     private String id = "";
-    private String content = "";
-    private String date = "";
     private String title = "";
+    private String url = "";
+    private String titleImageUrl="";
     private String authorAvatarUrl = "";
     private String author = "";
     private String authorID = "";
     private String groupName = "";
     private String groupID = "";
+    private String tag = "";
     private int likeNum = 0;
     private int commentNum = 0;
+    private String content = "";
+    private String date = "";
+
     private ArrayList<PostComment> hotComments = new ArrayList<PostComment>();
     private ArrayList<PostComment> comments = new ArrayList<PostComment>();
 
-    public PostDetail() {
+    public Post() {
         // TODO Auto-generated constructor stub
     }
 
-    public String getID() {
+    public String getId() {
         return id;
     }
 
-    public void setID(String id) {
+    public void setId(String id) {
         this.id = id;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
     }
 
     public String getTitle() {
@@ -51,6 +39,22 @@ public class PostDetail {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getTitleImageUrl() {
+        return titleImageUrl;
+    }
+
+    public void setTitleImageUrl(String titleImageUrl) {
+        this.titleImageUrl = titleImageUrl;
     }
 
     public String getAuthorAvatarUrl() {
@@ -93,6 +97,14 @@ public class PostDetail {
         this.groupID = groupID;
     }
 
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
     public int getLikeNum() {
         return likeNum;
     }
@@ -107,6 +119,22 @@ public class PostDetail {
 
     public void setCommentNum(int commentNum) {
         this.commentNum = commentNum;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public ArrayList<PostComment> getHotComments() {
