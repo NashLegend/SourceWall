@@ -1,16 +1,17 @@
 package com.example.outerspace.model;
 
-/**
- * Created by NashLegend on 2014/9/16 0016.
- */
-public class QuestionAnswerComment {
+public class QuestionComment {
     
     private String content = "";
     private String date = "";
     private String author = "";
     private String authorID = "";
     private String ID = "";
-    private String answerID = "";
+    private String questionID = "";
+
+    public QuestionComment() {
+        // TODO Auto-generated constructor stub
+    }
 
     public String getContent() {
         return content;
@@ -52,11 +53,12 @@ public class QuestionAnswerComment {
         ID = iD;
     }
 
-    public String getAnswerID() {
-        return answerID;
+    public String getQuestionID() {
+        return questionID;
     }
 
-    public void setAnswerID(String answerID) {
-        this.answerID = answerID;
+    public void setQuestionID(String questionID) {
+        this.questionID = questionID;
     }
+
 }
