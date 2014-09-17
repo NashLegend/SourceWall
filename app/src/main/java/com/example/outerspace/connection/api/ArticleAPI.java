@@ -51,7 +51,7 @@ public class ArticleAPI extends APIBase {
                     article.setAuthorID(getJsonString(getJsonObject(jo, "author"), "url")
                             .replaceAll("\\D+", ""));
                     article.setAuthorAvatarUrl(jo.getJSONObject("author").getJSONObject("avatar")
-                            .getString("large"));
+                            .getString("large").replaceAll("\\?\\S*$", ""));
                     article.setDate(getJsonString(jo, "date_published"));
                     article.setSubjectName(getJsonString(getJsonObject(jo, "subject"), "name"));
                     article.setSubjectKey(getJsonString(getJsonObject(jo, "subject"), "key"));
@@ -157,7 +157,7 @@ public class ArticleAPI extends APIBase {
                     comment.setAuthorID(getJsonString(getJsonObject(jo, "author"), "url")
                             .replaceAll("\\D+", ""));
                     comment.setAuthorAvatarUrl(jo.getJSONObject("author").getJSONObject("avatar")
-                            .getString("large"));
+                            .getString("large").replaceAll("\\?\\S*$", ""));
                     comment.setAuthorTitle(getJsonString(getJsonObject(jo, "author"), "title"));
                     comment.setDate(getJsonString(jo, "date_created"));
                     comment.setFloor((offset + i + 1) + "楼");

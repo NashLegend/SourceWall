@@ -93,7 +93,7 @@ public class PostAPI extends APIBase {
                     post.setAuthorID(jo.getJSONObject("author").getString("url")
                             .replaceAll("\\D+", ""));
                     post.setAuthorAvatarUrl(jo.getJSONObject("author").getJSONObject("avatar")
-                            .getString("small").replaceAll("\\?\\S*$", ""));
+                            .getString("large").replaceAll("\\?\\S*$", ""));
                     post.setDate(getJsonString(jo, "date_created"));
                     post.setCommentNum(getJsonInt(jo, "replies_count"));
                     post.setContent(getJsonString(jo, "html"));
@@ -222,7 +222,7 @@ public class PostAPI extends APIBase {
                     comment.setAuthorID(getJsonObject(jo, "author").getString("url")
                             .replaceAll("\\D+", ""));
                     comment.setAuthorAvatarUrl(getJsonObject(jo, "author").getJSONObject("avatar")
-                            .getString("small").replaceAll("\\?\\S*$", ""));
+                            .getString("large").replaceAll("\\?\\S*$", ""));
                     comment.setDate(getJsonString(jo, "date_created"));
                     comment.setLikes(getJsonInt(jo, "likings_count"));
                     comment.setContent(getJsonString(jo, "html"));

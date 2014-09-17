@@ -43,8 +43,7 @@ public class QuestionAPI extends APIBase {
                     question.setAuthorID(jsonObject.getJSONObject("author").getString("url")
                             .replaceAll("\\D+", ""));
                     question.setAuthorAvatarUrl(jsonObject.getJSONObject("author")
-                            .getJSONObject("avatar")
-                            .getString("small").replaceAll("\\?\\S*$", ""));
+                            .getJSONObject("avatar").getString("large").replaceAll("\\?\\S*$", ""));
                     question.setSummary(getJsonString(jsonObject, "summary"));
                     question.setDate(getJsonString(jsonObject, "date_created"));
                     question.setFollowNum(getJsonInt(jsonObject, "followers_count"));
@@ -113,7 +112,7 @@ public class QuestionAPI extends APIBase {
                 question.setAuthorID(result.getJSONObject("author").getString("url")
                         .replaceAll("\\D+", ""));
                 question.setAuthorAvatarUrl(result.getJSONObject("author").getJSONObject("avatar")
-                        .getString("small").replaceAll("\\?\\S*$", ""));
+                        .getString("large").replaceAll("\\?\\S*$", ""));
                 question.setContent(getJsonString(result, "annotation"));
                 question.setDate(getJsonString(result, "date_created"));
                 question.setFollowNum(getJsonInt(result, "followers_count"));
@@ -145,7 +144,7 @@ public class QuestionAPI extends APIBase {
                     ans.setAuthorID(getJsonString(getJsonObject(jo, "author"), "url")
                             .replaceAll("\\D+", ""));
                     ans.setAuthorAvatarUrl(jo.getJSONObject("author").getJSONObject("avatar")
-                            .getString("large"));
+                            .getString("large").replaceAll("\\?\\S*$", ""));
                     ans.setAuthorTitle(getJsonString(getJsonObject(jo, "author"), "title"));
                     ans.setCommentNum(getJsonInt(jo, "replies_count"));
                     ans.setContent(getJsonString(jo, "html"));
