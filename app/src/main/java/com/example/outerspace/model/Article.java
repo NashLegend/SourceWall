@@ -1,3 +1,4 @@
+
 package com.example.outerspace.model;
 
 import java.util.ArrayList;
@@ -13,11 +14,13 @@ public class Article {
     private String imageUrl = "";
     private String author = "";
     private String authorID = "";
+    private String authorAvatarUrl = "";
     private String subjectName = "";
-    private String subjectKey="";
-    private String date="";
+    private String subjectKey = "";
+    private String date = "";
     private int commentNum = 0;
-    private String summary="";
+    private int likeNum = 0;
+    private String summary = "";
     private String content = "";
     private ArrayList<ArticleComment> hotComments = new ArrayList<ArticleComment>();
     private ArrayList<ArticleComment> comments = new ArrayList<ArticleComment>();
@@ -132,5 +135,21 @@ public class Article {
 
     public void setComments(ArrayList<ArticleComment> comments) {
         this.comments = comments;
+    }
+
+    public String getAuthorAvatarUrl() {
+        return authorAvatarUrl;
+    }
+
+    public void setAuthorAvatarUrl(String authorAvatarUrl) {
+        this.authorAvatarUrl = authorAvatarUrl;
+    }
+
+    public int getLikeNum() {
+        return likeNum;
+    }
+
+    public void setLikeNum(int likeNum) {
+        this.likeNum = likeNum;
     }
 }

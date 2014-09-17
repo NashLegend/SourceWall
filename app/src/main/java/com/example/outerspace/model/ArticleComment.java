@@ -1,3 +1,4 @@
+
 package com.example.outerspace.model;
 
 /**
@@ -6,94 +7,75 @@ package com.example.outerspace.model;
 public class ArticleComment {
 
     private String content = "";
-    private String commentDate = "";
-    private String commentAuthor = "";
+    private String date = "";
+    private String author = "";
     private String authorAvatarUrl = "";
     private String authorTitle = "";
     private String floor = "";// 楼层
     private String authorID = "";
-    private String commentID = "";
+    private String ID = "";
     private String articleID = "";
-    private int likes = 0;
-
+    private int likeNum = 0;
+    
     public String getContent() {
         return content;
     }
-
     public void setContent(String content) {
         this.content = content;
     }
-
-    public String getCommentDate() {
-        return commentDate;
+    public String getDate() {
+        return date;
     }
-
-    public void setCommentDate(String commentDate) {
-        this.commentDate = commentDate;
+    public void setDate(String date) {
+        this.date = date;
     }
-
-    public String getCommentAuthor() {
-        return commentAuthor;
+    public String getAuthor() {
+        return author;
     }
-
-    public void setCommentAuthor(String commentAuthor) {
-        this.commentAuthor = commentAuthor;
+    public void setAuthor(String author) {
+        this.author = author;
     }
-
     public String getAuthorAvatarUrl() {
         return authorAvatarUrl;
     }
-
     public void setAuthorAvatarUrl(String authorAvatarUrl) {
         this.authorAvatarUrl = authorAvatarUrl;
     }
-
     public String getAuthorTitle() {
         return authorTitle;
     }
-
     public void setAuthorTitle(String authorTitle) {
         this.authorTitle = authorTitle;
     }
-
     public String getFloor() {
         return floor;
     }
-
     public void setFloor(String floor) {
         this.floor = floor;
     }
-
     public String getAuthorID() {
         return authorID;
     }
-
     public void setAuthorID(String authorID) {
         this.authorID = authorID;
     }
-
-    public String getCommentID() {
-        return commentID;
+    public String getID() {
+        return ID;
     }
-
-    public void setCommentID(String commentID) {
-        this.commentID = commentID;
+    public void setID(String ID) {
+        this.ID = ID;
     }
-
     public String getArticleID() {
         return articleID;
     }
-
     public void setArticleID(String articleID) {
         this.articleID = articleID;
     }
-
-    public int getLikes() {
-        return likes;
+    public int getLikeNum() {
+        return likeNum;
     }
-
-    public void setLikes(int likes) {
-        this.likes = likes;
+    public void setLikeNum(int likeNum) {
+        this.likeNum = likeNum;
     }
 
 }

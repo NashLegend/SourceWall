@@ -2,12 +2,12 @@ package com.example.outerspace.model;
 public class PostComment {
 
     private String content = "";
-    private String commentDate = "";
-    private String commentAuthor = "";
+    private String date = "";
+    private String author = "";
     private String authorAvatarUrl = "";
     private String floor = "";// 楼层
     private String authorID = "";
-    private String commentID = "";
+    private String ID = "";
     private String postID = "";
     private int likes = 0;
 
@@ -23,20 +23,20 @@ public class PostComment {
         this.content = content;
     }
 
-    public String getCommentDate() {
-        return commentDate;
+    public String getDate() {
+        return date;
     }
 
-    public void setCommentDate(String commentDate) {
-        this.commentDate = commentDate;
+    public void setDate(String date) {
+        this.date = date;
     }
 
-    public String getCommentAuthor() {
-        return commentAuthor;
+    public String getAuthor() {
+        return author;
     }
 
-    public void setCommentAuthor(String commentAuthor) {
-        this.commentAuthor = commentAuthor;
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public String getAuthorAvatarUrl() {
@@ -63,12 +63,12 @@ public class PostComment {
         this.authorID = authorID;
     }
 
-    public String getCommentID() {
-        return commentID;
+    public String getID() {
+        return ID;
     }
 
-    public void setCommentID(String commentID) {
-        this.commentID = commentID;
+    public void setID(String ID) {
+        this.ID = ID;
     }
 
     public String getPostID() {

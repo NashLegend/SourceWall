@@ -1,9 +1,7 @@
+
 package com.example.outerspace.connection;
 
-import android.net.Uri;
-
 import java.io.IOException;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -16,6 +14,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import com.example.outerspace.model.Article;
+import com.example.outerspace.model.ArticleComment;
 import com.example.outerspace.model.Post;
 import com.example.outerspace.model.PostComment;
 
@@ -33,7 +32,7 @@ public class JsoupUtil {
             Elements elements = doc.getElementsByClass("post-index-list");
             if (elements.size() == 1) {
                 Elements postlist = elements.get(0).getElementsByTag("li");
-                for (Iterator<Element> iterator = postlist.iterator(); iterator.hasNext(); ) {
+                for (Iterator<Element> iterator = postlist.iterator(); iterator.hasNext();) {
                     Post item = new Post();
                     Element element = (Element) iterator.next();
                     Element link = element.getElementsByClass("post").get(0);
@@ -74,8 +73,9 @@ public class JsoupUtil {
         }
     }
 
-    public static void getGroupPostListByJsonUrl(String id, int offset) {
-        String url = "http://apis.guokr.com/group/post.json?retrieve_type=by_group&group_id="+id+"&limit=2&offset="+offset;
+    public static ArrayList<Post> getGroupPostListByJsonUrl(String id, int offset) {
+        String url = "http://apis.guokr.com/group/post.json?retrieve_type=by_group&group_id=" + id
+                + "&limit=2&offset=" + offset;
         ArrayList<Post> list = new ArrayList<Post>();
         String jString = HttpFetcher.get(url);
         try {
@@ -86,18 +86,27 @@ public class JsoupUtil {
                 for (int i = 0; i < articles.length(); i++) {
                     JSONObject jo = articles.getJSONObject(i);
                     Post post = new Post();
+                    post.setId(getJsonString(jo, "id"));
                     post.setGroupName(jo.getJSONObject("group").getString("name"));
-                    post.setTitle(jo.getString("title"));
-                    post.setUrl(jo.getString("url"));
+                    post.setTitle(getJsonString(jo, "title"));
+                    post.setUrl(getJsonString(jo, "url"));
                     post.setAuthor(jo.getJSONObject("author").getString("nickname"));
-                    post.setCommentNum(jo.getInt("replies_count"));
-                    //无法获取赞的数量
+                    post.setAuthorID(jo.getJSONObject("author").getString("url")
+                            .replaceAll("\\D+", ""));
+                    post.setAuthorAvatarUrl(jo.getJSONObject("author").getJSONObject("avatar")
+                            .getString("small").replaceAll("\\?\\S*$", ""));
+                    post.setDate(getJsonString(jo, "date_created"));
+                    post.setCommentNum(getJsonInt(jo, "replies_count"));
+                    post.setContent(getJsonString(jo, "html"));
+                    // 无法获取赞的数量
+                    // 无法获取titleImageUrl
+                    list.add(post);
                 }
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
+        return list;
     }
 
     public static void getGroupPostListByHtmlUrl(String url) {
@@ -108,7 +117,7 @@ public class JsoupUtil {
             Elements elements = doc.getElementsByClass("post-list");
             if (elements.size() == 1) {
                 Elements postlist = elements.get(0).getElementsByTag("li");
-                for (Iterator<Element> iterator = postlist.iterator(); iterator.hasNext(); ) {
+                for (Iterator<Element> iterator = postlist.iterator(); iterator.hasNext();) {
                     Post item = new Post();
                     item.setGroupName(postGroup);
                     Element element = (Element) iterator.next();
@@ -196,7 +205,39 @@ public class JsoupUtil {
         return detail;
     }
 
-    public static ArrayList<PostComment> getPostComments(String id, int pageNo) {
+    public static ArrayList<PostComment> getPostCommentsFromJsonUrl(String id, int offset) {
+        ArrayList<PostComment> list = new ArrayList<PostComment>();
+        String url = "http://apis.guokr.com/group/post_reply.json?retrieve_type=by_post&post_id="
+                + id + "&limit=10&offset=" + offset;
+        String jString = HttpFetcher.get(url);
+        try {
+            JSONObject jss = new JSONObject(jString);
+            boolean ok = jss.getBoolean("ok");
+            if (ok) {
+                JSONArray comments = jss.getJSONArray("result");
+                for (int i = 0; i < comments.length(); i++) {
+                    JSONObject jo = comments.getJSONObject(i);
+                    PostComment comment = new PostComment();
+                    comment.setID(getJsonString(jo, "id"));
+                    comment.setAuthor(getJsonObject(jo, "author").getString("nickname"));
+                    comment.setAuthorID(getJsonObject(jo, "author").getString("url")
+                            .replaceAll("\\D+", ""));
+                    comment.setAuthorAvatarUrl(getJsonObject(jo, "author").getJSONObject("avatar")
+                            .getString("small").replaceAll("\\?\\S*$", ""));
+                    comment.setDate(getJsonString(jo, "date_created"));
+                    comment.setLikes(getJsonInt(jo, "likings_count"));
+                    comment.setContent(getJsonString(jo, "html"));
+                    comment.setFloor((offset + i + 1) + "楼");
+                    comment.setPostID(jo.getJSONObject("post").getString("id"));
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public static ArrayList<PostComment> getPostCommentsFromHtmlUrl(String id, int pageNo) {
         ArrayList<PostComment> list = new ArrayList<PostComment>();
         String url = "http://m.guokr.com/post/" + id + "/?page=" + pageNo;
         try {
@@ -232,9 +273,9 @@ public class JsoupUtil {
             int likes = Integer.valueOf(liElement.getElementsByClass("cmt-like").text());
             comment.setAuthorAvatarUrl(commentAuthorAvatarUrl);
             comment.setAuthorID(commentAuthorID);
-            comment.setCommentAuthor(commentAuthor);
-            comment.setCommentDate(commentDate);
-            comment.setCommentID(commentID);
+            comment.setAuthor(commentAuthor);
+            comment.setDate(commentDate);
+            comment.setID(commentID);
             comment.setContent(commentContent);
             comment.setFloor(commentFloor);
             comment.setPostID(postID);
@@ -244,19 +285,20 @@ public class JsoupUtil {
         return list;
     }
 
-    public static String getArticleListByChannel(String channelKey, int offset) {
+    public static ArrayList<Article> getArticleListByChannel(String channelKey, int offset) {
         String url = "http://www.guokr.com/apis/minisite/article.json?retrieve_type=by_channel&channel_key="
                 + channelKey + "&limit=20&offset=" + offset;
-        return url;
+        return getArticleListFromJsonUrl(url);
     }
 
-    public static String getArticleListBySubject(String subject_key, int offset) {
+    public static ArrayList<Article> getArticleListBySubject(String subject_key, int offset) {
         String url = "http://www.guokr.com/apis/minisite/article.json?retrieve_type=by_subject&subject_key="
                 + subject_key + "&limit=20&offset=" + offset;
-        return url;
+        return getArticleListFromJsonUrl(url);
     }
 
-    public static void getArticleListFromJsonUrl(String url) {
+    private static ArrayList<Article> getArticleListFromJsonUrl(String url) {
+        ArrayList<Article> articleList = new ArrayList<Article>();
         String jString = HttpFetcher.get(url);
         try {
             JSONObject jss = new JSONObject(jString);
@@ -266,26 +308,31 @@ public class JsoupUtil {
                 for (int i = 0; i < articles.length(); i++) {
                     JSONObject jo = articles.getJSONObject(i);
                     Article article = new Article();
-                    article.setId(jo.getString("id"));
+                    article.setId(getJsonString(jo, "id"));
                     article.setCommentNum(jo.getInt("replies_count"));
-                    article.setAuthor(jo.getJSONObject("author").getString("nickname"));
-                    article.setAuthorID(jo.getJSONObject("author").getString("url").replaceAll("\\D+", ""));
-                    article.setDate(jo.getString("date_published"));
-                    article.setSubjectName(jo.getJSONObject("subject").getString("name"));
-                    article.setSubjectKey(jo.getJSONObject("subject").getString("key"));
-                    article.setUrl(jo.getString("url"));
-                    article.setImageUrl(jo.getString("small_image"));
-                    article.setSummary(jo.getString("summary"));
-                    article.setTitle(jo.getString("title"));
+                    article.setAuthor(getJsonString(getJsonObject(jo, "author"), "nickname"));
+                    article.setAuthorID(getJsonString(getJsonObject(jo, "author"), "url")
+                            .replaceAll("\\D+", ""));
+                    article.setAuthorAvatarUrl(jo.getJSONObject("author").getJSONObject("avatar")
+                            .getString("large"));
+                    article.setDate(getJsonString(jo, "date_published"));
+                    article.setSubjectName(getJsonString(getJsonObject(jo, "subject"), "name"));
+                    article.setSubjectKey(getJsonString(getJsonObject(jo, "subject"), "key"));
+                    article.setUrl(getJsonString(jo, "url"));
+                    article.setImageUrl(getJsonString(jo, "small_image"));
+                    article.setSummary(getJsonString(jo, "summary"));
+                    article.setTitle(getJsonString(jo, "title"));
+                    articleList.add(article);
                 }
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        return articleList;
     }
 
     public static void getArticleDetailByID(String id) {
-        getPostDetailByUrl("http://www.guokr.com/article/" + id + "/");
+        getArticleDetailByUrl("http://www.guokr.com/article/" + id + "/");
     }
 
     /**
@@ -293,58 +340,130 @@ public class JsoupUtil {
      *
      * @param url
      */
-    public static Post getPostDetailByUrl(String url) {
-        // 手机页面无法取得评论数，最好是从点击时带过来。TODO
-        Post detail = new Post();
+    public static Article getArticleDetailByUrl(String url) {
+        Article article = new Article();
+        String aid = url.replaceAll("\\D+", "").replaceAll("\\?\\S*$", "");
         try {
             Document doc = Jsoup.connect(url).get();
-            String postID = url.replaceAll("\\?\\S*$", "").replaceAll("\\D+", "");
-            String groupID = doc.getElementsByClass("crumbs").get(0).getElementsByTag("a")
-                    .attr("href").replaceAll("\\D+", "");
-            String groupName = doc.getElementsByClass("crumbs").get(0).getElementsByTag("a").text();
-            Element mainElement = doc.getElementById("contentMain");
-            String authorAvatarUrl = mainElement.getElementsByClass("author-avatar").get(0)
-                    .getElementsByTag("img").attr("src").replaceAll("\\?\\S*$", "");
-            String title = mainElement.getElementsByClass("title").text();
-            String author = mainElement.select(".author").select(".gfl").text();
-            String authorID = mainElement.select(".author").select(".gfl").attr("href")
-                    .replaceAll("\\D+", "");
-            String date = mainElement.getElementsByTag("time").text();
-            String content = mainElement.getElementById("postContent").outerHtml();
-            int likeNum = Integer.valueOf(mainElement.getElementsByClass("like-num").get(0).text());
-            detail.setGroupID(groupID);
-            detail.setGroupName(groupName);
-            detail.setAuthor(author);
-            detail.setAuthorAvatarUrl(authorAvatarUrl);
-            detail.setAuthorID(authorID);
-            detail.setId(postID);
-            detail.setTitle(title);
-            detail.setDate(date);
-            detail.setContent(content);
-            detail.setLikeNum(likeNum);
-            Elements elements = doc.getElementsByClass("group-comments");
-            if (elements.size() == 1) {
-                detail.setComments(extractPostComments(elements.get(0), postID));
+            String content = doc.getElementsByClass("document").outerHtml();
+            int likeNum = Integer.valueOf(doc.getElementsByClass("recom-num").get(0).text()
+                    .replaceAll("\\D+", ""));
+            // 其他数据已经在列表取得，这里只要合过去就行了
+            article.setContent(content);
+            article.setLikeNum(likeNum);
+            Elements elements = doc.getElementsByClass("cmts-list");
+            if (elements != null && elements.size() > 0) {
+                // hot
+                article.setHotComments(getArticleHotComments(elements.get(0), aid));
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return detail;
+        return article;
     }
 
-    public static ArrayList<PostComment> getArticleComments(String id, int offset) {
-        ArrayList<PostComment> list = new ArrayList<PostComment>();
-        String url = "http://apis.guokr.com/minisite/article_reply.json?article_id=438938&limit=2&offset=0";
-        try {
-            Document doc = Jsoup.connect(url).get();
-            String postID = url.replaceAll("\\?\\S*$", "").replaceAll("\\D+", "");
-            Elements elements = doc.getElementsByClass("group-comments");
-            if (elements.size() == 1) {
-                return extractPostComments(elements.get(0), postID);
+    public static ArrayList<ArticleComment> getArticleHotComments(Element hotElement, String aid) {
+        ArrayList<ArticleComment> list = new ArrayList<ArticleComment>();
+        Elements comments = hotElement.getElementsByTag("li");
+        if (comments != null && comments.size() > 0) {
+            for (int i = 0; i < comments.size(); i++) {
+                Element element = comments.get(i);
+                ArticleComment comment = new ArticleComment();
+                String id = element.id().replace("reply", "");
+                Element tmp = element.select(".cmt-img").select(".cmtImg").select(".pt-pic").get(0);
+
+                String authorID = tmp.getElementsByTag("a").get(0).attr("href")
+                        .replaceAll("\\D+", "");
+                String authorAvatarUrl = tmp.getElementsByTag("img").get(0).attr("src")
+                        .replaceAll("\\?\\S*$", "");
+                String author = tmp.getElementsByTag("a").get(0).attr("title");
+                String likeNum = element.getElementsByClass("cmt-do-num").get(0).text();
+                String date = element.getElementsByClass("cmt-info").get(0).text();
+                String content = element.select(".cmt-content").select(".gbbcode-content")
+                        .select(".cmtContent").get(0).outerHtml();
+                Elements tmpelements = element.getElementsByClass("cmt-auth");
+                if (tmpelements != null && tmpelements.size() > 0) {
+                    String authorTitle = element.getElementsByClass("cmt-auth").get(0)
+                            .attr("title");
+                    comment.setAuthorTitle(authorTitle);
+                }
+                comment.setID(id);
+                comment.setLikeNum(Integer.valueOf(likeNum));
+                comment.setAuthor(author);
+                comment.setAuthorID(authorID);
+                comment.setAuthorAvatarUrl(authorAvatarUrl);
+                comment.setDate(date);
+                comment.setContent(content);
+                comment.setArticleID(aid);
+                list.add(comment);
             }
-        } catch (IOException e) {
+        }
+        return list;
+    }
+
+    public static ArrayList<ArticleComment> getArticleComments(String id, int offset) {
+        ArrayList<ArticleComment> list = new ArrayList<ArticleComment>();
+        String url = "http://apis.guokr.com/minisite/article_reply.json?article_id=" + id
+                + "&limit=2&offset=" + offset;
+        try {
+            String jString = HttpFetcher.get(url);
+            JSONObject jss = new JSONObject(jString);
+            boolean ok = jss.getBoolean("ok");
+            if (ok) {
+                JSONArray articles = jss.getJSONArray("result");
+                for (int i = 0; i < articles.length(); i++) {
+                    JSONObject jo = articles.getJSONObject(i);
+                    ArticleComment comment = new ArticleComment();
+                    comment.setID(getJsonString(jo, "id"));
+                    comment.setLikeNum(jo.getInt("likings_count"));
+                    comment.setAuthor(getJsonString(getJsonObject(jo, "author"), "nickname"));
+                    comment.setAuthorID(getJsonString(getJsonObject(jo, "author"), "url")
+                            .replaceAll("\\D+", ""));
+                    comment.setAuthorAvatarUrl(jo.getJSONObject("author").getJSONObject("avatar")
+                            .getString("large"));
+                    comment.setAuthorTitle(getJsonString(getJsonObject(jo, "author"), "title"));
+                    comment.setDate(getJsonString(jo, "date_created"));
+                    comment.setFloor((offset + i + 1) + "楼");
+                    comment.setContent(getJsonString(jo, "html"));
+                    comment.setArticleID(id);
+                    list.add(comment);
+                }
+            }
+        } catch (JSONException e) {
             e.printStackTrace();
         }
         return list;
+    }
+
+    public static int getJsonInt(JSONObject jsonObject, String key) throws JSONException {
+        if ((jsonObject.has(key)) && (!jsonObject.isNull(key))) {
+            return jsonObject.getInt(key);
+        } else {
+            return 0;
+        }
+    }
+
+    public static boolean getJsonBoolean(JSONObject jsonObject, String key) throws JSONException {
+        if ((jsonObject.has(key)) && (!jsonObject.isNull(key))) {
+            return jsonObject.getBoolean(key);
+        } else {
+            return false;
+        }
+    }
+
+    public static String getJsonString(JSONObject jsonObject, String key) throws JSONException {
+        if ((jsonObject.has(key)) && (!jsonObject.isNull(key))) {
+            return jsonObject.getString(key);
+        } else {
+            return "";
+        }
+    }
+
+    public static JSONObject getJsonObject(JSONObject jsonObject, String key) throws JSONException {
+        if ((jsonObject.has(key)) && (!jsonObject.isNull(key))) {
+            return jsonObject.getJSONObject(key);
+        } else {
+            return new JSONObject();
+        }
     }
 }
