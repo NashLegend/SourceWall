@@ -1,8 +1,9 @@
-
 package com.example.outerspace.connection.api;
 
-import java.io.IOException;
-import java.util.ArrayList;
+import com.example.outerspace.connection.HttpFetcher;
+import com.example.outerspace.model.Question;
+import com.example.outerspace.model.QuestionAnswer;
+import com.example.outerspace.model.SimpleComment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,11 +13,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.example.outerspace.connection.HttpFetcher;
-import com.example.outerspace.model.Question;
-import com.example.outerspace.model.QuestionAnswer;
-import com.example.outerspace.model.QuestionAnswerComment;
-import com.example.outerspace.model.QuestionComment;
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class QuestionAPI extends APIBase {
 
@@ -26,7 +24,7 @@ public class QuestionAPI extends APIBase {
 
     public static ArrayList<Question> getQuestionsByTagFromJsonUrl(String tag, int offset) {
         // 比html还特么浪费流量…………
-        ArrayList<Question> questions = new ArrayList<>();
+        ArrayList<Question> questions = new ArrayList<Question>();
         String url = "http://apis.guokr.com/ask/question.json?retrieve_type=by_tag&limit=1&tag_name="
                 + tag + "&offset=" + offset;
         String jString = HttpFetcher.get(url);
@@ -70,7 +68,7 @@ public class QuestionAPI extends APIBase {
     }
 
     public static ArrayList<Question> getQuestionsFromMobileUrl(String url) throws IOException {
-        ArrayList<Question> questions = new ArrayList<>();
+        ArrayList<Question> questions = new ArrayList<Question>();
         Document doc = Jsoup.connect(url).get();
         Elements elements = doc.getElementsByClass("ask-list");
         if (elements.size() == 1) {
@@ -128,7 +126,7 @@ public class QuestionAPI extends APIBase {
     }
 
     public static ArrayList<QuestionAnswer> getQuestionAnswers(String id, int offset) {
-        ArrayList<QuestionAnswer> answers = new ArrayList<>();
+        ArrayList<QuestionAnswer> answers = new ArrayList<QuestionAnswer>();
         String url = "http://apis.guokr.com/ask/answer.json?retrieve_type=by_question&limit=10&question_id="
                 + id + "&offset=" + offset;
         String jString = HttpFetcher.get(url);
@@ -165,8 +163,13 @@ public class QuestionAPI extends APIBase {
         return answers;
     }
 
-    public static ArrayList<QuestionComment> getQuestionComments(String id, int offset) {
-        ArrayList<QuestionComment> list = new ArrayList<>();
+    /**
+     * @param id
+     * @param offset
+     * @return
+     */
+    public static ArrayList<SimpleComment> getQuestionComments(String id, int offset) {
+        ArrayList<SimpleComment> list = new ArrayList<SimpleComment>();
         String url = "http://www.guokr.com/apis/ask/question_reply.json?retrieve_type=by_question&question_id="
                 + id + "&offset=" + offset;
         String jString = HttpFetcher.get(url);
@@ -177,14 +180,14 @@ public class QuestionAPI extends APIBase {
                 JSONArray comments = jss.getJSONArray("result");
                 for (int i = 0; i < comments.length(); i++) {
                     JSONObject jsonObject = comments.getJSONObject(i);
-                    QuestionComment comment = new QuestionComment();
+                    SimpleComment comment = new SimpleComment();
                     comment.setAuthor(jsonObject.getJSONObject("author").getString("nickname"));
                     comment.setAuthorID(jsonObject.getJSONObject("author").getString("url")
                             .replaceAll("\\D+", ""));
                     comment.setContent(getJsonString(jsonObject, "html"));
                     comment.setDate(getJsonString(jsonObject, "date_created"));
                     comment.setID(getJsonString(jsonObject, "id"));
-                    comment.setQuestionID(getJsonString(jsonObject, "question_id"));
+                    comment.setHostID(getJsonString(jsonObject, "question_id"));
                     list.add(comment);
                 }
             }
@@ -194,8 +197,8 @@ public class QuestionAPI extends APIBase {
         return list;
     }
 
-    public static ArrayList<QuestionAnswerComment> getAnswerComments(String id, int offset) {
-        ArrayList<QuestionAnswerComment> list = new ArrayList<>();
+    public static ArrayList<SimpleComment> getAnswerComments(String id, int offset) {
+        ArrayList<SimpleComment> list = new ArrayList<SimpleComment>();
         String url = "http://www.guokr.com/apis/ask/answer_reply.json?retrieve_type=by_answer&limit=10&answer_id="
                 + id + "&offset=" + offset;
         String jString = HttpFetcher.get(url);
@@ -206,14 +209,14 @@ public class QuestionAPI extends APIBase {
                 JSONArray comments = jss.getJSONArray("result");
                 for (int i = 0; i < comments.length(); i++) {
                     JSONObject jsonObject = comments.getJSONObject(i);
-                    QuestionAnswerComment comment = new QuestionAnswerComment();
+                    SimpleComment comment = new SimpleComment();
                     comment.setAuthor(jsonObject.getJSONObject("author").getString("nickname"));
                     comment.setAuthorID(jsonObject.getJSONObject("author").getString("url")
                             .replaceAll("\\D+", ""));
                     comment.setContent(getJsonString(jsonObject, "html"));
                     comment.setDate(getJsonString(jsonObject, "date_created"));
                     comment.setID(getJsonString(jsonObject, "id"));
-                    comment.setAnswerID(getJsonString(jsonObject, "question_id"));
+                    comment.setHostID(getJsonString(jsonObject, "question_id"));
                     list.add(comment);
                 }
             }

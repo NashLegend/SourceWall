@@ -1,12 +1,13 @@
 package com.example.outerspace.model;
+
 import java.util.ArrayList;
 
-public class Post {
+public class Post extends AceModel {
 
     private String id = "";
     private String title = "";
     private String url = "";
-    private String titleImageUrl="";
+    private String titleImageUrl = "";
     private String authorAvatarUrl = "";
     private String author = "";
     private String authorID = "";
@@ -18,8 +19,8 @@ public class Post {
     private String content = "";
     private String date = "";
 
-    private ArrayList<PostComment> hotComments = new ArrayList<PostComment>();
-    private ArrayList<PostComment> comments = new ArrayList<PostComment>();
+    private ArrayList<SimpleComment> hotComments = new ArrayList<SimpleComment>();
+    private ArrayList<SimpleComment> comments = new ArrayList<SimpleComment>();
 
     public Post() {
         // TODO Auto-generated constructor stub
@@ -137,19 +138,19 @@ public class Post {
         this.date = date;
     }
 
-    public ArrayList<PostComment> getHotComments() {
+    public ArrayList<SimpleComment> getHotComments() {
         return hotComments;
     }
 
-    public void setHotComments(ArrayList<PostComment> hotComments) {
+    public void setHotComments(ArrayList<SimpleComment> hotComments) {
         this.hotComments = hotComments;
     }
 
-    public ArrayList<PostComment> getComments() {
+    public ArrayList<SimpleComment> getComments() {
         return comments;
     }
 
-    public void setComments(ArrayList<PostComment> comments) {
+    public void setComments(ArrayList<SimpleComment> comments) {
         this.comments = comments;
     }
 

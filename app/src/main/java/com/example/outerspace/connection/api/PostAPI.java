@@ -1,8 +1,8 @@
 package com.example.outerspace.connection.api;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
+import com.example.outerspace.connection.HttpFetcher;
+import com.example.outerspace.model.Post;
+import com.example.outerspace.model.SimpleComment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,16 +12,16 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.example.outerspace.connection.HttpFetcher;
-import com.example.outerspace.model.Post;
-import com.example.outerspace.model.PostComment;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class PostAPI extends APIBase {
 
     public PostAPI() {
         // TODO Auto-generated constructor stub
     }
-    
+
 
     public static void getGroupHotPostListFromMobileUrl(int pageNo) {
         ArrayList<Post> list = new ArrayList<Post>();
@@ -31,7 +31,7 @@ public class PostAPI extends APIBase {
             Elements elements = doc.getElementsByClass("post-index-list");
             if (elements.size() == 1) {
                 Elements postlist = elements.get(0).getElementsByTag("li");
-                for (Iterator<Element> iterator = postlist.iterator(); iterator.hasNext();) {
+                for (Iterator<Element> iterator = postlist.iterator(); iterator.hasNext(); ) {
                     Post item = new Post();
                     Element element = (Element) iterator.next();
                     Element link = element.getElementsByClass("post").get(0);
@@ -116,7 +116,7 @@ public class PostAPI extends APIBase {
             Elements elements = doc.getElementsByClass("post-list");
             if (elements.size() == 1) {
                 Elements postlist = elements.get(0).getElementsByTag("li");
-                for (Iterator<Element> iterator = postlist.iterator(); iterator.hasNext();) {
+                for (Iterator<Element> iterator = postlist.iterator(); iterator.hasNext(); ) {
                     Post item = new Post();
                     item.setGroupName(postGroup);
                     Element element = (Element) iterator.next();
@@ -204,8 +204,8 @@ public class PostAPI extends APIBase {
         return detail;
     }
 
-    public static ArrayList<PostComment> getPostCommentsFromJsonUrl(String id, int offset) {
-        ArrayList<PostComment> list = new ArrayList<PostComment>();
+    public static ArrayList<SimpleComment> getPostCommentsFromJsonUrl(String id, int offset) {
+        ArrayList<SimpleComment> list = new ArrayList<SimpleComment>();
         String url = "http://apis.guokr.com/group/post_reply.json?retrieve_type=by_post&post_id="
                 + id + "&limit=10&offset=" + offset;
         String jString = HttpFetcher.get(url);
@@ -216,7 +216,7 @@ public class PostAPI extends APIBase {
                 JSONArray comments = jss.getJSONArray("result");
                 for (int i = 0; i < comments.length(); i++) {
                     JSONObject jo = comments.getJSONObject(i);
-                    PostComment comment = new PostComment();
+                    SimpleComment comment = new SimpleComment();
                     comment.setID(getJsonString(jo, "id"));
                     comment.setAuthor(getJsonObject(jo, "author").getString("nickname"));
                     comment.setAuthorID(getJsonObject(jo, "author").getString("url")
@@ -224,10 +224,10 @@ public class PostAPI extends APIBase {
                     comment.setAuthorAvatarUrl(getJsonObject(jo, "author").getJSONObject("avatar")
                             .getString("large").replaceAll("\\?\\S*$", ""));
                     comment.setDate(getJsonString(jo, "date_created"));
-                    comment.setLikes(getJsonInt(jo, "likings_count"));
+                    comment.setLikeNum(getJsonInt(jo, "likings_count"));
                     comment.setContent(getJsonString(jo, "html"));
                     comment.setFloor((offset + i + 1) + "楼");
-                    comment.setPostID(jo.getJSONObject("post").getString("id"));
+                    comment.setHostID(jo.getJSONObject("post").getString("id"));
                 }
             }
         } catch (JSONException e) {
@@ -236,8 +236,8 @@ public class PostAPI extends APIBase {
         return list;
     }
 
-    public static ArrayList<PostComment> getPostCommentsFromHtmlUrl(String id, int pageNo) {
-        ArrayList<PostComment> list = new ArrayList<PostComment>();
+    public static ArrayList<SimpleComment> getPostCommentsFromHtmlUrl(String id, int pageNo) {
+        ArrayList<SimpleComment> list = new ArrayList<SimpleComment>();
         String url = "http://m.guokr.com/post/" + id + "/?page=" + pageNo;
         try {
             Document doc = Jsoup.connect(url).get();
@@ -252,11 +252,11 @@ public class PostAPI extends APIBase {
         return list;
     }
 
-    public static ArrayList<PostComment> extractPostComments(Element element, String postID) {
-        ArrayList<PostComment> list = new ArrayList<PostComment>();
+    public static ArrayList<SimpleComment> extractPostComments(Element element, String postID) {
+        ArrayList<SimpleComment> list = new ArrayList<SimpleComment>();
         Elements commentlist = element.getElementsByClass("comment");
         for (int i = 0; i < commentlist.size(); i++) {
-            PostComment comment = new PostComment();
+            SimpleComment comment = new SimpleComment();
             Element liElement = commentlist.get(i);
             String commentID = liElement.id();
             String commentAuthorAvatarUrl = liElement.getElementsByClass("cmt-author-img")
@@ -277,8 +277,8 @@ public class PostAPI extends APIBase {
             comment.setID(commentID);
             comment.setContent(commentContent);
             comment.setFloor(commentFloor);
-            comment.setPostID(postID);
-            comment.setLikes(likes);
+            comment.setHostID(postID);
+            comment.setLikeNum(likes);
             list.add(comment);
         }
         return list;

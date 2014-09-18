@@ -8,7 +8,7 @@ public class APIBase {
     public APIBase() {
         // TODO Auto-generated constructor stub
     }
-    
+
     public static int getJsonInt(JSONObject jsonObject, String key) throws JSONException {
         if ((jsonObject.has(key)) && (!jsonObject.isNull(key))) {
             return jsonObject.getInt(key);

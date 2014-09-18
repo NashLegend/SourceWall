@@ -1,10 +1,9 @@
-
 package com.example.outerspace.model;
 
 /**
  * Created by NashLegend on 2014/9/16 0016.
  */
-public class Question {
+public class Question extends AceModel {
 
     private String id = "";
     private String title = "";

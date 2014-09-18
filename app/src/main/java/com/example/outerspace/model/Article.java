@@ -1,4 +1,3 @@
-
 package com.example.outerspace.model;
 
 import java.util.ArrayList;
@@ -6,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Created by NashLegend on 2014/9/16 0016.
  */
-public class Article {
+public class Article extends AceModel {
 
     private String id = "";
     private String title = "";
@@ -22,8 +21,8 @@ public class Article {
     private int likeNum = 0;
     private String summary = "";
     private String content = "";
-    private ArrayList<ArticleComment> hotComments = new ArrayList<ArticleComment>();
-    private ArrayList<ArticleComment> comments = new ArrayList<ArticleComment>();
+    private ArrayList<SimpleComment> hotComments = new ArrayList<SimpleComment>();
+    private ArrayList<SimpleComment> comments = new ArrayList<SimpleComment>();
 
     public String getId() {
         return id;
@@ -121,19 +120,19 @@ public class Article {
         this.content = content;
     }
 
-    public ArrayList<ArticleComment> getHotComments() {
+    public ArrayList<SimpleComment> getHotComments() {
         return hotComments;
     }
 
-    public void setHotComments(ArrayList<ArticleComment> hotComments) {
+    public void setHotComments(ArrayList<SimpleComment> hotComments) {
         this.hotComments = hotComments;
     }
 
-    public ArrayList<ArticleComment> getComments() {
+    public ArrayList<SimpleComment> getComments() {
         return comments;
     }
 
-    public void setComments(ArrayList<ArticleComment> comments) {
+    public void setComments(ArrayList<SimpleComment> comments) {
         this.comments = comments;
     }
 

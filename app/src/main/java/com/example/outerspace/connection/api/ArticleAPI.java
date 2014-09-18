@@ -1,7 +1,8 @@
-
 package com.example.outerspace.connection.api;
 
-import java.util.ArrayList;
+import com.example.outerspace.connection.HttpFetcher;
+import com.example.outerspace.model.Article;
+import com.example.outerspace.model.SimpleComment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,16 +12,14 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.example.outerspace.connection.HttpFetcher;
-import com.example.outerspace.model.Article;
-import com.example.outerspace.model.ArticleComment;
+import java.util.ArrayList;
 
 public class ArticleAPI extends APIBase {
 
     public ArticleAPI() {
         // TODO Auto-generated constructor stub
     }
-    
+
 
     public static ArrayList<Article> getArticleListByChannel(String channelKey, int offset) {
         String url = "http://www.guokr.com/apis/minisite/article.json?retrieve_type=by_channel&channel_key="
@@ -99,13 +98,13 @@ public class ArticleAPI extends APIBase {
         return article;
     }
 
-    public static ArrayList<ArticleComment> getArticleHotComments(Element hotElement, String aid) {
-        ArrayList<ArticleComment> list = new ArrayList<ArticleComment>();
+    public static ArrayList<SimpleComment> getArticleHotComments(Element hotElement, String aid) {
+        ArrayList<SimpleComment> list = new ArrayList<SimpleComment>();
         Elements comments = hotElement.getElementsByTag("li");
         if (comments != null && comments.size() > 0) {
             for (int i = 0; i < comments.size(); i++) {
                 Element element = comments.get(i);
-                ArticleComment comment = new ArticleComment();
+                SimpleComment comment = new SimpleComment();
                 String id = element.id().replace("reply", "");
                 Element tmp = element.select(".cmt-img").select(".cmtImg").select(".pt-pic").get(0);
 
@@ -131,15 +130,15 @@ public class ArticleAPI extends APIBase {
                 comment.setAuthorAvatarUrl(authorAvatarUrl);
                 comment.setDate(date);
                 comment.setContent(content);
-                comment.setArticleID(aid);
+                comment.setHostID(aid);
                 list.add(comment);
             }
         }
         return list;
     }
 
-    public static ArrayList<ArticleComment> getArticleComments(String id, int offset) {
-        ArrayList<ArticleComment> list = new ArrayList<ArticleComment>();
+    public static ArrayList<SimpleComment> getArticleComments(String id, int offset) {
+        ArrayList<SimpleComment> list = new ArrayList<SimpleComment>();
         String url = "http://apis.guokr.com/minisite/article_reply.json?article_id=" + id
                 + "&limit=2&offset=" + offset;
         try {
@@ -150,7 +149,7 @@ public class ArticleAPI extends APIBase {
                 JSONArray articles = jss.getJSONArray("result");
                 for (int i = 0; i < articles.length(); i++) {
                     JSONObject jo = articles.getJSONObject(i);
-                    ArticleComment comment = new ArticleComment();
+                    SimpleComment comment = new SimpleComment();
                     comment.setID(getJsonString(jo, "id"));
                     comment.setLikeNum(jo.getInt("likings_count"));
                     comment.setAuthor(getJsonString(getJsonObject(jo, "author"), "nickname"));
@@ -162,7 +161,7 @@ public class ArticleAPI extends APIBase {
                     comment.setDate(getJsonString(jo, "date_created"));
                     comment.setFloor((offset + i + 1) + "楼");
                     comment.setContent(getJsonString(jo, "html"));
-                    comment.setArticleID(id);
+                    comment.setHostID(id);
                     list.add(comment);
                 }
             }

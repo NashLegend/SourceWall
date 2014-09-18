@@ -2,12 +2,11 @@ package com.example.outerspace.adapters;
 
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 
 /**
  * Created by NashLegend on 2014/9/15 0015.
  */
-public class QAPostAdapter extends BaseAdapter {
+public class QuestionAdapter extends AceAdapter {
     @Override
     public int getCount() {
         return 0;

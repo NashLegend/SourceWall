@@ -2,30 +2,28 @@ package com.example.outerspace.adapters;
 
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 
 /**
- * Created by NashLegend on 2014/9/15 0015.
+ * Created by NashLegend on 2014/9/18 0018.
  */
-public class FirstAdapter extends BaseAdapter {
-
+public class SimpleCommentAdapter extends AceAdapter {
     @Override
     public int getCount() {
         return 0;
     }
 
     @Override
-    public Object getItem(int i) {
+    public Object getItem(int position) {
         return null;
     }
 
     @Override
-    public long getItemId(int i) {
+    public long getItemId(int position) {
         return 0;
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(int position, View convertView, ViewGroup parent) {
         return null;
     }
 }

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="list_title_color">#000000</color>
+    <color name="list_summary_color">#9C9C9C</color>
+    <color name="list_appendix_color">#888888</color>
+
+    <color name="article_list_summary_color">#000000</color>
+</resources>

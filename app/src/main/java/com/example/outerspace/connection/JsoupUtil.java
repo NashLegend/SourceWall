@@ -1,9 +1,9 @@
-
 package com.example.outerspace.connection;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
+import com.example.outerspace.model.Article;
+import com.example.outerspace.model.Post;
+import com.example.outerspace.model.PostComment;
+import com.example.outerspace.model.SimpleComment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,10 +13,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.example.outerspace.model.Article;
-import com.example.outerspace.model.ArticleComment;
-import com.example.outerspace.model.Post;
-import com.example.outerspace.model.PostComment;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class JsoupUtil {
 
@@ -32,7 +31,7 @@ public class JsoupUtil {
             Elements elements = doc.getElementsByClass("post-index-list");
             if (elements.size() == 1) {
                 Elements postlist = elements.get(0).getElementsByTag("li");
-                for (Iterator<Element> iterator = postlist.iterator(); iterator.hasNext();) {
+                for (Iterator<Element> iterator = postlist.iterator(); iterator.hasNext(); ) {
                     Post item = new Post();
                     Element element = (Element) iterator.next();
                     Element link = element.getElementsByClass("post").get(0);
@@ -117,7 +116,7 @@ public class JsoupUtil {
             Elements elements = doc.getElementsByClass("post-list");
             if (elements.size() == 1) {
                 Elements postlist = elements.get(0).getElementsByTag("li");
-                for (Iterator<Element> iterator = postlist.iterator(); iterator.hasNext();) {
+                for (Iterator<Element> iterator = postlist.iterator(); iterator.hasNext(); ) {
                     Post item = new Post();
                     item.setGroupName(postGroup);
                     Element element = (Element) iterator.next();
@@ -362,13 +361,13 @@ public class JsoupUtil {
         return article;
     }
 
-    public static ArrayList<ArticleComment> getArticleHotComments(Element hotElement, String aid) {
-        ArrayList<ArticleComment> list = new ArrayList<ArticleComment>();
+    public static ArrayList<SimpleComment> getArticleHotComments(Element hotElement, String aid) {
+        ArrayList<SimpleComment> list = new ArrayList<SimpleComment>();
         Elements comments = hotElement.getElementsByTag("li");
         if (comments != null && comments.size() > 0) {
             for (int i = 0; i < comments.size(); i++) {
                 Element element = comments.get(i);
-                ArticleComment comment = new ArticleComment();
+                SimpleComment comment = new SimpleComment();
                 String id = element.id().replace("reply", "");
                 Element tmp = element.select(".cmt-img").select(".cmtImg").select(".pt-pic").get(0);
 
@@ -394,15 +393,15 @@ public class JsoupUtil {
                 comment.setAuthorAvatarUrl(authorAvatarUrl);
                 comment.setDate(date);
                 comment.setContent(content);
-                comment.setArticleID(aid);
+                comment.setHostID(aid);
                 list.add(comment);
             }
         }
         return list;
     }
 
-    public static ArrayList<ArticleComment> getArticleComments(String id, int offset) {
-        ArrayList<ArticleComment> list = new ArrayList<ArticleComment>();
+    public static ArrayList<SimpleComment> getArticleComments(String id, int offset) {
+        ArrayList<SimpleComment> list = new ArrayList<SimpleComment>();
         String url = "http://apis.guokr.com/minisite/article_reply.json?article_id=" + id
                 + "&limit=2&offset=" + offset;
         try {
@@ -413,7 +412,7 @@ public class JsoupUtil {
                 JSONArray articles = jss.getJSONArray("result");
                 for (int i = 0; i < articles.length(); i++) {
                     JSONObject jo = articles.getJSONObject(i);
-                    ArticleComment comment = new ArticleComment();
+                    SimpleComment comment = new SimpleComment();
                     comment.setID(getJsonString(jo, "id"));
                     comment.setLikeNum(jo.getInt("likings_count"));
                     comment.setAuthor(getJsonString(getJsonObject(jo, "author"), "nickname"));
@@ -425,7 +424,7 @@ public class JsoupUtil {
                     comment.setDate(getJsonString(jo, "date_created"));
                     comment.setFloor((offset + i + 1) + "楼");
                     comment.setContent(getJsonString(jo, "html"));
-                    comment.setArticleID(id);
+                    comment.setHostID(id);
                     list.add(comment);
                 }
             }
