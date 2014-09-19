@@ -5,5 +5,5 @@ import android.app.Fragment;
 /**
  * Created by NashLegend on 2014/9/18 0018.
  */
-public class SimpleCommentListFragment extends Fragment {
+public class SimpleCommentListFragment extends BaseFragment {
 }

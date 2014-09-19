@@ -1,5 +1,6 @@
 package com.example.outerspace.adapters;
 
+import android.content.Context;
 import android.widget.BaseAdapter;
 
 import java.util.ArrayList;
@@ -8,7 +9,13 @@ import java.util.ArrayList;
  * Created by NashLegend on 2014/9/18 0018.
  */
 public abstract class AceAdapter<T> extends BaseAdapter {
-    private final ArrayList<T> list = new ArrayList<T>();
+
+    public final ArrayList<T> list = new ArrayList<T>();
+    private Context context;
+
+    public AceAdapter(Context context) {
+        setContext(context);
+    }
 
     public void addAll(ArrayList<T> list) {
         this.list.addAll(list);
@@ -41,5 +48,13 @@ public abstract class AceAdapter<T> extends BaseAdapter {
     public void setList(ArrayList<T> list) {
         this.list.clear();
         this.list.addAll(list);
+    }
+
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
     }
 }
