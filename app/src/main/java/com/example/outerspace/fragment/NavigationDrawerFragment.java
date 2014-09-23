@@ -4,6 +4,7 @@ package com.example.outerspace.fragment;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.outerspace.R;
+import com.example.outerspace.util.Consts;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -30,7 +32,7 @@ import com.example.outerspace.R;
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
  * Created by NashLegend on 2014/9/15 0015.
  */
-public class NavigationDrawerFragment extends Fragment {
+public class NavigationDrawerFragment extends Fragment implements View.OnClickListener {
 
     /**
      * Remember the position of the selected item.
@@ -44,17 +46,12 @@ public class NavigationDrawerFragment extends Fragment {
     private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
 
     /**
-     * A pointer to the current callbacks instance (the Activity).
-     */
-    private NavigationDrawerCallbacks mCallbacks;
-
-    /**
      * Helper component that ties the action bar to the navigation drawer.
      */
     private ActionBarDrawerToggle mDrawerToggle;
 
     private DrawerLayout mDrawerLayout;
-    private ListView mDrawerListView;
+    private View layoutView;
     private View mFragmentContainerView;
 
     private int mCurrentSelectedPosition = 0;
@@ -79,7 +76,7 @@ public class NavigationDrawerFragment extends Fragment {
         }
 
         // Select either the default item (0) or the last selected item.
-        selectItem(mCurrentSelectedPosition);
+        selectItem(R.id.button_articles);
     }
 
     @Override
@@ -92,25 +89,9 @@ public class NavigationDrawerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mDrawerListView = (ListView) inflater.inflate(
+        layoutView = (ListView) inflater.inflate(
                 R.layout.fragment_navigation_drawer, container, false);
-        mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectItem(position);
-            }
-        });
-        mDrawerListView.setAdapter(new ArrayAdapter<String>(
-                getActionBar().getThemedContext(),
-                android.R.layout.simple_list_item_activated_1,
-                android.R.id.text1,
-                new String[]{
-                        getString(R.string.title_section1),
-                        getString(R.string.title_section2),
-                        getString(R.string.title_section3),
-                }));
-        mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
-        return mDrawerListView;
+        return layoutView;
     }
 
     public boolean isDrawerOpen() {
@@ -191,33 +172,14 @@ public class NavigationDrawerFragment extends Fragment {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
-    private void selectItem(int position) {
-        mCurrentSelectedPosition = position;
-        if (mDrawerListView != null) {
-            mDrawerListView.setItemChecked(position, true);
-        }
-        if (mDrawerLayout != null) {
-            mDrawerLayout.closeDrawer(mFragmentContainerView);
-        }
-        if (mCallbacks != null) {
-            mCallbacks.onNavigationDrawerItemSelected(position);
-        }
-    }
-
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        try {
-            mCallbacks = (NavigationDrawerCallbacks) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException("Activity must implement NavigationDrawerCallbacks.");
-        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mCallbacks = null;
     }
 
     @Override
@@ -273,13 +235,29 @@ public class NavigationDrawerFragment extends Fragment {
         return getActivity().getActionBar();
     }
 
-    /**
-     * Callbacks interface that all activities using this fragment must implement.
-     */
-    public static interface NavigationDrawerCallbacks {
-        /**
-         * Called when an item in the navigation drawer is selected.
-         */
-        void onNavigationDrawerItemSelected(int position);
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+        selectItem(id);
+    }
+
+    private void selectItem(int id) {
+        Intent intent=new Intent();
+        mCurrentSelectedPosition = id;
+        if (mDrawerLayout != null) {
+            mDrawerLayout.closeDrawer(mFragmentContainerView);
+        }
+        switch (id) {
+            case R.id.button_articles:
+                intent.setAction(Consts.Action_Open_Articles_Fragment);
+                break;
+            case R.id.button_posts:
+                intent.setAction(Consts.Action_Open_Posts_Fragment);
+                break;
+            case R.id.button_questions:
+                intent.setAction(Consts.Action_Open_Questions_Fragment);
+                break;
+        }
+        getActivity().sendBroadcast(intent);
     }
 }

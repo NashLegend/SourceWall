@@ -11,7 +11,7 @@ import java.net.URL;
  */
 public class HttpFetcher {
 
-    public static String get(String url) {
+    public static String get(String url) throws IOException {
         String res = null;
         HttpURLConnection connection = null;
         InputStreamReader reader = null;
@@ -25,9 +25,6 @@ public class HttpFetcher {
                 stringBuffer.append(line);
             }
             res = stringBuffer.toString();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         } finally {
             if (connection != null) {
                 connection.disconnect();
