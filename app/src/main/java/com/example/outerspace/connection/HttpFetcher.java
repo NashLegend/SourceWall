@@ -40,4 +40,8 @@ public class HttpFetcher {
         return res;
     }
 
+    public static void downloadImage(String url){
+
+    }
+
 }

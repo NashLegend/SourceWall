@@ -9,9 +9,7 @@ import android.widget.TextView;
 import com.example.outerspace.R;
 import com.example.outerspace.model.AceModel;
 import com.example.outerspace.model.Article;
-import com.example.outerspace.util.ImageLoader;
-
-import java.util.zip.Inflater;
+import com.example.outerspace.util.ImageUtil.ImageLoader;
 
 /**
  * Created by NashLegend on 2014/9/18 0018.

@@ -1,4 +1,4 @@
-package com.example.outerspace.util;
+package com.example.outerspace.util.ImageUtil;
 
 import android.widget.ImageView;
 
