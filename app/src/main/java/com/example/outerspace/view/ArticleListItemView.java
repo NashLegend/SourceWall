@@ -1,6 +1,9 @@
 package com.example.outerspace.view;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
@@ -23,7 +26,6 @@ public class ArticleListItemView extends AceView {
     TextView replyView;
     ImageView titleImage;
     Article article;
-    ImageLoader loader;
 
     public ArticleListItemView(Context context) {
         super(context);
@@ -53,6 +55,41 @@ public class ArticleListItemView extends AceView {
         authorView.setText(article.getAuthor());
         dateView.setText(article.getDate());
         replyView.setText(article.getCommentNum() + "");
-        loader.loadImage(titleImage, article.getImageUrl());
+        loadImage();
+    }
+
+
+    public void loadImage() {
+        if (task != null && task.getStatus() == AsyncTask.Status.RUNNING) {
+            task.cancel(true);
+        }
+        if (!TextUtils.isEmpty(article.getImageUrl())) {
+            task = new LoaderTask();
+            task.execute();
+        }
+    }
+
+    LoaderTask task;
+
+    class LoaderTask extends AsyncTask<Void, Integer, Bitmap> {
+
+        @Override
+        protected Bitmap doInBackground(Void... params) {
+            return ImageLoader.getBitmapForUrl(article.getImageUrl());
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            if (bitmap != null) {
+                titleImage.setImageBitmap(bitmap);
+            } else {
+
+            }
+        }
     }
 }
