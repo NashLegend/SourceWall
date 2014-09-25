@@ -29,8 +29,8 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="@dimen/post_comment_list_item_avatar_dimen"
-                android:layout_height="@dimen/post_comment_list_item_avatar_dimen"
+                android:layout_width="@dimen/list_standard_comment_avatar_dimen"
+                android:layout_height="@dimen/list_standard_comment_avatar_dimen"
                 android:layout_weight="0" />
 
             <TextView

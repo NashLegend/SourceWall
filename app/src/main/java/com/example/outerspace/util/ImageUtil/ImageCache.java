@@ -19,7 +19,7 @@ public class ImageCache {
 
     private final static ConcurrentHashMap<String, SoftReference<Bitmap>> cachedBitmaps = new ConcurrentHashMap<String, SoftReference<Bitmap>>();
 
-    protected static Bitmap get(String key) {
+    public static Bitmap get(String key) {
         Bitmap bitmap = null;
         if (cachedBitmaps.containsKey(key)) {
             bitmap = cachedBitmaps.get(key).get();
@@ -30,11 +30,11 @@ public class ImageCache {
         return bitmap;
     }
 
-    protected static void add(String key, Bitmap bitmap) {
+    public static void add(String key, Bitmap bitmap) {
         cachedBitmaps.put(key, new SoftReference<Bitmap>(bitmap));
     }
 
-    protected static String getBitmapCacheFileDir(String url) {
+    public static String getBitmapCacheFileDir(String url) {
         try {
             return new File(AppApplication.getApplication().getExternalCacheDir(), URLEncoder.encode(url, "UTF-8")).getAbsolutePath();
         } catch (UnsupportedEncodingException e) {
@@ -43,13 +43,19 @@ public class ImageCache {
         return "";
     }
 
-    protected static Bitmap downloadImageToFile(String url) {
+    public static Bitmap downloadImageToFile(String url) {
+        return downloadImageToFile(url,true);
+    }
+
+    public static Bitmap downloadImageToFile(String url,boolean memryCache) {
         Bitmap bitmap = null;
         File file = new File(getBitmapCacheFileDir(url));
         if (HttpFetcher.downloadFile(url, file.getAbsolutePath())) {
             if (file.exists() && file.isFile()) {
                 bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-                ImageCache.add(url, bitmap);
+                if (memryCache){
+                    ImageCache.add(url, bitmap);
+                }
             }
         }
         return bitmap;

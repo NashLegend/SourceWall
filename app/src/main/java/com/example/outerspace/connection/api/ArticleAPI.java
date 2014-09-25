@@ -68,8 +68,8 @@ public class ArticleAPI extends APIBase {
         return articleList;
     }
 
-    public static void getArticleDetailByID(String id) throws IOException {
-        getArticleDetailByUrl("http://www.guokr.com/article/" + id + "/");
+    public static Article getArticleDetailByID(String id) throws IOException {
+        return getArticleDetailByUrl("http://www.guokr.com/article/" + id + "/");
     }
 
     /**
@@ -137,7 +137,7 @@ public class ArticleAPI extends APIBase {
     public static ArrayList<SimpleComment> getArticleComments(String id, int offset) throws IOException, JSONException {
         ArrayList<SimpleComment> list = new ArrayList<SimpleComment>();
         String url = "http://apis.guokr.com/minisite/article_reply.json?article_id=" + id
-                + "&limit=2&offset=" + offset;
+                + "&limit=20&offset=" + offset;
         String jString = HttpFetcher.get(url);
         JSONObject jss = new JSONObject(jString);
         boolean ok = jss.getBoolean("ok");
@@ -154,7 +154,10 @@ public class ArticleAPI extends APIBase {
                 comment.setAuthorAvatarUrl(jo.getJSONObject("author").getJSONObject("avatar")
                         .getString("large").replaceAll("\\?\\S*$", ""));
                 comment.setAuthorTitle(getJsonString(getJsonObject(jo, "author"), "title"));
-                comment.setDate(getJsonString(jo, "date_created"));
+                String dateString = getJsonString(jo, "date_created");
+                dateString = dateString.replace("T", " ");
+                dateString = dateString.replaceAll("\\.\\S+$", "");
+                comment.setDate(dateString);
                 comment.setFloor((offset + i + 1) + "楼");
                 comment.setContent(getJsonString(jo, "html"));
                 comment.setHostID(id);

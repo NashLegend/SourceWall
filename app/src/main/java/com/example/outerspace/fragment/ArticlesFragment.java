@@ -1,18 +1,20 @@
 package com.example.outerspace.fragment;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListView;
 
+import com.example.outerspace.ArticleActivity;
 import com.example.outerspace.R;
 import com.example.outerspace.adapters.ArticleAdapter;
 import com.example.outerspace.connection.ResultObject;
 import com.example.outerspace.connection.api.ArticleAPI;
 import com.example.outerspace.model.Article;
+import com.example.outerspace.util.Consts;
 import com.example.outerspace.view.ArticleListItemView;
 import com.example.outerspace.view.LListView;
 
@@ -48,7 +50,10 @@ public class ArticlesFragment extends BaseFragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                System.out.println(view instanceof ArticleListItemView);
+                Intent intent = new Intent();
+                intent.setClass(getActivity(), ArticleActivity.class);
+                intent.putExtra(Consts.Extra_Article, ((ArticleListItemView) view).getArticle());
+                startActivity(intent);
             }
         });
         task = new LoaderTask();

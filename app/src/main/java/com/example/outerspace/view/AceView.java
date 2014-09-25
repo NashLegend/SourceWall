@@ -1,6 +1,8 @@
 package com.example.outerspace.view;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.text.Html;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 

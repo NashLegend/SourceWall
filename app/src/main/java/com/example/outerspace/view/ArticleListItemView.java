@@ -20,15 +20,23 @@ import com.example.outerspace.util.ImageUtil.ImageLoader;
 /**
  * Created by NashLegend on 2014/9/18 0018.
  */
-public class ArticleListItemView extends AceView {
+public class ArticleListItemView extends AceView{
 
-    TextView titleView;
-    TextView summaryView;
-    TextView authorView;
-    TextView dateView;
-    TextView replyView;
-    ImageView titleImage;
-    Article article;
+    public Article getArticle() {
+        return article;
+    }
+
+    public void setArticle(Article article) {
+        this.article = article;
+    }
+
+    private TextView titleView;
+    private TextView contentView;
+    private TextView authorView;
+    private TextView dateView;
+    private TextView replyView;
+    private ImageView titleImage;
+    private Article article;
     ImageFetcher titleImageFetcher;
 
     public ArticleListItemView(Context context) {
@@ -36,7 +44,7 @@ public class ArticleListItemView extends AceView {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_article_item_view, this);
         titleView = (TextView) findViewById(R.id.text_title);
-        summaryView = (TextView) findViewById(R.id.text_summary);
+        contentView = (TextView) findViewById(R.id.text_content);
         authorView = (TextView) findViewById(R.id.text_author);
         dateView = (TextView) findViewById(R.id.text_date);
         replyView = (TextView) findViewById(R.id.text_replies_num);
@@ -56,7 +64,7 @@ public class ArticleListItemView extends AceView {
     public void setData(AceModel model) {
         article = (Article) model;
         titleView.setText(article.getTitle());
-        summaryView.setText(article.getSummary());
+        contentView.setText(article.getSummary());
         authorView.setText(article.getAuthor());
         dateView.setText(article.getDate());
         replyView.setText(article.getCommentNum() + "");
