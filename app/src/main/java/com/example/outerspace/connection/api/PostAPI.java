@@ -72,7 +72,7 @@ public class PostAPI extends APIBase {
         }
     }
 
-    public static ArrayList<Post> getGroupPostListByJsonUrl(String id, int offset) {
+    public static ArrayList<Post> getGroupPostListByJsonUrl(String id, int offset) throws IOException {
         String url = "http://apis.guokr.com/group/post.json?retrieve_type=by_group&group_id=" + id
                 + "&limit=2&offset=" + offset;
         ArrayList<Post> list = new ArrayList<Post>();
@@ -204,7 +204,7 @@ public class PostAPI extends APIBase {
         return detail;
     }
 
-    public static ArrayList<SimpleComment> getPostCommentsFromJsonUrl(String id, int offset) {
+    public static ArrayList<SimpleComment> getPostCommentsFromJsonUrl(String id, int offset) throws IOException {
         ArrayList<SimpleComment> list = new ArrayList<SimpleComment>();
         String url = "http://apis.guokr.com/group/post_reply.json?retrieve_type=by_post&post_id="
                 + id + "&limit=10&offset=" + offset;

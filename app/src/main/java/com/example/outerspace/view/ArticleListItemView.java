@@ -6,12 +6,15 @@ import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.outerspace.R;
 import com.example.outerspace.model.AceModel;
 import com.example.outerspace.model.Article;
+import com.example.outerspace.util.DisplayUtil;
+import com.example.outerspace.util.ImageFetcher.ImageFetcher;
 import com.example.outerspace.util.ImageUtil.ImageLoader;
 
 /**
@@ -26,6 +29,7 @@ public class ArticleListItemView extends AceView {
     TextView replyView;
     ImageView titleImage;
     Article article;
+    ImageFetcher titleImageFetcher;
 
     public ArticleListItemView(Context context) {
         super(context);
@@ -37,6 +41,7 @@ public class ArticleListItemView extends AceView {
         dateView = (TextView) findViewById(R.id.text_date);
         replyView = (TextView) findViewById(R.id.text_replies_num);
         titleImage = (ImageView) findViewById(R.id.image_title);
+        titleImageFetcher = new ImageFetcher(getContext(), DisplayUtil.getScreenWidth(getContext()), 0);
     }
 
     public ArticleListItemView(Context context, AttributeSet attrs) {
@@ -60,6 +65,9 @@ public class ArticleListItemView extends AceView {
 
 
     public void loadImage() {
+        ViewGroup.LayoutParams params = titleImage.getLayoutParams();
+        params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        titleImage.setLayoutParams(params);
         if (task != null && task.getStatus() == AsyncTask.Status.RUNNING) {
             task.cancel(true);
         }
@@ -86,6 +94,9 @@ public class ArticleListItemView extends AceView {
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             if (bitmap != null) {
+                ViewGroup.LayoutParams params = titleImage.getLayoutParams();
+                params.height = titleImage.getWidth() * bitmap.getHeight() / bitmap.getWidth();
+                titleImage.setLayoutParams(params);
                 titleImage.setImageBitmap(bitmap);
             } else {
 

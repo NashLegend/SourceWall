@@ -3,7 +3,6 @@ package com.example.outerspace;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.outerspace.fragment.ArticlesFragment;
+import com.example.outerspace.fragment.BaseFragment;
 import com.example.outerspace.fragment.NavigationDrawerFragment;
 import com.example.outerspace.fragment.PostsFragment;
 import com.example.outerspace.fragment.QuestionsFragment;
@@ -62,18 +62,10 @@ public class MainActivity extends BaseActivity {
         registerReceiver(receiver, filter);
     }
 
-    public void onSectionAttached(int number) {
-        switch (number) {
-            case 1:
-                mTitle = getString(R.string.title_section1);
-                break;
-            case 2:
-                mTitle = getString(R.string.title_section2);
-                break;
-            case 3:
-                mTitle = getString(R.string.title_section3);
-                break;
-        }
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(receiver);
+        super.onDestroy();
     }
 
     public void restoreActionBar() {
@@ -109,6 +101,10 @@ public class MainActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void replaceFragment(BaseFragment fragment, Intent intent) {
+        getFragmentManager().beginTransaction().replace(R.id.container, articlesFragment).commit();
+    }
+
     class Receiver extends BroadcastReceiver {
 
         @Override
@@ -118,14 +114,17 @@ public class MainActivity extends BaseActivity {
                 if (articlesFragment == null) {
                     articlesFragment = new ArticlesFragment();
                 }
+                replaceFragment(articlesFragment, intent);
             } else if (Consts.Action_Open_Posts_Fragment.equals(action)) {
                 if (postsFragment == null) {
                     postsFragment = new PostsFragment();
                 }
+                replaceFragment(postsFragment, intent);
             } else if (Consts.Action_Open_Questions_Fragment.equals(action)) {
                 if (questionsFragment == null) {
                     questionsFragment = new QuestionsFragment();
                 }
+                replaceFragment(questionsFragment, intent);
             }
         }
     }

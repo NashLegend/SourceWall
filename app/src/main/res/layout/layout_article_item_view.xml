@@ -4,18 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="@dimen/list_item_padding">
+    android:paddingBottom="@dimen/list_standard_bottom_author_span"
+    android:paddingLeft="@dimen/list_item_padding_horizontal"
+    android:paddingRight="@dimen/list_item_padding_horizontal"
+    android:paddingTop="@dimen/list_standard_top_span">
 
     <TextView
-        android:id="@id/text_title"
+        android:id="@+id/text_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/action_example"
-        android:textColor="@color/list_title_color" />
+        android:text="This is an abstract Title"
+        android:textColor="@color/list_title_color"
+        android:textSize="@dimen/list_standard_title_font_size" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/list_standard_title_author_span"
         android:orientation="horizontal">
 
         <TextView
@@ -23,15 +28,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"
-            android:text="@string/action_example"
+            android:text="Author"
             android:textColor="@color/list_appendix_color" />
 
         <TextView
             android:id="@+id/text_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/list_item_author_text_dimen"
             android:layout_weight="0"
-            android:text="@string/action_example"
+            android:text="2014-09-24 08:00:09"
             android:textColor="@color/list_appendix_color" />
 
         <View
@@ -40,7 +46,6 @@
             android:layout_weight="1" />
 
         <ImageView
-            android:id="@+id/image_title"
             android:layout_width="@dimen/list_item_reply_image_dimen"
             android:layout_height="@dimen/list_item_reply_image_dimen"
             android:layout_weight="0" />
@@ -50,20 +55,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"
-            android:text="@string/action_example"
+            android:text="32"
             android:textColor="@color/list_appendix_color" />
 
     </LinearLayout>
 
     <ImageView
-        android:layout_width="@dimen/article_list_item_image_dimen"
-        android:layout_height="@dimen/article_list_item_image_dimen"
-        android:layout_gravity="center_vertical" />
-
-    <TextView
-        android:id="@id/text_summary"
+        android:id="@+id/image_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/list_standard_image_author_span"
+        android:background="#fff000" />
+
+    <TextView
+        android:id="@+id/text_summary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/list_standard_image_summary_span"
         android:text="@string/action_example"
         android:textColor="@color/article_list_summary_color" />
 </LinearLayout>

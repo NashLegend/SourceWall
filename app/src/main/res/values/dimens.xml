@@ -5,14 +5,20 @@
 
     <!-- Per the design guidelines, navigation drawers should be between 240dp and 320dp:
          https://developer.android.com/design/patterns/navigation-drawer.html -->
-    <dimen name="list_standard_title_font_size">16dp</dimen>
+    <dimen name="list_standard_title_font_size">18dp</dimen>
+    <dimen name="list_standard_title_author_span">8dp</dimen>
+    <dimen name="list_standard_image_summary_span">14dp</dimen>
+    <dimen name="list_standard_image_author_span">10dp</dimen>
+    <dimen name="list_standard_top_span">14dp</dimen>
+    <dimen name="list_standard_bottom_author_span">14dp</dimen>
     <dimen name="list_standard_summary_font_size">14dp</dimen>
     <dimen name="list_standard_appendix_font_size">14dp</dimen>
     <dimen name="navigation_drawer_width">240dp</dimen>
     <dimen name="article_list_item_image_dimen">64dp</dimen>
     <dimen name="post_list_item_avatar_dimen">36dp</dimen>
     <dimen name="post_comment_list_item_avatar_dimen">30dp</dimen>
-    <dimen name="list_item_padding">4dp</dimen>
+    <dimen name="list_item_padding_horizontal">4dp</dimen>
     <dimen name="list_item_like_image_dimen">12dp</dimen>
     <dimen name="list_item_reply_image_dimen">12dp</dimen>
+    <dimen name="list_item_author_text_dimen">18dp</dimen>
 </resources>

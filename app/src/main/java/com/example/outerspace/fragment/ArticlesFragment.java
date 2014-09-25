@@ -1,9 +1,7 @@
 package com.example.outerspace.fragment;
 
-import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +13,8 @@ import com.example.outerspace.adapters.ArticleAdapter;
 import com.example.outerspace.connection.ResultObject;
 import com.example.outerspace.connection.api.ArticleAPI;
 import com.example.outerspace.model.Article;
+import com.example.outerspace.view.ArticleListItemView;
+import com.example.outerspace.view.LListView;
 
 import org.json.JSONException;
 
@@ -26,30 +26,44 @@ import java.util.ArrayList;
  */
 public class ArticlesFragment extends BaseFragment {
 
-    String defaultChannel = "hottest";
+    String defaultChannel = "hot";
     boolean isChannel = true;
-    ListView listView;
+    LListView listView;
     ArticleAdapter adapter;
     ChannelBoardFragment channelBoard;
+    LoaderTask task;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        System.out.println("create");
         super.onCreate(savedInstanceState);
     }
 
     @Override
     public View onCreateLayoutView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_articles, container, false);
-        listView = (ListView) view.findViewById(R.id.list_articles);
+        listView = (LListView) view.findViewById(R.id.list_articles);
         adapter = new ArticleAdapter(getActivity());
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
+                System.out.println(view instanceof ArticleListItemView);
             }
         });
+        task = new LoaderTask();
+        RequestData requestData = new RequestData();
+        requestData.isChannel = true;
+        requestData.isLoadMore = false;
+        requestData.key = defaultChannel;
+        requestData.offset = 0;
+        task.execute(requestData);
         return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
     }
 
     class LoaderTask extends AsyncTask<RequestData, Integer, ResultObject> {
@@ -86,17 +100,18 @@ public class ArticlesFragment extends BaseFragment {
 
         @Override
         protected void onPostExecute(ResultObject o) {
+            System.out.println(o.ok);
             if (o.ok) {
                 ArrayList<Article> ars = (ArrayList<Article>) o.result;
                 if (data.isLoadMore) {
                     if (ars.size() > 0) {
-                        adapter.setList(ars);
+                        adapter.addAll(ars);
                     } else {
 
                     }
                 } else {
                     if (ars.size() > 0) {
-                        adapter.addAll(ars);
+                        adapter.setList(ars);
                     } else {
 
                     }

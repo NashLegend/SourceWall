@@ -20,6 +20,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -57,6 +59,9 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     private int mCurrentSelectedPosition = 0;
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
+    private View artisButton;
+    private View postsButton;
+    private View quessButton;
 
     public NavigationDrawerFragment() {
     }
@@ -89,8 +94,14 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        layoutView = (ListView) inflater.inflate(
+        layoutView = (LinearLayout) inflater.inflate(
                 R.layout.fragment_navigation_drawer, container, false);
+        artisButton=layoutView.findViewById(R.id.button_articles);
+        postsButton=layoutView.findViewById(R.id.button_posts);
+        quessButton=layoutView.findViewById(R.id.button_questions);
+        artisButton.setOnClickListener(this);
+        postsButton.setOnClickListener(this);
+        quessButton.setOnClickListener(this);
         return layoutView;
     }
 

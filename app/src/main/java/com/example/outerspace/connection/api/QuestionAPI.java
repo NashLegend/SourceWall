@@ -22,7 +22,7 @@ public class QuestionAPI extends APIBase {
         // TODO Auto-generated constructor stub
     }
 
-    public static ArrayList<Question> getQuestionsByTagFromJsonUrl(String tag, int offset) {
+    public static ArrayList<Question> getQuestionsByTagFromJsonUrl(String tag, int offset) throws IOException {
         // 比html还特么浪费流量…………
         ArrayList<Question> questions = new ArrayList<Question>();
         String url = "http://apis.guokr.com/ask/question.json?retrieve_type=by_tag&limit=1&tag_name="
@@ -89,12 +89,12 @@ public class QuestionAPI extends APIBase {
         return questions;
     }
 
-    public static Question getQuestionDetailByID(String id) {
+    public static Question getQuestionDetailByID(String id) throws IOException {
         String url = "http://apis.guokr.com/ask/question/" + id + ".json";
         return getQuestionDetailFromJsonUrl(url);
     }
 
-    public static Question getQuestionDetailFromJsonUrl(String url) {
+    public static Question getQuestionDetailFromJsonUrl(String url) throws IOException {
         Question question = null;
         String jString = HttpFetcher.get(url);
         try {
@@ -125,7 +125,7 @@ public class QuestionAPI extends APIBase {
         return question;
     }
 
-    public static ArrayList<QuestionAnswer> getQuestionAnswers(String id, int offset) {
+    public static ArrayList<QuestionAnswer> getQuestionAnswers(String id, int offset) throws IOException {
         ArrayList<QuestionAnswer> answers = new ArrayList<QuestionAnswer>();
         String url = "http://apis.guokr.com/ask/answer.json?retrieve_type=by_question&limit=10&question_id="
                 + id + "&offset=" + offset;
@@ -168,7 +168,7 @@ public class QuestionAPI extends APIBase {
      * @param offset
      * @return
      */
-    public static ArrayList<SimpleComment> getQuestionComments(String id, int offset) {
+    public static ArrayList<SimpleComment> getQuestionComments(String id, int offset) throws IOException {
         ArrayList<SimpleComment> list = new ArrayList<SimpleComment>();
         String url = "http://www.guokr.com/apis/ask/question_reply.json?retrieve_type=by_question&question_id="
                 + id + "&offset=" + offset;
@@ -197,7 +197,7 @@ public class QuestionAPI extends APIBase {
         return list;
     }
 
-    public static ArrayList<SimpleComment> getAnswerComments(String id, int offset) {
+    public static ArrayList<SimpleComment> getAnswerComments(String id, int offset) throws IOException {
         ArrayList<SimpleComment> list = new ArrayList<SimpleComment>();
         String url = "http://www.guokr.com/apis/ask/answer_reply.json?retrieve_type=by_answer&limit=10&answer_id="
                 + id + "&offset=" + offset;

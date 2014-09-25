@@ -51,7 +51,11 @@ public class ArticleAPI extends APIBase {
                         .replaceAll("\\D+", ""));
                 article.setAuthorAvatarUrl(jo.getJSONObject("author").getJSONObject("avatar")
                         .getString("large").replaceAll("\\?\\S*$", ""));
-                article.setDate(getJsonString(jo, "date_published"));
+                String dateString = getJsonString(jo, "date_published");
+                dateString = dateString.replace("T", " ");
+                dateString = dateString.replaceAll("\\+\\S+$", "");
+                article.setDate(dateString);
+
                 article.setSubjectName(getJsonString(getJsonObject(jo, "subject"), "name"));
                 article.setSubjectKey(getJsonString(getJsonObject(jo, "subject"), "key"));
                 article.setUrl(getJsonString(jo, "url"));
