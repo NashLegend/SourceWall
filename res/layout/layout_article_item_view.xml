@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/list_standard_item_bottom_author_span"
+    android:paddingLeft="@dimen/list_standard_item_padding_horizontal"
+    android:paddingRight="@dimen/list_standard_item_padding_horizontal"
+    android:paddingTop="@dimen/list_standard_item_top_span">
+
+    <TextView
+        android:id="@+id/text_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="This is an abstract Title"
+        android:textColor="@color/list_title_color"
+        android:textSize="@dimen/list_standard_title_font_size" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/list_standard_title_author_span"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/text_author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:text="Author"
+            android:textColor="@color/list_appendix_color" />
+
+        <TextView
+            android:id="@+id/text_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/list_standard_item_author_text_dimen"
+            android:layout_weight="0"
+            android:text="2014-09-24 08:00:09"
+            android:textColor="@color/list_appendix_color" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="10dp"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:layout_width="@dimen/list_standard_item_reply_image_dimen"
+            android:layout_height="@dimen/list_standard_item_reply_image_dimen"
+            android:layout_weight="0" />
+
+        <TextView
+            android:id="@+id/text_replies_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:text="32"
+            android:textColor="@color/list_appendix_color" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/image_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/list_standard_image_author_span"
+        android:background="#fff000" />
+
+    <TextView
+        android:id="@+id/text_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/list_standard_image_summary_span"
+        android:text="@string/action_example"
+        android:textColor="@color/article_list_summary_color" />
+</LinearLayout>
