@@ -9,6 +9,7 @@
         android:id="@id/text_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/sample_title"
         android:textSize="@dimen/Text_title_size_dimen" />
 
     <LinearLayout
@@ -20,12 +21,14 @@
             android:id="@id/text_author"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/sample_author"
             android:textSize="@dimen/text_author_view_font_size_dimen" />
 
         <TextView
             android:id="@id/text_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/sample_date"
             android:textSize="@dimen/text_author_view_font_size_dimen" />
     </LinearLayout>
 

@@ -5,9 +5,10 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.widget.AbsListView;
-import android.widget.ListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.ListView;
 
 /**
  * Created by NashLegend on 2014/9/24 0024.
@@ -20,9 +21,28 @@ public class LListView extends ListView implements OnScrollListener {
     public static final int State_Refreshing = 3;
     public static final int State_Loading_More = 4;
 
+    private boolean can_pull_to_refresh = true;
+    private boolean can_auto_load_more = false;
+
+    public boolean isCan_pull_to_refresh() {
+        return can_pull_to_refresh;
+    }
+
+    public void setCan_pull_to_refresh(boolean can_pull_to_refresh) {
+        this.can_pull_to_refresh = can_pull_to_refresh;
+    }
+
+    public boolean isCan_auto_load_more() {
+        return can_auto_load_more;
+    }
+
+    public void setCan_auto_load_more(boolean can_auto_load_more) {
+        this.can_auto_load_more = can_auto_load_more;
+    }
+
     private LListHeader headerView;
     private LListFooter footerView;
-    int touchSlop = 16;// The last thing
+    int touchSlop = 32;// The last thing
 
     private int loadingMoreThreshold = 10;//低于此自动不显示
 
@@ -74,6 +94,7 @@ public class LListView extends ListView implements OnScrollListener {
     }
 
     private void addViews(Context context) {
+        touchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
         headerView = new LListHeader(context);
         addHeaderView(headerView);
     }
@@ -81,39 +102,51 @@ public class LListView extends ListView implements OnScrollListener {
     float touchDownY;
     float lastY;
     float currentY;
+    boolean dragging = false;
+    boolean pulling = false;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         if (checkRefreshable(ev)) {
-
             switch (ev.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     touchDownY = ev.getY();
                     currentY = touchDownY;
+
                     lastY = currentY;
                     break;
                 case MotionEvent.ACTION_MOVE:
                     currentY = ev.getY();
-                    float dist = currentY - lastY;
-                    if (!headerView.handleMoveDistance(dist)) {
-                        return super.onTouchEvent(ev);
+                    if (dragging) {
+                        float dist = currentY - lastY;
+                        if (!headerView.handleMoveDistance(dist)) {
+                            pulling = false;
+                            return super.onTouchEvent(ev);
+                        } else {
+                            pulling = true;
+                        }
+                        lastY = currentY;
+                    } else {
+                        if (Math.abs(currentY - touchDownY) > touchSlop) {
+                            dragging = true;
+                        }
                     }
-                    lastY = currentY;
                     break;
                 case MotionEvent.ACTION_CANCEL:
                 case MotionEvent.ACTION_UP:
                     headerView.handleOperationDone();
+                    pulling = false;
+                    dragging = false;
                     break;
-
                 default:
                     break;
             }
-            setPressed(false);
-            setFocusable(false);
-            setFocusableInTouchMode(false);
-            // TODO 如果是return super.onTouchEvent呢
-            return true;
+            if (ev.getAction() == MotionEvent.ACTION_MOVE && pulling) {
+                return true;
+            } else {
+                return super.onTouchEvent(ev);
+            }
         }
         return super.onTouchEvent(ev);
     }
@@ -123,17 +156,21 @@ public class LListView extends ListView implements OnScrollListener {
     }
 
     private boolean checkRefreshable(MotionEvent ev) {
-        View firstView = this.getChildAt(0);
-        if (firstView != null) {
-            int p = this.getFirstVisiblePosition();
-            if (p == 0 && firstView.getTop() >= 0) {
-                // TODO getTop有么有可能大于0，大于0的时候怎么办。
-                refreshable = true;
+        if (can_pull_to_refresh) {
+            View firstView = this.getChildAt(0);
+            if (firstView != null) {
+                int p = this.getFirstVisiblePosition();
+                if (p == 0 && firstView.getTop() >= 0) {
+                    // TODO getTop有么有可能大于0，大于0的时候怎么办。
+                    refreshable = true;
+                } else {
+                    refreshable = false;
+                }
             } else {
-                refreshable = false;
+                refreshable = true;
             }
         } else {
-            refreshable = true;
+            refreshable = false;
         }
         return refreshable;
     }
@@ -150,6 +187,9 @@ public class LListView extends ListView implements OnScrollListener {
         if (outerListener != null) {
             outerListener.onScrollStateChanged(view, scrollState);
         }
+        if (scrollState == SCROLL_STATE_IDLE) {
+            //TODO if last
+        }
     }
 
     @Override
@@ -158,6 +198,12 @@ public class LListView extends ListView implements OnScrollListener {
         if (outerListener != null) {
             outerListener.onScroll(view, firstVisibleItem, visibleItemCount,
                     totalItemCount);
+        }
+
+        if (firstVisibleItem + visibleItemCount == totalItemCount) {
+            if (footerView.isVisible()) {
+                footerView.show();
+            }
         }
     }
 

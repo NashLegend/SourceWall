@@ -21,4 +21,9 @@
     <string name="refreshing">Refreshing</string>
     <string name="idling">idling</string>
 
+    <!--Sample Strings-->
+    <string name="sample_title">This is a sample title as you see</string>
+    <string name="sample_author">Nominate</string>
+    <string name="sample_date">2014-12-05 22:45:51</string>
+    <string name="sample_summary">This is a sample summary, as you see, this is used only for some space for the convenience of developing</string>
 </resources>

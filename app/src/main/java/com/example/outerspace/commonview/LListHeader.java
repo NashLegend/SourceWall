@@ -1,19 +1,25 @@
 package com.example.outerspace.commonview;
 
-import com.example.outerspace.R;
-import com.example.outerspace.commonview.LListView.OnRefreshListener;
-
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+
+import com.example.outerspace.R;
+import com.example.outerspace.commonview.LListView.OnRefreshListener;
 
 public class LListHeader extends FrameLayout {
     private int currentState = LListView.State_Normal;
     private int lastState = currentState;
-    private MarginLayoutParams layoutParams;
     private OnRefreshListener onRefreshListener;
     private TextView tvHint;
+    private ObjectAnimator heightAnimator;
+    private int Refreshing_Height = 200;
+    private int Release_Height = 300;
+    private boolean layouted = false;
 
     public LListHeader(Context context) {
         super(context);
@@ -37,9 +43,7 @@ public class LListHeader extends FrameLayout {
         if (dist < 0 && !isVisible()) {
             return false;
         }
-
         handleMotion(dist);
-
         if (currentState != LListView.State_Refreshing) {
             // 这时只有两种可能的状态State_Release_To_Refresh和State_Pull_To_Refresh
             // TODO 或许可以做更多
@@ -70,7 +74,6 @@ public class LListHeader extends FrameLayout {
     }
 
     public void handleOperationDone() {
-        layoutParams = (MarginLayoutParams) getLayoutParams();
         if (currentState == LListView.State_Release_To_Refresh) {
             // TODO start refresh
             if (onRefreshListener != null) {
@@ -90,6 +93,7 @@ public class LListHeader extends FrameLayout {
     }
 
     private void normal2Refreshing() {
+        animateToHeight(Refreshing_Height);
         tvHint.setText(R.string.refreshing);
         onRefreshListener.onRefresh();
     }
@@ -100,6 +104,7 @@ public class LListHeader extends FrameLayout {
 
     private void pull2Normal() {
         tvHint.setText(R.string.idling);
+        animateToHeight(0);
     }
 
     private void pull2Release() {
@@ -112,19 +117,24 @@ public class LListHeader extends FrameLayout {
 
     private void release2Normal() {
         tvHint.setText(R.string.idling);
+        animateToHeight(0);
     }
 
     private void release2Refreshing() {
+        animateToHeight(Refreshing_Height);
         tvHint.setText(R.string.refreshing);
         onRefreshListener.onRefresh();
     }
 
     private void refreshing2Refreshing() {
         //TODO
+        animateToHeight(Refreshing_Height);
     }
 
     private void refreshing2Normal() {
         //
+
+        animateToHeight(0);
     }
 
     /**
@@ -148,9 +158,7 @@ public class LListHeader extends FrameLayout {
 
                 break;
         }
-        getHeight();
-        layoutParams.height += getHeight() + dist;
-        setLayoutParams(layoutParams);
+        setHeight((int) (getHeight() + dist));
     }
 
     public void cancelRefresh() {
@@ -170,7 +178,7 @@ public class LListHeader extends FrameLayout {
 
     private boolean isOverReleaseThreshold() {
         //这里需要在初始化的时候就确定这个Threshold，TODO
-        return getHeight() > 300;
+        return getHeight() > Release_Height;
     }
 
     @Override
@@ -178,11 +186,14 @@ public class LListHeader extends FrameLayout {
                             int bottom) {
         // TODO Auto-generated method stub
         super.onLayout(changed, left, top, right, bottom);
-        layoutParams = (MarginLayoutParams) getLayoutParams();
+        if (!layouted) {
+            layouted = true;
+            setHeight(0);
+        }
     }
 
     public boolean isVisible() {
-        return getHeight() > 0;
+        return getVisibility() == View.VISIBLE;
     }
 
     public int getState() {
@@ -193,4 +204,33 @@ public class LListHeader extends FrameLayout {
         this.onRefreshListener = onRefreshListener;
     }
 
+    public void cancelPotentialHeightAnimator() {
+        if (heightAnimator != null) {
+            heightAnimator.cancel();
+        }
+    }
+
+    public void animateToHeight(int height) {
+        int duration = 300;
+        cancelPotentialHeightAnimator();
+        heightAnimator = ObjectAnimator.ofInt(this, "height", getHeight(), height);
+        heightAnimator.setDuration(duration);
+        heightAnimator.start();
+    }
+
+    public void setHeight(int height) {
+        if (height <= 0) {
+            setVisibility(View.GONE);
+            ViewGroup.LayoutParams params = getLayoutParams();
+            params.height = 1;
+            setLayoutParams(params);
+        } else {
+            if (getVisibility() != View.VISIBLE) {
+                setVisibility(View.VISIBLE);
+            }
+            ViewGroup.LayoutParams params = getLayoutParams();
+            params.height = height;
+            setLayoutParams(params);
+        }
+    }
 }

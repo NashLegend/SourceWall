@@ -26,7 +26,7 @@ import java.util.ArrayList;
 /**
  * Created by NashLegend on 2014/9/18 0018.
  */
-public class ArticlesFragment extends BaseFragment {
+public class ArticlesFragment extends BaseFragment implements LListView.OnRefreshListener {
 
     String defaultChannel = "hot";
     boolean isChannel = true;
@@ -69,6 +69,16 @@ public class ArticlesFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onRefresh() {
+        //TODO
+    }
+
+    @Override
+    public void onLoadMore() {
+        //TODO
     }
 
     class LoaderTask extends AsyncTask<RequestData, Integer, ResultObject> {

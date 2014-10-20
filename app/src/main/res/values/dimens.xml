@@ -10,7 +10,7 @@
 
 
     <!--通用系列-->
-    <dimen name="text_author_view_font_size_dimen">24dp</dimen>
+    <dimen name="text_author_view_font_size_dimen">12dp</dimen>
     <dimen name="avatar_right_span_dimen">12dp</dimen>
     <dimen name="content_top_span_dimen">12dp</dimen>
 
@@ -30,7 +30,7 @@
     <dimen name="list_post_item_title_image_dimen">36dp</dimen>
 
     <!--正文系列-->
-    <dimen name="Text_title_size_dimen">24dp</dimen>
+    <dimen name="Text_title_size_dimen">18dp</dimen>
     <dimen name="text_content_font_size_dimen">16dp</dimen>
 
 </resources>
