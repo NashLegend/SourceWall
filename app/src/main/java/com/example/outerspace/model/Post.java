@@ -15,7 +15,7 @@ public class Post extends AceModel {
     private String groupID = "";
     private String tag = "";
     private int likeNum = 0;
-    private int commentNum = 0;
+    private int replyNum = 0;
     private String content = "";
     private String date = "";
 
@@ -114,12 +114,12 @@ public class Post extends AceModel {
         this.likeNum = likeNum;
     }
 
-    public int getCommentNum() {
-        return commentNum;
+    public int getReplyNum() {
+        return replyNum;
     }
 
-    public void setCommentNum(int commentNum) {
-        this.commentNum = commentNum;
+    public void setReplyNum(int replyNum) {
+        this.replyNum = replyNum;
     }
 
     public String getContent() {

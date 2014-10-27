@@ -1,12 +1,9 @@
 package com.example.outerspace.view;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,19 +12,15 @@ import com.example.outerspace.model.AceModel;
 import com.example.outerspace.model.Article;
 import com.example.outerspace.util.DisplayUtil;
 import com.example.outerspace.util.ImageFetcher.ImageFetcher;
-import com.example.outerspace.util.ImageUtil.ImageLoader;
+import com.squareup.picasso.Picasso;
 
 /**
- * Created by NashLegend on 2014/9/18 0018.
+ * Created by NashLegend on 2014/9/18 0018
  */
-public class ArticleListItemView extends AceView{
+public class ArticleListItemView extends AceView {
 
     public Article getArticle() {
         return article;
-    }
-
-    public void setArticle(Article article) {
-        this.article = article;
     }
 
     private TextView titleView;
@@ -68,47 +61,12 @@ public class ArticleListItemView extends AceView{
         authorView.setText(article.getAuthor());
         dateView.setText(article.getDate());
         replyView.setText(article.getCommentNum() + "");
-        loadImage();
-    }
-
-
-    public void loadImage() {
-        ViewGroup.LayoutParams params = titleImage.getLayoutParams();
-        params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-        titleImage.setLayoutParams(params);
-        if (task != null && task.getStatus() == AsyncTask.Status.RUNNING) {
-            task.cancel(true);
-        }
-        if (!TextUtils.isEmpty(article.getImageUrl())) {
-            task = new LoaderTask();
-            task.execute();
-        }
-    }
-
-    LoaderTask task;
-
-    class LoaderTask extends AsyncTask<Void, Integer, Bitmap> {
-
-        @Override
-        protected Bitmap doInBackground(Void... params) {
-            return ImageLoader.getBitmapForUrl(article.getImageUrl());
-        }
-
-        @Override
-        protected void onCancelled() {
-            super.onCancelled();
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            if (bitmap != null) {
-                ViewGroup.LayoutParams params = titleImage.getLayoutParams();
-                params.height = titleImage.getWidth() * bitmap.getHeight() / bitmap.getWidth();
-                titleImage.setLayoutParams(params);
-                titleImage.setImageBitmap(bitmap);
-            } else {
-
-            }
+        if (TextUtils.isEmpty(article.getImageUrl())) {
+            titleImage.setImageResource(R.drawable.ic_launcher);
+        } else {
+            Picasso.with(getContext()).load(article.getImageUrl())
+                    .resize(DisplayUtil.getScreenWidth(getContext()), -1)
+                    .into(titleImage);
         }
     }
 }

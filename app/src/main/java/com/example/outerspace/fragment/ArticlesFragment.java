@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Created by NashLegend on 2014/9/18 0018.
+ * Created by NashLegend on 2014/9/18 0018
  */
 public class ArticlesFragment extends BaseFragment implements LListView.OnRefreshListener {
 
@@ -37,7 +37,6 @@ public class ArticlesFragment extends BaseFragment implements LListView.OnRefres
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        System.out.println("create");
         super.onCreate(savedInstanceState);
     }
 
@@ -115,7 +114,6 @@ public class ArticlesFragment extends BaseFragment implements LListView.OnRefres
 
         @Override
         protected void onPostExecute(ResultObject o) {
-            System.out.println(o.ok);
             if (o.ok) {
                 ArrayList<Article> ars = (ArrayList<Article>) o.result;
                 if (data.isLoadMore) {

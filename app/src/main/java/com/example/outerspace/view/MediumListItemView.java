@@ -2,6 +2,7 @@ package com.example.outerspace.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.text.Html;
@@ -57,7 +58,6 @@ public class MediumListItemView extends AceView {
 
     @Override
     public void setData(AceModel model) {
-        System.out.println("setData");
         if (model instanceof SimpleComment) {
             comment = (SimpleComment) model;
             authorView.setText(comment.getAuthor());
@@ -88,10 +88,10 @@ public class MediumListItemView extends AceView {
 
     LoaderTask task;
 
-    class LoaderTask extends AsyncTask<Void, Integer, Bitmap> {
+    class LoaderTask extends AsyncTask<Void, Integer, BitmapDrawable> {
 
         @Override
-        protected Bitmap doInBackground(Void... params) {
+        protected BitmapDrawable doInBackground(Void... params) {
             return ImageLoader.getBitmapForUrl(comment.getAuthorAvatarUrl());
         }
 
@@ -101,9 +101,9 @@ public class MediumListItemView extends AceView {
         }
 
         @Override
-        protected void onPostExecute(Bitmap bitmap) {
+        protected void onPostExecute(BitmapDrawable bitmap) {
             if (bitmap != null) {
-                avatarImage.setImageBitmap(bitmap);
+                avatarImage.setImageDrawable(bitmap);
             } else {
 
             }

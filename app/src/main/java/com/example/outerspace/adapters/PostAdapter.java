@@ -9,7 +9,7 @@ import com.example.outerspace.view.AceView;
 import com.example.outerspace.view.PostListItemView;
 
 /**
- * Created by NashLegend on 2014/9/15 0015.
+ * Created by NashLegend on 2014/9/15 0015
  */
 public class PostAdapter extends AceAdapter<Post> {
 
@@ -38,6 +38,6 @@ public class PostAdapter extends AceAdapter<Post> {
             convertView = new PostListItemView(getContext());
         }
         ((AceView) convertView).setData(list.get(position));
-        return null;
+        return convertView;
     }
 }

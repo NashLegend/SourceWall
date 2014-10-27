@@ -105,6 +105,11 @@ public class LListView extends ListView implements OnScrollListener {
     boolean dragging = false;
     boolean pulling = false;
 
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        return super.onInterceptTouchEvent(ev);
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent ev) {

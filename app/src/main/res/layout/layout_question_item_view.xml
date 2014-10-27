@@ -4,10 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/list_standard_item_bottom_author_span"
+    android:paddingBottom="@dimen/list_standard_item_padding_vertical"
     android:paddingLeft="@dimen/list_standard_item_padding_horizontal"
     android:paddingRight="@dimen/list_standard_item_padding_horizontal"
-    android:paddingTop="@dimen/list_standard_item_top_span">
+    android:paddingTop="@dimen/list_standard_item_padding_vertical">
 
     <TextView
         android:id="@+id/text_title"

@@ -2,6 +2,7 @@ package com.example.outerspace.util.ImageUtil;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 
 import com.example.outerspace.AppApplication;
 import com.example.outerspace.connection.HttpFetcher;
@@ -17,10 +18,10 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ImageCache {
 
-    private final static ConcurrentHashMap<String, SoftReference<Bitmap>> cachedBitmaps = new ConcurrentHashMap<String, SoftReference<Bitmap>>();
+    private final static ConcurrentHashMap<String, SoftReference<BitmapDrawable>> cachedBitmaps = new ConcurrentHashMap<String, SoftReference<BitmapDrawable>>();
 
-    public static Bitmap get(String key) {
-        Bitmap bitmap = null;
+    public static BitmapDrawable get(String key) {
+        BitmapDrawable bitmap = null;
         if (cachedBitmaps.containsKey(key)) {
             bitmap = cachedBitmaps.get(key).get();
         }
@@ -30,8 +31,8 @@ public class ImageCache {
         return bitmap;
     }
 
-    public static void add(String key, Bitmap bitmap) {
-        cachedBitmaps.put(key, new SoftReference<Bitmap>(bitmap));
+    public static void add(String key, BitmapDrawable bitmap) {
+        cachedBitmaps.put(key, new SoftReference<BitmapDrawable>(bitmap));
     }
 
     public static String getBitmapCacheFileDir(String url) {
@@ -43,17 +44,17 @@ public class ImageCache {
         return "";
     }
 
-    public static Bitmap downloadImageToFile(String url) {
-        return downloadImageToFile(url,true);
+    public static BitmapDrawable downloadImageToFile(String url) {
+        return downloadImageToFile(url, true);
     }
 
-    public static Bitmap downloadImageToFile(String url,boolean memryCache) {
-        Bitmap bitmap = null;
+    public static BitmapDrawable downloadImageToFile(String url, boolean memryCache) {
+        BitmapDrawable bitmap = null;
         File file = new File(getBitmapCacheFileDir(url));
         if (HttpFetcher.downloadFile(url, file.getAbsolutePath())) {
             if (file.exists() && file.isFile()) {
-                bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-                if (memryCache){
+                bitmap = new BitmapDrawable(AppApplication.getApplication().getResources(), BitmapFactory.decodeFile(file.getAbsolutePath()));
+                if (memryCache) {
                     ImageCache.add(url, bitmap);
                 }
             }
@@ -61,11 +62,12 @@ public class ImageCache {
         return bitmap;
     }
 
-    protected static Bitmap readImageFromFile(String url) {
-        Bitmap bitmap = null;
+    protected static BitmapDrawable readImageFromFile(String url) {
+        BitmapDrawable bitmap = null;
         File file = new File(getBitmapCacheFileDir(url));
         if (file.exists() && file.isFile()) {
-            bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+            Bitmap bmp = BitmapFactory.decodeFile(file.getAbsolutePath());
+            bitmap = new BitmapDrawable(AppApplication.getApplication().getResources(), bmp);
             ImageCache.add(url, bitmap);
         }
         return bitmap;

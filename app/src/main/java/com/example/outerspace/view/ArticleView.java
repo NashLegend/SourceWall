@@ -11,7 +11,7 @@ import com.example.outerspace.model.AceModel;
 import com.example.outerspace.model.Article;
 
 /**
- * Created by NashLegend on 2014/9/18 0018.
+ * Created by NashLegend on 2014/9/18 0018
  */
 public class ArticleView extends AceView {
 
@@ -72,8 +72,8 @@ public class ArticleView extends AceView {
                     "    <body>\n" +
                     "<div class=\"container article-page\">\n" +
                     "    <div class=\"main\">\n" +
-                    "        <div class=\"content\">" + article.getContent() + "\n" +
-                    "        </div>\n" +
+                    "        <div class=\"content\"> <div itemprop=\"http://rdfs.org/sioc/ns#content\" class=\"content-txt\" id=\"articleContent\"> " + article.getContent() + "\n" +
+                    "        </div>\n" + "</div>" +
                     "    </div>\n" +
                     " </div>\n" +
                     "</body></html>";

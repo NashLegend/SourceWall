@@ -1,28 +1,25 @@
 package com.example.outerspace.fragment;
 
 
-import android.app.ActionBar;
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.outerspace.R;
@@ -96,9 +93,9 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
                              Bundle savedInstanceState) {
         layoutView = (LinearLayout) inflater.inflate(
                 R.layout.fragment_navigation_drawer, container, false);
-        artisButton=layoutView.findViewById(R.id.button_articles);
-        postsButton=layoutView.findViewById(R.id.button_posts);
-        quessButton=layoutView.findViewById(R.id.button_questions);
+        artisButton = layoutView.findViewById(R.id.button_articles);
+        postsButton = layoutView.findViewById(R.id.button_posts);
+        quessButton = layoutView.findViewById(R.id.button_questions);
         artisButton.setOnClickListener(this);
         postsButton.setOnClickListener(this);
         quessButton.setOnClickListener(this);
@@ -238,12 +235,11 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     private void showGlobalContextActionBar() {
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setTitle(R.string.app_name);
     }
 
     private ActionBar getActionBar() {
-        return getActivity().getActionBar();
+        return ((ActionBarActivity) getActivity()).getSupportActionBar();
     }
 
     @Override
@@ -253,7 +249,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     }
 
     private void selectItem(int id) {
-        Intent intent=new Intent();
+        Intent intent = new Intent();
         mCurrentSelectedPosition = id;
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(mFragmentContainerView);

@@ -21,12 +21,12 @@
     <dimen name="list_standard_image_summary_span">14dp</dimen>
     <dimen name="list_standard_image_author_span">10dp</dimen>
     <dimen name="list_standard_comment_avatar_dimen">30dp</dimen>
-    <dimen name="list_standard_item_top_span">14dp</dimen>
-    <dimen name="list_standard_item_bottom_author_span">14dp</dimen>
-    <dimen name="list_standard_item_padding_horizontal">4dp</dimen>
+    <dimen name="list_standard_item_padding_horizontal">6dp</dimen>
+    <dimen name="list_standard_item_padding_vertical">6dp</dimen>
     <dimen name="list_standard_item_like_image_dimen">12dp</dimen>
     <dimen name="list_standard_item_reply_image_dimen">12dp</dimen>
     <dimen name="list_standard_item_author_text_dimen">10dp</dimen>
+    <dimen name="list_standard_item_text_gap">10dp</dimen>
     <dimen name="list_post_item_title_image_dimen">36dp</dimen>
 
     <!--正文系列-->

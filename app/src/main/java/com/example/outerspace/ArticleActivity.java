@@ -30,7 +30,7 @@ public class ArticleActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article);
-        article= (Article) getIntent().getSerializableExtra(Consts.Extra_Article);
+        article = (Article) getIntent().getSerializableExtra(Consts.Extra_Article);
         listView = (LListView) findViewById(R.id.list_detail);
         adapter = new ArticleDetailAdapter(this);
         listView.setAdapter(adapter);

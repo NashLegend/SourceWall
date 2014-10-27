@@ -79,7 +79,7 @@ public class ArticleAPI extends APIBase {
      */
     public static Article getArticleDetailByUrl(String url) throws IOException {
         Article article = new Article();
-        String aid = url.replaceAll("\\D+", "").replaceAll("\\?\\S*$", "");
+        String aid = url.replaceAll("\\?\\S*$", "").replaceAll("\\D+", "");
         Document doc = Jsoup.parse(HttpFetcher.get(url));
         String content = doc.getElementsByClass("document").outerHtml();
         int likeNum = Integer.valueOf(doc.getElementsByClass("recom-num").get(0).text()

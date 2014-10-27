@@ -9,7 +9,7 @@ import com.example.outerspace.model.Article;
 import com.example.outerspace.view.ArticleListItemView;
 
 /**
- * Created by NashLegend on 2014/9/18 0018.
+ * Created by NashLegend on 2014/9/18 0018
  */
 public class ArticleAdapter extends AceAdapter<Article> {
 

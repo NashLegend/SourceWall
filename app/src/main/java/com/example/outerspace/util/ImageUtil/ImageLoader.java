@@ -12,8 +12,8 @@ import java.lang.ref.WeakReference;
  */
 public class ImageLoader {
 
-    public static Bitmap getBitmapForUrl(String url) {
-        Bitmap bitmap;
+    public static BitmapDrawable getBitmapForUrl(String url) {
+        BitmapDrawable bitmap;
         if ((bitmap = ImageCache.get(url)) == null) {
             bitmap = ImageCache.downloadImageToFile(url);
         }

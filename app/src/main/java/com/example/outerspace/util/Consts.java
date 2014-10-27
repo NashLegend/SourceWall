@@ -10,4 +10,5 @@ public class Consts {
     public static final String Action_Open_Questions_Fragment = "outerspace.action.open.questions.fragment";
 
     public static final String Extra_Article = "outerspace.extra.article.id";
+    public static final String Extra_Post = "outerspace.extra.post.id";
 }
