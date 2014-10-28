@@ -69,9 +69,9 @@ public class PostView extends AceView {
                     "  <link rel=\"stylesheet\" href=\"http://bdimg.share.baidu.com/static/api/css/share_style0_16.css?v=f4b44e79.css\" />\n" +
                     " </head> \n" +
                     " <body> \n" +
-                    "  <div class=\"msite-container \"> \n" +
+//                    "  <div class=\"msite-container \"> \n" +
                     "   <article id=\"contentMain\" class=\"content-main post\"> " + post.getContent() + "   </article> \n" +
-                    "  </div> \n" +
+//                    "  </div> \n" +
                     " </body>\n" +
                     "</html>";
             contentView.getSettings().setDefaultTextEncodingName("UTF-8");

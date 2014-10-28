@@ -1,16 +1,16 @@
 package com.example.outerspace;
 
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.outerspace.adapters.ArticleDetailAdapter;
+import com.example.outerspace.adapters.QuestionDetailAdapter;
 import com.example.outerspace.commonview.LListView;
-import com.example.outerspace.connection.api.ArticleAPI;
+import com.example.outerspace.connection.api.QuestionAPI;
 import com.example.outerspace.model.AceModel;
-import com.example.outerspace.model.Article;
-import com.example.outerspace.model.SimpleComment;
+import com.example.outerspace.model.Question;
 import com.example.outerspace.util.Consts;
 
 import org.json.JSONException;
@@ -19,20 +19,21 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class ArticleActivity extends BaseActivity {
+public class QuestionActivity extends Activity {
 
     LListView listView;
-    ArticleDetailAdapter adapter;
-    Article article;
+    QuestionDetailAdapter adapter;
+    Question mQuestion;
     LoaderTask loaderTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_post);
         setContentView(R.layout.activity_article);
-        article = (Article) getIntent().getSerializableExtra(Consts.Extra_Article);
+        mQuestion = (Question) getIntent().getSerializableExtra(Consts.Extra_Question);
         listView = (LListView) findViewById(R.id.list_detail);
-        adapter = new ArticleDetailAdapter(this);
+        adapter = new QuestionDetailAdapter(this);
         listView.setAdapter(adapter);
         loaderTask = new LoaderTask();
         RequestData data = new RequestData();
@@ -44,12 +45,16 @@ public class ArticleActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.article, menu);
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.question, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
@@ -70,15 +75,12 @@ public class ArticleActivity extends BaseActivity {
         protected Boolean doInBackground(RequestData... params) {
             data = params[0];
             try {
-                if (data.isLoadMore) {
-                    models.addAll(ArticleAPI.getArticleComments(article.getId(), data.offset));
-                } else {
-                    Article detailArticle = ArticleAPI.getArticleDetailByID(article.getId());
-                    ArrayList<SimpleComment> simpleComments = ArticleAPI.getArticleComments(article.getId(), 0);
-                    article.setContent(detailArticle.getContent());
-                    models.add(article);
-                    models.addAll(simpleComments);
+                if (!data.isLoadMore) {
+                    Question question = QuestionAPI.getQuestionDetailByID(mQuestion.getId());
+                    mQuestion = question;
+                    models.add(question);
                 }
+                models.addAll(QuestionAPI.getQuestionAnswers(mQuestion.getId(), data.offset));
                 return true;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -96,7 +98,9 @@ public class ArticleActivity extends BaseActivity {
                 if (data.isLoadMore) {
                     adapter.addAll(models);
                 } else {
-                    adapter.setList(models);
+                    if (models.size() > 0) {
+                        adapter.setList(models);
+                    }
                 }
                 adapter.notifyDataSetChanged();
             }

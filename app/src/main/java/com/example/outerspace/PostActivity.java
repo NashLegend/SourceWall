@@ -78,7 +78,6 @@ public class PostActivity extends Activity {
             data = params[0];
             try {
                 if (data.isLoadMore) {
-                    models.add(new SimpleComment());
                     models.addAll(PostAPI.getPostCommentsFromJsonUrl(mPost.getId(), data.offset));
                 } else {
                     Post post = PostAPI.getPostDetailByIDFromMobileUrl(mPost.getId());

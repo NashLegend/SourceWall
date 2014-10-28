@@ -1,7 +1,7 @@
 package com.example.outerspace.model;
 
 /**
- * Created by NashLegend on 2014/9/16 0016.
+ * Created by NashLegend on 2014/9/16 0016
  */
 public class Question extends AceModel {
 
@@ -16,6 +16,7 @@ public class Question extends AceModel {
     private String date = "";
     private String summary = "";
     private boolean answerable = true;
+    private boolean featured = false;//热门、精彩
     private int commentNum = 0;
     private int recommendNum = 0;
     private int followNum = 0;
@@ -141,4 +142,11 @@ public class Question extends AceModel {
         this.summary = summary;
     }
 
+    public boolean isFeatured() {
+        return featured;
+    }
+
+    public void setFeatured(boolean featured) {
+        this.featured = featured;
+    }
 }

@@ -62,7 +62,7 @@ public class PostListItemView extends AceView {
         replyView.setText(mPost.getReplyNum() + "");
         likesView.setText(mPost.getLikeNum() + "");
         if (TextUtils.isEmpty(mPost.getTitleImageUrl())) {
-            titleImage.setImageResource(R.drawable.ic_launcher);
+            titleImage.setImageResource(R.drawable.post);
         } else {
             Picasso.with(getContext()).load(mPost.getTitleImageUrl())
                     .resizeDimen(R.dimen.list_post_item_title_image_dimen, R.dimen.list_post_item_title_image_dimen)

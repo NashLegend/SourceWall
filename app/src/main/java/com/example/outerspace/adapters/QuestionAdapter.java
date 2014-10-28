@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 
 import com.example.outerspace.model.Question;
 import com.example.outerspace.view.AceView;
-import com.example.outerspace.view.QuestionListItemView;
+import com.example.outerspace.view.QuestionFeaturedListItemView;
 
 /**
  * Created by NashLegend on 2014/9/15 0015.
@@ -34,9 +34,9 @@ public class QuestionAdapter extends AceAdapter<Question> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = new QuestionListItemView(getContext());
+            convertView = new QuestionFeaturedListItemView(getContext());
         }
         ((AceView) convertView).setData(list.get(position));
-        return null;
+        return convertView;
     }
 }

@@ -37,6 +37,10 @@
             android:name=".PostActivity"
             android:label="@string/title_activity_post" >
         </activity>
+        <activity
+            android:name=".QuestionActivity"
+            android:label="@string/title_activity_question" >
+        </activity>
     </application>
 
 </manifest>

@@ -6,11 +6,11 @@ import android.view.ViewGroup;
 
 import com.example.outerspace.model.AceModel;
 import com.example.outerspace.view.AceView;
-import com.example.outerspace.view.MediumListItemView;
+import com.example.outerspace.view.AnswerListItemView;
 import com.example.outerspace.view.QuestionView;
 
 /**
- * Created by NashLegend on 2014/9/18 0018.
+ * Created by NashLegend on 2014/9/18 0018
  */
 public class QuestionDetailAdapter extends AceAdapter<AceModel> {
 
@@ -53,7 +53,7 @@ public class QuestionDetailAdapter extends AceAdapter<AceModel> {
             if (tp == Type_Question) {
                 convertView = new QuestionView(getContext());
             } else {
-                convertView = new MediumListItemView(getContext());
+                convertView = new AnswerListItemView(getContext());
             }
         }
         ((AceView) convertView).setData(list.get(position));

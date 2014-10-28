@@ -1,5 +1,7 @@
 package com.example.outerspace.connection.api;
 
+import android.text.TextUtils;
+
 import com.example.outerspace.connection.HttpFetcher;
 import com.example.outerspace.model.Question;
 import com.example.outerspace.model.QuestionAnswer;
@@ -80,47 +82,48 @@ public class QuestionAPI extends APIBase {
                 String title = link.getElementsByTag("h4").text();
                 String id = link.attr("href").replaceAll("\\D+", "");
                 String summary = link.getElementsByTag("p").text();
+                String l = link.getElementsByClass("ask-descrip").text().replaceAll("\\D+", "");
+                if (!TextUtils.isEmpty(l)) {
+                    item.setRecommendNum(Integer.valueOf(l));
+                }
                 item.setTitle(title);
                 item.setId(id);
                 item.setSummary(summary);
+                item.setFeatured(true);
                 questions.add(item);
             }
         }
         return questions;
     }
 
-    public static Question getQuestionDetailByID(String id) throws IOException {
+    public static Question getQuestionDetailByID(String id) throws IOException, JSONException {
         String url = "http://apis.guokr.com/ask/question/" + id + ".json";
         return getQuestionDetailFromJsonUrl(url);
     }
 
-    public static Question getQuestionDetailFromJsonUrl(String url) throws IOException {
+    public static Question getQuestionDetailFromJsonUrl(String url) throws IOException, JSONException {
         Question question = null;
         String jString = HttpFetcher.get(url);
-        try {
-            JSONObject jss = new JSONObject(jString);
-            boolean ok = jss.getBoolean("ok");
-            if (ok) {
-                JSONObject result = getJsonObject(jss, "result");
-                question = new Question();
-                question.setAnswerable(getJsonBoolean(result, "is_answerable"));
-                question.setAnswerNum(getJsonInt(result, "answers_count"));
-                question.setCommentNum(getJsonInt(result, "replies_count"));
-                question.setAuthor(result.getJSONObject("author").getString("nickname"));
-                question.setAuthorID(result.getJSONObject("author").getString("url")
-                        .replaceAll("\\D+", ""));
-                question.setAuthorAvatarUrl(result.getJSONObject("author").getJSONObject("avatar")
-                        .getString("large").replaceAll("\\?\\S*$", ""));
-                question.setContent(getJsonString(result, "annotation"));
-                question.setDate(getJsonString(result, "date_created"));
-                question.setFollowNum(getJsonInt(result, "followers_count"));
-                question.setId(getJsonString(result, "id"));
-                question.setRecommendNum(getJsonInt(result, "recommends_count"));
-                question.setTitle(getJsonString(result, "question"));
-                question.setUrl(getJsonString(result, "url"));
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        JSONObject jss = new JSONObject(jString);
+        boolean ok = jss.getBoolean("ok");
+        if (ok) {
+            JSONObject result = getJsonObject(jss, "result");
+            question = new Question();
+            question.setAnswerable(getJsonBoolean(result, "is_answerable"));
+            question.setAnswerNum(getJsonInt(result, "answers_count"));
+            question.setCommentNum(getJsonInt(result, "replies_count"));
+            question.setAuthor(result.getJSONObject("author").getString("nickname"));
+            question.setAuthorID(result.getJSONObject("author").getString("url")
+                    .replaceAll("\\D+", ""));
+            question.setAuthorAvatarUrl(result.getJSONObject("author").getJSONObject("avatar")
+                    .getString("large").replaceAll("\\?\\S*$", ""));
+            question.setContent(getJsonString(result, "annotation"));
+            question.setDate(getJsonString(result, "date_created"));
+            question.setFollowNum(getJsonInt(result, "followers_count"));
+            question.setId(getJsonString(result, "id"));
+            question.setRecommendNum(getJsonInt(result, "recommends_count"));
+            question.setTitle(getJsonString(result, "question"));
+            question.setUrl(getJsonString(result, "url"));
         }
         return question;
     }

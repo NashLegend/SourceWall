@@ -29,6 +29,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <TextView
@@ -43,7 +44,7 @@
                     android:id="@+id/text_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/list_standard_item_author_text_dimen"
+                    android:layout_marginLeft="@dimen/list_standard_item_text_text_gap"
                     android:layout_weight="0"
                     android:text="2014-09-24 08:00:09"
                     android:textColor="@color/list_appendix_color" />
@@ -52,7 +53,7 @@
                     android:id="@+id/text_group"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/list_standard_item_text_gap"
+                    android:layout_marginLeft="@dimen/list_standard_item_text_text_gap"
                     android:singleLine="true"
                     android:text="@string/sample_group"
                     android:textColor="@color/list_appendix_color"
@@ -67,11 +68,12 @@
                     android:layout_width="@dimen/list_standard_item_reply_image_dimen"
                     android:layout_height="@dimen/list_standard_item_reply_image_dimen"
                     android:layout_weight="0"
-                    android:src="@drawable/ic_launcher" />
+                    android:src="@drawable/comment" />
 
                 <TextView
                     android:id="@+id/text_replies_num"
                     android:layout_width="wrap_content"
+                    android:layout_marginLeft="@dimen/list_standard_item_text_icon_gap"
                     android:layout_height="wrap_content"
                     android:layout_weight="0"
                     android:text="@string/sample_like_num"
@@ -80,14 +82,15 @@
                 <ImageView
                     android:layout_width="@dimen/list_standard_item_like_image_dimen"
                     android:layout_height="@dimen/list_standard_item_like_image_dimen"
-                    android:layout_marginLeft="@dimen/list_standard_item_text_gap"
+                    android:layout_marginLeft="@dimen/list_standard_item_text_text_gap"
                     android:layout_weight="0"
-                    android:src="@drawable/ic_launcher" />
+                    android:src="@drawable/like" />
 
                 <TextView
                     android:id="@+id/text_like_num"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/list_standard_item_text_icon_gap"
                     android:singleLine="true"
                     android:text="@string/sample_like_num"
                     android:textColor="@color/list_appendix_color"
@@ -100,8 +103,8 @@
             android:layout_width="@dimen/list_post_item_title_image_dimen"
             android:layout_height="@dimen/list_post_item_title_image_dimen"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/list_standard_item_text_gap"
-            android:src="@drawable/ic_launcher" />
+            android:layout_marginLeft="@dimen/list_standard_item_text_text_gap"
+            android:src="@drawable/post" />
     </LinearLayout>
 
 </android.support.v7.widget.CardView>

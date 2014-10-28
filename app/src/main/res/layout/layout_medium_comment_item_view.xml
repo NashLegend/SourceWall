@@ -25,7 +25,7 @@
                 android:layout_height="@dimen/list_standard_comment_avatar_dimen"
                 android:layout_marginRight="@dimen/avatar_right_span_dimen"
                 android:layout_weight="0"
-                android:src="@drawable/ic_launcher" />
+                android:src="@drawable/avatar" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -53,10 +53,9 @@
                         android:id="@+id/text_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/list_standard_item_author_text_dimen"
+                        android:layout_marginLeft="@dimen/list_standard_item_text_text_gap"
                         android:text="@string/sample_date" />
                 </LinearLayout>
-
             </LinearLayout>
 
             <Space
@@ -67,12 +66,14 @@
             <ImageView
                 android:layout_width="@dimen/list_standard_item_like_image_dimen"
                 android:layout_height="@dimen/list_standard_item_like_image_dimen"
-                android:layout_weight="0" />
+                android:layout_weight="0"
+                android:src="@drawable/like" />
 
             <TextView
                 android:id="@+id/text_like_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/list_standard_item_text_icon_gap"
                 android:layout_weight="0"
                 android:text="@string/sample_like_num" />
 

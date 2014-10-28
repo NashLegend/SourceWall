@@ -53,10 +53,14 @@ public class ArticleView extends AceView {
             dateView.setText(article.getDate());
             String html = "<html class=\"no-js screen-scroll\"><head>\n" +
                     "<link rel=\"stylesheet\" href=\"http://static.guokr.com/apps/minisite/styles/3b737dd5.main.css\">\n" +
-                    "<link rel=\"stylesheet\" href=\"http://static.guokr.com/apps/minisite/styles/editor/014cbc1e.skin.css\">\n" +
                     "<link rel=\"stylesheet\" href=\"http://static.guokr.com/apps/minisite/styles/e8ff5a9c.gbbcode.css\">\n" +
                     "<link rel=\"stylesheet\" href=\"http://static.guokr.com/apps/minisite/styles/edfe43e5.article.css\">\n" +
-                    "<style>[touch-action=\"none\"]{ -ms-touch-action: none; touch-action: none; }[touch-action=\"pan-x\"]{ -ms-touch-action: pan-x; touch-action: pan-x; }[touch-action=\"pan-y\"]{ -ms-touch-action: pan-y; touch-action: pan-y; }[touch-action=\"scroll\"],[touch-action=\"pan-x pan-y\"],[touch-action=\"pan-y pan-x\"]{ -ms-touch-action: pan-x pan-y; touch-action: pan-x pan-y; }</style><style id=\"style-1-cropbar-clipper\">/* Copyright 2014 Evernote Corporation. All rights reserved. */\n" +
+                    "<style>[touch-action=\"none\"]{ -ms-touch-action: none; touch-action: none; }[touch-action=\"pan-x\"]" +
+                    "{ -ms-touch-action: pan-x; touch-action: pan-x; }" +
+                    "[touch-action=\"pan-y\"]{ -ms-touch-action: pan-y; touch-action: pan-y; }" +
+                    "[touch-action=\"scroll\"],[touch-action=\"pan-x pan-y\"]," +
+                    "[touch-action=\"pan-y pan-x\"]{ -ms-touch-action: pan-x pan-y; touch-action: pan-x pan-y; }" +
+                    "</style><style id=\"style-1-cropbar-clipper\">/* Copyright 2014 Evernote Corporation. All rights reserved. */\n" +
                     ".en-markup-crop-options {\n" +
                     "    top: 18px !important;\n" +
                     "    left: 50% !important;\n" +
@@ -70,9 +74,10 @@ public class ArticleView extends AceView {
                     "}\n" +
                     "</style></head>\n" +
                     "    <body>\n" +
-                    "<div class=\"container article-page\">\n" +
+                    "<div class=\"article-page\">\n" +
                     "    <div class=\"main\">\n" +
-                    "        <div class=\"content\"> <div itemprop=\"http://rdfs.org/sioc/ns#content\" class=\"content-txt\" id=\"articleContent\"> " + article.getContent() + "\n" +
+                    "        <div class=\"content\"> <div itemprop=\"http://rdfs.org/sioc/ns#content\"" +
+                    " class=\"content-txt\" id=\"articleContent\"> " + article.getContent() + "\n" +
                     "        </div>\n" + "</div>" +
                     "    </div>\n" +
                     " </div>\n" +

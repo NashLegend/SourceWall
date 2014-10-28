@@ -26,7 +26,8 @@
     <dimen name="list_standard_item_like_image_dimen">12dp</dimen>
     <dimen name="list_standard_item_reply_image_dimen">12dp</dimen>
     <dimen name="list_standard_item_author_text_dimen">10dp</dimen>
-    <dimen name="list_standard_item_text_gap">10dp</dimen>
+    <dimen name="list_standard_item_text_text_gap">10dp</dimen>
+    <dimen name="list_standard_item_text_icon_gap">5dp</dimen>
     <dimen name="list_post_item_title_image_dimen">36dp</dimen>
 
     <!--正文系列-->

@@ -27,8 +27,10 @@
     <string name="sample_group">万有引力</string>
     <string name="sample_title">This is a sample title as you see</string>
     <string name="sample_author">Nominate</string>
+    <string name="sample_author_title">Doctor Who</string>
     <string name="sample_date">2014-12-05 22:45:51</string>
-    <string name="sample_summary">This is a sample summary, as you see, this is used only for some space for the convenience of developing</string>
+    <string name="sample_summary">This is a sample summary, as you see, this is used only for some space for the convenience of developing, the rest words are used to fill more space, they are meaningless so do not read them</string>
     <string name="title_activity_post">PostActivity</string>
+    <string name="title_activity_question">QuestionActivity</string>
 
 </resources>
