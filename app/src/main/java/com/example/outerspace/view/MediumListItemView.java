@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.outerspace.R;
-import com.example.outerspace.model.AceModel;
 import com.example.outerspace.model.SimpleComment;
 import com.example.outerspace.util.ImageUtil.ImageCache;
 import com.example.outerspace.util.ImageUtil.ImageLoader;
@@ -26,7 +25,7 @@ import java.net.URL;
  * Created by NashLegend on 2014/9/18 0018.
  * Shared by PostComment and ArticleComment
  */
-public class MediumListItemView extends AceView {
+public class MediumListItemView extends AceView<SimpleComment> {
 
     private TextView contentView;
     private TextView authorView;
@@ -57,23 +56,21 @@ public class MediumListItemView extends AceView {
     }
 
     @Override
-    public void setData(AceModel model) {
-        if (model instanceof SimpleComment) {
-            comment = (SimpleComment) model;
-            authorView.setText(comment.getAuthor());
-            dateView.setText(comment.getDate());
-            likesView.setText(comment.getLikeNum() + "");
-            floorView.setText(comment.getFloor());
-            contentView.setText(Html.fromHtml(comment.getContent()));
-            if (htmlTask != null && htmlTask.getStatus() == AsyncTask.Status.RUNNING) {
-                htmlTask.cancel(true);
-            }
-            if (comment.getContent().contains("<img")) {
-                htmlTask = new HtmlLoaderTask();
-                htmlTask.execute(comment.getContent());
-            }
-            loadImage();
+    public void setData(SimpleComment model) {
+        comment = (SimpleComment) model;
+        authorView.setText(comment.getAuthor());
+        dateView.setText(comment.getDate());
+        likesView.setText(comment.getLikeNum() + "");
+        floorView.setText(comment.getFloor());
+        contentView.setText(Html.fromHtml(comment.getContent()));
+        if (htmlTask != null && htmlTask.getStatus() == AsyncTask.Status.RUNNING) {
+            htmlTask.cancel(true);
         }
+        if (comment.getContent().contains("<img")) {
+            htmlTask = new HtmlLoaderTask();
+            htmlTask.execute(comment.getContent());
+        }
+        loadImage();
     }
 
     public void loadImage() {

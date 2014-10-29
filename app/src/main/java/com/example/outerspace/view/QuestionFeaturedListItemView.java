@@ -6,13 +6,12 @@ import android.view.LayoutInflater;
 import android.widget.TextView;
 
 import com.example.outerspace.R;
-import com.example.outerspace.model.AceModel;
 import com.example.outerspace.model.Question;
 
 /**
  * Created by NashLegend on 2014/9/15 0015
  */
-public class QuestionFeaturedListItemView extends AceView {
+public class QuestionFeaturedListItemView extends AceView<Question> {
     private boolean featured = false;
     private Question question;
     private TextView titleView;
@@ -37,13 +36,11 @@ public class QuestionFeaturedListItemView extends AceView {
     }
 
     @Override
-    public void setData(AceModel model) {
-        if (model instanceof Question) {
-            question = (Question) model;
-            titleView.setText(question.getTitle());
-            summaryView.setText(question.getSummary());
-            likeView.setText(question.getRecommendNum() + "");
-        }
+    public void setData(Question model) {
+        question = (Question) model;
+        titleView.setText(question.getTitle());
+        summaryView.setText(question.getSummary());
+        likeView.setText(question.getRecommendNum() + "");
     }
 
     public Question getQuestion() {

@@ -1,8 +1,6 @@
 package com.example.outerspace.view;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.text.Html;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
@@ -11,7 +9,7 @@ import com.example.outerspace.model.AceModel;
 /**
  * Created by NashLegend on 2014/9/19 0019.
  */
-public abstract class AceView extends FrameLayout {
+public abstract class AceView<T extends AceModel> extends FrameLayout {
 
     public AceView(Context context) {
         super(context);
@@ -25,5 +23,5 @@ public abstract class AceView extends FrameLayout {
         super(context, attrs, defStyle);
     }
 
-    public abstract void setData(AceModel model);
+    public abstract void setData(T t);
 }

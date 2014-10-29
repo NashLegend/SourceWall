@@ -38,6 +38,7 @@ public class QuestionDetailAdapter extends AceAdapter<AceModel> {
 
     @Override
     public int getItemViewType(int position) {
+        //return list.get(position) instanceof Question ? Type_Question : Type_Answer;
         return position == 0 ? Type_Question : Type_Answer;
     }
 

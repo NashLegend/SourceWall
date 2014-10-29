@@ -18,11 +18,13 @@
             android:orientation="vertical">
 
             <ImageButton
+                android:id="@+id/button_upvote"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@android:drawable/arrow_up_float" />
 
             <ImageButton
+                android:id="@+id/button_downvote"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@android:drawable/arrow_down_float" />
@@ -83,7 +85,7 @@
             </LinearLayout>
 
             <WebView
-                android:id="@+id/text_content"
+                android:id="@+id/web_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>

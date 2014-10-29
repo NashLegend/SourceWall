@@ -17,7 +17,7 @@ import com.squareup.picasso.Picasso;
 /**
  * Created by NashLegend on 2014/9/18 0018
  */
-public class ArticleListItemView extends AceView {
+public class ArticleListItemView extends AceView<Article> {
 
     public Article getArticle() {
         return article;
@@ -54,8 +54,8 @@ public class ArticleListItemView extends AceView {
     }
 
     @Override
-    public void setData(AceModel model) {
-        article = (Article) model;
+    public void setData(Article model) {
+        article = model;
         titleView.setText(article.getTitle());
         contentView.setText(article.getSummary());
         authorView.setText(article.getAuthor());
