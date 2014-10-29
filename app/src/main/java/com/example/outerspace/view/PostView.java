@@ -47,9 +47,9 @@ public class PostView extends AceView<Post> {
                 " <head> \n" +
                 "  <meta charset=\"UTF-8\" /> \n" +
                 "  <meta content=\"width=device-width,initial-scale=1.0,maximum-scale=1,minimum-scale=1,user-scalable=no\" name=\"viewport\" /> \n" +
-                "  <link rel=\"stylesheet\" href=\"http://static.guokr.com/apps/msite/styles/27dc13be.m.css\" /> \n" +
-                "  <link rel=\"stylesheet\" href=\"http://static.guokr.com/apps/group/styles/e8ff5a9c.gbbcode.css\" type=\"text/css\" /> \n" +
-                "  <link rel=\"stylesheet\" href=\"http://static.guokr.com/apps/msite/styles/81e10205.group.css\" type=\"text/css\" /> \n" +
+                "  <link rel=\"stylesheet\" href=\"file:///android_asset/static.guokr.com/apps/msite/styles/27dc13be.m.css\" /> \n" +
+                "  <link rel=\"stylesheet\" href=\"file:///android_asset/static.guokr.com/apps/group/styles/e8ff5a9c.gbbcode.css\" type=\"text/css\" /> \n" +
+                "  <link rel=\"stylesheet\" href=\"file:///android_asset/static.guokr.com/apps/msite/styles/81e10205.group.css\" type=\"text/css\" /> \n" +
                 "  <style id=\"style-1-cropbar-clipper\">/* Copyright 2014 Evernote Corporation. All rights reserved. */\n" +
                 ".en-markup-crop-options {\n" +
                 "    top: 18px !important;\n" +
@@ -64,15 +64,15 @@ public class PostView extends AceView<Post> {
                 "    margin-left: 0px !important;\n" +
                 "}\n" +
                 "</style>\n" +
-                "  <link rel=\"stylesheet\" href=\"http://bdimg.share.baidu.com/static/api/css/share_style0_16.css?v=f4b44e79.css\" />\n" +
                 " </head> \n" +
                 " <body> \n" +
-//                    "  <div class=\"msite-container \"> \n" +
+                "  <div class=\"msite-container \"> \n" +
                 "   <article id=\"contentMain\" class=\"content-main post\"> " + post.getContent() + "   </article> \n" +
-//                    "  </div> \n" +
+                "  </div> \n" +
                 " </body>\n" +
                 "</html>";
         contentView.getSettings().setDefaultTextEncodingName("UTF-8");
-        contentView.loadData(html, "text/html; charset=UTF-8", null);
+        contentView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "charset=UTF-8", null);
+        // contentView.loadData(html, "text/html; charset=UTF-8", null);
     }
 }

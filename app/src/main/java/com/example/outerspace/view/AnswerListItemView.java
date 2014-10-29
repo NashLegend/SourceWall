@@ -34,8 +34,8 @@ public class AnswerListItemView extends AceView<QuestionAnswer> {
         authorTitleView = (TextView) findViewById(R.id.text_author_title);
         dateView = (TextView) findViewById(R.id.text_date);
         avatar = (ImageView) findViewById(R.id.image_avatar);
-        upButton = (ImageButton) findViewById(R.id.button_upvote);
-        downButton = (ImageButton) findViewById(R.id.button_downvote);
+//        upButton = (ImageButton) findViewById(R.id.button_upvote);
+//        downButton = (ImageButton) findViewById(R.id.button_downvote);
     }
 
     public AnswerListItemView(Context context, AttributeSet attrs) {
@@ -59,9 +59,9 @@ public class AnswerListItemView extends AceView<QuestionAnswer> {
                 " <head> \n" +
                 "  <meta charset=\"UTF-8\" /> \n" +
                 "  <meta content=\"width=device-width,initial-scale=1.0,maximum-scale=1,minimum-scale=1,user-scalable=no\" name=\"viewport\" /> \n" +
-                "  <link rel=\"stylesheet\" href=\"http://static.guokr.com/apps/msite/styles/27dc13be.m.css\" /> \n" +
-                "  <link rel=\"stylesheet\" href=\"http://static.guokr.com/apps/msite/styles/cfb7569b.ask.css\" type=\"text/css\" /> \n" +
-                "  <style id=\"style-1-cropbar-clipper\">\n" +
+                "  <link rel=\"stylesheet\" href=\"file:///android_asset/static.guokr.com/apps/msite/styles/27dc13be.m.css\" /> \n" +
+                "  <link rel=\"stylesheet\" href=\"file:///android_asset/static.guokr.com/apps/msite/styles/cfb7569b.ask.css\" type=\"text/css\" /> \n" +
+                "  <style id=\"style-1-cropbar-clipper\">/* Copyright 2014 Evernote Corporation. All rights reserved. */\n" +
                 ".en-markup-crop-options {\n" +
                 "    top: 18px !important;\n" +
                 "    left: 50% !important;\n" +
@@ -75,25 +75,25 @@ public class AnswerListItemView extends AceView<QuestionAnswer> {
                 "    margin-left: 0px !important;\n" +
                 "}\n" +
                 "</style>\n" +
-                "</head> \n" +
+                " </head> \n" +
                 " <body> \n" +
-//                "  <div class=\"msite-container \"> \n" +
+                "  <div class=\"msite-container \"> \n" +
                 "   <div> \n" +
                 "    <div class=\"quality-answer\"> \n" +
                 "     <section class=\"content-block\"> \n" +
                 "      <div id=\"answersList\" class=\"content-main\"> \n" +
-                "       <div id=\"answer753555\" class=\"answer-padding15 answerItem\" style=\"-webkit-transform-origin: 0px 0px; opacity: 1; -webkit-transform: scale(1, 1);\"> \n" +
-                "        <div class=\"askcontent\">" + answer.getContent() +
+                "       <div id=\"answer755710\" class=\"answer-padding15 answerItem\" style=\"-webkit-transform-origin: 0px 0px; opacity: 1; -webkit-transform: scale(1, 1);\"> \n" +
+                "        <div class=\"askcontent\"> " + answer.getContent() +
                 "        </div>\n" +
                 "       </div> \n" +
                 "      </div> \n" +
                 "     </section> \n" +
                 "    </div> \n" +
                 "   </div> \n" +
-//                "  </div> \n" +
+                "  </div> \n" +
                 " </body>\n" +
                 "</html>";
         contentView.getSettings().setDefaultTextEncodingName("UTF-8");
-        contentView.loadData(html, "text/html; charset=UTF-8", null);
+        contentView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "charset=UTF-8", null);
     }
 }

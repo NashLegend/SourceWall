@@ -1,6 +1,7 @@
 package com.example.outerspace;
 
 import android.app.Application;
+import android.content.res.AssetManager;
 
 /**
  * Created by NashLegend on 2014/9/24 0024.

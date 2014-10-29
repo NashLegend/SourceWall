@@ -47,8 +47,8 @@ public class QuestionView extends AceView<Question> {
                 " <head> \n" +
                 "  <meta charset=\"UTF-8\" /> \n" +
                 "  <meta content=\"width=device-width,initial-scale=1.0,maximum-scale=1,minimum-scale=1,user-scalable=no\" name=\"viewport\" /> \n" +
-                "  <link rel=\"stylesheet\" href=\"http://static.guokr.com/apps/msite/styles/27dc13be.m.css\" /> \n" +
-                "  <link rel=\"stylesheet\" href=\"http://static.guokr.com/apps/msite/styles/cfb7569b.ask.css\" type=\"text/css\" /> \n" +
+                "  <link rel=\"stylesheet\" href=\"file:///android_asset/static.guokr.com/apps/msite/styles/27dc13be.m.css\" /> \n" +
+                "  <link rel=\"stylesheet\" href=\"file:///android_asset/static.guokr.com/apps/msite/styles/cfb7569b.ask.css\" type=\"text/css\" /> \n" +
                 "  <style id=\"style-1-cropbar-clipper\">\n" +
                 ".en-markup-crop-options {\n" +
                 "    top: 18px !important;\n" +
@@ -63,7 +63,6 @@ public class QuestionView extends AceView<Question> {
                 "    margin-left: 0px !important;\n" +
                 "}\n" +
                 "</style>\n" +
-                "  <link rel=\"stylesheet\" href=\"http://bdimg.share.baidu.com/static/api/css/share_style0_16.css?v=f4b44e79.css\" />\n" +
                 " </head> \n" +
                 " <body> \n" +
                 "  <div class=\"msite-container \"> \n" +
@@ -77,6 +76,6 @@ public class QuestionView extends AceView<Question> {
                 " </body>\n" +
                 "</html>";
         contentView.getSettings().setDefaultTextEncodingName("UTF-8");
-        contentView.loadData(html, "text/html; charset=UTF-8", null);
+        contentView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "charset=UTF-8", null);
     }
 }

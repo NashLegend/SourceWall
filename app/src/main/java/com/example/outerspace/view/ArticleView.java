@@ -49,38 +49,28 @@ public class ArticleView extends AceView<Article> {
         titleView.setText(article.getTitle());
         authorView.setText(article.getAuthor());
         dateView.setText(article.getDate());
-        String html = "<html class=\"no-js screen-scroll\"><head>\n" +
-                "<link rel=\"stylesheet\" href=\"http://static.guokr.com/apps/minisite/styles/3b737dd5.main.css\">\n" +
-                "<link rel=\"stylesheet\" href=\"http://static.guokr.com/apps/minisite/styles/e8ff5a9c.gbbcode.css\">\n" +
-                "<link rel=\"stylesheet\" href=\"http://static.guokr.com/apps/minisite/styles/edfe43e5.article.css\">\n" +
-                "<style>[touch-action=\"none\"]{ -ms-touch-action: none; touch-action: none; }[touch-action=\"pan-x\"]" +
-                "{ -ms-touch-action: pan-x; touch-action: pan-x; }" +
-                "[touch-action=\"pan-y\"]{ -ms-touch-action: pan-y; touch-action: pan-y; }" +
-                "[touch-action=\"scroll\"],[touch-action=\"pan-x pan-y\"]," +
-                "[touch-action=\"pan-y pan-x\"]{ -ms-touch-action: pan-x pan-y; touch-action: pan-x pan-y; }" +
-                "</style><style id=\"style-1-cropbar-clipper\">/* Copyright 2014 Evernote Corporation. All rights reserved. */\n" +
-                ".en-markup-crop-options {\n" +
-                "    top: 18px !important;\n" +
-                "    left: 50% !important;\n" +
-                "    margin-left: -90px !important;\n" +
-                "    width: 180px !important;\n" +
-                "    border: 2px rgba(255,255,255,.38) solid !important;\n" +
-                "    border-radius: 4px !important;\n" +
-                "}\n" +
-                ".en-markup-crop-options div div:first-of-type {\n" +
-                "    margin-left: 0px !important;\n" +
-                "}\n" +
-                "</style></head>\n" +
-                "    <body>\n" +
-                "<div class=\"article-page\">\n" +
-                "    <div class=\"main\">\n" +
-                "        <div class=\"content\"> <div itemprop=\"http://rdfs.org/sioc/ns#content\"" +
-                " class=\"content-txt\" id=\"articleContent\"> " + article.getContent() + "\n" +
-                "        </div>\n" + "</div>" +
-                "    </div>\n" +
-                " </div>\n" +
-                "</body></html>";
+        String html = "<html class=\"no-js screen-scroll\">\n" +
+                " <head> \n" +
+                "  <meta charset=\"UTF-8\" /> \n" +
+                "  <meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge,chrome=1\" /> \n" +
+                "  <meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0,maximum-scale=1,user-scalable=no\" /> \n" +
+                "  <meta name=\"format-detection\" content=\"telephone=no\" /> \n" +
+                "  <link rel=\"stylesheet\" href=\"file:///android_asset/static.guokr.com/apps/minisite/styles/3b737dd5.main.css\" type=\"text/css\"/> \n" +
+                "  <link rel=\"stylesheet\" href=\"file:///android_asset/static.guokr.com/apps/minisite/styles/e8ff5a9c.gbbcode.css\" type=\"text/css\"/> \n" +
+                "  <link rel=\"stylesheet\" href=\"file:///android_asset/static.guokr.com/apps/minisite/styles/edfe43e5.article.css\" type=\"text/css\"/> \n" +
+                " </head> \n" +
+                " <body> \n" +
+                "  <div class=\"container article-page\"> \n" +
+                "   <div class=\"main\"> \n" +
+                "    <div class=\"content\"> \n" +
+                "     <div itemprop=\"http://rdfs.org/sioc/ns#content\" class=\"content-txt\" id=\"articleContent\"> " + article.getContent() +
+                "     </div> \n" +
+                "    </div> \n" +
+                "   </div> \n" +
+                "  </div> \n" +
+                " </body>\n" +
+                "</html>";
         contentView.getSettings().setDefaultTextEncodingName("UTF-8");
-        contentView.loadData(html, "text/html; charset=UTF-8", null);
+        contentView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "charset=UTF-8", null);
     }
 }

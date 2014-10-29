@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import com.example.outerspace.PostActivity;
+import com.example.outerspace.QuestionActivity;
 import com.example.outerspace.R;
 import com.example.outerspace.adapters.QuestionAdapter;
 import com.example.outerspace.commonview.LListView;
@@ -43,8 +44,8 @@ public class QuestionsFragment extends BaseFragment implements LListView.OnRefre
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent();
-                intent.setClass(getActivity(), PostActivity.class);
-                intent.putExtra(Consts.Extra_Post, ((QuestionFeaturedListItemView) view).getQuestion());
+                intent.setClass(getActivity(), QuestionActivity.class);
+                intent.putExtra(Consts.Extra_Question, ((QuestionFeaturedListItemView) view).getQuestion());
                 startActivity(intent);
             }
         });
