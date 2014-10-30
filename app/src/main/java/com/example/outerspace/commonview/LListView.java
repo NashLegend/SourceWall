@@ -113,7 +113,6 @@ public class LListView extends ListView implements OnScrollListener {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        System.out.println(ev.getAction());
         if (checkRefreshable(ev)) {
             switch (ev.getAction()) {
                 case MotionEvent.ACTION_DOWN:
@@ -126,7 +125,6 @@ public class LListView extends ListView implements OnScrollListener {
                     currentY = ev.getY();
                     if (dragging) {
                         float dist = currentY - lastY;
-
                         if (!headerView.handleMoveDistance(dist)) {
                             pulling = false;
                             return super.onTouchEvent(ev);

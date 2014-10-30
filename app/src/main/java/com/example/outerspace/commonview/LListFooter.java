@@ -54,6 +54,10 @@ public class LListFooter extends FrameLayout {
         }
     }
 
+    public void handleMoveDistance(float dist) {
+
+    }
+
     public void animateToHeight(int height) {
         int duration = 100;
         cancelPotentialHeightAnimator();
