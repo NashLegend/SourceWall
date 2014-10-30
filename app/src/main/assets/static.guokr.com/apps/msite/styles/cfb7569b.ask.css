@@ -655,11 +655,11 @@
 }
 
 #answersList {
-	padding: 0 8px
+	padding: 0 0px
 }
 
 .answerItem {
-	padding: 15px 7px;
+	padding: 0px 0px;
 }
 
 .answerItem img {

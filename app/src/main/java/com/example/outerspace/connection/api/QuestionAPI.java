@@ -19,7 +19,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class QuestionAPI extends APIBase {
-
+    static int maxImageWidth = 240;
+    static String prefix = "<div class=\"ZoomBox\"><div class=\"content-zoom ZoomIn\">";
+    static String suffix = "</div></div>";
     public QuestionAPI() {
         // TODO Auto-generated constructor stub
     }
@@ -117,7 +119,7 @@ public class QuestionAPI extends APIBase {
                     .replaceAll("\\D+", ""));
             question.setAuthorAvatarUrl(result.getJSONObject("author").getJSONObject("avatar")
                     .getString("large").replaceAll("\\?\\S*$", ""));
-            question.setContent(getJsonString(result, "annotation"));
+            question.setContent(getJsonString(result, "annotation_html").replaceAll("<img .*?/>", prefix + "$0" + suffix).replaceAll("style=\"max-width: \\d+px\"", "style=\"max-width: " + maxImageWidth + "px\""));
             question.setDate(getJsonString(result, "date_created"));
             question.setFollowNum(getJsonInt(result, "followers_count"));
             question.setId(getJsonString(result, "id"));
@@ -133,6 +135,7 @@ public class QuestionAPI extends APIBase {
         String url = "http://apis.guokr.com/ask/answer.json?retrieve_type=by_question&limit=10&question_id="
                 + id + "&offset=" + offset;
         String jString = HttpFetcher.get(url);
+
         try {
             JSONObject jss = new JSONObject(jString);
             boolean ok = jss.getBoolean("ok");
@@ -148,7 +151,7 @@ public class QuestionAPI extends APIBase {
                             .getString("large").replaceAll("\\?\\S*$", ""));
                     ans.setAuthorTitle(getJsonString(getJsonObject(jo, "author"), "title"));
                     ans.setCommentNum(getJsonInt(jo, "replies_count"));
-                    ans.setContent(getJsonString(jo, "html"));
+                    ans.setContent(getJsonString(jo, "html").replaceAll("<img .*?/>", prefix + "$0" + suffix).replaceAll("style=\"max-width: \\d+px\"", "style=\"max-width: " + maxImageWidth + "px\""));
                     ans.setDate_created(getJsonString(jo, "date_created"));
                     ans.setDate_modified(getJsonString(jo, "date_modified"));
                     ans.setHasDownVoted(getJsonBoolean(jo, "current_user_has_buried"));

@@ -9,6 +9,7 @@ import android.content.res.AssetManager;
 public class AppApplication extends Application {
 
     static AppApplication application;
+    static int screenWidthInDP=360;
 
     @Override
     public void onCreate() {
