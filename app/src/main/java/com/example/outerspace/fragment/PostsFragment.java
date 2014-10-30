@@ -57,12 +57,12 @@ public class PostsFragment extends BaseFragment implements LListView.OnRefreshLi
 
     @Override
     public void onRefresh() {
-
+        //TODO
     }
 
     @Override
     public void onLoadMore() {
-
+        //TODO
     }
 
 

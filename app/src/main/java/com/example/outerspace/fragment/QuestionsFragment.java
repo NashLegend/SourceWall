@@ -61,12 +61,12 @@ public class QuestionsFragment extends BaseFragment implements LListView.OnRefre
 
     @Override
     public void onRefresh() {
-
+        //TODO
     }
 
     @Override
     public void onLoadMore() {
-
+        //TODO
     }
 
     class LoaderTask extends AsyncTask<RequestData, Integer, ResultObject> {

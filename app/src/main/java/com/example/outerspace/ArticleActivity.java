@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class ArticleActivity extends BaseActivity {
+public class ArticleActivity extends BaseActivity  implements LListView.OnRefreshListener {
 
     LListView listView;
     ArticleDetailAdapter adapter;
@@ -55,6 +55,16 @@ public class ArticleActivity extends BaseActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onRefresh() {
+        //TODO
+    }
+
+    @Override
+    public void onLoadMore() {
+        //TODO
     }
 
     class LoaderTask extends AsyncTask<RequestData, Integer, Boolean> {

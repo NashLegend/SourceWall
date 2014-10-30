@@ -1,6 +1,5 @@
 package com.example.outerspace;
 
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
@@ -19,7 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class QuestionActivity extends Activity {
+public class QuestionActivity extends BaseActivity implements LListView.OnRefreshListener {
 
     LListView listView;
     QuestionDetailAdapter adapter;
@@ -60,6 +59,16 @@ public class QuestionActivity extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onRefresh() {
+        //TODO
+    }
+
+    @Override
+    public void onLoadMore() {
+        //TODO
     }
 
     class LoaderTask extends AsyncTask<RequestData, Integer, Boolean> {

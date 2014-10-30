@@ -100,7 +100,7 @@ public class LListView extends ListView implements OnScrollListener {
     }
 
     float touchDownY;
-    float lastY;
+    float lastY = -1;
     float currentY;
     boolean dragging = false;
     boolean pulling = false;
@@ -113,6 +113,7 @@ public class LListView extends ListView implements OnScrollListener {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
+        System.out.println(ev.getAction());
         if (checkRefreshable(ev)) {
             switch (ev.getAction()) {
                 case MotionEvent.ACTION_DOWN:
@@ -125,6 +126,7 @@ public class LListView extends ListView implements OnScrollListener {
                     currentY = ev.getY();
                     if (dragging) {
                         float dist = currentY - lastY;
+
                         if (!headerView.handleMoveDistance(dist)) {
                             pulling = false;
                             return super.onTouchEvent(ev);
@@ -135,6 +137,7 @@ public class LListView extends ListView implements OnScrollListener {
                     } else {
                         if (Math.abs(currentY - touchDownY) > touchSlop) {
                             dragging = true;
+                            lastY = currentY;
                         }
                     }
                     break;
@@ -166,7 +169,6 @@ public class LListView extends ListView implements OnScrollListener {
             if (firstView != null) {
                 int p = this.getFirstVisiblePosition();
                 if (p == 0 && firstView.getTop() >= 0) {
-                    // TODO getTop有么有可能大于0，大于0的时候怎么办。
                     refreshable = true;
                 } else {
                     refreshable = false;

@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class PostActivity extends Activity {
+public class PostActivity extends BaseActivity  implements LListView.OnRefreshListener {
     LListView listView;
     PostDetailAdapter adapter;
     Post mPost;
@@ -62,6 +62,16 @@ public class PostActivity extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onRefresh() {
+        //TODO
+    }
+
+    @Override
+    public void onLoadMore() {
+        //TODO
     }
 
     class LoaderTask extends AsyncTask<RequestData, Integer, Boolean> {
