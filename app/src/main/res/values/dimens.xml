@@ -10,13 +10,13 @@
 
 
     <!--通用系列-->
-    <dimen name="text_author_view_font_size_dimen">12dp</dimen>
+    <dimen name="text_author_view_font_size_dimen">12sp</dimen>
     <dimen name="avatar_right_span_dimen">12dp</dimen>
     <dimen name="content_top_span_dimen">12dp</dimen>
 
     <!--列表系列-->
-    <dimen name="list_standard_title_font_size">18dp</dimen>
-    <dimen name="list_standard_summary_font_size">14dp</dimen>
+    <dimen name="list_standard_title_font_size">18sp</dimen>
+    <dimen name="list_standard_summary_font_size">14sp</dimen>
     <dimen name="list_standard_title_author_span">8dp</dimen>
     <dimen name="list_standard_image_summary_span">14dp</dimen>
     <dimen name="list_standard_image_author_span">10dp</dimen>
@@ -32,6 +32,6 @@
 
     <!--正文系列-->
     <dimen name="Text_title_size_dimen">18dp</dimen>
-    <dimen name="text_content_font_size_dimen">16dp</dimen>
+    <dimen name="text_content_font_size_dimen">16sp</dimen>
 
 </resources>

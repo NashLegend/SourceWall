@@ -26,10 +26,8 @@ public class PostListItemView extends AceView<Post> {
     private Post mPost;
     private TextView titleView;
     private TextView authorView;
-    private TextView dateView;
     private TextView replyView;
     private TextView likesView;
-    private ImageView titleImage;
     ImageFetcher titleImageFetcher;
 
     public PostListItemView(Context context) {
@@ -38,10 +36,8 @@ public class PostListItemView extends AceView<Post> {
         inflater.inflate(R.layout.layout_post_item_view, this);
         titleView = (TextView) findViewById(R.id.text_title);
         authorView = (TextView) findViewById(R.id.text_author);
-        dateView = (TextView) findViewById(R.id.text_date);
         replyView = (TextView) findViewById(R.id.text_replies_num);
         likesView = (TextView) findViewById(R.id.text_like_num);
-        titleImage = (ImageView) findViewById(R.id.image_title);
         titleImageFetcher = new ImageFetcher(getContext(), DisplayUtil.getScreenWidth(getContext()), 0);
     }
 
@@ -58,15 +54,7 @@ public class PostListItemView extends AceView<Post> {
         mPost = model;
         titleView.setText(mPost.getTitle());
         authorView.setText(mPost.getAuthor());
-        dateView.setText(mPost.getDate());
         replyView.setText(mPost.getReplyNum() + "");
         likesView.setText(mPost.getLikeNum() + "");
-        if (TextUtils.isEmpty(mPost.getTitleImageUrl())) {
-            titleImage.setImageResource(R.drawable.post);
-        } else {
-            Picasso.with(getContext()).load(mPost.getTitleImageUrl())
-                    .resizeDimen(R.dimen.list_post_item_title_image_dimen, R.dimen.list_post_item_title_image_dimen)
-                    .into(titleImage);
-        }
     }
 }
