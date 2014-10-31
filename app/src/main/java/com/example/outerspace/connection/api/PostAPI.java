@@ -22,7 +22,22 @@ public class PostAPI extends APIBase {
         // TODO Auto-generated constructor stub
     }
 
+    public static ArrayList<Post> getMyGroupRecentPosts(int pageNo) throws IOException {
+        //TODO
+        ArrayList<Post> list = new ArrayList<Post>();
+        String url = "http://m.guokr.com/group/user/recent_replies/";
+        Document doc = Jsoup.connect(url).get();
+        return null;
+    }
 
+
+    /**
+     * 获得小组热贴（与登录无关）
+     *
+     * @param pageNo，要获取的页码
+     * @return 帖子列表
+     * @throws IOException
+     */
     public static ArrayList<Post> getGroupHotPostListFromMobileUrl(int pageNo) throws IOException {
         ArrayList<Post> list = new ArrayList<Post>();
         String url = "http://m.guokr.com/group/hot_posts/?page=" + pageNo;
@@ -70,6 +85,14 @@ public class PostAPI extends APIBase {
         return list;
     }
 
+    /**
+     * 根据小组id获得帖子列表
+     *
+     * @param id     小组id
+     * @param offset 从第几个帖子开始取
+     * @return
+     * @throws IOException
+     */
     public static ArrayList<Post> getGroupPostListByJsonUrl(String id, int offset) throws IOException {
         String url = "http://apis.guokr.com/group/post.json?retrieve_type=by_group&group_id=" + id
                 + "&limit=2&offset=" + offset;
@@ -106,6 +129,11 @@ public class PostAPI extends APIBase {
         return list;
     }
 
+    /**
+     * 根据地址获取帖子列表，暂时没考虑个别小组，用于拦截链接点击，未解析热贴。
+     *
+     * @param url 浏览器里小组的地址。
+     */
     public static void getGroupPostListByHtmlUrl(String url) {
         ArrayList<Post> list = new ArrayList<Post>();
         try {
@@ -154,12 +182,19 @@ public class PostAPI extends APIBase {
         }
     }
 
+    /**
+     * 根据帖子地址解析帖子详细内容
+     *
+     * @param id，帖子id
+     * @return
+     * @throws IOException
+     */
     public static Post getPostDetailByIDFromMobileUrl(String id) throws IOException {
         return getPostDetailByPostMobileUrl("http://m.guokr.com/post/" + id + "/");
     }
 
     /**
-     * 仅限第一页
+     * 仅限第一页，根据帖子地址解析帖子详细内容
      *
      * @param url
      */
@@ -198,6 +233,15 @@ public class PostAPI extends APIBase {
         return detail;
     }
 
+    /**
+     * 使用Json解析方式获得帖子评论列表
+     *
+     * @param id
+     * @param offset
+     * @return
+     * @throws IOException
+     * @throws JSONException
+     */
     public static ArrayList<SimpleComment> getPostCommentsFromJsonUrl(String id, int offset) throws IOException, JSONException {
         ArrayList<SimpleComment> list = new ArrayList<SimpleComment>();
         String url = "http://apis.guokr.com/group/post_reply.json?retrieve_type=by_post&post_id="
@@ -226,6 +270,13 @@ public class PostAPI extends APIBase {
         return list;
     }
 
+    /**
+     * 使用Html解析方式获得帖子评论列表
+     *
+     * @param id
+     * @param pageNo
+     * @return
+     */
     public static ArrayList<SimpleComment> getPostCommentsFromHtmlUrl(String id, int pageNo) {
         ArrayList<SimpleComment> list = new ArrayList<SimpleComment>();
         String url = "http://m.guokr.com/post/" + id + "/?page=" + pageNo;

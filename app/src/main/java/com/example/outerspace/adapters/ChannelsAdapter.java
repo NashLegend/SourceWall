@@ -81,4 +81,16 @@ public class ChannelsAdapter extends BaseExpandableListAdapter {
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
     }
+
+    //articles
+    private String[] articleNames = {};
+    private String[] articleValues = {};
+
+    public void createDefaultChannels() {
+        //create articles
+
+        //create posts
+
+        //create questions
+    }
 }
