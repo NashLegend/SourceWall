@@ -8,8 +8,20 @@ import java.util.ArrayList;
  * Created by NashLegend on 2014/10/31 0031
  */
 public class DataConsts {
+
+    public static ArrayList<SubItem> getSections() {
+        SubItem[] items = {new SubItem(SubItem.Section_Article, SubItem.Type_Collections, "Article", "Article"),
+                new SubItem(SubItem.Section_Post, SubItem.Type_Collections, "Post", "Post"),
+                new SubItem(SubItem.Section_Question, SubItem.Type_Collections, "Question", "Question")};
+        ArrayList<SubItem> subItems = new ArrayList<SubItem>();
+        for (int i = 0; i < items.length; i++) {
+            subItems.add(items[i]);
+        }
+        return subItems;
+    }
+
     public static ArrayList<SubItem> getArticles() {
-        SubItem[] items = {new SubItem(SubItem.Section_Article, SubItem.Type_Collections, "", ""),
+        SubItem[] items = {new SubItem(SubItem.Section_Article, SubItem.Type_Collections, "科学人", ""),
                 new SubItem(SubItem.Section_Article, SubItem.Type_Single_Channel, "热点", "hot"),
                 new SubItem(SubItem.Section_Article, SubItem.Type_Single_Channel, "前沿", "frontier"),
                 new SubItem(SubItem.Section_Article, SubItem.Type_Single_Channel, "评论", "review"),

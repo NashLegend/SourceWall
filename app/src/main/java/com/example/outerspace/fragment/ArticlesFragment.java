@@ -29,7 +29,6 @@ import java.util.ArrayList;
  */
 public class ArticlesFragment extends ChannelsFragment implements LListView.OnRefreshListener {
 
-    private String defaultChannel = "hot";
     private LListView listView;
     private ArticleAdapter adapter;
     private LoaderTask task;
@@ -56,14 +55,14 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
                 startActivity(intent);
             }
         });
-        task = new LoaderTask();
-        RequestData requestData = new RequestData();
-        requestData.isChannel = true;
-        requestData.isLoadMore = false;
-        requestData.key = defaultChannel;
-        requestData.offset = 0;
-        task.execute(requestData);
+        loadData(0);
         return view;
+    }
+
+    private void loadData(int offset) {
+        cancelPotentialTask();
+        task = new LoaderTask();
+        task.execute(offset);
     }
 
     @Override
@@ -72,23 +71,44 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
     }
 
     @Override
-    public void onRefresh() {
+    public void onStartRefresh() {
         //TODO
+        loadData(0);
     }
 
     @Override
-    public void onLoadMore() {
+    public void onStartLoadMore() {
         //TODO
+        loadData(adapter.getCount());
     }
 
     @Override
-    public View resetData(SubItem subItem) {
-        return null;
+    public void resetData(SubItem subItem) {
+        if (subItem.equals(this.subItem)) {
+            triggerRefresh();
+        } else {
+            this.subItem = subItem;
+            loadData(0);
+            adapter.clear();
+            adapter.notifyDataSetInvalidated();
+        }
     }
 
-    class LoaderTask extends AsyncTask<RequestData, Integer, ResultObject> {
+    @Override
+    public void triggerRefresh() {
+        //
+        listView.startRefresh();
+    }
 
-        RequestData data;
+    private void cancelPotentialTask() {
+        if (task != null && task.getStatus() == AsyncTask.Status.RUNNING) {
+            task.cancel(true);
+        }
+    }
+
+    class LoaderTask extends AsyncTask<Integer, Integer, ResultObject> {
+
+        int offset;
 
         @Override
         protected void onPreExecute() {
@@ -96,15 +116,15 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
         }
 
         @Override
-        protected ResultObject doInBackground(RequestData... datas) {
-            data = datas[0];
+        protected ResultObject doInBackground(Integer... datas) {
+            offset = datas[0];
             ArrayList<Article> articles = new ArrayList<Article>();
             ResultObject resultObject = new ResultObject();
             try {
-                if (data.isChannel) {
-                    articles = ArticleAPI.getArticleListByChannel(data.key, data.offset);
+                if (subItem.getType() == SubItem.Type_Collections) {
+                    articles = ArticleAPI.getArticleListIndexPage(offset);
                 } else {
-                    articles = ArticleAPI.getArticleListBySubject(data.key, data.offset);
+                    articles = ArticleAPI.getArticleListByChannel(subItem.getValue(), offset);
                 }
                 resultObject.result = articles;
                 if (articles != null) {
@@ -120,34 +140,29 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
 
         @Override
         protected void onPostExecute(ResultObject o) {
-            if (o.ok) {
-                ArrayList<Article> ars = (ArrayList<Article>) o.result;
-                if (data.isLoadMore) {
-                    if (ars.size() > 0) {
-                        adapter.addAll(ars);
-                    } else {
+            if (!isCancelled()) {
+                if (o.ok) {
+                    ArrayList<Article> ars = (ArrayList<Article>) o.result;
+                    if (offset > 0) {
+                        if (ars.size() > 0) {
+                            adapter.addAll(ars);
+                        } else {
 
+                        }
+                    } else {
+                        if (ars.size() > 0) {
+                            adapter.setList(ars);
+                        } else {
+
+                        }
                     }
+                    adapter.notifyDataSetChanged();
                 } else {
-                    if (ars.size() > 0) {
-                        adapter.setList(ars);
-                    } else {
 
-                    }
                 }
-                adapter.notifyDataSetChanged();
-            } else {
-
             }
+
         }
     }
-
-    class RequestData {
-        boolean isLoadMore = false;
-        boolean isChannel = true;
-        String key = "";
-        int offset = 0;
-    }
-
 
 }

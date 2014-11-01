@@ -65,12 +65,12 @@ public class PostActivity extends BaseActivity  implements LListView.OnRefreshLi
     }
 
     @Override
-    public void onRefresh() {
+    public void onStartRefresh() {
         //TODO
     }
 
     @Override
-    public void onLoadMore() {
+    public void onStartLoadMore() {
         //TODO
     }
 

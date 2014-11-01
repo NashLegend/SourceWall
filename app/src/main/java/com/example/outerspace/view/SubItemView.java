@@ -27,7 +27,8 @@ public class SubItemView extends AceView<SubItem> {
 
     @Override
     public void setData(SubItem subItem) {
-        textView.setText(subItem.getName());
+        item = subItem;
+        textView.setText(item.getName());
     }
 
 }

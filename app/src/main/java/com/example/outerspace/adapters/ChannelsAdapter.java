@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 
 import com.example.outerspace.model.SubItem;
+import com.example.outerspace.util.DataConsts;
 import com.example.outerspace.view.GroupItemView;
 import com.example.outerspace.view.SubItemView;
 
@@ -15,6 +16,22 @@ import java.util.ArrayList;
  * Created by NashLegend on 2014/10/31 0031
  */
 public class ChannelsAdapter extends BaseExpandableListAdapter {
+
+    public ArrayList<SubItem> getGroupList() {
+        return groupList;
+    }
+
+    public void setGroupList(ArrayList<SubItem> groupList) {
+        this.groupList = groupList;
+    }
+
+    public ArrayList<ArrayList<SubItem>> getSubLists() {
+        return subLists;
+    }
+
+    public void setSubLists(ArrayList<ArrayList<SubItem>> subLists) {
+        this.subLists = subLists;
+    }
 
     private ArrayList<SubItem> groupList = new ArrayList<SubItem>();
     private ArrayList<ArrayList<SubItem>> subLists = new ArrayList<ArrayList<SubItem>>();
@@ -82,15 +99,18 @@ public class ChannelsAdapter extends BaseExpandableListAdapter {
         return true;
     }
 
-    //articles
-    private String[] articleNames = {};
-    private String[] articleValues = {};
 
     public void createDefaultChannels() {
-        //create articles
 
-        //create posts
+        ArrayList<SubItem> groups = DataConsts.getSections();
+        ArrayList<ArrayList<SubItem>> cols = new ArrayList<ArrayList<SubItem>>();
+        cols.add(DataConsts.getArticles());
+        cols.add(DataConsts.getPosts());
+        cols.add(DataConsts.getQuestions());
 
-        //create questions
+        setGroupList(groups);
+        setSubLists(cols);
+
+        notifyDataSetChanged();
     }
 }

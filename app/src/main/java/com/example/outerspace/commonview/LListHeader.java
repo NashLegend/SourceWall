@@ -95,7 +95,7 @@ public class LListHeader extends FrameLayout {
     private void normal2Refreshing() {
         animateToHeight(Refreshing_Height);
         tvHint.setText(R.string.refreshing);
-        onRefreshListener.onRefresh();
+        onRefreshListener.onStartRefresh();
     }
 
     private void normal2Pull() {
@@ -123,7 +123,7 @@ public class LListHeader extends FrameLayout {
     private void release2Refreshing() {
         animateToHeight(Refreshing_Height);
         tvHint.setText(R.string.refreshing);
-        onRefreshListener.onRefresh();
+        onRefreshListener.onStartRefresh();
     }
 
     private void refreshing2Refreshing() {

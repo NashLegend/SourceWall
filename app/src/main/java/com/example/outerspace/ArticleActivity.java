@@ -58,12 +58,12 @@ public class ArticleActivity extends BaseActivity  implements LListView.OnRefres
     }
 
     @Override
-    public void onRefresh() {
+    public void onStartRefresh() {
         //TODO
     }
 
     @Override
-    public void onLoadMore() {
+    public void onStartLoadMore() {
         //TODO
     }
 

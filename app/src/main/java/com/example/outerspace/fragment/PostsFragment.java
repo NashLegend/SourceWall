@@ -57,18 +57,23 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     }
 
     @Override
-    public void onRefresh() {
+    public void onStartRefresh() {
         //TODO
     }
 
     @Override
-    public void onLoadMore() {
+    public void onStartLoadMore() {
         //TODO
     }
 
     @Override
-    public View resetData(SubItem subItem) {
-        return null;
+    public void resetData(SubItem subItem) {
+
+    }
+
+    @Override
+    public void triggerRefresh() {
+
     }
 
 

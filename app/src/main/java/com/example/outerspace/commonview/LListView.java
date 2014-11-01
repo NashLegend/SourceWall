@@ -213,9 +213,9 @@ public class LListView extends ListView implements OnScrollListener {
     }
 
     public static interface OnRefreshListener {
-        public void onRefresh();
+        public void onStartRefresh();
 
-        public void onLoadMore();
+        public void onStartLoadMore();
     }
 
     public void setOnRefreshListener(OnRefreshListener onRefreshListener) {

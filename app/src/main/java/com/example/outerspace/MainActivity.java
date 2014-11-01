@@ -110,6 +110,7 @@ public class MainActivity extends BaseActivity {
             Bundle bundle = new Bundle();
             bundle.putSerializable(Consts.Extra_SubItem, subItem);
             fragment.setArguments(bundle);
+            currentFragment = fragment;
             getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
         }
     }

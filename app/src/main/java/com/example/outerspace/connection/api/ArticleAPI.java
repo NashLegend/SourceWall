@@ -21,6 +21,10 @@ public class ArticleAPI extends APIBase {
         // TODO Auto-generated constructor stub
     }
 
+    public static ArrayList<Article> getArticleListIndexPage(int offset) throws JSONException, IOException {
+        String url = "http://www.guokr.com/apis/minisite/article.json?retrieve_type=by_subject" + "&limit=20&offset=" + offset;
+        return getArticleListFromJsonUrl(url);
+    }
 
     public static ArrayList<Article> getArticleListByChannel(String channelKey, int offset) throws JSONException, IOException {
         String url = "http://www.guokr.com/apis/minisite/article.json?retrieve_type=by_channel&channel_key="

@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by NashLegend on 2014/10/31 0031
  */
-public class SubItem extends AceModel implements Serializable{
+public class SubItem extends AceModel implements Serializable {
 
     public static final int Type_Collections = 0;
     public static final int Type_Single_Channel = 1;
@@ -17,7 +17,6 @@ public class SubItem extends AceModel implements Serializable{
 
     private int section;
     private int type;
-    private String id = "";
     private String name = "";
     private String value = "";
 
@@ -58,5 +57,17 @@ public class SubItem extends AceModel implements Serializable{
 
     public void setSection(int section) {
         this.section = section;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof SubItem) {
+            SubItem sb = (SubItem) o;
+            return sb.getName().equals(getName())
+                    && sb.getSection() == getSection()
+                    && sb.getType() == getType()
+                    && sb.getValue().equals(getValue());
+        }
+        return false;
     }
 }

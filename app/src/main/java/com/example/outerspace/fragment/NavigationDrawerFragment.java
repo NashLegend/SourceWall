@@ -83,7 +83,6 @@ public class NavigationDrawerFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        // Indicate that this fragment would like to influence the set of actions in the action bar.
         setHasOptionsMenu(true);
     }
 
@@ -93,7 +92,9 @@ public class NavigationDrawerFragment extends Fragment {
         layoutView = (LinearLayout) inflater.inflate(
                 R.layout.fragment_navigation_drawer, container, false);
         listView = (ExpandableListView) layoutView.findViewById(R.id.list_channel);
+        listView.setGroupIndicator(null);
         adapter = new ChannelsAdapter(getActivity());
+        adapter.createDefaultChannels();
         listView.setAdapter(adapter);
         listView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
@@ -105,6 +106,9 @@ public class NavigationDrawerFragment extends Fragment {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 if (v instanceof SubItemView) {
+                    if (mDrawerLayout != null) {
+                        mDrawerLayout.closeDrawer(mFragmentContainerView);
+                    }
                     SubItem subItem = ((SubItemView) v).getSubItem();
                     Intent intent = new Intent();
                     intent.setAction(Consts.Action_Open_Content_Fragment);
