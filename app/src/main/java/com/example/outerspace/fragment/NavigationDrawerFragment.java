@@ -13,7 +13,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,7 +25,9 @@ import android.widget.Toast;
 
 import com.example.outerspace.R;
 import com.example.outerspace.adapters.ChannelsAdapter;
+import com.example.outerspace.model.SubItem;
 import com.example.outerspace.util.Consts;
+import com.example.outerspace.view.SubItemView;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -34,7 +35,7 @@ import com.example.outerspace.util.Consts;
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
  * Created by NashLegend on 2014/9/15 0015.
  */
-public class NavigationDrawerFragment extends Fragment implements View.OnClickListener {
+public class NavigationDrawerFragment extends Fragment {
 
     /**
      * Remember the position of the selected item.
@@ -68,7 +69,6 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         // Read in the flag indicating whether or not the user has demonstrated awareness of the
         // drawer. See PREF_USER_LEARNED_DRAWER for details.
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -78,9 +78,6 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
             mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
             mFromSavedInstanceState = true;
         }
-
-        // Select either the default item (0) or the last selected item.
-        selectItem(R.id.button_articles);
     }
 
     @Override
@@ -96,8 +93,27 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         layoutView = (LinearLayout) inflater.inflate(
                 R.layout.fragment_navigation_drawer, container, false);
         listView = (ExpandableListView) layoutView.findViewById(R.id.list_channel);
-        adapter=new ChannelsAdapter(getActivity());
-
+        adapter = new ChannelsAdapter(getActivity());
+        listView.setAdapter(adapter);
+        listView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                return false;
+            }
+        });
+        listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                if (v instanceof SubItemView) {
+                    SubItem subItem = ((SubItemView) v).getSubItem();
+                    Intent intent = new Intent();
+                    intent.setAction(Consts.Action_Open_Content_Fragment);
+                    intent.putExtra(Consts.Extra_SubItem, subItem);
+                    getActivity().sendBroadcast(intent);
+                }
+                return false;
+            }
+        });
         return layoutView;
     }
 
@@ -239,31 +255,5 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
 
     private ActionBar getActionBar() {
         return ((ActionBarActivity) getActivity()).getSupportActionBar();
-    }
-
-    @Override
-    public void onClick(View view) {
-        int id = view.getId();
-        selectItem(id);
-    }
-
-    private void selectItem(int id) {
-        Intent intent = new Intent();
-        mCurrentSelectedPosition = id;
-        if (mDrawerLayout != null) {
-            mDrawerLayout.closeDrawer(mFragmentContainerView);
-        }
-        switch (id) {
-            case R.id.button_articles:
-                intent.setAction(Consts.Action_Open_Articles_Fragment);
-                break;
-            case R.id.button_posts:
-                intent.setAction(Consts.Action_Open_Posts_Fragment);
-                break;
-            case R.id.button_questions:
-                intent.setAction(Consts.Action_Open_Questions_Fragment);
-                break;
-        }
-        getActivity().sendBroadcast(intent);
     }
 }

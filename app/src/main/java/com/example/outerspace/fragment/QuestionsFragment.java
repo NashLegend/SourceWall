@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
-import com.example.outerspace.PostActivity;
 import com.example.outerspace.QuestionActivity;
 import com.example.outerspace.R;
 import com.example.outerspace.adapters.QuestionAdapter;
@@ -16,6 +15,7 @@ import com.example.outerspace.commonview.LListView;
 import com.example.outerspace.connection.ResultObject;
 import com.example.outerspace.connection.api.QuestionAPI;
 import com.example.outerspace.model.Question;
+import com.example.outerspace.model.SubItem;
 import com.example.outerspace.util.Consts;
 import com.example.outerspace.view.QuestionFeaturedListItemView;
 
@@ -25,18 +25,18 @@ import java.util.ArrayList;
 /**
  * Created by NashLegend on 2014/9/18 0018
  */
-public class QuestionsFragment extends BaseFragment implements LListView.OnRefreshListener {
-    boolean isChannel = false;
+public class QuestionsFragment extends ChannelsFragment implements LListView.OnRefreshListener {
     private final String HOTTEST = "hottest";
     private final String HIGHLIGHT = "highlight";
-    LListView listView;
-    QuestionAdapter adapter;
-    ChannelBoardFragment channelBoard;
-    LoaderTask task;
+    private LListView listView;
+    private QuestionAdapter adapter;
+    private LoaderTask task;
+    private SubItem subItem;
 
     @Override
     public View onCreateLayoutView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_questions, container, false);
+        subItem = (SubItem) getArguments().getSerializable(Consts.Extra_SubItem);
         listView = (LListView) view.findViewById(R.id.list_questions);
         adapter = new QuestionAdapter(getActivity());
         listView.setAdapter(adapter);
@@ -67,6 +67,11 @@ public class QuestionsFragment extends BaseFragment implements LListView.OnRefre
     @Override
     public void onLoadMore() {
         //TODO
+    }
+
+    @Override
+    public View resetData(SubItem subItem) {
+        return null;
     }
 
     class LoaderTask extends AsyncTask<RequestData, Integer, ResultObject> {

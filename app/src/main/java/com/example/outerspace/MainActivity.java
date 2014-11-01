@@ -16,10 +16,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.outerspace.fragment.ArticlesFragment;
-import com.example.outerspace.fragment.BaseFragment;
+import com.example.outerspace.fragment.ChannelsFragment;
 import com.example.outerspace.fragment.NavigationDrawerFragment;
 import com.example.outerspace.fragment.PostsFragment;
 import com.example.outerspace.fragment.QuestionsFragment;
+import com.example.outerspace.model.SubItem;
 import com.example.outerspace.util.Consts;
 
 
@@ -57,9 +58,7 @@ public class MainActivity extends BaseActivity {
 
         receiver = new Receiver();
         IntentFilter filter = new IntentFilter();
-        filter.addAction(Consts.Action_Open_Articles_Fragment);
-        filter.addAction(Consts.Action_Open_Posts_Fragment);
-        filter.addAction(Consts.Action_Open_Questions_Fragment);
+        filter.addAction(Consts.Action_Open_Content_Fragment);
         registerReceiver(receiver, filter);
     }
 
@@ -102,30 +101,43 @@ public class MainActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void replaceFragment(BaseFragment fragment, Intent intent) {
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
+    private ChannelsFragment currentFragment;
+
+    public void replaceFragment(ChannelsFragment fragment, SubItem subItem) {
+        if (currentFragment == fragment) {
+            fragment.resetData(subItem);
+        } else {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(Consts.Extra_SubItem, subItem);
+            fragment.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
+        }
     }
 
     class Receiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (Consts.Action_Open_Articles_Fragment.equals(action)) {
-                if (articlesFragment == null) {
-                    articlesFragment = new ArticlesFragment();
-                }
-                replaceFragment(articlesFragment, intent);
-            } else if (Consts.Action_Open_Posts_Fragment.equals(action)) {
-                if (postsFragment == null) {
-                    postsFragment = new PostsFragment();
-                }
-                replaceFragment(postsFragment, intent);
-            } else if (Consts.Action_Open_Questions_Fragment.equals(action)) {
-                if (questionsFragment == null) {
-                    questionsFragment = new QuestionsFragment();
-                }
-                replaceFragment(questionsFragment, intent);
+            SubItem subItem = (SubItem) intent.getSerializableExtra(Consts.Extra_SubItem);
+            switch (subItem.getSection()) {
+                case SubItem.Section_Article:
+                    if (articlesFragment == null) {
+                        articlesFragment = new ArticlesFragment();
+                    }
+                    replaceFragment(articlesFragment, subItem);
+                    break;
+                case SubItem.Section_Post:
+                    if (postsFragment == null) {
+                        postsFragment = new PostsFragment();
+                    }
+                    replaceFragment(postsFragment, subItem);
+                    break;
+                case SubItem.Section_Question:
+                    if (questionsFragment == null) {
+                        questionsFragment = new QuestionsFragment();
+                    }
+                    replaceFragment(questionsFragment, subItem);
+                    break;
             }
         }
     }

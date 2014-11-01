@@ -15,6 +15,7 @@ import com.example.outerspace.commonview.LListView;
 import com.example.outerspace.connection.ResultObject;
 import com.example.outerspace.connection.api.ArticleAPI;
 import com.example.outerspace.model.Article;
+import com.example.outerspace.model.SubItem;
 import com.example.outerspace.util.Consts;
 import com.example.outerspace.view.ArticleListItemView;
 
@@ -26,14 +27,13 @@ import java.util.ArrayList;
 /**
  * Created by NashLegend on 2014/9/18 0018
  */
-public class ArticlesFragment extends BaseFragment implements LListView.OnRefreshListener {
+public class ArticlesFragment extends ChannelsFragment implements LListView.OnRefreshListener {
 
-    String defaultChannel = "hot";
-    boolean isChannel = true;
-    LListView listView;
-    ArticleAdapter adapter;
-    ChannelBoardFragment channelBoard;
-    LoaderTask task;
+    private String defaultChannel = "hot";
+    private LListView listView;
+    private ArticleAdapter adapter;
+    private LoaderTask task;
+    private SubItem subItem;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,6 +43,7 @@ public class ArticlesFragment extends BaseFragment implements LListView.OnRefres
     @Override
     public View onCreateLayoutView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_articles, container, false);
+        subItem = (SubItem) getArguments().getSerializable(Consts.Extra_SubItem);
         listView = (LListView) view.findViewById(R.id.list_articles);
         adapter = new ArticleAdapter(getActivity());
         listView.setAdapter(adapter);
@@ -78,6 +79,11 @@ public class ArticlesFragment extends BaseFragment implements LListView.OnRefres
     @Override
     public void onLoadMore() {
         //TODO
+    }
+
+    @Override
+    public View resetData(SubItem subItem) {
+        return null;
     }
 
     class LoaderTask extends AsyncTask<RequestData, Integer, ResultObject> {

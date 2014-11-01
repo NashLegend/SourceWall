@@ -21,6 +21,10 @@ public class SubItemView extends AceView<SubItem> {
         textView = (TextView) findViewById(R.id.text_subitem);
     }
 
+    public SubItem getSubItem() {
+        return item;
+    }
+
     @Override
     public void setData(SubItem subItem) {
         textView.setText(subItem.getName());

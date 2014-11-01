@@ -1,9 +1,11 @@
 package com.example.outerspace.model;
 
+import java.io.Serializable;
+
 /**
  * Created by NashLegend on 2014/10/31 0031
  */
-public class SubItem extends AceModel {
+public class SubItem extends AceModel implements Serializable{
 
     public static final int Type_Collections = 0;
     public static final int Type_Single_Channel = 1;

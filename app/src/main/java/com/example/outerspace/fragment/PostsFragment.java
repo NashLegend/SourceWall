@@ -15,6 +15,7 @@ import com.example.outerspace.commonview.LListView;
 import com.example.outerspace.connection.ResultObject;
 import com.example.outerspace.connection.api.PostAPI;
 import com.example.outerspace.model.Post;
+import com.example.outerspace.model.SubItem;
 import com.example.outerspace.util.Consts;
 import com.example.outerspace.view.PostListItemView;
 
@@ -24,16 +25,16 @@ import java.util.ArrayList;
 /**
  * Created by NashLegend on 2014/9/18 0018
  */
-public class PostsFragment extends BaseFragment implements LListView.OnRefreshListener {
-    boolean isChannel = false;
-    LListView listView;
-    PostAdapter adapter;
-    ChannelBoardFragment channelBoard;
-    LoaderTask task;
+public class PostsFragment extends ChannelsFragment implements LListView.OnRefreshListener {
+    private LListView listView;
+    private PostAdapter adapter;
+    private LoaderTask task;
+    private SubItem subItem;
 
     @Override
     public View onCreateLayoutView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_posts, container, false);
+        subItem = (SubItem) getArguments().getSerializable(Consts.Extra_SubItem);
         listView = (LListView) view.findViewById(R.id.list_posts);
         adapter = new PostAdapter(getActivity());
         listView.setAdapter(adapter);
@@ -63,6 +64,11 @@ public class PostsFragment extends BaseFragment implements LListView.OnRefreshLi
     @Override
     public void onLoadMore() {
         //TODO
+    }
+
+    @Override
+    public View resetData(SubItem subItem) {
+        return null;
     }
 
 
