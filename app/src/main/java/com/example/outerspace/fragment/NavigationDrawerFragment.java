@@ -13,16 +13,19 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.outerspace.R;
+import com.example.outerspace.adapters.ChannelsAdapter;
 import com.example.outerspace.util.Consts;
 
 /**
@@ -56,9 +59,8 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     private int mCurrentSelectedPosition = 0;
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
-    private View artisButton;
-    private View postsButton;
-    private View quessButton;
+    private ExpandableListView listView;
+    private ChannelsAdapter adapter;
 
     public NavigationDrawerFragment() {
     }
@@ -93,12 +95,9 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
                              Bundle savedInstanceState) {
         layoutView = (LinearLayout) inflater.inflate(
                 R.layout.fragment_navigation_drawer, container, false);
-        artisButton = layoutView.findViewById(R.id.button_articles);
-        postsButton = layoutView.findViewById(R.id.button_posts);
-        quessButton = layoutView.findViewById(R.id.button_questions);
-        artisButton.setOnClickListener(this);
-        postsButton.setOnClickListener(this);
-        quessButton.setOnClickListener(this);
+        listView = (ExpandableListView) layoutView.findViewById(R.id.list_channel);
+        adapter=new ChannelsAdapter(getActivity());
+
         return layoutView;
     }
 
