@@ -1,29 +1,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/darker_gray"
+    android:background="@android:color/white"
     android:orientation="vertical">
 
     <ExpandableListView
         android:id="@+id/list_channel"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <!--<Button-->
-        <!--android:id="@+id/button_articles"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="@string/articles" />-->
-
-    <!--<Button-->
-        <!--android:id="@+id/button_posts"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="@string/posts" />-->
-
-    <!--<Button-->
-        <!--android:id="@+id/button_questions"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="@string/questions" />-->
+        android:layout_height="match_parent"
+        android:childDivider="@null"
+        android:divider="@null" />
 </LinearLayout>
