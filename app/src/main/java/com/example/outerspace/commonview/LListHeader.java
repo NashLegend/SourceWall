@@ -43,6 +43,8 @@ public class LListHeader extends FrameLayout {
         if (dist < 0 && !isVisible()) {
             return false;
         }
+        float rat = 1.5f;
+        dist /= rat;
         handleMotion(dist);
         if (currentState != LListView.State_Refreshing) {
             // 这时只有两种可能的状态State_Release_To_Refresh和State_Pull_To_Refresh
@@ -139,8 +141,7 @@ public class LListHeader extends FrameLayout {
 
     /**
      * 处理运动过程中的变化
-     * 好了问题来了：挖掘机技术到底哪家强？
-     * 不对打错了，假如说我想让header的高度是变化的，那么如果使用margin来控制的话无疑增加了麻烦的计算。
+     * 假如说我想让header的高度是变化的，那么如果使用margin来控制的话无疑增加了麻烦的计算。
      * 所以呢最好的方式是不用margin，而是使用直接改变高度的方式
      *
      * @param dist

@@ -11,7 +11,7 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
 
 /**
- * Created by NashLegend on 2014/9/24 0024.
+ * Created by NashLegend on 2014/9/24 0024
  */
 public class LListView extends ListView implements OnScrollListener {
 
@@ -94,7 +94,7 @@ public class LListView extends ListView implements OnScrollListener {
     }
 
     private void addViews(Context context) {
-        touchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
+        touchSlop = (int) (ViewConfiguration.get(getContext()).getScaledTouchSlop() * 1.5);
         headerView = new LListHeader(context);
         addHeaderView(headerView);
     }
@@ -104,11 +104,7 @@ public class LListView extends ListView implements OnScrollListener {
     float currentY;
     boolean dragging = false;
     boolean pulling = false;
-
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-        return super.onInterceptTouchEvent(ev);
-    }
+    float handMoveThreshold = 1.5f;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -125,13 +121,15 @@ public class LListView extends ListView implements OnScrollListener {
                     currentY = ev.getY();
                     if (dragging) {
                         float dist = currentY - lastY;
-                        if (!headerView.handleMoveDistance(dist)) {
-                            pulling = false;
-                            return super.onTouchEvent(ev);
-                        } else {
-                            pulling = true;
+                        if (Math.abs(dist) > handMoveThreshold) {
+                            if (!headerView.handleMoveDistance(dist)) {
+                                pulling = false;
+                                return super.onTouchEvent(ev);
+                            } else {
+                                pulling = true;
+                            }
+                            lastY = currentY;
                         }
-                        lastY = currentY;
                     } else {
                         if (Math.abs(currentY - touchDownY) > touchSlop) {
                             dragging = true;
