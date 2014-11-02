@@ -29,8 +29,9 @@ public class QuestionAPI extends APIBase {
     public static ArrayList<Question> getQuestionsByTagFromJsonUrl(String tag, int offset) throws IOException {
         // 比html还特么浪费流量…………
         ArrayList<Question> questions = new ArrayList<Question>();
-        String url = "http://apis.guokr.com/ask/question.json?retrieve_type=by_tag&limit=1&tag_name="
+        String url = "http://apis.guokr.com/ask/question.json?retrieve_type=by_tag&limit=20&tag_name="
                 + tag + "&offset=" + offset;
+        System.out.println(url);
         String jString = HttpFetcher.get(url);
         try {
             JSONObject jss = new JSONObject(jString);
@@ -132,7 +133,7 @@ public class QuestionAPI extends APIBase {
 
     public static ArrayList<QuestionAnswer> getQuestionAnswers(String id, int offset) throws IOException {
         ArrayList<QuestionAnswer> answers = new ArrayList<QuestionAnswer>();
-        String url = "http://apis.guokr.com/ask/answer.json?retrieve_type=by_question&limit=10&question_id="
+        String url = "http://apis.guokr.com/ask/answer.json?retrieve_type=by_question&limit=20&question_id="
                 + id + "&offset=" + offset;
         String jString = HttpFetcher.get(url);
 
@@ -205,7 +206,7 @@ public class QuestionAPI extends APIBase {
 
     public static ArrayList<SimpleComment> getAnswerComments(String id, int offset) throws IOException {
         ArrayList<SimpleComment> list = new ArrayList<SimpleComment>();
-        String url = "http://www.guokr.com/apis/ask/answer_reply.json?retrieve_type=by_answer&limit=10&answer_id="
+        String url = "http://www.guokr.com/apis/ask/answer_reply.json?retrieve_type=by_answer&limit=20&answer_id="
                 + id + "&offset=" + offset;
         String jString = HttpFetcher.get(url);
         try {

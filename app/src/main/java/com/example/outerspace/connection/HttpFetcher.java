@@ -1,23 +1,16 @@
 package com.example.outerspace.connection;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Build;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Created by NashLegend on 2014/9/15 0015.
+ * Created by NashLegend on 2014/9/15 0015
  */
 public class HttpFetcher {
 

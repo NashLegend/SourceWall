@@ -47,39 +47,55 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                 startActivity(intent);
             }
         });
-        task = new LoaderTask();
-        RequestData requestData = new RequestData();
-        requestData.isChannel = false;
-        requestData.isLoadMore = false;
-        requestData.offset = 1;
-        task.execute(requestData);
+        loadData(0);
         return view;
+    }
+
+    private void loadData(int offset) {
+        cancelPotentialTask();
+        task = new LoaderTask();
+        task.execute(offset);
     }
 
     @Override
     public void onStartRefresh() {
         //TODO
+        loadData(0);
     }
 
     @Override
     public void onStartLoadMore() {
         //TODO
+        loadData(adapter.getCount());
     }
 
     @Override
     public void resetData(SubItem subItem) {
-
+        if (subItem.equals(this.subItem)) {
+            triggerRefresh();
+        } else {
+            this.subItem = subItem;
+            loadData(0);
+            adapter.clear();
+            adapter.notifyDataSetInvalidated();
+        }
     }
 
     @Override
     public void triggerRefresh() {
-
+        //TODO
+        listView.startRefresh();
     }
 
+    private void cancelPotentialTask() {
+        if (task != null && task.getStatus() == AsyncTask.Status.RUNNING) {
+            task.cancel(true);
+        }
+    }
 
-    class LoaderTask extends AsyncTask<RequestData, Integer, ResultObject> {
+    class LoaderTask extends AsyncTask<Integer, Integer, ResultObject> {
 
-        RequestData data;
+        int offset;
 
         @Override
         protected void onPreExecute() {
@@ -87,15 +103,15 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         }
 
         @Override
-        protected ResultObject doInBackground(RequestData... datas) {
-            data = datas[0];
+        protected ResultObject doInBackground(Integer... datas) {
+            offset = datas[0];
             ArrayList<Post> posts = new ArrayList<Post>();
             ResultObject resultObject = new ResultObject();
             try {
-                if (data.isChannel) {
-                    posts = PostAPI.getGroupPostListByJsonUrl(data.key, data.offset);
+                if (subItem.getType() == SubItem.Type_Collections) {
+                    posts = PostAPI.getGroupHotPostListFromMobileUrl(offset);
                 } else {
-                    posts = PostAPI.getGroupHotPostListFromMobileUrl(data.offset);
+                    posts = PostAPI.getGroupPostListByJsonUrl(subItem.getValue(), offset);
                 }
                 resultObject.result = posts;
                 if (posts != null) {
@@ -109,32 +125,27 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
 
         @Override
         protected void onPostExecute(ResultObject o) {
-            if (o.ok) {
-                ArrayList<Post> ars = (ArrayList<Post>) o.result;
-                if (data.isLoadMore) {
-                    if (ars.size() > 0) {
-                        adapter.addAll(ars);
-                    } else {
+            if (!isCancelled()) {
+                if (o.ok) {
+                    ArrayList<Post> ars = (ArrayList<Post>) o.result;
+                    if (offset > 0) {
+                        if (ars.size() > 0) {
+                            adapter.addAll(ars);
+                        } else {
 
+                        }
+                    } else {
+                        if (ars.size() > 0) {
+                            adapter.setList(ars);
+                        } else {
+
+                        }
                     }
+                    adapter.notifyDataSetChanged();
                 } else {
-                    if (ars.size() > 0) {
-                        adapter.setList(ars);
-                    } else {
 
-                    }
                 }
-                adapter.notifyDataSetChanged();
-            } else {
-
             }
         }
-    }
-
-    class RequestData {
-        boolean isLoadMore = false;
-        boolean isChannel = true;
-        String key = "";
-        int offset = 0;
     }
 }

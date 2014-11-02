@@ -95,7 +95,7 @@ public class PostAPI extends APIBase {
      */
     public static ArrayList<Post> getGroupPostListByJsonUrl(String id, int offset) throws IOException {
         String url = "http://apis.guokr.com/group/post.json?retrieve_type=by_group&group_id=" + id
-                + "&limit=2&offset=" + offset;
+                + "&limit=20&offset=" + offset;
         ArrayList<Post> list = new ArrayList<Post>();
         String jString = HttpFetcher.get(url);
         try {
@@ -245,7 +245,7 @@ public class PostAPI extends APIBase {
     public static ArrayList<SimpleComment> getPostCommentsFromJsonUrl(String id, int offset) throws IOException, JSONException {
         ArrayList<SimpleComment> list = new ArrayList<SimpleComment>();
         String url = "http://apis.guokr.com/group/post_reply.json?retrieve_type=by_post&post_id="
-                + id + "&limit=10&offset=" + offset;
+                + id + "&limit=20&offset=" + offset;
         String jString = HttpFetcher.get(url);
         JSONObject jss = new JSONObject(jString);
         boolean ok = jss.getBoolean("ok");

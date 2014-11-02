@@ -20,6 +20,7 @@ import com.example.outerspace.util.Consts;
 import com.example.outerspace.view.QuestionFeaturedListItemView;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /**
@@ -49,39 +50,55 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
                 startActivity(intent);
             }
         });
-        task = new LoaderTask();
-        RequestData requestData = new RequestData();
-        requestData.isByTag = false;
-        requestData.isLoadMore = false;
-        requestData.offset = 1;
-        requestData.tag = HOTTEST;
-        task.execute(requestData);
+        loadData(0);
         return view;
+    }
+
+    private void loadData(int offset) {
+        cancelPotentialTask();
+        task = new LoaderTask();
+        task.execute(offset);
     }
 
     @Override
     public void onStartRefresh() {
         //TODO
+        loadData(0);
     }
 
     @Override
     public void onStartLoadMore() {
         //TODO
+        loadData(adapter.getCount());
     }
 
     @Override
     public void resetData(SubItem subItem) {
-
+        if (subItem.equals(this.subItem)) {
+            triggerRefresh();
+        } else {
+            this.subItem = subItem;
+            loadData(0);
+            adapter.clear();
+            adapter.notifyDataSetInvalidated();
+        }
     }
 
     @Override
     public void triggerRefresh() {
-
+        //TODO
+        listView.startRefresh();
     }
 
-    class LoaderTask extends AsyncTask<RequestData, Integer, ResultObject> {
+    private void cancelPotentialTask() {
+        if (task != null && task.getStatus() == AsyncTask.Status.RUNNING) {
+            task.cancel(true);
+        }
+    }
 
-        RequestData data;
+    class LoaderTask extends AsyncTask<Integer, Integer, ResultObject> {
+
+        int offset;
 
         @Override
         protected void onPreExecute() {
@@ -89,19 +106,19 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
         }
 
         @Override
-        protected ResultObject doInBackground(RequestData... datas) {
-            data = datas[0];
+        protected ResultObject doInBackground(Integer... datas) {
+            offset = datas[0];
             ArrayList<Question> questions = new ArrayList<Question>();
             ResultObject resultObject = new ResultObject();
             try {
-                if (data.isByTag) {
-                    questions = QuestionAPI.getQuestionsByTagFromJsonUrl(data.tag, data.offset);
-                } else {
-                    if (HOTTEST.equals(data.tag)) {
-                        questions = QuestionAPI.getHotQuestions(data.offset);
+                if (subItem.getType() == SubItem.Type_Collections) {
+                    if (HOTTEST.equals(subItem.getValue())) {
+                        questions = QuestionAPI.getHotQuestions(offset);
                     } else {
-                        questions = QuestionAPI.getHighlightQuestions(data.offset);
+                        questions = QuestionAPI.getHighlightQuestions(offset);
                     }
+                } else {
+                    questions = QuestionAPI.getQuestionsByTagFromJsonUrl(URLEncoder.encode(subItem.getValue(), "UTF-8"), offset);
                 }
                 resultObject.result = questions;
                 if (questions != null) {
@@ -115,32 +132,27 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
 
         @Override
         protected void onPostExecute(ResultObject o) {
-            if (o.ok) {
-                ArrayList<Question> ars = (ArrayList<Question>) o.result;
-                if (data.isLoadMore) {
-                    if (ars.size() > 0) {
-                        adapter.addAll(ars);
-                    } else {
+            if (!isCancelled()) {
+                if (o.ok) {
+                    ArrayList<Question> ars = (ArrayList<Question>) o.result;
+                    if (offset > 0) {
+                        if (ars.size() > 0) {
+                            adapter.addAll(ars);
+                        } else {
 
+                        }
+                    } else {
+                        if (ars.size() > 0) {
+                            adapter.setList(ars);
+                        } else {
+
+                        }
                     }
+                    adapter.notifyDataSetChanged();
                 } else {
-                    if (ars.size() > 0) {
-                        adapter.setList(ars);
-                    } else {
 
-                    }
                 }
-                adapter.notifyDataSetChanged();
-            } else {
-
             }
         }
-    }
-
-    class RequestData {
-        boolean isLoadMore = false;
-        boolean isByTag = false;
-        String tag = "";
-        int offset = 0;
     }
 }
