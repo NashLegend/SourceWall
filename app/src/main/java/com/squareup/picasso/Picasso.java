@@ -15,6 +15,28 @@
  */
 package com.squareup.picasso;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.os.Process;
+import android.widget.ImageView;
+import android.widget.RemoteViews;
+
+import com.squareup.picasso.Action.RequestWeakReference;
+
+import java.io.File;
+import java.lang.ref.ReferenceQueue;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
+import java.util.concurrent.ExecutorService;
+
 import static android.os.Process.THREAD_PRIORITY_BACKGROUND;
 import static com.squareup.picasso.Dispatcher.HUNTER_BATCH_COMPLETE;
 import static com.squareup.picasso.Dispatcher.REQUEST_BATCH_RESUME;
@@ -28,28 +50,6 @@ import static com.squareup.picasso.Utils.VERB_ERRORED;
 import static com.squareup.picasso.Utils.VERB_RESUMED;
 import static com.squareup.picasso.Utils.checkMain;
 import static com.squareup.picasso.Utils.log;
-
-import java.io.File;
-import java.lang.ref.ReferenceQueue;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
-import java.util.concurrent.ExecutorService;
-
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.os.Process;
-import android.widget.ImageView;
-import android.widget.RemoteViews;
-
-import com.squareup.picasso.Action.RequestWeakReference;
 
 /**
  * Image downloading, transformation, and caching manager.
@@ -340,7 +340,7 @@ public class Picasso {
 	/**
 	 * {@code true} if debug display, logging, and statistics are enabled.
 	 * <p>
-	 * 
+	 *
 	 * @deprecated Use {@link #areIndicatorsEnabled()} and
 	 *             {@link #isLoggingEnabled()} instead.
 	 */
@@ -353,7 +353,7 @@ public class Picasso {
 	/**
 	 * Toggle whether debug display, logging, and statistics are enabled.
 	 * <p>
-	 * 
+	 *
 	 * @deprecated Use {@link #setIndicatorsEnabled(boolean)} and
 	 *             {@link #setLoggingEnabled(boolean)} instead.
 	 */
@@ -404,7 +404,7 @@ public class Picasso {
 
 	/**
 	 * 清理缓存中包含cacheKey字段的内存
-	 * 
+	 *
 	 * @param cacheKey
 	 */
 	public void cleanMemoryCacheByKey(String cacheKey) {
@@ -417,14 +417,14 @@ public class Picasso {
 	public void cleanMemoryCache() {
 		cache.clear();
 	}
-	
+
 	/**
 	 * 清理缓存文件夹
 	 */
 	public void cleanFileCache(){
 		Utils.cleanDefaultCacheDir();
 	}
-	
+
 	/**
 	 * 获取缓存文件夹大小
 	 * @return
@@ -435,7 +435,7 @@ public class Picasso {
 
 	/**
 	 * 获取缓存大小，单位为byte
-	 * 
+	 *
 	 * @return
 	 */
 	public int getCacheSize() {

@@ -15,18 +15,18 @@
  */
 package com.squareup.picasso;
 
-import static com.squareup.picasso.Utils.parseResponseSourceHeader;
+import android.content.Context;
+import android.net.Uri;
+
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.OkUrlFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import android.content.Context;
-import android.net.Uri;
-
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.OkUrlFactory;
+import static com.squareup.picasso.Utils.parseResponseSourceHeader;
 
 /** A {@link com.squareup.picasso.Downloader} which uses OkHttp to download images. */
 public class OkHttpDownloader implements Downloader {

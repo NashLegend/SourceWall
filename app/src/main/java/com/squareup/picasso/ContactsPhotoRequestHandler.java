@@ -15,15 +15,6 @@
  */
 package com.squareup.picasso;
 
-import static android.content.ContentResolver.SCHEME_CONTENT;
-import static android.os.Build.VERSION.SDK_INT;
-import static android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH;
-import static android.provider.ContactsContract.Contacts.openContactPhotoInputStream;
-import static com.squareup.picasso.Picasso.LoadedFrom.DISK;
-
-import java.io.IOException;
-import java.io.InputStream;
-
 import android.annotation.TargetApi;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -32,6 +23,15 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.ContactsContract;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import static android.content.ContentResolver.SCHEME_CONTENT;
+import static android.os.Build.VERSION.SDK_INT;
+import static android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH;
+import static android.provider.ContactsContract.Contacts.openContactPhotoInputStream;
+import static com.squareup.picasso.Picasso.LoadedFrom.DISK;
 
 class ContactsPhotoRequestHandler extends RequestHandler {
 	/**

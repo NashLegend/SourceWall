@@ -15,12 +15,12 @@
  */
 package com.squareup.picasso;
 
-import static com.squareup.picasso.Picasso.TAG;
+import android.util.Log;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import android.util.Log;
+import static com.squareup.picasso.Picasso.TAG;
 
 /**
  * Represents all stats for a {@link com.squareup.picasso.Picasso} instance at a single point in

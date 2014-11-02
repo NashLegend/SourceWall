@@ -15,13 +15,13 @@
  */
 package com.squareup.picasso;
 
-import java.lang.ref.ReferenceQueue;
-import java.lang.ref.WeakReference;
-
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
 import com.squareup.picasso.Picasso.Priority;
+
+import java.lang.ref.ReferenceQueue;
+import java.lang.ref.WeakReference;
 
 public abstract class Action<T> {
 	static class RequestWeakReference<T> extends WeakReference<T> {

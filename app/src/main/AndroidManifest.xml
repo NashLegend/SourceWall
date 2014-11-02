@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.outerspace">
+    package="com.example.sourcewall">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -9,13 +9,13 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".AppApplication"
+        android:name="com.example.sourcewall.AppApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name="com.example.sourcewall.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,22 +24,28 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SettingActivity"
+            android:name="com.example.sourcewall.SettingActivity"
             android:label="@string/title_activity_setting"
-            android:parentActivityName=".BaseActivity">
+            android:parentActivityName="com.example.sourcewall.BaseActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.outerspace.BaseActivity" />
+                android:value="com.example.sourcewall.BaseActivity" />
         </activity>
         <activity
-            android:name=".ArticleActivity"
-            android:label="@string/title_activity_article"></activity>
+            android:name="com.example.sourcewall.ArticleActivity"
+            android:label="@string/title_activity_article">
+
+        </activity>
         <activity
-            android:name=".PostActivity"
-            android:label="@string/title_activity_post"></activity>
+            android:name="com.example.sourcewall.PostActivity"
+            android:label="@string/title_activity_post">
+
+        </activity>
         <activity
-            android:name=".QuestionActivity"
-            android:label="@string/title_activity_question"></activity>
+            android:name="com.example.sourcewall.QuestionActivity"
+            android:label="@string/title_activity_question">
+
+        </activity>
     </application>
 
 </manifest>

@@ -15,6 +15,12 @@
  */
 package com.squareup.picasso;
 
+import android.content.Context;
+import android.media.ExifInterface;
+import android.net.Uri;
+
+import java.io.IOException;
+
 import static android.content.ContentResolver.SCHEME_FILE;
 import static android.media.ExifInterface.ORIENTATION_NORMAL;
 import static android.media.ExifInterface.ORIENTATION_ROTATE_180;
@@ -22,12 +28,6 @@ import static android.media.ExifInterface.ORIENTATION_ROTATE_270;
 import static android.media.ExifInterface.ORIENTATION_ROTATE_90;
 import static android.media.ExifInterface.TAG_ORIENTATION;
 import static com.squareup.picasso.Picasso.LoadedFrom.DISK;
-
-import java.io.IOException;
-
-import android.content.Context;
-import android.media.ExifInterface;
-import android.net.Uri;
 
 class FileRequestHandler extends ContentStreamRequestHandler {
 

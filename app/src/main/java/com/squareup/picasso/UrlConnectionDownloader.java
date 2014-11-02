@@ -15,17 +15,17 @@
  */
 package com.squareup.picasso;
 
-import static com.squareup.picasso.Utils.parseResponseSourceHeader;
+import android.content.Context;
+import android.net.Uri;
+import android.net.http.HttpResponseCache;
+import android.os.Build;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import android.content.Context;
-import android.net.Uri;
-import android.net.http.HttpResponseCache;
-import android.os.Build;
+import static com.squareup.picasso.Utils.parseResponseSourceHeader;
 
 /**
  * A {@link com.squareup.picasso.Downloader} which uses {@link java.net.HttpURLConnection} to download images.

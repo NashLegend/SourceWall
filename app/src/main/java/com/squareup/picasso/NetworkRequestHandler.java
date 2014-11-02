@@ -15,17 +15,17 @@
  */
 package com.squareup.picasso;
 
-import static com.squareup.picasso.Picasso.LoadedFrom.DISK;
-import static com.squareup.picasso.Picasso.LoadedFrom.NETWORK;
-
-import java.io.IOException;
-import java.io.InputStream;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.NetworkInfo;
 
 import com.squareup.picasso.Downloader.Response;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import static com.squareup.picasso.Picasso.LoadedFrom.DISK;
+import static com.squareup.picasso.Picasso.LoadedFrom.NETWORK;
 
 class NetworkRequestHandler extends RequestHandler {
 	static final int RETRY_COUNT = 2;

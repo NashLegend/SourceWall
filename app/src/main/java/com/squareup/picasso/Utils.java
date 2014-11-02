@@ -15,24 +15,6 @@
  */
 package com.squareup.picasso;
 
-import static android.content.Context.ACTIVITY_SERVICE;
-import static android.content.pm.ApplicationInfo.FLAG_LARGE_HEAP;
-import static android.os.Build.VERSION.SDK_INT;
-import static android.os.Build.VERSION_CODES.HONEYCOMB;
-import static android.os.Build.VERSION_CODES.HONEYCOMB_MR1;
-import static android.os.Process.THREAD_PRIORITY_BACKGROUND;
-import static android.provider.Settings.System.AIRPLANE_MODE_ON;
-import static com.squareup.picasso.Picasso.TAG;
-import static java.lang.String.format;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-import java.util.concurrent.ThreadFactory;
-
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.content.ContentResolver;
@@ -46,6 +28,24 @@ import android.os.Process;
 import android.os.StatFs;
 import android.provider.Settings;
 import android.util.Log;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.concurrent.ThreadFactory;
+
+import static android.content.Context.ACTIVITY_SERVICE;
+import static android.content.pm.ApplicationInfo.FLAG_LARGE_HEAP;
+import static android.os.Build.VERSION.SDK_INT;
+import static android.os.Build.VERSION_CODES.HONEYCOMB;
+import static android.os.Build.VERSION_CODES.HONEYCOMB_MR1;
+import static android.os.Process.THREAD_PRIORITY_BACKGROUND;
+import static android.provider.Settings.System.AIRPLANE_MODE_ON;
+import static com.squareup.picasso.Picasso.TAG;
+import static java.lang.String.format;
 
 public final class Utils {
 	static final String THREAD_PREFIX = "Picasso-";

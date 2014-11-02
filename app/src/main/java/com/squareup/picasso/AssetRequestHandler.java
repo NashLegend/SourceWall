@@ -15,17 +15,17 @@
  */
 package com.squareup.picasso;
 
-import static android.content.ContentResolver.SCHEME_FILE;
-import static com.squareup.picasso.Picasso.LoadedFrom.DISK;
-
-import java.io.IOException;
-import java.io.InputStream;
-
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import static android.content.ContentResolver.SCHEME_FILE;
+import static com.squareup.picasso.Picasso.LoadedFrom.DISK;
 
 class AssetRequestHandler extends RequestHandler {
 	protected static final String ANDROID_ASSET = "android_asset";

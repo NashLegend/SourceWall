@@ -15,13 +15,14 @@
  */
 package com.squareup.picasso;
 
-import static android.content.Context.NOTIFICATION_SERVICE;
-import static com.squareup.picasso.Utils.getService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.appwidget.AppWidgetManager;
 import android.graphics.Bitmap;
 import android.widget.RemoteViews;
+
+import static android.content.Context.NOTIFICATION_SERVICE;
+import static com.squareup.picasso.Utils.getService;
 
 abstract class RemoteViewsAction extends Action<RemoteViewsAction.RemoteViewsTarget> {
 	final RemoteViews remoteViews;

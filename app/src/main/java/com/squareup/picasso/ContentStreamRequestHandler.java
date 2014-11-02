@@ -15,16 +15,16 @@
  */
 package com.squareup.picasso;
 
-import static android.content.ContentResolver.SCHEME_CONTENT;
-import static com.squareup.picasso.Picasso.LoadedFrom.DISK;
-
-import java.io.IOException;
-import java.io.InputStream;
-
 import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import static android.content.ContentResolver.SCHEME_CONTENT;
+import static com.squareup.picasso.Picasso.LoadedFrom.DISK;
 
 class ContentStreamRequestHandler extends RequestHandler {
 	final Context context;

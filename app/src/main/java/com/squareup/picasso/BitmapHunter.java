@@ -15,6 +15,20 @@
  */
 package com.squareup.picasso;
 
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.net.NetworkInfo;
+
+import com.squareup.picasso.Picasso.Priority;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import static com.squareup.picasso.Picasso.LoadedFrom.MEMORY;
 import static com.squareup.picasso.Picasso.Priority.LOW;
 import static com.squareup.picasso.Utils.OWNER_HUNTER;
@@ -25,20 +39,6 @@ import static com.squareup.picasso.Utils.VERB_REMOVED;
 import static com.squareup.picasso.Utils.VERB_TRANSFORMED;
 import static com.squareup.picasso.Utils.getLogIdsForHunter;
 import static com.squareup.picasso.Utils.log;
-
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Future;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import android.graphics.Bitmap;
-import android.graphics.Matrix;
-import android.net.NetworkInfo;
-
-import com.squareup.picasso.Picasso.Priority;
 
 class BitmapHunter implements Runnable {
 	/**

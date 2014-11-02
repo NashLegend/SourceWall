@@ -15,12 +15,12 @@
  */
 package com.squareup.picasso;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import android.content.Context;
-import android.graphics.Bitmap;
 
 /**
  * A memory cache which uses a least-recently used eviction policy.

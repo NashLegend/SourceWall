@@ -15,11 +15,11 @@
  */
 package com.squareup.picasso;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import android.graphics.Bitmap;
 import android.net.Uri;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * A mechanism to load images from external resources such as a disk cache
