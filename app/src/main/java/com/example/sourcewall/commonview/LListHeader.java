@@ -31,7 +31,7 @@ public class LListHeader extends FrameLayout {
     private void checkStateChange() {
         if (lastState != currentState) {
             // 在move状态下只有这两种可能
-            if (currentState == LListView.State_Pull_To_Refresh) {
+            if (currentState == LListView.State_Pull_Down_To_Refresh) {
                 //有可能来自下拉从LListView.State_Normal变来也有可能来自上滑从State_Release_To_Refresh变来
             } else if (currentState == LListView.State_Release_To_Refresh) {
                 //只有可能从State_Pull_To_Refresh变来
@@ -52,14 +52,14 @@ public class LListHeader extends FrameLayout {
             if (isOverReleaseThreshold()) {
                 currentState = LListView.State_Release_To_Refresh;
             } else {
-                currentState = LListView.State_Pull_To_Refresh;
+                currentState = LListView.State_Pull_Down_To_Refresh;
             }
         }
 
         //这段表示状态之间的转换，不涉及状态内动作
         if (lastState != currentState) {
             // 在move状态下只有这两种可能
-            if (currentState == LListView.State_Pull_To_Refresh) {
+            if (currentState == LListView.State_Pull_Down_To_Refresh) {
                 //有可能来自下拉从LListView.State_Normal变来也有可能来自上滑从State_Release_To_Refresh变来
                 if (lastState == LListView.State_Normal) {
                     normal2Pull();
@@ -83,7 +83,7 @@ public class LListHeader extends FrameLayout {
             } else {
                 release2Normal();
             }
-        } else if (currentState == LListView.State_Pull_To_Refresh) {
+        } else if (currentState == LListView.State_Pull_Down_To_Refresh) {
             pull2Normal();
         } else if (currentState == LListView.State_Refreshing) {
             // TODO 这里的值应该是动画的正常高度，是在初始化时就确定的
@@ -117,7 +117,7 @@ public class LListHeader extends FrameLayout {
     }
 
     private void release2Pull() {
-        currentState = LListView.State_Pull_To_Refresh;
+        currentState = LListView.State_Pull_Down_To_Refresh;
         tvHint.setText(R.string.pull_to_refresh);
     }
 
@@ -156,7 +156,7 @@ public class LListHeader extends FrameLayout {
     public void handleMotion(float dist) {
         switch (currentState) {
             //TODO
-            case LListView.State_Pull_To_Refresh:
+            case LListView.State_Pull_Down_To_Refresh:
 
                 break;
             case LListView.State_Release_To_Refresh:

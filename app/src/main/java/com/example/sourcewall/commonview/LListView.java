@@ -16,28 +16,28 @@ import android.widget.ListView;
 public class LListView extends ListView implements OnScrollListener {
 
     public static final int State_Normal = 0;
-    public static final int State_Pull_To_Refresh = 1;
+    public static final int State_Pull_Down_To_Refresh = 1;
     public static final int State_Release_To_Refresh = 2;
     public static final int State_Refreshing = 3;
     public static final int State_Loading_More = 4;
 
-    private boolean can_pull_to_refresh = true;
-    private boolean can_auto_load_more = false;
+    private boolean refreshable = true;
+    private boolean loadable = false;
 
-    public boolean isCan_pull_to_refresh() {
-        return can_pull_to_refresh;
+    public boolean isRefreshable() {
+        return refreshable;
     }
 
-    public void setCan_pull_to_refresh(boolean can_pull_to_refresh) {
-        this.can_pull_to_refresh = can_pull_to_refresh;
+    public void setRefreshable(boolean refreshable) {
+        this.refreshable = refreshable;
     }
 
-    public boolean isCan_auto_load_more() {
-        return can_auto_load_more;
+    public boolean isLoadable() {
+        return loadable;
     }
 
-    public void setCan_auto_load_more(boolean can_auto_load_more) {
-        this.can_auto_load_more = can_auto_load_more;
+    public void setLoadable(boolean loadable) {
+        this.loadable = loadable;
     }
 
     private LListHeader headerView;
@@ -53,9 +53,6 @@ public class LListView extends ListView implements OnScrollListener {
     public void setLoadingMoreThreshold(int loadingMoreThreshold) {
         this.loadingMoreThreshold = loadingMoreThreshold;
     }
-
-
-    private boolean refreshable = false;
 
     public LListView(Context context) {
         super(context);
@@ -165,22 +162,28 @@ public class LListView extends ListView implements OnScrollListener {
     }
 
     private boolean checkRefreshable(MotionEvent ev) {
-        if (can_pull_to_refresh) {
+        boolean refreshable = false;
+        if (this.refreshable) {
             View firstView = this.getChildAt(0);
             if (firstView != null) {
                 int p = this.getFirstVisiblePosition();
                 if (p == 0 && firstView.getTop() >= 0) {
                     refreshable = true;
-                } else {
-                    refreshable = false;
                 }
             } else {
                 refreshable = true;
             }
-        } else {
-            refreshable = false;
         }
         return refreshable;
+    }
+
+    private boolean checkLoadable(MotionEvent ev) {
+        if (loadable) {
+
+        } else {
+
+        }
+        return false;
     }
 
     private OnScrollListener outerListener;
