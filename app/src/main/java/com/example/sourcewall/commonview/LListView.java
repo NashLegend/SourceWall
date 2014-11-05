@@ -72,6 +72,11 @@ public class LListView extends ListView implements OnScrollListener {
         addViews(context);
     }
 
+    public void doneOperation() {
+        doneRefreshing();
+        doneLoadingMore();
+    }
+
     public void cancelRefresh() {
         headerView.cancelRefresh();
     }

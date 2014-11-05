@@ -46,6 +46,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
         listView = (LListView) view.findViewById(R.id.list_articles);
         adapter = new ArticleAdapter(getActivity());
         listView.setAdapter(adapter);
+        listView.setOnRefreshListener(this);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -73,6 +74,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
     @Override
     public void onStartRefresh() {
         //TODO
+        System.out.println("onStartRefresh");
         loadData(0);
     }
 
@@ -97,12 +99,14 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
     @Override
     public void triggerRefresh() {
         //TODO
+        System.out.println("Refresh");
         listView.startRefresh();
     }
 
     private void cancelPotentialTask() {
         if (task != null && task.getStatus() == AsyncTask.Status.RUNNING) {
             task.cancel(true);
+            listView.doneOperation();
         }
     }
 
@@ -144,22 +148,26 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
                 if (o.ok) {
                     ArrayList<Article> ars = (ArrayList<Article>) o.result;
                     if (offset > 0) {
+                        //Load More
                         if (ars.size() > 0) {
                             adapter.addAll(ars);
                         } else {
-
+                            //no data loaded
                         }
+                        adapter.notifyDataSetChanged();
                     } else {
+                        //Refresh
                         if (ars.size() > 0) {
                             adapter.setList(ars);
                         } else {
-
+                            //no data loaded,不要清除了，保留旧数据得了
                         }
+                        adapter.notifyDataSetInvalidated();
                     }
-                    adapter.notifyDataSetChanged();
                 } else {
-
+                    // load error
                 }
+                listView.doneOperation();
             }
 
         }

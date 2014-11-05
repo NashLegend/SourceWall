@@ -141,17 +141,19 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
                         } else {
 
                         }
+                        adapter.notifyDataSetChanged();
                     } else {
                         if (ars.size() > 0) {
                             adapter.setList(ars);
                         } else {
 
                         }
+                        adapter.notifyDataSetInvalidated();
                     }
-                    adapter.notifyDataSetChanged();
                 } else {
 
                 }
+                listView.doneOperation();
             }
         }
     }

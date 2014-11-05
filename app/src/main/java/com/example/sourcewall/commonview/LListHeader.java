@@ -97,6 +97,7 @@ public class LListHeader extends FrameLayout {
     private void normal2Refreshing() {
         animateToHeight(Refreshing_Height);
         tvHint.setText(R.string.refreshing);
+        currentState = LListView.State_Refreshing;
         onRefreshListener.onStartRefresh();
     }
 
@@ -105,24 +106,29 @@ public class LListHeader extends FrameLayout {
     }
 
     private void pull2Normal() {
+        currentState = LListView.State_Normal;
         tvHint.setText(R.string.idling);
         animateToHeight(0);
     }
 
     private void pull2Release() {
+        currentState = LListView.State_Release_To_Refresh;
         tvHint.setText(R.string.release_to_refresh);
     }
 
     private void release2Pull() {
+        currentState = LListView.State_Pull_To_Refresh;
         tvHint.setText(R.string.pull_to_refresh);
     }
 
     private void release2Normal() {
+        currentState = LListView.State_Normal;
         tvHint.setText(R.string.idling);
         animateToHeight(0);
     }
 
     private void release2Refreshing() {
+        currentState = LListView.State_Refreshing;
         animateToHeight(Refreshing_Height);
         tvHint.setText(R.string.refreshing);
         onRefreshListener.onStartRefresh();
@@ -135,7 +141,8 @@ public class LListHeader extends FrameLayout {
 
     private void refreshing2Normal() {
         //
-
+        currentState = LListView.State_Normal;
+        tvHint.setText(R.string.idling);
         animateToHeight(0);
     }
 

@@ -38,6 +38,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         listView = (LListView) view.findViewById(R.id.list_posts);
         adapter = new PostAdapter(getActivity());
         listView.setAdapter(adapter);
+        listView.setOnRefreshListener(this);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -90,6 +91,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     private void cancelPotentialTask() {
         if (task != null && task.getStatus() == AsyncTask.Status.RUNNING) {
             task.cancel(true);
+            listView.doneOperation();
         }
     }
 
@@ -132,19 +134,21 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                         if (ars.size() > 0) {
                             adapter.addAll(ars);
                         } else {
-
+                            // notify no data
                         }
+                        adapter.notifyDataSetChanged();
                     } else {
                         if (ars.size() > 0) {
                             adapter.setList(ars);
                         } else {
-
+                            // notify no data
                         }
+                        adapter.notifyDataSetInvalidated();
                     }
-                    adapter.notifyDataSetChanged();
                 } else {
-
+                    //load error
                 }
+                listView.doneOperation();
             }
         }
     }
