@@ -3,6 +3,7 @@ package com.example.sourcewall.fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,8 +51,13 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
                 startActivity(intent);
             }
         });
+        setTitle();
         loadData(0);
         return view;
+    }
+
+    private void setTitle() {
+        getActivity().setTitle(this.subItem.getName() + " -- 问答");
     }
 
     private void loadData(int offset) {
@@ -78,6 +84,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
             triggerRefresh();
         } else {
             this.subItem = subItem;
+            setTitle();
             loadData(0);
             adapter.clear();
             adapter.notifyDataSetInvalidated();

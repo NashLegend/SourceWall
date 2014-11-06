@@ -34,7 +34,6 @@ public class MainActivity extends BaseActivity {
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
-    private CharSequence mTitle;
     Receiver receiver;
     ArticlesFragment articlesFragment;
     PostsFragment postsFragment;
@@ -48,7 +47,6 @@ public class MainActivity extends BaseActivity {
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-        mTitle = getTitle();
 
 
         // Set up the drawer.
@@ -72,7 +70,7 @@ public class MainActivity extends BaseActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
+        actionBar.setTitle(getTitle());
     }
 
 

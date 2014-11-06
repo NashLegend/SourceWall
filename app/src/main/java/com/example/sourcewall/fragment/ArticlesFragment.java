@@ -3,6 +3,7 @@ package com.example.sourcewall.fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,8 +57,17 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
                 startActivity(intent);
             }
         });
+        setTitle();
         loadData(0);
         return view;
+    }
+
+    private void setTitle() {
+        if (subItem.getType() == SubItem.Type_Collections) {
+            getActivity().setTitle("科学人");
+        } else {
+            getActivity().setTitle(this.subItem.getName() + " -- 科学人");
+        }
     }
 
     private void loadData(int offset) {
@@ -90,6 +100,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
             triggerRefresh();
         } else {
             this.subItem = subItem;
+            setTitle();
             loadData(0);
             adapter.clear();
             adapter.notifyDataSetInvalidated();
