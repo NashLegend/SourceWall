@@ -31,7 +31,6 @@ public class QuestionAPI extends APIBase {
         ArrayList<Question> questions = new ArrayList<Question>();
         String url = "http://apis.guokr.com/ask/question.json?retrieve_type=by_tag&limit=20&tag_name="
                 + tag + "&offset=" + offset;
-        System.out.println(url);
         String jString = HttpFetcher.get(url);
         try {
             JSONObject jss = new JSONObject(jString);

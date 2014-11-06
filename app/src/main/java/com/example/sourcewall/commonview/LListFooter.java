@@ -27,18 +27,8 @@ public class LListFooter extends FrameLayout {
         tvHint = (TextView) findViewById(R.id.text_footer_hint);
     }
 
-    private void checkStateChange() {
-        if (lastState != currentState) {
-            // 在move状态下只有这两种可能
-            if (currentState == LListView.State_Pull_Up_To_Load_More) {
-                //有可能来自下拉从LListView.State_Normal变来也有可能来自上滑从State_Release_To_Load_More变来
-            } else if (currentState == LListView.State_Release_To_Load_More) {
-                //只有可能从State_Pull_To_Refresh变来
-            }
-        }
-    }
-
-    public boolean handleMoveDistance(float dist) {
+    protected boolean handleMoveDistance(float dist) {
+        dist *= -1;
         if (dist < 0 && !isVisible()) {
             return false;
         }
@@ -46,18 +36,20 @@ public class LListFooter extends FrameLayout {
         dist /= rat;
         handleMotion(dist);
         if (currentState != LListView.State_Loading_More) {
-            // 这时只有两种可能的状态State_Release_To_Load_More和State_Pull_To_Refresh
             // TODO 或许可以做更多
-            if (isOverReleaseThreshold()) {
-                currentState = LListView.State_Release_To_Load_More;
+            if (isVisible()) {
+                if (isOverReleaseThreshold()) {
+                    currentState = LListView.State_Release_To_Load_More;
+                } else {
+                    currentState = LListView.State_Pull_Up_To_Load_More;
+                }
             } else {
-                currentState = LListView.State_Pull_Up_To_Load_More;
+                currentState = LListView.State_Normal;
             }
         }
 
         //这段表示状态之间的转换，不涉及状态内动作
         if (lastState != currentState) {
-            // 在move状态下只有这两种可能
             if (currentState == LListView.State_Pull_Up_To_Load_More) {
                 //有可能来自下拉从LListView.State_Normal变来也有可能来自上滑从State_Release_To_Load_More变来
                 if (lastState == LListView.State_Normal) {
@@ -74,7 +66,7 @@ public class LListFooter extends FrameLayout {
         return true;
     }
 
-    public void handleOperationDone() {
+    protected void handleUpOperation() {
         if (currentState == LListView.State_Release_To_Load_More) {
             // TODO start loading more
             if (onRefreshListener != null) {
@@ -90,10 +82,10 @@ public class LListFooter extends FrameLayout {
                 loading2Loading();
             }
         }
-        checkStateChange();
+        lastState = LListView.State_Normal;
     }
 
-    private void normal2Refreshing() {
+    private void normal2Loading() {
         animateToHeight(Loading_Height);
         tvHint.setText(R.string.loading);
         currentState = LListView.State_Loading_More;
@@ -134,25 +126,16 @@ public class LListFooter extends FrameLayout {
     }
 
     private void loading2Loading() {
-        //TODO
         animateToHeight(Loading_Height);
     }
 
     private void loading2Normal() {
-        //
         currentState = LListView.State_Normal;
         tvHint.setText(R.string.idling);
         animateToHeight(0);
     }
 
-    /**
-     * 处理运动过程中的变化
-     * 假如说我想让header的高度是变化的，那么如果使用margin来控制的话无疑增加了麻烦的计算。
-     * 所以呢最好的方式是不用margin，而是使用直接改变高度的方式
-     *
-     * @param dist
-     */
-    public void handleMotion(float dist) {
+    protected void handleMotion(float dist) {
         switch (currentState) {
             //TODO
             case LListView.State_Pull_Up_To_Load_More:
@@ -168,19 +151,12 @@ public class LListFooter extends FrameLayout {
         setHeight((int) (getHeight() + dist));
     }
 
-    public void cancelRefresh() {
+    protected void doneLoading() {
         loading2Normal();
     }
 
-    public void doneRefreshing() {
-        loading2Normal();
-    }
-
-    /**
-     * 直接开始刷新，当然前提是当前状态是State_Normal，状态的检测由LListView负责
-     */
-    public void directlyStartLoading() {
-        normal2Refreshing();
+    protected void directlyStartLoading() {
+        normal2Loading();
     }
 
     private boolean isOverReleaseThreshold() {
@@ -199,25 +175,25 @@ public class LListFooter extends FrameLayout {
         }
     }
 
-    public boolean isVisible() {
+    private boolean isVisible() {
         return getVisibility() == View.VISIBLE;
     }
 
-    public int getState() {
+    protected int getState() {
         return currentState;
     }
 
-    public void setOnRefreshListener(LListView.OnRefreshListener onRefreshListener) {
+    protected void setOnRefreshListener(LListView.OnRefreshListener onRefreshListener) {
         this.onRefreshListener = onRefreshListener;
     }
 
-    public void cancelPotentialHeightAnimator() {
+    private void cancelPotentialHeightAnimator() {
         if (heightAnimator != null) {
             heightAnimator.cancel();
         }
     }
 
-    public void animateToHeight(int height) {
+    private void animateToHeight(int height) {
         int duration = 300;
         cancelPotentialHeightAnimator();
         heightAnimator = ObjectAnimator.ofInt(this, "height", getHeight(), height);

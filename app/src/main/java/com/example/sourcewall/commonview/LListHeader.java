@@ -28,18 +28,7 @@ public class LListHeader extends FrameLayout {
         tvHint = (TextView) findViewById(R.id.text_header_hint);
     }
 
-    private void checkStateChange() {
-        if (lastState != currentState) {
-            // 在move状态下只有这两种可能
-            if (currentState == LListView.State_Pull_Down_To_Refresh) {
-                //有可能来自下拉从LListView.State_Normal变来也有可能来自上滑从State_Release_To_Refresh变来
-            } else if (currentState == LListView.State_Release_To_Refresh) {
-                //只有可能从State_Pull_To_Refresh变来
-            }
-        }
-    }
-
-    public boolean handleMoveDistance(float dist) {
+    protected boolean handleMoveDistance(float dist) {
         if (dist < 0 && !isVisible()) {
             return false;
         }
@@ -80,7 +69,7 @@ public class LListHeader extends FrameLayout {
         return true;
     }
 
-    public void handleOperationDone() {
+    protected void handleUpOperation() {
         if (currentState == LListView.State_Release_To_Refresh) {
             // TODO start refresh
             if (onRefreshListener != null) {
@@ -96,7 +85,7 @@ public class LListHeader extends FrameLayout {
                 refreshing2Refreshing();
             }
         }
-        checkStateChange();
+        lastState = currentState;
     }
 
     private void normal2Refreshing() {
@@ -158,7 +147,7 @@ public class LListHeader extends FrameLayout {
      *
      * @param dist
      */
-    public void handleMotion(float dist) {
+    private void handleMotion(float dist) {
         switch (currentState) {
             //TODO
             case LListView.State_Pull_Down_To_Refresh:
@@ -174,18 +163,14 @@ public class LListHeader extends FrameLayout {
         setHeight((int) (getHeight() + dist));
     }
 
-    public void cancelRefresh() {
-        refreshing2Normal();
-    }
-
-    public void doneRefreshing() {
+    protected void doneRefreshing() {
         refreshing2Normal();
     }
 
     /**
      * 直接开始刷新，当然前提是当前状态是State_Normal，状态的检测由LListView负责
      */
-    public void directlyStartRefresh() {
+    protected void directlyStartRefresh() {
         normal2Refreshing();
     }
 
@@ -205,25 +190,25 @@ public class LListHeader extends FrameLayout {
         }
     }
 
-    public boolean isVisible() {
+    private boolean isVisible() {
         return getVisibility() == View.VISIBLE;
     }
 
-    public int getState() {
+    protected int getState() {
         return currentState;
     }
 
-    public void setOnRefreshListener(OnRefreshListener onRefreshListener) {
+    protected void setOnRefreshListener(OnRefreshListener onRefreshListener) {
         this.onRefreshListener = onRefreshListener;
     }
 
-    public void cancelPotentialHeightAnimator() {
+    private void cancelPotentialHeightAnimator() {
         if (heightAnimator != null) {
             heightAnimator.cancel();
         }
     }
 
-    public void animateToHeight(int height) {
+    private void animateToHeight(int height) {
         int duration = 300;
         cancelPotentialHeightAnimator();
         heightAnimator = ObjectAnimator.ofInt(this, "height", getHeight(), height);

@@ -41,6 +41,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
         listView = (LListView) view.findViewById(R.id.list_questions);
         adapter = new QuestionAdapter(getActivity());
         listView.setAdapter(adapter);
+        listView.setOnRefreshListener(this);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {

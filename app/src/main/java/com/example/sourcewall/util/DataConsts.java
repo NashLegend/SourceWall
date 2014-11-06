@@ -44,7 +44,7 @@ public class DataConsts {
                 new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, "谣言粉碎机", "40"),
                 new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, "DIY", "27"),
                 new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, "自然控", "36"),
-                new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, "死理改派", "39"),
+                new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, "死理性派", "39"),
                 new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, "Geek笑点低", "63"),
                 new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, "吃货研究所", "69"),
                 new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, "谋杀 现场 法医", "31"),

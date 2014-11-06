@@ -108,7 +108,6 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
     @Override
     public void triggerRefresh() {
         //TODO
-        System.out.println("Refresh");
         listView.startRefreshing();
     }
 
