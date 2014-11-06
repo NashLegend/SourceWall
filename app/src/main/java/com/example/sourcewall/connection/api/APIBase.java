@@ -1,5 +1,6 @@
 package com.example.sourcewall.connection.api;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -40,5 +41,14 @@ public class APIBase {
             return new JSONObject();
         }
     }
+
+    public static JSONArray getJsonArray(JSONObject jsonObject, String key) throws JSONException {
+        if ((jsonObject.has(key)) && (!jsonObject.isNull(key))) {
+            return jsonObject.getJSONArray(key);
+        } else {
+            return new JSONArray();
+        }
+    }
+
 
 }

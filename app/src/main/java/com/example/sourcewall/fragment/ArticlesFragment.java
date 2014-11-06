@@ -82,13 +82,11 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
 
     @Override
     public void onStartRefresh() {
-        //TODO
         loadData(0);
     }
 
     @Override
     public void onStartLoadMore() {
-        //TODO
         loadData(adapter.getCount());
     }
 
@@ -107,7 +105,6 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
 
     @Override
     public void triggerRefresh() {
-        //TODO
         listView.startRefreshing();
     }
 

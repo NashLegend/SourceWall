@@ -265,6 +265,7 @@ public class PostAPI extends APIBase {
                 comment.setContent(getJsonString(jo, "html"));
                 comment.setFloor((offset + i + 1) + "楼");
                 comment.setHostID(jo.getJSONObject("post").getString("id"));
+                list.add(comment);
             }
         }
         return list;
