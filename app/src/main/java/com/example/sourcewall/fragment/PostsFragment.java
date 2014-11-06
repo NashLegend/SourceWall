@@ -3,7 +3,6 @@ package com.example.sourcewall.fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,7 +95,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     @Override
     public void triggerRefresh() {
         //TODO
-        listView.startRefresh();
+        listView.startRefreshing();
     }
 
     private void cancelPotentialTask() {

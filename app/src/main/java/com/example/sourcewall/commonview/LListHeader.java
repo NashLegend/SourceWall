@@ -49,11 +49,16 @@ public class LListHeader extends FrameLayout {
         if (currentState != LListView.State_Refreshing) {
             // 这时只有两种可能的状态State_Release_To_Refresh和State_Pull_To_Refresh
             // TODO 或许可以做更多
-            if (isOverReleaseThreshold()) {
-                currentState = LListView.State_Release_To_Refresh;
+            if (isVisible()) {
+                if (isOverReleaseThreshold()) {
+                    currentState = LListView.State_Release_To_Refresh;
+                } else {
+                    currentState = LListView.State_Pull_Down_To_Refresh;
+                }
             } else {
-                currentState = LListView.State_Pull_Down_To_Refresh;
+                currentState = LListView.State_Normal;
             }
+
         }
 
         //这段表示状态之间的转换，不涉及状态内动作
@@ -102,7 +107,7 @@ public class LListHeader extends FrameLayout {
     }
 
     private void normal2Pull() {
-        tvHint.setText(R.string.pull_to_refresh);
+        tvHint.setText(R.string.pull_down_to_refresh);
     }
 
     private void pull2Normal() {
@@ -118,7 +123,7 @@ public class LListHeader extends FrameLayout {
 
     private void release2Pull() {
         currentState = LListView.State_Pull_Down_To_Refresh;
-        tvHint.setText(R.string.pull_to_refresh);
+        tvHint.setText(R.string.pull_down_to_refresh);
     }
 
     private void release2Normal() {

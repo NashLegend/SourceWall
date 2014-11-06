@@ -3,7 +3,6 @@ package com.example.sourcewall.fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,7 +83,6 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
     @Override
     public void onStartRefresh() {
         //TODO
-        System.out.println("onStartRefresh");
         loadData(0);
     }
 
@@ -111,7 +109,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
     public void triggerRefresh() {
         //TODO
         System.out.println("Refresh");
-        listView.startRefresh();
+        listView.startRefreshing();
     }
 
     private void cancelPotentialTask() {

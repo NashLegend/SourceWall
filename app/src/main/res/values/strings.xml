@@ -15,9 +15,12 @@
     <string name="title_activity_setting">SettingActivity</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_article">ArticleActivity</string>
-    <string name="pull_to_refresh">Pull To Refresh</string>
+    <string name="pull_down_to_refresh">Pull Down To Refresh</string>
     <string name="release_to_refresh">Release To Refresh</string>
     <string name="refreshing">Refreshing</string>
+    <string name="pull_up_to_load_more">Pull Up To Load More</string>
+    <string name="release_to_load_more">Release To Load More</string>
+    <string name="loading">Loading</string>
     <string name="idling">idling</string>
 
     <!-- Sample Strings -->
