@@ -121,17 +121,17 @@ public class LListView extends ListView {
                         dist = currentY - lastY;
                         if (Math.abs(dist) > handMoveThreshold) {
                             if (!pullingUp && checkRefreshable()) {
-                                if (!headerView.handleMoveDistance(dist)) {
-                                    pullingDown = false;
-                                } else {
+                                if (headerView.handleMoveDistance(dist)) {
                                     pullingDown = true;
+                                } else {
+                                    pullingDown = false;
                                 }
                             }
                             if (!pullingDown && checkLoadable()) {
-                                if (!footerView.handleMoveDistance(dist)) {
-                                    pullingUp = false;
-                                } else {
+                                if (footerView.handleMoveDistance(dist)) {
                                     pullingUp = true;
+                                } else {
+                                    pullingUp = false;
                                 }
                             }
                             lastY = currentY;
@@ -158,8 +158,15 @@ public class LListView extends ListView {
                 default:
                     break;
             }
-            if (ev.getAction() == MotionEvent.ACTION_MOVE && (pullingDown || ((pullingUp && dist > 0)))) {
-                return true;
+            if (ev.getAction() == MotionEvent.ACTION_MOVE) {
+                if (pullingDown || (pullingUp && dist > 0)) {
+                    return true;
+                }
+                if (pullingUp && dist < 0) {
+                    smoothScrollBy((int) (-dist), 0);
+                    lastY = currentY;
+                    return true;
+                }
             }
         }
         return super.onTouchEvent(ev);
