@@ -19,8 +19,8 @@ public class LListView extends ListView {
     public static final int State_Release_To_Load_More = 5;
     public static final int State_Loading_More = 6;
 
-    private boolean canPullToRefresh = true;
-    private boolean canPullToLoadMore = true;
+    private boolean canPullToRefresh = false;
+    private boolean canPullToLoadMore = false;
 
     public boolean canPullToRefresh() {
         return canPullToRefresh;

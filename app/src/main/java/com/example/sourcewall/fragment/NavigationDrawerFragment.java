@@ -197,6 +197,12 @@ public class NavigationDrawerFragment extends Fragment {
         });
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        SubItem subItem = (SubItem) adapter.getChild(0, 0);
+        Intent intent = new Intent();
+        intent.setAction(Consts.Action_Open_Content_Fragment);
+        intent.putExtra(Consts.Extra_SubItem, subItem);
+        getActivity().sendBroadcast(intent);
     }
 
     @Override
