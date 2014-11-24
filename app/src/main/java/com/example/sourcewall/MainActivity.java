@@ -45,19 +45,18 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        receiver = new Receiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Consts.Action_Open_Content_Fragment);
+        registerReceiver(receiver, filter);
+
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-
 
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
-
-        receiver = new Receiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Consts.Action_Open_Content_Fragment);
-        registerReceiver(receiver, filter);
     }
 
     @Override

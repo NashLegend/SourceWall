@@ -20,6 +20,7 @@ public class HttpFetcher {
         InputStreamReader reader = null;
         try {
             connection = (HttpURLConnection) new URL(url).openConnection();
+            System.out.println(url);
             reader = new InputStreamReader(connection.getInputStream());
             BufferedReader bufferedReader = new BufferedReader(reader);
             StringBuffer stringBuffer = new StringBuffer();
