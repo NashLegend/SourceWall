@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,13 +39,15 @@ public class MainActivity extends BaseActivity {
     ArticlesFragment articlesFragment;
     PostsFragment postsFragment;
     QuestionsFragment questionsFragment;
+    Toolbar toolbar;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        toolbar= (Toolbar) findViewById(R.id.action_bar);
+        setSupportActionBar(toolbar);
         receiver = new Receiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction(Consts.Action_Open_Content_Fragment);
