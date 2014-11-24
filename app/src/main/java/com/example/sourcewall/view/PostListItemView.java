@@ -24,7 +24,6 @@ public class PostListItemView extends AceView<Post> {
     private TextView authorView;
     private TextView replyView;
     private TextView likesView;
-    ImageFetcher titleImageFetcher;
 
     public PostListItemView(Context context) {
         super(context);
@@ -34,7 +33,6 @@ public class PostListItemView extends AceView<Post> {
         authorView = (TextView) findViewById(R.id.text_author);
         replyView = (TextView) findViewById(R.id.text_replies_num);
         likesView = (TextView) findViewById(R.id.text_like_num);
-        titleImageFetcher = new ImageFetcher(getContext(), DisplayUtil.getScreenWidth(getContext()), 0);
     }
 
     public PostListItemView(Context context, AttributeSet attrs) {
