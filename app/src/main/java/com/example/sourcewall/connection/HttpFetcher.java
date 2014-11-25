@@ -1,5 +1,7 @@
 package com.example.sourcewall.connection;
 
+import org.apache.http.impl.client.DefaultHttpClient;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -13,6 +15,8 @@ import java.net.URL;
  * Created by NashLegend on 2014/9/15 0015
  */
 public class HttpFetcher {
+
+    public static DefaultHttpClient defaultHttpClient;
 
     public static String get(String url) throws IOException {
         String res = null;
@@ -42,6 +46,17 @@ public class HttpFetcher {
             }
         }
         return res;
+    }
+
+    public static DefaultHttpClient getDefaultHttpClient(){
+        if (defaultHttpClient==null){
+            defaultHttpClient=new DefaultHttpClient();
+        }
+        return defaultHttpClient;
+    }
+
+    public static void assignCookie(String string){
+        getDefaultHttpClient();
     }
 
     private static final int IO_BUFFER_SIZE = 8 * 1024;

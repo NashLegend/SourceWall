@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 
 import com.example.sourcewall.model.SubItem;
-import com.example.sourcewall.util.DataConsts;
+import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.view.GroupItemView;
 import com.example.sourcewall.view.SubItemView;
 
@@ -102,11 +102,11 @@ public class ChannelsAdapter extends BaseExpandableListAdapter {
 
     public void createDefaultChannels() {
 
-        ArrayList<SubItem> groups = DataConsts.getSections();
+        ArrayList<SubItem> groups = Consts.getSections();
         ArrayList<ArrayList<SubItem>> cols = new ArrayList<ArrayList<SubItem>>();
-        cols.add(DataConsts.getArticles());
-        cols.add(DataConsts.getPosts());
-        cols.add(DataConsts.getQuestions());
+        cols.add(Consts.getArticles());
+        cols.add(Consts.getPosts());
+        cols.add(Consts.getQuestions());
 
         setGroupList(groups);
         setSubLists(cols);

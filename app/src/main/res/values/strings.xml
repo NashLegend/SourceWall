@@ -35,6 +35,6 @@
     <string name="sample_summary">This is a sample summary, as you see, this is used only for some space for the convenience of developing, the rest words are used to fill more space, they are meaningless so do not read them</string>
     <string name="title_activity_post">PostActivity</string>
     <string name="title_activity_question">QuestionActivity</string>
-
+    <string name="title_activity_login">LoginActivity</string>
 
 </resources>
