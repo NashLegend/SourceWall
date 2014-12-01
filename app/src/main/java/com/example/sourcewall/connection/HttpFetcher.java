@@ -1,15 +1,23 @@
 package com.example.sourcewall.connection;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
 
-import java.io.BufferedReader;
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
 /**
  * Created by NashLegend on 2014/9/15 0015
@@ -18,45 +26,28 @@ public class HttpFetcher {
 
     public static DefaultHttpClient defaultHttpClient;
 
-    public static String get(String url) throws IOException {
-        String res = null;
-        HttpURLConnection connection = null;
-        InputStreamReader reader = null;
-        try {
-            connection = (HttpURLConnection) new URL(url).openConnection();
-            System.out.println(url);
-            reader = new InputStreamReader(connection.getInputStream());
-            BufferedReader bufferedReader = new BufferedReader(reader);
-            StringBuffer stringBuffer = new StringBuffer();
-            String line = null;
-            while ((line = bufferedReader.readLine()) != null) {
-                stringBuffer.append(line);
-            }
-            res = stringBuffer.toString();
-        } finally {
-            if (connection != null) {
-                connection.disconnect();
-            }
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return res;
+    public static String post(String url, List<NameValuePair> params) throws IOException {
+        HttpPost httpPost = new HttpPost(url);
+        httpPost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+        HttpResponse response = getDefaultHttpClient().execute(httpPost);
+        int statusCode = response.getStatusLine().getStatusCode();
+        HttpEntity entity = response.getEntity();
+        return EntityUtils.toString(entity, HTTP.UTF_8);
     }
 
-    public static DefaultHttpClient getDefaultHttpClient(){
-        if (defaultHttpClient==null){
-            defaultHttpClient=new DefaultHttpClient();
+    public static String get(String url) throws IOException {
+        HttpGet httpGet = new HttpGet(url);
+        HttpResponse response = getDefaultHttpClient().execute(httpGet);
+        int statusCode = response.getStatusLine().getStatusCode();
+        HttpEntity entity = response.getEntity();
+        return EntityUtils.toString(entity, HTTP.UTF_8);
+    }
+
+    public static DefaultHttpClient getDefaultHttpClient() {
+        if (defaultHttpClient == null) {
+            defaultHttpClient = new DefaultHttpClient();
         }
         return defaultHttpClient;
-    }
-
-    public static void assignCookie(String string){
-        getDefaultHttpClient();
     }
 
     private static final int IO_BUFFER_SIZE = 8 * 1024;

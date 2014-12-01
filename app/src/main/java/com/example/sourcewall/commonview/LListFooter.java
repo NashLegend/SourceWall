@@ -20,6 +20,7 @@ public class LListFooter extends FrameLayout {
     private int Release_Height = 300;
     private boolean layouted = false;
 
+    //TODO 删掉，改成自动加载
     public LListFooter(Context context) {
         super(context);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

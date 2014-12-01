@@ -47,6 +47,10 @@
             android:name="com.example.sourcewall.LoginActivity"
             android:label="@string/title_activity_login" >
         </activity>
+        <activity
+            android:name="com.example.sourcewall.ReplyArticleActivity"
+            android:label="@string/title_activity_reply_article" >
+        </activity>
     </application>
 
 </manifest>

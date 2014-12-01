@@ -36,5 +36,16 @@
     <string name="title_activity_post">PostActivity</string>
     <string name="title_activity_question">QuestionActivity</string>
     <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_reply_article">ReplyArticleActivity</string>
 
+    <!--Publish Reply-->
+    <string name="sample_reply_title">This is a reply title</string>
+    <string name="reply_hint">Input something</string>
+    <string name="add_image">IMG</string>
+    <string name="insert_image">Insert</string>
+    <string name="way_to_add_image">Way to add image</string>
+    <string name="add_image_from_disk">Select Image From Disk</string>
+    <string name="add_image_from_link">Add Image From Link</string>
+    <string name="add_link">LINK</string>
+    <string name="publish_reply">Publish</string>
 </resources>

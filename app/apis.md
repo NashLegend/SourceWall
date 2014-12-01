@@ -12,6 +12,22 @@ Http Code:
 > 200 ok
 
 
+---------------------------------------------------------------
+上传图片
+===============
+POST:http://www.guokr.com/apis/image.json?enable_watermark=true
+
+Host: www.guokr.com
+X-Requested-With: XMLHttpRequest
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary2O2cnCklDGYBEGNm
+
+Params:`access_token=369a930a7c06f2ce10a838e45fc21da1e80ac81d458244cc78110e17714af157&upload_file=<file>`
+
+Http Code:
+> 201 ok
+
+
+
 -------------------------------------------------------------
 收藏一个帖子
 ================
@@ -43,6 +59,17 @@ Http Code:
 400 already liked
 
 
+---------------------------------------------------------------
+回复帖子
+===============
+POST:http://apis.guokr.com/group/post_reply.json
+
+Content-Type: Content-Type: application/x-www-form-urlencoded
+
+Params:`post_id=#&content=#&access_token=#`
+
+Http Code:
+> 201 ok
 
 -------------------------------------------------------------
 赞一个帖子评论
@@ -88,6 +115,19 @@ Params:(UrlEncode))`title=小小粉尘，何以酿成大祸？&url=http://www.gu
 
 Http Code:
 > 201 ok(recommend unlimited)
+
+
+---------------------------------------------------------------
+回复文章
+===============
+POST:http://apis.guokr.com/minisite/article_reply.json
+
+Content-Type: application/x-www-form-urlencoded
+
+Params:`article_id=439564&content=#&access_token=#`
+
+Http Code:
+> 201 ok
 
 -------------------------------------------------------------
 赞文章评论
@@ -135,6 +175,19 @@ Params:(UrlEncode))`title=火有影子吗？&summary=Quora上有人问过这个�
 Http Code:
 
 > 201 ok(recommend unlimited)
+
+
+---------------------------------------------------------------
+回答问题
+===============
+POST:http://apis.guokr.com/ask/answer.json
+
+Content-Type: application/x-www-form-urlencoded
+
+Params:`question_id=#&content=#&access_token=#`
+
+Http Code:
+> 201 ok
 
 -------------------------------------------------------------
 顶踩答案

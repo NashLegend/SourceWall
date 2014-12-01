@@ -1,9 +1,13 @@
 package com.example.sourcewall.connection.api;
 
+import com.example.sourcewall.AppApplication;
 import com.example.sourcewall.connection.HttpFetcher;
+import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.model.Article;
 import com.example.sourcewall.model.SimpleComment;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -170,5 +174,53 @@ public class ArticleAPI extends APIBase {
         }
         return list;
     }
+
+    public ResultObject recommendArticle(String basketID, String comment, String articleID, String title, String summary) {
+        String url = "http://www.guokr.com/apis/community/user/recommend.json";
+        String param = "title=#&url=#&summary=#&comment=#&target=activity&access_token=#";
+        return null;
+    }
+
+    public ResultObject collectArticle(String articleID, String title, String basketID) {
+        String url = "http://www.guokr.com/apis/favorite/link.json";
+        String param = "basket_id=#&url=#&title=#&access_token=#";
+        return null;
+    }
+
+    public ResultObject likeComment(String id) {
+        String url = "http://www.guokr.com/apis/minisite/article_reply_liking.json";
+        String param = "reply_id=#&access_token=#";
+        return null;
+    }
+
+    /**
+     * @param id
+     * @param content
+     * @return ResultObject.result is the reply_id if ok;
+     */
+    public ResultObject replyArticle(String id, String content) {
+        ResultObject resultObject = new ResultObject();
+        String url = "http://apis.guokr.com/minisite/article_reply.json";
+        ArrayList<NameValuePair> pairs = new ArrayList<>();
+        pairs.add(new BasicNameValuePair("article_id", id));
+        pairs.add(new BasicNameValuePair("content", content));
+        pairs.add(new BasicNameValuePair("access_token", AppApplication.tokenString));
+        try {
+            String result = HttpFetcher.post(url, pairs);
+            JSONObject object = new JSONObject(result);
+            if (getJsonBoolean(object, "ok")) {
+                JSONObject resultJson = getJsonObject(object, "result");
+                String replyID = getJsonString(resultJson, "id");
+                resultObject.ok = true;
+                resultObject.result = replyID;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return resultObject;
+    }
+
 
 }
