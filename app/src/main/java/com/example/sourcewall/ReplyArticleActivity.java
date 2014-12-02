@@ -14,17 +14,23 @@ import android.widget.EditText;
 
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.APIBase;
+import com.example.sourcewall.connection.api.ArticleAPI;
+import com.example.sourcewall.model.Article;
+import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.FileUtil;
 import com.example.sourcewall.util.ImageFetcher.AsyncTask;
+import com.example.sourcewall.util.ToastUtil;
 
 public class ReplyArticleActivity extends ActionBarActivity implements View.OnClickListener {
 
     EditText reply;
+    Article article;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reply_article);
+        article = (Article) getIntent().getSerializableExtra(Consts.Extra_Article);
         reply = (EditText) findViewById(R.id.text_reply);
         findViewById(R.id.btn_publish).setOnClickListener(this);
     }
@@ -50,11 +56,13 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
     }
 
     public void uploadImage(String path) {
-
+        ImageUploadTask task = new ImageUploadTask();
+        task.execute(path);
     }
 
     private void publishReply(String rep) {
-
+        PublishReplyTask task = new PublishReplyTask();
+        task.execute(article.getId(), rep);
     }
 
     @Override
@@ -70,6 +78,32 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
             case R.id.btn_add_img:
                 invokeImageDialog();
                 break;
+        }
+    }
+
+    class PublishReplyTask extends AsyncTask<String, Integer, ResultObject> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected ResultObject doInBackground(String... params) {
+            String id = params[0];
+            String content = params[1];
+            return ArticleAPI.replyArticle(id, content);
+        }
+
+        @Override
+        protected void onPostExecute(ResultObject resultObject) {
+            if (resultObject.ok) {
+                //notify ok
+                ToastUtil.toast("Reply OK");
+            } else {
+                //failed
+                ToastUtil.toast("Reply Failed");
+            }
         }
     }
 
@@ -90,8 +124,11 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
         protected void onPostExecute(ResultObject resultObject) {
             if (resultObject.ok) {
                 // tap to insert image
+                String url = (String) resultObject.result;
+                ToastUtil.toast("Upload OK,url is : " + url);
             } else {
                 //upload failed
+                ToastUtil.toast("Upload Failed");
             }
         }
 

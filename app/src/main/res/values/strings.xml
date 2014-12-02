@@ -22,6 +22,8 @@
     <string name="release_to_load_more">Release To Load More</string>
     <string name="loading">Loading</string>
     <string name="idling">idling</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
 
     <!-- Sample Strings -->
     <string name="sample_floor">1楼</string>
@@ -38,7 +40,13 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_reply_article">ReplyArticleActivity</string>
 
-    <!--Publish Reply-->
+    <!--user-->
+    <string name="action_create_basket">Create</string>
+
+    <!--Article-->
+    <string name="action_reply">Reply</string>
+    <string name="action_recommend">Recommend</string>
+    <string name="action_favor">Favor</string>
     <string name="sample_reply_title">This is a reply title</string>
     <string name="reply_hint">Input something</string>
     <string name="add_image">IMG</string>

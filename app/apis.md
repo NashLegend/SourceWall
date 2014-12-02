@@ -1,3 +1,13 @@
+获取分类：
+================
+GET:http://www.guokr.com/apis/favorite/category.json?access_token=13d4b2b74c323e79b5e35b6c46fd8d9e2e3f7b937ecbca9dd9e39943cc4a7044
+
+Accept: application/json, text/javascript, */*; q=0.01
+X-Requested-With: XMLHttpRequest
+
+Http Code:
+> 200 ok
+
 获取果篮
 ================
 GET:http://www.guokr.com/apis/favorite/basket.json?t=1416970098312&retrieve_type=by_ukey&ukey=5p6t9t&limit=100&access_token=5fe191c401d8a1d646cfe3cb3f23cac6e400f42d3ed2b82ecbd3a5d6508a36a5
@@ -7,6 +17,22 @@ X-Requested-With: XMLHttpRequest
 Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 
 Params:post_id=646116&access_token=f182c94e82887148a7208e242f68ae9e2f81baf2af1bbed796e405e24d1d12f1
+
+Http Code:
+> 200 ok
+
+
+创建果篮
+================
+POST http://www.guokr.com/apis/favorite/basket.json
+
+Host: www.guokr.com
+Accept: application/json, text/javascript, */*; q=0.01
+X-Requested-With: XMLHttpRequest
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+
+Params:(UrlEncode)title=中文Test&introduction=中文Desciption&category_id=13&access_token=13d4b2b74c323e79b5e35b6c46fd8d9e2e3f7b937ecbca9dd9e39943cc4a7044
+category_id=-1指无分类
 
 Http Code:
 > 200 ok
@@ -37,7 +63,7 @@ Host: www.guokr.com
 X-Requested-With: XMLHttpRequest
 Content-Type: application/x-www-form-urlencoded; charset=UTF-8
 
-Params:(UrlEncode))basket_id=786415&url=http://www.guokr.com/post/646133/&title=［深入绝地］告别LOL、dota2，周末和小伙伴一起刷桌游吧～&access_token=5fe191c401d8a1d646cfe3cb3f23cac6e400f42d3ed2b82ecbd3a5d6508a36a5
+Params:(UrlEncode)basket_id=786415&url=http://www.guokr.com/post/646133/&title=［深入绝地］告别LOL、dota2，周末和小伙伴一起刷桌游吧～&access_token=5fe191c401d8a1d646cfe3cb3f23cac6e400f42d3ed2b82ecbd3a5d6508a36a5
 
 Http Code:
 > 201 ok(Favor unlimited)

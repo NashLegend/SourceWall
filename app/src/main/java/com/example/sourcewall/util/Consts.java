@@ -15,20 +15,23 @@ public class Consts {
     public static final String Action_Open_Posts_Fragment = "sourcewall.action.open.posts.fragment";
     public static final String Action_Open_Questions_Fragment = "sourcewall.action.open.questions.fragment";
 
+    // usually used in intent.put
     public static final String Extra_Article = "sourcewall.extra.article.id";
     public static final String Extra_Post = "sourcewall.extra.post.id";
     public static final String Extra_Question = "sourcewall.extra.question.id";
     public static final String Extra_SubItem = "sourcewall.extra.subitem.id";
 
+    // usually used in SharedPreferences
     public static final String Key_Cookie = "sourcewall.key.cookie";
     public static final String Key_Access_Token = "sourcewall.key.access.token";
     public static final String Key_Ukey = "sourcewall.key.ukey";
 
+    // login webpage
     public static final String LOGIN_URL = "https://account.guokr.com/sign_in/?display=mobile";
     public static final String SUCCESS_URL_1 = "http://m.guokr.com/";
     public static final String SUCCESS_URL_2 = "http://www.guokr.com/";
-    public static final String Cookie_Token_Key="_32353_access_token";
-    public static final String Cookie_Ukey_Key ="_32353_ukey";
+    public static final String Cookie_Token_Key = "_32353_access_token";
+    public static final String Cookie_Ukey_Key = "_32353_ukey";
 
 
     public static ArrayList<SubItem> getSections() {

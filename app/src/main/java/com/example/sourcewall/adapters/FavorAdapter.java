@@ -1,0 +1,37 @@
+package com.example.sourcewall.adapters;
+
+import android.content.Context;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.example.sourcewall.model.Basket;
+
+/**
+ * Created by NashLegend on 2014/12/2 0002
+ */
+public class FavorAdapter extends AceAdapter<Basket> {
+
+    public FavorAdapter(Context context) {
+        super(context);
+    }
+
+    @Override
+    public int getCount() {
+        return list.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return list.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        return null;
+    }
+}

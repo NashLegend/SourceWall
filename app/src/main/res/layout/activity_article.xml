@@ -4,10 +4,19 @@
     android:layout_height="match_parent"
     tools:context="com.example.sourcewall.ArticleActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize" />
+
     <com.example.sourcewall.commonview.LListView
         android:id="@+id/list_detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/action_bar"
         android:divider="@null" />
+
 
 </RelativeLayout>

@@ -1,7 +1,10 @@
 package com.example.sourcewall;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -9,10 +12,12 @@ import com.example.sourcewall.adapters.ArticleDetailAdapter;
 import com.example.sourcewall.commonview.LListView;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.ArticleAPI;
+import com.example.sourcewall.dialogs.InputDialog;
 import com.example.sourcewall.model.AceModel;
 import com.example.sourcewall.model.Article;
 import com.example.sourcewall.model.SimpleComment;
 import com.example.sourcewall.util.Consts;
+import com.example.sourcewall.util.ToastUtil;
 
 import org.json.JSONException;
 
@@ -26,11 +31,14 @@ public class ArticleActivity extends BaseActivity implements LListView.OnRefresh
     ArticleDetailAdapter adapter;
     Article article;
     LoaderTask task;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article);
+        toolbar = (Toolbar) findViewById(R.id.action_bar);
+        setSupportActionBar(toolbar);
         article = (Article) getIntent().getSerializableExtra(Consts.Extra_Article);
         listView = (LListView) findViewById(R.id.list_detail);
         adapter = new ArticleDetailAdapter(this);
@@ -57,6 +65,39 @@ public class ArticleActivity extends BaseActivity implements LListView.OnRefresh
         }
     }
 
+    private void startReplyActivity() {
+        Intent intent = new Intent(this, ReplyArticleActivity.class);
+        intent.putExtra(Consts.Extra_Article, article);
+        startActivity(intent);
+    }
+
+    private void recommend() {
+        InputDialog.Builder builder = new InputDialog.Builder(this);
+        builder.setTitle("Recommend This Article");
+        builder.setCancelable(true);
+        builder.setCanceledOnTouchOutside(false);
+        builder.setOnClickListener(new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (which == DialogInterface.BUTTON_POSITIVE) {
+                    InputDialog d = (InputDialog) dialog;
+                    String text = d.InputString;
+                    RecommendTask recommendTask = new RecommendTask();
+                    recommendTask.execute(article.getId(), article.getTitle(), article.getSummary(), text);
+                } else {
+                    // cancel recommend
+                }
+            }
+        });
+        InputDialog inputDialog = builder.create();
+        inputDialog.show();
+    }
+
+    private void favor() {
+        // basket dialog
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.article, menu);
@@ -66,10 +107,69 @@ public class ArticleActivity extends BaseActivity implements LListView.OnRefresh
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            case R.id.action_reply:
+                startReplyActivity();
+                break;
+            case R.id.action_recommend:
+                recommend();
+                break;
+            case R.id.action_favor:
+                favor();
+                break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    class FavorTask extends AsyncTask<String, Integer, ResultObject> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected ResultObject doInBackground(String... params) {
+            String articleID = params[0];
+            String title = params[1];
+            String basketID = params[2];
+            return ArticleAPI.collectArticle(articleID, title, basketID);
+        }
+
+        @Override
+        protected void onPostExecute(ResultObject resultObject) {
+            if (resultObject.ok) {
+                ToastUtil.toast("Favor OK");
+            } else {
+                ToastUtil.toast("Favor Failed");
+            }
+        }
+    }
+
+    class RecommendTask extends AsyncTask<String, Integer, ResultObject> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected ResultObject doInBackground(String... params) {
+            String articleID = params[0];
+            String title = params[1];
+            String summary = params[2];
+            String comment = params[3];
+            return ArticleAPI.recommendArticle(articleID, title, summary, comment);
+        }
+
+        @Override
+        protected void onPostExecute(ResultObject resultObject) {
+            if (resultObject.ok) {
+                ToastUtil.toast("Recommend OK");
+            } else {
+                ToastUtil.toast("Recommend Failed");
+            }
+        }
     }
 
     @Override

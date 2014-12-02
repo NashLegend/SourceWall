@@ -17,6 +17,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 public class ArticleAPI extends APIBase {
@@ -175,19 +176,38 @@ public class ArticleAPI extends APIBase {
         return list;
     }
 
-    public ResultObject recommendArticle(String basketID, String comment, String articleID, String title, String summary) {
+    public static ResultObject recommendArticle(String articleID, String title, String summary, String comment) {
         String url = "http://www.guokr.com/apis/community/user/recommend.json";
-        String param = "title=#&url=#&summary=#&comment=#&target=activity&access_token=#";
-        return null;
+        ResultObject resultObject = new ResultObject();
+        try {
+            String articleUrl = "http://www.guokr.com/article/" + articleID + "/";
+            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            pairs.add(new BasicNameValuePair("title", title));
+            pairs.add(new BasicNameValuePair("url", articleUrl));
+            pairs.add(new BasicNameValuePair("summary", summary));
+            pairs.add(new BasicNameValuePair("comment", comment));
+            pairs.add(new BasicNameValuePair("target", "activity"));
+            pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
+            String result = HttpFetcher.post(url, pairs);
+            JSONObject object = new JSONObject(result);
+            if (getJsonBoolean(object, "ok")) {
+                resultObject.ok = true;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return resultObject;
     }
 
-    public ResultObject collectArticle(String articleID, String title, String basketID) {
+    public static ResultObject collectArticle(String articleID, String title, String basketID) {
         String url = "http://www.guokr.com/apis/favorite/link.json";
         String param = "basket_id=#&url=#&title=#&access_token=#";
         return null;
     }
 
-    public ResultObject likeComment(String id) {
+    public static ResultObject likeComment(String id) {
         String url = "http://www.guokr.com/apis/minisite/article_reply_liking.json";
         String param = "reply_id=#&access_token=#";
         return null;
@@ -198,14 +218,14 @@ public class ArticleAPI extends APIBase {
      * @param content
      * @return ResultObject.result is the reply_id if ok;
      */
-    public ResultObject replyArticle(String id, String content) {
+    public static ResultObject replyArticle(String id, String content) {
         ResultObject resultObject = new ResultObject();
-        String url = "http://apis.guokr.com/minisite/article_reply.json";
-        ArrayList<NameValuePair> pairs = new ArrayList<>();
-        pairs.add(new BasicNameValuePair("article_id", id));
-        pairs.add(new BasicNameValuePair("content", content));
-        pairs.add(new BasicNameValuePair("access_token", AppApplication.tokenString));
         try {
+            String url = "http://apis.guokr.com/minisite/article_reply.json";
+            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            pairs.add(new BasicNameValuePair("article_id", id));
+            pairs.add(new BasicNameValuePair("content", content));
+            pairs.add(new BasicNameValuePair("access_token", AppApplication.tokenString));
             String result = HttpFetcher.post(url, pairs);
             JSONObject object = new JSONObject(result);
             if (getJsonBoolean(object, "ok")) {

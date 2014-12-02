@@ -21,10 +21,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.example.sourcewall.R;
 import com.example.sourcewall.adapters.ChannelsAdapter;
+import com.example.sourcewall.connection.api.UserAPI;
 import com.example.sourcewall.model.SubItem;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.view.SubItemView;
@@ -246,7 +246,7 @@ public class NavigationDrawerFragment extends Fragment {
         }
 
         if (item.getItemId() == R.id.action_example) {
-            Toast.makeText(getActivity(), "Example action.", Toast.LENGTH_SHORT).show();
+            UserAPI.startLoginActivity(getActivity());
             return true;
         }
 
