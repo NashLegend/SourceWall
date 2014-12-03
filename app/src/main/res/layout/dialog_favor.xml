@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <ListView
             android:id="@+id/list_favor_dialog"
@@ -31,14 +31,14 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_weight="1"
-                android:text="@string/action_create_basket" />
+                android:text="@string/action_invoke_create_basket" />
 
             <Button
                 android:id="@+id/button_favor_dialog_ok"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_weight="1"
-                android:text="@string/ok" />
+                android:text="@string/action_done" />
         </LinearLayout>
     </LinearLayout>
 
@@ -47,7 +47,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <EditText
             android:id="@+id/text_create_basket_name"
@@ -62,7 +62,8 @@
         <Spinner
             android:id="@+id/spinner_categories"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:spinnerMode="dialog" />
 
         <EditText
             android:id="@+id/text_create_basket_introduction"
@@ -93,7 +94,7 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_weight="1"
-                android:text="@string/ok" />
+                android:text="@string/action_create_basket" />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

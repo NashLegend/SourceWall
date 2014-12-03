@@ -24,6 +24,7 @@
     <string name="idling">idling</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
+    <string name="action_done">Done</string>
 
     <!-- Sample Strings -->
     <string name="sample_floor">1楼</string>
@@ -42,6 +43,7 @@
 
     <!--user-->
     <string name="action_create_basket">Create</string>
+    <string name="action_invoke_create_basket">Invoke Create</string>
     <string name="action_favor">Favor</string>
     <string name="action_action">Action</string>
     <string name="action_reply">Reply</string>

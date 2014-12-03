@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
@@ -40,6 +41,7 @@ public class FavorView extends FrameLayout implements View.OnClickListener {
     ViewGroup editLayout;
     TextView nameText;
     TextView introText;
+    ArrayList<Category> categories;
 
     public FavorView(Context context) {
         super(context);
@@ -95,14 +97,18 @@ public class FavorView extends FrameLayout implements View.OnClickListener {
 
     private void openCreateBasketView() {
         //TODO show view
-        listLayout.setVisibility(GONE);
         editLayout.setVisibility(VISIBLE);
-        loadCategories();
+        listLayout.setVisibility(GONE);
+        if (categories == null) {
+            loadCategories();
+        }
     }
 
     private void openBasketListView() {
         listLayout.setVisibility(VISIBLE);
         editLayout.setVisibility(GONE);
+        nameText.setText("");
+        introText.setText("");
     }
 
     @Override
@@ -117,7 +123,11 @@ public class FavorView extends FrameLayout implements View.OnClickListener {
                 openBasketListView();
                 break;
             case R.id.button_create_basket:
-                createBasket(nameText.getText().toString(), introText.getText().toString(), "-1");
+                String cateID = "-1";
+                if (categories != null && categories.size() > 0 && spinner.getSelectedItemPosition() >= 0) {
+                    cateID = String.valueOf(categories.get(spinner.getSelectedItemPosition()).getId());
+                }
+                createBasket(nameText.getText().toString(), introText.getText().toString(), cateID);
                 break;
         }
     }
@@ -155,8 +165,13 @@ public class FavorView extends FrameLayout implements View.OnClickListener {
         @Override
         protected void onPostExecute(ResultObject resultObject) {
             if (resultObject.ok) {
-                ToastUtil.toast("Load Category OK");
-                ArrayList<Category> categories = (ArrayList<Category>) resultObject.result;
+                categories = (ArrayList<Category>) resultObject.result;
+                String[] items = new String[categories.size()];
+                for (int i = 0; i < categories.size(); i++) {
+                    items[i] = categories.get(i).getName();
+                }
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(), R.layout.simple_spinner_item, items);
+                spinner.setAdapter(arrayAdapter);
                 //TODO
             } else {
                 //TODO fetch failed
@@ -164,6 +179,7 @@ public class FavorView extends FrameLayout implements View.OnClickListener {
             }
         }
     }
+
 
     class CreateBasketTask extends AsyncTask<String, Integer, ResultObject> {
 
