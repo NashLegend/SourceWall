@@ -1,6 +1,5 @@
 package com.example.sourcewall.connection.api;
 
-import com.example.sourcewall.AppApplication;
 import com.example.sourcewall.connection.HttpFetcher;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.model.Article;
@@ -177,7 +176,7 @@ public class ArticleAPI extends APIBase {
 
     public static ResultObject recommendArticle(String articleID, String title, String summary, String comment) {
         String articleUrl = "http://www.guokr.com/article/" + articleID + "/";
-        return UserAPI.recommendLink(articleUrl,title,summary,comment);
+        return UserAPI.recommendLink(articleUrl, title, summary, comment);
     }
 
     public static ResultObject likeComment(String id) {
@@ -198,7 +197,7 @@ public class ArticleAPI extends APIBase {
             ArrayList<NameValuePair> pairs = new ArrayList<>();
             pairs.add(new BasicNameValuePair("article_id", id));
             pairs.add(new BasicNameValuePair("content", content));
-            pairs.add(new BasicNameValuePair("access_token", AppApplication.tokenString));
+            pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
             String result = HttpFetcher.post(url, pairs);
             JSONObject object = new JSONObject(result);
             if (getJsonBoolean(object, "ok")) {
