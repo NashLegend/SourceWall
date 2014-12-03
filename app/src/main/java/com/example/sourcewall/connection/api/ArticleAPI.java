@@ -17,7 +17,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 
 public class ArticleAPI extends APIBase {
@@ -105,7 +104,7 @@ public class ArticleAPI extends APIBase {
     }
 
     public static ArrayList<SimpleComment> getArticleHotComments(Element hotElement, String aid) {
-        ArrayList<SimpleComment> list = new ArrayList<SimpleComment>();
+        ArrayList<SimpleComment> list = new ArrayList<>();
         Elements comments = hotElement.getElementsByTag("li");
         if (comments != null && comments.size() > 0) {
             for (int i = 0; i < comments.size(); i++) {
@@ -123,8 +122,8 @@ public class ArticleAPI extends APIBase {
                 String date = element.getElementsByClass("cmt-info").get(0).text();
                 String content = element.select(".cmt-content").select(".gbbcode-content")
                         .select(".cmtContent").get(0).outerHtml();
-                Elements tmpelements = element.getElementsByClass("cmt-auth");
-                if (tmpelements != null && tmpelements.size() > 0) {
+                Elements tmpElements = element.getElementsByClass("cmt-auth");
+                if (tmpElements != null && tmpElements.size() > 0) {
                     String authorTitle = element.getElementsByClass("cmt-auth").get(0)
                             .attr("title");
                     comment.setAuthorTitle(authorTitle);
@@ -144,7 +143,7 @@ public class ArticleAPI extends APIBase {
     }
 
     public static ArrayList<SimpleComment> getArticleComments(String id, int offset) throws IOException, JSONException {
-        ArrayList<SimpleComment> list = new ArrayList<SimpleComment>();
+        ArrayList<SimpleComment> list = new ArrayList<>();
         String url = "http://apis.guokr.com/minisite/article_reply.json?article_id=" + id
                 + "&limit=20&offset=" + offset;
         String jString = HttpFetcher.get(url);
@@ -177,34 +176,8 @@ public class ArticleAPI extends APIBase {
     }
 
     public static ResultObject recommendArticle(String articleID, String title, String summary, String comment) {
-        String url = "http://www.guokr.com/apis/community/user/recommend.json";
-        ResultObject resultObject = new ResultObject();
-        try {
-            String articleUrl = "http://www.guokr.com/article/" + articleID + "/";
-            ArrayList<NameValuePair> pairs = new ArrayList<>();
-            pairs.add(new BasicNameValuePair("title", title));
-            pairs.add(new BasicNameValuePair("url", articleUrl));
-            pairs.add(new BasicNameValuePair("summary", summary));
-            pairs.add(new BasicNameValuePair("comment", comment));
-            pairs.add(new BasicNameValuePair("target", "activity"));
-            pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
-            String result = HttpFetcher.post(url, pairs);
-            JSONObject object = new JSONObject(result);
-            if (getJsonBoolean(object, "ok")) {
-                resultObject.ok = true;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return resultObject;
-    }
-
-    public static ResultObject collectArticle(String articleID, String title, String basketID) {
-        String url = "http://www.guokr.com/apis/favorite/link.json";
-        String param = "basket_id=#&url=#&title=#&access_token=#";
-        return null;
+        String articleUrl = "http://www.guokr.com/article/" + articleID + "/";
+        return UserAPI.recommendLink(articleUrl,title,summary,comment);
     }
 
     public static ResultObject likeComment(String id) {

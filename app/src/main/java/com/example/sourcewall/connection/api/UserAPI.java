@@ -8,6 +8,7 @@ import com.example.sourcewall.LoginActivity;
 import com.example.sourcewall.connection.HttpFetcher;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.model.Basket;
+import com.example.sourcewall.model.Category;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.SharedUtil;
 
@@ -50,6 +51,68 @@ public class UserAPI extends APIBase {
 
     public static void startLoginActivity(Context context) {
         context.startActivity(new Intent(context, LoginActivity.class));
+    }
+
+    /**
+     * @param link
+     * @param title
+     * @param basketID
+     * @return
+     */
+    public static ResultObject favorLink(String link, String title, String basketID) {
+        String param = "basket_id=#&url=#&title=#&access_token=#";
+        ResultObject resultObject = new ResultObject();
+        try {
+            String url = "http://www.guokr.com/apis/favorite/link.json";
+            ArrayList<NameValuePair> params = new ArrayList<>();
+            params.add(new BasicNameValuePair("basket_id", basketID));
+            params.add(new BasicNameValuePair("url", link));
+            params.add(new BasicNameValuePair("title", title));
+            params.add(new BasicNameValuePair("access_token", getToken()));
+            String result = HttpFetcher.post(url, params);
+            JSONObject object = new JSONObject(result);
+            if (getJsonBoolean(object, "ok")) {
+                resultObject.ok = true;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resultObject;
+    }
+
+    /**
+     * @param link
+     * @param title
+     * @param summary
+     * @param comment
+     * @return
+     */
+    public static ResultObject recommendLink(String link, String title, String summary, String comment) {
+        String url = "http://www.guokr.com/apis/community/user/recommend.json";
+        ResultObject resultObject = new ResultObject();
+        try {
+            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            pairs.add(new BasicNameValuePair("title", title));
+            pairs.add(new BasicNameValuePair("url", link));
+            pairs.add(new BasicNameValuePair("summary", summary));
+            pairs.add(new BasicNameValuePair("comment", comment));
+            pairs.add(new BasicNameValuePair("target", "activity"));
+            pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
+            String result = HttpFetcher.post(url, pairs);
+            JSONObject object = new JSONObject(result);
+            if (getJsonBoolean(object, "ok")) {
+                resultObject.ok = true;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return resultObject;
     }
 
     /**
@@ -102,13 +165,13 @@ public class UserAPI extends APIBase {
      */
     public static ResultObject createBasket(String title, String introduction, String category_id) {
         ResultObject resultObject = new ResultObject();
-        String url = "http://www.guokr.com/apis/favorite/basket.json";
-        ArrayList<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("title", title));
-        params.add(new BasicNameValuePair("introduction", introduction));
-        params.add(new BasicNameValuePair("category_id", category_id));
-        params.add(new BasicNameValuePair("access_token", getToken()));
         try {
+            String url = "http://www.guokr.com/apis/favorite/basket.json";
+            ArrayList<NameValuePair> params = new ArrayList<>();
+            params.add(new BasicNameValuePair("title", title));
+            params.add(new BasicNameValuePair("introduction", introduction));
+            params.add(new BasicNameValuePair("category_id", category_id));
+            params.add(new BasicNameValuePair("access_token", getToken()));
             String result = HttpFetcher.post(url, params);
             JSONObject object = new JSONObject(result);
             if (getJsonBoolean(object, "ok")) {
@@ -127,6 +190,37 @@ public class UserAPI extends APIBase {
                     resultObject.ok = true;
                     resultObject.result = basket;
                     myBaskets.add(basket);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resultObject;
+    }
+
+    public static ResultObject getCategoryList() {
+        ResultObject resultObject = new ResultObject();
+        try {
+            String url = "http://www.guokr.com/apis/favorite/category.json?access_token=" + getToken();
+            String result = HttpFetcher.get(url);
+            JSONObject object = new JSONObject(result);
+            if (getJsonBoolean(object, "ok")) {
+                JSONArray jsonArray = getJsonArray(object, "result");
+                if (jsonArray != null) {
+                    ArrayList<Category> categories = new ArrayList<>();
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject subObject = jsonArray.getJSONObject(i);
+                        Category category = new Category();
+                        category.setId(getJsonString(subObject, "id"));
+                        category.setName(getJsonString(subObject, "name"));
+                        categories.add(category);
+                    }
+                    resultObject.ok = true;
+                    resultObject.result = categories;
                 }
             }
         } catch (JSONException e) {

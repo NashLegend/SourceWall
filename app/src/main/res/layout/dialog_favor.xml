@@ -1,30 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="@dimen/favor_dialog_height">
 
     <LinearLayout
         android:id="@+id/layout_favor_dialog_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <ListView
             android:id="@+id/list_favor_dialog"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:background="@android:color/transparent"
             android:gravity="top"
-            android:minHeight="@dimen/input_dialog_min_height"
+            android:minHeight="@dimen/input_dialog_input_height"
             android:padding="2dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/button_favor_dialog_create"
+                android:id="@+id/button_favor_dialog_invoke_create"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_weight="1"
@@ -44,20 +47,38 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <EditText
-            android:id="@+id/text_create_basket"
+            android:id="@+id/text_create_basket_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:gravity="top"
+            android:hint="@string/hint_input_basket_name"
+            android:padding="2dp"
+            android:singleLine="true" />
+
+        <Spinner
+            android:id="@+id/spinner_categories"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/text_create_basket_introduction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="@android:color/transparent"
             android:gravity="top"
-            android:minHeight="@dimen/input_dialog_min_height"
+            android:hint="@string/hint_input_basket_introduction"
+            android:minHeight="@dimen/input_dialog_input_height"
             android:padding="2dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
             android:orientation="horizontal">
 
             <Button

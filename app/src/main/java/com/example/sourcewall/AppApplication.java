@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.UserAPI;
+import com.example.sourcewall.util.ToastUtil;
 
 /**
  * Created by NashLegend on 2014/9/24 0024
@@ -23,6 +24,8 @@ public class AppApplication extends Application {
     public void onCreate() {
         super.onCreate();
         application = this;
+        TestLoginTask testLoginTask = new TestLoginTask();
+        testLoginTask.execute();
     }
 
     public static Application getApplication() {
@@ -42,6 +45,7 @@ public class AppApplication extends Application {
                 //ok
             } else {
                 //clear
+                ToastUtil.toast("Not Logged In");
                 switch (resultObject.code) {
                     case CODE_NOT_LOGGED_IN:
                         break;

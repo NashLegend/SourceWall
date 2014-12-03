@@ -42,13 +42,11 @@
 
     <!--user-->
     <string name="action_create_basket">Create</string>
-
-    <!--Article-->
+    <string name="action_favor">Favor</string>
+    <string name="action_action">Action</string>
     <string name="action_reply">Reply</string>
     <string name="action_recommend">Recommend</string>
-    <string name="action_favor">Favor</string>
-    <string name="sample_reply_title">This is a reply title</string>
-    <string name="reply_hint">Input something</string>
+    <string name="hint_reply">Input Reply</string>
     <string name="add_image">IMG</string>
     <string name="insert_image">Insert</string>
     <string name="way_to_add_image">Way to add image</string>
@@ -56,4 +54,10 @@
     <string name="add_image_from_link">Add Image From Link</string>
     <string name="add_link">LINK</string>
     <string name="publish_reply">Publish</string>
+    <string name="hint_input_basket_name">Input a basket name</string>
+    <string name="hint_input_basket_introduction">Input a basket introduction</string>
+
+    <!--Article-->
+    <string name="sample_reply_title">This is a reply title</string>
+
 </resources>

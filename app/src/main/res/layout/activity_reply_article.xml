@@ -35,7 +35,7 @@
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:gravity="top"
-            android:hint="@string/reply_hint" />
+            android:hint="@string/hint_reply" />
 
         <LinearLayout
             android:id="@+id/layout_reply_action"

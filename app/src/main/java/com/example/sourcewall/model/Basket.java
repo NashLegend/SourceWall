@@ -58,4 +58,22 @@ public class Basket extends AceModel {
     private String name = "";
     private String introduction = "";
     private int links_count = 0;
+    private boolean hasFavored = false;
+    private boolean isFavoring = false;
+
+    public boolean isHasFavored() {
+        return hasFavored;
+    }
+
+    public void setHasFavored(boolean hasFavored) {
+        this.hasFavored = hasFavored;
+    }
+
+    public boolean isFavoring() {
+        return isFavoring;
+    }
+
+    public void setFavoring(boolean isFavoring) {
+        this.isFavoring = isFavoring;
+    }
 }

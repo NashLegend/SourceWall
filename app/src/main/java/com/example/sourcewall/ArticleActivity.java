@@ -7,11 +7,14 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AbsListView;
 
 import com.example.sourcewall.adapters.ArticleDetailAdapter;
 import com.example.sourcewall.commonview.LListView;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.ArticleAPI;
+import com.example.sourcewall.connection.api.UserAPI;
+import com.example.sourcewall.dialogs.FavorDialog;
 import com.example.sourcewall.dialogs.InputDialog;
 import com.example.sourcewall.model.AceModel;
 import com.example.sourcewall.model.Article;
@@ -25,7 +28,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class ArticleActivity extends BaseActivity implements LListView.OnRefreshListener {
+public class ArticleActivity extends BaseActivity implements LListView.OnRefreshListener, AbsListView.OnScrollListener {
 
     LListView listView;
     ArticleDetailAdapter adapter;
@@ -43,6 +46,7 @@ public class ArticleActivity extends BaseActivity implements LListView.OnRefresh
         listView = (LListView) findViewById(R.id.list_detail);
         adapter = new ArticleDetailAdapter(this);
         listView.setAdapter(adapter);
+        listView.setOnScrollListener(this);
         listView.setCanPullToRefresh(false);
         listView.setCanPullToLoadMore(true);
         listView.setOnRefreshListener(this);
@@ -96,6 +100,15 @@ public class ArticleActivity extends BaseActivity implements LListView.OnRefresh
 
     private void favor() {
         // basket dialog
+        new FavorDialog.Builder(this).setTitle("Favor This").create(article).show();
+    }
+
+    private void hideHead() {
+
+    }
+
+    private void hideTail() {
+
     }
 
     @Override
@@ -121,29 +134,14 @@ public class ArticleActivity extends BaseActivity implements LListView.OnRefresh
         return super.onOptionsItemSelected(item);
     }
 
-    class FavorTask extends AsyncTask<String, Integer, ResultObject> {
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
+    }
 
-        @Override
-        protected ResultObject doInBackground(String... params) {
-            String articleID = params[0];
-            String title = params[1];
-            String basketID = params[2];
-            return ArticleAPI.collectArticle(articleID, title, basketID);
-        }
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
-        @Override
-        protected void onPostExecute(ResultObject resultObject) {
-            if (resultObject.ok) {
-                ToastUtil.toast("Favor OK");
-            } else {
-                ToastUtil.toast("Favor Failed");
-            }
-        }
     }
 
     class RecommendTask extends AsyncTask<String, Integer, ResultObject> {
@@ -159,7 +157,8 @@ public class ArticleActivity extends BaseActivity implements LListView.OnRefresh
             String title = params[1];
             String summary = params[2];
             String comment = params[3];
-            return ArticleAPI.recommendArticle(articleID, title, summary, comment);
+            String articleUrl = "http://www.guokr.com/article/" + articleID + "/";
+            return UserAPI.recommendLink(articleUrl, title, summary, comment);
         }
 
         @Override

@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:gravity="top"
-        android:minHeight="@dimen/input_dialog_min_height"
+        android:minHeight="@dimen/input_dialog_input_height"
         android:padding="2dp" />
 
     <LinearLayout

@@ -9,7 +9,8 @@
     <dimen name="navigation_drawer_width">240dp</dimen>
 
     <!--dialog-->
-    <dimen name="input_dialog_min_height">96dp</dimen>
+    <dimen name="input_dialog_input_height">96dp</dimen>
+    <dimen name="favor_dialog_height">300dp</dimen>
 
 
     <!--通用系列-->

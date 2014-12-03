@@ -5,14 +5,20 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.sourcewall.model.Basket;
+import com.example.sourcewall.view.FavorItemView;
+import com.example.sourcewall.view.FavorView;
 
 /**
  * Created by NashLegend on 2014/12/2 0002
  */
 public class FavorAdapter extends AceAdapter<Basket> {
+    String link = "";
+    String title = "";
 
-    public FavorAdapter(Context context) {
+    public FavorAdapter(Context context, String link, String title) {
         super(context);
+        this.link = link;
+        this.title = title;
     }
 
     @Override
@@ -32,6 +38,10 @@ public class FavorAdapter extends AceAdapter<Basket> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        return null;
+        if (convertView == null) {
+            convertView = new FavorItemView(getContext());
+        }
+        ((FavorItemView) convertView).setData(list.get(position), link, title);
+        return convertView;
     }
 }

@@ -18,5 +18,32 @@
         android:layout_below="@id/action_bar"
         android:divider="@null" />
 
+    <LinearLayout
+        android:id="@+id/layout_operation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_favor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/action_favor"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/button_recommend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/action_recommend"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/button_operate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/action_action" />
+    </LinearLayout>
 
 </RelativeLayout>
