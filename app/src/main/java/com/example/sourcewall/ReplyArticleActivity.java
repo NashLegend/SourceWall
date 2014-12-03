@@ -100,6 +100,7 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
             if (resultObject.ok) {
                 //notify ok
                 ToastUtil.toast("Reply OK");
+                finish();
             } else {
                 //failed
                 ToastUtil.toast("Reply Failed");
