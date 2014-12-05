@@ -77,7 +77,7 @@ public class ArticleActivity extends BaseActivity implements LListView.OnRefresh
 
     private void recommend() {
         InputDialog.Builder builder = new InputDialog.Builder(this);
-        builder.setTitle("Recommend This Article");
+        builder.setTitle(R.string.sample_title);
         builder.setCancelable(true);
         builder.setCanceledOnTouchOutside(false);
         builder.setOnClickListener(new DialogInterface.OnClickListener() {

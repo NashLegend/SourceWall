@@ -32,6 +32,7 @@ public class InputDialog extends Dialog {
         private boolean canceledOnTouchOutside = true;
         private boolean cancelable = true;
         private OnClickListener onClickListener;
+        private int resID = R.layout.dialog_input;
 
         public Builder(Context context) {
             mContext = context;
@@ -57,6 +58,11 @@ public class InputDialog extends Dialog {
             return this;
         }
 
+        public Builder setTitle(int title) {
+            this.title = mContext.getResources().getString(title);
+            return this;
+        }
+
         public Builder setButtonText(String Okay, String Nay) {
             this.OkayString = Okay;
             this.NayString = Nay;
@@ -68,11 +74,21 @@ public class InputDialog extends Dialog {
             return this;
         }
 
+        public Builder setSingleLine() {
+            resID = R.layout.dialog_input_simple;
+            return this;
+        }
+
+        public Builder setMultiLine() {
+            resID = R.layout.dialog_input;
+            return this;
+        }
+
         public InputDialog create() {
             dialog = new InputDialog(mContext);
             LayoutInflater inflater = (LayoutInflater) mContext
                     .getSystemService(Service.LAYOUT_INFLATER_SERVICE);
-            View layout = inflater.inflate(R.layout.dialog_input, null);
+            View layout = inflater.inflate(resID, null);
             dialog.setContentView(layout, new LayoutParams(
                     LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
             dialog.setCancelable(cancelable);

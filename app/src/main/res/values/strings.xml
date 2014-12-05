@@ -58,8 +58,12 @@
     <string name="publish_reply">Publish</string>
     <string name="hint_input_basket_name">Input a basket name</string>
     <string name="hint_input_basket_introduction">Input a basket introduction</string>
+    <string name="hint_input_image_url">Input an Image Url</string>
     <string name="file_not_image">File Not Image</string>
     <string name="file_not_exists">File Not Exists</string>
+    <string name="content_cannot_be_empty">Content Is Empty</string>
+    <string name="reply_ok">Reply OK</string>
+    <string name="reply_failed">Reply Failed</string>
 
     <!--Article-->
     <string name="sample_reply_title">This is a reply title</string>

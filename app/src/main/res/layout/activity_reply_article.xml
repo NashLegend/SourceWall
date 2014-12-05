@@ -23,6 +23,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/abc_action_bar_subtitle_bottom_margin_material"
                 android:maxLines="3"
                 android:text="@string/sample_reply_title"
                 android:textSize="@dimen/abc_text_size_title_material" />

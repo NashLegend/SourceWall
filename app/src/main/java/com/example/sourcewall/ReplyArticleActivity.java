@@ -12,10 +12,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.APIBase;
 import com.example.sourcewall.connection.api.ArticleAPI;
+import com.example.sourcewall.dialogs.InputDialog;
 import com.example.sourcewall.model.Article;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.FileUtil;
@@ -26,21 +28,27 @@ import java.io.File;
 
 public class ReplyArticleActivity extends ActionBarActivity implements View.OnClickListener {
 
-    EditText reply;
+    EditText editText;
     Article article;
     Button publishButton;
     Button imgButton;
+    Button insertButton;
+    ProgressBar uploadingProgress;
+    String tmpImagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reply_article);
         article = (Article) getIntent().getSerializableExtra(Consts.Extra_Article);
-        reply = (EditText) findViewById(R.id.text_reply);
+        editText = (EditText) findViewById(R.id.text_reply);
         publishButton = (Button) findViewById(R.id.btn_publish);
         imgButton = (Button) findViewById(R.id.btn_add_img);
+        insertButton = (Button) findViewById(R.id.btn_insert_img);
+        uploadingProgress = (ProgressBar) findViewById(R.id.prg_uploading_img);
         publishButton.setOnClickListener(this);
         imgButton.setOnClickListener(this);
+        insertButton.setOnClickListener(this);
     }
 
     private void invokeImageDialog() {
@@ -56,11 +64,34 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
                         startActivityForResult(intent, 1024);
                         break;
                     case 1:
-                        //Net Image
+                        invokeUrlDialog();
                         break;
                 }
             }
         }).create().show();
+    }
+
+    private void invokeUrlDialog() {
+        InputDialog.Builder builder = new InputDialog.Builder(this);
+        builder.setTitle(R.string.sample_title);
+        builder.setCancelable(true);
+        builder.setSingleLine();
+        builder.setCanceledOnTouchOutside(false);
+        builder.setOnClickListener(new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (which == DialogInterface.BUTTON_POSITIVE) {
+                    InputDialog d = (InputDialog) dialog;
+                    String text = d.InputString;
+                    ToastUtil.toast(text);
+                } else {
+                    // cancel recommend
+                }
+            }
+        });
+        InputDialog inputDialog = builder.create();
+        inputDialog.show();
     }
 
     public void uploadImage(String path) {
@@ -75,7 +106,20 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
         } else {
             ToastUtil.toast(R.string.file_not_image);
         }
+    }
 
+    private void doneUploadingImage(String url) {
+        // tap to insert image
+        tmpImagePath = url;
+        setImageButtonsPrepared();
+    }
+
+    /**
+     *
+     */
+    private void insertImagePath() {
+        editText.getText().insert(editText.getSelectionStart(), tmpImagePath);
+        resetImageButtons();
     }
 
     private void publishReply(String rep) {
@@ -87,14 +131,17 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_publish:
-                if (!TextUtils.isEmpty(reply.getText().toString().trim())) {
-                    publishReply(reply.getText().toString());
+                if (!TextUtils.isEmpty(editText.getText().toString().trim())) {
+                    publishReply(editText.getText().toString());
                 } else {
-                    // empty
+                    ToastUtil.toast(R.string.content_cannot_be_empty);
                 }
                 break;
             case R.id.btn_add_img:
                 invokeImageDialog();
+                break;
+            case R.id.btn_insert_img:
+                insertImagePath();
                 break;
         }
     }
@@ -116,21 +163,37 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
         @Override
         protected void onPostExecute(ResultObject resultObject) {
             if (resultObject.ok) {
-                //notify ok
-                ToastUtil.toast("Reply OK");
+                ToastUtil.toast(R.string.reply_ok);
                 finish();
             } else {
-                //failed
-                ToastUtil.toast("Reply Failed");
+                ToastUtil.toast(R.string.reply_failed);
             }
         }
+    }
+
+    private void resetImageButtons() {
+        insertButton.setVisibility(View.GONE);
+        imgButton.setVisibility(View.VISIBLE);
+        uploadingProgress.setVisibility(View.GONE);
+    }
+
+    private void setImageButtonsUploading() {
+        insertButton.setVisibility(View.GONE);
+        imgButton.setVisibility(View.GONE);
+        uploadingProgress.setVisibility(View.VISIBLE);
+    }
+
+    private void setImageButtonsPrepared() {
+        insertButton.setVisibility(View.VISIBLE);
+        imgButton.setVisibility(View.GONE);
+        uploadingProgress.setVisibility(View.GONE);
     }
 
     class ImageUploadTask extends AsyncTask<String, Integer, ResultObject> {
 
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
+            setImageButtonsUploading();
         }
 
         @Override
@@ -143,19 +206,17 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
         protected void onPostExecute(ResultObject resultObject) {
             if (resultObject.ok) {
                 // tap to insert image
-                String url = (String) resultObject.result;
-                ToastUtil.toast("Upload OK,url is : " + url);
+                doneUploadingImage((String) resultObject.result);
             } else {
-                //upload failed
+                resetImageButtons();
                 ToastUtil.toast("Upload Failed");
             }
         }
 
         @Override
         protected void onCancelled() {
-            super.onCancelled();
+            resetImageButtons();
         }
-
     }
 
     @Override
