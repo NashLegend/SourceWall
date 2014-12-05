@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.sourcewall.connection.ResultObject;
@@ -21,10 +22,14 @@ import com.example.sourcewall.util.FileUtil;
 import com.example.sourcewall.util.ImageFetcher.AsyncTask;
 import com.example.sourcewall.util.ToastUtil;
 
+import java.io.File;
+
 public class ReplyArticleActivity extends ActionBarActivity implements View.OnClickListener {
 
     EditText reply;
     Article article;
+    Button publishButton;
+    Button imgButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +37,10 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
         setContentView(R.layout.activity_reply_article);
         article = (Article) getIntent().getSerializableExtra(Consts.Extra_Article);
         reply = (EditText) findViewById(R.id.text_reply);
-        findViewById(R.id.btn_publish).setOnClickListener(this);
+        publishButton = (Button) findViewById(R.id.btn_publish);
+        imgButton = (Button) findViewById(R.id.btn_add_img);
+        publishButton.setOnClickListener(this);
+        imgButton.setOnClickListener(this);
     }
 
     private void invokeImageDialog() {
@@ -56,8 +64,18 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
     }
 
     public void uploadImage(String path) {
-        ImageUploadTask task = new ImageUploadTask();
-        task.execute(path);
+        if (FileUtil.isImage(path)) {
+            File file = new File(path);
+            if (file.exists()) {
+                ImageUploadTask task = new ImageUploadTask();
+                task.execute(path);
+            } else {
+                ToastUtil.toast(R.string.file_not_exists);
+            }
+        } else {
+            ToastUtil.toast(R.string.file_not_image);
+        }
+
     }
 
     private void publishReply(String rep) {

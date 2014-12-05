@@ -1,6 +1,5 @@
 package com.example.sourcewall.connection.api;
 
-import com.example.sourcewall.AppApplication;
 import com.example.sourcewall.connection.HttpFetcher;
 import com.example.sourcewall.connection.ResultObject;
 
@@ -10,8 +9,10 @@ import org.apache.http.HttpVersion;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.ContentBody;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
@@ -32,20 +33,22 @@ public class APIBase {
         ResultObject resultObject = new ResultObject();
         File file = new File(path);
         if (file != null && file.exists() && !file.isDirectory() && file.length() >= 0) {
-            HttpClient httpClient = HttpFetcher.getDefaultHttpClient();
-            httpClient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION,
-                    HttpVersion.HTTP_1_1);
-            HttpPost httpPost = new HttpPost(
-                    "http://www.guokr.com/apis/image.json?enable_watermark=" + (watermark ? "true" : "false"));
-            MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-            builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-            builder.addBinaryBody("upload_file", file);
-            builder.addTextBody("access_token", UserAPI.getToken());
-            HttpEntity entity = builder.build();
-            httpPost.setEntity(entity);
-            HttpResponse response;
-            String result = "";
             try {
+                HttpClient httpClient = HttpFetcher.getDefaultHttpClient();
+                httpClient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION,
+                        HttpVersion.HTTP_1_1);
+                HttpPost httpPost = new HttpPost(
+                        "http://www.guokr.com/apis/image.json?enable_watermark=" + (watermark ? "true" : "false"));
+
+                MultipartEntity multipartEntity = new MultipartEntity();
+                ContentBody contentBody = new FileBody(file);
+                multipartEntity.addPart("upload_file", new FileBody(file));
+                multipartEntity.addPart("access_token", new StringBody(UserAPI.getToken()));
+                httpPost.setEntity(multipartEntity);
+
+                HttpResponse response;
+                String result = "";
+
                 response = httpClient.execute(httpPost);
                 HttpEntity resEntity = response.getEntity();
                 if (resEntity != null) {
@@ -64,6 +67,8 @@ public class APIBase {
                 e.printStackTrace();
             } catch (JSONException e) {
                 e.printStackTrace();
+            } catch (Exception e) {
+
             }
         }
         return resultObject;

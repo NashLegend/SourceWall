@@ -10,10 +10,46 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 
+import java.io.File;
+
 /**
  * Created by NashLegend on 2014/12/1 0001
  */
 public class FileUtil {
+
+    public static final String[] imageSuffixArray = {
+            "jpg", "jpeg", "png",
+            "bmp", "gif"
+    };
+
+    public static boolean isImage(String path) {
+        return isArrayContains(imageSuffixArray, getFileSuffix(new File(path)));
+    }
+
+    private static boolean isArrayContains(String[] strs, String suffix) {
+        if (strs == null || suffix == null) {
+            return false;
+        }
+        for (int i = 0; i < strs.length; i++) {
+            if (suffix.equals(strs[i])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static String getFileSuffix(File file) {
+        if (file.isDirectory()) {
+            return "";
+        }
+        String fileName = file.getName();
+        String suffix = "";
+        int offset = fileName.lastIndexOf(".");
+        if (offset >= 0) {
+            suffix = fileName.substring(offset + 1);
+        }
+        return suffix.toLowerCase();
+    }
 
     @SuppressLint("NewApi")
     public static String getActualPath(final Context context, final Uri uri) {

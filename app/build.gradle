@@ -17,16 +17,19 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    packagingOptions {
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/LICENSE.txt'
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile files('libs/jsoup-1.7.3.jar')
     compile 'com.android.support:appcompat-v7:21.0.2'
     compile 'com.android.support:support-v4:21.0.2'
     compile 'com.android.support:cardview-v7:21.0.2'
     compile 'com.android.support:recyclerview-v7:21.0.2'
     compile 'com.squareup.okhttp:okhttp:2.0.0'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
-    compile 'org.apache.httpcomponents:httpmime:4.3.6'
+    compile 'org.apache.httpcomponents:httpmime:4.2.1'
 }
