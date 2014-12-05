@@ -25,8 +25,8 @@ public class InputDialog extends Dialog {
     public static class Builder {
         private Context mContext;
         private String title = "";
-        private String OkayString = "Okay";
-        private String NayString = "Nay";
+        private String OkayString = "";
+        private String NayString = "";
         private String input = "";
         private InputDialog dialog;
         private boolean canceledOnTouchOutside = true;
@@ -36,6 +36,8 @@ public class InputDialog extends Dialog {
 
         public Builder(Context context) {
             mContext = context;
+            OkayString = mContext.getResources().getString(R.string.ok);
+            NayString = mContext.getResources().getString(R.string.cancel);
         }
 
         public Builder setOnClickListener(OnClickListener onClickListener) {
