@@ -2,6 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingLeft="@dimen/abc_dropdownitem_text_padding_left"
+    android:paddingRight="@dimen/abc_dropdownitem_text_padding_right"
+    android:descendantFocusability="blocksDescendants"
+    android:gravity="center_vertical"
     android:orientation="horizontal">
 
     <TextView
@@ -11,10 +15,11 @@
         android:layout_weight="1"
         android:text="@string/sample_title" />
 
-    <Button
+    <ImageButton
         android:id="@+id/button_add_2_favor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="0"
-        android:text="@string/action_favor" />
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_star_black_24dp" />
 </LinearLayout>

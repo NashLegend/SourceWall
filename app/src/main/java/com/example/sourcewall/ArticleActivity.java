@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.Button;
 
 import com.example.sourcewall.adapters.ArticleDetailAdapter;
 import com.example.sourcewall.commonview.LListView;
@@ -30,6 +29,7 @@ import com.example.sourcewall.model.Article;
 import com.example.sourcewall.model.SimpleComment;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.ToastUtil;
+import com.getbase.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONException;
 
@@ -46,11 +46,9 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
     Toolbar toolbar;
     View header;
     View bottomLayout;
-    Button expandButton;
-    Button collapseButton;
-    Button replyButton;
-    Button recomButton;
-    Button favorButton;
+    FloatingActionButton replyButton;
+    FloatingActionButton recomButton;
+    FloatingActionButton favorButton;
     int touchSlop = 10;
 
     @Override
@@ -77,19 +75,17 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         listView.setCanPullToLoadMore(true);
         listView.setOnRefreshListener(this);
 
-        expandButton = (Button) findViewById(R.id.button_expand);
-        collapseButton = (Button) findViewById(R.id.button_collapse);
-        replyButton = (Button) findViewById(R.id.button_reply);
-        recomButton = (Button) findViewById(R.id.button_recommend);
-        favorButton = (Button) findViewById(R.id.button_favor);
+        replyButton = (FloatingActionButton) findViewById(R.id.button_reply);
+        recomButton = (FloatingActionButton) findViewById(R.id.button_recommend);
+        favorButton = (FloatingActionButton) findViewById(R.id.button_favor);
 
-        expandButton.setOnClickListener(this);
-        collapseButton.setOnClickListener(this);
         replyButton.setOnClickListener(this);
         recomButton.setOnClickListener(this);
         favorButton.setOnClickListener(this);
 
         loadData(0);
+
+
     }
 
     private void loadData(int offset) {
@@ -151,17 +147,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch (id) {
-            case R.id.action_reply:
-                startReplyActivity();
-                break;
-            case R.id.action_recommend:
-                recommend();
-                break;
-            case R.id.action_favor:
-                favor();
-                break;
-        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -275,12 +261,6 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.button_expand:
-                expandButtons();
-                break;
-            case R.id.button_collapse:
-                collapseButtons();
-                break;
             case R.id.button_reply:
                 startReplyActivity();
                 break;
@@ -291,22 +271,6 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
                 favor();
                 break;
         }
-    }
-
-    private void expandButtons() {
-        replyButton.setVisibility(View.VISIBLE);
-        recomButton.setVisibility(View.VISIBLE);
-        favorButton.setVisibility(View.VISIBLE);
-        expandButton.setVisibility(View.INVISIBLE);
-        collapseButton.setVisibility(View.VISIBLE);
-    }
-
-    private void collapseButtons() {
-        replyButton.setVisibility(View.GONE);
-        recomButton.setVisibility(View.GONE);
-        favorButton.setVisibility(View.GONE);
-        expandButton.setVisibility(View.VISIBLE);
-        collapseButton.setVisibility(View.INVISIBLE);
     }
 
     class RecommendTask extends AsyncTask<String, Integer, ResultObject> {

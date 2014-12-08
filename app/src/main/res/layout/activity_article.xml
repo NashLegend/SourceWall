@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -18,54 +19,44 @@
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary" />
 
-    <LinearLayout
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/layout_operation"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        fab:fab_addButtonColorNormal="@android:color/holo_blue_light"
+        fab:fab_addButtonColorPressed="@android:color/holo_blue_dark"
+        fab:fab_addButtonPlusIconColor="@android:color/white"
+        fab:fab_expandDirection="left">
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <Button
-                android:id="@+id/button_collapse"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/action_collapse"
-                android:visibility="invisible" />
-
-            <Button
-                android:id="@+id/button_expand"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/action_expand" />
-
-        </RelativeLayout>
-
-        <Button
+        <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/button_favor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/action_favor"
-            android:visibility="gone" />
+            fab:fab_icon="@drawable/ic_star_white_36dp"
 
-        <Button
+            fab:fab_colorNormal="@android:color/holo_blue_bright"
+            fab:fab_colorPressed="@android:color/holo_blue_light" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/button_recommend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/action_recommend"
-            android:visibility="gone" />
+            android:paddingTop="10dp"
+            fab:fab_icon="@drawable/ic_plus_one_white_36dp"
+            fab:fab_colorNormal="@android:color/holo_blue_bright"
+            fab:fab_colorPressed="@android:color/holo_blue_light" />
 
-        <Button
+        <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/button_reply"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/action_reply"
-            android:visibility="gone" />
+            fab:fab_icon="@drawable/ic_write_color_white_36dp"
+            fab:fab_colorNormal="@android:color/holo_blue_bright"
+            fab:fab_colorPressed="@android:color/holo_blue_light" />
 
-
-    </LinearLayout>
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
 </RelativeLayout>

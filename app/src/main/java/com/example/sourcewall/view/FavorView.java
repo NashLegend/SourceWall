@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -31,6 +32,7 @@ import java.util.ArrayList;
 public class FavorView extends FrameLayout implements View.OnClickListener {
 
     ListView listView;
+    ProgressBar progressBaskets;
     FavorAdapter adapter;
     Button btn_invoke_create;
     Button btn_ok;
@@ -57,6 +59,7 @@ public class FavorView extends FrameLayout implements View.OnClickListener {
         btn_create_basket = (Button) findViewById(R.id.button_create_basket);
         spinner = (Spinner) findViewById(R.id.spinner_categories);
         listView = (ListView) findViewById(R.id.list_favor_dialog);
+        progressBaskets = (ProgressBar) findViewById(R.id.progress_loading_baskets);
     }
 
     public void setData(AceModel model) {
@@ -135,6 +138,12 @@ public class FavorView extends FrameLayout implements View.OnClickListener {
     class LoadBasketTask extends AsyncTask<Void, Integer, ResultObject> {
 
         @Override
+        protected void onPreExecute() {
+            progressBaskets.setVisibility(VISIBLE);
+            listView.setVisibility(INVISIBLE);
+        }
+
+        @Override
         protected ResultObject doInBackground(Void... params) {
             return UserAPI.getBaskets();
         }
@@ -152,6 +161,8 @@ public class FavorView extends FrameLayout implements View.OnClickListener {
                 //TODO fetch failed
                 ToastUtil.toast("Load Basket Failed");
             }
+            progressBaskets.setVisibility(INVISIBLE);
+            listView.setVisibility(VISIBLE);
         }
     }
 

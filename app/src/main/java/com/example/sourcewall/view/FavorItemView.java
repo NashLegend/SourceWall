@@ -19,7 +19,7 @@ import com.example.sourcewall.util.ToastUtil;
  */
 public class FavorItemView extends AceView<Basket> implements View.OnClickListener {
     TextView textView;
-    Button button;
+    View button;
     Basket basket;
     String link = "";
     String title = "";
@@ -29,7 +29,7 @@ public class FavorItemView extends AceView<Basket> implements View.OnClickListen
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_favor_item_view, this);
         textView = (TextView) findViewById(R.id.text_basket_name);
-        button = (Button) findViewById(R.id.button_add_2_favor);
+        button = findViewById(R.id.button_add_2_favor);
         button.setOnClickListener(this);
     }
 
