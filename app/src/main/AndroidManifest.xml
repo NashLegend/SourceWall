@@ -34,7 +34,8 @@
         </activity>
         <activity
             android:name="com.example.sourcewall.ArticleActivity"
-            android:label="@string/title_activity_article" />
+            android:label="@string/title_activity_article"
+            android:theme="@style/BlankTheme" />
         <activity
             android:name="com.example.sourcewall.PostActivity"
             android:label="@string/title_activity_post" />
