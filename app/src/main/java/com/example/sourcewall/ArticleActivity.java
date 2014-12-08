@@ -36,7 +36,6 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-
 public class ArticleActivity extends SwipeActivity implements LListView.OnRefreshListener, View.OnClickListener {
 
     LListView listView;
@@ -112,7 +111,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
 
     private void recommend() {
         InputDialog.Builder builder = new InputDialog.Builder(this);
-        builder.setTitle(R.string.sample_title);
+        builder.setTitle(R.string.recommend_article);
         builder.setCancelable(true);
         builder.setCanceledOnTouchOutside(false);
         builder.setOnClickListener(new DialogInterface.OnClickListener() {
@@ -135,7 +134,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
 
     private void favor() {
         // basket dialog
-        new FavorDialog.Builder(this).setTitle("Favor This").create(article).show();
+        new FavorDialog.Builder(this).setTitle(R.string.action_favor).create(article).show();
     }
 
     @Override

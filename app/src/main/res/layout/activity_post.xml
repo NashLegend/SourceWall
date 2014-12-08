@@ -10,4 +10,10 @@
         android:layout_height="match_parent"
         android:divider="@null" />
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary" />
+
 </RelativeLayout>

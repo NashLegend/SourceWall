@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="@dimen/basket_item_height"
     android:paddingLeft="@dimen/abc_dropdownitem_text_padding_left"
     android:paddingRight="@dimen/abc_dropdownitem_text_padding_right"
     android:descendantFocusability="blocksDescendants"
@@ -17,9 +17,9 @@
 
     <ImageButton
         android:id="@+id/button_add_2_favor"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/basket_item_height"
+        android:layout_height="@dimen/basket_item_height"
         android:layout_weight="0"
         android:background="@android:color/transparent"
-        android:src="@drawable/ic_star_black_24dp" />
+        android:src="@drawable/ic_plus_holo_light_blue" />
 </LinearLayout>

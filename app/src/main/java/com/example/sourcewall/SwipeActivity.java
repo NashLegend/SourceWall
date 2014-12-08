@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
@@ -74,13 +75,23 @@ public class SwipeActivity extends BaseActivity {
             mActivity = activity;
             screenWidth = getScreenWidth(activity);
             setClickable(true);
-            ViewGroup root = (ViewGroup) activity.getWindow().getDecorView();
+            final ViewGroup root = (ViewGroup) activity.getWindow().getDecorView();
             content = root.getChildAt(0);
             ViewGroup.LayoutParams params = content.getLayoutParams();
             root.removeView(content);
             this.addView(content);
             root.addView(this, params);
             sideWidth = (int) (sideWidthInDP * activity.getResources().getDisplayMetrics().density);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    //TODO 查看在Android 5.0以上的这几个数值是多少
+                    System.out.println("**********");
+                    System.out.println(root.getHeight());//1920
+                    System.out.println(SwipeLayout.this.getHeight());//1776
+                    System.out.println(content.getHeight());//1632
+                }
+            }, 200);
         }
 
         boolean canSwipe = false;

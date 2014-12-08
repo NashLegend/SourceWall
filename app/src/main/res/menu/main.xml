@@ -4,7 +4,7 @@
     tools:context=".MainActivity">
     <item
         android:id="@+id/action_example"
-        android:title="@string/action_example"
+        android:title="@string/action_login"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_settings"

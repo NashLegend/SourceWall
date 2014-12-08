@@ -6,7 +6,6 @@
     android:background="?android:attr/colorBackground"
     tools:context="com.example.sourcewall.ArticleActivity">
 
-
     <com.example.sourcewall.commonview.LListView
         android:id="@+id/list_detail"
         android:layout_width="match_parent"

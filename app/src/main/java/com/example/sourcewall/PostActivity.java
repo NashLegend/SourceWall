@@ -2,6 +2,7 @@ package com.example.sourcewall;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -24,12 +25,13 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
     PostDetailAdapter adapter;
     Post mPost;
     LoaderTask task;
-
+    Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
-        setContentView(R.layout.activity_article);
+        toolbar = (Toolbar) findViewById(R.id.action_bar);
+        setSupportActionBar(toolbar);
         mPost = (Post) getIntent().getSerializableExtra(Consts.Extra_Post);
         listView = (LListView) findViewById(R.id.list_detail);
         adapter = new PostDetailAdapter(this);

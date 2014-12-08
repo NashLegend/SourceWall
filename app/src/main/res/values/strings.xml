@@ -5,69 +5,71 @@
     <string name="title_section1">Section 1</string>
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>
-    <string name="articles">Articles</string>
-    <string name="posts">Posts</string>
-    <string name="questions">Questions</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="action_example">Example action</string>
-    <string name="action_settings">Settings</string>
-    <string name="title_activity_setting">SettingActivity</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="title_activity_article">ArticleActivity</string>
-    <string name="pull_down_to_refresh">Pull Down To Refresh</string>
-    <string name="release_to_refresh">Release To Refresh</string>
-    <string name="refreshing">Refreshing</string>
-    <string name="pull_up_to_load_more">Pull Up To Load More</string>
-    <string name="release_to_load_more">Release To Load More</string>
-    <string name="loading">Loading</string>
+    <string name="articles">文章</string>
+    <string name="posts">帖子</string>
+    <string name="questions">问答</string>
+    <string name="navigation_drawer_open">打开导航抽屉</string>
+    <string name="navigation_drawer_close">关闭导航抽屉</string>
+    <string name="action_login">登录</string>
+    <string name="action_settings">设置</string>
+    <string name="hello_world">泥嚎！</string>
+
+    <string name="title_activity_setting">设置</string>
+    <string name="title_activity_article">文章</string>
+    <string name="title_activity_post">帖子</string>
+    <string name="title_activity_question">问答</string>
+    <string name="title_activity_login">登录</string>
+    <string name="title_activity_reply_article">回复</string>
+
+    <string name="pull_down_to_refresh">下拉以刷新</string>
+    <string name="release_to_refresh">放开以刷新</string>
+    <string name="refreshing">刷新中</string>
+    <string name="pull_up_to_load_more">上拉以加载更多</string>
+    <string name="release_to_load_more">放开以加载更多</string>
+    <string name="loading">加载中</string>
     <string name="idling">idling</string>
-    <string name="cancel">Cancel</string>
-    <string name="ok">OK</string>
-    <string name="action_done">Done</string>
+    <string name="cancel">取消</string>
+    <string name="ok">确定</string>
+    <string name="action_done">完成</string>
 
     <!-- Sample Strings -->
     <string name="sample_floor">1楼</string>
     <string name="sample_like_num">22</string>
     <string name="sample_reply_num">38</string>
-    <string name="sample_group">Opposites Attract</string>
-    <string name="sample_title">This is a sample title as you see</string>
-    <string name="sample_author">Nominate</string>
-    <string name="sample_author_title">Doctor Who</string>
+    <string name="sample_group">万有引力</string>
+    <string name="sample_title">弹涂鱼：上岸本领哪里来？</string>
+    <string name="sample_author">无名氏</string>
+    <string name="sample_author_title">叫兽</string>
     <string name="sample_date">2014-12-05 22:45:51</string>
-    <string name="sample_summary">This is a sample summary, as you see, this is used only for some space for the convenience of developing, the rest words are used to fill more space, they are meaningless so do not read them</string>
-    <string name="title_activity_post">PostActivity</string>
-    <string name="title_activity_question">QuestionActivity</string>
-    <string name="title_activity_login">LoginActivity</string>
-    <string name="title_activity_reply_article">ReplyArticleActivity</string>
+    <string name="sample_summary">泥盆纪生物从水生到陆生的转变，是脊椎动物演化史中最重要的事件。这种转变最终导致了四足动物的出现。许多后来出现的两栖硬骨鱼在适应陆地生活的过程中演化出了用来行走的胸鳍、更佳的视力和对氨的耐受力。然而此前，人们对这些演化的基因和分子基础还知之甚少。</string>
+
 
     <!--user-->
-    <string name="action_create_basket">Create</string>
-    <string name="action_invoke_create_basket">Invoke Create</string>
-    <string name="action_favor">Favor</string>
+    <string name="action_create_basket">创建</string>
+    <string name="action_invoke_create_basket">创建果篮</string>
+    <string name="action_favor">收藏</string>
     <string name="action_action">Action</string>
-    <string name="action_reply">Reply</string>
-    <string name="action_recommend">Recommend</string>
-    <string name="action_expand">Expand</string>
-    <string name="action_collapse">Collapse</string>
-    <string name="hint_reply">Input Reply</string>
-    <string name="add_image">IMG</string>
-    <string name="insert_image">Insert</string>
-    <string name="way_to_add_image">Way to add image</string>
-    <string name="add_image_from_disk">Select Image From Disk</string>
-    <string name="add_image_from_link">Add Image From Link</string>
+    <string name="action_reply">回复</string>
+    <string name="action_recommend">推荐</string>
+    <string name="recommend_article">推荐文章</string>
+    <string name="hint_reply">请输入回复</string>
+    <string name="add_image">添加图片</string>
+    <string name="insert_image">插入图片</string>
+    <string name="way_to_add_image">选择添加图片的方式</string>
+    <string name="add_image_from_disk">从本地上传</string>
+    <string name="add_image_from_link">添加网络地址</string>
     <string name="add_link">LINK</string>
-    <string name="publish_reply">Publish</string>
-    <string name="hint_input_basket_name">Input a basket name</string>
-    <string name="hint_input_basket_introduction">Input a basket introduction</string>
-    <string name="hint_input_image_url">Input an Image Url</string>
-    <string name="file_not_image">File Not Image</string>
-    <string name="file_not_exists">File Not Exists</string>
-    <string name="content_cannot_be_empty">Content Is Empty</string>
-    <string name="reply_ok">Reply OK</string>
-    <string name="reply_failed">Reply Failed</string>
+    <string name="publish_reply">发布</string>
+    <string name="hint_input_basket_name">输入果篮名</string>
+    <string name="hint_input_basket_introduction">输入果篮介绍，选填</string>
+    <string name="hint_input_image_url">输入图片网址</string>
+    <string name="file_not_image">不是图片文件</string>
+    <string name="file_not_exists">文件不存在</string>
+    <string name="content_cannot_be_empty">内容不能为空</string>
+    <string name="reply_ok">回复成功</string>
+    <string name="reply_failed">回复失败</string>
 
     <!--Article-->
-    <string name="sample_reply_title">This is a reply title</string>
+    <string name="sample_reply_title">回复文章</string>
 
 </resources>

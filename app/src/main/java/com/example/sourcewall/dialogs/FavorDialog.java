@@ -44,6 +44,11 @@ public class FavorDialog extends Dialog {
             return this;
         }
 
+        public Builder setTitle(int title) {
+            this.title = mContext.getResources().getString(title);
+            return this;
+        }
+
         public FavorDialog create(AceModel data) {
             dialog = new FavorDialog(mContext);
             favorView = new FavorView(mContext);
