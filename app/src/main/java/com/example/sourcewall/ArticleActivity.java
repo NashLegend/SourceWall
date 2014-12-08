@@ -53,6 +53,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //TODO 5.0 bug
         setContentView(R.layout.activity_article);
         touchSlop = (int) (ViewConfiguration.get(ArticleActivity.this).getScaledTouchSlop() * 0.9);
         toolbar = (Toolbar) findViewById(R.id.action_bar);
@@ -83,8 +84,6 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         favorButton.setOnClickListener(this);
 
         loadData(0);
-
-
     }
 
     private void loadData(int offset) {
