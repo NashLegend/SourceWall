@@ -48,6 +48,8 @@
     <string name="action_action">Action</string>
     <string name="action_reply">Reply</string>
     <string name="action_recommend">Recommend</string>
+    <string name="action_expand">Expand</string>
+    <string name="action_collapse">Collapse</string>
     <string name="hint_reply">Input Reply</string>
     <string name="add_image">IMG</string>
     <string name="insert_image">Insert</string>

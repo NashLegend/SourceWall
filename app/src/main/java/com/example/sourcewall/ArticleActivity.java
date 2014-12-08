@@ -1,13 +1,22 @@
 package com.example.sourcewall;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.Button;
 
 import com.example.sourcewall.adapters.ArticleDetailAdapter;
 import com.example.sourcewall.commonview.LListView;
@@ -28,28 +37,58 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class ArticleActivity extends BaseActivity implements LListView.OnRefreshListener, AbsListView.OnScrollListener {
+public class ArticleActivity extends SwipeActivity implements LListView.OnRefreshListener, View.OnClickListener {
 
     LListView listView;
     ArticleDetailAdapter adapter;
     Article article;
     LoaderTask task;
     Toolbar toolbar;
+    View header;
+    View bottomLayout;
+    Button expandButton;
+    Button collapseButton;
+    Button replyButton;
+    Button recomButton;
+    Button favorButton;
+    int touchSlop = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article);
+        touchSlop = (int) (ViewConfiguration.get(ArticleActivity.this).getScaledTouchSlop() * 0.9);
         toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         article = (Article) getIntent().getSerializableExtra(Consts.Extra_Article);
+        bottomLayout = findViewById(R.id.layout_operation);
         listView = (LListView) findViewById(R.id.list_detail);
         adapter = new ArticleDetailAdapter(this);
         listView.setAdapter(adapter);
-        listView.setOnScrollListener(this);
+
+        header = new View(ArticleActivity.this);
+        header.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen.abc_action_bar_default_height_material)));
+        header.setBackgroundColor(Color.parseColor("#00000000"));
+        listView.addHeaderView(header);
+
+        listView.setOnScrollListener(onScrollListener);
+        listView.setOnTouchListener(onTouchListener);
         listView.setCanPullToRefresh(false);
         listView.setCanPullToLoadMore(true);
         listView.setOnRefreshListener(this);
+
+        expandButton = (Button) findViewById(R.id.button_expand);
+        collapseButton = (Button) findViewById(R.id.button_collapse);
+        replyButton = (Button) findViewById(R.id.button_reply);
+        recomButton = (Button) findViewById(R.id.button_recommend);
+        favorButton = (Button) findViewById(R.id.button_favor);
+
+        expandButton.setOnClickListener(this);
+        collapseButton.setOnClickListener(this);
+        replyButton.setOnClickListener(this);
+        recomButton.setOnClickListener(this);
+        favorButton.setOnClickListener(this);
+
         loadData(0);
     }
 
@@ -103,14 +142,6 @@ public class ArticleActivity extends BaseActivity implements LListView.OnRefresh
         new FavorDialog.Builder(this).setTitle("Favor This").create(article).show();
     }
 
-    private void hideHead() {
-
-    }
-
-    private void hideTail() {
-
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.article, menu);
@@ -134,14 +165,148 @@ public class ArticleActivity extends BaseActivity implements LListView.OnRefresh
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
+    AnimatorSet backAnimatorSet;
 
+    private void animateBack() {
+        if (hideAnimatorSet != null && hideAnimatorSet.isRunning()) {
+            hideAnimatorSet.cancel();
+        }
+        if (backAnimatorSet != null && backAnimatorSet.isRunning()) {
+
+        } else {
+            backAnimatorSet = new AnimatorSet();
+            ObjectAnimator headerAnimator = ObjectAnimator.ofFloat(toolbar, "translationY", toolbar.getTranslationY(), 0f);
+            ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(bottomLayout, "translationY", bottomLayout.getTranslationY(), 0f);
+            ArrayList<Animator> animators = new ArrayList<>();
+            animators.add(headerAnimator);
+            animators.add(footerAnimator);
+            backAnimatorSet.setDuration(300);
+            backAnimatorSet.playTogether(animators);
+            backAnimatorSet.start();
+        }
     }
 
-    @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+    AnimatorSet hideAnimatorSet;
 
+    private void animateHide() {
+        if (backAnimatorSet != null && backAnimatorSet.isRunning()) {
+            backAnimatorSet.cancel();
+        }
+        if (hideAnimatorSet != null && hideAnimatorSet.isRunning()) {
+
+        } else {
+            hideAnimatorSet = new AnimatorSet();
+            ObjectAnimator headerAnimator = ObjectAnimator.ofFloat(toolbar, "translationY", toolbar.getTranslationY(), -toolbar.getHeight());
+            ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(bottomLayout, "translationY", bottomLayout.getTranslationY(), bottomLayout.getHeight());
+            ArrayList<Animator> animators = new ArrayList<>();
+            animators.add(headerAnimator);
+            animators.add(footerAnimator);
+            hideAnimatorSet.setDuration(300);
+            hideAnimatorSet.playTogether(animators);
+            hideAnimatorSet.start();
+        }
+    }
+
+    View.OnTouchListener onTouchListener = new View.OnTouchListener() {
+
+        float lastY = 0f;
+        float currentY = 0f;
+        int lastDirection = 0;
+        int currentDirection = 0;
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    lastY = event.getY();
+                    currentY = event.getY();
+                    currentDirection = 0;
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    if (listView.getFirstVisiblePosition() > 1) {
+                        float tmpCurrentY = event.getY();
+                        if (Math.abs(tmpCurrentY - lastY) > touchSlop) {
+                            currentY = tmpCurrentY;
+                            currentDirection = (int) (currentY - lastY);
+                            if (lastDirection != currentDirection) {
+                                if (currentDirection < 0) {
+                                    animateHide();
+                                } else {
+                                    animateBack();
+                                }
+                            }
+                            lastY = currentY;
+                        }
+                    }
+                    break;
+                case MotionEvent.ACTION_CANCEL:
+                case MotionEvent.ACTION_UP:
+                    currentDirection = 0;
+                    break;
+            }
+            return false;
+        }
+    };
+
+
+    AbsListView.OnScrollListener onScrollListener = new AbsListView.OnScrollListener() {
+        int lastPosition = 0;
+        int state = AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
+
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
+            state = scrollState;
+        }
+
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            if (firstVisibleItem == 0 || firstVisibleItem == 1) {
+                animateBack();
+            }
+            if (firstVisibleItem > 1) {
+                if (firstVisibleItem > lastPosition && state == SCROLL_STATE_FLING) {
+                    animateHide();
+                }
+            }
+            lastPosition = firstVisibleItem;
+        }
+    };
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.button_expand:
+                expandButtons();
+                break;
+            case R.id.button_collapse:
+                collapseButtons();
+                break;
+            case R.id.button_reply:
+                startReplyActivity();
+                break;
+            case R.id.button_recommend:
+                recommend();
+                break;
+            case R.id.button_favor:
+                favor();
+                break;
+        }
+    }
+
+    private void expandButtons() {
+        replyButton.setVisibility(View.VISIBLE);
+        recomButton.setVisibility(View.VISIBLE);
+        favorButton.setVisibility(View.VISIBLE);
+        expandButton.setVisibility(View.INVISIBLE);
+        collapseButton.setVisibility(View.VISIBLE);
+    }
+
+    private void collapseButtons() {
+        replyButton.setVisibility(View.GONE);
+        recomButton.setVisibility(View.GONE);
+        favorButton.setVisibility(View.GONE);
+        expandButton.setVisibility(View.VISIBLE);
+        collapseButton.setVisibility(View.INVISIBLE);
     }
 
     class RecommendTask extends AsyncTask<String, Integer, ResultObject> {

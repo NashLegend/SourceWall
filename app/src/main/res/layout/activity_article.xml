@@ -2,21 +2,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?android:attr/colorBackground"
     tools:context="com.example.sourcewall.ArticleActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/action_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize" />
 
     <com.example.sourcewall.commonview.LListView
         android:id="@+id/list_detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/action_bar"
         android:divider="@null" />
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary" />
 
     <LinearLayout
         android:id="@+id/layout_operation"
@@ -24,6 +24,25 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/button_collapse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/action_collapse"
+                android:visibility="invisible" />
+
+            <Button
+                android:id="@+id/button_expand"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/action_expand" />
+
+        </RelativeLayout>
 
         <Button
             android:id="@+id/button_favor"
@@ -40,10 +59,13 @@
             android:visibility="gone" />
 
         <Button
-            android:id="@+id/button_operate"
+            android:id="@+id/button_reply"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/action_action" />
+            android:text="@string/action_reply"
+            android:visibility="gone" />
+
+
     </LinearLayout>
 
 </RelativeLayout>
