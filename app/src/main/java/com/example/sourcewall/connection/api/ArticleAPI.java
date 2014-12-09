@@ -87,12 +87,15 @@ public class ArticleAPI extends APIBase {
     public static Article getArticleDetailByUrl(String url) throws IOException {
         Article article = new Article();
         String aid = url.replaceAll("\\?\\S*$", "").replaceAll("\\D+", "");
+
         Document doc = Jsoup.parse(HttpFetcher.get(url));
-        String content = doc.getElementsByClass("document").outerHtml();
+        String articleContent = doc.getElementById("articleContent").outerHtml();
+        String copyright = doc.getElementsByClass("copyright").outerHtml();
+        article.setContent(articleContent + copyright);
+
         int likeNum = Integer.valueOf(doc.getElementsByClass("recom-num").get(0).text()
                 .replaceAll("\\D+", ""));
         // 其他数据已经在列表取得，这里只要合过去就行了
-        article.setContent(content);
         article.setLikeNum(likeNum);
         Elements elements = doc.getElementsByClass("cmts-list");
         if (elements != null && elements.size() > 0) {

@@ -62,9 +62,7 @@ public class ArticleView extends AceView<Article> {
                 " <body> \n" +
                 "  <div class=\"container article-page\"> \n" +
                 "   <div class=\"main\"> \n" +
-                "    <div class=\"content\"> \n" +
-                "     <div itemprop=\"http://rdfs.org/sioc/ns#content\" class=\"content-txt\" id=\"articleContent\"> " + article.getContent() +
-                "     </div> \n" +
+                "    <div class=\"content\"> \n" + article.getContent() +
                 "    </div> \n" +
                 "   </div> \n" +
                 "  </div> \n" +
