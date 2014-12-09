@@ -12,11 +12,13 @@
         android:layout_height="match_parent"
         android:divider="@null" />
 
-    <android.support.v7.widget.Toolbar
+    <android.support.v7.widget.Toolbar xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/action_bar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary" />
+        android:background="?attr/colorPrimary"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/layout_operation"
@@ -34,27 +36,26 @@
             android:id="@+id/button_favor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            fab:fab_icon="@drawable/ic_star_white_36dp"
-
             fab:fab_colorNormal="@android:color/holo_blue_bright"
-            fab:fab_colorPressed="@android:color/holo_blue_light" />
+            fab:fab_colorPressed="@android:color/holo_blue_light"
+            fab:fab_icon="@drawable/ic_star_white_36dp" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/button_recommend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="10dp"
-            fab:fab_icon="@drawable/ic_plus_one_white_36dp"
             fab:fab_colorNormal="@android:color/holo_blue_bright"
-            fab:fab_colorPressed="@android:color/holo_blue_light" />
+            fab:fab_colorPressed="@android:color/holo_blue_light"
+            fab:fab_icon="@drawable/ic_plus_one_white_36dp" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/button_reply"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            fab:fab_icon="@drawable/ic_write_color_white_36dp"
             fab:fab_colorNormal="@android:color/holo_blue_bright"
-            fab:fab_colorPressed="@android:color/holo_blue_light" />
+            fab:fab_colorPressed="@android:color/holo_blue_light"
+            fab:fab_icon="@drawable/ic_write_color_white_36dp" />
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
