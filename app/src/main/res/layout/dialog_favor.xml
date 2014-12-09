@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/favor_dialog_height">
+    android:layout_height="@dimen/favor_dialog_height"
+    android:paddingLeft="@dimen/list_standard_item_padding_horizontal"
+    android:paddingRight="@dimen/list_standard_item_padding_horizontal">
 
     <LinearLayout
         android:id="@+id/layout_favor_dialog_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -28,30 +30,31 @@
                 android:layout_height="match_parent"
                 android:background="@android:color/transparent"
                 android:gravity="top"
-                android:minHeight="@dimen/input_dialog_input_height"
-                android:padding="2dp" />
+                android:minHeight="@dimen/input_dialog_input_height" />
         </RelativeLayout>
-
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0"
+            android:gravity="end"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/button_favor_dialog_invoke_create"
-                android:layout_width="48dp"
+                android:layout_width="wrap_content"
                 android:layout_height="48dp"
-                android:layout_weight="1"
-                android:text="@string/action_invoke_create_basket" />
+                android:background="@android:color/transparent"
+                android:text="@string/action_invoke_create_basket"
+                android:textColor="@drawable/dialog_button_text_color" />
 
             <Button
                 android:id="@+id/button_favor_dialog_ok"
-                android:layout_width="48dp"
+                android:layout_width="wrap_content"
                 android:layout_height="48dp"
-                android:layout_weight="1"
-                android:text="@string/action_done" />
+                android:background="@android:color/transparent"
+                android:text="@string/action_done"
+                android:textColor="@drawable/dialog_button_text_color" />
         </LinearLayout>
     </LinearLayout>
 
@@ -60,54 +63,60 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <EditText
             android:id="@+id/text_create_basket_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="3dp"
             android:layout_weight="0"
+            android:background="@android:color/transparent"
             android:gravity="top"
             android:hint="@string/hint_input_basket_name"
-            android:padding="2dp"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:textSize="@dimen/abc_text_size_title_material" />
 
         <Spinner
             android:id="@+id/spinner_categories"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="3dp"
             android:spinnerMode="dialog" />
 
         <EditText
             android:id="@+id/text_create_basket_introduction"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="3dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:gravity="top"
             android:hint="@string/hint_input_basket_introduction"
-            android:minHeight="@dimen/input_dialog_input_height"
-            android:padding="2dp" />
+            android:minHeight="@dimen/input_dialog_input_height" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0"
+            android:gravity="end"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/button_cancel_create_basket"
-                android:layout_width="48dp"
+                android:layout_width="wrap_content"
                 android:layout_height="48dp"
-                android:layout_weight="1"
-                android:text="@string/cancel" />
+                android:background="@android:color/transparent"
+                android:text="@string/cancel"
+                android:textColor="@drawable/dialog_button_text_color" />
 
             <Button
                 android:id="@+id/button_create_basket"
-                android:layout_width="48dp"
+                android:layout_width="wrap_content"
                 android:layout_height="48dp"
-                android:layout_weight="1"
-                android:text="@string/action_create_basket" />
+                android:background="@android:color/transparent"
+                android:text="@string/action_create_basket"
+                android:textColor="@drawable/dialog_button_text_color" />
         </LinearLayout>
     </LinearLayout>
 

@@ -8,7 +8,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
@@ -53,7 +52,9 @@ public class SwipeActivity extends BaseActivity {
         if (swipeFinished) {
             super.finish();
         } else {
-            swipeLayout.animateFinish(false);
+            swipeLayout.cancelPotentialAnimation();
+            super.finish();
+            overridePendingTransition(0, R.anim.slide_out_right);
         }
     }
 
@@ -164,7 +165,7 @@ public class SwipeActivity extends BaseActivity {
 
         ObjectAnimator animator;
 
-        private void cancelPotentialAnimation() {
+        public void cancelPotentialAnimation() {
             if (animator != null) {
                 animator.removeAllListeners();
                 animator.cancel();
