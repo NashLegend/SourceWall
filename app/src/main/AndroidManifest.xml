@@ -34,14 +34,14 @@
         </activity>
         <activity
             android:name="com.example.sourcewall.ArticleActivity"
-            android:label="@string/title_activity_article"
+            android:label="@string/article"
             android:theme="@style/BlankTheme" />
         <activity
             android:name="com.example.sourcewall.PostActivity"
-            android:label="@string/title_activity_post" />
+            android:label="@string/post" />
         <activity
             android:name="com.example.sourcewall.QuestionActivity"
-            android:label="@string/title_activity_question" />
+            android:label="@string/question" />
         <activity
             android:name="com.example.sourcewall.LoginActivity"
             android:label="@string/title_activity_login" />

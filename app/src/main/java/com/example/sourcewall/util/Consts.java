@@ -1,5 +1,7 @@
 package com.example.sourcewall.util;
 
+import com.example.sourcewall.AppApplication;
+import com.example.sourcewall.R;
 import com.example.sourcewall.model.SubItem;
 
 import java.util.ArrayList;
@@ -35,9 +37,9 @@ public class Consts {
 
 
     public static ArrayList<SubItem> getSections() {
-        SubItem[] items = {new SubItem(SubItem.Section_Article, SubItem.Type_Collections, "Article", "Article"),
-                new SubItem(SubItem.Section_Post, SubItem.Type_Collections, "Post", "Post"),
-                new SubItem(SubItem.Section_Question, SubItem.Type_Collections, "Question", "Question")};
+        SubItem[] items = {new SubItem(SubItem.Section_Article, SubItem.Type_Collections, AppApplication.getApplication().getResources().getString(R.string.article), "Article"),
+                new SubItem(SubItem.Section_Post, SubItem.Type_Collections, AppApplication.getApplication().getResources().getString(R.string.post), "Post"),
+                new SubItem(SubItem.Section_Question, SubItem.Type_Collections, AppApplication.getApplication().getResources().getString(R.string.question), "Question")};
         ArrayList<SubItem> subItems = new ArrayList<SubItem>();
         for (int i = 0; i < items.length; i++) {
             subItems.add(items[i]);

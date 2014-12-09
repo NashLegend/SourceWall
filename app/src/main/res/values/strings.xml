@@ -5,9 +5,6 @@
     <string name="title_section1">Section 1</string>
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>
-    <string name="articles">文章</string>
-    <string name="posts">帖子</string>
-    <string name="questions">问答</string>
     <string name="navigation_drawer_open">打开导航抽屉</string>
     <string name="navigation_drawer_close">关闭导航抽屉</string>
     <string name="action_login">登录</string>
@@ -15,9 +12,9 @@
     <string name="hello_world">泥嚎！</string>
 
     <string name="title_activity_setting">设置</string>
-    <string name="title_activity_article">科学人</string>
-    <string name="title_activity_post">小组</string>
-    <string name="title_activity_question">问答</string>
+    <string name="article">科学人</string>
+    <string name="post">小组</string>
+    <string name="question">问答</string>
     <string name="title_activity_login">登录</string>
     <string name="title_activity_reply_article">回复</string>
 

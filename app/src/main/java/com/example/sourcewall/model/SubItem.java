@@ -9,7 +9,6 @@ public class SubItem extends AceModel implements Serializable {
 
     public static final int Type_Collections = 0;
     public static final int Type_Single_Channel = 1;
-    public static final int Type_Single_Subject = 2;
 
     public static final int Section_Article = 0;
     public static final int Section_Post = 1;
