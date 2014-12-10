@@ -27,20 +27,26 @@ public class ArticleView extends AceView<Article> {
 
     public ArticleView(Context context) {
         super(context);
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        initViews();
+    }
+
+    public ArticleView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        initViews();
+    }
+
+    public ArticleView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        initViews();
+    }
+
+    private void initViews(){
+        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_article_view, this);
         titleView = (TextView) findViewById(R.id.text_title);
         contentView = (WebView) findViewById(R.id.web_content);
         authorView = (TextView) findViewById(R.id.text_author);
         dateView = (TextView) findViewById(R.id.text_date);
-    }
-
-    public ArticleView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public ArticleView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
     }
 
     @Override

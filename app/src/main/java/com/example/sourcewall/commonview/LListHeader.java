@@ -186,7 +186,7 @@ public class LListHeader extends FrameLayout {
         super.onLayout(changed, left, top, right, bottom);
         if (!layouted) {
             layouted = true;
-            setHeight(0);
+            setHeight(1);
         }
     }
 
@@ -219,9 +219,12 @@ public class LListHeader extends FrameLayout {
     public void setHeight(int height) {
         if (height <= 0) {
             setVisibility(View.GONE);
+            //TODO
             ViewGroup.LayoutParams params = getLayoutParams();
-            params.height = 1;
-            setLayoutParams(params);
+            if (params!=null){
+                params.height = 1;
+                setLayoutParams(params);
+            }
         } else {
             if (getVisibility() != View.VISIBLE) {
                 setVisibility(View.VISIBLE);
