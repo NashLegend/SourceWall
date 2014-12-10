@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="list_title_color">#000000</color>
+    <color name="list_title_color">@android:color/black</color>
     <color name="list_summary_color">#9C9C9C</color>
     <color name="list_appendix_color">#888888</color>
     <color name="text_color_primary">@android:color/white</color>
@@ -8,5 +8,5 @@
     <color name="color_primary_dark">@android:color/holo_blue_dark</color>
     <color name="primary_bright">@android:color/holo_blue_bright</color>
     <color name="color_accent">@android:color/holo_blue_light</color>
-    <color name="article_list_summary_color">#000000</color>
+    <color name="article_list_summary_color">@android:color/black</color>
 </resources>
