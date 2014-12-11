@@ -57,7 +57,7 @@ public class MediumListItemView extends AceView<SimpleComment> {
 
     @Override
     public void setData(SimpleComment model) {
-        comment = (SimpleComment) model;
+        comment = model;
         authorView.setText(comment.getAuthor());
         dateView.setText(comment.getDate());
         likesView.setText(comment.getLikeNum() + "");
@@ -71,6 +71,11 @@ public class MediumListItemView extends AceView<SimpleComment> {
             htmlTask.execute(comment.getContent());
         }
         loadImage();
+    }
+
+    @Override
+    public SimpleComment getData() {
+        return comment;
     }
 
     public void loadImage() {

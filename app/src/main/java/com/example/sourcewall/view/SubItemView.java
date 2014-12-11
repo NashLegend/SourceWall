@@ -31,4 +31,9 @@ public class SubItemView extends AceView<SubItem> {
         textView.setText(item.getName());
     }
 
+    @Override
+    public SubItem getData() {
+        return item;
+    }
+
 }

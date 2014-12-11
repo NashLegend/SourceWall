@@ -26,4 +26,9 @@ public class SimpleCommentItemView extends AceView<SimpleComment> {
     public void setData(SimpleComment model) {
 
     }
+
+    @Override
+    public SimpleComment getData() {
+        return null;
+    }
 }

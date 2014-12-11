@@ -80,6 +80,7 @@
             android:id="@+id/text_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:lineSpacingMultiplier="@dimen/lineSpacingMultiplier"
             android:layout_marginTop="@dimen/list_standard_image_summary_span"
             android:text="@string/sample_summary"
             android:textColor="@color/article_list_summary_color" />

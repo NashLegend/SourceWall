@@ -65,6 +65,11 @@ public class FavorItemView extends AceView<Basket> implements View.OnClickListen
     }
 
     @Override
+    public Basket getData() {
+        return basket;
+    }
+
+    @Override
     public void onClick(View v) {
         FavorTask task = new FavorTask();
         task.execute(link, title, basket.getId());

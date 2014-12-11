@@ -43,7 +43,8 @@ public class QuestionFeaturedListItemView extends AceView<Question> {
         likeView.setText(question.getRecommendNum() + "");
     }
 
-    public Question getQuestion() {
+    @Override
+    public Question getData() {
         return question;
     }
 

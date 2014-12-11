@@ -29,7 +29,6 @@ public class ArticleListItemView extends AceView<Article> {
     private TextView replyView;
     private ImageView titleImage;
     private Article article;
-    ImageFetcher titleImageFetcher;
 
     public ArticleListItemView(Context context) {
         super(context);
@@ -41,7 +40,6 @@ public class ArticleListItemView extends AceView<Article> {
         dateView = (TextView) findViewById(R.id.text_date);
         replyView = (TextView) findViewById(R.id.text_replies_num);
         titleImage = (ImageView) findViewById(R.id.image_title);
-        titleImageFetcher = new ImageFetcher(getContext(), DisplayUtil.getScreenWidth(getContext()), 0);
     }
 
     public ArticleListItemView(Context context, AttributeSet attrs) {
@@ -67,5 +65,10 @@ public class ArticleListItemView extends AceView<Article> {
                     .resize(DisplayUtil.getScreenWidth(getContext()), -1)
                     .into(titleImage);
         }
+    }
+
+    @Override
+    public Article getData() {
+        return article;
     }
 }

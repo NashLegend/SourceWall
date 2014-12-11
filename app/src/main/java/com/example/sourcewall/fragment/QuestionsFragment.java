@@ -47,7 +47,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent();
                 intent.setClass(getActivity(), QuestionActivity.class);
-                intent.putExtra(Consts.Extra_Question, ((QuestionFeaturedListItemView) view).getQuestion());
+                intent.putExtra(Consts.Extra_Question, ((QuestionFeaturedListItemView) view).getData());
                 startActivity(intent);
             }
         });

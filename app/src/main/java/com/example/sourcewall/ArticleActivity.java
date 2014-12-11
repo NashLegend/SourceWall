@@ -3,6 +3,7 @@ package com.example.sourcewall;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 
 import com.example.sourcewall.adapters.ArticleDetailAdapter;
 import com.example.sourcewall.commonview.LListView;
@@ -29,6 +31,7 @@ import com.example.sourcewall.model.Article;
 import com.example.sourcewall.model.SimpleComment;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.ToastUtil;
+import com.example.sourcewall.view.MediumListItemView;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONException;
@@ -70,6 +73,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
 
         listView.setOnScrollListener(onScrollListener);
         listView.setOnTouchListener(onTouchListener);
+        listView.setOnItemClickListener(onItemClickListener);
         listView.setCanPullToRefresh(false);
         listView.setCanPullToLoadMore(true);
         listView.setOnRefreshListener(this);
@@ -101,9 +105,16 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         }
     }
 
-    private void startReplyActivity() {
+    private void replyArticle() {
+        replyArticle(null);
+    }
+
+    private void replyArticle(SimpleComment comment) {
         Intent intent = new Intent(this, ReplyArticleActivity.class);
         intent.putExtra(Consts.Extra_Article, article);
+        if (comment != null) {
+            intent.putExtra(Consts.Extra_Article_Reply, comment);
+        }
         startActivity(intent);
     }
 
@@ -231,6 +242,47 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         }
     };
 
+    private void replyComment(SimpleComment comment) {
+        replyArticle(comment);
+    }
+
+    private void likeComment(SimpleComment comment) {
+
+    }
+
+    private void favorComment(SimpleComment comment) {
+
+    }
+
+    private void onReplyItemClick(final View view, int position, long id) {
+        String[] operations = {"Reply", "Like", "Favor"};
+        if (view instanceof MediumListItemView) {
+            new AlertDialog.Builder(this).setTitle("").setItems(operations, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    SimpleComment comment=((MediumListItemView) view).getData();
+                    switch (which) {
+                        case 0:
+                            replyComment(comment);
+                            break;
+                        case 1:
+                            likeComment(comment);
+                            break;
+                        case 2:
+                            favorComment(comment);
+                            break;
+                    }
+                }
+            }).create().show();
+        }
+    }
+
+    AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            onReplyItemClick(view, position, id);
+        }
+    };
 
     AbsListView.OnScrollListener onScrollListener = new AbsListView.OnScrollListener() {
         int lastPosition = 0;
@@ -259,7 +311,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_reply:
-                startReplyActivity();
+                replyArticle();
                 break;
             case R.id.button_recommend:
                 recommend();

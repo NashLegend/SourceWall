@@ -1,7 +1,7 @@
 package com.example.sourcewall.model;
 
 /**
- * Created by NashLegend on 2014/9/16 0016.
+ * Created by NashLegend on 2014/9/16 0016
  */
 public class SimpleComment extends AceModel {
 

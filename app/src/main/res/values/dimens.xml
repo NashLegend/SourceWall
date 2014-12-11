@@ -22,8 +22,8 @@
     <dimen name="list_standard_title_font_size">18sp</dimen>
     <dimen name="list_standard_summary_font_size">14sp</dimen>
     <dimen name="list_standard_title_author_span">8dp</dimen>
-    <dimen name="list_standard_image_summary_span">14dp</dimen>
-    <dimen name="list_standard_image_author_span">10dp</dimen>
+    <dimen name="list_standard_image_summary_span">8dp</dimen>
+    <dimen name="list_standard_image_author_span">8dp</dimen>
     <dimen name="list_standard_comment_avatar_dimen">30dp</dimen>
     <dimen name="list_standard_item_padding_horizontal">6dp</dimen>
     <dimen name="list_standard_item_padding_vertical">6dp</dimen>
@@ -38,5 +38,7 @@
     <dimen name="Text_title_size_dimen">18dp</dimen>
     <dimen name="text_content_font_size_dimen">16sp</dimen>
     <dimen name="basket_item_height">48dp</dimen>
+
+    <item name="lineSpacingMultiplier" format="float" type="dimen">1.3</item>
 
 </resources>

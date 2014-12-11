@@ -75,4 +75,9 @@ public class PostView extends AceView<Post> {
         contentView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "charset=UTF-8", null);
         // contentView.loadData(html, "text/html; charset=UTF-8", null);
     }
+
+    @Override
+    public Post getData() {
+        return post;
+    }
 }

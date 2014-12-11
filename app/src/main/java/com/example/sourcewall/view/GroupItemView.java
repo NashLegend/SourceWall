@@ -27,7 +27,8 @@ public class GroupItemView extends AceView<SubItem> {
         textView.setText(item.getName());
     }
 
-    public SubItem getItem() {
+    @Override
+    public SubItem getData() {
         return item;
     }
 }

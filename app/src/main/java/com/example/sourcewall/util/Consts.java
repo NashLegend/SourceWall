@@ -19,6 +19,7 @@ public class Consts {
 
     // usually used in intent.put
     public static final String Extra_Article = "sourcewall.extra.article.id";
+    public static final String Extra_Article_Reply = "sourcewall.extra.article.reply.id";
     public static final String Extra_Post = "sourcewall.extra.post.id";
     public static final String Extra_Question = "sourcewall.extra.question.id";
     public static final String Extra_SubItem = "sourcewall.extra.subitem.id";

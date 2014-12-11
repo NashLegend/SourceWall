@@ -51,4 +51,9 @@ public class PostListItemView extends AceView<Post> {
         replyView.setText(mPost.getReplyNum() + "");
         likesView.setText(mPost.getLikeNum() + "");
     }
+
+    @Override
+    public Post getData() {
+        return mPost;
+    }
 }

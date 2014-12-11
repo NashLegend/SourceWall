@@ -10,7 +10,7 @@ import com.example.sourcewall.view.ArticleView;
 import com.example.sourcewall.view.MediumListItemView;
 
 /**
- * Created by NashLegend on 2014/9/18 0018.
+ * Created by NashLegend on 2014/9/18 0018
  */
 public class ArticleDetailAdapter extends AceAdapter<AceModel> {
 

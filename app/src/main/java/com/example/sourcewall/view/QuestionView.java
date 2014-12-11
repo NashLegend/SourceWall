@@ -78,4 +78,9 @@ public class QuestionView extends AceView<Question> {
         contentView.getSettings().setDefaultTextEncodingName("UTF-8");
         contentView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "charset=UTF-8", null);
     }
+
+    @Override
+    public Question getData() {
+        return question;
+    }
 }

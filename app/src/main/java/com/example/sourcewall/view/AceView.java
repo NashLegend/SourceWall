@@ -7,7 +7,7 @@ import android.widget.FrameLayout;
 import com.example.sourcewall.model.AceModel;
 
 /**
- * Created by NashLegend on 2014/9/19 0019.
+ * Created by NashLegend on 2014/9/19 0019
  */
 public abstract class AceView<T extends AceModel> extends FrameLayout {
 
@@ -24,4 +24,5 @@ public abstract class AceView<T extends AceModel> extends FrameLayout {
     }
 
     public abstract void setData(T t);
+    public abstract T getData();
 }
