@@ -96,6 +96,9 @@ public class InputDialog extends Dialog {
             dialog.setCancelable(cancelable);
             dialog.setTitle(title);
             dialog.setCanceledOnTouchOutside(canceledOnTouchOutside);
+            //不知为啥在Android5.0上，在xml里面和setContentView里面设置match_parent不管用，只好如下行这样强制设置喽
+            //然而后来发现这是LinearLayout的问题，把根view改成RelativeLayout就成了，所以正面这行就不用了
+            //dialog.getWindow().setLayout(-1, -2);
             final EditText inputText = (EditText) layout
                     .findViewById(R.id.input_dialog_text);
             Button okayButton = (Button) layout

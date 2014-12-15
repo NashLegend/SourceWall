@@ -68,5 +68,7 @@
 
     <!--Article-->
     <string name="sample_reply_title">回复文章</string>
+    <string name="recommend_ok">推荐成功 ^_^</string>
+    <string name="recommend_failed">推荐失败 0.0</string>
 
 </resources>

@@ -342,9 +342,9 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         @Override
         protected void onPostExecute(ResultObject resultObject) {
             if (resultObject.ok) {
-                ToastUtil.toast("Recommend OK");
+                ToastUtil.toast(R.string.recommend_ok);
             } else {
-                ToastUtil.toast("Recommend Failed");
+                ToastUtil.toast(R.string.recommend_failed);
             }
         }
     }

@@ -240,7 +240,7 @@ public class SwipeActivity extends BaseActivity {
 
         }
 
-        @TargetApi(Build.VERSION_CODES.L)
+        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
         public SwipeLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
             super(context, attrs, defStyleAttr, defStyleRes);
         }
