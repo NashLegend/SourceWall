@@ -6,22 +6,27 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.APIBase;
 import com.example.sourcewall.connection.api.ArticleAPI;
 import com.example.sourcewall.dialogs.InputDialog;
 import com.example.sourcewall.model.Article;
+import com.example.sourcewall.model.SimpleComment;
+import com.example.sourcewall.util.Config;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.FileUtil;
 import com.example.sourcewall.util.ImageFetcher.AsyncTask;
+import com.example.sourcewall.util.RegUtil;
 import com.example.sourcewall.util.ToastUtil;
 
 import java.io.File;
@@ -29,22 +34,37 @@ import java.io.File;
 public class ReplyArticleActivity extends ActionBarActivity implements View.OnClickListener {
 
     EditText editText;
+    TextView hostText;
     Article article;
-    Button publishButton;
-    Button imgButton;
-    Button insertButton;
+    ImageButton publishButton;
+    ImageButton imgButton;
+    ImageButton insertButton;
     ProgressBar uploadingProgress;
     String tmpImagePath;
+    Toolbar toolbar;
+    SimpleComment comment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reply_article);
+        toolbar = (Toolbar) findViewById(R.id.action_bar);
+        setSupportActionBar(toolbar);
         article = (Article) getIntent().getSerializableExtra(Consts.Extra_Article);
+        comment = (SimpleComment) getIntent().getSerializableExtra(Consts.Extra_Simple_Comment);
         editText = (EditText) findViewById(R.id.text_reply);
-        publishButton = (Button) findViewById(R.id.btn_publish);
-        imgButton = (Button) findViewById(R.id.btn_add_img);
-        insertButton = (Button) findViewById(R.id.btn_insert_img);
+        hostText = (TextView) findViewById(R.id.text_reply_host);
+        if (comment != null) {
+            hostText.setVisibility(View.VISIBLE);
+            String cont = RegUtil.html2PlainTextWithoutBlockQuote(comment.getContent());
+            if (cont.length() > 100) {
+                cont = cont.substring(0, 100) + "...";
+            }
+            hostText.setText("引用@" + comment.getAuthor() + " 的话：" + cont);
+        }
+        publishButton = (ImageButton) findViewById(R.id.btn_publish);
+        imgButton = (ImageButton) findViewById(R.id.btn_add_img);
+        insertButton = (ImageButton) findViewById(R.id.btn_insert_img);
         uploadingProgress = (ProgressBar) findViewById(R.id.prg_uploading_img);
         publishButton.setOnClickListener(this);
         imgButton.setOnClickListener(this);
@@ -115,7 +135,7 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
     }
 
     /**
-     *
+     * 插入图片
      */
     private void insertImagePath() {
         editText.getText().insert(editText.getSelectionStart(), tmpImagePath);
@@ -124,7 +144,14 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
 
     private void publishReply(String rep) {
         PublishReplyTask task = new PublishReplyTask();
-        task.execute(article.getId(), rep);
+        String header = "";
+        String tail = Config.getReplyTail();
+        if (comment != null) {
+            header = "<blockquote>" + hostText.getText() + "<blockquote>";
+        }
+//        PegDownProcessor processor=new PegDownProcessor();
+//        System.out.println(processor.markdownToHtml(rep));
+        task.execute(article.getId(), header + rep + tail);
     }
 
     @Override

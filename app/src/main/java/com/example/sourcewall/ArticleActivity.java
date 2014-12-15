@@ -4,6 +4,8 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -23,13 +25,13 @@ import com.example.sourcewall.adapters.ArticleDetailAdapter;
 import com.example.sourcewall.commonview.LListView;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.ArticleAPI;
-import com.example.sourcewall.connection.api.UserAPI;
 import com.example.sourcewall.dialogs.FavorDialog;
 import com.example.sourcewall.dialogs.InputDialog;
 import com.example.sourcewall.model.AceModel;
 import com.example.sourcewall.model.Article;
 import com.example.sourcewall.model.SimpleComment;
 import com.example.sourcewall.util.Consts;
+import com.example.sourcewall.util.RegUtil;
 import com.example.sourcewall.util.ToastUtil;
 import com.example.sourcewall.view.MediumListItemView;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -113,7 +115,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         Intent intent = new Intent(this, ReplyArticleActivity.class);
         intent.putExtra(Consts.Extra_Article, article);
         if (comment != null) {
-            intent.putExtra(Consts.Extra_Article_Reply, comment);
+            intent.putExtra(Consts.Extra_Simple_Comment, comment);
         }
         startActivity(intent);
     }
@@ -247,20 +249,23 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
     }
 
     private void likeComment(SimpleComment comment) {
-
+        LikeCommentTask likeCommentTask = new LikeCommentTask();
+        likeCommentTask.execute(comment);
     }
 
-    private void favorComment(SimpleComment comment) {
-
+    private void copyComment(SimpleComment comment) {
+        //do nothing
+        ClipboardManager manager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        manager.setPrimaryClip(ClipData.newPlainText(null, RegUtil.html2PlainText(comment.getContent())));
     }
 
     private void onReplyItemClick(final View view, int position, long id) {
-        String[] operations = {"Reply", "Like", "Favor"};
+        String[] operations = {"Reply", "Like", "Copy"};
         if (view instanceof MediumListItemView) {
             new AlertDialog.Builder(this).setTitle("").setItems(operations, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    SimpleComment comment=((MediumListItemView) view).getData();
+                    SimpleComment comment = ((MediumListItemView) view).getData();
                     switch (which) {
                         case 0:
                             replyComment(comment);
@@ -269,7 +274,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
                             likeComment(comment);
                             break;
                         case 2:
-                            favorComment(comment);
+                            copyComment(comment);
                             break;
                     }
                 }
@@ -335,8 +340,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
             String title = params[1];
             String summary = params[2];
             String comment = params[3];
-            String articleUrl = "http://www.guokr.com/article/" + articleID + "/";
-            return UserAPI.recommendLink(articleUrl, title, summary, comment);
+            return ArticleAPI.recommendArticle(articleID, title, summary, comment);
         }
 
         @Override
@@ -421,6 +425,27 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
                     // load error
                 }
                 listView.doneOperation();
+            }
+        }
+    }
+
+    class LikeCommentTask extends AsyncTask<SimpleComment, Integer, ResultObject> {
+
+        SimpleComment comment;
+
+        @Override
+        protected ResultObject doInBackground(SimpleComment... params) {
+            comment = params[0];
+            return ArticleAPI.likeComment(comment.getID());
+        }
+
+        @Override
+        protected void onPostExecute(ResultObject resultObject) {
+            if (resultObject.ok) {
+                comment.setLikeNum(comment.getLikeNum() + 1);
+                adapter.notifyDataSetChanged();
+            } else {
+                //do nothing
             }
         }
     }

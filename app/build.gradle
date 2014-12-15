@@ -33,4 +33,6 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
     compile 'org.apache.httpcomponents:httpmime:4.2.1'
     compile 'com.getbase:floatingactionbutton:1.2.1'
+//    compile 'org.pegdown:pegdown:1.4.2'
+//    compile 'org.parboiled:parboiled-core:1.1.6'
 }

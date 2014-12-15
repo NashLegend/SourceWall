@@ -9,4 +9,5 @@
     <color name="primary_bright">@android:color/holo_blue_bright</color>
     <color name="color_accent">@android:color/holo_blue_light</color>
     <color name="article_list_summary_color">@android:color/darker_gray</color>
+    <color name="light_gray">#dddddd</color>
 </resources>

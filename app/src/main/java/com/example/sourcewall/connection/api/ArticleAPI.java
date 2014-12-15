@@ -184,8 +184,20 @@ public class ArticleAPI extends APIBase {
 
     public static ResultObject likeComment(String id) {
         String url = "http://www.guokr.com/apis/minisite/article_reply_liking.json";
-        String param = "reply_id=#&access_token=#";
-        return null;
+        ResultObject resultObject = new ResultObject();
+        try {
+            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            pairs.add(new BasicNameValuePair("reply_id", id));
+            pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
+            String result = HttpFetcher.post(url, pairs);
+            JSONObject object = new JSONObject(result);
+            if (getJsonBoolean(object, "ok")) {
+                resultObject.ok = true;
+            }
+        } catch (JSONException | IOException e) {
+            e.printStackTrace();
+        }
+        return resultObject;
     }
 
     /**

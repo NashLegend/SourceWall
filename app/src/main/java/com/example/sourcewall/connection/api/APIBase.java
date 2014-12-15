@@ -5,12 +5,13 @@ import com.example.sourcewall.connection.ResultObject;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.params.CoreProtocolPNames;
@@ -41,7 +42,6 @@ public class APIBase {
                         "http://www.guokr.com/apis/image.json?enable_watermark=" + (watermark ? "true" : "false"));
 
                 MultipartEntity multipartEntity = new MultipartEntity();
-                ContentBody contentBody = new FileBody(file);
                 multipartEntity.addPart("upload_file", new FileBody(file));
                 multipartEntity.addPart("access_token", new StringBody(UserAPI.getToken()));
                 httpPost.setEntity(multipartEntity);
@@ -70,6 +70,32 @@ public class APIBase {
             } catch (Exception e) {
 
             }
+        }
+        return resultObject;
+    }
+
+    public static ResultObject parseMarkdownByGitHub(String text) {
+        ResultObject resultObject = new ResultObject();
+        String url = "https://api.github.com/markdown";
+        try {
+            HttpClient httpClient = HttpFetcher.getDefaultHttpClient();
+            httpClient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION,
+                    HttpVersion.HTTP_1_1);
+            HttpPost httpPost = new HttpPost(url);
+            StringEntity entity = new StringEntity(text, HTTP.UTF_8);
+            httpPost.setEntity(entity);
+            HttpResponse response;
+            String result = "";
+
+            response = httpClient.execute(httpPost);
+            HttpEntity resEntity = response.getEntity();
+
+            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK && resEntity != null) {
+                result = EntityUtils.toString(resEntity, HTTP.UTF_8);
+                resultObject.result = result;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return resultObject;
     }
