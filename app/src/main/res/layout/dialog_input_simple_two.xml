@@ -5,12 +5,22 @@
     android:orientation="vertical">
 
     <EditText
+        android:layout_marginTop="10dp"
         android:id="@+id/input_dialog_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top"
+        android:hint="@string/hint_input_url"
+        android:padding="5dp"
+        android:singleLine="true" />
+
+    <EditText
+        android:id="@+id/input_dialog_text2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:gravity="top"
-        android:hint="@string/hint_input_image_url"
+        android:hint="@string/hint_input_title"
         android:padding="5dp"
         android:singleLine="true" />
 
@@ -23,7 +33,7 @@
         <Button
             android:id="@+id/button_dialog_input_cancel"
             android:layout_width="wrap_content"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:text="@string/cancel"
             android:textColor="@drawable/dialog_button_text_color" />
@@ -31,7 +41,7 @@
         <Button
             android:id="@+id/button_dialog_input_ok"
             android:layout_width="wrap_content"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:text="@string/ok"
             android:textColor="@drawable/dialog_button_text_color" />

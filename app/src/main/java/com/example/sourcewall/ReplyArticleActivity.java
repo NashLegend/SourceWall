@@ -1,12 +1,15 @@
 package com.example.sourcewall;
 
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -68,7 +71,7 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
         imgButton = (ImageButton) findViewById(R.id.btn_add_img);
         insertButton = (ImageButton) findViewById(R.id.btn_insert_img);
         cameraButton = (ImageButton) findViewById(R.id.btn_camera);
-        linkButton= (ImageButton) findViewById(R.id.btn_camera);
+        linkButton = (ImageButton) findViewById(R.id.btn_link);
         uploadingProgress = (ProgressBar) findViewById(R.id.prg_uploading_img);
         publishButton.setOnClickListener(this);
         imgButton.setOnClickListener(this);
@@ -78,7 +81,9 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
     }
 
     private void invokeImageDialog() {
-        String[] ways = {getResources().getString(R.string.add_image_from_disk), getResources().getString(R.string.add_image_from_link)};
+        String[] ways = {getResources().getString(R.string.add_image_from_disk),
+                getResources().getString(R.string.add_image_from_camera),
+                getResources().getString(R.string.add_image_from_link)};
         new AlertDialog.Builder(this).setTitle(R.string.way_to_add_image).setItems(ways, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -90,19 +95,35 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
                         startActivityForResult(intent, 1024);
                         break;
                     case 1:
-                        invokeUrlDialog();
+                        invokeCamera();
+                    case 2:
+                        invokeImageUrlDialog();
                         break;
                 }
             }
         }).create().show();
     }
 
-    private void invokeUrlDialog() {
+    private String getPossibleUrlFromClipBoard(){
+        ClipboardManager manager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        ClipData clip = manager.getPrimaryClip();
+        String chars="";
+        if (clip != null && clip.getItemCount() > 0) {
+            String tmpChars = (clip.getItemAt(0).coerceToText(this).toString()).trim();
+            if (tmpChars.startsWith("http://") || tmpChars.startsWith("https://")) {
+                chars = tmpChars;
+            }
+        }
+        return chars;
+    }
+
+    private void invokeImageUrlDialog() {
         InputDialog.Builder builder = new InputDialog.Builder(this);
-        builder.setTitle(R.string.sample_title);
+        builder.setTitle(R.string.input_image_url);
         builder.setCancelable(true);
-        builder.setSingleLine();
         builder.setCanceledOnTouchOutside(false);
+        builder.setSingleLine();
+        builder.setInputText(getPossibleUrlFromClipBoard());
         builder.setOnClickListener(new DialogInterface.OnClickListener() {
 
             @Override
@@ -110,9 +131,7 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
                 if (which == DialogInterface.BUTTON_POSITIVE) {
                     InputDialog d = (InputDialog) dialog;
                     String text = d.InputString;
-                    ToastUtil.toast(text);
-                } else {
-                    // cancel recommend
+                    insertImagePath(text.trim());
                 }
             }
         });
@@ -143,9 +162,41 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
     /**
      * 插入图片
      */
-    private void insertImagePath() {
-        editText.getText().insert(editText.getSelectionStart(), "[image]"+tmpImagePath+"[/image]");
+    private void insertImagePath(String url) {
+        editText.getText().insert(editText.getSelectionStart(), "[image]" + url + "[/image]");
         resetImageButtons();
+    }
+
+    private void invokeCamera() {
+        //TODO
+    }
+
+    /**
+     * 插入链接
+     */
+    private void insertLink() {
+        //TODO
+        InputDialog.Builder builder = new InputDialog.Builder(this);
+        builder.setTitle(R.string.input_link_url);
+        builder.setCancelable(true);
+        builder.setCanceledOnTouchOutside(false);
+        builder.setTwoLine();
+        builder.setInputText(getPossibleUrlFromClipBoard());
+        builder.setOnClickListener(new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (which == DialogInterface.BUTTON_POSITIVE) {
+                    InputDialog d = (InputDialog) dialog;
+                    String url = d.InputString;
+                    String title = d.InputString2;
+                    String result = "[url=" + url + "]" + title + "[/url]";
+                    editText.getText().insert(editText.getSelectionStart(), result);
+                }
+            }
+        });
+        InputDialog inputDialog = builder.create();
+        inputDialog.show();
     }
 
     private void publishReply(String rep) {
@@ -182,7 +233,13 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
                 invokeImageDialog();
                 break;
             case R.id.btn_insert_img:
-                insertImagePath();
+                insertImagePath(tmpImagePath);
+                break;
+            case R.id.btn_camera:
+                invokeCamera();
+                break;
+            case R.id.btn_link:
+                insertLink();
                 break;
         }
     }
@@ -232,6 +289,7 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
     }
 
     private void resetImageButtons() {
+        tmpImagePath = "";
         insertButton.setVisibility(View.GONE);
         imgButton.setVisibility(View.VISIBLE);
         uploadingProgress.setVisibility(View.GONE);

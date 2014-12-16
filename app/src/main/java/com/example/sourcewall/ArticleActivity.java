@@ -77,7 +77,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         listView.setOnTouchListener(onTouchListener);
         listView.setOnItemClickListener(onItemClickListener);
         listView.setCanPullToRefresh(false);
-        listView.setCanPullToLoadMore(true);
+        listView.setCanPullToLoadMore(false);
         listView.setOnRefreshListener(this);
 
         replyButton = (FloatingActionButton) findViewById(R.id.button_reply);
@@ -368,6 +368,8 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
 
         @Override
         protected void onPreExecute() {
+            listView.setCanPullToLoadMore(false);
+            listView.setCanPullToRefresh(false);
             super.onPreExecute();
         }
 
@@ -389,9 +391,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
                 }
                 resultObject.result = models;
                 resultObject.ok = true;
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
+            } catch (IOException | JSONException e) {
                 e.printStackTrace();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -423,6 +423,13 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
                     }
                 } else {
                     // load error
+                }
+                if (adapter.getCount() > 0) {
+                    listView.setCanPullToLoadMore(true);
+                    listView.setCanPullToRefresh(false);
+                } else {
+                    listView.setCanPullToLoadMore(false);
+                    listView.setCanPullToRefresh(true);
                 }
                 listView.doneOperation();
             }

@@ -17,6 +17,7 @@ import com.example.sourcewall.R;
 public class InputDialog extends Dialog {
 
     public String InputString = "";
+    public String InputString2 = "";
 
     public InputDialog(Context context) {
         super(context);
@@ -25,8 +26,8 @@ public class InputDialog extends Dialog {
     public static class Builder {
         private Context mContext;
         private String title = "";
-        private String OkayString = "";
-        private String NayString = "";
+        private String okString = "";
+        private String cancelString = "";
         private String input = "";
         private InputDialog dialog;
         private boolean canceledOnTouchOutside = true;
@@ -36,8 +37,8 @@ public class InputDialog extends Dialog {
 
         public Builder(Context context) {
             mContext = context;
-            OkayString = mContext.getResources().getString(R.string.ok);
-            NayString = mContext.getResources().getString(R.string.cancel);
+            okString = mContext.getResources().getString(R.string.ok);
+            cancelString = mContext.getResources().getString(R.string.cancel);
         }
 
         public Builder setOnClickListener(OnClickListener onClickListener) {
@@ -66,8 +67,8 @@ public class InputDialog extends Dialog {
         }
 
         public Builder setButtonText(String Okay, String Nay) {
-            this.OkayString = Okay;
-            this.NayString = Nay;
+            this.okString = Okay;
+            this.cancelString = Nay;
             return this;
         }
 
@@ -78,6 +79,11 @@ public class InputDialog extends Dialog {
 
         public Builder setSingleLine() {
             resID = R.layout.dialog_input_simple;
+            return this;
+        }
+
+        public Builder setTwoLine() {
+            resID = R.layout.dialog_input_simple_two;
             return this;
         }
 
@@ -101,19 +107,24 @@ public class InputDialog extends Dialog {
             //dialog.getWindow().setLayout(-1, -2);
             final EditText inputText = (EditText) layout
                     .findViewById(R.id.input_dialog_text);
+            final EditText inputText2 = (EditText) layout
+                    .findViewById(R.id.input_dialog_text2);
             Button okayButton = (Button) layout
                     .findViewById(R.id.button_dialog_input_ok);
             Button nayButton = (Button) layout
                     .findViewById(R.id.button_dialog_input_cancel);
             inputText.setText(input);
-            okayButton.setText(OkayString);
-            nayButton.setText(NayString);
+            okayButton.setText(okString);
+            nayButton.setText(cancelString);
             okayButton.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
                     if (onClickListener != null) {
                         dialog.InputString = inputText.getText().toString();
+                        if (inputText2 != null) {
+                            dialog.InputString2 = inputText2.getText().toString();
+                        }
                         onClickListener.onClick(dialog, BUTTON_POSITIVE);
                         dialog.dismiss();
                     }
