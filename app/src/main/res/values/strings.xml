@@ -49,6 +49,8 @@
     <string name="action_reply">回复</string>
     <string name="action_recommend">推荐</string>
     <string name="recommend_article">推荐文章</string>
+    <string name="action_copy">复制</string>
+    <string name="action_like">点赞</string>
     <string name="hint_reply">请输入回复</string>
     <string name="add_image">添加图片</string>
     <string name="insert_image">插入图片</string>
@@ -70,6 +72,7 @@
     <string name="content_cannot_be_empty">内容不能为空</string>
     <string name="reply_ok">回复成功</string>
     <string name="reply_failed">回复失败</string>
+
 
     <!--Article-->
     <string name="sample_reply_title">回复文章</string>

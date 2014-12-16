@@ -87,14 +87,13 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         replyButton.setOnClickListener(this);
         recomButton.setOnClickListener(this);
         favorButton.setOnClickListener(this);
-
-        loadData(0);
+        loadData(-1);
     }
 
+    /**
+     * @param offset -1是指刷新
+     */
     private void loadData(int offset) {
-        if (offset < 0) {
-            offset = 0;
-        }
         cancelPotentialTask();
         task = new LoaderTask();
         task.execute(offset);
@@ -260,7 +259,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
     }
 
     private void onReplyItemClick(final View view, int position, long id) {
-        String[] operations = {"Reply", "Like", "Copy"};
+        String[] operations = {getString(R.string.action_reply), getString(R.string.action_like), getString(R.string.action_copy)};
         if (view instanceof MediumListItemView) {
             new AlertDialog.Builder(this).setTitle("").setItems(operations, new DialogInterface.OnClickListener() {
                 @Override
@@ -355,7 +354,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
 
     @Override
     public void onStartRefresh() {
-        loadData(0);
+        loadData(-1);
     }
 
     @Override
@@ -368,8 +367,6 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
 
         @Override
         protected void onPreExecute() {
-            listView.setCanPullToLoadMore(false);
-            listView.setCanPullToRefresh(false);
             super.onPreExecute();
         }
 
@@ -379,15 +376,15 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
             ArrayList<AceModel> models = new ArrayList<AceModel>();
             ResultObject resultObject = new ResultObject();
             try {
-                if (offset > 0) {
-                    models.addAll(ArticleAPI.getArticleComments(article.getId(), offset));
-                } else {
+                if (offset < 0) {
                     //同时取了热门回帖，但是在这里没有显示 TODO
                     Article detailArticle = ArticleAPI.getArticleDetailByID(article.getId());
                     ArrayList<SimpleComment> simpleComments = ArticleAPI.getArticleComments(article.getId(), 0);
                     article.setContent(detailArticle.getContent());
                     models.add(article);
                     models.addAll(simpleComments);
+                } else {
+                    models.addAll(ArticleAPI.getArticleComments(article.getId(), offset));
                 }
                 resultObject.result = models;
                 resultObject.ok = true;
@@ -404,22 +401,22 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
             if (!isCancelled()) {
                 if (result.ok) {
                     ArrayList<AceModel> ars = (ArrayList<AceModel>) result.result;
-                    if (offset > 0) {
-                        //Load More
-                        if (ars.size() > 0) {
-                            adapter.addAll(ars);
-                        } else {
-                            //no data loaded
-                        }
-                        adapter.notifyDataSetChanged();
-                    } else {
+                    if (offset < 0) {
                         //Refresh
                         if (ars.size() > 0) {
                             adapter.setList(ars);
+                            adapter.notifyDataSetInvalidated();
                         } else {
                             //no data loaded,不清除，保留旧数据
                         }
-                        adapter.notifyDataSetInvalidated();
+                    } else {
+                        //Load More
+                        if (ars.size() > 0) {
+                            adapter.addAll(ars);
+                            adapter.notifyDataSetChanged();
+                        } else {
+                            //no data loaded
+                        }
                     }
                 } else {
                     // load error

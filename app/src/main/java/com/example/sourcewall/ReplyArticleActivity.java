@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.SpannableString;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -81,9 +80,9 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
     }
 
     private void invokeImageDialog() {
-        String[] ways = {getResources().getString(R.string.add_image_from_disk),
-                getResources().getString(R.string.add_image_from_camera),
-                getResources().getString(R.string.add_image_from_link)};
+        String[] ways = {getString(R.string.add_image_from_disk),
+                getString(R.string.add_image_from_camera),
+                getString(R.string.add_image_from_link)};
         new AlertDialog.Builder(this).setTitle(R.string.way_to_add_image).setItems(ways, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -104,10 +103,10 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
         }).create().show();
     }
 
-    private String getPossibleUrlFromClipBoard(){
+    private String getPossibleUrlFromClipBoard() {
         ClipboardManager manager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
         ClipData clip = manager.getPrimaryClip();
-        String chars="";
+        String chars = "";
         if (clip != null && clip.getItemCount() > 0) {
             String tmpChars = (clip.getItemAt(0).coerceToText(this).toString()).trim();
             if (tmpChars.startsWith("http://") || tmpChars.startsWith("https://")) {
