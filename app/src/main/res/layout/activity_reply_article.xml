@@ -56,7 +56,21 @@
             android:paddingTop="5dp">
 
             <RelativeLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <ImageButton
+                    android:id="@+id/btn_camera"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_camera_holo_light_blue_36dp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
 
@@ -86,6 +100,21 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <ImageButton
+                    android:id="@+id/btn_link"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_link_holo_light_blue_36dp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_marginLeft="48dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 

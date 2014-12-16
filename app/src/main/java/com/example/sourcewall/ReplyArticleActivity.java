@@ -22,10 +22,10 @@ import com.example.sourcewall.connection.api.ArticleAPI;
 import com.example.sourcewall.dialogs.InputDialog;
 import com.example.sourcewall.model.Article;
 import com.example.sourcewall.model.SimpleComment;
-import com.example.sourcewall.util.Config;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.FileUtil;
 import com.example.sourcewall.util.ImageFetcher.AsyncTask;
+import com.example.sourcewall.util.MDUtil;
 import com.example.sourcewall.util.RegUtil;
 import com.example.sourcewall.util.ToastUtil;
 
@@ -39,6 +39,8 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
     ImageButton publishButton;
     ImageButton imgButton;
     ImageButton insertButton;
+    ImageButton cameraButton;
+    ImageButton linkButton;
     ProgressBar uploadingProgress;
     String tmpImagePath;
     Toolbar toolbar;
@@ -65,10 +67,14 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
         publishButton = (ImageButton) findViewById(R.id.btn_publish);
         imgButton = (ImageButton) findViewById(R.id.btn_add_img);
         insertButton = (ImageButton) findViewById(R.id.btn_insert_img);
+        cameraButton = (ImageButton) findViewById(R.id.btn_camera);
+        linkButton= (ImageButton) findViewById(R.id.btn_camera);
         uploadingProgress = (ProgressBar) findViewById(R.id.prg_uploading_img);
         publishButton.setOnClickListener(this);
         imgButton.setOnClickListener(this);
         insertButton.setOnClickListener(this);
+        cameraButton.setOnClickListener(this);
+        linkButton.setOnClickListener(this);
     }
 
     private void invokeImageDialog() {
@@ -138,20 +144,28 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
      * 插入图片
      */
     private void insertImagePath() {
-        editText.getText().insert(editText.getSelectionStart(), tmpImagePath);
+        editText.getText().insert(editText.getSelectionStart(), "[image]"+tmpImagePath+"[/image]");
         resetImageButtons();
     }
 
     private void publishReply(String rep) {
         PublishReplyTask task = new PublishReplyTask();
         String header = "";
-        String tail = Config.getReplyTail();
+        String tail = "\n\n[blockquote]Send by [url=https://github.com/NashLegend/SourceWall/]The Great Source Wall[/url][/blockquote]";
+        if (comment != null) {
+            header = "[blockquote]" + hostText.getText() + "[/blockquote]";
+        }
+        task.execute(article.getId(), header, rep, tail, Simple_Reply);
+    }
+
+    private void publishAdvancedReply(String rep) {
+        PublishReplyTask task = new PublishReplyTask();
+        String header = "";
         if (comment != null) {
             header = "<blockquote>" + hostText.getText() + "<blockquote>";
         }
-//        PegDownProcessor processor=new PegDownProcessor();
-//        System.out.println(processor.markdownToHtml(rep));
-        task.execute(article.getId(), header + rep + tail);
+        String tail = "<p></p><p>From <a href=\"https://github.com/NashLegend/SourceWall\" target=\"_blank\">The Great Source Wall</a></p>";
+        task.execute(article.getId(), header, rep, tail, Advanced_Reply);
     }
 
     @Override
@@ -173,6 +187,9 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
         }
     }
 
+    final String Simple_Reply = "Simple_Reply";
+    final String Advanced_Reply = "Advanced_Reply";
+
     class PublishReplyTask extends AsyncTask<String, Integer, ResultObject> {
 
         @Override
@@ -183,14 +200,30 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
         @Override
         protected ResultObject doInBackground(String... params) {
             String id = params[0];
-            String content = params[1];
-            return ArticleAPI.replyArticle(id, content);
+            String header = params[1];
+            String content = params[2];
+            String tail = params[3];
+            String reply_format = params[4];
+            String result;
+            if (Advanced_Reply.equals(reply_format)) {
+                ResultObject resultObject = MDUtil.parseMarkdownByGitHub(content);
+                if (resultObject.ok) {
+                    content = (String) resultObject.result;
+                } else {
+                    content = MDUtil.Markdown2HtmlDumb(content);
+                }
+                result = header + content + tail;
+                return ArticleAPI.replyArticleAdvanced(id, result);
+            }
+            result = header + content + tail;
+            return ArticleAPI.replyArticle(id, result);
         }
 
         @Override
         protected void onPostExecute(ResultObject resultObject) {
             if (resultObject.ok) {
                 ToastUtil.toast(R.string.reply_ok);
+                setResult(RESULT_OK);
                 finish();
             } else {
                 ToastUtil.toast(R.string.reply_failed);
@@ -269,11 +302,9 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 

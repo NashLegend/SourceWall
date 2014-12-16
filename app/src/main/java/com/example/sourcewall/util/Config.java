@@ -5,6 +5,6 @@ package com.example.sourcewall.util;
  */
 public class Config {
     public static String getReplyTail(){
-        return "";
+        return "<p></p><p>From <a href=\"https://github.com/NashLegend/SourceWall\" target=\"_blank\">The Great Source Wall</a></p>";
     }
 }

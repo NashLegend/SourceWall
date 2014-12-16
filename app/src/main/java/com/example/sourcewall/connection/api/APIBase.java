@@ -82,7 +82,10 @@ public class APIBase {
             httpClient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION,
                     HttpVersion.HTTP_1_1);
             HttpPost httpPost = new HttpPost(url);
-            StringEntity entity = new StringEntity(text, HTTP.UTF_8);
+            JSONObject jsonObject=new JSONObject();
+            jsonObject.put("text",text);
+            jsonObject.put("mode","gfm");
+            StringEntity entity = new StringEntity(jsonObject.toString(), HTTP.UTF_8);
             httpPost.setEntity(entity);
             HttpResponse response;
             String result = "";
@@ -92,9 +95,12 @@ public class APIBase {
 
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK && resEntity != null) {
                 result = EntityUtils.toString(resEntity, HTTP.UTF_8);
+                resultObject.ok=true;
                 resultObject.result = result;
             }
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
             e.printStackTrace();
         }
         return resultObject;

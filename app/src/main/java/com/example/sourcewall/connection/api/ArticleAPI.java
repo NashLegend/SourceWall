@@ -201,11 +201,42 @@ public class ArticleAPI extends APIBase {
     }
 
     /**
+     * 使用网页请求而不是json来获得结果，可以使用高级样式
      * @param id
      * @param content
      * @return ResultObject.result is the reply_id if ok;
      */
     public static ResultObject replyArticle(String id, String content) {
+        ResultObject resultObject = new ResultObject();
+        try {
+            String url = "http://apis.guokr.com/minisite/article_reply.json";
+            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            pairs.add(new BasicNameValuePair("article_id", id));
+            pairs.add(new BasicNameValuePair("content", content));
+            pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
+            String result = HttpFetcher.post(url, pairs);
+            JSONObject object = new JSONObject(result);
+            if (getJsonBoolean(object, "ok")) {
+                JSONObject resultJson = getJsonObject(object, "result");
+                String replyID = getJsonString(resultJson, "id");
+                resultObject.ok = true;
+                resultObject.result = replyID;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return resultObject;
+    }
+
+    /**
+     * 使用网页请求而不是json来获得结果，可以使用高级样式
+     * @param id
+     * @param content
+     * @return ResultObject.result is the reply_id if ok;
+     */
+    public static ResultObject replyArticleAdvanced(String id, String content) {
         ResultObject resultObject = new ResultObject();
         try {
             String url = "http://apis.guokr.com/minisite/article_reply.json";
