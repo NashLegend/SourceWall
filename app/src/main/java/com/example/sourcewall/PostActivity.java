@@ -1,51 +1,94 @@
 package com.example.sourcewall;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewConfiguration;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 
 import com.example.sourcewall.adapters.PostDetailAdapter;
 import com.example.sourcewall.commonview.LListView;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.PostAPI;
+import com.example.sourcewall.dialogs.FavorDialog;
 import com.example.sourcewall.model.AceModel;
 import com.example.sourcewall.model.Post;
+import com.example.sourcewall.model.SimpleComment;
 import com.example.sourcewall.util.Consts;
+import com.example.sourcewall.util.RegUtil;
+import com.example.sourcewall.view.MediumListItemView;
+import com.getbase.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-
-public class PostActivity extends BaseActivity implements LListView.OnRefreshListener {
+public class PostActivity extends SwipeActivity implements LListView.OnRefreshListener, View.OnClickListener {
     LListView listView;
     PostDetailAdapter adapter;
-    Post mPost;
+    Post post;
+    View header;
+    View bottomLayout;
     LoaderTask task;
     Toolbar toolbar;
+    int touchSlop = 10;
+    FloatingActionButton replyButton;
+    FloatingActionButton recomButton;
+    FloatingActionButton favorButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
+        touchSlop = (int) (ViewConfiguration.get(PostActivity.this).getScaledTouchSlop() * 0.9);
         toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
-        mPost = (Post) getIntent().getSerializableExtra(Consts.Extra_Post);
+        post = (Post) getIntent().getSerializableExtra(Consts.Extra_Post);
+        bottomLayout = findViewById(R.id.layout_operation);
         listView = (LListView) findViewById(R.id.list_detail);
         adapter = new PostDetailAdapter(this);
         listView.setAdapter(adapter);
+
+        header = new View(PostActivity.this);
+        header.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen.abc_action_bar_default_height_material)));
+        header.setBackgroundColor(Color.parseColor("#00000000"));
+        listView.addHeaderView(header);
+
+        listView.setOnScrollListener(onScrollListener);
+        listView.setOnTouchListener(onTouchListener);
+        listView.setOnItemClickListener(onItemClickListener);
         listView.setCanPullToRefresh(false);
         listView.setCanPullToLoadMore(true);
         listView.setOnRefreshListener(this);
-        loadData(0);
+
+        replyButton = (FloatingActionButton) findViewById(R.id.button_reply);
+        recomButton = (FloatingActionButton) findViewById(R.id.button_recommend);
+        favorButton = (FloatingActionButton) findViewById(R.id.button_favor);
+
+        replyButton.setOnClickListener(this);
+        recomButton.setOnClickListener(this);
+        favorButton.setOnClickListener(this);
+
+        loadData(-1);
     }
 
     private void loadData(int offset) {
-        if (offset < 0) {
-            offset = 0;
-        }
         cancelPotentialTask();
         task = new LoaderTask();
         task.execute(offset);
@@ -61,16 +104,12 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.post, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
@@ -80,12 +119,36 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
 
     @Override
     public void onStartRefresh() {
-        loadData(0);
+        loadData(-1);
     }
 
     @Override
     public void onStartLoadMore() {
         loadData(adapter.getCount() - 1);
+    }
+
+    private void likePost() {
+        LikePostTask likePostTask = new LikePostTask();
+        likePostTask.execute(post);
+    }
+
+    private void favor() {
+        new FavorDialog.Builder(this).setTitle(R.string.action_favor).create(post).show();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.button_reply:
+                replyPost();
+                break;
+            case R.id.button_recommend:
+                likePost();
+                break;
+            case R.id.button_favor:
+                favor();
+                break;
+        }
     }
 
     class LoaderTask extends AsyncTask<Integer, Integer, ResultObject> {
@@ -102,13 +165,13 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
             ArrayList<AceModel> models = new ArrayList<AceModel>();
             ResultObject resultObject = new ResultObject();
             try {
-                if (offset > 0) {
-                    models.addAll(PostAPI.getPostCommentsFromJsonUrl(mPost.getId(), offset));
+                if (offset < 0) {
+                    Post tmpPost = PostAPI.getPostDetailByIDFromMobileUrl(PostActivity.this.post.getId());
+                    post.setContent(tmpPost.getContent());
+                    models.add(PostActivity.this.post);
+                    models.addAll(tmpPost.getComments());
                 } else {
-                    Post post = PostAPI.getPostDetailByIDFromMobileUrl(mPost.getId());
-                    mPost.setContent(post.getContent());
-                    models.add(mPost);
-                    models.addAll(post.getComments());
+                    models.addAll(PostAPI.getPostCommentsFromJsonUrl(post.getId(), offset));
                 }
                 resultObject.result = models;
                 resultObject.ok = true;
@@ -127,27 +190,239 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
             if (!isCancelled()) {
                 if (result.ok) {
                     ArrayList<AceModel> ars = (ArrayList<AceModel>) result.result;
-                    if (offset > 0) {
-                        //Load More
-                        if (ars.size() > 0) {
-                            adapter.addAll(ars);
-                        } else {
-                            //no data loaded
-                        }
-                        adapter.notifyDataSetChanged();
-                    } else {
+                    if (offset < 0) {
                         //Refresh
                         if (ars.size() > 0) {
                             adapter.setList(ars);
+                            adapter.notifyDataSetInvalidated();
                         } else {
                             //no data loaded,不清除，保留旧数据
                         }
-                        adapter.notifyDataSetInvalidated();
+                    } else {
+                        //Load More
+                        if (ars.size() > 0) {
+                            adapter.addAll(ars);
+                            adapter.notifyDataSetChanged();
+                        } else {
+                            //no data loaded
+                        }
                     }
                 } else {
                     // load error
                 }
+                if (adapter.getCount() > 0) {
+                    listView.setCanPullToLoadMore(true);
+                    listView.setCanPullToRefresh(false);
+                } else {
+                    listView.setCanPullToLoadMore(false);
+                    listView.setCanPullToRefresh(true);
+                }
                 listView.doneOperation();
+            }
+        }
+    }
+
+    private void replyPost() {
+        replyPost(null);
+    }
+
+    private void replyPost(SimpleComment comment) {
+        Intent intent = new Intent(this, ReplyArticleActivity.class);
+        intent.putExtra(Consts.Extra_Post, post);
+        if (comment != null) {
+            intent.putExtra(Consts.Extra_Simple_Comment, comment);
+        }
+        startActivity(intent);
+    }
+
+    private void replyComment(SimpleComment comment) {
+        replyPost(comment);
+    }
+
+    private void likeComment(SimpleComment comment) {
+        LikeCommentTask likeCommentTask = new LikeCommentTask();
+        likeCommentTask.execute(comment);
+    }
+
+    private void copyComment(SimpleComment comment) {
+        //do nothing
+        ClipboardManager manager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        manager.setPrimaryClip(ClipData.newPlainText(null, RegUtil.html2PlainText(comment.getContent())));
+    }
+
+    private void onReplyItemClick(final View view, int position, long id) {
+        String[] operations = {getString(R.string.action_reply), getString(R.string.action_like), getString(R.string.action_copy)};
+        if (view instanceof MediumListItemView) {
+            new AlertDialog.Builder(this).setTitle("").setItems(operations, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    SimpleComment comment = ((MediumListItemView) view).getData();
+                    switch (which) {
+                        case 0:
+                            replyComment(comment);
+                            break;
+                        case 1:
+                            likeComment(comment);
+                            break;
+                        case 2:
+                            copyComment(comment);
+                            break;
+                    }
+                }
+            }).create().show();
+        }
+    }
+
+    AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            onReplyItemClick(view, position, id);
+        }
+    };
+
+    AnimatorSet backAnimatorSet;
+
+    private void animateBack() {
+        if (hideAnimatorSet != null && hideAnimatorSet.isRunning()) {
+            hideAnimatorSet.cancel();
+        }
+        if (backAnimatorSet != null && backAnimatorSet.isRunning()) {
+
+        } else {
+            backAnimatorSet = new AnimatorSet();
+            ObjectAnimator headerAnimator = ObjectAnimator.ofFloat(toolbar, "translationY", toolbar.getTranslationY(), 0f);
+            ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(bottomLayout, "translationY", bottomLayout.getTranslationY(), 0f);
+            ArrayList<Animator> animators = new ArrayList<>();
+            animators.add(headerAnimator);
+            animators.add(footerAnimator);
+            backAnimatorSet.setDuration(300);
+            backAnimatorSet.playTogether(animators);
+            backAnimatorSet.start();
+        }
+    }
+
+    AnimatorSet hideAnimatorSet;
+
+    private void animateHide() {
+        if (backAnimatorSet != null && backAnimatorSet.isRunning()) {
+            backAnimatorSet.cancel();
+        }
+        if (hideAnimatorSet != null && hideAnimatorSet.isRunning()) {
+
+        } else {
+            hideAnimatorSet = new AnimatorSet();
+            ObjectAnimator headerAnimator = ObjectAnimator.ofFloat(toolbar, "translationY", toolbar.getTranslationY(), -toolbar.getHeight());
+            ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(bottomLayout, "translationY", bottomLayout.getTranslationY(), bottomLayout.getHeight());
+            ArrayList<Animator> animators = new ArrayList<>();
+            animators.add(headerAnimator);
+            animators.add(footerAnimator);
+            hideAnimatorSet.setDuration(300);
+            hideAnimatorSet.playTogether(animators);
+            hideAnimatorSet.start();
+        }
+    }
+
+    View.OnTouchListener onTouchListener = new View.OnTouchListener() {
+
+        float lastY = 0f;
+        float currentY = 0f;
+        int lastDirection = 0;
+        int currentDirection = 0;
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    lastY = event.getY();
+                    currentY = event.getY();
+                    currentDirection = 0;
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    if (listView.getFirstVisiblePosition() > 1) {
+                        float tmpCurrentY = event.getY();
+                        if (Math.abs(tmpCurrentY - lastY) > touchSlop) {
+                            currentY = tmpCurrentY;
+                            currentDirection = (int) (currentY - lastY);
+                            if (lastDirection != currentDirection) {
+                                if (currentDirection < 0) {
+                                    animateHide();
+                                } else {
+                                    animateBack();
+                                }
+                            }
+                            lastY = currentY;
+                        }
+                    }
+                    break;
+                case MotionEvent.ACTION_CANCEL:
+                case MotionEvent.ACTION_UP:
+                    currentDirection = 0;
+                    break;
+            }
+            return false;
+        }
+    };
+
+    AbsListView.OnScrollListener onScrollListener = new AbsListView.OnScrollListener() {
+        int lastPosition = 0;
+        int state = AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
+
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
+            state = scrollState;
+        }
+
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            if (firstVisibleItem == 0 || firstVisibleItem == 1) {
+                animateBack();
+            }
+            if (firstVisibleItem > 1) {
+                if (firstVisibleItem > lastPosition && state == SCROLL_STATE_FLING) {
+                    animateHide();
+                }
+            }
+            lastPosition = firstVisibleItem;
+        }
+    };
+
+    class LikePostTask extends AsyncTask<Post, Integer, ResultObject> {
+        Post post;
+
+        @Override
+        protected ResultObject doInBackground(Post... params) {
+            post = params[0];
+            return PostAPI.likePost(post.getId());
+        }
+
+        @Override
+        protected void onPostExecute(ResultObject resultObject) {
+            if (resultObject.ok) {
+                post.setLikeNum(post.getLikeNum() + 1);
+                adapter.notifyDataSetChanged();
+            } else {
+                //do nothing
+            }
+        }
+    }
+
+    class LikeCommentTask extends AsyncTask<SimpleComment, Integer, ResultObject> {
+
+        SimpleComment comment;
+
+        @Override
+        protected ResultObject doInBackground(SimpleComment... params) {
+            comment = params[0];
+            return PostAPI.likeComment(comment.getID());
+        }
+
+        @Override
+        protected void onPostExecute(ResultObject resultObject) {
+            if (resultObject.ok) {
+                comment.setLikeNum(comment.getLikeNum() + 1);
+                adapter.notifyDataSetChanged();
+            } else {
+                //do nothing
             }
         }
     }

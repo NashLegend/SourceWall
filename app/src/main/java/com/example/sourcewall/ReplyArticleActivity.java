@@ -22,6 +22,7 @@ import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.APIBase;
 import com.example.sourcewall.connection.api.ArticleAPI;
 import com.example.sourcewall.dialogs.InputDialog;
+import com.example.sourcewall.model.AceModel;
 import com.example.sourcewall.model.Article;
 import com.example.sourcewall.model.SimpleComment;
 import com.example.sourcewall.util.Consts;
@@ -37,7 +38,7 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
 
     EditText editText;
     TextView hostText;
-    Article article;
+    AceModel aceModel;
     ImageButton publishButton;
     ImageButton imgButton;
     ImageButton insertButton;
@@ -54,7 +55,7 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
         setContentView(R.layout.activity_reply_article);
         toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
-        article = (Article) getIntent().getSerializableExtra(Consts.Extra_Article);
+        aceModel = (Article) getIntent().getSerializableExtra(Consts.Extra_Article);
         comment = (SimpleComment) getIntent().getSerializableExtra(Consts.Extra_Simple_Comment);
         editText = (EditText) findViewById(R.id.text_reply);
         hostText = (TextView) findViewById(R.id.text_reply_host);
@@ -205,7 +206,7 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
         if (comment != null) {
             header = "[blockquote]" + hostText.getText() + "[/blockquote]";
         }
-        task.execute(article.getId(), header, rep, tail, Simple_Reply);
+        task.execute(header, rep, tail, Simple_Reply);
     }
 
     private void publishAdvancedReply(String rep) {
@@ -215,7 +216,7 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
             header = "<blockquote>" + hostText.getText() + "<blockquote>";
         }
         String tail = "<p></p><p>From <a href=\"https://github.com/NashLegend/SourceWall\" target=\"_blank\">The Great Source Wall</a></p>";
-        task.execute(article.getId(), header, rep, tail, Advanced_Reply);
+        task.execute(header, rep, tail, Advanced_Reply);
     }
 
     @Override
@@ -255,11 +256,10 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
 
         @Override
         protected ResultObject doInBackground(String... params) {
-            String id = params[0];
-            String header = params[1];
-            String content = params[2];
-            String tail = params[3];
-            String reply_format = params[4];
+            String header = params[0];
+            String content = params[1];
+            String tail = params[2];
+            String reply_format = params[3];
             String result;
             if (Advanced_Reply.equals(reply_format)) {
                 ResultObject resultObject = MDUtil.parseMarkdownByGitHub(content);
@@ -269,10 +269,10 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
                     content = MDUtil.Markdown2HtmlDumb(content);
                 }
                 result = header + content + tail;
-                return ArticleAPI.replyArticleAdvanced(id, result);
+                return APIBase.replyAdvanced(aceModel, result);
             }
             result = header + content + tail;
-            return ArticleAPI.replyArticle(id, result);
+            return APIBase.reply(aceModel, result);
         }
 
         @Override

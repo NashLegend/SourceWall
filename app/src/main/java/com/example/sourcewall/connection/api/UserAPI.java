@@ -60,7 +60,6 @@ public class UserAPI extends APIBase {
      * @return
      */
     public static ResultObject favorLink(String link, String title, String basketID) {
-        String param = "basket_id=#&url=#&title=#&access_token=#";
         ResultObject resultObject = new ResultObject();
         try {
             String url = "http://www.guokr.com/apis/favorite/link.json";

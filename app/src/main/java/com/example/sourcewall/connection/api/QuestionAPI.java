@@ -3,10 +3,13 @@ package com.example.sourcewall.connection.api;
 import android.text.TextUtils;
 
 import com.example.sourcewall.connection.HttpFetcher;
+import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.model.Question;
 import com.example.sourcewall.model.QuestionAnswer;
 import com.example.sourcewall.model.SimpleComment;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,6 +25,7 @@ public class QuestionAPI extends APIBase {
     static int maxImageWidth = 240;
     static String prefix = "<div class=\"ZoomBox\"><div class=\"content-zoom ZoomIn\">";
     static String suffix = "</div></div>";
+
     public QuestionAPI() {
         // TODO Auto-generated constructor stub
     }
@@ -231,4 +235,123 @@ public class QuestionAPI extends APIBase {
         }
         return list;
     }
+
+    /**
+     * 使用json请求
+     *
+     * @param id
+     * @param content
+     * @return ResultObject.result is the reply_id if ok;
+     */
+    public static ResultObject answerQuestion(String id, String content) {
+        ResultObject resultObject = new ResultObject();
+        try {
+            String url = "http://apis.guokr.com/ask/answer.json";
+            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            pairs.add(new BasicNameValuePair("question_id", id));
+            pairs.add(new BasicNameValuePair("content", content));
+            pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
+            String result = HttpFetcher.post(url, pairs);
+            JSONObject object = new JSONObject(result);
+            if (getJsonBoolean(object, "ok")) {
+                JSONObject resultJson = getJsonObject(object, "result");
+                String replyID = getJsonString(resultJson, "id");
+                resultObject.ok = true;
+                resultObject.result = replyID;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return resultObject;
+    }
+
+    /**
+     * 支持答案
+     *
+     * @param id
+     * @return
+     */
+    public static ResultObject supportAnswer(String id) {
+        return supportOrOpposeAnswer(id,"support");
+    }
+
+    /**
+     * 反对答案
+     *
+     * @param id
+     * @return
+     */
+    public static ResultObject opposeAnswer(String id) {
+        return supportOrOpposeAnswer(id,"oppose");
+    }
+
+    private static ResultObject supportOrOpposeAnswer(String id,String opinion){
+        String url = "http://www.guokr.com/apis/ask/answer_polling.json";
+        ResultObject resultObject = new ResultObject();
+        try {
+            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            pairs.add(new BasicNameValuePair("answer_id", id));
+            pairs.add(new BasicNameValuePair("opinion", opinion));
+            pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
+            String result = HttpFetcher.post(url, pairs);
+            JSONObject object = new JSONObject(result);
+            if (getJsonBoolean(object, "ok")) {
+                resultObject.ok = true;
+            }
+        } catch (JSONException | IOException e) {
+            e.printStackTrace();
+        }
+        return resultObject;
+    }
+
+    /**
+     * 感谢答案
+     *
+     * @param id
+     * @return
+     */
+    public static ResultObject thankAnswer(String id) {
+        String url = "http://www.guokr.com/apis/ask/answer_thanking.json?v=" + System.currentTimeMillis();
+        ResultObject resultObject = new ResultObject();
+        try {
+            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            pairs.add(new BasicNameValuePair("answer_id", id));
+            pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
+            String result = HttpFetcher.post(url, pairs);
+            JSONObject object = new JSONObject(result);
+            if (getJsonBoolean(object, "ok")) {
+                resultObject.ok = true;
+            }
+        } catch (JSONException | IOException e) {
+            e.printStackTrace();
+        }
+        return resultObject;
+    }
+
+    /**
+     * 不是答案
+     *
+     * @param id
+     * @return
+     */
+    public static ResultObject buryAnswer(String id) {
+        String url = "http://www.guokr.com/apis/ask/answer_burying.json?v=" + System.currentTimeMillis();
+        ResultObject resultObject = new ResultObject();
+        try {
+            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            pairs.add(new BasicNameValuePair("answer_id", id));
+            pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
+            String result = HttpFetcher.post(url, pairs);
+            JSONObject object = new JSONObject(result);
+            if (getJsonBoolean(object, "ok")) {
+                resultObject.ok = true;
+            }
+        } catch (JSONException | IOException e) {
+            e.printStackTrace();
+        }
+        return resultObject;
+    }
+
 }

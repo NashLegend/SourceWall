@@ -2,6 +2,10 @@ package com.example.sourcewall.connection.api;
 
 import com.example.sourcewall.connection.HttpFetcher;
 import com.example.sourcewall.connection.ResultObject;
+import com.example.sourcewall.model.AceModel;
+import com.example.sourcewall.model.Article;
+import com.example.sourcewall.model.Post;
+import com.example.sourcewall.model.Question;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -28,6 +32,34 @@ public class APIBase {
 
     public APIBase() {
         // TODO Auto-generated constructor stub
+    }
+
+    /**
+     * 统一回复
+     *
+     * @return
+     */
+    public static ResultObject reply(AceModel data, String content) {
+        ResultObject resultObject = new ResultObject();
+        if (data instanceof Article) {
+            return ArticleAPI.replyArticle(((Article) data).getId(), content);
+        } else if (data instanceof Post) {
+            return PostAPI.replyPost(((Post) data).getId(), content);
+        } else if (data instanceof Question) {
+
+        }
+        return resultObject;
+    }
+
+    /**
+     * 统一回复
+     *
+     * @return
+     */
+    public static ResultObject replyAdvanced(AceModel data, String content) {
+        ResultObject resultObject = new ResultObject();
+
+        return resultObject;
     }
 
     public static ResultObject uploadImage(String path, boolean watermark) {
@@ -82,9 +114,9 @@ public class APIBase {
             httpClient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION,
                     HttpVersion.HTTP_1_1);
             HttpPost httpPost = new HttpPost(url);
-            JSONObject jsonObject=new JSONObject();
-            jsonObject.put("text",text);
-            jsonObject.put("mode","gfm");
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("text", text);
+            jsonObject.put("mode", "gfm");
             StringEntity entity = new StringEntity(jsonObject.toString(), HTTP.UTF_8);
             httpPost.setEntity(entity);
             HttpResponse response;
@@ -95,7 +127,7 @@ public class APIBase {
 
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK && resEntity != null) {
                 result = EntityUtils.toString(resEntity, HTTP.UTF_8);
-                resultObject.ok=true;
+                resultObject.ok = true;
                 resultObject.result = result;
             }
         } catch (IOException e) {

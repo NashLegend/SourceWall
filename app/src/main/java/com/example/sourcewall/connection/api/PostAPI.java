@@ -1,9 +1,12 @@
 package com.example.sourcewall.connection.api;
 
 import com.example.sourcewall.connection.HttpFetcher;
+import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.model.Post;
 import com.example.sourcewall.model.SimpleComment;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -324,6 +327,72 @@ public class PostAPI extends APIBase {
             list.add(comment);
         }
         return list;
+    }
+
+    public static ResultObject likePost(String postID) {
+        String url = "http://www.guokr.com/apis/group/post_liking.json";
+        ResultObject resultObject = new ResultObject();
+        try {
+            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            pairs.add(new BasicNameValuePair("post_id", postID));
+            pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
+            String result = HttpFetcher.post(url, pairs);
+            JSONObject object = new JSONObject(result);
+            if (getJsonBoolean(object, "ok")) {
+                resultObject.ok = true;
+            }
+        } catch (JSONException | IOException e) {
+            e.printStackTrace();
+        }
+        return resultObject;
+    }
+
+    /**
+     * 使用json请求
+     * @param id
+     * @param content
+     * @return ResultObject.result is the reply_id if ok;
+     */
+    public static ResultObject replyPost(String id, String content) {
+        ResultObject resultObject = new ResultObject();
+        try {
+            String url = "http://apis.guokr.com/group/post_reply.json";
+            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            pairs.add(new BasicNameValuePair("post_id", id));
+            pairs.add(new BasicNameValuePair("content", content));
+            pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
+            String result = HttpFetcher.post(url, pairs);
+            JSONObject object = new JSONObject(result);
+            if (getJsonBoolean(object, "ok")) {
+                JSONObject resultJson = getJsonObject(object, "result");
+                String replyID = getJsonString(resultJson, "id");
+                resultObject.ok = true;
+                resultObject.result = replyID;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return resultObject;
+    }
+
+    public static ResultObject likeComment(String id) {
+        String url = "http://www.guokr.com/apis/group/post_reply_liking.json";
+        ResultObject resultObject = new ResultObject();
+        try {
+            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            pairs.add(new BasicNameValuePair("reply_id", id));
+            pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
+            String result = HttpFetcher.post(url, pairs);
+            JSONObject object = new JSONObject(result);
+            if (getJsonBoolean(object, "ok")) {
+                resultObject.ok = true;
+            }
+        } catch (JSONException | IOException e) {
+            e.printStackTrace();
+        }
+        return resultObject;
     }
 
 }

@@ -38,7 +38,8 @@
             android:theme="@style/BlankTheme" />
         <activity
             android:name="com.example.sourcewall.PostActivity"
-            android:label="@string/post" />
+            android:label="@string/post"
+            android:theme="@style/BlankTheme" />
         <activity
             android:name="com.example.sourcewall.QuestionActivity"
             android:label="@string/question" />

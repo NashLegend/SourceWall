@@ -243,6 +243,29 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         }
     };
 
+    AbsListView.OnScrollListener onScrollListener = new AbsListView.OnScrollListener() {
+        int lastPosition = 0;
+        int state = AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
+
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
+            state = scrollState;
+        }
+
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            if (firstVisibleItem == 0 || firstVisibleItem == 1) {
+                animateBack();
+            }
+            if (firstVisibleItem > 1) {
+                if (firstVisibleItem > lastPosition && state == SCROLL_STATE_FLING) {
+                    animateHide();
+                }
+            }
+            lastPosition = firstVisibleItem;
+        }
+    };
+
     private void replyComment(SimpleComment comment) {
         replyArticle(comment);
     }
@@ -285,29 +308,6 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             onReplyItemClick(view, position, id);
-        }
-    };
-
-    AbsListView.OnScrollListener onScrollListener = new AbsListView.OnScrollListener() {
-        int lastPosition = 0;
-        int state = AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
-
-        @Override
-        public void onScrollStateChanged(AbsListView view, int scrollState) {
-            state = scrollState;
-        }
-
-        @Override
-        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-            if (firstVisibleItem == 0 || firstVisibleItem == 1) {
-                animateBack();
-            }
-            if (firstVisibleItem > 1) {
-                if (firstVisibleItem > lastPosition && state == SCROLL_STATE_FLING) {
-                    animateHide();
-                }
-            }
-            lastPosition = firstVisibleItem;
         }
     };
 
