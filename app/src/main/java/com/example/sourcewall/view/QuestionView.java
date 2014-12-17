@@ -1,9 +1,13 @@
 package com.example.sourcewall.view;
 
 import android.content.Context;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.ViewGroup;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.TextView;
 
 import com.example.sourcewall.R;
@@ -18,15 +22,39 @@ public class QuestionView extends AceView<Question> {
     private TextView authorView;
     private TextView dateView;
     private WebView contentView;
+    private Handler handler;
 
     public QuestionView(Context context) {
         super(context);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_question_view, this);
+        handler = new Handler();
         titleView = (TextView) findViewById(R.id.text_title);
         authorView = (TextView) findViewById(R.id.text_author);
         dateView = (TextView) findViewById(R.id.text_date);
         contentView = (WebView) findViewById(R.id.web_content);
+
+        contentView.getSettings().setJavaScriptEnabled(true);
+        contentView.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                contentView.loadUrl("javascript:MyApp.resize(document.body.getBoundingClientRect().height)");
+                super.onPageFinished(view, url);
+            }
+        });
+        contentView.addJavascriptInterface(this, "MyApp");
+    }
+
+    @JavascriptInterface
+    public void resize(final float height) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                ViewGroup.LayoutParams params = contentView.getLayoutParams();
+                params.height = (int) (height * getResources().getDisplayMetrics().density);
+                contentView.setLayoutParams(params);
+            }
+        });
     }
 
     public QuestionView(Context context, AttributeSet attrs) {
@@ -40,6 +68,11 @@ public class QuestionView extends AceView<Question> {
     @Override
     public void setData(Question model) {
         question = model;
+
+        ViewGroup.LayoutParams params = contentView.getLayoutParams();
+        params.height = 10;
+        contentView.setLayoutParams(params);
+
         titleView.setText(question.getTitle());
         authorView.setText(question.getAuthor());
         dateView.setText(question.getDate());

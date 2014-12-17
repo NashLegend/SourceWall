@@ -12,7 +12,6 @@ import com.example.sourcewall.R;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.UserAPI;
 import com.example.sourcewall.model.Basket;
-import com.example.sourcewall.util.ToastUtil;
 
 /**
  * Created by NashLegend on 2014/12/2 0002

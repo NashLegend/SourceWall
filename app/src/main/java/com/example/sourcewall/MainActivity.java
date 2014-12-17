@@ -46,7 +46,7 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        toolbar= (Toolbar) findViewById(R.id.action_bar);
+        toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         receiver = new Receiver();
         IntentFilter filter = new IntentFilter();

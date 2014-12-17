@@ -425,7 +425,7 @@ public class ImageCache {
                         mDiskLruCache = null;
                     }
                 } catch (IOException e) {
-                    
+
                 }
             }
         }

@@ -2,8 +2,10 @@ package com.example.sourcewall;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.example.sourcewall.adapters.QuestionDetailAdapter;
 import com.example.sourcewall.commonview.LListView;
@@ -11,6 +13,7 @@ import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.QuestionAPI;
 import com.example.sourcewall.model.AceModel;
 import com.example.sourcewall.model.Question;
+import com.example.sourcewall.util.AutoHideUtil;
 import com.example.sourcewall.util.Consts;
 
 import org.json.JSONException;
@@ -25,26 +28,31 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
     QuestionDetailAdapter adapter;
     Question mQuestion;
     LoaderTask task;
+    Toolbar toolbar;
+    View bottomLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_post);
-        setContentView(R.layout.activity_article);
+        setContentView(R.layout.activity_question);
+        toolbar = (Toolbar) findViewById(R.id.action_bar);
+        setSupportActionBar(toolbar);
+        bottomLayout = findViewById(R.id.layout_operation);
         mQuestion = (Question) getIntent().getSerializableExtra(Consts.Extra_Question);
         listView = (LListView) findViewById(R.id.list_detail);
         adapter = new QuestionDetailAdapter(this);
         listView.setAdapter(adapter);
+
+        AutoHideUtil.applyAutoHide(this, listView, toolbar, bottomLayout, (int) getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
+
         listView.setCanPullToRefresh(false);
-        listView.setCanPullToLoadMore(true);
+        listView.setCanPullToLoadMore(false);
         listView.setOnRefreshListener(this);
-        loadData(0);
+
+        loadData(-1);
     }
 
     private void loadData(int offset) {
-        if (offset < 0) {
-            offset = 0;
-        }
         cancelPotentialTask();
         task = new LoaderTask();
         task.execute(offset);
@@ -78,7 +86,7 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
 
     @Override
     public void onStartRefresh() {
-        loadData(0);
+        loadData(-1);
     }
 
     @Override
@@ -100,12 +108,12 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
             ArrayList<AceModel> models = new ArrayList<AceModel>();
             ResultObject resultObject = new ResultObject();
             try {
-                if (offset == 0) {
+                if (offset < 0) {
                     Question question = QuestionAPI.getQuestionDetailByID(mQuestion.getId());
                     mQuestion = question;
                     models.add(question);
                 }
-                models.addAll(QuestionAPI.getQuestionAnswers(mQuestion.getId(), offset));
+                models.addAll(QuestionAPI.getQuestionAnswers(mQuestion.getId(), offset < 0 ? 0 : offset));
                 resultObject.result = models;
                 if (models != null) {
                     resultObject.ok = true;
@@ -125,25 +133,32 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
             if (!isCancelled()) {
                 if (result.ok) {
                     ArrayList<AceModel> ars = (ArrayList<AceModel>) result.result;
-                    if (offset > 0) {
-                        //Load More
-                        if (ars.size() > 0) {
-                            adapter.addAll(ars);
-                        } else {
-                            //no data loaded
-                        }
-                        adapter.notifyDataSetChanged();
-                    } else {
+                    if (offset < 0) {
                         //Refresh
                         if (ars.size() > 0) {
                             adapter.setList(ars);
+                            adapter.notifyDataSetInvalidated();
                         } else {
                             //no data loaded,不清除，保留旧数据
                         }
-                        adapter.notifyDataSetInvalidated();
+                    } else {
+                        //Load More
+                        if (ars.size() > 0) {
+                            adapter.addAll(ars);
+                            adapter.notifyDataSetChanged();
+                        } else {
+                            //no data loaded
+                        }
                     }
                 } else {
                     // load error
+                }
+                if (adapter.getCount() > 0) {
+                    listView.setCanPullToLoadMore(true);
+                    listView.setCanPullToRefresh(false);
+                } else {
+                    listView.setCanPullToLoadMore(false);
+                    listView.setCanPullToRefresh(true);
                 }
                 listView.doneOperation();
             }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="list_title_color">#222222</color>
+    <color name="list_title_color">#444444</color>
     <color name="list_summary_color">@android:color/darker_gray</color>
     <color name="list_appendix_color">#888888</color>
     <color name="text_color_primary">@android:color/white</color>

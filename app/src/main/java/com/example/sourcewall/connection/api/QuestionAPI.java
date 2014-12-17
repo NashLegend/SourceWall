@@ -274,7 +274,7 @@ public class QuestionAPI extends APIBase {
      * @return
      */
     public static ResultObject supportAnswer(String id) {
-        return supportOrOpposeAnswer(id,"support");
+        return supportOrOpposeAnswer(id, "support");
     }
 
     /**
@@ -284,10 +284,10 @@ public class QuestionAPI extends APIBase {
      * @return
      */
     public static ResultObject opposeAnswer(String id) {
-        return supportOrOpposeAnswer(id,"oppose");
+        return supportOrOpposeAnswer(id, "oppose");
     }
 
-    private static ResultObject supportOrOpposeAnswer(String id,String opinion){
+    private static ResultObject supportOrOpposeAnswer(String id, String opinion) {
         String url = "http://www.guokr.com/apis/ask/answer_polling.json";
         ResultObject resultObject = new ResultObject();
         try {

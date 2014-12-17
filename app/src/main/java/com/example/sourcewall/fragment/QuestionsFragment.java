@@ -40,6 +40,8 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
         subItem = (SubItem) getArguments().getSerializable(Consts.Extra_SubItem);
         listView = (LListView) view.findViewById(R.id.list_questions);
         adapter = new QuestionAdapter(getActivity());
+        listView.setCanPullToRefresh(false);
+        listView.setCanPullToLoadMore(false);
         listView.setAdapter(adapter);
         listView.setOnRefreshListener(this);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -49,6 +51,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
                 intent.setClass(getActivity(), QuestionActivity.class);
                 intent.putExtra(Consts.Extra_Question, ((QuestionFeaturedListItemView) view).getData());
                 startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
             }
         });
         setTitle();
@@ -143,22 +146,31 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
                 if (o.ok) {
                     ArrayList<Question> ars = (ArrayList<Question>) o.result;
                     if (offset > 0) {
+                        //Load More
                         if (ars.size() > 0) {
                             adapter.addAll(ars);
+                            adapter.notifyDataSetChanged();
                         } else {
-
+                            //no data loaded
                         }
-                        adapter.notifyDataSetChanged();
                     } else {
+                        //Refresh
                         if (ars.size() > 0) {
                             adapter.setList(ars);
+                            adapter.notifyDataSetInvalidated();
                         } else {
-
+                            //no data loaded,不要清除了，保留旧数据得了
                         }
-                        adapter.notifyDataSetInvalidated();
                     }
                 } else {
-
+                    // load error
+                }
+                if (adapter.getCount() > 0) {
+                    listView.setCanPullToLoadMore(true);
+                    listView.setCanPullToRefresh(true);
+                } else {
+                    listView.setCanPullToLoadMore(false);
+                    listView.setCanPullToRefresh(true);
                 }
                 listView.doneOperation();
             }

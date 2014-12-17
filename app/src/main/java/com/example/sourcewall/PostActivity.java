@@ -1,24 +1,16 @@
 package com.example.sourcewall;
 
-import android.animation.Animator;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
-import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 
 import com.example.sourcewall.adapters.PostDetailAdapter;
@@ -29,6 +21,7 @@ import com.example.sourcewall.dialogs.FavorDialog;
 import com.example.sourcewall.model.AceModel;
 import com.example.sourcewall.model.Post;
 import com.example.sourcewall.model.SimpleComment;
+import com.example.sourcewall.util.AutoHideUtil;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.RegUtil;
 import com.example.sourcewall.view.MediumListItemView;
@@ -43,11 +36,9 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
     LListView listView;
     PostDetailAdapter adapter;
     Post post;
-    View header;
     View bottomLayout;
     LoaderTask task;
     Toolbar toolbar;
-    int touchSlop = 10;
     FloatingActionButton replyButton;
     FloatingActionButton recomButton;
     FloatingActionButton favorButton;
@@ -56,25 +47,19 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
-        touchSlop = (int) (ViewConfiguration.get(PostActivity.this).getScaledTouchSlop() * 0.9);
         toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
-        post = (Post) getIntent().getSerializableExtra(Consts.Extra_Post);
         bottomLayout = findViewById(R.id.layout_operation);
+        post = (Post) getIntent().getSerializableExtra(Consts.Extra_Post);
         listView = (LListView) findViewById(R.id.list_detail);
         adapter = new PostDetailAdapter(this);
         listView.setAdapter(adapter);
 
-        header = new View(PostActivity.this);
-        header.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen.abc_action_bar_default_height_material)));
-        header.setBackgroundColor(Color.parseColor("#00000000"));
-        listView.addHeaderView(header);
+        AutoHideUtil.applyAutoHide(this, listView, toolbar, bottomLayout, (int) getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
 
-        listView.setOnScrollListener(onScrollListener);
-        listView.setOnTouchListener(onTouchListener);
         listView.setOnItemClickListener(onItemClickListener);
         listView.setCanPullToRefresh(false);
-        listView.setCanPullToLoadMore(true);
+        listView.setCanPullToLoadMore(false);
         listView.setOnRefreshListener(this);
 
         replyButton = (FloatingActionButton) findViewById(R.id.button_reply);
@@ -228,7 +213,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
 
     private void replyPost(SimpleComment comment) {
         Intent intent = new Intent(this, ReplyArticleActivity.class);
-        intent.putExtra(Consts.Extra_Post, post);
+        intent.putExtra(Consts.Extra_Ace_Model, post);
         if (comment != null) {
             intent.putExtra(Consts.Extra_Simple_Comment, comment);
         }
@@ -277,112 +262,6 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             onReplyItemClick(view, position, id);
-        }
-    };
-
-    AnimatorSet backAnimatorSet;
-
-    private void animateBack() {
-        if (hideAnimatorSet != null && hideAnimatorSet.isRunning()) {
-            hideAnimatorSet.cancel();
-        }
-        if (backAnimatorSet != null && backAnimatorSet.isRunning()) {
-
-        } else {
-            backAnimatorSet = new AnimatorSet();
-            ObjectAnimator headerAnimator = ObjectAnimator.ofFloat(toolbar, "translationY", toolbar.getTranslationY(), 0f);
-            ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(bottomLayout, "translationY", bottomLayout.getTranslationY(), 0f);
-            ArrayList<Animator> animators = new ArrayList<>();
-            animators.add(headerAnimator);
-            animators.add(footerAnimator);
-            backAnimatorSet.setDuration(300);
-            backAnimatorSet.playTogether(animators);
-            backAnimatorSet.start();
-        }
-    }
-
-    AnimatorSet hideAnimatorSet;
-
-    private void animateHide() {
-        if (backAnimatorSet != null && backAnimatorSet.isRunning()) {
-            backAnimatorSet.cancel();
-        }
-        if (hideAnimatorSet != null && hideAnimatorSet.isRunning()) {
-
-        } else {
-            hideAnimatorSet = new AnimatorSet();
-            ObjectAnimator headerAnimator = ObjectAnimator.ofFloat(toolbar, "translationY", toolbar.getTranslationY(), -toolbar.getHeight());
-            ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(bottomLayout, "translationY", bottomLayout.getTranslationY(), bottomLayout.getHeight());
-            ArrayList<Animator> animators = new ArrayList<>();
-            animators.add(headerAnimator);
-            animators.add(footerAnimator);
-            hideAnimatorSet.setDuration(300);
-            hideAnimatorSet.playTogether(animators);
-            hideAnimatorSet.start();
-        }
-    }
-
-    View.OnTouchListener onTouchListener = new View.OnTouchListener() {
-
-        float lastY = 0f;
-        float currentY = 0f;
-        int lastDirection = 0;
-        int currentDirection = 0;
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    lastY = event.getY();
-                    currentY = event.getY();
-                    currentDirection = 0;
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    if (listView.getFirstVisiblePosition() > 1) {
-                        float tmpCurrentY = event.getY();
-                        if (Math.abs(tmpCurrentY - lastY) > touchSlop) {
-                            currentY = tmpCurrentY;
-                            currentDirection = (int) (currentY - lastY);
-                            if (lastDirection != currentDirection) {
-                                if (currentDirection < 0) {
-                                    animateHide();
-                                } else {
-                                    animateBack();
-                                }
-                            }
-                            lastY = currentY;
-                        }
-                    }
-                    break;
-                case MotionEvent.ACTION_CANCEL:
-                case MotionEvent.ACTION_UP:
-                    currentDirection = 0;
-                    break;
-            }
-            return false;
-        }
-    };
-
-    AbsListView.OnScrollListener onScrollListener = new AbsListView.OnScrollListener() {
-        int lastPosition = 0;
-        int state = AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
-
-        @Override
-        public void onScrollStateChanged(AbsListView view, int scrollState) {
-            state = scrollState;
-        }
-
-        @Override
-        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-            if (firstVisibleItem == 0 || firstVisibleItem == 1) {
-                animateBack();
-            }
-            if (firstVisibleItem > 1) {
-                if (firstVisibleItem > lastPosition && state == SCROLL_STATE_FLING) {
-                    animateHide();
-                }
-            }
-            lastPosition = firstVisibleItem;
         }
     };
 

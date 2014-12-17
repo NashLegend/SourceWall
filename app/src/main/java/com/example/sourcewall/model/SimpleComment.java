@@ -15,6 +15,7 @@ public class SimpleComment extends AceModel {
     private String ID = "";
     private String hostID = "";
     private int likeNum = 0;
+    private boolean isContentComplex = false;
 
     public String getContent() {
         return content;
@@ -94,6 +95,14 @@ public class SimpleComment extends AceModel {
 
     public void setLikeNum(int likeNum) {
         this.likeNum = likeNum;
+    }
+
+    public boolean isContentComplex() {
+        return isContentComplex;
+    }
+
+    public void setContentComplex(boolean isContentComplex) {
+        this.isContentComplex = isContentComplex;
     }
 
 }

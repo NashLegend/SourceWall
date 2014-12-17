@@ -48,7 +48,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                 intent.setClass(getActivity(), PostActivity.class);
                 intent.putExtra(Consts.Extra_Post, ((PostListItemView) view).getPost());
                 startActivity(intent);
-                getActivity().overridePendingTransition(R.anim.slide_in_right,0);
+                getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
             }
         });
         setTitle();
@@ -56,7 +56,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         return view;
     }
 
-    private void setTitle(){
+    private void setTitle() {
         if (subItem.getType() == SubItem.Type_Collections) {
             getActivity().setTitle("小组热贴");
         } else {

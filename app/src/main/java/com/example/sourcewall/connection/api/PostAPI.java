@@ -349,6 +349,7 @@ public class PostAPI extends APIBase {
 
     /**
      * 使用json请求
+     *
      * @param id
      * @param content
      * @return ResultObject.result is the reply_id if ok;

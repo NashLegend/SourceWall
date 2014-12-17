@@ -202,6 +202,7 @@ public class ArticleAPI extends APIBase {
 
     /**
      * 使用json请求
+     *
      * @param id
      * @param content
      * @return ResultObject.result is the reply_id if ok;
@@ -232,6 +233,7 @@ public class ArticleAPI extends APIBase {
 
     /**
      * 使用网页请求而不是json来获得结果，可以使用高级样式 TODO
+     *
      * @param id
      * @param content
      * @return ResultObject.result is the reply_id if ok;

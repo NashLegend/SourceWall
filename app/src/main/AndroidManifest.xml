@@ -42,7 +42,8 @@
             android:theme="@style/BlankTheme" />
         <activity
             android:name="com.example.sourcewall.QuestionActivity"
-            android:label="@string/question" />
+            android:label="@string/question"
+            android:theme="@style/BlankTheme" />
         <activity
             android:name="com.example.sourcewall.LoginActivity"
             android:label="@string/title_activity_login" />

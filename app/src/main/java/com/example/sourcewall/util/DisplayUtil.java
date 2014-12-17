@@ -1,4 +1,3 @@
-
 package com.example.sourcewall.util;
 
 import android.app.Activity;
@@ -12,7 +11,7 @@ public class DisplayUtil {
 
     /**
      * 获取手机屏幕高度,以px为单位
-     * 
+     *
      * @param context
      * @return
      */
@@ -25,7 +24,7 @@ public class DisplayUtil {
 
     /**
      * 获取手机屏幕宽度，以px为单位
-     * 
+     *
      * @param context
      * @return
      */
@@ -38,7 +37,7 @@ public class DisplayUtil {
 
     /**
      * 返回程序window宽度
-     * 
+     *
      * @return
      */
     public static int getWindowWidth(Activity activity) {
@@ -47,7 +46,7 @@ public class DisplayUtil {
 
     /**
      * 返回程序window高度，不包括通知栏和标题栏
-     * 
+     *
      * @return
      */
     public static int getWindowContentHeight(Activity activity) {
@@ -57,7 +56,7 @@ public class DisplayUtil {
 
     /**
      * 返回程序window高度，不包括通知栏
-     * 
+     *
      * @return
      */
     public static int getWindowHeight(Activity activity) {
@@ -66,7 +65,7 @@ public class DisplayUtil {
 
     /**
      * 返回屏幕像素密度
-     * 
+     *
      * @param context
      * @return
      */
@@ -76,7 +75,7 @@ public class DisplayUtil {
 
     /**
      * 返回状态栏高度
-     * 
+     *
      * @param activity
      * @return
      */
@@ -93,7 +92,7 @@ public class DisplayUtil {
 
     /**
      * 单位转换，将dip转换为px
-     * 
+     *
      * @param dp
      * @param context
      * @return
@@ -105,7 +104,7 @@ public class DisplayUtil {
 
     /**
      * 单位转换，将px转换为dip
-     * 
+     *
      * @param px
      * @param context
      * @return

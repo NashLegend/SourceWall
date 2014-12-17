@@ -1,6 +1,7 @@
 package com.example.sourcewall;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.DialogInterface;
@@ -20,10 +21,8 @@ import android.widget.TextView;
 
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.APIBase;
-import com.example.sourcewall.connection.api.ArticleAPI;
 import com.example.sourcewall.dialogs.InputDialog;
 import com.example.sourcewall.model.AceModel;
-import com.example.sourcewall.model.Article;
 import com.example.sourcewall.model.SimpleComment;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.FileUtil;
@@ -45,6 +44,7 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
     ImageButton cameraButton;
     ImageButton linkButton;
     ProgressBar uploadingProgress;
+    ProgressDialog progressDialog;
     String tmpImagePath;
     Toolbar toolbar;
     SimpleComment comment;
@@ -55,7 +55,7 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
         setContentView(R.layout.activity_reply_article);
         toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
-        aceModel = (Article) getIntent().getSerializableExtra(Consts.Extra_Article);
+        aceModel = (AceModel) getIntent().getSerializableExtra(Consts.Extra_Ace_Model);
         comment = (SimpleComment) getIntent().getSerializableExtra(Consts.Extra_Simple_Comment);
         editText = (EditText) findViewById(R.id.text_reply);
         hostText = (TextView) findViewById(R.id.text_reply_host);
@@ -251,7 +251,10 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
 
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
+            progressDialog = new ProgressDialog(ReplyArticleActivity.this);
+            progressDialog.setCancelable(false);
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.show();
         }
 
         @Override
@@ -277,6 +280,7 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
 
         @Override
         protected void onPostExecute(ResultObject resultObject) {
+            progressDialog.dismiss();
             if (resultObject.ok) {
                 ToastUtil.toast(R.string.reply_ok);
                 setResult(RESULT_OK);

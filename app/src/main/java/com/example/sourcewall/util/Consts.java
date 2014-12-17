@@ -18,6 +18,7 @@ public class Consts {
     public static final String Action_Open_Questions_Fragment = "sourcewall.action.open.questions.fragment";
 
     // usually used in intent.put
+    public static final String Extra_Ace_Model = "sourcewall.extra.ace.model.id";
     public static final String Extra_Article = "sourcewall.extra.article.id";
     public static final String Extra_Simple_Comment = "sourcewall.extra.simple.comment.id";
     public static final String Extra_Post = "sourcewall.extra.post.id";
@@ -79,6 +80,7 @@ public class Consts {
                 new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, "美丽也是技术活", "73"),
                 new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, "情感夜夜话", "127"),
                 new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, "心事鉴定组", "33"),
+                new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, "Hello world!", "60"),
         };
         //FIXME，前十而已
         ArrayList<SubItem> subItems = new ArrayList<SubItem>();

@@ -19,6 +19,7 @@ public class QuestionAnswer extends AceModel {
     private boolean hasUpvoted = false;
     private boolean hasDownVoted = false;
     private boolean hasThanked = false;
+    private boolean isContentComplex = false;
 
     public String getContent() {
         return content;
@@ -131,4 +132,13 @@ public class QuestionAnswer extends AceModel {
     public void setHasThanked(boolean hasThanked) {
         this.hasThanked = hasThanked;
     }
+
+    public boolean isContentComplex() {
+        return isContentComplex;
+    }
+
+    public void setContentComplex(boolean isContentComplex) {
+        this.isContentComplex = isContentComplex;
+    }
+
 }

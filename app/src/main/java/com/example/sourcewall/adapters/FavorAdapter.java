@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 
 import com.example.sourcewall.model.Basket;
 import com.example.sourcewall.view.FavorItemView;
-import com.example.sourcewall.view.FavorView;
 
 /**
  * Created by NashLegend on 2014/12/2 0002

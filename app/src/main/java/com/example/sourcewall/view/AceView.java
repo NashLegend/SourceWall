@@ -24,5 +24,6 @@ public abstract class AceView<T extends AceModel> extends FrameLayout {
     }
 
     public abstract void setData(T t);
+
     public abstract T getData();
 }

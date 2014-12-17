@@ -40,7 +40,7 @@ public class ArticleView extends AceView<Article> {
         initViews();
     }
 
-    private void initViews(){
+    private void initViews() {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_article_view, this);
         titleView = (TextView) findViewById(R.id.text_title);

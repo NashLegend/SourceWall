@@ -1,9 +1,13 @@
 package com.example.sourcewall.view;
 
 import android.content.Context;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.ViewGroup;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,11 +28,13 @@ public class AnswerListItemView extends AceView<QuestionAnswer> {
     private TextView authorTitleView;
     private ImageButton upButton;
     private ImageButton downButton;
+    private Handler handler;
 
     public AnswerListItemView(Context context) {
         super(context);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_answer_item_view, this);
+        handler = new Handler();
         contentView = (WebView) findViewById(R.id.web_content);
         authorView = (TextView) findViewById(R.id.text_author);
         authorTitleView = (TextView) findViewById(R.id.text_author_title);
@@ -36,6 +42,28 @@ public class AnswerListItemView extends AceView<QuestionAnswer> {
         avatar = (ImageView) findViewById(R.id.image_avatar);
 //        upButton = (ImageButton) findViewById(R.id.button_upvote);
 //        downButton = (ImageButton) findViewById(R.id.button_downvote);
+
+        contentView.getSettings().setJavaScriptEnabled(true);
+        contentView.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                contentView.loadUrl("javascript:MyApp.resize(document.body.getBoundingClientRect().height)");
+                super.onPageFinished(view, url);
+            }
+        });
+        contentView.addJavascriptInterface(this, "MyApp");
+    }
+
+    @JavascriptInterface
+    public void resize(final float height) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                ViewGroup.LayoutParams params = contentView.getLayoutParams();
+                params.height = (int) (height * getResources().getDisplayMetrics().density);
+                contentView.setLayoutParams(params);
+            }
+        });
     }
 
     public AnswerListItemView(Context context, AttributeSet attrs) {
@@ -49,6 +77,11 @@ public class AnswerListItemView extends AceView<QuestionAnswer> {
     @Override
     public void setData(QuestionAnswer model) {
         answer = model;
+
+        ViewGroup.LayoutParams params = contentView.getLayoutParams();
+        params.height = 10;
+        contentView.setLayoutParams(params);
+
         authorView.setText(answer.getAuthor());
         authorTitleView.setText(answer.getAuthorTitle());
         dateView.setText(answer.getDate_created());

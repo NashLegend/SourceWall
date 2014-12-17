@@ -1,8 +1,6 @@
 package com.example.sourcewall.view;
 
 import android.content.Context;
-import android.graphics.drawable.BitmapDrawable;
-import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -13,7 +11,6 @@ import android.widget.TextView;
 import com.example.sourcewall.R;
 import com.example.sourcewall.model.SimpleComment;
 import com.example.sourcewall.util.DisplayUtil;
-import com.example.sourcewall.util.ImageUtil.ImageLoader;
 import com.squareup.picasso.Picasso;
 
 /**

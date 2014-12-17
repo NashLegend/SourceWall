@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.example.sourcewall.R;
 import com.example.sourcewall.model.Article;
 import com.example.sourcewall.util.DisplayUtil;
-import com.example.sourcewall.util.ImageFetcher.ImageFetcher;
 import com.squareup.picasso.Picasso;
 
 /**

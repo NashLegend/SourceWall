@@ -7,8 +7,6 @@ import android.widget.TextView;
 
 import com.example.sourcewall.R;
 import com.example.sourcewall.model.Post;
-import com.example.sourcewall.util.DisplayUtil;
-import com.example.sourcewall.util.ImageFetcher.ImageFetcher;
 
 /**
  * Created by NashLegend on 2014/9/15 0015
@@ -24,6 +22,7 @@ public class PostListItemView extends AceView<Post> {
     private TextView authorView;
     private TextView replyView;
     private TextView likesView;
+    private TextView groupView;
 
     public PostListItemView(Context context) {
         super(context);
@@ -33,6 +32,7 @@ public class PostListItemView extends AceView<Post> {
         authorView = (TextView) findViewById(R.id.text_author);
         replyView = (TextView) findViewById(R.id.text_replies_num);
         likesView = (TextView) findViewById(R.id.text_like_num);
+        groupView = (TextView) findViewById(R.id.text_group);
     }
 
     public PostListItemView(Context context, AttributeSet attrs) {
@@ -50,6 +50,7 @@ public class PostListItemView extends AceView<Post> {
         authorView.setText(mPost.getAuthor());
         replyView.setText(mPost.getReplyNum() + "");
         likesView.setText(mPost.getLikeNum() + "");
+        groupView.setText(mPost.getGroupName());
     }
 
     @Override
