@@ -48,6 +48,7 @@ public class AnswerListItemView extends AceView<QuestionAnswer> {
             @Override
             public void onPageFinished(WebView view, String url) {
                 contentView.loadUrl("javascript:MyApp.resize(document.body.getBoundingClientRect().height)");
+//                resize(-1);
                 super.onPageFinished(view, url);
             }
         });
@@ -60,6 +61,7 @@ public class AnswerListItemView extends AceView<QuestionAnswer> {
             @Override
             public void run() {
                 ViewGroup.LayoutParams params = contentView.getLayoutParams();
+//                params.height = -2;
                 params.height = (int) (height * getResources().getDisplayMetrics().density);
                 contentView.setLayoutParams(params);
             }

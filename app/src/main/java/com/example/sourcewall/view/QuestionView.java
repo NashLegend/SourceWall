@@ -39,6 +39,7 @@ public class QuestionView extends AceView<Question> {
             @Override
             public void onPageFinished(WebView view, String url) {
                 contentView.loadUrl("javascript:MyApp.resize(document.body.getBoundingClientRect().height)");
+                //resize(-2);
                 super.onPageFinished(view, url);
             }
         });
@@ -51,7 +52,8 @@ public class QuestionView extends AceView<Question> {
             @Override
             public void run() {
                 ViewGroup.LayoutParams params = contentView.getLayoutParams();
-                params.height = (int) (height * getResources().getDisplayMetrics().density);
+                params.height = -2;
+                //(int) (height * getResources().getDisplayMetrics().density);
                 contentView.setLayoutParams(params);
             }
         });
