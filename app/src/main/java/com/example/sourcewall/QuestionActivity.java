@@ -154,7 +154,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
     }
 
     private void answerQuestion() {
-        Intent intent = new Intent(this, ReplyArticleActivity.class);
+        Intent intent = new Intent(this, ReplyActivity.class);
         intent.putExtra(Consts.Extra_Ace_Model, question);
         startActivity(intent);
     }

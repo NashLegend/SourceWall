@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.sourcewall">
+    package="com.example.sourcewall" >
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -9,15 +9,15 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name="com.example.sourcewall.AppApplication"
+        android:name=".AppApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:screenOrientation="portrait"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme" >
         <activity
-            android:name="com.example.sourcewall.MainActivity"
-            android:label="@string/app_name">
+            android:name=".MainActivity"
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,32 +25,36 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.sourcewall.SettingActivity"
+            android:name=".SettingActivity"
             android:label="@string/title_activity_setting"
-            android:parentActivityName="com.example.sourcewall.BaseActivity">
+            android:parentActivityName=".BaseActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.sourcewall.BaseActivity" />
         </activity>
         <activity
-            android:name="com.example.sourcewall.ArticleActivity"
+            android:name=".ArticleActivity"
             android:label="@string/article"
             android:theme="@style/BlankTheme" />
         <activity
-            android:name="com.example.sourcewall.PostActivity"
+            android:name=".PostActivity"
             android:label="@string/post"
             android:theme="@style/BlankTheme" />
         <activity
-            android:name="com.example.sourcewall.QuestionActivity"
+            android:name=".QuestionActivity"
             android:label="@string/question"
             android:theme="@style/BlankTheme" />
         <activity
-            android:name="com.example.sourcewall.LoginActivity"
+            android:name=".LoginActivity"
             android:label="@string/title_activity_login" />
         <activity
-            android:name="com.example.sourcewall.ReplyArticleActivity"
+            android:name=".ReplyActivity"
             android:label="@string/title_activity_reply_article"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".AnswerActivity"
+            android:label="@string/title_activity_answer" >
+        </activity>
     </application>
 
 </manifest>

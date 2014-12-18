@@ -11,7 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.widget.AdapterView;
 
 import com.example.sourcewall.adapters.ArticleDetailAdapter;
@@ -98,7 +97,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
     }
 
     private void replyArticle(SimpleComment comment) {
-        Intent intent = new Intent(this, ReplyArticleActivity.class);
+        Intent intent = new Intent(this, ReplyActivity.class);
         intent.putExtra(Consts.Extra_Ace_Model, article);
         if (comment != null) {
             intent.putExtra(Consts.Extra_Simple_Comment, comment);

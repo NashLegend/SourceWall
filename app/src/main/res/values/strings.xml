@@ -10,14 +10,12 @@
     <string name="action_login">登录</string>
     <string name="action_settings">设置</string>
     <string name="hello_world">泥嚎！</string>
-
     <string name="title_activity_setting">设置</string>
     <string name="article">科学人</string>
     <string name="post">小组</string>
     <string name="question">问答</string>
     <string name="title_activity_login">登录</string>
     <string name="title_activity_reply_article">回复</string>
-
     <string name="pull_down_to_refresh">下拉以刷新</string>
     <string name="release_to_refresh">放开以刷新</string>
     <string name="refreshing">刷新中</string>
@@ -40,8 +38,7 @@
     <string name="sample_date">2014-12-05 22:45:51</string>
     <string name="sample_summary">泥盆纪生物从水生到陆生的转变，是脊椎动物演化史中最重要的事件。这种转变最终导致了四足动物的出现。许多后来出现的两栖硬骨鱼在适应陆地生活的过程中演化出了用来行走的胸鳍、更佳的视力和对氨的耐受力。然而此前，人们对这些演化的基因和分子基础还知之甚少。</string>
 
-
-    <!--user-->
+    <!-- user -->
     <string name="action_create_basket">创建</string>
     <string name="action_invoke_create_basket">创建果篮</string>
     <string name="action_favor">收藏</string>
@@ -73,10 +70,10 @@
     <string name="reply_ok">回复成功</string>
     <string name="reply_failed">回复失败</string>
 
-
-    <!--Article-->
+    <!-- Article -->
     <string name="sample_reply_title">回复文章</string>
     <string name="recommend_ok">推荐成功 ^_^</string>
     <string name="recommend_failed">推荐失败 0.0</string>
+    <string name="title_activity_answer">AnswerActivity</string>
 
 </resources>

@@ -212,7 +212,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
     }
 
     private void replyPost(SimpleComment comment) {
-        Intent intent = new Intent(this, ReplyArticleActivity.class);
+        Intent intent = new Intent(this, ReplyActivity.class);
         intent.putExtra(Consts.Extra_Ace_Model, post);
         if (comment != null) {
             intent.putExtra(Consts.Extra_Simple_Comment, comment);

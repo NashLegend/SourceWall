@@ -27,13 +27,12 @@ import com.example.sourcewall.model.SimpleComment;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.FileUtil;
 import com.example.sourcewall.util.ImageFetcher.AsyncTask;
-import com.example.sourcewall.util.MDUtil;
 import com.example.sourcewall.util.RegUtil;
 import com.example.sourcewall.util.ToastUtil;
 
 import java.io.File;
 
-public class ReplyArticleActivity extends ActionBarActivity implements View.OnClickListener {
+public class ReplyActivity extends ActionBarActivity implements View.OnClickListener {
 
     EditText editText;
     TextView hostText;
@@ -52,7 +51,7 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reply_article);
+        setContentView(R.layout.activity_reply);
         toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         aceModel = (AceModel) getIntent().getSerializableExtra(Consts.Extra_Ace_Model);
@@ -251,7 +250,7 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
 
         @Override
         protected void onPreExecute() {
-            progressDialog = new ProgressDialog(ReplyArticleActivity.this);
+            progressDialog = new ProgressDialog(ReplyActivity.this);
             progressDialog.setCancelable(false);
             progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.show();
