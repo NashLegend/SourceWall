@@ -46,13 +46,11 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
     FloatingActionButton replyButton;
     FloatingActionButton recomButton;
     FloatingActionButton favorButton;
-    int touchSlop = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article);
-        touchSlop = (int) (ViewConfiguration.get(ArticleActivity.this).getScaledTouchSlop() * 0.9);
         toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         article = (Article) getIntent().getSerializableExtra(Consts.Extra_Article);
@@ -75,6 +73,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         replyButton.setOnClickListener(this);
         recomButton.setOnClickListener(this);
         favorButton.setOnClickListener(this);
+
         loadData(-1);
     }
 

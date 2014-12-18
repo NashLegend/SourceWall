@@ -51,31 +51,33 @@ public class ArticleView extends AceView<Article> {
 
     @Override
     public void setData(Article model) {
-        article = model;
-        titleView.setText(article.getTitle());
-        authorView.setText(article.getAuthor());
-        dateView.setText(article.getDate());
-        String html = "<html class=\"no-js screen-scroll\">\n" +
-                " <head> \n" +
-                "  <meta charset=\"UTF-8\" /> \n" +
-                "  <meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge,chrome=1\" /> \n" +
-                "  <meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0,maximum-scale=1,user-scalable=no\" /> \n" +
-                "  <meta name=\"format-detection\" content=\"telephone=no\" /> \n" +
-                "  <link rel=\"stylesheet\" href=\"file:///android_asset/static.guokr.com/apps/minisite/styles/3b737dd5.main.css\" type=\"text/css\"/> \n" +
-                "  <link rel=\"stylesheet\" href=\"file:///android_asset/static.guokr.com/apps/minisite/styles/e8ff5a9c.gbbcode.css\" type=\"text/css\"/> \n" +
-                "  <link rel=\"stylesheet\" href=\"file:///android_asset/static.guokr.com/apps/minisite/styles/edfe43e5.article.css\" type=\"text/css\"/> \n" +
-                " </head> \n" +
-                " <body> \n" +
-                "  <div class=\"container article-page\"> \n" +
-                "   <div class=\"main\"> \n" +
-                "    <div class=\"content\"> \n" + article.getContent() +
-                "    </div> \n" +
-                "   </div> \n" +
-                "  </div> \n" +
-                " </body>\n" +
-                "</html>";
-        contentView.getSettings().setDefaultTextEncodingName("UTF-8");
-        contentView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "charset=UTF-8", null);
+        if (article == null) {
+            article = model;
+            titleView.setText(article.getTitle());
+            authorView.setText(article.getAuthor());
+            dateView.setText(article.getDate());
+            String html = "<html class=\"no-js screen-scroll\">\n" +
+                    " <head> \n" +
+                    "  <meta charset=\"UTF-8\" /> \n" +
+                    "  <meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge,chrome=1\" /> \n" +
+                    "  <meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0,maximum-scale=1,user-scalable=no\" /> \n" +
+                    "  <meta name=\"format-detection\" content=\"telephone=no\" /> \n" +
+                    "  <link rel=\"stylesheet\" href=\"file:///android_asset/static.guokr.com/apps/minisite/styles/3b737dd5.main.css\" type=\"text/css\"/> \n" +
+                    "  <link rel=\"stylesheet\" href=\"file:///android_asset/static.guokr.com/apps/minisite/styles/e8ff5a9c.gbbcode.css\" type=\"text/css\"/> \n" +
+                    "  <link rel=\"stylesheet\" href=\"file:///android_asset/static.guokr.com/apps/minisite/styles/edfe43e5.article.css\" type=\"text/css\"/> \n" +
+                    " </head> \n" +
+                    " <body> \n" +
+                    "  <div class=\"container article-page\"> \n" +
+                    "   <div class=\"main\"> \n" +
+                    "    <div class=\"content\"> \n" + article.getContent() +
+                    "    </div> \n" +
+                    "   </div> \n" +
+                    "  </div> \n" +
+                    " </body>\n" +
+                    "</html>";
+            contentView.getSettings().setDefaultTextEncodingName("UTF-8");
+            contentView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "charset=UTF-8", null);
+        }
     }
 
     @Override

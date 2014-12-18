@@ -2,12 +2,10 @@ package com.example.sourcewall.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.text.Html;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
@@ -16,7 +14,7 @@ import android.widget.TextView;
 import com.example.sourcewall.R;
 import com.example.sourcewall.model.SimpleComment;
 import com.example.sourcewall.util.ImageUtil.ImageCache;
-import com.example.sourcewall.util.ImageUtil.ImageLoader;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.net.URL;
@@ -70,46 +68,14 @@ public class MediumListItemView extends AceView<SimpleComment> {
             htmlTask = new HtmlLoaderTask();
             htmlTask.execute(comment.getContent());
         }
-        loadImage();
+        Picasso.with(getContext()).load(comment.getAuthorAvatarUrl())
+                .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
+                .into(avatarImage);
     }
 
     @Override
     public SimpleComment getData() {
         return comment;
-    }
-
-    public void loadImage() {
-        if (task != null && task.getStatus() == AsyncTask.Status.RUNNING) {
-            task.cancel(true);
-        }
-        if (!TextUtils.isEmpty(comment.getAuthorAvatarUrl())) {
-            task = new LoaderTask();
-            task.execute();
-        }
-    }
-
-    LoaderTask task;
-
-    class LoaderTask extends AsyncTask<Void, Integer, BitmapDrawable> {
-
-        @Override
-        protected BitmapDrawable doInBackground(Void... params) {
-            return ImageLoader.getBitmapForUrl(comment.getAuthorAvatarUrl());
-        }
-
-        @Override
-        protected void onCancelled() {
-            super.onCancelled();
-        }
-
-        @Override
-        protected void onPostExecute(BitmapDrawable bitmap) {
-            if (bitmap != null) {
-                avatarImage.setImageDrawable(bitmap);
-            } else {
-
-            }
-        }
     }
 
     HtmlLoaderTask htmlTask;

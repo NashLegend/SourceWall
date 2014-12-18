@@ -22,6 +22,7 @@ import com.example.sourcewall.model.Article;
 import com.example.sourcewall.model.Basket;
 import com.example.sourcewall.model.Category;
 import com.example.sourcewall.model.Post;
+import com.example.sourcewall.model.Question;
 import com.example.sourcewall.util.ToastUtil;
 
 import java.util.ArrayList;
@@ -72,7 +73,8 @@ public class FavorView extends FrameLayout implements View.OnClickListener {
             link = "http://www.guokr.com/post/" + ((Post) model).getId() + "/";
             title = ((Post) model).getTitle();
         } else {
-            return;
+            link = "http://www.guokr.com/question/" + ((Question) model).getId() + "/";
+            title = ((Question) model).getTitle();
         }
         adapter = new FavorAdapter(getContext(), link, title);
         listView.setAdapter(adapter);

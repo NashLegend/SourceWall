@@ -1,13 +1,9 @@
 package com.example.sourcewall.view;
 
 import android.content.Context;
-import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.ViewGroup;
-import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.TextView;
 
 import com.example.sourcewall.R;
@@ -22,41 +18,15 @@ public class QuestionView extends AceView<Question> {
     private TextView authorView;
     private TextView dateView;
     private WebView contentView;
-    private Handler handler;
 
     public QuestionView(Context context) {
         super(context);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_question_view, this);
-        handler = new Handler();
         titleView = (TextView) findViewById(R.id.text_title);
         authorView = (TextView) findViewById(R.id.text_author);
         dateView = (TextView) findViewById(R.id.text_date);
         contentView = (WebView) findViewById(R.id.web_content);
-
-        contentView.getSettings().setJavaScriptEnabled(true);
-        contentView.setWebViewClient(new WebViewClient() {
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                contentView.loadUrl("javascript:MyApp.resize(document.body.getBoundingClientRect().height)");
-                //resize(-2);
-                super.onPageFinished(view, url);
-            }
-        });
-        contentView.addJavascriptInterface(this, "MyApp");
-    }
-
-    @JavascriptInterface
-    public void resize(final float height) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                ViewGroup.LayoutParams params = contentView.getLayoutParams();
-                params.height = -2;
-                //(int) (height * getResources().getDisplayMetrics().density);
-                contentView.setLayoutParams(params);
-            }
-        });
     }
 
     public QuestionView(Context context, AttributeSet attrs) {
@@ -69,49 +39,46 @@ public class QuestionView extends AceView<Question> {
 
     @Override
     public void setData(Question model) {
-        question = model;
-
-        ViewGroup.LayoutParams params = contentView.getLayoutParams();
-        params.height = 10;
-        contentView.setLayoutParams(params);
-
-        titleView.setText(question.getTitle());
-        authorView.setText(question.getAuthor());
-        dateView.setText(question.getDate());
-        String html = "<html>\n" +
-                " <head> \n" +
-                "  <meta charset=\"UTF-8\" /> \n" +
-                "  <meta content=\"width=device-width,initial-scale=1.0,maximum-scale=1,minimum-scale=1,user-scalable=no\" name=\"viewport\" /> \n" +
-                "  <link rel=\"stylesheet\" href=\"file:///android_asset/static.guokr.com/apps/msite/styles/27dc13be.m.css\" /> \n" +
-                "  <link rel=\"stylesheet\" href=\"file:///android_asset/static.guokr.com/apps/msite/styles/cfb7569b.ask.css\" type=\"text/css\" /> \n" +
-                "  <style id=\"style-1-cropbar-clipper\">\n" +
-                ".en-markup-crop-options {\n" +
-                "    top: 18px !important;\n" +
-                "    left: 50% !important;\n" +
-                "    margin-left: -100px !important;\n" +
-                "    width: 200px !important;\n" +
-                "    border: 2px rgba(255,255,255,.38) solid !important;\n" +
-                "    border-radius: 4px !important;\n" +
-                "}\n" +
-                "\n" +
-                ".en-markup-crop-options div div:first-of-type {\n" +
-                "    margin-left: 0px !important;\n" +
-                "}\n" +
-                "</style>\n" +
-                " </head> \n" +
-                " <body> \n" +
-                "  <div class=\"msite-container \"> \n" +
-                "   <div> \n" +
-                "    <article class=\"content-main question\"> \n" +
-                "     <div id=\"askContent\" class=\"html-text-mixin\" style=\"position: relative;\">" + question.getContent() +
-                "     </div> \n" +
-                "    </article> \n" +
-                "   </div> \n" +
-                "  </div> \n" +
-                " </body>\n" +
-                "</html>";
-        contentView.getSettings().setDefaultTextEncodingName("UTF-8");
-        contentView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "charset=UTF-8", null);
+        if (question==null){
+            question = model;
+            titleView.setText(question.getTitle());
+            authorView.setText(question.getAuthor());
+            dateView.setText(question.getDate());
+            String html = "<html>\n" +
+                    " <head> \n" +
+                    "  <meta charset=\"UTF-8\" /> \n" +
+                    "  <meta content=\"width=device-width,initial-scale=1.0,maximum-scale=1,minimum-scale=1,user-scalable=no\" name=\"viewport\" /> \n" +
+                    "  <link rel=\"stylesheet\" href=\"file:///android_asset/static.guokr.com/apps/msite/styles/27dc13be.m.css\" /> \n" +
+                    "  <link rel=\"stylesheet\" href=\"file:///android_asset/static.guokr.com/apps/msite/styles/cfb7569b.ask.css\" type=\"text/css\" /> \n" +
+                    "  <style id=\"style-1-cropbar-clipper\">\n" +
+                    ".en-markup-crop-options {\n" +
+                    "    top: 18px !important;\n" +
+                    "    left: 50% !important;\n" +
+                    "    margin-left: -100px !important;\n" +
+                    "    width: 200px !important;\n" +
+                    "    border: 2px rgba(255,255,255,.38) solid !important;\n" +
+                    "    border-radius: 4px !important;\n" +
+                    "}\n" +
+                    "\n" +
+                    ".en-markup-crop-options div div:first-of-type {\n" +
+                    "    margin-left: 0px !important;\n" +
+                    "}\n" +
+                    "</style>\n" +
+                    " </head> \n" +
+                    " <body> \n" +
+                    "  <div class=\"msite-container \"> \n" +
+                    "   <div> \n" +
+                    "    <article class=\"content-main question\"> \n" +
+                    "     <div id=\"askContent\" class=\"html-text-mixin\" style=\"position: relative;\">" + question.getContent() +
+                    "     </div> \n" +
+                    "    </article> \n" +
+                    "   </div> \n" +
+                    "  </div> \n" +
+                    " </body>\n" +
+                    "</html>";
+            contentView.getSettings().setDefaultTextEncodingName("UTF-8");
+            contentView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "charset=UTF-8", null);
+        }
     }
 
     @Override

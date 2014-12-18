@@ -264,16 +264,17 @@ public class ReplyArticleActivity extends ActionBarActivity implements View.OnCl
             String tail = params[2];
             String reply_format = params[3];
             String result;
-            if (Advanced_Reply.equals(reply_format)) {
-                ResultObject resultObject = MDUtil.parseMarkdownByGitHub(content);
-                if (resultObject.ok) {
-                    content = (String) resultObject.result;
-                } else {
-                    content = MDUtil.Markdown2HtmlDumb(content);
-                }
-                result = header + content + tail;
-                return APIBase.replyAdvanced(aceModel, result);
-            }
+            //高级回复，等会再说
+//            if (Advanced_Reply.equals(reply_format)) {
+//                ResultObject resultObject = MDUtil.parseMarkdownByGitHub(content);
+//                if (resultObject.ok) {
+//                    content = (String) resultObject.result;
+//                } else {
+//                    content = MDUtil.Markdown2HtmlDumb(content);
+//                }
+//                result = header + content + tail;
+//                return APIBase.replyAdvanced(aceModel, result);
+//            }
             result = header + content + tail;
             return APIBase.reply(aceModel, result);
         }

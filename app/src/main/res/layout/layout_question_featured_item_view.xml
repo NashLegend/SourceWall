@@ -27,6 +27,8 @@
             android:id="@+id/text_summary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="3"
             android:text="@string/sample_summary"
             android:textColor="@color/list_summary_color"
             android:textSize="@dimen/list_standard_summary_font_size" />

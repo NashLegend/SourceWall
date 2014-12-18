@@ -354,4 +354,9 @@ public class QuestionAPI extends APIBase {
         return resultObject;
     }
 
+    public static ResultObject recommendQuestion(String questionID, String title, String summary, String comment) {
+        String articleUrl = "http://www.guokr.com/question/" + questionID + "/";
+        return UserAPI.recommendLink(articleUrl, title, summary, comment);
+    }
+
 }

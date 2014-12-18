@@ -1,5 +1,7 @@
 package com.example.sourcewall;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -11,10 +13,14 @@ import com.example.sourcewall.adapters.QuestionDetailAdapter;
 import com.example.sourcewall.commonview.LListView;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.QuestionAPI;
+import com.example.sourcewall.dialogs.FavorDialog;
+import com.example.sourcewall.dialogs.InputDialog;
 import com.example.sourcewall.model.AceModel;
 import com.example.sourcewall.model.Question;
 import com.example.sourcewall.util.AutoHideUtil;
 import com.example.sourcewall.util.Consts;
+import com.example.sourcewall.util.ToastUtil;
+import com.getbase.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONException;
 
@@ -22,14 +28,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class QuestionActivity extends BaseActivity implements LListView.OnRefreshListener {
+public class QuestionActivity extends SwipeActivity implements LListView.OnRefreshListener, View.OnClickListener {
 
     LListView listView;
     QuestionDetailAdapter adapter;
-    Question mQuestion;
+    Question question;
     LoaderTask task;
     Toolbar toolbar;
     View bottomLayout;
+    FloatingActionButton replyButton;
+    FloatingActionButton recomButton;
+    FloatingActionButton favorButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +47,7 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
         toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         bottomLayout = findViewById(R.id.layout_operation);
-        mQuestion = (Question) getIntent().getSerializableExtra(Consts.Extra_Question);
+        question = (Question) getIntent().getSerializableExtra(Consts.Extra_Question);
         listView = (LListView) findViewById(R.id.list_detail);
         adapter = new QuestionDetailAdapter(this);
         listView.setAdapter(adapter);
@@ -48,6 +57,14 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
         listView.setCanPullToRefresh(false);
         listView.setCanPullToLoadMore(false);
         listView.setOnRefreshListener(this);
+
+        replyButton = (FloatingActionButton) findViewById(R.id.button_reply);
+        recomButton = (FloatingActionButton) findViewById(R.id.button_recommend);
+        favorButton = (FloatingActionButton) findViewById(R.id.button_favor);
+
+        replyButton.setOnClickListener(this);
+        recomButton.setOnClickListener(this);
+        favorButton.setOnClickListener(this);
 
         loadData(-1);
     }
@@ -94,6 +111,54 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
         loadData(adapter.getCount() - 1);
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.button_reply:
+                answerQuestion();
+                break;
+            case R.id.button_recommend:
+                recommend();
+                break;
+            case R.id.button_favor:
+                favor();
+                break;
+        }
+    }
+
+    private void favor() {
+        new FavorDialog.Builder(this).setTitle(R.string.action_favor).create(question).show();
+    }
+
+    private void recommend() {
+        InputDialog.Builder builder = new InputDialog.Builder(this);
+        builder.setTitle(R.string.recommend_article);
+        builder.setCancelable(true);
+        builder.setCanceledOnTouchOutside(false);
+        builder.setOnClickListener(new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (which == DialogInterface.BUTTON_POSITIVE) {
+                    InputDialog d = (InputDialog) dialog;
+                    String text = d.InputString;
+                    RecommendTask recommendTask = new RecommendTask();
+                    recommendTask.execute(question.getId(), question.getTitle(), question.getSummary(), text);
+                } else {
+                    // cancel recommend
+                }
+            }
+        });
+        InputDialog inputDialog = builder.create();
+        inputDialog.show();
+    }
+
+    private void answerQuestion() {
+        Intent intent = new Intent(this, ReplyArticleActivity.class);
+        intent.putExtra(Consts.Extra_Ace_Model, question);
+        startActivity(intent);
+    }
+
     class LoaderTask extends AsyncTask<Integer, Integer, ResultObject> {
         int offset;
 
@@ -109,18 +174,16 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
             ResultObject resultObject = new ResultObject();
             try {
                 if (offset < 0) {
-                    Question question = QuestionAPI.getQuestionDetailByID(mQuestion.getId());
-                    mQuestion = question;
+                    Question question = QuestionAPI.getQuestionDetailByID(QuestionActivity.this.question.getId());
+                    QuestionActivity.this.question = question;
                     models.add(question);
                 }
-                models.addAll(QuestionAPI.getQuestionAnswers(mQuestion.getId(), offset < 0 ? 0 : offset));
+                models.addAll(QuestionAPI.getQuestionAnswers(question.getId(), offset < 0 ? 0 : offset));
                 resultObject.result = models;
-                if (models != null) {
-                    resultObject.ok = true;
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+                resultObject.ok = true;
             } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
                 e.printStackTrace();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -161,6 +224,32 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
                     listView.setCanPullToRefresh(true);
                 }
                 listView.doneOperation();
+            }
+        }
+    }
+
+    class RecommendTask extends AsyncTask<String, Integer, ResultObject> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected ResultObject doInBackground(String... params) {
+            String questionID = params[0];
+            String title = params[1];
+            String summary = params[2];
+            String comment = params[3];
+            return QuestionAPI.recommendQuestion(questionID, title, summary, comment);
+        }
+
+        @Override
+        protected void onPostExecute(ResultObject resultObject) {
+            if (resultObject.ok) {
+                ToastUtil.toast(R.string.recommend_ok);
+            } else {
+                ToastUtil.toast(R.string.recommend_failed);
             }
         }
     }

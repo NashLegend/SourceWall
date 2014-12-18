@@ -46,7 +46,7 @@ public class APIBase {
         } else if (data instanceof Post) {
             return PostAPI.replyPost(((Post) data).getId(), content);
         } else if (data instanceof Question) {
-
+            return QuestionAPI.answerQuestion(((Question) data).getId(), content);
         }
         return resultObject;
     }
