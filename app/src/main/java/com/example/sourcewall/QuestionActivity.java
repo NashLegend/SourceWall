@@ -52,7 +52,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         adapter = new QuestionDetailAdapter(this);
         listView.setAdapter(adapter);
 
-        AutoHideUtil.applyAutoHide(this, listView, toolbar, bottomLayout, (int) getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
+        AutoHideUtil.applyListViewAutoHide(this, listView, toolbar, bottomLayout, (int) getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
 
         listView.setCanPullToRefresh(false);
         listView.setCanPullToLoadMore(false);

@@ -1,12 +1,142 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context="com.example.sourcewall.AnswerActivity">
 
-    <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <TextView
+        android:id="@+id/text_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/action_bar"
+        android:background="?android:attr/colorBackground"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp"
+        android:text="@string/sample_title" />
+
+    <LinearLayout
+        android:id="@+id/layout_author"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_title"
+        android:background="@android:color/white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+        <ImageView
+            android:id="@+id/image_avatar"
+            android:layout_width="@dimen/list_standard_comment_avatar_dimen"
+            android:layout_height="@dimen/list_standard_comment_avatar_dimen"
+            android:layout_marginRight="@dimen/avatar_right_span_dimen"
+            android:layout_weight="0"
+            android:src="@drawable/avatar" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/text_author"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sample_author" />
+
+            <TextView
+                android:id="@+id/text_author_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sample_author_title" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_opinion"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/list_standard_item_like_image_dimen"
+                android:layout_height="@dimen/list_standard_item_like_image_dimen"
+                android:layout_weight="0"
+                android:src="@drawable/like" />
+
+            <TextView
+                android:id="@+id/text_num_support"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/list_standard_item_text_icon_gap"
+                android:layout_weight="0"
+                android:text="@string/sample_like_num" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <WebView
+            android:id="@+id/web_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </ScrollView>
+
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/layout_operation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        fab:fab_addButtonColorNormal="@android:color/holo_blue_light"
+        fab:fab_addButtonColorPressed="@android:color/holo_blue_dark"
+        fab:fab_addButtonPlusIconColor="@android:color/white"
+        fab:fab_expandDirection="left">
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/button_thank"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_colorNormal="@android:color/holo_blue_bright"
+            fab:fab_colorPressed="@android:color/holo_blue_light"
+            fab:fab_icon="@drawable/ic_star_white_36dp" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/button_not_answer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            fab:fab_colorNormal="@android:color/holo_blue_bright"
+            fab:fab_colorPressed="@android:color/holo_blue_light"
+            fab:fab_icon="@drawable/ic_plus_one_white_36dp" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/button_reply"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_colorNormal="@android:color/holo_blue_bright"
+            fab:fab_colorPressed="@android:color/holo_blue_light"
+            fab:fab_icon="@drawable/ic_reply_color_white_36dp" />
+
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
 </RelativeLayout>

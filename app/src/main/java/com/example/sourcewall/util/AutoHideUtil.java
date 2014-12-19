@@ -11,6 +11,7 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ListView;
+import android.widget.ScrollView;
 
 import java.util.ArrayList;
 
@@ -18,19 +19,23 @@ import java.util.ArrayList;
  * Created by NashLegend on 2014/12/17 0017
  */
 public class AutoHideUtil {
-    public static void applyAutoHide(Context context, ListView listView, View header, View footer, int headerHeight) {
-        AutoHideTool tool = new AutoHideTool();
+    public static void applyListViewAutoHide(Context context, ListView listView, View header, View footer, int headerHeight) {
+        ListViewAutoHideTool tool = new ListViewAutoHideTool();
         tool.applyAutoHide(context, listView, header, footer, headerHeight);
     }
 
-    private static class AutoHideTool {
+    public static void applyListViewAutoHide(Context context, ScrollView scrollView, View header, View footer, int headerHeight) {
+        
+    }
+
+    private static class ListViewAutoHideTool {
 
         View header;
         View footer;
         ListView listView;
         int touchSlop = 10;
 
-        public AutoHideTool() {
+        public ListViewAutoHideTool() {
 
         }
 
