@@ -3,7 +3,7 @@ package com.example.sourcewall.model;
 /**
  * Created by NashLegend on 2014/9/16 0016
  */
-public class SimpleComment extends AceModel {
+public class NormalComment extends AceModel {
 
     private String content = "";
     private String date = "";

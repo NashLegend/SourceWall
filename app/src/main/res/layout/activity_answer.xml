@@ -6,6 +6,17 @@
     android:layout_height="match_parent"
     tools:context="com.example.sourcewall.AnswerActivity">
 
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <WebView
+            android:id="@+id/web_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </ScrollView>
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/action_bar"
         android:layout_width="match_parent"
@@ -89,16 +100,6 @@
 
     </LinearLayout>
 
-    <ScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <WebView
-            android:id="@+id/web_content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </ScrollView>
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/layout_operation"
@@ -121,7 +122,7 @@
             fab:fab_icon="@drawable/ic_star_white_36dp" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/button_not_answer"
+            android:id="@+id/button_Bury"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="10dp"

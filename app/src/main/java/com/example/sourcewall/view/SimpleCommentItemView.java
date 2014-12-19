@@ -3,13 +3,13 @@ package com.example.sourcewall.view;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import com.example.sourcewall.model.SimpleComment;
+import com.example.sourcewall.model.NormalComment;
 
 /**
  * Created by NashLegend on 2014/9/18 0018.
  * Shared by QuestionComment and QuestionAnswerComment
  */
-public class SimpleCommentItemView extends AceView<SimpleComment> {
+public class SimpleCommentItemView extends AceView<NormalComment> {
     public SimpleCommentItemView(Context context) {
         super(context);
     }
@@ -23,12 +23,12 @@ public class SimpleCommentItemView extends AceView<SimpleComment> {
     }
 
     @Override
-    public void setData(SimpleComment model) {
+    public void setData(NormalComment model) {
 
     }
 
     @Override
-    public SimpleComment getData() {
+    public NormalComment getData() {
         return null;
     }
 }

@@ -19,8 +19,8 @@ import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.PostAPI;
 import com.example.sourcewall.dialogs.FavorDialog;
 import com.example.sourcewall.model.AceModel;
+import com.example.sourcewall.model.NormalComment;
 import com.example.sourcewall.model.Post;
-import com.example.sourcewall.model.SimpleComment;
 import com.example.sourcewall.util.AutoHideUtil;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.RegUtil;
@@ -211,7 +211,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         replyPost(null);
     }
 
-    private void replyPost(SimpleComment comment) {
+    private void replyPost(NormalComment comment) {
         Intent intent = new Intent(this, ReplyActivity.class);
         intent.putExtra(Consts.Extra_Ace_Model, post);
         if (comment != null) {
@@ -220,16 +220,16 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         startActivity(intent);
     }
 
-    private void replyComment(SimpleComment comment) {
+    private void replyComment(NormalComment comment) {
         replyPost(comment);
     }
 
-    private void likeComment(SimpleComment comment) {
+    private void likeComment(NormalComment comment) {
         LikeCommentTask likeCommentTask = new LikeCommentTask();
         likeCommentTask.execute(comment);
     }
 
-    private void copyComment(SimpleComment comment) {
+    private void copyComment(NormalComment comment) {
         //do nothing
         ClipboardManager manager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
         manager.setPrimaryClip(ClipData.newPlainText(null, RegUtil.html2PlainText(comment.getContent())));
@@ -241,7 +241,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
             new AlertDialog.Builder(this).setTitle("").setItems(operations, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    SimpleComment comment = ((MediumListItemView) view).getData();
+                    NormalComment comment = ((MediumListItemView) view).getData();
                     switch (which) {
                         case 0:
                             replyComment(comment);
@@ -285,12 +285,12 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         }
     }
 
-    class LikeCommentTask extends AsyncTask<SimpleComment, Integer, ResultObject> {
+    class LikeCommentTask extends AsyncTask<NormalComment, Integer, ResultObject> {
 
-        SimpleComment comment;
+        NormalComment comment;
 
         @Override
-        protected ResultObject doInBackground(SimpleComment... params) {
+        protected ResultObject doInBackground(NormalComment... params) {
             comment = params[0];
             return PostAPI.likeComment(comment.getID());
         }

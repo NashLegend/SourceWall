@@ -3,7 +3,7 @@ package com.example.sourcewall.connection.api;
 import com.example.sourcewall.connection.HttpFetcher;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.model.Article;
-import com.example.sourcewall.model.SimpleComment;
+import com.example.sourcewall.model.NormalComment;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -105,13 +105,13 @@ public class ArticleAPI extends APIBase {
         return article;
     }
 
-    public static ArrayList<SimpleComment> getArticleHotComments(Element hotElement, String aid) {
-        ArrayList<SimpleComment> list = new ArrayList<>();
+    public static ArrayList<NormalComment> getArticleHotComments(Element hotElement, String aid) {
+        ArrayList<NormalComment> list = new ArrayList<>();
         Elements comments = hotElement.getElementsByTag("li");
         if (comments != null && comments.size() > 0) {
             for (int i = 0; i < comments.size(); i++) {
                 Element element = comments.get(i);
-                SimpleComment comment = new SimpleComment();
+                NormalComment comment = new NormalComment();
                 String id = element.id().replace("reply", "");
                 Element tmp = element.select(".cmt-img").select(".cmtImg").select(".pt-pic").get(0);
 
@@ -144,8 +144,8 @@ public class ArticleAPI extends APIBase {
         return list;
     }
 
-    public static ArrayList<SimpleComment> getArticleComments(String id, int offset) throws IOException, JSONException {
-        ArrayList<SimpleComment> list = new ArrayList<>();
+    public static ArrayList<NormalComment> getArticleComments(String id, int offset) throws IOException, JSONException {
+        ArrayList<NormalComment> list = new ArrayList<>();
         String url = "http://apis.guokr.com/minisite/article_reply.json?article_id=" + id
                 + "&limit=20&offset=" + offset;
         String jString = HttpFetcher.get(url);
@@ -155,7 +155,7 @@ public class ArticleAPI extends APIBase {
             JSONArray articles = jss.getJSONArray("result");
             for (int i = 0; i < articles.length(); i++) {
                 JSONObject jo = articles.getJSONObject(i);
-                SimpleComment comment = new SimpleComment();
+                NormalComment comment = new NormalComment();
                 comment.setID(getJsonString(jo, "id"));
                 comment.setLikeNum(jo.getInt("likings_count"));
                 comment.setAuthor(getJsonString(getJsonObject(jo, "author"), "nickname"));

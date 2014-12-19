@@ -2,8 +2,8 @@ package com.example.sourcewall.connection.api;
 
 import com.example.sourcewall.connection.HttpFetcher;
 import com.example.sourcewall.connection.ResultObject;
+import com.example.sourcewall.model.NormalComment;
 import com.example.sourcewall.model.Post;
-import com.example.sourcewall.model.SimpleComment;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -245,8 +245,8 @@ public class PostAPI extends APIBase {
      * @throws java.io.IOException
      * @throws org.json.JSONException
      */
-    public static ArrayList<SimpleComment> getPostCommentsFromJsonUrl(String id, int offset) throws IOException, JSONException {
-        ArrayList<SimpleComment> list = new ArrayList<SimpleComment>();
+    public static ArrayList<NormalComment> getPostCommentsFromJsonUrl(String id, int offset) throws IOException, JSONException {
+        ArrayList<NormalComment> list = new ArrayList<NormalComment>();
         String url = "http://apis.guokr.com/group/post_reply.json?retrieve_type=by_post&post_id="
                 + id + "&limit=20&offset=" + offset;
         String jString = HttpFetcher.get(url);
@@ -256,7 +256,7 @@ public class PostAPI extends APIBase {
             JSONArray comments = jss.getJSONArray("result");
             for (int i = 0; i < comments.length(); i++) {
                 JSONObject jo = comments.getJSONObject(i);
-                SimpleComment comment = new SimpleComment();
+                NormalComment comment = new NormalComment();
                 comment.setID(getJsonString(jo, "id"));
                 comment.setAuthor(getJsonObject(jo, "author").getString("nickname"));
                 comment.setAuthorID(getJsonObject(jo, "author").getString("url")
@@ -281,8 +281,8 @@ public class PostAPI extends APIBase {
      * @param pageNo
      * @return
      */
-    public static ArrayList<SimpleComment> getPostCommentsFromHtmlUrl(String id, int pageNo) {
-        ArrayList<SimpleComment> list = new ArrayList<SimpleComment>();
+    public static ArrayList<NormalComment> getPostCommentsFromHtmlUrl(String id, int pageNo) {
+        ArrayList<NormalComment> list = new ArrayList<NormalComment>();
         String url = "http://m.guokr.com/post/" + id + "/?page=" + pageNo;
         try {
             Document doc = Jsoup.connect(url).get();
@@ -297,11 +297,11 @@ public class PostAPI extends APIBase {
         return list;
     }
 
-    public static ArrayList<SimpleComment> extractPostComments(Element element, String postID) {
-        ArrayList<SimpleComment> list = new ArrayList<SimpleComment>();
+    public static ArrayList<NormalComment> extractPostComments(Element element, String postID) {
+        ArrayList<NormalComment> list = new ArrayList<NormalComment>();
         Elements commentlist = element.getElementsByClass("comment");
         for (int i = 0; i < commentlist.size(); i++) {
-            SimpleComment comment = new SimpleComment();
+            NormalComment comment = new NormalComment();
             Element liElement = commentlist.get(i);
             String commentID = liElement.id();
             String commentAuthorAvatarUrl = liElement.getElementsByClass("cmt-author-img")

@@ -21,8 +21,8 @@ public class Article extends AceModel {
     private int likeNum = 0;
     private String summary = "";
     private String content = "";
-    private ArrayList<SimpleComment> hotComments = new ArrayList<SimpleComment>();
-    private ArrayList<SimpleComment> comments = new ArrayList<SimpleComment>();
+    private ArrayList<NormalComment> hotComments = new ArrayList<NormalComment>();
+    private ArrayList<NormalComment> comments = new ArrayList<NormalComment>();
 
     public String getId() {
         return id;
@@ -120,19 +120,19 @@ public class Article extends AceModel {
         this.content = content;
     }
 
-    public ArrayList<SimpleComment> getHotComments() {
+    public ArrayList<NormalComment> getHotComments() {
         return hotComments;
     }
 
-    public void setHotComments(ArrayList<SimpleComment> hotComments) {
+    public void setHotComments(ArrayList<NormalComment> hotComments) {
         this.hotComments = hotComments;
     }
 
-    public ArrayList<SimpleComment> getComments() {
+    public ArrayList<NormalComment> getComments() {
         return comments;
     }
 
-    public void setComments(ArrayList<SimpleComment> comments) {
+    public void setComments(ArrayList<NormalComment> comments) {
         this.comments = comments;
     }
 

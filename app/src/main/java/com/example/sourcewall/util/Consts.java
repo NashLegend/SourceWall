@@ -23,6 +23,7 @@ public class Consts {
     public static final String Extra_Simple_Comment = "sourcewall.extra.simple.comment.id";
     public static final String Extra_Post = "sourcewall.extra.post.id";
     public static final String Extra_Question = "sourcewall.extra.question.id";
+    public static final String Extra_Answer = "sourcewall.extra.answer.id";
     public static final String Extra_SubItem = "sourcewall.extra.subitem.id";
 
     // usually used in SharedPreferences

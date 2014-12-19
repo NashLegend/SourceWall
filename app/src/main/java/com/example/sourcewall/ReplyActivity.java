@@ -23,7 +23,7 @@ import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.APIBase;
 import com.example.sourcewall.dialogs.InputDialog;
 import com.example.sourcewall.model.AceModel;
-import com.example.sourcewall.model.SimpleComment;
+import com.example.sourcewall.model.NormalComment;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.FileUtil;
 import com.example.sourcewall.util.ImageFetcher.AsyncTask;
@@ -46,7 +46,7 @@ public class ReplyActivity extends ActionBarActivity implements View.OnClickList
     ProgressDialog progressDialog;
     String tmpImagePath;
     Toolbar toolbar;
-    SimpleComment comment;
+    NormalComment comment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +55,7 @@ public class ReplyActivity extends ActionBarActivity implements View.OnClickList
         toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         aceModel = (AceModel) getIntent().getSerializableExtra(Consts.Extra_Ace_Model);
-        comment = (SimpleComment) getIntent().getSerializableExtra(Consts.Extra_Simple_Comment);
+        comment = (NormalComment) getIntent().getSerializableExtra(Consts.Extra_Simple_Comment);
         editText = (EditText) findViewById(R.id.text_reply);
         hostText = (TextView) findViewById(R.id.text_reply_host);
         if (comment != null) {

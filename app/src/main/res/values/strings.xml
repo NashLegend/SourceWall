@@ -48,6 +48,10 @@
     <string name="recommend_article">推荐文章</string>
     <string name="action_copy">复制</string>
     <string name="action_like">点赞</string>
+    <string name="action_support">赞同</string>
+    <string name="action_oppose">反对</string>
+    <string name="action_bury">不是答案</string>
+    <string name="action_thank">感谢</string>
     <string name="hint_reply">请输入回复</string>
     <string name="add_image">添加图片</string>
     <string name="insert_image">插入图片</string>
@@ -75,5 +79,6 @@
     <string name="recommend_ok">推荐成功 ^_^</string>
     <string name="recommend_failed">推荐失败 0.0</string>
     <string name="title_activity_answer">AnswerActivity</string>
+    <string name="title_activity_simple_reply">SimpleReplyActivity</string>
 
 </resources>

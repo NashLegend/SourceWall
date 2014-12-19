@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 
 import com.example.sourcewall.adapters.QuestionDetailAdapter;
 import com.example.sourcewall.commonview.LListView;
@@ -20,6 +21,7 @@ import com.example.sourcewall.model.Question;
 import com.example.sourcewall.util.AutoHideUtil;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.ToastUtil;
+import com.example.sourcewall.view.AnswerListItemView;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONException;
@@ -57,6 +59,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         listView.setCanPullToRefresh(false);
         listView.setCanPullToLoadMore(false);
         listView.setOnRefreshListener(this);
+        listView.setOnItemClickListener(onItemClickListener);
 
         replyButton = (FloatingActionButton) findViewById(R.id.button_reply);
         recomButton = (FloatingActionButton) findViewById(R.id.button_recommend);
@@ -109,6 +112,21 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
     @Override
     public void onStartLoadMore() {
         loadData(adapter.getCount() - 1);
+    }
+
+    AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            onReplyItemClick(view, position, id);
+        }
+    };
+
+    private void onReplyItemClick(final View view, int position, long id) {
+        if (view instanceof AnswerListItemView) {
+            Intent intent = new Intent(this, AnswerActivity.class);
+            intent.putExtra(Consts.Extra_Answer, ((AnswerListItemView) view).getData());
+            startActivity(intent);
+        }
     }
 
     @Override
