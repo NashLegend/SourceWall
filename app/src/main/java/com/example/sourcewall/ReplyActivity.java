@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -32,7 +31,7 @@ import com.example.sourcewall.util.ToastUtil;
 
 import java.io.File;
 
-public class ReplyActivity extends ActionBarActivity implements View.OnClickListener {
+public class ReplyActivity extends SwipeActivity implements View.OnClickListener {
 
     EditText editText;
     TextView hostText;

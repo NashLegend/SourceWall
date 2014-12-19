@@ -1,12 +1,11 @@
 package com.example.sourcewall;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class SimpleReplyActivity extends ActionBarActivity {
+public class SimpleReplyActivity extends SwipeActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

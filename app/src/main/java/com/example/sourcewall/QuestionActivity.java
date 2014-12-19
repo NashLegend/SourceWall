@@ -125,6 +125,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         if (view instanceof AnswerListItemView) {
             Intent intent = new Intent(this, AnswerActivity.class);
             intent.putExtra(Consts.Extra_Answer, ((AnswerListItemView) view).getData());
+            intent.putExtra(Consts.Extra_Question, question);
             startActivity(intent);
         }
     }
