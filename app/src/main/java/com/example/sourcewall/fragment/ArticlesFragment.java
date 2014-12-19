@@ -17,6 +17,7 @@ import com.example.sourcewall.connection.api.ArticleAPI;
 import com.example.sourcewall.model.Article;
 import com.example.sourcewall.model.SubItem;
 import com.example.sourcewall.util.Consts;
+import com.example.sourcewall.util.ToastUtil;
 import com.example.sourcewall.view.ArticleListItemView;
 
 import org.json.JSONException;
@@ -173,7 +174,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
                         }
                     }
                 } else {
-                    // load error
+                    ToastUtil.toast("Load Error");
                 }
                 if (adapter.getCount() > 0) {
                     listView.setCanPullToLoadMore(true);
