@@ -19,8 +19,8 @@ public class Post extends AceModel {
     private String content = "";
     private String date = "";
 
-    private ArrayList<NormalComment> hotComments = new ArrayList<NormalComment>();
-    private ArrayList<NormalComment> comments = new ArrayList<NormalComment>();
+    private ArrayList<UniversalComment> hotComments = new ArrayList<UniversalComment>();
+    private ArrayList<UniversalComment> comments = new ArrayList<UniversalComment>();
 
     public Post() {
         // TODO Auto-generated constructor stub
@@ -138,19 +138,19 @@ public class Post extends AceModel {
         this.date = date;
     }
 
-    public ArrayList<NormalComment> getHotComments() {
+    public ArrayList<UniversalComment> getHotComments() {
         return hotComments;
     }
 
-    public void setHotComments(ArrayList<NormalComment> hotComments) {
+    public void setHotComments(ArrayList<UniversalComment> hotComments) {
         this.hotComments = hotComments;
     }
 
-    public ArrayList<NormalComment> getComments() {
+    public ArrayList<UniversalComment> getComments() {
         return comments;
     }
 
-    public void setComments(ArrayList<NormalComment> comments) {
+    public void setComments(ArrayList<UniversalComment> comments) {
         this.comments = comments;
     }
 

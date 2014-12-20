@@ -8,6 +8,7 @@ import com.example.sourcewall.R;
 import com.example.sourcewall.model.SubItem;
 
 /**
+ * 左侧栏目名的view
  * Created by NashLegend on 2014/10/31 0031
  */
 public class SubItemView extends AceView<SubItem> {

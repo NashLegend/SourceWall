@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.sourcewall.R;
-import com.example.sourcewall.model.NormalComment;
+import com.example.sourcewall.model.UniversalComment;
 import com.example.sourcewall.util.ImageUtil.ImageCache;
 import com.squareup.picasso.Picasso;
 
@@ -23,7 +23,7 @@ import java.net.URL;
  * Created by NashLegend on 2014/9/18 0018.
  * Shared by PostComment and ArticleComment
  */
-public class MediumListItemView extends AceView<NormalComment> {
+public class MediumListItemView extends AceView<UniversalComment> {
 
     private TextView contentView;
     private TextView authorView;
@@ -31,7 +31,7 @@ public class MediumListItemView extends AceView<NormalComment> {
     private TextView likesView;
     private TextView floorView;
     private ImageView avatarImage;
-    private NormalComment comment;
+    private UniversalComment comment;
 
     public MediumListItemView(Context context) {
         super(context);
@@ -54,7 +54,7 @@ public class MediumListItemView extends AceView<NormalComment> {
     }
 
     @Override
-    public void setData(NormalComment model) {
+    public void setData(UniversalComment model) {
         comment = model;
         authorView.setText(comment.getAuthor());
         dateView.setText(comment.getDate());
@@ -74,7 +74,7 @@ public class MediumListItemView extends AceView<NormalComment> {
     }
 
     @Override
-    public NormalComment getData() {
+    public UniversalComment getData() {
         return comment;
     }
 

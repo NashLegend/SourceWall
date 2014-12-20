@@ -4,14 +4,14 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.sourcewall.model.NormalComment;
+import com.example.sourcewall.model.UniversalComment;
 import com.example.sourcewall.view.AceView;
 import com.example.sourcewall.view.SimpleCommentItemView;
 
 /**
- * Created by NashLegend on 2014/9/18 0018.
+ * Created by NashLegend on 2014/9/18 0018
  */
-public class SimpleCommentAdapter extends AceAdapter<NormalComment> {
+public class SimpleCommentAdapter extends AceAdapter<UniversalComment> {
     public SimpleCommentAdapter(Context context) {
         super(context);
     }

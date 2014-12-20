@@ -4,9 +4,9 @@ import android.text.TextUtils;
 
 import com.example.sourcewall.connection.HttpFetcher;
 import com.example.sourcewall.connection.ResultObject;
-import com.example.sourcewall.model.NormalComment;
 import com.example.sourcewall.model.Question;
 import com.example.sourcewall.model.QuestionAnswer;
+import com.example.sourcewall.model.UniversalComment;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -30,6 +30,14 @@ public class QuestionAPI extends APIBase {
         // TODO Auto-generated constructor stub
     }
 
+    /**
+     * 根据tag获取相关问题
+     *
+     * @param tag
+     * @param offset
+     * @return
+     * @throws IOException
+     */
     public static ArrayList<Question> getQuestionsByTagFromJsonUrl(String tag, int offset) throws IOException {
         // 比html还特么浪费流量…………
         ArrayList<Question> questions = new ArrayList<Question>();
@@ -65,16 +73,37 @@ public class QuestionAPI extends APIBase {
         return questions;
     }
 
+    /**
+     * 返回热门回答问题列表
+     *
+     * @param pageNo
+     * @return
+     * @throws IOException
+     */
     public static ArrayList<Question> getHotQuestions(int pageNo) throws IOException {
         String url = "http://m.guokr.com/ask/hottest/?page=" + pageNo;
         return getQuestionsFromMobileUrl(url);
     }
 
+    /**
+     * 返回精彩回答问题列表
+     *
+     * @param pageNo
+     * @return
+     * @throws IOException
+     */
     public static ArrayList<Question> getHighlightQuestions(int pageNo) throws IOException {
         String url = "http://m.guokr.com/ask/highlight/?page=" + pageNo;
         return getQuestionsFromMobileUrl(url);
     }
 
+    /**
+     * 解析html页面获得问题列表
+     *
+     * @param url
+     * @return
+     * @throws IOException
+     */
     public static ArrayList<Question> getQuestionsFromMobileUrl(String url) throws IOException {
         ArrayList<Question> questions = new ArrayList<Question>();
         Document doc = Jsoup.connect(url).get();
@@ -102,11 +131,27 @@ public class QuestionAPI extends APIBase {
         return questions;
     }
 
+    /**
+     * 返回问题内容
+     *
+     * @param id
+     * @return
+     * @throws IOException
+     * @throws JSONException
+     */
     public static Question getQuestionDetailByID(String id) throws IOException, JSONException {
         String url = "http://apis.guokr.com/ask/question/" + id + ".json";
         return getQuestionDetailFromJsonUrl(url);
     }
 
+    /**
+     * 返回问题内容
+     *
+     * @param url
+     * @return
+     * @throws IOException
+     * @throws JSONException
+     */
     public static Question getQuestionDetailFromJsonUrl(String url) throws IOException, JSONException {
         Question question = null;
         String jString = HttpFetcher.get(url);
@@ -134,6 +179,14 @@ public class QuestionAPI extends APIBase {
         return question;
     }
 
+    /**
+     * 获取问题的答案
+     *
+     * @param id
+     * @param offset
+     * @return
+     * @throws IOException
+     */
     public static ArrayList<QuestionAnswer> getQuestionAnswers(String id, int offset) throws IOException {
         ArrayList<QuestionAnswer> answers = new ArrayList<QuestionAnswer>();
         String url = "http://apis.guokr.com/ask/answer.json?retrieve_type=by_question&limit=20&question_id="
@@ -174,12 +227,14 @@ public class QuestionAPI extends APIBase {
     }
 
     /**
+     * 返回问题的评论
+     *
      * @param id
      * @param offset
      * @return
      */
-    public static ArrayList<NormalComment> getQuestionComments(String id, int offset) throws IOException {
-        ArrayList<NormalComment> list = new ArrayList<NormalComment>();
+    public static ArrayList<UniversalComment> getQuestionComments(String id, int offset) throws IOException {
+        ArrayList<UniversalComment> list = new ArrayList<UniversalComment>();
         String url = "http://www.guokr.com/apis/ask/question_reply.json?retrieve_type=by_question&question_id="
                 + id + "&offset=" + offset;
         String jString = HttpFetcher.get(url);
@@ -190,36 +245,7 @@ public class QuestionAPI extends APIBase {
                 JSONArray comments = jss.getJSONArray("result");
                 for (int i = 0; i < comments.length(); i++) {
                     JSONObject jsonObject = comments.getJSONObject(i);
-                    NormalComment comment = new NormalComment();
-                    comment.setAuthor(jsonObject.getJSONObject("author").getString("nickname"));
-                    comment.setAuthorID(jsonObject.getJSONObject("author").getString("url")
-                            .replaceAll("\\D+", ""));
-                    comment.setContent(getJsonString(jsonObject, "html"));
-                    comment.setDate(getJsonString(jsonObject, "date_created"));
-                    comment.setID(getJsonString(jsonObject, "id"));
-                    comment.setHostID(getJsonString(jsonObject, "question_id"));
-                    list.add(comment);
-                }
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
-
-    public static ArrayList<NormalComment> getAnswerComments(String id, int offset) throws IOException {
-        ArrayList<NormalComment> list = new ArrayList<NormalComment>();
-        String url = "http://www.guokr.com/apis/ask/answer_reply.json?retrieve_type=by_answer&limit=20&answer_id="
-                + id + "&offset=" + offset;
-        String jString = HttpFetcher.get(url);
-        try {
-            JSONObject jss = new JSONObject(jString);
-            boolean ok = jss.getBoolean("ok");
-            if (ok) {
-                JSONArray comments = jss.getJSONArray("result");
-                for (int i = 0; i < comments.length(); i++) {
-                    JSONObject jsonObject = comments.getJSONObject(i);
-                    NormalComment comment = new NormalComment();
+                    UniversalComment comment = new UniversalComment();
                     comment.setAuthor(jsonObject.getJSONObject("author").getString("nickname"));
                     comment.setAuthorID(jsonObject.getJSONObject("author").getString("url")
                             .replaceAll("\\D+", ""));
@@ -237,7 +263,40 @@ public class QuestionAPI extends APIBase {
     }
 
     /**
-     * 使用json请求
+     * 返回答案的评论
+     *
+     * @param id
+     * @param offset
+     * @return
+     * @throws IOException
+     */
+    public static ArrayList<UniversalComment> getAnswerComments(String id, int offset) throws IOException, JSONException {
+        ArrayList<UniversalComment> list = new ArrayList<UniversalComment>();
+        String url = "http://www.guokr.com/apis/ask/answer_reply.json?retrieve_type=by_answer&limit=20&answer_id="
+                + id + "&offset=" + offset;
+        String jString = HttpFetcher.get(url);
+        JSONObject jss = new JSONObject(jString);
+        boolean ok = jss.getBoolean("ok");
+        if (ok) {
+            JSONArray comments = jss.getJSONArray("result");
+            for (int i = 0; i < comments.length(); i++) {
+                JSONObject jsonObject = comments.getJSONObject(i);
+                UniversalComment comment = new UniversalComment();
+                comment.setAuthor(jsonObject.getJSONObject("author").getString("nickname"));
+                comment.setAuthorID(jsonObject.getJSONObject("author").getString("url")
+                        .replaceAll("\\D+", ""));
+                comment.setContent(getJsonString(jsonObject, "html"));
+                comment.setDate(getJsonString(jsonObject, "date_created"));
+                comment.setID(getJsonString(jsonObject, "id"));
+                comment.setHostID(getJsonString(jsonObject, "question_id"));
+                list.add(comment);
+            }
+        }
+        return list;
+    }
+
+    /**
+     * 回答问题，使用json请求
      *
      * @param id
      * @param content
@@ -287,6 +346,13 @@ public class QuestionAPI extends APIBase {
         return supportOrOpposeAnswer(id, "oppose");
     }
 
+    /**
+     * 支持或者反对答案
+     *
+     * @param id
+     * @param opinion
+     * @return
+     */
     private static ResultObject supportOrOpposeAnswer(String id, String opinion) {
         String url = "http://www.guokr.com/apis/ask/answer_polling.json";
         ResultObject resultObject = new ResultObject();

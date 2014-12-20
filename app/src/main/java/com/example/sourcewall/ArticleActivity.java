@@ -21,7 +21,7 @@ import com.example.sourcewall.dialogs.FavorDialog;
 import com.example.sourcewall.dialogs.InputDialog;
 import com.example.sourcewall.model.AceModel;
 import com.example.sourcewall.model.Article;
-import com.example.sourcewall.model.NormalComment;
+import com.example.sourcewall.model.UniversalComment;
 import com.example.sourcewall.util.AutoHideUtil;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.RegUtil;
@@ -96,7 +96,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         replyArticle(null);
     }
 
-    private void replyArticle(NormalComment comment) {
+    private void replyArticle(UniversalComment comment) {
         Intent intent = new Intent(this, ReplyActivity.class);
         intent.putExtra(Consts.Extra_Ace_Model, article);
         if (comment != null) {
@@ -146,16 +146,16 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         return super.onOptionsItemSelected(item);
     }
 
-    private void replyComment(NormalComment comment) {
+    private void replyComment(UniversalComment comment) {
         replyArticle(comment);
     }
 
-    private void likeComment(NormalComment comment) {
+    private void likeComment(UniversalComment comment) {
         LikeCommentTask likeCommentTask = new LikeCommentTask();
         likeCommentTask.execute(comment);
     }
 
-    private void copyComment(NormalComment comment) {
+    private void copyComment(UniversalComment comment) {
         //do nothing
         ClipboardManager manager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
         manager.setPrimaryClip(ClipData.newPlainText(null, RegUtil.html2PlainText(comment.getContent())));
@@ -167,7 +167,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
             new AlertDialog.Builder(this).setTitle("").setItems(operations, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    NormalComment comment = ((MediumListItemView) view).getData();
+                    UniversalComment comment = ((MediumListItemView) view).getData();
                     switch (which) {
                         case 0:
                             replyComment(comment);
@@ -259,7 +259,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
                 if (offset < 0) {
                     //同时取了热门回帖，但是在这里没有显示 TODO
                     Article detailArticle = ArticleAPI.getArticleDetailByID(article.getId());
-                    ArrayList<NormalComment> simpleComments = ArticleAPI.getArticleComments(article.getId(), 0);
+                    ArrayList<UniversalComment> simpleComments = ArticleAPI.getArticleComments(article.getId(), 0);
                     article.setContent(detailArticle.getContent());
                     models.add(article);
                     models.addAll(simpleComments);
@@ -313,12 +313,12 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         }
     }
 
-    class LikeCommentTask extends AsyncTask<NormalComment, Integer, ResultObject> {
+    class LikeCommentTask extends AsyncTask<UniversalComment, Integer, ResultObject> {
 
-        NormalComment comment;
+        UniversalComment comment;
 
         @Override
-        protected ResultObject doInBackground(NormalComment... params) {
+        protected ResultObject doInBackground(UniversalComment... params) {
             comment = params[0];
             return ArticleAPI.likeComment(comment.getID());
         }
