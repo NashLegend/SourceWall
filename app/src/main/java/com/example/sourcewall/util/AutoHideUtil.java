@@ -11,7 +11,6 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ListView;
-import android.widget.ScrollView;
 
 import java.util.ArrayList;
 
@@ -22,10 +21,6 @@ public class AutoHideUtil {
     public static void applyListViewAutoHide(Context context, ListView listView, View header, View footer, int headerHeight) {
         ListViewAutoHideTool tool = new ListViewAutoHideTool();
         tool.applyAutoHide(context, listView, header, footer, headerHeight);
-    }
-
-    public static void applyListViewAutoHide(Context context, ScrollView scrollView, View header, View footer, int headerHeight) {
-        
     }
 
     private static class ListViewAutoHideTool {

@@ -1,18 +1,28 @@
 package com.example.sourcewall;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.sourcewall.commonview.SScrollView;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.QuestionAPI;
 import com.example.sourcewall.model.Question;
@@ -22,11 +32,18 @@ import com.example.sourcewall.util.ToastUtil;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 public class AnswerActivity extends SwipeActivity implements View.OnClickListener {
 
+    View rootView;
     View authorLayout;
     Toolbar toolbar;
     View bottomLayout;
+    SScrollView scrollView;
+    View headerHolder;
+    View footerHolder;
+    LinearLayout webHolder;
     WebView webView;
     ImageView avatar;
     TextView questionText;
@@ -39,17 +56,26 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
     FloatingActionButton replyButton;
     FloatingActionButton notAnButton;
     FloatingActionButton thankButton;
+    Handler handler;
+    int topBarHeight;
+    int headerHeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_answer);
+        handler = new Handler();
+        rootView = findViewById(R.id.rootView);
         answer = (QuestionAnswer) getIntent().getSerializableExtra(Consts.Extra_Answer);
         question = (Question) getIntent().getSerializableExtra(Consts.Extra_Question);
         toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         authorLayout = findViewById(R.id.layout_author);
         bottomLayout = findViewById(R.id.layout_operation);
+        scrollView = (SScrollView) findViewById(R.id.scrollView);
+        headerHolder = findViewById(R.id.headerHolder);
+        footerHolder = findViewById(R.id.footerHolder);
+        webHolder = (LinearLayout) findViewById(R.id.web_holder);
         webView = (WebView) findViewById(R.id.web_content);
         questionText = (TextView) findViewById(R.id.text_title);
         avatar = (ImageView) findViewById(R.id.image_avatar);
@@ -61,6 +87,12 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         notAnButton = (FloatingActionButton) findViewById(R.id.button_Bury);
         thankButton = (FloatingActionButton) findViewById(R.id.button_thank);
 
+        questionText.setOnClickListener(this);
+        supportView.setOnClickListener(this);
+        replyButton.setOnClickListener(this);
+        notAnButton.setOnClickListener(this);
+        thankButton.setOnClickListener(this);
+
         questionText.setText(question.getTitle());
         supportText.setText(answer.getUpvoteNum() + "");
         authorName.setText(answer.getAuthor());
@@ -68,12 +100,88 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         Picasso.with(this).load(answer.getAuthorAvatarUrl())
                 .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
                 .into(avatar);
+        rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (authorLayout.getHeight() > 0) {
+                    rootView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                    topBarHeight = toolbar.getHeight() + questionText.getHeight();
+                    headerHeight = topBarHeight + authorLayout.getHeight();
+                    ViewGroup.LayoutParams params = headerHolder.getLayoutParams();
+                    params.height = headerHeight;
+                    scrollView.applyAutoHide(AnswerActivity.this, topBarHeight, autoHideListener);
+                    loadHtml();
+                }
+            }
+        });
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                webView.loadUrl("javascript:MyApp.resize(document.body.getBoundingClientRect().height)");
+                super.onPageFinished(view, url);
+            }
+        });
+        webView.addJavascriptInterface(this, "MyApp");
+    }
 
-        questionText.setOnClickListener(this);
-        supportView.setOnClickListener(this);
-        replyButton.setOnClickListener(this);
-        notAnButton.setOnClickListener(this);
-        thankButton.setOnClickListener(this);
+    @JavascriptInterface
+    public void resize(final float height) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                ViewGroup.LayoutParams params = webView.getLayoutParams();
+                params.height = (int) (height * getResources().getDisplayMetrics().density);
+                webView.setLayoutParams(params);
+
+                ViewGroup.LayoutParams params1 = webHolder.getLayoutParams();
+                params1.height = params.height + headerHolder.getHeight() + footerHolder.getHeight();
+                webHolder.setLayoutParams(params1);
+            }
+        });
+    }
+
+    private void loadHtml() {
+        String html = "<html>\n" +
+                " <head> \n" +
+                "  <meta charset=\"UTF-8\" /> \n" +
+                "  <meta content=\"width=device-width,initial-scale=1.0,maximum-scale=1,minimum-scale=1,user-scalable=no\" name=\"viewport\" /> \n" +
+                "  <link rel=\"stylesheet\" href=\"file:///android_asset/static.guokr.com/apps/msite/styles/27dc13be.m.css\" /> \n" +
+                "  <link rel=\"stylesheet\" href=\"file:///android_asset/static.guokr.com/apps/msite/styles/cfb7569b.ask.css\" type=\"text/css\" /> \n" +
+                "  <style id=\"style-1-cropbar-clipper\">/* Copyright 2014 Evernote Corporation. All rights reserved. */\n" +
+                ".en-markup-crop-options {\n" +
+                "    top: 18px !important;\n" +
+                "    left: 50% !important;\n" +
+                "    margin-left: -100px !important;\n" +
+                "    width: 200px !important;\n" +
+                "    border: 2px rgba(255,255,255,.38) solid !important;\n" +
+                "    border-radius: 4px !important;\n" +
+                "}\n" +
+                "\n" +
+                ".en-markup-crop-options div div:first-of-type {\n" +
+                "    margin-left: 0px !important;\n" +
+                "}\n" +
+                "</style>\n" +
+                " </head> \n" +
+                " <body> \n" +
+                "  <div class=\"msite-container \"> \n" +
+                "   <div> \n" +
+                "    <div class=\"quality-answer\"> \n" +
+                "     <section class=\"content-block\"> \n" +
+                "      <div id=\"answersList\" class=\"content-main\"> \n" +
+                "       <div id=\"answer755710\" class=\"answer-padding15 answerItem\" style=\"-webkit-transform-origin: 0px 0px; opacity: 1; -webkit-transform: scale(1, 1);\"> \n" +
+                "        <div class=\"askcontent\"> " + answer.getContent() +
+                "        </div>\n" +
+                "       </div> \n" +
+                "      </div> \n" +
+                "     </section> \n" +
+                "    </div> \n" +
+                "   </div> \n" +
+                "  </div> \n" +
+                " </body>\n" +
+                "</html>";
+        webView.getSettings().setDefaultTextEncodingName("UTF-8");
+        webView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "charset=UTF-8", null);
     }
 
 
@@ -91,6 +199,86 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         }
         return super.onOptionsItemSelected(item);
     }
+
+    SScrollView.AutoHideListener autoHideListener = new SScrollView.AutoHideListener() {
+        AnimatorSet backAnimatorSet;
+
+        @Override
+        public void animateBack() {
+            if (hideAnimatorSet != null && hideAnimatorSet.isRunning()) {
+                hideAnimatorSet.cancel();
+            }
+            if (backFooterAnimatorSet != null && backFooterAnimatorSet.isRunning()) {
+                backFooterAnimatorSet.cancel();
+            }
+            if (backAnimatorSet != null && backAnimatorSet.isRunning()) {
+
+            } else {
+                backAnimatorSet = new AnimatorSet();
+                ObjectAnimator toolBarAnimator = ObjectAnimator.ofFloat(toolbar, "translationY", toolbar.getTranslationY(), 0f);
+                ObjectAnimator titleAnimator = ObjectAnimator.ofFloat(questionText, "translationY", questionText.getTranslationY(), 0f);
+                ObjectAnimator authorAnimator = ObjectAnimator.ofFloat(authorLayout, "translationY", authorLayout.getTranslationY(), 0f);
+                ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(bottomLayout, "translationY", bottomLayout.getTranslationY(), 0f);
+                ArrayList<Animator> animators = new ArrayList<>();
+                animators.add(toolBarAnimator);
+                animators.add(titleAnimator);
+                animators.add(authorAnimator);
+                animators.add(footerAnimator);
+                backAnimatorSet.setDuration(300);
+                backAnimatorSet.playTogether(animators);
+                backAnimatorSet.start();
+            }
+        }
+
+        AnimatorSet backFooterAnimatorSet;
+
+        @Override
+        public void animateBackFooter() {
+            if (hideAnimatorSet != null && hideAnimatorSet.isRunning()) {
+                hideAnimatorSet.cancel();
+            }
+            if (backAnimatorSet != null && backAnimatorSet.isRunning() || backFooterAnimatorSet != null && backFooterAnimatorSet.isRunning()) {
+                //do nothing
+            } else {
+                backFooterAnimatorSet = new AnimatorSet();
+                ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(bottomLayout, "translationY", bottomLayout.getTranslationY(), 0f);
+                ArrayList<Animator> animators = new ArrayList<>();
+                animators.add(footerAnimator);
+                backFooterAnimatorSet.setDuration(300);
+                backFooterAnimatorSet.playTogether(animators);
+                backFooterAnimatorSet.start();
+            }
+        }
+
+        AnimatorSet hideAnimatorSet;
+
+        @Override
+        public void animateHide() {
+            if (backAnimatorSet != null && backAnimatorSet.isRunning()) {
+                backAnimatorSet.cancel();
+            }
+            if (backFooterAnimatorSet != null && backFooterAnimatorSet.isRunning()) {
+                backFooterAnimatorSet.cancel();
+            }
+            if (hideAnimatorSet != null && hideAnimatorSet.isRunning()) {
+
+            } else {
+                hideAnimatorSet = new AnimatorSet();
+                ObjectAnimator toolBarAnimator = ObjectAnimator.ofFloat(toolbar, "translationY", toolbar.getTranslationY(), -toolbar.getBottom());
+                ObjectAnimator titleAnimator = ObjectAnimator.ofFloat(questionText, "translationY", questionText.getTranslationY(), -questionText.getBottom());
+                ObjectAnimator authorAnimator = ObjectAnimator.ofFloat(authorLayout, "translationY", authorLayout.getTranslationY(), -authorLayout.getTop());
+                ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(bottomLayout, "translationY", bottomLayout.getTranslationY(), bottomLayout.getHeight());
+                ArrayList<Animator> animators = new ArrayList<>();
+                animators.add(toolBarAnimator);
+                animators.add(titleAnimator);
+                animators.add(authorAnimator);
+                animators.add(footerAnimator);
+                hideAnimatorSet.setDuration(300);
+                hideAnimatorSet.playTogether(animators);
+                hideAnimatorSet.start();
+            }
+        }
+    };
 
     @Override
     public void onClick(View v) {
