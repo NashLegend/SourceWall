@@ -13,7 +13,6 @@ import com.example.sourcewall.util.ToastUtil;
 public class AppApplication extends Application {
 
     static AppApplication application;
-    static int screenWidthInDP = 360;
     public static String cookieString = "";
     public static String tokenString = "";
     public static String ukeyString = "";

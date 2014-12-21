@@ -4,11 +4,74 @@
     android:background="@android:color/white"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:id="@+id/layout_user"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:background="@drawable/bg_list_item"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+        <ImageView
+            android:id="@+id/image_avatar"
+            android:layout_width="@dimen/list_standard_comment_avatar_dimen"
+            android:layout_height="@dimen/list_standard_comment_avatar_dimen"
+            android:src="@drawable/avatar" />
+
+        <TextView
+            android:id="@+id/text_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="@string/sample_author"
+            android:textColor="@android:color/black" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_weight="0"
+        android:background="@android:color/darker_gray" />
+
     <ExpandableListView
         android:id="@+id/list_channel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_weight="1"
         android:childDivider="@null"
         android:choiceMode="singleChoice"
         android:divider="@null" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_weight="0"
+        android:background="@android:color/darker_gray" />
+
+    <LinearLayout
+        android:id="@+id/view_setting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:background="@drawable/bg_list_item"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+        <ImageView
+            android:layout_width="@dimen/list_standard_comment_avatar_dimen"
+            android:layout_height="@dimen/list_standard_comment_avatar_dimen"
+            android:src="@drawable/keyboard_holo_light_blue" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="@string/action_settings"
+            android:textColor="@android:color/black" />
+    </LinearLayout>
 </LinearLayout>

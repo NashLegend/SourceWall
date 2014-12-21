@@ -37,7 +37,6 @@ public class UserAPI extends APIBase {
                 JSONObject object = new JSONObject(HttpFetcher.get("http://www.guokr.com/apis/community/rn_num.json?access_token=" + token));
                 if (getJsonBoolean(object, "ok")) {
                     resultObject.ok = true;
-
                 }
             } catch (IOException e) {
                 e.printStackTrace();

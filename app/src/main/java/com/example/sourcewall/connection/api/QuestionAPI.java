@@ -276,7 +276,6 @@ public class QuestionAPI extends APIBase {
         ArrayList<UComment> list = new ArrayList<UComment>();
         String url = "http://www.guokr.com/apis/ask/answer_reply.json?retrieve_type=by_answer&limit=20&answer_id="
                 + id + "&offset=" + offset;
-        System.out.println(url);
         String jString = HttpFetcher.get(url);
         JSONObject jss = new JSONObject(jString);
         boolean ok = jss.getBoolean("ok");
