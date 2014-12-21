@@ -46,5 +46,30 @@
             android:id="@+id/web_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:id="@+id/layout_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/list_standard_item_reply_image_dimen"
+                android:layout_height="@dimen/list_standard_item_reply_image_dimen"
+                android:layout_weight="0"
+                android:src="@drawable/comment" />
+
+            <TextView
+                android:id="@+id/text_replies_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/list_standard_item_text_icon_gap"
+                android:layout_weight="0"
+                android:singleLine="true"
+                android:text="@string/sample_like_num"
+                android:textColor="@color/list_appendix_color" />
+        </LinearLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

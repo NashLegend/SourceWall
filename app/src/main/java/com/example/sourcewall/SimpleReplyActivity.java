@@ -1,5 +1,6 @@
 package com.example.sourcewall;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -151,6 +153,19 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
         }
     }
 
+    private void hideInput(EditText editText) {
+        try {
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(
+                    Activity.INPUT_METHOD_SERVICE);
+            if (inputMethodManager != null && inputMethodManager.isActive(editText)) {
+                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+
+    }
+
     class ReplyTask extends AsyncTask<String, Integer, ResultObject> {
 
         @Override
@@ -165,7 +180,6 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
         protected ResultObject doInBackground(String... params) {
             String content = params[0];
             ResultObject resultObject = new ResultObject();
-            System.out.println(content);
             if (aceModel instanceof Question) {
                 resultObject = QuestionAPI.commentOnQuestion(((Question) aceModel).getId(), content);
             } else if (aceModel instanceof QuestionAnswer) {
@@ -180,7 +194,7 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
             if (result.ok) {
                 mMenu.findItem(R.id.action_cancel_simple_reply).setVisible(false);
                 textReply.setHint(R.string.hint_reply);
-                textReply.getText().clear();
+                hideInput(textReply);
                 UComment uComment = (UComment) result.result;
                 adapter.add(0, uComment);
                 adapter.notifyDataSetChanged();
