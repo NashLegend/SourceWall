@@ -6,7 +6,7 @@ import com.example.sourcewall.connection.HttpFetcher;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.model.Question;
 import com.example.sourcewall.model.QuestionAnswer;
-import com.example.sourcewall.model.UniversalComment;
+import com.example.sourcewall.model.UComment;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -233,8 +233,8 @@ public class QuestionAPI extends APIBase {
      * @param offset
      * @return
      */
-    public static ArrayList<UniversalComment> getQuestionComments(String id, int offset) throws IOException {
-        ArrayList<UniversalComment> list = new ArrayList<UniversalComment>();
+    public static ArrayList<UComment> getQuestionComments(String id, int offset) throws IOException {
+        ArrayList<UComment> list = new ArrayList<UComment>();
         String url = "http://www.guokr.com/apis/ask/question_reply.json?retrieve_type=by_question&question_id="
                 + id + "&offset=" + offset;
         String jString = HttpFetcher.get(url);
@@ -245,7 +245,7 @@ public class QuestionAPI extends APIBase {
                 JSONArray comments = jss.getJSONArray("result");
                 for (int i = 0; i < comments.length(); i++) {
                     JSONObject jsonObject = comments.getJSONObject(i);
-                    UniversalComment comment = new UniversalComment();
+                    UComment comment = new UComment();
                     comment.setAuthor(jsonObject.getJSONObject("author").getString("nickname"));
                     comment.setAuthorID(jsonObject.getJSONObject("author").getString("url")
                             .replaceAll("\\D+", ""));
@@ -270,10 +270,11 @@ public class QuestionAPI extends APIBase {
      * @return
      * @throws IOException
      */
-    public static ArrayList<UniversalComment> getAnswerComments(String id, int offset) throws IOException, JSONException {
-        ArrayList<UniversalComment> list = new ArrayList<UniversalComment>();
+    public static ArrayList<UComment> getAnswerComments(String id, int offset) throws IOException, JSONException {
+        ArrayList<UComment> list = new ArrayList<UComment>();
         String url = "http://www.guokr.com/apis/ask/answer_reply.json?retrieve_type=by_answer&limit=20&answer_id="
                 + id + "&offset=" + offset;
+        System.out.println(url);
         String jString = HttpFetcher.get(url);
         JSONObject jss = new JSONObject(jString);
         boolean ok = jss.getBoolean("ok");
@@ -281,11 +282,13 @@ public class QuestionAPI extends APIBase {
             JSONArray comments = jss.getJSONArray("result");
             for (int i = 0; i < comments.length(); i++) {
                 JSONObject jsonObject = comments.getJSONObject(i);
-                UniversalComment comment = new UniversalComment();
+                UComment comment = new UComment();
                 comment.setAuthor(jsonObject.getJSONObject("author").getString("nickname"));
                 comment.setAuthorID(jsonObject.getJSONObject("author").getString("url")
                         .replaceAll("\\D+", ""));
-                comment.setContent(getJsonString(jsonObject, "html"));
+                comment.setAuthorAvatarUrl(jsonObject.getJSONObject("author")
+                        .getJSONObject("avatar").getString("large").replaceAll("\\?\\S*$", ""));
+                comment.setContent(getJsonString(jsonObject, "text"));
                 comment.setDate(getJsonString(jsonObject, "date_created"));
                 comment.setID(getJsonString(jsonObject, "id"));
                 comment.setHostID(getJsonString(jsonObject, "question_id"));

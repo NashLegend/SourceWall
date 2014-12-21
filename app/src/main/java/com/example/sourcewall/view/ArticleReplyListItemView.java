@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.sourcewall.R;
-import com.example.sourcewall.model.UniversalComment;
+import com.example.sourcewall.model.UComment;
 import com.example.sourcewall.util.DisplayUtil;
 import com.squareup.picasso.Picasso;
 
@@ -17,7 +17,7 @@ import com.squareup.picasso.Picasso;
  * Created by NashLegend on 2014/9/18 0018.
  * Shared by PostComment and ArticleComment
  */
-public class ArticleReplyListItemView extends AceView<UniversalComment> {
+public class ArticleReplyListItemView extends AceView<UComment> {
 
     private WebView contentView;
     private TextView authorView;
@@ -25,7 +25,7 @@ public class ArticleReplyListItemView extends AceView<UniversalComment> {
     private TextView likesView;
     private TextView floorView;
     private ImageView avatarImage;
-    private UniversalComment comment;
+    private UComment comment;
 
     public ArticleReplyListItemView(Context context) {
         super(context);
@@ -48,7 +48,7 @@ public class ArticleReplyListItemView extends AceView<UniversalComment> {
     }
 
     @Override
-    public void setData(UniversalComment model) {
+    public void setData(UComment model) {
         comment = model;
         authorView.setText(comment.getAuthor());
         dateView.setText(comment.getDate());
@@ -67,7 +67,7 @@ public class ArticleReplyListItemView extends AceView<UniversalComment> {
     }
 
     @Override
-    public UniversalComment getData() {
+    public UComment getData() {
         return comment;
     }
 }

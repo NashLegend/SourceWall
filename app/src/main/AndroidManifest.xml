@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.sourcewall" >
+    package="com.example.sourcewall">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -14,10 +14,10 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:screenOrientation="portrait"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,7 +27,7 @@
         <activity
             android:name=".SettingActivity"
             android:label="@string/title_activity_setting"
-            android:parentActivityName=".BaseActivity" >
+            android:parentActivityName=".BaseActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.sourcewall.BaseActivity" />
@@ -53,12 +53,12 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".AnswerActivity"
-            android:label="@string/title_activity_answer" >
-        </activity>
+            android:label="@string/title_activity_answer"
+            android:theme="@style/BlankTheme" />
         <activity
             android:name=".SimpleReplyActivity"
-            android:label="@string/title_activity_simple_reply" >
-        </activity>
+            android:label="@string/title_activity_simple_reply"
+            android:theme="@style/BlankTheme" />
     </application>
 
 </manifest>

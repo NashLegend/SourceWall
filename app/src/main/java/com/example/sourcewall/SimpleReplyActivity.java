@@ -2,10 +2,13 @@ package com.example.sourcewall;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.example.sourcewall.adapters.SimpleCommentAdapter;
 import com.example.sourcewall.commonview.LListView;
@@ -14,8 +17,9 @@ import com.example.sourcewall.connection.api.QuestionAPI;
 import com.example.sourcewall.model.AceModel;
 import com.example.sourcewall.model.Question;
 import com.example.sourcewall.model.QuestionAnswer;
-import com.example.sourcewall.model.UniversalComment;
+import com.example.sourcewall.model.UComment;
 import com.example.sourcewall.util.Consts;
+import com.example.sourcewall.view.SimpleCommentItemView;
 
 import org.json.JSONException;
 
@@ -23,17 +27,24 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRefreshListener {
+public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRefreshListener, View.OnClickListener {
 
     private AceModel aceModel;
     LoaderTask task;
     LListView listView;
     SimpleCommentAdapter adapter;
+    Toolbar toolbar;
+    EditText textReply;
+    ImageButton publishButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_simple_reply);
+        toolbar = (Toolbar) findViewById(R.id.action_bar);
+        setSupportActionBar(toolbar);
+        textReply = (EditText) findViewById(R.id.text_simple_reply);
+        publishButton = (ImageButton) findViewById(R.id.btn_publish);
         aceModel = (AceModel) getIntent().getSerializableExtra(Consts.Extra_Ace_Model);
         listView = (LListView) findViewById(R.id.list_detail);
         adapter = new SimpleCommentAdapter(this);
@@ -42,7 +53,8 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
         listView.setCanPullToRefresh(false);
         listView.setCanPullToLoadMore(false);
         listView.setOnRefreshListener(this);
-//        loadData(0);
+        publishButton.setOnClickListener(this);
+        loadData(0);
     }
 
     /**
@@ -89,7 +101,9 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
     };
 
     private void onReplyItemClick(final View view, int position, long id) {
-
+        if (view instanceof SimpleCommentItemView) {
+            textReply.setHint("回复@" + ((SimpleCommentItemView) view).getData().getAuthor() + "：");
+        }
     }
 
     @Override
@@ -102,13 +116,18 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
         loadData(adapter.getCount() - 1);
     }
 
+    @Override
+    public void onClick(View v) {
+
+    }
+
     class LoaderTask extends AsyncTask<Integer, Integer, ResultObject> {
         int offset;
 
         @Override
         protected ResultObject doInBackground(Integer... params) {
             offset = params[0];
-            ArrayList<UniversalComment> models = new ArrayList<>();
+            ArrayList<UComment> models = new ArrayList<>();
             ResultObject resultObject = new ResultObject();
             try {
                 if (aceModel instanceof Question) {
@@ -132,7 +151,7 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
         protected void onPostExecute(ResultObject result) {
             if (!isCancelled()) {
                 if (result.ok) {
-                    ArrayList<UniversalComment> ars = (ArrayList<UniversalComment>) result.result;
+                    ArrayList<UComment> ars = (ArrayList<UComment>) result.result;
                     if (offset < 0) {
                         //Refresh
                         if (ars.size() > 0) {

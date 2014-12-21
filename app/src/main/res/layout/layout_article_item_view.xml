@@ -29,12 +29,13 @@
             android:layout_marginTop="@dimen/list_standard_title_author_span"
             android:gravity="center_vertical"
             android:orientation="horizontal">
-
+            <!--作者名有可能很长-->
             <TextView
                 android:id="@+id/text_author"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
+                android:singleLine="true"
                 android:text="Author"
                 android:textColor="@color/list_appendix_color" />
 
@@ -44,6 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/list_standard_item_text_text_gap"
                 android:layout_weight="0"
+                android:singleLine="true"
                 android:text="2014-09-24 08:00:09"
                 android:textColor="@color/list_appendix_color" />
 
@@ -64,6 +66,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/list_standard_item_text_icon_gap"
                 android:layout_weight="0"
+                android:singleLine="true"
                 android:text="@string/sample_like_num"
                 android:textColor="@color/list_appendix_color" />
         </LinearLayout>
@@ -80,8 +83,8 @@
             android:id="@+id/text_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:lineSpacingMultiplier="@dimen/lineSpacingMultiplier"
             android:layout_marginTop="@dimen/list_standard_image_summary_span"
+            android:lineSpacingMultiplier="@dimen/lineSpacingMultiplier"
             android:text="@string/sample_summary"
             android:textColor="@color/article_list_summary_color" />
     </LinearLayout>

@@ -4,14 +4,13 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.sourcewall.model.UniversalComment;
-import com.example.sourcewall.view.AceView;
+import com.example.sourcewall.model.UComment;
 import com.example.sourcewall.view.SimpleCommentItemView;
 
 /**
  * Created by NashLegend on 2014/9/18 0018
  */
-public class SimpleCommentAdapter extends AceAdapter<UniversalComment> {
+public class SimpleCommentAdapter extends AceAdapter<UComment> {
     public SimpleCommentAdapter(Context context) {
         super(context);
     }
@@ -36,7 +35,7 @@ public class SimpleCommentAdapter extends AceAdapter<UniversalComment> {
         if (convertView == null) {
             convertView = new SimpleCommentItemView(getContext());
         }
-        ((AceView) convertView).setData(list.get(position));
-        return null;
+        ((SimpleCommentItemView) convertView).setData(list.get(position));
+        return convertView;
     }
 }
