@@ -249,6 +249,8 @@ public class QuestionAPI extends APIBase {
                     comment.setAuthor(jsonObject.getJSONObject("author").getString("nickname"));
                     comment.setAuthorID(jsonObject.getJSONObject("author").getString("url")
                             .replaceAll("\\D+", ""));
+                    comment.setAuthorAvatarUrl(jsonObject.getJSONObject("author")
+                            .getJSONObject("avatar").getString("large").replaceAll("\\?\\S*$", ""));
                     comment.setContent(getJsonString(jsonObject, "html"));
                     comment.setDate(getJsonString(jsonObject, "date_created"));
                     comment.setID(getJsonString(jsonObject, "id"));
@@ -424,8 +426,48 @@ public class QuestionAPI extends APIBase {
     }
 
     public static ResultObject recommendQuestion(String questionID, String title, String summary, String comment) {
-        String articleUrl = "http://www.guokr.com/question/" + questionID + "/";
-        return UserAPI.recommendLink(articleUrl, title, summary, comment);
+        String url = "http://www.guokr.com/question/" + questionID + "/";
+        return UserAPI.recommendLink(url, title, summary, comment);
+    }
+
+    public static ResultObject commentOnQuestion(String questionID, String comment) {
+        String url = "http://www.guokr.com/apis/ask/question_reply.json";
+        ResultObject resultObject = new ResultObject();
+        try {
+            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            pairs.add(new BasicNameValuePair("question_id", questionID));
+            pairs.add(new BasicNameValuePair("content", comment));
+            pairs.add(new BasicNameValuePair("retrieve_type", "by_question"));
+            pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
+            String result = HttpFetcher.post(url, pairs);
+            JSONObject object = new JSONObject(result);
+            if (getJsonBoolean(object, "ok")) {
+                resultObject.ok = true;
+            }
+        } catch (JSONException | IOException e) {
+            e.printStackTrace();
+        }
+        return resultObject;
+    }
+
+    public static ResultObject commentOnAnswer(String answerID, String comment) {
+        String url = "http://www.guokr.com/apis/ask/answer_reply.json";
+        ResultObject resultObject = new ResultObject();
+        try {
+            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            pairs.add(new BasicNameValuePair("answer_id", answerID));
+            pairs.add(new BasicNameValuePair("content", comment));
+            pairs.add(new BasicNameValuePair("retrieve_type", "by_answer"));
+            pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
+            String result = HttpFetcher.post(url, pairs);
+            JSONObject object = new JSONObject(result);
+            if (getJsonBoolean(object, "ok")) {
+                resultObject.ok = true;
+            }
+        } catch (JSONException | IOException e) {
+            e.printStackTrace();
+        }
+        return resultObject;
     }
 
 }

@@ -1,8 +1,10 @@
 package com.example.sourcewall;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +21,7 @@ import com.example.sourcewall.model.Question;
 import com.example.sourcewall.model.QuestionAnswer;
 import com.example.sourcewall.model.UComment;
 import com.example.sourcewall.util.Consts;
+import com.example.sourcewall.util.ToastUtil;
 import com.example.sourcewall.view.SimpleCommentItemView;
 
 import org.json.JSONException;
@@ -36,6 +39,7 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
     Toolbar toolbar;
     EditText textReply;
     ImageButton publishButton;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +91,7 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_cancel_simple_reply) {
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -106,6 +110,15 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
         }
     }
 
+    /**
+     * 是回复/问题，还是回复里面的评论
+     *
+     * @return
+     */
+    private boolean isCommentOnHost() {
+        return true;
+    }
+
     @Override
     public void onStartRefresh() {
         loadData(0);
@@ -113,12 +126,57 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
 
     @Override
     public void onStartLoadMore() {
-        loadData(adapter.getCount() - 1);
+        loadData(adapter.getCount());
     }
 
     @Override
     public void onClick(View v) {
+        if (v.getId() == R.id.btn_publish) {
+            if (!TextUtils.isEmpty(textReply.getText().toString().trim())) {
+                String content = "";
+                if (isCommentOnHost()) {
+                    content = textReply.getText().toString();
+                } else {
+                    content = textReply.getHint().toString() + textReply.getText().toString();
+                }
+                ReplyTask replyTask = new ReplyTask();
+                replyTask.execute(content);
+            }
+        }
+    }
 
+    class ReplyTask extends AsyncTask<String, Integer, ResultObject> {
+
+        @Override
+        protected void onPreExecute() {
+            progressDialog = new ProgressDialog(SimpleReplyActivity.this);
+            progressDialog.setCancelable(false);
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.show();
+        }
+
+        @Override
+        protected ResultObject doInBackground(String... params) {
+            String content = params[0];
+            ResultObject resultObject = new ResultObject();
+            if (aceModel instanceof Question) {
+                resultObject = QuestionAPI.commentOnQuestion(((Question) aceModel).getId(), content);
+            } else if (aceModel instanceof QuestionAnswer) {
+                resultObject = QuestionAPI.commentOnAnswer(((QuestionAnswer) aceModel).getID(), content);
+            }
+            return resultObject;
+        }
+
+        @Override
+        protected void onPostExecute(ResultObject result) {
+            progressDialog.dismiss();
+            if (result.ok) {
+                ToastUtil.toast("Reply OK");
+                textReply.getText().clear();
+            } else {
+                ToastUtil.toast("Reply Failed");
+            }
+        }
     }
 
     class LoaderTask extends AsyncTask<Integer, Integer, ResultObject> {

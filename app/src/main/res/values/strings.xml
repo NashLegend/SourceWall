@@ -9,6 +9,7 @@
     <string name="navigation_drawer_close">关闭导航抽屉</string>
     <string name="action_login">登录</string>
     <string name="action_settings">设置</string>
+    <string name="action_cancel_simple_reply">取消回复</string>
     <string name="hello_world">泥嚎！</string>
     <string name="title_activity_setting">设置</string>
     <string name="article">科学人</string>
