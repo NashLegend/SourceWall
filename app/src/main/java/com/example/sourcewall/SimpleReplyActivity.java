@@ -40,6 +40,7 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
     EditText textReply;
     ImageButton publishButton;
     ProgressDialog progressDialog;
+    Menu mMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +85,9 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        mMenu = menu;
         getMenuInflater().inflate(R.menu.menu_simple_reply, menu);
+        mMenu.findItem(R.id.action_cancel_simple_reply).setVisible(false);
         return true;
     }
 
@@ -92,6 +95,8 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_cancel_simple_reply) {
+            mMenu.findItem(R.id.action_cancel_simple_reply).setVisible(false);
+            textReply.setHint(R.string.hint_reply);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -107,6 +112,7 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
     private void onReplyItemClick(final View view, int position, long id) {
         if (view instanceof SimpleCommentItemView) {
             textReply.setHint("回复@" + ((SimpleCommentItemView) view).getData().getAuthor() + "：");
+            mMenu.findItem(R.id.action_cancel_simple_reply).setVisible(true);
         }
     }
 
@@ -116,7 +122,7 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
      * @return
      */
     private boolean isCommentOnHost() {
-        return true;
+        return !mMenu.findItem(R.id.action_cancel_simple_reply).isVisible();
     }
 
     @Override
@@ -159,6 +165,7 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
         protected ResultObject doInBackground(String... params) {
             String content = params[0];
             ResultObject resultObject = new ResultObject();
+            System.out.println(content);
             if (aceModel instanceof Question) {
                 resultObject = QuestionAPI.commentOnQuestion(((Question) aceModel).getId(), content);
             } else if (aceModel instanceof QuestionAnswer) {
@@ -171,8 +178,13 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
         protected void onPostExecute(ResultObject result) {
             progressDialog.dismiss();
             if (result.ok) {
-                ToastUtil.toast("Reply OK");
+                mMenu.findItem(R.id.action_cancel_simple_reply).setVisible(false);
+                textReply.setHint(R.string.hint_reply);
                 textReply.getText().clear();
+                UComment uComment = (UComment) result.result;
+                adapter.add(0, uComment);
+                adapter.notifyDataSetChanged();
+                ToastUtil.toast("Reply OK");
             } else {
                 ToastUtil.toast("Reply Failed");
             }
@@ -210,7 +222,7 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
             if (!isCancelled()) {
                 if (result.ok) {
                     ArrayList<UComment> ars = (ArrayList<UComment>) result.result;
-                    if (offset < 0) {
+                    if (offset == 0) {
                         //Refresh
                         if (ars.size() > 0) {
                             adapter.setList(ars);
@@ -232,7 +244,7 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
                 }
                 if (adapter.getCount() > 0) {
                     listView.setCanPullToLoadMore(true);
-                    listView.setCanPullToRefresh(false);
+                    listView.setCanPullToRefresh(true);
                 } else {
                     listView.setCanPullToLoadMore(false);
                     listView.setCanPullToRefresh(true);

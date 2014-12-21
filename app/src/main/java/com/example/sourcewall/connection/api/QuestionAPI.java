@@ -251,7 +251,7 @@ public class QuestionAPI extends APIBase {
                             .replaceAll("\\D+", ""));
                     comment.setAuthorAvatarUrl(jsonObject.getJSONObject("author")
                             .getJSONObject("avatar").getString("large").replaceAll("\\?\\S*$", ""));
-                    comment.setContent(getJsonString(jsonObject, "html"));
+                    comment.setContent(getJsonString(jsonObject, "text"));
                     comment.setDate(getJsonString(jsonObject, "date_created"));
                     comment.setID(getJsonString(jsonObject, "id"));
                     comment.setHostID(getJsonString(jsonObject, "question_id"));
@@ -442,7 +442,19 @@ public class QuestionAPI extends APIBase {
             String result = HttpFetcher.post(url, pairs);
             JSONObject object = new JSONObject(result);
             if (getJsonBoolean(object, "ok")) {
+                JSONObject jsonObject = object.getJSONObject("result");
+                UComment uComment = new UComment();
+                uComment.setAuthor(jsonObject.getJSONObject("author").getString("nickname"));
+                uComment.setAuthorID(jsonObject.getJSONObject("author").getString("url")
+                        .replaceAll("\\D+", ""));
+                uComment.setAuthorAvatarUrl(jsonObject.getJSONObject("author")
+                        .getJSONObject("avatar").getString("large").replaceAll("\\?\\S*$", ""));
+                uComment.setContent(getJsonString(jsonObject, "text"));
+                uComment.setDate(getJsonString(jsonObject, "date_created"));
+                uComment.setID(getJsonString(jsonObject, "id"));
+                uComment.setHostID(getJsonString(jsonObject, "question_id"));
                 resultObject.ok = true;
+                resultObject.result = uComment;
             }
         } catch (JSONException | IOException e) {
             e.printStackTrace();
@@ -450,6 +462,13 @@ public class QuestionAPI extends APIBase {
         return resultObject;
     }
 
+    /**
+     * 评论一个答案，resultObject.result 是一个UComment
+     *
+     * @param answerID
+     * @param comment
+     * @return
+     */
     public static ResultObject commentOnAnswer(String answerID, String comment) {
         String url = "http://www.guokr.com/apis/ask/answer_reply.json";
         ResultObject resultObject = new ResultObject();
@@ -462,7 +481,19 @@ public class QuestionAPI extends APIBase {
             String result = HttpFetcher.post(url, pairs);
             JSONObject object = new JSONObject(result);
             if (getJsonBoolean(object, "ok")) {
+                JSONObject jsonObject = object.getJSONObject("result");
+                UComment uComment = new UComment();
+                uComment.setAuthor(jsonObject.getJSONObject("author").getString("nickname"));
+                uComment.setAuthorID(jsonObject.getJSONObject("author").getString("url")
+                        .replaceAll("\\D+", ""));
+                uComment.setAuthorAvatarUrl(jsonObject.getJSONObject("author")
+                        .getJSONObject("avatar").getString("large").replaceAll("\\?\\S*$", ""));
+                uComment.setContent(getJsonString(jsonObject, "text"));
+                uComment.setDate(getJsonString(jsonObject, "date_created"));
+                uComment.setID(getJsonString(jsonObject, "id"));
+                uComment.setHostID(getJsonString(jsonObject, "question_id"));
                 resultObject.ok = true;
+                resultObject.result = uComment;
             }
         } catch (JSONException | IOException e) {
             e.printStackTrace();
