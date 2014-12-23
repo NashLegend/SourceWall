@@ -7,6 +7,7 @@ import android.webkit.CookieManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.example.sourcewall.connection.api.UserAPI;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.SharedUtil;
 
@@ -56,6 +57,7 @@ public class LoginActivity extends ActionBarActivity {
                 SharedUtil.saveString(Consts.Key_Cookie, cookieStr);
                 parseRawCookie(cookieStr);
                 setResult(RESULT_OK);
+                UserAPI.setLoggedInOK();
                 finish();
             } else {
                 view.loadUrl(url);

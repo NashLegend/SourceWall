@@ -9,6 +9,7 @@ import com.example.sourcewall.connection.HttpFetcher;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.model.Basket;
 import com.example.sourcewall.model.Category;
+import com.example.sourcewall.model.UserInfo;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.SharedUtil;
 
@@ -29,22 +30,87 @@ public class UserAPI extends APIBase {
     public static ArrayList<Basket> myBaskets = new ArrayList<>();
     public static boolean Logged = false;
 
+    public static boolean isLoggedIn() {
+        return Logged;
+    }
+
+    public static void setLoggedInOK() {
+        Logged = true;
+    }
+
+    public static String base36Encode(long id) {
+        String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        id = Math.abs(id);
+        StringBuilder sb = new StringBuilder();
+        for (; id > 0; id /= 36) {
+            sb.insert(0, ALPHABET.charAt((int) (id % 36)));
+        }
+        return sb.toString().toLowerCase();
+    }
+
+    public static ResultObject getUserInfoByUkey(String ukey) {
+        ResultObject resultObject = new ResultObject();
+        try {
+            JSONObject object = new JSONObject(HttpFetcher.get("http://apis.guokr.com/community/user/" + ukey + ".json"));
+            if (getJsonBoolean(object, "ok")) {
+                JSONObject subObject = getJsonObject(object, "result");
+                UserInfo info = new UserInfo();
+                info.setDate_created(getJsonString(subObject, "date_created"));
+                info.setIntroduction(getJsonString(subObject, "introduction"));
+                info.setNickname(getJsonString(subObject, "nickname"));
+                info.setTitle(getJsonString(subObject, "title"));
+                info.setUkey(getJsonString(subObject, "ukey"));
+                info.setUrl(getJsonString(subObject, "url"));
+                info.setId(info.getUrl().replaceAll("^\\D+(\\d+)\\D*", "$1"));
+                info.setAvatar(subObject.getJSONObject("avatar")
+                        .getString("large").replaceAll("\\?\\S*$", ""));
+                resultObject.result = info;
+                resultObject.ok = true;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return resultObject;
+    }
+
+    public static ResultObject getUserInfoByID(String id) {
+        return getUserInfoByUkey(base36Encode(Long.valueOf(id)));
+    }
+
+    /**
+     * 获取消息提醒的方式
+     *
+     * @return
+     */
     public static ResultObject testLogin() {
         ResultObject resultObject = new ResultObject();
         String token = getToken();
-        if (!TextUtils.isEmpty(token) && token.length() == 64) {
-            try {
-                JSONObject object = new JSONObject(HttpFetcher.get("http://www.guokr.com/apis/community/rn_num.json?access_token=" + token));
-                if (getJsonBoolean(object, "ok")) {
-                    resultObject.ok = true;
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+        String ukey = getUkey();
+        if (!TextUtils.isEmpty(ukey) && ukey.length() == 6 && !TextUtils.isEmpty(token) && token.length() == 64) {
+            resultObject = getMessageNum();
+        } else {
+            clearMyInfo();
         }
         Logged = resultObject.ok;
+        return resultObject;
+    }
+
+    public static ResultObject getMessageNum() {
+        ResultObject resultObject = new ResultObject();
+        String token = getToken();
+        try {
+            JSONObject object = new JSONObject(HttpFetcher.get("http://www.guokr.com/apis/community/rn_num.json?_=" + System.currentTimeMillis() + "&access_token=" + token));
+            if (getJsonBoolean(object, "ok")) {
+                resultObject.ok = true;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         return resultObject;
     }
 
@@ -229,6 +295,10 @@ public class UserAPI extends APIBase {
             e.printStackTrace();
         }
         return resultObject;
+    }
+
+    public static void clearMyInfo() {
+
     }
 
     public static String getToken() {

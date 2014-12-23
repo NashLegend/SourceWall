@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -25,10 +26,14 @@ import android.widget.TextView;
 
 import com.example.sourcewall.R;
 import com.example.sourcewall.adapters.ChannelsAdapter;
+import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.UserAPI;
 import com.example.sourcewall.model.SubItem;
+import com.example.sourcewall.model.UserInfo;
 import com.example.sourcewall.util.Consts;
+import com.example.sourcewall.util.ToastUtil;
 import com.example.sourcewall.view.SubItemView;
+import com.squareup.picasso.Picasso;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -70,6 +75,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
 
 
     public NavigationDrawerFragment() {
+
     }
 
     @Override
@@ -77,7 +83,6 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         super.onCreate(savedInstanceState);
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mUserLearnedDrawer = sp.getBoolean(PREF_USER_LEARNED_DRAWER, false);
-
         if (savedInstanceState != null) {
             mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
             mFromSavedInstanceState = true;
@@ -89,6 +94,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -132,6 +138,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         });
         return layoutView;
     }
+
 
     public boolean isDrawerOpen() {
         return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mFragmentContainerView);
@@ -212,6 +219,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        testLogin();
     }
 
     @Override
@@ -282,5 +290,68 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
 
                 break;
         }
+    }
+
+    private void testLogin() {
+        TestLoginTask testLoginTask = new TestLoginTask();
+        testLoginTask.execute();
+    }
+
+    private void loadUserInfo() {
+        if (UserAPI.isLoggedIn()) {
+            UserInfoTask task = new UserInfoTask();
+            task.execute();
+        }
+    }
+
+    class TestLoginTask extends AsyncTask<Void, Integer, ResultObject> {
+
+        @Override
+        protected ResultObject doInBackground(Void... params) {
+            return UserAPI.testLogin();
+        }
+
+        @Override
+        protected void onPostExecute(ResultObject resultObject) {
+            if (resultObject.ok) {
+                loadUserInfo();
+            } else {
+                ToastUtil.toast("Not Logged In");
+                switch (resultObject.code) {
+                    case CODE_NOT_LOGGED_IN:
+                        break;
+                    case CODE_NETWORK_ERROR:
+                        break;
+                    case CODE_JSON_ERROR:
+                        break;
+                    case CODE_UNKNOWN:
+                        break;
+                }
+            }
+        }
+    }
+
+    class UserInfoTask extends AsyncTask<String, Intent, ResultObject> {
+
+        @Override
+        protected ResultObject doInBackground(String... params) {
+            return UserAPI.getUserInfoByUkey(UserAPI.getUkey());
+        }
+
+        @Override
+        protected void onPostExecute(ResultObject resultObject) {
+            if (resultObject.ok) {
+                setupUserInfo((UserInfo) resultObject.result);
+            } else {
+                ToastUtil.toast("Get UserInfo Failed");
+            }
+        }
+    }
+
+    private void setupUserInfo(UserInfo info) {
+        Picasso.with(getActivity()).load(info.getAvatar())
+                .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
+                .into(avatarView);
+        userName.setText(info.getNickname());
     }
 }
