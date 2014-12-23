@@ -2,6 +2,7 @@ package com.example.sourcewall;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.webkit.CookieManager;
 import android.webkit.WebView;
@@ -16,11 +17,14 @@ public class LoginActivity extends ActionBarActivity {
 
     WebView webView;
     String cookieStr;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        toolbar = (Toolbar) findViewById(R.id.action_bar);
+        setSupportActionBar(toolbar);
         webView = (WebView) findViewById(R.id.web_login);
         webView.setWebViewClient(webViewClient);
         webView.getSettings().setJavaScriptEnabled(true);

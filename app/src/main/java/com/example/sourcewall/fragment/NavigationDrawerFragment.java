@@ -24,6 +24,7 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.sourcewall.LoginActivity;
 import com.example.sourcewall.R;
 import com.example.sourcewall.adapters.ChannelsAdapter;
 import com.example.sourcewall.connection.ResultObject;
@@ -274,9 +275,12 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         return ((ActionBarActivity) getActivity()).getSupportActionBar();
     }
 
+    private final int Code_Login = 1033;
+
     private void onUserViewClicked() {
-        if (!UserAPI.Logged) {
-            UserAPI.startLoginActivity(getActivity());
+        if (!UserAPI.isLoggedIn()) {
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            startActivityForResult(intent, Code_Login);
         }
     }
 
@@ -301,6 +305,15 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         if (UserAPI.isLoggedIn()) {
             UserInfoTask task = new UserInfoTask();
             task.execute();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        System.out.println(requestCode + " " + resultCode);
+        if (requestCode == Code_Login && resultCode == Activity.RESULT_OK) {
+            loadUserInfo();
         }
     }
 
