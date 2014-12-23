@@ -23,6 +23,7 @@ import com.example.sourcewall.connection.api.APIBase;
 import com.example.sourcewall.dialogs.InputDialog;
 import com.example.sourcewall.model.AceModel;
 import com.example.sourcewall.model.UComment;
+import com.example.sourcewall.util.Config;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.FileUtil;
 import com.example.sourcewall.util.ImageFetcher.AsyncTask;
@@ -200,7 +201,7 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
     private void publishReply(String rep) {
         PublishReplyTask task = new PublishReplyTask();
         String header = "";
-        String tail = "\n\n[blockquote]Send by [url=https://github.com/NashLegend/SourceWall/]The Great Source Wall[/url][/blockquote]";
+        String tail = Config.getSimpleReplyTail();
         if (comment != null) {
             header = "[blockquote]" + hostText.getText() + "[/blockquote]";
         }
@@ -213,7 +214,7 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
         if (comment != null) {
             header = "<blockquote>" + hostText.getText() + "<blockquote>";
         }
-        String tail = "<p></p><p>From <a href=\"https://github.com/NashLegend/SourceWall\" target=\"_blank\">The Great Source Wall</a></p>";
+        String tail = Config.getComplexReplyTail();
         task.execute(header, rep, tail, Advanced_Reply);
     }
 
