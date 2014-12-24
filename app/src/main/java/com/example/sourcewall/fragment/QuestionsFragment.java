@@ -88,9 +88,11 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
         } else {
             this.subItem = subItem;
             setTitle();
-            loadData(0);
             adapter.clear();
             adapter.notifyDataSetInvalidated();
+            listView.setCanPullToRefresh(false);
+            listView.setCanPullToLoadMore(false);
+            loadData(0);
         }
     }
 

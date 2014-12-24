@@ -101,9 +101,11 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
         } else {
             this.subItem = subItem;
             setTitle();
-            loadData(0);
             adapter.clear();
             adapter.notifyDataSetInvalidated();
+            listView.setCanPullToRefresh(false);
+            listView.setCanPullToLoadMore(false);
+            loadData(0);
         }
     }
 

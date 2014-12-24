@@ -89,9 +89,11 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         } else {
             this.subItem = subItem;
             setTitle();
-            loadData(0);
             adapter.clear();
             adapter.notifyDataSetInvalidated();
+            listView.setCanPullToRefresh(false);
+            listView.setCanPullToLoadMore(false);
+            loadData(0);
         }
     }
 
