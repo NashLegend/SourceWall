@@ -67,7 +67,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     private void loadData(int offset) {
         cancelPotentialTask();
         task = new LoaderTask();
-        task.execute(offset);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, offset);
     }
 
     @Override

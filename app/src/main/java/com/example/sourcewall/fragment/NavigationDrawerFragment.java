@@ -218,12 +218,6 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        testLogin();
-    }
-
-    @Override
     public void onDetach() {
         super.onDetach();
     }
@@ -296,22 +290,27 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        testLogin();
+    }
+
     private void testLogin() {
         TestLoginTask testLoginTask = new TestLoginTask();
-        testLoginTask.execute();
+        testLoginTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void loadUserInfo() {
         if (UserAPI.isLoggedIn()) {
             UserInfoTask task = new UserInfoTask();
-            task.execute();
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        System.out.println(requestCode + " " + resultCode);
         if (requestCode == Code_Login && resultCode == Activity.RESULT_OK) {
             loadUserInfo();
         }
@@ -329,15 +328,21 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
             if (resultObject.ok) {
                 loadUserInfo();
             } else {
-                ToastUtil.toast("Not Logged In");
                 switch (resultObject.code) {
-                    case CODE_NOT_LOGGED_IN:
+                    case CODE_LOGIN_FAILED:
+                        ToastUtil.toast(getActivity().getString(R.string.login_failed_for_other_reason));
                         break;
                     case CODE_NETWORK_ERROR:
+                        ToastUtil.toast(getActivity().getString(R.string.network_error));
                         break;
                     case CODE_JSON_ERROR:
+                        ToastUtil.toast(getActivity().getString(R.string.json_error));
+                        break;
+                    case CODE_NO_TOKEN:
+                        ToastUtil.toast(getActivity().getString(R.string.have_not_login));
                         break;
                     case CODE_UNKNOWN:
+                        ToastUtil.toast(getActivity().getString(R.string.unknown_error));
                         break;
                 }
             }

@@ -66,7 +66,7 @@ public class MediumListItemView extends AceView<UComment> {
         }
         if (comment.getContent().contains("<img")) {
             htmlTask = new HtmlLoaderTask();
-            htmlTask.execute(comment.getContent());
+            htmlTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, comment.getContent());
         }
         Picasso.with(getContext()).load(comment.getAuthorAvatarUrl())
                 .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)

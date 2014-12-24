@@ -71,7 +71,7 @@ public class FavorItemView extends AceView<Basket> implements View.OnClickListen
     @Override
     public void onClick(View v) {
         FavorTask task = new FavorTask();
-        task.execute(link, title, basket.getId());
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, link, title, basket.getId());
     }
 
     class FavorTask extends AsyncTask<String, Integer, ResultObject> {

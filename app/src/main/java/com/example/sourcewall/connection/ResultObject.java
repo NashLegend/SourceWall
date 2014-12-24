@@ -10,6 +10,12 @@ public class ResultObject {
     public Object result;
 
     public static enum ResultCode {
-        CODE_OK, CODE_NOT_LOGGED_IN, CODE_TOKEN_EXPIRED, CODE_NETWORK_ERROR, CODE_JSON_ERROR, CODE_UNKNOWN
+        CODE_OK,
+        CODE_LOGIN_FAILED,
+        CODE_TOKEN_EXPIRED,
+        CODE_NETWORK_ERROR,
+        CODE_JSON_ERROR,
+        CODE_UNKNOWN,
+        CODE_NO_TOKEN
     }
 }

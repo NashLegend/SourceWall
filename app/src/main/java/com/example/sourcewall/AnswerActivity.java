@@ -314,19 +314,19 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
             public void onClick(DialogInterface dialog, int which) {
                 Boolean support = which == 0;
                 OpinionTask task = new OpinionTask();
-                task.execute(support);
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, support);
             }
         }).create().show();
     }
 
     private void buryAnswer() {
         BuryTask task = new BuryTask();
-        task.execute();
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void thankAnswer() {
         ThankTask task = new ThankTask();
-        task.execute();
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     class OpinionTask extends AsyncTask<Boolean, Integer, ResultObject> {

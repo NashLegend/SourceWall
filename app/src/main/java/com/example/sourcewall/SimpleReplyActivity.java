@@ -75,7 +75,7 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
         }
         cancelPotentialTask();
         task = new LoaderTask();
-        task.execute(offset);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, offset);
     }
 
     private void cancelPotentialTask() {
@@ -148,7 +148,7 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
                     content = textReply.getHint().toString() + textReply.getText().toString();
                 }
                 ReplyTask replyTask = new ReplyTask();
-                replyTask.execute(content);
+                replyTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, content);
             }
         }
     }

@@ -6,7 +6,10 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
@@ -42,9 +45,15 @@ public class HttpFetcher {
         return EntityUtils.toString(entity, HTTP.UTF_8);
     }
 
+    /**
+     * @return 返回一个线程安全的HttpClient。
+     */
     public static DefaultHttpClient getDefaultHttpClient() {
         if (defaultHttpClient == null) {
             defaultHttpClient = new DefaultHttpClient();
+            ClientConnectionManager manager = defaultHttpClient.getConnectionManager();
+            HttpParams params = defaultHttpClient.getParams();
+            defaultHttpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(params, manager.getSchemeRegistry()), params);
         }
         return defaultHttpClient;
     }

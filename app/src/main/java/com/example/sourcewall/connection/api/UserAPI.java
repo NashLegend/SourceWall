@@ -93,6 +93,7 @@ public class UserAPI extends APIBase {
             resultObject = getMessageNum();
         } else {
             clearMyInfo();
+            resultObject.code = ResultObject.ResultCode.CODE_NO_TOKEN;
         }
         Logged = resultObject.ok;
         return resultObject;
@@ -105,10 +106,14 @@ public class UserAPI extends APIBase {
             JSONObject object = new JSONObject(HttpFetcher.get("http://www.guokr.com/apis/community/rn_num.json?_=" + System.currentTimeMillis() + "&access_token=" + token));
             if (getJsonBoolean(object, "ok")) {
                 resultObject.ok = true;
+            } else {
+                resultObject.code = ResultObject.ResultCode.CODE_LOGIN_FAILED;
             }
         } catch (IOException e) {
+            resultObject.code = ResultObject.ResultCode.CODE_NETWORK_ERROR;
             e.printStackTrace();
         } catch (JSONException e) {
+            resultObject.code = ResultObject.ResultCode.CODE_JSON_ERROR;
             e.printStackTrace();
         }
         return resultObject;

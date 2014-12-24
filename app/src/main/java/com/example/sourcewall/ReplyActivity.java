@@ -143,7 +143,7 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
             File file = new File(path);
             if (file.exists()) {
                 ImageUploadTask task = new ImageUploadTask();
-                task.execute(path);
+                task.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR, path);
             } else {
                 ToastUtil.toast(R.string.file_not_exists);
             }

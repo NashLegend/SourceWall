@@ -75,7 +75,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
     private void loadData(int offset) {
         cancelPotentialTask();
         task = new LoaderTask();
-        task.execute(offset);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, offset);
     }
 
     private void cancelPotentialTask() {
@@ -162,7 +162,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
                     InputDialog d = (InputDialog) dialog;
                     String text = d.InputString;
                     RecommendTask recommendTask = new RecommendTask();
-                    recommendTask.execute(question.getId(), question.getTitle(), question.getSummary(), text);
+                    recommendTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, question.getId(), question.getTitle(), question.getSummary(), text);
                 } else {
                     // cancel recommend
                 }

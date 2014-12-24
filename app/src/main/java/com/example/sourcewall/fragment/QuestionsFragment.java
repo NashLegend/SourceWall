@@ -66,7 +66,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
     private void loadData(int offset) {
         cancelPotentialTask();
         task = new LoaderTask();
-        task.execute(offset);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, offset);
     }
 
     @Override

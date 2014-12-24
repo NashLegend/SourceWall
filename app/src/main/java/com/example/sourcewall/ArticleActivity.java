@@ -82,7 +82,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
     private void loadData(int offset) {
         cancelPotentialTask();
         task = new LoaderTask();
-        task.execute(offset);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, offset);
     }
 
     private void cancelPotentialTask() {
@@ -118,7 +118,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
                     InputDialog d = (InputDialog) dialog;
                     String text = d.InputString;
                     RecommendTask recommendTask = new RecommendTask();
-                    recommendTask.execute(article.getId(), article.getTitle(), article.getSummary(), text);
+                    recommendTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, article.getId(), article.getTitle(), article.getSummary(), text);
                 } else {
                     // cancel recommend
                 }
@@ -152,7 +152,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
 
     private void likeComment(UComment comment) {
         LikeCommentTask likeCommentTask = new LikeCommentTask();
-        likeCommentTask.execute(comment);
+        likeCommentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, comment);
     }
 
     private void copyComment(UComment comment) {

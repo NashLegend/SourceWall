@@ -87,17 +87,17 @@ public class FavorView extends FrameLayout implements View.OnClickListener {
 
     private void loadBasket() {
         LoadBasketTask task = new LoadBasketTask();
-        task.execute();
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void createBasket(String title, String introduction, String category_id) {
         CreateBasketTask task = new CreateBasketTask();
-        task.execute(title, introduction, category_id);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, title, introduction, category_id);
     }
 
     private void loadCategories() {
         LoadCategoryTask task = new LoadCategoryTask();
-        task.execute();
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void openCreateBasketView() {

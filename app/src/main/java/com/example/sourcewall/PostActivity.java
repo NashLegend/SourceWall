@@ -76,7 +76,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
     private void loadData(int offset) {
         cancelPotentialTask();
         task = new LoaderTask();
-        task.execute(offset);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, offset);
     }
 
     private void cancelPotentialTask() {
@@ -114,7 +114,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
 
     private void likePost() {
         LikePostTask likePostTask = new LikePostTask();
-        likePostTask.execute(post);
+        likePostTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, post);
     }
 
     private void favor() {
@@ -226,7 +226,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
 
     private void likeComment(UComment comment) {
         LikeCommentTask likeCommentTask = new LikeCommentTask();
-        likeCommentTask.execute(comment);
+        likeCommentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, comment);
     }
 
     private void copyComment(UComment comment) {
