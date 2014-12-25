@@ -1,7 +1,6 @@
 package com.example.sourcewall.view;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.text.Html;
@@ -13,11 +12,11 @@ import android.widget.TextView;
 
 import com.example.sourcewall.R;
 import com.example.sourcewall.model.UComment;
+import com.example.sourcewall.util.DisplayUtil;
 import com.example.sourcewall.util.ImageUtil.ImageCache;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.net.URL;
 
 /**
  * Created by NashLegend on 2014/9/18 0018.
@@ -95,16 +94,14 @@ public class MediumListItemView extends AceView<UComment> {
         Html.ImageGetter imageGetter = new Html.ImageGetter() {
             @Override
             public Drawable getDrawable(String source) {
+                float density = DisplayUtil.getPixelDensity(getContext());
                 Drawable drawable = null;
-                Bitmap bitmap;
-                URL url;
                 File file = new File(ImageCache.getBitmapCacheFileDir(source));
                 if (file.exists()) {
                     drawable = Drawable.createFromPath(file.getAbsolutePath());
                 }
                 if (drawable == null) {
                     try {
-                        url = new URL(source);
                         ImageCache.downloadImageToFile(source, false);
                         if (file.exists()) {
                             drawable = Drawable.createFromPath(file.getAbsolutePath());
@@ -114,8 +111,8 @@ public class MediumListItemView extends AceView<UComment> {
                     }
                 }
                 if (drawable != null) {
-                    drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable
-                            .getIntrinsicHeight());
+                    drawable.setBounds(0, 0, (int) (drawable.getIntrinsicWidth() * density), (int) (drawable
+                            .getIntrinsicHeight() * density));
                 }
                 return drawable;
             }
