@@ -1,6 +1,9 @@
 package com.example.sourcewall.view;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.text.Html;
@@ -94,28 +97,48 @@ public class MediumListItemView extends AceView<UComment> {
         Html.ImageGetter imageGetter = new Html.ImageGetter() {
             @Override
             public Drawable getDrawable(String source) {
-                float density = DisplayUtil.getPixelDensity(getContext());
+                float stretch = DisplayUtil.getPixelDensity(getContext());
+                int maxWidth = (int) (DisplayUtil.getScreenWidth(getContext()) * 0.8);
                 Drawable drawable = null;
                 File file = new File(ImageCache.getBitmapCacheFileDir(source));
+                if (!file.exists()) {
+                    ImageCache.downloadImageToFile(source, false);
+                }
                 if (file.exists()) {
-                    drawable = Drawable.createFromPath(file.getAbsolutePath());
+                    //防止图片超出屏幕
+                    drawable = decodeSampledBitmapFromFile(file.getAbsolutePath(), (int) (maxWidth / stretch));
                 }
-                if (drawable == null) {
-                    try {
-                        ImageCache.downloadImageToFile(source, false);
-                        if (file.exists()) {
-                            drawable = Drawable.createFromPath(file.getAbsolutePath());
-                        }
-                    } catch (Exception e) {
-                        return null;
-                    }
-                }
+
                 if (drawable != null) {
-                    drawable.setBounds(0, 0, (int) (drawable.getIntrinsicWidth() * density), (int) (drawable
-                            .getIntrinsicHeight() * density));
+                    int width = (int) (drawable.getIntrinsicWidth() * stretch);
+                    int height = (int) (drawable.getIntrinsicHeight() * stretch);
+                    drawable.setBounds(0, 0, width, height);
                 }
                 return drawable;
             }
         };
+    }
+
+    public BitmapDrawable decodeSampledBitmapFromFile(String filename, int maxWidth) {
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(filename, options);
+        options.inSampleSize = calculateInSampleSize(options, maxWidth);
+        options.inJustDecodeBounds = false;
+        Bitmap bitmap = BitmapFactory.decodeFile(filename, options);
+        BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), bitmap);
+        return bitmapDrawable;
+    }
+
+    public int calculateInSampleSize(BitmapFactory.Options options, int reqWidth) {
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+        if (width > reqWidth) {
+            final int halfWidth = width / 2;
+            while ((halfWidth / inSampleSize) > reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+        return inSampleSize;
     }
 }
