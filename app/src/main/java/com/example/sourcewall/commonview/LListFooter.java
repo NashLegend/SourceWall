@@ -9,6 +9,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.example.sourcewall.R;
+import com.example.sourcewall.util.DisplayUtil;
 
 public class LListFooter extends FrameLayout {
     private int currentState = LListView.State_Normal;
@@ -16,6 +17,8 @@ public class LListFooter extends FrameLayout {
     private LListView.OnRefreshListener onRefreshListener;
     private TextView tvHint;
     private ObjectAnimator heightAnimator;
+    private int Loading_Height_In_DP = 55;
+    private int Release_Height_In_DP = 80;
     private int Loading_Height = 200;
     private int Release_Height = 300;
     private boolean layouted = false;
@@ -23,9 +26,12 @@ public class LListFooter extends FrameLayout {
     //TODO 删掉，改成自动加载
     public LListFooter(Context context) {
         super(context);
+        Release_Height = (int) (DisplayUtil.getPixelDensity(context) * Release_Height_In_DP);
+        Loading_Height = (int) (DisplayUtil.getPixelDensity(context) * Loading_Height_In_DP);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_footer_view, this);
         tvHint = (TextView) findViewById(R.id.text_footer_hint);
+
     }
 
     protected boolean handleMoveDistance(float dist) {
@@ -79,7 +85,7 @@ public class LListFooter extends FrameLayout {
             pull2Normal();
         } else if (currentState == LListView.State_Loading_More) {
             // TODO 这里的值应该是动画的正常高度，是在初始化时就确定的
-            if (getHeight() > 300) {
+            if (getHeight() > Release_Height) {
                 loading2Loading();
             }
         }
@@ -209,11 +215,11 @@ public class LListFooter extends FrameLayout {
             params.height = 1;
             setLayoutParams(params);
         } else {
+            ViewGroup.LayoutParams params = getLayoutParams();
+            params.height = height;
             if (getVisibility() != View.VISIBLE) {
                 setVisibility(View.VISIBLE);
             }
-            ViewGroup.LayoutParams params = getLayoutParams();
-            params.height = height;
             setLayoutParams(params);
         }
     }

@@ -12,6 +12,7 @@ import com.example.sourcewall.ArticleActivity;
 import com.example.sourcewall.R;
 import com.example.sourcewall.adapters.ArticleAdapter;
 import com.example.sourcewall.commonview.LListView;
+import com.example.sourcewall.commonview.LoadingView;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.ArticleAPI;
 import com.example.sourcewall.model.Article;
@@ -34,6 +35,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
     private ArticleAdapter adapter;
     private LoaderTask task;
     private SubItem subItem;
+    private LoadingView loadingView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
     @Override
     public View onCreateLayoutView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_articles, container, false);
+        loadingView = (LoadingView) view.findViewById(R.id.article_progress_loading);
         subItem = (SubItem) getArguments().getSerializable(Consts.Extra_SubItem);
         listView = (LListView) view.findViewById(R.id.list_articles);
         adapter = new ArticleAdapter(getActivity());
@@ -61,7 +64,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
             }
         });
         setTitle();
-        loadData(0);
+        loadOver();
         return view;
     }
 
@@ -71,6 +74,11 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
         } else {
             getActivity().setTitle(this.subItem.getName() + " -- 科学人");
         }
+    }
+
+    private void loadOver() {
+        loadingView.setVisibility(View.VISIBLE);
+        loadData(0);
     }
 
     private void loadData(int offset) {
@@ -105,7 +113,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
             adapter.notifyDataSetInvalidated();
             listView.setCanPullToRefresh(false);
             listView.setCanPullToLoadMore(false);
-            loadData(0);
+            loadOver();
         }
     }
 
@@ -155,6 +163,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
 
         @Override
         protected void onPostExecute(ResultObject o) {
+            loadingView.setVisibility(View.GONE);
             if (!isCancelled()) {
                 if (o.ok) {
                     ArrayList<Article> ars = (ArrayList<Article>) o.result;

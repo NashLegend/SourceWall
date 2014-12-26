@@ -115,9 +115,9 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_marginLeft="48dp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="48dp">
 
                 <ImageButton
                     android:id="@+id/btn_publish"

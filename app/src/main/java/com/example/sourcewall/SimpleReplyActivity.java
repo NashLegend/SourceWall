@@ -16,6 +16,7 @@ import android.widget.ImageButton;
 
 import com.example.sourcewall.adapters.SimpleCommentAdapter;
 import com.example.sourcewall.commonview.LListView;
+import com.example.sourcewall.commonview.LoadingView;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.QuestionAPI;
 import com.example.sourcewall.model.AceModel;
@@ -43,11 +44,13 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
     ImageButton publishButton;
     ProgressDialog progressDialog;
     Menu mMenu;
+    LoadingView loadingView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_simple_reply);
+        loadingView = (LoadingView) findViewById(R.id.replies_progress_loading);
         toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         textReply = (EditText) findViewById(R.id.text_simple_reply);
@@ -233,6 +236,7 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
 
         @Override
         protected void onPostExecute(ResultObject result) {
+            loadingView.setVisibility(View.GONE);
             if (!isCancelled()) {
                 if (result.ok) {
                     ArrayList<UComment> ars = (ArrayList<UComment>) result.result;

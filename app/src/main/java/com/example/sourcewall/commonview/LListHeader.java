@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.sourcewall.R;
 import com.example.sourcewall.commonview.LListView.OnRefreshListener;
+import com.example.sourcewall.util.DisplayUtil;
 
 public class LListHeader extends FrameLayout {
     private int currentState = LListView.State_Normal;
@@ -17,12 +18,16 @@ public class LListHeader extends FrameLayout {
     private OnRefreshListener onRefreshListener;
     private TextView tvHint;
     private ObjectAnimator heightAnimator;
+    private int Refreshing_Height_In_DP = 55;
+    private int Release_Height_In_DP = 80;
     private int Refreshing_Height = 200;
     private int Release_Height = 300;
     private boolean layouted = false;
 
     public LListHeader(Context context) {
         super(context);
+        Release_Height = (int) (DisplayUtil.getPixelDensity(context) * Release_Height_In_DP);
+        Refreshing_Height = (int) (DisplayUtil.getPixelDensity(context) * Refreshing_Height_In_DP);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_header_view, this);
         tvHint = (TextView) findViewById(R.id.text_header_hint);
@@ -81,7 +86,7 @@ public class LListHeader extends FrameLayout {
             pull2Normal();
         } else if (currentState == LListView.State_Refreshing) {
             // TODO 这里的值应该是动画的正常高度，是在初始化时就确定的
-            if (getHeight() > 300) {
+            if (getHeight() > Release_Height) {
                 refreshing2Refreshing();
             }
         }

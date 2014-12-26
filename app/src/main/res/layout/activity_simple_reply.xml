@@ -16,13 +16,25 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <com.example.sourcewall.commonview.LListView
-        android:id="@+id/list_detail"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:footerDividersEnabled="false"
-        android:headerDividersEnabled="false" />
+        android:layout_weight="1">
+
+        <com.example.sourcewall.commonview.LListView
+            android:id="@+id/list_detail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:footerDividersEnabled="false"
+            android:headerDividersEnabled="false" />
+
+        <com.example.sourcewall.commonview.LoadingView
+            android:id="@+id/replies_progress_loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </RelativeLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"

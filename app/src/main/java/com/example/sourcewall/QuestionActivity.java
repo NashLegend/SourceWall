@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 
 import com.example.sourcewall.adapters.QuestionDetailAdapter;
 import com.example.sourcewall.commonview.LListView;
+import com.example.sourcewall.commonview.LoadingView;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.QuestionAPI;
 import com.example.sourcewall.dialogs.FavorDialog;
@@ -41,11 +42,13 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
     FloatingActionButton replyButton;
     FloatingActionButton recomButton;
     FloatingActionButton favorButton;
+    LoadingView loadingView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question);
+        loadingView = (LoadingView) findViewById(R.id.question_progress_loading);
         toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         bottomLayout = findViewById(R.id.layout_operation);
@@ -212,6 +215,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
 
         @Override
         protected void onPostExecute(ResultObject result) {
+            loadingView.setVisibility(View.GONE);
             if (!isCancelled()) {
                 if (result.ok) {
                     ArrayList<AceModel> ars = (ArrayList<AceModel>) result.result;

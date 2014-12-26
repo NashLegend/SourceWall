@@ -2,11 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/basket_item_height"
-    android:paddingLeft="@dimen/abc_dropdownitem_text_padding_left"
-    android:paddingRight="@dimen/abc_dropdownitem_text_padding_right"
     android:descendantFocusability="blocksDescendants"
     android:gravity="center_vertical"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:paddingLeft="@dimen/abc_dropdownitem_text_padding_left"
+    android:paddingRight="@dimen/abc_dropdownitem_text_padding_right">
 
     <TextView
         android:id="@+id/text_basket_name"

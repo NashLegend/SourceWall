@@ -12,6 +12,7 @@ import com.example.sourcewall.QuestionActivity;
 import com.example.sourcewall.R;
 import com.example.sourcewall.adapters.QuestionAdapter;
 import com.example.sourcewall.commonview.LListView;
+import com.example.sourcewall.commonview.LoadingView;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.QuestionAPI;
 import com.example.sourcewall.model.Question;
@@ -33,10 +34,12 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
     private QuestionAdapter adapter;
     private LoaderTask task;
     private SubItem subItem;
+    private LoadingView loadingView;
 
     @Override
     public View onCreateLayoutView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_questions, container, false);
+        loadingView = (LoadingView) view.findViewById(R.id.question_progress_loading);
         subItem = (SubItem) getArguments().getSerializable(Consts.Extra_SubItem);
         listView = (LListView) view.findViewById(R.id.list_questions);
         adapter = new QuestionAdapter(getActivity());
@@ -55,12 +58,17 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
             }
         });
         setTitle();
-        loadData(0);
+        loadOver();
         return view;
     }
 
     private void setTitle() {
         getActivity().setTitle(this.subItem.getName() + " -- 问答");
+    }
+
+    private void loadOver() {
+        loadingView.setVisibility(View.VISIBLE);
+        loadData(0);
     }
 
     private void loadData(int offset) {
@@ -92,7 +100,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
             adapter.notifyDataSetInvalidated();
             listView.setCanPullToRefresh(false);
             listView.setCanPullToLoadMore(false);
-            loadData(0);
+            loadOver();
         }
     }
 
@@ -144,6 +152,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
 
         @Override
         protected void onPostExecute(ResultObject o) {
+            loadingView.setVisibility(View.GONE);
             if (!isCancelled()) {
                 if (o.ok) {
                     ArrayList<Question> ars = (ArrayList<Question>) o.result;

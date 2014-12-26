@@ -29,7 +29,7 @@ public class AnswerListItemView extends AceView<QuestionAnswer> {
         inflater.inflate(R.layout.layout_answer_item_view, this);
         contentView = (TextView) findViewById(R.id.web_content);
         authorView = (TextView) findViewById(R.id.text_author);
-        supportView= (TextView) findViewById(R.id.text_num_support);
+        supportView = (TextView) findViewById(R.id.text_num_support);
         authorTitleView = (TextView) findViewById(R.id.text_author_title);
         dateView = (TextView) findViewById(R.id.text_date);
         avatar = (ImageView) findViewById(R.id.image_avatar);
@@ -46,14 +46,14 @@ public class AnswerListItemView extends AceView<QuestionAnswer> {
     @Override
     public void setData(QuestionAnswer model) {
         answer = model;
-        supportView.setText(answer.getUpvoteNum()+"");
+        supportView.setText(answer.getUpvoteNum() + "");
         authorView.setText(answer.getAuthor());
         authorTitleView.setText(answer.getAuthorTitle());
         dateView.setText(answer.getDate_created());
         Picasso.with(getContext()).load(answer.getAuthorAvatarUrl())
                 .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
                 .into(avatar);
-        String simplifiedStr=RegUtil.tryGetStringByLength(RegUtil.html2PlainTextWithImageTag(answer.getContent()), 100);
+        String simplifiedStr = RegUtil.tryGetStringByLength(RegUtil.html2PlainTextWithImageTag(answer.getContent()), 100);
         contentView.setText(simplifiedStr);
     }
 

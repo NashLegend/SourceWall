@@ -12,6 +12,7 @@ import com.example.sourcewall.PostActivity;
 import com.example.sourcewall.R;
 import com.example.sourcewall.adapters.PostAdapter;
 import com.example.sourcewall.commonview.LListView;
+import com.example.sourcewall.commonview.LoadingView;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.PostAPI;
 import com.example.sourcewall.model.Post;
@@ -30,11 +31,13 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     private PostAdapter adapter;
     private LoaderTask task;
     private SubItem subItem;
+    private LoadingView loadingView;
 
     @Override
     public View onCreateLayoutView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_posts, container, false);
         subItem = (SubItem) getArguments().getSerializable(Consts.Extra_SubItem);
+        loadingView = (LoadingView) view.findViewById(R.id.post_progress_loading);
         listView = (LListView) view.findViewById(R.id.list_posts);
         adapter = new PostAdapter(getActivity());
         listView.setCanPullToRefresh(false);
@@ -52,7 +55,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
             }
         });
         setTitle();
-        loadData(0);
+        loadOver();
         return view;
     }
 
@@ -62,6 +65,11 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         } else {
             getActivity().setTitle(this.subItem.getName() + " -- 小组");
         }
+    }
+
+    private void loadOver() {
+        loadingView.setVisibility(View.VISIBLE);
+        loadData(0);
     }
 
     private void loadData(int offset) {
@@ -93,7 +101,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
             adapter.notifyDataSetInvalidated();
             listView.setCanPullToRefresh(false);
             listView.setCanPullToLoadMore(false);
-            loadData(0);
+            loadOver();
         }
     }
 
@@ -142,6 +150,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
 
         @Override
         protected void onPostExecute(ResultObject o) {
+            loadingView.setVisibility(View.GONE);
             if (!isCancelled()) {
                 if (o.ok) {
                     ArrayList<Post> ars = (ArrayList<Post>) o.result;
