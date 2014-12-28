@@ -6,7 +6,7 @@
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
         <item name="colorPrimaryBright">@color/color_primary_bright</item>
         <item name="colorAccent">@color/color_accent</item>
-        <item name="android:colorBackground">#eeeeee</item>
+        <item name="android:colorBackground">@color/page_background</item>
 
         <item name="color_page_background">@color/page_background</item>
 
@@ -83,6 +83,93 @@
     </style>
 
     <style name="BlankTheme" parent="AppTheme">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="AppThemeNight" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="windowActionModeOverlay">true</item>
+        <item name="colorPrimary">@color/color_primary_night</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark_night</item>
+        <item name="colorPrimaryBright">@color/color_primary_bright_night</item>
+        <item name="colorAccent">@color/color_accent_night</item>
+        <item name="android:colorBackground">@color/page_background_night</item>
+
+        <item name="color_page_background">@color/page_background_night</item>
+
+        <!--正文标题颜色-->
+        <item name="color_article_title">@color/article_title_night</item>
+        <!--正文内容字体颜色-->
+        <item name="color_article_content_text">@color/article_content_text_night</item>
+        <!--正文背景色-->
+        <item name="color_article_text_background">@color/article_text_background_night</item>
+
+        <!--作者名字颜色，同时还是日期、数量等的颜色，正文列表通用-->
+        <item name="color_author_color">@color/author_color_night</item>
+        <item name="color_author_dark_color">@color/author_dark_color_night</item>
+        <item name="color_author_sub_color">@color/author_sub_color_night</item>
+
+        <!--列表样式-->
+        <!--列表item的标题颜色-->
+        <item name="color_list_title">@color/list_title_night</item>
+        <!--列表item的简介颜色-->
+        <item name="color_list_summary">@color/list_summary_night</item>
+        <!--列表背景色-->
+        <item name="color_list_background">@color/list_background_night</item>
+        <!--列表背景色（按下）-->
+        <item name="color_list_background_pressed">@color/list_background_pressed_night</item>
+
+        <!--答案页面-->
+        <!--AnswerActivity回答者背景-->
+        <item name="color_answer_author_background">@color/answer_author_background_night</item>
+        <!--AnswerActivity回答者字体-->
+        <item name="color_answer_author_text">@color/answer_author_text_night</item>
+        <item name="color_answer_author_sub_text">@color/answer_author_sub_text_night</item>
+        <!--AnswerActivity问题背景色-->
+        <item name="color_answer_question_title_background">
+            @color/answer_question_title_background_night
+        </item>
+        <item name="color_answer_question_title_background_pressed">
+            @color/answer_question_title_background_pressed_night
+        </item>
+        <!--AnswerActivity问题文字颜色-->
+        <item name="color_answer_question_title_text">@color/answer_question_title_text_night</item>
+
+        <!--回复页面-->
+        <item name="color_reply_quote_background">@color/reply_quote_background_night</item>
+        <item name="color_reply_quote_text">@color/reply_quote_text_night</item>
+        <item name="color_reply_input_background">@color/reply_input_background_night</item>
+        <item name="color_reply_input_text">@color/reply_input_text_night</item>
+        <item name="color_reply_hint">@color/reply_hint_night</item>
+
+        <!--对话框-->
+        <item name="color_dialog_button_background">@color/dialog_button_background_night</item>
+        <item name="drawable_dialog_button_text">@drawable/dialog_button_text_color_night</item>
+        <item name="color_dialog_button_text">@color/dialog_button_text_night</item>
+        <item name="color_dialog_button_text_pressed">@color/dialog_button_text_pressed_night</item>
+        <item name="color_dialog_title">@color/dialog_title_night</item>
+        <item name="color_dialog_list_text">@color/dialog_list_text_night</item>
+        <item name="color_dialog_text">@color/dialog_text_night</item>
+        <item name="color_dialog_background">@color/dialog_background_night</item>
+
+        <!--抽屉颜色-->
+        <item name="drawable_drawer_button_background">@drawable/bg_drawer_button_night</item>
+        <item name="color_drawer_button_background">@color/drawer_button_background_night</item>
+        <item name="color_drawer_button_background_pressed">
+            @color/drawer_button_background_pressed_night
+        </item>
+        <item name="color_drawer_button_text">@color/drawer_button_text_night</item>
+        <item name="color_drawer_button_text_pressed">@color/drawer_button_text_pressed_night</item>
+        <item name="color_drawer_author">@color/drawer_author_night</item>
+        <item name="color_drawer_list_text">@color/drawer_list_text_night</item>
+        <item name="color_drawer_list_sub_text">@color/drawer_list_sub_text_night</item>
+        <item name="color_drawer_background">@color/drawer_background_night</item>
+
+        <!--LListView-->
+        <item name="color_llist_foot_head_text">@color/llist_foot_head_text_night</item>
+    </style>
+
+    <style name="BlankThemeNight" parent="AppThemeNight">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsTranslucent">true</item>
     </style>
