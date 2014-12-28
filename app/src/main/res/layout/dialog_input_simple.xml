@@ -28,7 +28,7 @@
             android:layout_height="48dp"
             android:background="?attr/color_dialog_button_background"
             android:text="@string/cancel"
-            android:textColor="@drawable/dialog_button_text_color" />
+            android:textColor="?attr/drawable_dialog_button_text" />
 
         <Button
             android:id="@+id/button_dialog_input_ok"
@@ -36,7 +36,7 @@
             android:layout_height="48dp"
             android:background="?attr/color_dialog_button_background"
             android:text="@string/ok"
-            android:textColor="@drawable/dialog_button_text_color" />
+            android:textColor="?attr/drawable_dialog_button_text" />
     </LinearLayout>
 
 </LinearLayout>

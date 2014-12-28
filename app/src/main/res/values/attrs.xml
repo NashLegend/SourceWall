@@ -3,11 +3,11 @@
     <!--通用-->
 
     <!--主题色-->
-    <attr name="color_primary" format="color" />
-    <attr name="color_primary_dark" format="color" />
-    <attr name="color_primary_bright" format="color" />
-    <attr name="color_accent" format="color" />
+    <attr name="colorPrimaryBright" format="color" />
+
+
     <attr name="color_page_background" format="color" />
+
 
     <!--正文页颜色-->
     <!--正文标题颜色-->
@@ -51,6 +51,7 @@
 
     <!--Dialog-->
     <attr name="color_dialog_button_background" format="color" />
+    <attr name="drawable_dialog_button_text" format="reference" />
     <attr name="color_dialog_button_text" format="color" />
     <attr name="color_dialog_button_text_pressed" format="color" />
     <attr name="color_dialog_title" format="color" />
@@ -59,6 +60,7 @@
     <attr name="color_dialog_background" format="color" />
 
     <!--抽屉颜色-->
+    <attr name="drawable_drawer_button_background" format="reference" />
     <attr name="color_drawer_button_background" format="color" />
     <attr name="color_drawer_button_background_pressed" format="color" />
     <attr name="color_drawer_button_text" format="color" />

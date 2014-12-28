@@ -4,6 +4,7 @@
         <item name="windowActionModeOverlay">true</item>
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
+        <item name="colorPrimaryBright">@color/color_primary_bright</item>
         <item name="colorAccent">@color/color_accent</item>
         <item name="android:colorBackground">#eeeeee</item>
 
@@ -56,6 +57,7 @@
 
         <!--对话框-->
         <item name="color_dialog_button_background">@color/dialog_button_background</item>
+        <item name="drawable_dialog_button_text">@drawable/dialog_button_text_color</item>
         <item name="color_dialog_button_text">@color/dialog_button_text</item>
         <item name="color_dialog_button_text_pressed">@color/dialog_button_text_pressed</item>
         <item name="color_dialog_title">@color/dialog_title</item>
@@ -64,6 +66,7 @@
         <item name="color_dialog_background">@color/dialog_background</item>
 
         <!--抽屉颜色-->
+        <item name="drawable_drawer_button_background">@drawable/bg_drawer_button</item>
         <item name="color_drawer_button_background">@color/drawer_button_background</item>
         <item name="color_drawer_button_background_pressed">
             @color/drawer_button_background_pressed
