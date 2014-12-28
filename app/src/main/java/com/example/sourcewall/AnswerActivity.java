@@ -15,7 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
@@ -114,29 +113,22 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
                 }
             }
         });
-        webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
-                webView.loadUrl("javascript:MyApp.resize(document.body.getBoundingClientRect().height)");
+                resize();
                 super.onPageFinished(view, url);
             }
         });
-        webView.addJavascriptInterface(this, "MyApp");
     }
 
-    @JavascriptInterface
-    public void resize(final float height) {
+    public void resize() {
         handler.post(new Runnable() {
             @Override
             public void run() {
                 ViewGroup.LayoutParams params = webView.getLayoutParams();
-                params.height = (int) (height * getResources().getDisplayMetrics().density);
+                params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
                 webView.setLayoutParams(params);
-
-                ViewGroup.LayoutParams params1 = webHolder.getLayoutParams();
-                params1.height = params.height + headerHolder.getHeight() + footerHolder.getHeight();
-                webHolder.setLayoutParams(params1);
             }
         });
     }
