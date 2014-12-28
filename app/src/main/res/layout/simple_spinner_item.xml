@@ -7,5 +7,7 @@
     android:ellipsize="marquee"
     android:paddingBottom="6dp"
     android:paddingTop="6dp"
+    android:text="@string/sample_title"
     android:singleLine="true"
-    android:textAlignment="inherit" />
+    android:textAlignment="inherit"
+    android:textColor="?attr/color_dialog_list_text" />

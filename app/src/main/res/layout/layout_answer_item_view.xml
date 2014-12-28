@@ -35,6 +35,7 @@
                 android:layout_marginTop="5dp"
                 android:gravity="center"
                 android:text="9999"
+                android:textColor="?attr/color_author_color"
                 android:textSize="12sp" />
         </LinearLayout>
 
@@ -55,7 +56,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
-                    android:text="@string/sample_author" />
+                    android:text="@string/sample_author"
+                    android:textColor="?attr/color_author_color" />
 
                 <TextView
                     android:id="@+id/text_author_title"
@@ -63,14 +65,16 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/list_standard_item_text_text_gap"
                     android:singleLine="true"
-                    android:text="@string/sample_author_title" />
+                    android:text="@string/sample_author_title"
+                    android:textColor="?attr/color_author_color" />
             </LinearLayout>
 
             <TextView
                 android:id="@+id/text_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/sample_date" />
+                android:text="@string/sample_date"
+                android:textColor="?attr/color_author_color" />
 
             <TextView
                 android:id="@+id/web_content"
@@ -79,7 +83,7 @@
                 android:ellipsize="end"
                 android:maxLines="3"
                 android:text="@string/sample_summary"
-                android:textColor="@color/list_summary_color"
+                android:textColor="?attr/color_list_summary"
                 android:textSize="@dimen/list_standard_summary_font_size" />
         </LinearLayout>
     </LinearLayout>

@@ -1,7 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="#ffffff"
     android:orientation="vertical">
 
     <LinearLayout
@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0"
-        android:background="@drawable/bg_list_item"
+        android:background="@drawable/bg_drawer_button"
         android:clickable="true"
         android:gravity="center_vertical"
         android:orientation="horizontal"
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:text="@string/sample_author"
-            android:textColor="@android:color/black" />
+            android:textColor="?attr/color_drawer_author" />
     </LinearLayout>
 
     <View
@@ -56,7 +56,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0"
-        android:background="@drawable/bg_list_item"
+        android:background="@drawable/bg_drawer_button"
         android:clickable="true"
         android:gravity="center_vertical"
         android:orientation="horizontal"
@@ -72,6 +72,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:text="@string/action_settings"
-            android:textColor="@android:color/black" />
+            android:textColor="?attr/color_drawer_button_text" />
     </LinearLayout>
 </LinearLayout>

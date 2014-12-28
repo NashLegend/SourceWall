@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/post_item_title_margin_bottom"
             android:text="@string/sample_title"
-            android:textColor="@color/list_title_color"
+            android:textColor="?attr/color_list_title"
             android:textSize="@dimen/list_standard_title_font_size" />
 
         <LinearLayout
@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
                 android:text="@string/sample_author"
-                android:textColor="@color/list_appendix_color"
+                android:textColor="?attr/color_author_color"
                 android:textSize="@dimen/text_author_view_font_size_dimen" />
 
             <TextView
@@ -44,7 +44,7 @@
                 android:layout_marginLeft="@dimen/list_standard_item_text_text_gap"
                 android:singleLine="true"
                 android:text="@string/sample_group"
-                android:textColor="@color/list_appendix_color"
+                android:textColor="?attr/color_author_color"
                 android:textSize="@dimen/text_author_view_font_size_dimen" />
 
             <View
@@ -65,7 +65,7 @@
                 android:layout_marginLeft="@dimen/list_standard_item_text_icon_gap"
                 android:layout_weight="0"
                 android:text="@string/sample_like_num"
-                android:textColor="@color/list_appendix_color"
+                android:textColor="?attr/color_author_color"
                 android:textSize="@dimen/text_author_view_font_size_dimen" />
 
             <ImageView
@@ -82,7 +82,7 @@
                 android:layout_marginLeft="@dimen/list_standard_item_text_icon_gap"
                 android:singleLine="true"
                 android:text="@string/sample_like_num"
-                android:textColor="@color/list_appendix_color"
+                android:textColor="?attr/color_author_color"
                 android:textSize="@dimen/text_author_view_font_size_dimen" />
         </LinearLayout>
     </LinearLayout>

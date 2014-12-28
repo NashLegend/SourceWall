@@ -2,6 +2,8 @@
 <EditText xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/transparent"
+    android:background="?attr/color_reply_input_background"
     android:hint="@string/hint_input_image_url"
-    android:singleLine="true" />
+    android:singleLine="true"
+    android:textColor="?attr/color_reply_input_text"
+    android:textColorHint="?attr/color_reply_hint" />

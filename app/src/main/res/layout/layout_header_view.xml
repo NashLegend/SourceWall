@@ -9,5 +9,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:textColor="?attr/color_llist_foot_head_text"
         android:text="@string/pull_down_to_refresh" />
 </RelativeLayout>

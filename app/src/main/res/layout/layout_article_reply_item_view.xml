@@ -39,7 +39,8 @@
                     android:id="@+id/text_author"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/sample_author" />
+                    android:text="@string/sample_author"
+                    android:textColor="?attr/color_author_color" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -49,14 +50,16 @@
                         android:id="@+id/text_floor"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/sample_floor" />
+                        android:text="@string/sample_floor"
+                        android:textColor="?attr/color_author_color" />
 
                     <TextView
                         android:id="@+id/text_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/list_standard_item_text_text_gap"
-                        android:text="@string/sample_date" />
+                        android:text="@string/sample_date"
+                        android:textColor="?attr/color_author_color" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -77,7 +80,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/list_standard_item_text_icon_gap"
                 android:layout_weight="0"
-                android:text="@string/sample_like_num" />
+                android:text="@string/sample_like_num"
+                android:textColor="?attr/color_author_color" />
         </LinearLayout>
 
         <WebView

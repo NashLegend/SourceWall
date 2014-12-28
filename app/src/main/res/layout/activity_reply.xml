@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:attr/colorBackground"
+    android:background="?attr/color_page_background"
     tools:context="com.example.sourcewall.ReplyActivity">
 
     <android.support.v7.widget.Toolbar
@@ -27,9 +27,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/abc_action_bar_subtitle_bottom_margin_material"
+            android:background="?attr/color_reply_quote_background"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:text="@string/sample_title"
+            android:textColor="?attr/color_reply_quote_text"
             android:visibility="gone" />
 
         <EditText
@@ -37,11 +39,13 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="@android:color/transparent"
+            android:background="?attr/color_reply_input_background"
             android:gravity="top"
             android:hint="@string/hint_reply"
             android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin" />
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:textColor="?attr/color_reply_input_text"
+            android:textColorHint="?attr/color_reply_hint" />
 
         <LinearLayout
             android:id="@+id/layout_reply_action"

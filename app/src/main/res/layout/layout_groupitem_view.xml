@@ -10,6 +10,7 @@
         android:id="@+id/text_subitem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="?attr/color_drawer_list_text"
         android:text="@string/sample_title"
         android:textSize="@dimen/list_standard_title_font_size" />
 </LinearLayout>

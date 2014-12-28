@@ -15,7 +15,7 @@ import com.squareup.picasso.Picasso;
 
 /**
  * Created by NashLegend on 2014/9/18 0018.
- * Shared by PostComment and ArticleComment
+ * 没有被使用过
  */
 public class ArticleReplyListItemView extends AceView<UComment> {
 

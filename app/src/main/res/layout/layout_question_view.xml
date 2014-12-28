@@ -8,7 +8,7 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/white"
+        android:background="?attr/color_page_background"
         android:orientation="vertical"
         android:paddingBottom="@dimen/list_standard_item_padding_vertical"
         android:paddingLeft="@dimen/list_standard_item_padding_horizontal"
@@ -17,6 +17,7 @@
 
         <TextView
             android:id="@+id/text_title"
+            android:textColor="?attr/color_article_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/sample_title"
@@ -31,6 +32,7 @@
             <TextView
                 android:id="@+id/text_author"
                 android:layout_width="wrap_content"
+                android:textColor="?attr/color_author_color"
                 android:layout_height="wrap_content"
                 android:text="@string/sample_author" />
 
@@ -38,6 +40,7 @@
                 android:id="@+id/text_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="?attr/color_author_color"
                 android:layout_marginLeft="@dimen/list_standard_item_text_text_gap"
                 android:text="@string/sample_date" />
         </LinearLayout>
@@ -65,11 +68,11 @@
                 android:id="@+id/text_replies_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="?attr/color_author_color"
                 android:layout_marginLeft="@dimen/list_standard_item_text_icon_gap"
                 android:layout_weight="0"
                 android:singleLine="true"
-                android:text="@string/sample_like_num"
-                android:textColor="@color/list_appendix_color" />
+                android:text="@string/sample_like_num" />
         </LinearLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

@@ -5,7 +5,7 @@
     android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="?attr/color_page_background"
     tools:context="com.example.sourcewall.AnswerActivity">
 
     <com.example.sourcewall.commonview.SScrollView
@@ -45,21 +45,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/action_bar"
-        android:background="?android:attr/colorBackground"
+        android:background="?attr/color_answer_question_title_background"
         android:ellipsize="end"
         android:maxLines="3"
         android:paddingBottom="10dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:paddingTop="10dp"
-        android:text="@string/sample_title" />
+        android:text="@string/sample_title"
+        android:textColor="?attr/color_answer_question_title_text" />
 
     <LinearLayout
         android:id="@+id/layout_author"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/text_title"
-        android:background="#f5f5f5"
+        android:background="?attr/color_answer_author_background"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="5dp">
@@ -82,13 +83,15 @@
                 android:id="@+id/text_author"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/sample_author" />
+                android:text="@string/sample_author"
+                android:textColor="?attr/color_answer_author_text" />
 
             <TextView
                 android:id="@+id/text_author_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/sample_author_title" />
+                android:text="@string/sample_author_title"
+                android:textColor="?attr/color_answer_author_sub_text" />
         </LinearLayout>
 
         <LinearLayout
@@ -110,7 +113,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/list_standard_item_text_icon_gap"
                 android:layout_weight="0"
-                android:text="@string/sample_like_num" />
+                android:text="@string/sample_like_num"
+                android:textColor="?attr/color_answer_author_sub_text" />
         </LinearLayout>
 
     </LinearLayout>
@@ -131,8 +135,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        fab:fab_addButtonColorNormal="@android:color/holo_blue_light"
-        fab:fab_addButtonColorPressed="@android:color/holo_blue_dark"
+        fab:fab_addButtonColorNormal="?attr/color_primary_bright"
+        fab:fab_addButtonColorPressed="?attr/color_primary_dark"
         fab:fab_addButtonPlusIconColor="@android:color/white"
         fab:fab_expandDirection="left">
 
@@ -140,8 +144,8 @@
             android:id="@+id/button_thank"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            fab:fab_colorNormal="@android:color/holo_blue_bright"
-            fab:fab_colorPressed="@android:color/holo_blue_light"
+            fab:fab_colorNormal="?attr/color_primary_bright"
+            fab:fab_colorPressed="?attr/color_primary_dark"
             fab:fab_icon="@drawable/ic_star_white_36dp" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
@@ -149,16 +153,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="10dp"
-            fab:fab_colorNormal="@android:color/holo_blue_bright"
-            fab:fab_colorPressed="@android:color/holo_blue_light"
+            fab:fab_colorNormal="?attr/color_primary_bright"
+            fab:fab_colorPressed="?attr/color_primary_dark"
             fab:fab_icon="@drawable/ic_plus_one_white_36dp" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/button_reply"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            fab:fab_colorNormal="@android:color/holo_blue_bright"
-            fab:fab_colorPressed="@android:color/holo_blue_light"
+            fab:fab_colorNormal="?attr/color_primary_bright"
+            fab:fab_colorPressed="?attr/color_primary_dark"
             fab:fab_icon="@drawable/ic_reply_color_white_36dp" />
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>

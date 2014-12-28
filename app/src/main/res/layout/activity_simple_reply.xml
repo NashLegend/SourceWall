@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="?attr/color_page_background"
     android:orientation="vertical"
     tools:context="com.example.sourcewall.SimpleReplyActivity">
 
@@ -48,6 +48,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="@string/hint_reply"
+            android:textColor="?attr/color_reply_input_text"
+            android:textColorHint="?attr/color_reply_hint"
             android:maxHeight="240dp" />
 
         <ImageButton

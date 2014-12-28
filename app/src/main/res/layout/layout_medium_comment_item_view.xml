@@ -8,7 +8,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
+        android:background="?attr/color_page_background"
         android:orientation="vertical"
         android:paddingBottom="@dimen/list_standard_item_padding_vertical"
         android:paddingLeft="@dimen/list_standard_item_padding_horizontal"
@@ -38,6 +38,7 @@
                 <TextView
                     android:id="@+id/text_author"
                     android:layout_width="wrap_content"
+                    android:textColor="?attr/color_author_color"
                     android:layout_height="wrap_content"
                     android:text="@string/sample_author" />
 
@@ -47,6 +48,7 @@
 
                     <TextView
                         android:id="@+id/text_floor"
+                        android:textColor="?attr/color_author_color"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/sample_floor" />
@@ -55,6 +57,7 @@
                         android:id="@+id/text_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="?attr/color_author_color"
                         android:layout_marginLeft="@dimen/list_standard_item_text_text_gap"
                         android:text="@string/sample_date" />
                 </LinearLayout>
@@ -75,6 +78,7 @@
                 android:id="@+id/text_like_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="?attr/color_author_color"
                 android:layout_marginLeft="@dimen/list_standard_item_text_icon_gap"
                 android:layout_weight="0"
                 android:text="@string/sample_like_num" />
@@ -85,7 +89,9 @@
             android:id="@+id/text_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:lineSpacingMultiplier="@dimen/lineSpacingMultiplier"
             android:layout_marginTop="@dimen/content_top_span_dimen"
+            android:textColor="?attr/color_list_summary"
             android:paddingBottom="0dp"
             android:text="@string/sample_summary" />
     </LinearLayout>
