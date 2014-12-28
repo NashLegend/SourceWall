@@ -52,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0"
-            android:background="@color/light_gray"
+            android:background="?attr/color_reply_operation_bar_background"
             android:gravity="end"
             android:orientation="horizontal"
             android:paddingBottom="5dp"

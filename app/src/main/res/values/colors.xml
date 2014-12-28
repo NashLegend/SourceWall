@@ -4,103 +4,106 @@
     <color name="text_color_primary">#ffffff</color>
     <color name="text_color_primary_night">#000000</color>
     <color name="color_primary">#33b5e5</color>
-    <color name="color_primary_night">#cc4a1a</color>
+    <color name="color_primary_night">#212121</color>
     <color name="color_primary_dark">#0099cc</color>
-    <color name="color_primary_dark_night">#ff6633</color>
+    <color name="color_primary_dark_night">#424242</color>
     <color name="color_primary_bright">#00ddff</color>
-    <color name="color_primary_bright_night">#ff2200</color>
+    <color name="color_primary_bright_night">#616161</color>
     <color name="color_accent">#33b5e5</color>
-    <color name="color_accent_night">#cc4a1a</color>
+    <color name="color_accent_night">#212121</color>
     <color name="light_gray">#dddddd</color>
     <color name="light_gray_night">#222222</color>
 
     <color name="page_background">#eeeeee</color>
-    <color name="page_background_night">#111111</color>
+    <color name="page_background_night">#424242</color>
 
     <!--正文标题颜色-->
     <color name="article_title">#000000</color>
-    <color name="article_title_night">#ffffff</color>
+    <color name="article_title_night">#e0e0e0</color>
     <!--正文内容字体颜色-->
     <color name="article_content_text">#555555</color>
-    <color name="article_content_text_night">#aaaaaa</color>
+    <color name="article_content_text_night">#e0e0e0</color>
     <!--正文背景色-->
     <color name="article_text_background">#ffffff</color>
-    <color name="article_text_background_night">#000000</color>
+    <color name="article_text_background_night">#212121</color>
 
     <color name="list_title">#444444</color>
-    <color name="list_title_night">#bbbbbb</color>
+    <color name="list_title_night">#e0e0e0</color>
     <color name="list_summary">#777777</color>
-    <color name="list_summary_night">#888888</color>
+    <color name="list_summary_night">#e0e0e0</color>
     <color name="author_color">#888888</color>
-    <color name="author_color_night">#777777</color>
+    <color name="author_color_night">#e0e0e0</color>
     <color name="author_dark_color">#555555</color>
-    <color name="author_dark_color_night">#aaaaaa</color>
+    <color name="author_dark_color_night">#f0f0f0</color>
     <color name="author_sub_color">#aaaaaa</color>
-    <color name="author_sub_color_night">#555555</color>
+    <color name="author_sub_color_night">#c5c5c5</color>
+
     <color name="list_background">#ffffff</color>
-    <color name="list_background_night">#000000</color>
+    <color name="list_background_night">#212121</color>
     <color name="list_background_pressed">#dddddd</color>
-    <color name="list_background_pressed_night">#222222</color>
+    <color name="list_background_pressed_night">#424242</color>
 
     <!--答案页面-->
     <color name="answer_author_background">#f5f5f5</color>
-    <color name="answer_author_background_night">#0a0a0a</color>
+    <color name="answer_author_background_night">#616161</color>
     <color name="answer_author_text">#333333</color>
-    <color name="answer_author_text_night">#cccccc</color>
+    <color name="answer_author_text_night">#e0e0e0</color>
     <color name="answer_author_sub_text">#555555</color>
-    <color name="answer_author_sub_text_night">#aaaaaa</color>
+    <color name="answer_author_sub_text_night">#d0d0d0</color>
     <color name="answer_question_title_background">#eeeeee</color>
-    <color name="answer_question_title_background_night">#111111</color>
+    <color name="answer_question_title_background_night">#515151</color>
     <color name="answer_question_title_background_pressed">#cccccc</color>
-    <color name="answer_question_title_background_pressed_night">#333333</color>
+    <color name="answer_question_title_background_pressed_night">#757575</color>
     <color name="answer_question_title_text">#222222</color>
-    <color name="answer_question_title_text_night">#dddddd</color>
+    <color name="answer_question_title_text_night">#bdbdbd</color>
 
     <!--回复页面-->
     <color name="reply_quote_background">#f5f5f5</color>
-    <color name="reply_quote_background_night">#0a0a0a</color>
+    <color name="reply_quote_background_night">#212121</color>
     <color name="reply_quote_text">#333333</color>
     <color name="reply_quote_text_night">#cccccc</color>
     <color name="reply_input_background">#ffffff</color>
-    <color name="reply_input_background_night">#000000</color>
+    <color name="reply_input_background_night">#424242</color>
     <color name="reply_input_text">#000000</color>
-    <color name="reply_input_text_night">#ffffff</color>
+    <color name="reply_input_text_night">#bdbdbd</color>
     <color name="reply_hint">#808080</color>
     <color name="reply_hint_night">#7f7f7f</color>
+    <color name="reply_operation_bar_background">#dddddd</color>
+    <color name="reply_operation_bar_background_night">#444444</color>
 
     <!--对话框-->
     <color name="dialog_button_background">@android:color/transparent</color>
     <color name="dialog_button_background_night">@android:color/transparent</color>
     <color name="dialog_button_text">#33b5e5</color>
-    <color name="dialog_button_text_night">#cc4a1a</color>
+    <color name="dialog_button_text_night">#9c9c9c</color>
     <color name="dialog_button_text_pressed">#0099cc</color>
-    <color name="dialog_button_text_pressed_night">#ff6633</color>
+    <color name="dialog_button_text_pressed_night">#bdbdbd</color>
     <color name="dialog_title">#000000</color>
-    <color name="dialog_title_night">#ffffff</color>
+    <color name="dialog_title_night">#eeeeee</color>
     <color name="dialog_text">#222222</color>
     <color name="dialog_text_night">#dddddd</color>
     <color name="dialog_list_text">#888888</color>
     <color name="dialog_list_text_night">#777777</color>
     <color name="dialog_background">#ffffff</color>
-    <color name="dialog_background_night">#000000</color>
+    <color name="dialog_background_night">#424242</color>
 
     <!--抽屉颜色-->
     <color name="drawer_button_background">#ffffff</color>
-    <color name="drawer_button_background_night">#000000</color>
+    <color name="drawer_button_background_night">#616161</color>
     <color name="drawer_button_background_pressed">#33b5e5</color>
-    <color name="drawer_button_background_pressed_night">#cc4a1a</color>
+    <color name="drawer_button_background_pressed_night">#828282</color>
     <color name="drawer_button_text">#000000</color>
-    <color name="drawer_button_text_night">#ffffff</color>
+    <color name="drawer_button_text_night">#dddddd</color>
     <color name="drawer_button_text_pressed">#000000</color>
-    <color name="drawer_button_text_pressed_night">#ffffff</color>
+    <color name="drawer_button_text_pressed_night">#dddddd</color>
     <color name="drawer_author">#000000</color>
-    <color name="drawer_author_night">#ffffff</color>
+    <color name="drawer_author_night">#dddddd</color>
     <color name="drawer_list_text">#222222</color>
     <color name="drawer_list_text_night">#dddddd</color>
     <color name="drawer_list_sub_text">#333333</color>
     <color name="drawer_list_sub_text_night">#cccccc</color>
     <color name="drawer_background">#ffffff</color>
-    <color name="drawer_background_night">#000000</color>
+    <color name="drawer_background_night">#424242</color>
 
 
     <!--LListView-->

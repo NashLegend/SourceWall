@@ -48,6 +48,7 @@
     <attr name="color_reply_input_background" format="color" />
     <attr name="color_reply_input_text" format="color" />
     <attr name="color_reply_hint" format="color" />
+    <attr name="color_reply_operation_bar_background" format="color" />
 
     <!--Dialog-->
     <attr name="color_dialog_button_background" format="color" />

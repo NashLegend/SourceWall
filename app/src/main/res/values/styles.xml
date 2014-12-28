@@ -55,6 +55,7 @@
         <item name="color_reply_input_text">@color/reply_input_text</item>
         <item name="color_reply_hint">@color/reply_hint</item>
 
+
         <!--对话框-->
         <item name="color_dialog_button_background">@color/dialog_button_background</item>
         <item name="drawable_dialog_button_text">@drawable/dialog_button_text_color</item>
@@ -88,6 +89,22 @@
     </style>
 
     <style name="AppThemeNight" parent="Theme.AppCompat.Light.NoActionBar">
+
+        <item name="android:textColorPrimary">@color/abc_primary_text_material_dark</item>
+        <item name="android:textColorPrimaryInverse">@color/abc_primary_text_material_light</item>
+        <item name="android:textColorPrimaryDisableOnly">@color/abc_primary_text_disable_only_material_dark</item>
+        <item name="android:textColorSecondary">@color/abc_secondary_text_material_dark</item>
+        <item name="android:textColorSecondaryInverse">@color/abc_secondary_text_material_light</item>
+        <item name="android:textColorTertiary">@color/abc_secondary_text_material_dark</item>
+        <item name="android:textColorTertiaryInverse">@color/abc_secondary_text_material_light</item>
+        <item name="android:textColorHint">@color/hint_foreground_material_dark</item>
+        <item name="android:textColorHintInverse">@color/hint_foreground_material_light</item>
+        <item name="android:textColorHighlight">@color/highlighted_text_material_dark</item>
+        <item name="android:textColorLink">@color/link_text_material_dark</item>
+
+        <!-- Used by MediaRouter -->
+        <item name="isLightTheme">false</item>
+
         <item name="windowActionModeOverlay">true</item>
         <item name="colorPrimary">@color/color_primary_night</item>
         <item name="colorPrimaryDark">@color/color_primary_dark_night</item>
@@ -141,6 +158,7 @@
         <item name="color_reply_input_background">@color/reply_input_background_night</item>
         <item name="color_reply_input_text">@color/reply_input_text_night</item>
         <item name="color_reply_hint">@color/reply_hint_night</item>
+        <item name="color_reply_operation_bar_background">@color/reply_operation_bar_background_night</item>
 
         <!--对话框-->
         <item name="color_dialog_button_background">@color/dialog_button_background_night</item>
