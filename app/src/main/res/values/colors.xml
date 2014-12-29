@@ -4,13 +4,13 @@
     <color name="text_color_primary">#ffffff</color>
     <color name="text_color_primary_night">#000000</color>
     <color name="color_primary">#33b5e5</color>
-    <color name="color_primary_night">#212121</color>
+    <color name="color_primary_night">#363636</color>
     <color name="color_primary_dark">#0099cc</color>
     <color name="color_primary_dark_night">#424242</color>
     <color name="color_primary_bright">#00ddff</color>
     <color name="color_primary_bright_night">#616161</color>
     <color name="color_accent">#33b5e5</color>
-    <color name="color_accent_night">#212121</color>
+    <color name="color_accent_night">#bdbdbd</color>
     <color name="light_gray">#dddddd</color>
     <color name="light_gray_night">#222222</color>
 
@@ -18,7 +18,7 @@
     <color name="page_background_night">#424242</color>
 
     <color name="card_background">#ffffff</color>
-    <color name="card_background_night">#616161</color>
+    <color name="card_background_night">#505050</color>
 
     <color name="author_color">#888888</color>
     <color name="author_color_night">#cccccc</color>
@@ -65,8 +65,6 @@
     <color name="reply_quote_background_night">#454545</color>
     <color name="reply_quote_text">#333333</color>
     <color name="reply_quote_text_night">#e0e0e0</color>
-    <color name="reply_input_background">#ffffff</color>
-    <color name="reply_input_background_night">#424242</color>
     <color name="reply_input_text">#000000</color>
     <color name="reply_input_text_night">#e0e0e0</color>
     <color name="reply_hint">#808080</color>
@@ -92,9 +90,9 @@
 
     <!--抽屉颜色-->
     <color name="drawer_button_background">#ffffff</color>
-    <color name="drawer_button_background_night">#616161</color>
+    <color name="drawer_button_background_night">#424242</color>
     <color name="drawer_button_background_pressed">#33b5e5</color>
-    <color name="drawer_button_background_pressed_night">#9c9c9c</color>
+    <color name="drawer_button_background_pressed_night">#757575</color>
     <color name="drawer_button_text">#000000</color>
     <color name="drawer_button_text_night">#e0e0e0</color>
     <color name="drawer_button_text_pressed">#000000</color>

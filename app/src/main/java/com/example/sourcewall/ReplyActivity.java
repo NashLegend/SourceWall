@@ -253,6 +253,7 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
             progressDialog = new ProgressDialog(ReplyActivity.this);
             progressDialog.setCancelable(false);
             progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.setMessage(getString(R.string.message_replying));
             progressDialog.show();
         }
 

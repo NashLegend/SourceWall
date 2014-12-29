@@ -44,7 +44,6 @@
     <!--回复-->
     <attr name="color_reply_quote_background" format="color" />
     <attr name="color_reply_quote_text" format="color" />
-    <attr name="color_reply_input_background" format="color" />
     <attr name="color_reply_input_text" format="color" />
     <attr name="color_reply_hint" format="color" />
     <attr name="color_reply_operation_bar_background" format="color" />

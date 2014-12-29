@@ -39,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="?attr/color_reply_input_background"
+            android:background="@android:color/transparent"
             android:gravity="top"
             android:hint="@string/hint_reply"
             android:paddingLeft="@dimen/activity_horizontal_margin"

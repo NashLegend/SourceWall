@@ -176,6 +176,7 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
             progressDialog = new ProgressDialog(SimpleReplyActivity.this);
             progressDialog.setCancelable(false);
             progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.setMessage(getString(R.string.message_replying));
             progressDialog.show();
         }
 

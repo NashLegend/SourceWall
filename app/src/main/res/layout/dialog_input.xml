@@ -15,10 +15,11 @@
             android:id="@+id/input_dialog_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/color_reply_input_background"
+            android:background="@android:color/transparent"
             android:gravity="top"
             android:minHeight="@dimen/input_dialog_input_height"
             android:padding="5dp"
+            android:hint="@string/hint_recommend"
             android:textColor="?attr/color_reply_input_text"
             android:textColorHint="?attr/color_reply_hint" />
 

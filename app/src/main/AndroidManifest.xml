@@ -14,7 +14,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:screenOrientation="portrait"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppThemeNight">
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">
@@ -35,15 +35,15 @@
         <activity
             android:name=".ArticleActivity"
             android:label="@string/article"
-            android:theme="@style/BlankTheme" />
+            android:theme="@style/BlankThemeNight" />
         <activity
             android:name=".PostActivity"
             android:label="@string/post"
-            android:theme="@style/BlankTheme" />
+            android:theme="@style/BlankThemeNight" />
         <activity
             android:name=".QuestionActivity"
             android:label="@string/question"
-            android:theme="@style/BlankTheme" />
+            android:theme="@style/BlankThemeNight" />
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login" />
@@ -54,11 +54,11 @@
         <activity
             android:name=".AnswerActivity"
             android:label="@string/title_activity_answer"
-            android:theme="@style/BlankTheme" />
+            android:theme="@style/BlankThemeNight" />
         <activity
             android:name=".SimpleReplyActivity"
             android:label="@string/title_activity_simple_reply"
-            android:theme="@style/BlankTheme" />
+            android:theme="@style/BlankThemeNight" />
     </application>
 
 </manifest>
