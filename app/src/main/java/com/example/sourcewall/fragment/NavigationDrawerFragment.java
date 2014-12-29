@@ -248,10 +248,6 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-        if (item.getItemId() == R.id.action_example) {
-            UserAPI.startLoginActivity(getActivity());
-            return true;
-        }
         return super.onOptionsItemSelected(item);
     }
 

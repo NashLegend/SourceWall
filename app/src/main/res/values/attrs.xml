@@ -8,6 +8,8 @@
 
     <!--卡片-->
     <attr name="color_card_background" format="color" />
+    <!--ToolBar Theme-->
+    <attr name="theme_toolbar" format="reference" />
 
     <!--作者名字颜色，同时还是日期、数量等的颜色，正文列表通用-->
     <attr name="color_author_color" format="color" />
@@ -71,4 +73,5 @@
 
     <!--LListView-->
     <attr name="color_llist_foot_head_text" format="color" />
+
 </resources>

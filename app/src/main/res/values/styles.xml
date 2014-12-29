@@ -1,6 +1,17 @@
 <resources>
 
+    <style name="ToolbarTextAppearance" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
+    <style name="ToolbarStyleDay" parent="@style/Widget.AppCompat.Toolbar">
+        <item name="titleTextAppearance">@style/ToolbarTextAppearance</item>
+    </style>
+
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!--夜间模式不用设置toolbarStyle-->
+        <item name="toolbarStyle">@style/ToolbarStyleDay</item>
+
         <item name="windowActionModeOverlay">true</item>
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
@@ -53,6 +64,9 @@
         <item name="color_reply_quote_text">@color/reply_quote_text</item>
         <item name="color_reply_input_text">@color/reply_input_text</item>
         <item name="color_reply_hint">@color/reply_hint</item>
+        <item name="color_reply_operation_bar_background">
+            @color/reply_operation_bar_background
+        </item>
 
 
         <!--对话框-->
@@ -99,7 +113,7 @@
 
     <style name="AppThemeNight" parent="Theme.AppCompat.Light.NoActionBar">
 
-        <item name="android:textColorPrimary">@color/abc_primary_text_material_dark</item>
+        <item name="android:textColorPrimary">#eeeeee</item>
         <item name="android:textColorPrimaryInverse">@color/abc_primary_text_material_light</item>
         <item name="android:textColorPrimaryDisableOnly">
             @color/abc_primary_text_disable_only_material_dark
