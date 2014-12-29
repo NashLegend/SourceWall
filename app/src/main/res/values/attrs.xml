@@ -4,23 +4,22 @@
 
     <!--主题色-->
     <attr name="colorPrimaryBright" format="color" />
-
-
     <attr name="color_page_background" format="color" />
 
+    <!--卡片-->
+    <attr name="color_card_background" format="color" />
 
-    <!--正文页颜色-->
+    <!--作者名字颜色，同时还是日期、数量等的颜色，正文列表通用-->
+    <attr name="color_author_color" format="color" />
+    <attr name="color_author_dark_color" format="color" />
+    <attr name="color_author_sub_color" format="color" />
+
     <!--正文标题颜色-->
     <attr name="color_article_title" format="color" />
     <!--正文内容字体颜色-->
     <attr name="color_article_content_text" format="color" />
     <!--正文背景色-->
     <attr name="color_article_text_background" format="color" />
-
-    <!--作者名字颜色，同时还是日期、数量等的颜色，正文列表通用-->
-    <attr name="color_author_color" format="color" />
-    <attr name="color_author_dark_color" format="color" />
-    <attr name="color_author_sub_color" format="color" />
 
     <!--列表item的标题颜色-->
     <attr name="color_list_title" format="color" />
