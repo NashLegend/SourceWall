@@ -32,6 +32,7 @@ import com.example.sourcewall.connection.api.UserAPI;
 import com.example.sourcewall.model.SubItem;
 import com.example.sourcewall.model.UserInfo;
 import com.example.sourcewall.util.Consts;
+import com.example.sourcewall.util.SharedUtil;
 import com.example.sourcewall.util.ToastUtil;
 import com.example.sourcewall.view.SubItemView;
 import com.squareup.picasso.Picasso;
@@ -71,6 +72,8 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     private ChannelsAdapter adapter;
     private View settingView;
     private View userView;
+    private View dayView;
+    private View nightView;
     private ImageView avatarView;
     private TextView userName;
 
@@ -105,10 +108,23 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
 
         settingView = layoutView.findViewById(R.id.view_setting);
         userView = layoutView.findViewById(R.id.layout_user);
+        dayView = layoutView.findViewById(R.id.view_switch_to_day);
+        nightView = layoutView.findViewById(R.id.view_switch_to_night);
+
+        if (SharedUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
+            dayView.setVisibility(View.VISIBLE);
+            nightView.setVisibility(View.GONE);
+        } else {
+            dayView.setVisibility(View.GONE);
+            nightView.setVisibility(View.VISIBLE);
+        }
+
         avatarView = (ImageView) layoutView.findViewById(R.id.image_avatar);
         userName = (TextView) layoutView.findViewById(R.id.text_name);
         settingView.setOnClickListener(this);
         userView.setOnClickListener(this);
+        dayView.setOnClickListener(this);
+        nightView.setOnClickListener(this);
 
         listView = (ExpandableListView) layoutView.findViewById(R.id.list_channel);
         listView.setGroupIndicator(null);
@@ -274,6 +290,11 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         }
     }
 
+    private void revertMode() {
+        SharedUtil.saveBoolean(Consts.Key_Is_Night_Mode, !SharedUtil.readBoolean(Consts.Key_Is_Night_Mode, false));
+        getActivity().recreate();
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -281,7 +302,10 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
                 onUserViewClicked();
                 break;
             case R.id.view_setting:
-
+                break;
+            case R.id.view_switch_to_day:
+            case R.id.view_switch_to_night:
+                revertMode();
                 break;
         }
     }

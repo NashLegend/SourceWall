@@ -35,7 +35,7 @@
     <color name="article_content_text_night">#d0d0d0</color>
     <!--正文背景色-->
     <color name="article_text_background">#ffffff</color>
-    <color name="article_text_background_night">#212121</color>
+    <color name="article_text_background_night">#424242</color>
 
     <color name="list_title">#444444</color>
     <color name="list_title_night">#e0e0e0</color>

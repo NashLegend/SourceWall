@@ -89,5 +89,7 @@
     <string name="login_failed_for_other_reason">登录失败</string>
     <string name="unknown_error">未知错误</string>
     <string name="click_to_login">点击登录</string>
+    <string name="switch_to_night_mode">夜间模式</string>
+    <string name="switch_to_normal_mode">日间模式</string>
 
 </resources>

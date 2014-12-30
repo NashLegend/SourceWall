@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -23,6 +24,7 @@ import com.example.sourcewall.fragment.PostsFragment;
 import com.example.sourcewall.fragment.QuestionsFragment;
 import com.example.sourcewall.model.SubItem;
 import com.example.sourcewall.util.Consts;
+import com.example.sourcewall.util.SharedUtil;
 
 
 public class MainActivity extends BaseActivity {
@@ -41,18 +43,26 @@ public class MainActivity extends BaseActivity {
     QuestionsFragment questionsFragment;
     Toolbar toolbar;
 
+    @Override
+    public void setTheme(int resid) {
+        if (SharedUtil.readBoolean(Consts.Key_Is_Night_Mode,false)){
+            resid=R.style.BottomThemeNight;
+        }else {
+            resid=R.style.BottomTheme;
+        }
+        super.setTheme(resid);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        toolbar = (Toolbar) findViewById(R.id.action_bar);
-        setSupportActionBar(toolbar);
         receiver = new Receiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction(Consts.Action_Open_Content_Fragment);
         registerReceiver(receiver, filter);
-
+        toolbar = (Toolbar) findViewById(R.id.action_bar);
+        setSupportActionBar(toolbar);
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 
@@ -60,6 +70,11 @@ public class MainActivity extends BaseActivity {
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -79,7 +94,6 @@ public class MainActivity extends BaseActivity {
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(getTitle());
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

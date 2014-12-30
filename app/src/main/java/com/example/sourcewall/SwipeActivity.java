@@ -17,9 +17,22 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
+import com.example.sourcewall.util.Consts;
+import com.example.sourcewall.util.SharedUtil;
+
 public class SwipeActivity extends BaseActivity {
 
     private SwipeLayout swipeLayout;
+
+    @Override
+    public void setTheme(int resid) {
+        if (SharedUtil.readBoolean(Consts.Key_Is_Night_Mode, false)){
+            resid=R.style.AppThemeNight;
+        }else {
+            resid=R.style.AppTheme;
+        }
+        super.setTheme(resid);
+    }
 
     public SwipeActivity() {
 

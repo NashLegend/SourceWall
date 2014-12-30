@@ -13,7 +13,7 @@ import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.SharedUtil;
 
 
-public class LoginActivity extends ActionBarActivity {
+public class LoginActivity extends SwipeActivity {
 
     WebView webView;
     String cookieStr;
