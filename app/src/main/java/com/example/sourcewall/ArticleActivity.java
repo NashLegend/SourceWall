@@ -106,6 +106,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
             intent.putExtra(Consts.Extra_Simple_Comment, comment);
         }
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, 0);
     }
 
     private void recommend() {

@@ -17,9 +17,10 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:theme="@style/BottomTheme">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -27,23 +28,20 @@
         <activity
             android:name=".SettingActivity"
             android:label="@string/title_activity_setting"
-            android:parentActivityName=".BaseActivity">
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.sourcewall.BaseActivity" />
         </activity>
         <activity
             android:name=".ArticleActivity"
-            android:label="@string/article"
-            android:theme="@style/BlankTheme" />
+            android:label="@string/article" />
         <activity
             android:name=".PostActivity"
-            android:label="@string/post"
-            android:theme="@style/BlankTheme" />
+            android:label="@string/post" />
         <activity
             android:name=".QuestionActivity"
-            android:label="@string/question"
-            android:theme="@style/BlankTheme" />
+            android:label="@string/question" />
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login" />
@@ -53,12 +51,10 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".AnswerActivity"
-            android:label="@string/title_activity_answer"
-            android:theme="@style/BlankTheme" />
+            android:label="@string/title_activity_answer" />
         <activity
             android:name=".SimpleReplyActivity"
-            android:label="@string/title_activity_simple_reply"
-            android:theme="@style/BlankThemeNight" />
+            android:label="@string/title_activity_simple_reply" />
     </application>
 
 </manifest>

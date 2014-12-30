@@ -1,5 +1,11 @@
 <resources>
 
+    <style name="BaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="windowActionModeOverlay">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
     <style name="ToolbarTextAppearance" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textColor">#ffffff</item>
     </style>
@@ -8,7 +14,7 @@
         <item name="titleTextAppearance">@style/ToolbarTextAppearance</item>
     </style>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="BaseTheme">
         <!--夜间模式不用设置toolbarStyle-->
         <item name="toolbarStyle">@style/ToolbarStyleDay</item>
 
@@ -96,9 +102,10 @@
         <item name="color_llist_foot_head_text">@color/llist_foot_head_text</item>
     </style>
 
-    <style name="BlankTheme" parent="AppTheme">
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowIsTranslucent">true</item>
+    <!--MainActivity的主题-->
+    <style name="BottomTheme" parent="AppTheme">
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:windowIsTranslucent">false</item>
     </style>
 
     <style name="DialogThemeNight" parent="Theme.AppCompat.Dialog">
@@ -111,8 +118,7 @@
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
-    <style name="AppThemeNight" parent="Theme.AppCompat.Light.NoActionBar">
-
+    <style name="AppThemeNight" parent="BaseTheme">
         <item name="android:textColorPrimary">#eeeeee</item>
         <item name="android:textColorPrimaryInverse">@color/abc_primary_text_material_light</item>
         <item name="android:textColorPrimaryDisableOnly">
@@ -230,9 +236,10 @@
         <item name="color_llist_foot_head_text">@color/llist_foot_head_text_night</item>
     </style>
 
-    <style name="BlankThemeNight" parent="AppThemeNight">
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowIsTranslucent">true</item>
+    <!--MainActivity的夜间主题-->
+    <style name="BottomThemeNight" parent="AppThemeNight">
+        <item name="android:windowBackground">@android:color/black</item>
+        <item name="android:windowIsTranslucent">false</item>
     </style>
 
 </resources>
