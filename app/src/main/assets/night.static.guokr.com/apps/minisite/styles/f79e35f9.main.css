@@ -1,6 +1,5 @@
 @charset "UTF-8";
 
-/*夜间模式*/
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video {
 	margin: 0;
 	padding: 0;
@@ -8,17 +7,6 @@ html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abb
 	font: inherit;
 	font-size: 100%;
 	vertical-align: baseline
-	background: #424242
-}
-
-.content{
-    margin: 0;
-	padding: 0;
-	border: 0;
-	font: inherit;
-	font-size: 100%;
-	vertical-align: baseline
-	background: #424242
 }
 
 html {
@@ -235,8 +223,8 @@ article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section,su
 	content: "\e60a"
 }
 
-.gnicon-home,.gnicon-search,.gnicon-notice,.gnicon-msg,.gnicon-set,.gnicon-close,.gncion-arrowd,.gnicon-close-small,.gnicon-add,.gnicon-tick,.gnicon-cancel,.gnicon-mail,.gnicon-fresh {
-	background: url(../images/05236c04.header-icon.png) no-repeat;
+.gnicon-home,.gnicon-search,.gnicon-notice,.gnicon-msg,.gnicon-set,.gnicon-close,.gncion-arrowd,.gnicon-close-small,.gnicon-add,.gnicon-tick,.gnicon-cancel,.gnicon-mail,.gnicon-fresh,.gicon-set {
+	background: url(../images/e9ee3fbc.header-icon.png) no-repeat;
 	display: inline-block;
 	*display: inline;
 	*zoom: 1;
@@ -291,6 +279,21 @@ article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section,su
 	width: 17px;
 	height: 18px;
 	text-indent: 0
+}
+
+.gnicon-set {
+	background-position: -20px 0;
+	width: 15px;
+	height: 15px;
+	text-indent: 0
+}
+
+.gheader-new .gh-notice-panel .gnicon-set {
+	margin: 1px 0 0 3px;
+	background: url(../images/e9ee3fbc.header-icon.png) no-repeat;
+	background-position: -20px 0;
+	width: 15px;
+	height: 15px
 }
 
 .gnarrow-up,.gnarrow-down,.gnarrow-right,.gnarrow-left {
@@ -678,7 +681,7 @@ article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section,su
 }
 
 .gheader-new .gh-notice-panel li .gnicon-close,.gheader-new .gh-remind-panel li .gnicon-close {
-	background: url(../images/05236c04.header-icon.png) no-repeat;
+	background: url(../images/e9ee3fbc.header-icon.png) no-repeat;
 	background-position: -24px -55px;
 	width: 14px;
 	height: 14px;
@@ -1652,7 +1655,7 @@ body {
 
 @media screen and (max-width:767px) {
 	.container {
-		margin-top: 0px
+
 	}
 }
 

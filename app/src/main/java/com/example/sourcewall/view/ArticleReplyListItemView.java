@@ -55,6 +55,7 @@ public class ArticleReplyListItemView extends AceView<UComment> {
         likesView.setText(comment.getLikeNum() + "");
         floorView.setText(comment.getFloor());
         String html = "";
+        contentView.setBackgroundColor(0);
         contentView.getSettings().setDefaultTextEncodingName("UTF-8");
         contentView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "charset=UTF-8", null);
         if (TextUtils.isEmpty(comment.getAuthorAvatarUrl())) {

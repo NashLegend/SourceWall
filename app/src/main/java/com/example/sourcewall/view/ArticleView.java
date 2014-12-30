@@ -1,6 +1,7 @@
 package com.example.sourcewall.view;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.webkit.WebView;

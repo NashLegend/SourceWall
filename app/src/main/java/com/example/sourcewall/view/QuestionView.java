@@ -63,6 +63,7 @@ public class QuestionView extends AceView<Question> {
             authorView.setText(question.getAuthor());
             dateView.setText(question.getDate());
             String html = StyleChecker.getQuestionHtml(question.getContent());
+            contentView.setBackgroundColor(0);
             contentView.getSettings().setDefaultTextEncodingName("UTF-8");
             contentView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "charset=UTF-8", null);
         }

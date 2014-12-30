@@ -46,6 +46,7 @@ public class PostView extends AceView<Post> {
             authorView.setText(post.getAuthor());
             dateView.setText(post.getDate());
             String html = StyleChecker.getPostHtml(post.getContent());
+            contentView.setBackgroundColor(0);
             contentView.getSettings().setDefaultTextEncodingName("UTF-8");
             contentView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "charset=UTF-8", null);
         }

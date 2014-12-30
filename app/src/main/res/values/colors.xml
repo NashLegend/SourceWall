@@ -17,6 +17,9 @@
     <color name="page_background">#eeeeee</color>
     <color name="page_background_night">#424242</color>
 
+    <color name="webview_background">#ffffff</color>
+    <color name="webview_background_night">#424242</color>
+
     <color name="card_background">#ffffff</color>
     <color name="card_background_night">#505050</color>
 
@@ -105,7 +108,6 @@
     <color name="drawer_list_sub_text_night">#cccccc</color>
     <color name="drawer_background">#ffffff</color>
     <color name="drawer_background_night">#424242</color>
-
 
     <!--LListView-->
     <color name="llist_foot_head_text">#888888</color>

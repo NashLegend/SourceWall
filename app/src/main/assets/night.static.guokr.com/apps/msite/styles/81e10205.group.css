@@ -745,7 +745,7 @@
 }
 
 .content-paragraph,.html-text-mixin p,.html-text-mixin td,.html-text-mixin th {
-	color: #d0d0d0;
+	color: #32393d;
 	font-family: "Microsoft YaHei","WenQuanYi Micro Hei",SimHei,Tahoma,sans-serif;
 	text-align: left;
 	margin-bottom: 1.2em
@@ -934,7 +934,7 @@
 
 .html-text-mixin a {
 	text-decoration: underline;
-	color: #80cbc4;
+	color: #32393d;
 	word-break: break-all
 }
 
@@ -973,7 +973,7 @@
 .content-main {
 	margin: 0;
 	padding: 15px;
-	background: #505050
+	background: #fff
 }
 
 .content-main .header .publish .author,.content-main .header .publish .date {

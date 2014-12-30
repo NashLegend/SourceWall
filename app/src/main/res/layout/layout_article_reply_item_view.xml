@@ -89,9 +89,7 @@
             android:id="@+id/text_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#0000"
             android:layout_marginTop="@dimen/content_top_span_dimen"
-            android:paddingBottom="0dp"
-            android:text="@string/sample_summary" />
+            android:paddingBottom="0dp" />
     </LinearLayout>
 </android.support.v7.widget.CardView>

@@ -22,7 +22,6 @@ public class StyleChecker {
                 "  <div class=\"container article-page\"> \n" +
                 "   <div class=\"main\"> \n" +
                 "    <div class=\"content\"> ";
-
         String suffix = "</div> \n" +
                 "   </div> \n" +
                 "  </div> \n" +
@@ -67,8 +66,6 @@ public class StyleChecker {
                 "  <link rel=\"stylesheet\" href=\"file:///android_asset/static.guokr.com/apps/ask/styles/b3b2bdee.contentPage.css\" /> \n" +
                 " </head> \n" +
                 " <body> \n" +
-                "  <div class=\"sub-nav\"> \n" +
-                "  </div> \n" +
                 "  <div class=\"gwrap ask-content-page\"> \n" +
                 "   <div class=\"gmain\"> \n" +
                 "    <div class=\"post\"> \n" +
@@ -82,7 +79,6 @@ public class StyleChecker {
                 " </body>\n" +
                 "</html>";
         String html = prefix + content + suffix;
-
         return html;
     }
 

@@ -554,7 +554,7 @@
 
 .article-page {
 	font-size: 14px;
-	color: #d0d0d0;
+	color: #333;
 	position: relative
 }
 
@@ -684,7 +684,9 @@
 
 .article-page .document div,.article-page .document p {
 	margin-bottom: 25px;
-	line-height: 30px
+	line-height: 30px;
+	word-break: break-word;
+	word-wrap: break-word
 }
 
 .article-page .document div em,.article-page .document p em {
@@ -946,7 +948,7 @@
 	word-wrap: break-word
 }
 
-.article-page .cmts .cmts-list li .cmt-content i {
+.article-page .cmts .cmts-list li .cmt-content i,.article-page .cmts .cmts-list li .cmt-content em {
 	font-style: italic
 }
 

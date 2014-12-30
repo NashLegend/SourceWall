@@ -5,6 +5,7 @@
     <!--主题色-->
     <attr name="colorPrimaryBright" format="color" />
     <attr name="color_page_background" format="color" />
+    <attr name="color_webview_background" format="color" />
 
     <!--卡片-->
     <attr name="color_card_background" format="color" />

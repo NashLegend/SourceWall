@@ -52,7 +52,6 @@
             android:id="@+id/web_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#0000"
             android:textSize="@dimen/text_content_font_size_dimen" />
 
     </LinearLayout>

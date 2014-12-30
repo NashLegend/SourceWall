@@ -25,6 +25,7 @@
         <item name="colorAccent">@color/color_accent</item>
         <item name="android:colorBackground">@color/page_background</item>
         <item name="color_page_background">@color/page_background</item>
+        <item name="color_webview_background">@color/webview_background</item>
         <item name="cardBackgroundColor">@color/card_background</item>
 
         <!--作者名字颜色，同时还是日期、数量等的颜色，正文列表通用-->
@@ -158,6 +159,7 @@
         <item name="colorAccent">@color/color_accent_night</item>
         <item name="android:colorBackground">@color/page_background_night</item>
         <item name="color_page_background">@color/page_background_night</item>
+        <item name="color_webview_background">@color/webview_background_night</item>
         <item name="cardBackgroundColor">@color/card_background_night</item>
 
         <!--作者名字颜色，同时还是日期、数量等的颜色，正文列表通用-->
