@@ -88,5 +88,6 @@
     <string name="json_error">返回Json问题</string>
     <string name="login_failed_for_other_reason">登录失败</string>
     <string name="unknown_error">未知错误</string>
+    <string name="click_to_login">点击登录</string>
 
 </resources>
