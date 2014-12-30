@@ -27,6 +27,7 @@ import com.example.sourcewall.connection.api.QuestionAPI;
 import com.example.sourcewall.model.Question;
 import com.example.sourcewall.model.QuestionAnswer;
 import com.example.sourcewall.util.Consts;
+import com.example.sourcewall.util.StyleChecker;
 import com.example.sourcewall.util.ToastUtil;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
@@ -134,44 +135,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
     }
 
     private void loadHtml() {
-        String html = "<html>\n" +
-                " <head> \n" +
-                "  <meta charset=\"UTF-8\" /> \n" +
-                "  <meta content=\"width=device-width,initial-scale=1.0,maximum-scale=1,minimum-scale=1,user-scalable=no\" name=\"viewport\" /> \n" +
-                "  <link rel=\"stylesheet\" href=\"file:///android_asset/static.guokr.com/apps/msite/styles/27dc13be.m.css\" /> \n" +
-                "  <link rel=\"stylesheet\" href=\"file:///android_asset/static.guokr.com/apps/msite/styles/cfb7569b.ask.css\" type=\"text/css\" /> \n" +
-                "  <style id=\"style-1-cropbar-clipper\">/* Copyright 2014 Evernote Corporation. All rights reserved. */\n" +
-                ".en-markup-crop-options {\n" +
-                "    top: 18px !important;\n" +
-                "    left: 50% !important;\n" +
-                "    margin-left: -100px !important;\n" +
-                "    width: 200px !important;\n" +
-                "    border: 2px rgba(255,255,255,.38) solid !important;\n" +
-                "    border-radius: 4px !important;\n" +
-                "}\n" +
-                "\n" +
-                ".en-markup-crop-options div div:first-of-type {\n" +
-                "    margin-left: 0px !important;\n" +
-                "}\n" +
-                "</style>\n" +
-                " </head> \n" +
-                " <body> \n" +
-                "  <div class=\"msite-container \"> \n" +
-                "   <div> \n" +
-                "    <div class=\"quality-answer\"> \n" +
-                "     <section class=\"content-block\"> \n" +
-                "      <div id=\"answersList\" class=\"content-main\"> \n" +
-                "       <div id=\"answer755710\" class=\"answer-padding15 answerItem\" style=\"-webkit-transform-origin: 0px 0px; opacity: 1; -webkit-transform: scale(1, 1);\"> \n" +
-                "        <div class=\"askcontent\"> " + answer.getContent() +
-                "        </div>\n" +
-                "       </div> \n" +
-                "      </div> \n" +
-                "     </section> \n" +
-                "    </div> \n" +
-                "   </div> \n" +
-                "  </div> \n" +
-                " </body>\n" +
-                "</html>";
+        String html = StyleChecker.getAnswerHtml(answer.getContent());
         webView.getSettings().setDefaultTextEncodingName("UTF-8");
         webView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "charset=UTF-8", null);
     }

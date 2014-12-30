@@ -152,8 +152,6 @@
         <!--上面几行只在Night设置-->
         <!--下面几行也在Day中一一对应-->
 
-        <item name="android:windowBackground">@color/color_primary_dark_night</item>
-        <item name="windowActionModeOverlay">true</item>
         <item name="colorPrimary">@color/color_primary_night</item>
         <item name="colorPrimaryDark">@color/color_primary_dark_night</item>
         <item name="colorPrimaryBright">@color/color_primary_bright_night</item>
