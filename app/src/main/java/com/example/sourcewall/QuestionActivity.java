@@ -15,6 +15,7 @@ import com.example.sourcewall.commonview.LListView;
 import com.example.sourcewall.commonview.LoadingView;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.QuestionAPI;
+import com.example.sourcewall.connection.api.UserAPI;
 import com.example.sourcewall.dialogs.FavorDialog;
 import com.example.sourcewall.dialogs.InputDialog;
 import com.example.sourcewall.model.AceModel;
@@ -146,10 +147,18 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
     }
 
     private void favor() {
+        if (!UserAPI.isLoggedIn()){
+            notifyNeedLog();
+            return;
+        }
         new FavorDialog.Builder(this).setTitle(R.string.action_favor).create(question).show();
     }
 
     private void recommend() {
+        if (!UserAPI.isLoggedIn()){
+            notifyNeedLog();
+            return;
+        }
         InputDialog.Builder builder = new InputDialog.Builder(this);
         builder.setTitle(R.string.recommend_article);
         builder.setCancelable(true);
@@ -173,6 +182,10 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
     }
 
     private void answerQuestion() {
+        if (!UserAPI.isLoggedIn()){
+            notifyNeedLog();
+            return;
+        }
         Intent intent = new Intent(this, ReplyActivity.class);
         intent.putExtra(Consts.Extra_Ace_Model, question);
         startActivity(intent);

@@ -18,6 +18,7 @@ import com.example.sourcewall.commonview.LListView;
 import com.example.sourcewall.commonview.LoadingView;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.PostAPI;
+import com.example.sourcewall.connection.api.UserAPI;
 import com.example.sourcewall.dialogs.FavorDialog;
 import com.example.sourcewall.model.AceModel;
 import com.example.sourcewall.model.Post;
@@ -113,11 +114,19 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
     }
 
     private void likePost() {
+        if (!UserAPI.isLoggedIn()) {
+            notifyNeedLog();
+            return;
+        }
         LikePostTask likePostTask = new LikePostTask();
         likePostTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, post);
     }
 
     private void favor() {
+        if (!UserAPI.isLoggedIn()) {
+            notifyNeedLog();
+            return;
+        }
         new FavorDialog.Builder(this).setTitle(R.string.action_favor).create(post).show();
     }
 
@@ -213,6 +222,10 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
     }
 
     private void replyPost(UComment comment) {
+        if (!UserAPI.isLoggedIn()) {
+            notifyNeedLog();
+            return;
+        }
         Intent intent = new Intent(this, ReplyActivity.class);
         intent.putExtra(Consts.Extra_Ace_Model, post);
         if (comment != null) {
@@ -226,6 +239,10 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
     }
 
     private void likeComment(UComment comment) {
+        if (!UserAPI.isLoggedIn()) {
+            notifyNeedLog();
+            return;
+        }
         LikeCommentTask likeCommentTask = new LikeCommentTask();
         likeCommentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, comment);
     }

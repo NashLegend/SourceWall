@@ -19,6 +19,7 @@ import com.example.sourcewall.commonview.LListView;
 import com.example.sourcewall.commonview.LoadingView;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.QuestionAPI;
+import com.example.sourcewall.connection.api.UserAPI;
 import com.example.sourcewall.model.AceModel;
 import com.example.sourcewall.model.Question;
 import com.example.sourcewall.model.QuestionAnswer;
@@ -143,6 +144,10 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_publish) {
+            if (!UserAPI.isLoggedIn()) {
+                notifyNeedLog();
+                return;
+            }
             if (!TextUtils.isEmpty(textReply.getText().toString().trim())) {
                 String content = "";
                 if (isCommentOnHost()) {

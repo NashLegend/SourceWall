@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.example.sourcewall.commonview.SScrollView;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.QuestionAPI;
+import com.example.sourcewall.connection.api.UserAPI;
 import com.example.sourcewall.model.Question;
 import com.example.sourcewall.model.QuestionAnswer;
 import com.example.sourcewall.util.Consts;
@@ -262,6 +263,10 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
     }
 
     private void invokeOpinionDialog() {
+        if (!UserAPI.isLoggedIn()) {
+            notifyNeedLog();
+            return;
+        }
         String[] operations = {getString(R.string.action_support), getString(R.string.action_oppose)};
         new AlertDialog.Builder(this).setTitle("").setItems(operations, new DialogInterface.OnClickListener() {
             @Override
@@ -274,11 +279,19 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
     }
 
     private void buryAnswer() {
+        if (!UserAPI.isLoggedIn()){
+            notifyNeedLog();
+            return;
+        }
         BuryTask task = new BuryTask();
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void thankAnswer() {
+        if (!UserAPI.isLoggedIn()){
+            notifyNeedLog();
+            return;
+        }
         ThankTask task = new ThankTask();
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

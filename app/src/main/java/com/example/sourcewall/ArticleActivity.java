@@ -18,6 +18,7 @@ import com.example.sourcewall.commonview.LListView;
 import com.example.sourcewall.commonview.LoadingView;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.ArticleAPI;
+import com.example.sourcewall.connection.api.UserAPI;
 import com.example.sourcewall.dialogs.FavorDialog;
 import com.example.sourcewall.dialogs.InputDialog;
 import com.example.sourcewall.model.AceModel;
@@ -100,6 +101,10 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
     }
 
     private void replyArticle(UComment comment) {
+        if (!UserAPI.isLoggedIn()){
+            notifyNeedLog();
+            return;
+        }
         Intent intent = new Intent(this, ReplyActivity.class);
         intent.putExtra(Consts.Extra_Ace_Model, article);
         if (comment != null) {
@@ -110,6 +115,10 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
     }
 
     private void recommend() {
+        if (!UserAPI.isLoggedIn()){
+            notifyNeedLog();
+            return;
+        }
         InputDialog.Builder builder = new InputDialog.Builder(this);
         builder.setTitle(R.string.recommend_article);
         builder.setCancelable(true);
@@ -133,6 +142,10 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
     }
 
     private void favor() {
+        if (!UserAPI.isLoggedIn()){
+            notifyNeedLog();
+            return;
+        }
         // basket dialog
         new FavorDialog.Builder(this).setTitle(R.string.action_favor).create(article).show();
     }
@@ -155,6 +168,10 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
     }
 
     private void likeComment(UComment comment) {
+        if (!UserAPI.isLoggedIn()){
+            notifyNeedLog();
+            return;
+        }
         LikeCommentTask likeCommentTask = new LikeCommentTask();
         likeCommentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, comment);
     }
