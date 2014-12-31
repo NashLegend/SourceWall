@@ -92,7 +92,6 @@ a,a:visited {
 }
 
 input[type=text],textarea {
-	background: #fff;
 	font-size: 14px;
 	font-family: "Microsoft YaHei","WenQuanYi Micro Hei",SimHei,Tahoma,sans-serif;
 	word-wrap: break-word;
@@ -184,7 +183,6 @@ textarea {
 }
 
 .tab {
-	background: #fff;
 	height: 41px;
 	line-height: 40px;
 	border-bottom: 1px solid #ebedee
@@ -277,7 +275,6 @@ textarea {
 .page-tab-flat li .arrow-up-in {
 	top: -5px;
 	left: -6px;
-	border-bottom-color: #fff
 }
 
 .page-tab-flat .current a {
@@ -301,7 +298,6 @@ textarea {
 
 .titles {
 	margin-bottom: -1px;
-	background: #fff;
 	overflow: hidden
 }
 
@@ -376,9 +372,6 @@ textarea {
 
 .pop-bd {
 	width: 270px;
-	background: #fff;
-	line-height: 40px;
-	margin: 0 auto;
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
 	-ms-border-radius: 2px;
@@ -1422,7 +1415,6 @@ body {
 }
 
 body,html {
-	background: #fff;
 	font-family: "Microsoft YaHei","WenQuanYi Micro Hei",SimHei,Tahoma,sans-serif;
 	min-height: 100%;
 	line-height: 40px;
@@ -1432,7 +1424,6 @@ body,html {
 .msite-container {
 	min-height: 600px;
 	position: relative;
-	background-color: #fff;
 	overflow: hidden;
 	-webkit-transition: -webkit-transform .2s cubic-bezier(0.2,.3,.25,.9);
 	transition: transform,padding .2s cubic-bezier(0.2,.3,.25,.9)
@@ -1483,7 +1474,6 @@ img {
 
 .spread .top-ad {
 	display: block;
-	background-color: #FFF
 }
 
 .spread .top-ad img {

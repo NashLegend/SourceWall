@@ -1880,7 +1880,7 @@ s.name_card-right {
 .ask-content-page .post-detail {
 	line-height: 2;
 	font-size: 14px;
-	color: #333;
+	color: #d0d0d0;
 	word-wrap: break-word;
 }
 
@@ -2172,7 +2172,7 @@ s.name_card-right {
 	line-height: 2;
 	font-size: 14px;
 	word-wrap: break-word;
-	color: #333
+	color: #d0d0d0
 }
 
 .ask-content-page .answers .answer-txt img {
@@ -2568,7 +2568,7 @@ body .bdsharebuttonbox a {
 	position: relative;
 	font-size: 12px;
 	height: 16px;
-	color: #333;
+	color: #d0d0d0;
 	margin-left: -6px
 }
 

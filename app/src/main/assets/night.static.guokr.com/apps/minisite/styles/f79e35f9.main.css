@@ -596,7 +596,7 @@ article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section,su
 }
 
 .gheader-new .gh-notice-panel .gh-i-popup-category a,.gheader-new .gh-remind-panel .gh-i-popup-category a {
-	color: #0078b6
+	color: #d0d0ff
 }
 
 .gheader-new .gh-notice-panel .gh-msg-title,.gheader-new .gh-remind-panel .gh-msg-title {
@@ -1236,7 +1236,7 @@ article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section,su
 
 .gbottom .gbottom-nav a {
 	margin: 0 10px;
-	color: #0078b6;
+	color: #d0d0ff;
 	text-decoration: none
 }
 

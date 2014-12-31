@@ -2,7 +2,6 @@
 	border-top: 1px solid #ebedee;
 	border-bottom: 1px solid #ebedee;
 	padding: 0 8px;
-	background: #fff
 }
 
 .group-list li {
@@ -121,7 +120,6 @@
 	padding: 0 8px;
 	border-top: 1px solid #ebedee;
 	border-bottom: 1px solid #ebedee;
-	background: #fff
 }
 
 .post-list li {
@@ -174,7 +172,6 @@
 	margin-bottom: 10px;
 	border: 1px solid #ebedee;
 	padding: 12px;
-	background: #fff;
 	line-height: 18px
 }
 
@@ -223,7 +220,7 @@
 }
 
 .group-main-page .page-tab-flat {
-	background: #fff
+
 }
 
 .group-header {
@@ -342,7 +339,6 @@
 
 .group-comments {
 	padding-bottom: 15px;
-	background: #fff
 }
 
 .group-comments .comment {
@@ -973,7 +969,6 @@
 .content-main {
 	margin: 0;
 	padding: 15px;
-	background: #fff
 }
 
 .content-main .header .publish .author,.content-main .header .publish .date {
@@ -981,7 +976,7 @@
 }
 
 .content-block .pager {
-	background: #fff
+
 }
 
 .html-text-mixin {
@@ -1009,7 +1004,6 @@
 	height: 100%;
 	line-height: 48px;
 	text-align: center;
-	color: #fff;
 	font-size: 12px
 }
 
@@ -1111,13 +1105,11 @@
 	line-height: 25px;
 	text-align: center;
 	background-color: #42CCB5;
-	color: #FFF;
 	border-radius: 3px
 }
 
 .profile-header .focus[data-operation=unfollow] {
 	color: #999;
-	background-color: #FFF;
 	border: 1px solid #eee;
 	border-radius: 3px
 }

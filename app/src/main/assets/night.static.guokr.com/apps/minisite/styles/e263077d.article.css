@@ -554,7 +554,7 @@
 
 .article-page {
 	font-size: 14px;
-	color: #333;
+	color: #d0d0d0;
 	position: relative
 }
 
@@ -565,7 +565,7 @@
 
 .article-page .content-th h1 {
 	margin-top: 18px;
-	color: #333;
+	color: #d0d0d0;
 	font-size: 24px;
 	font-weight: 400
 }
@@ -620,7 +620,7 @@
 }
 
 .article-page .post-tags {
-	color: #333;
+	color: #d0d0d0;
 	margin-bottom: 0;
 	margin-top: 15px
 }
@@ -731,7 +731,7 @@
 }
 
 .article-page .document table.docutils {
-	color: #333;
+	color: #d0d0d0;
 	font-size: 14px;
 	line-height: 2
 }
@@ -797,7 +797,7 @@
 
 .article-page .recommend-articles h2 {
 	font-size: 18px;
-	color: #333;
+	color: #d0d0d0;
 	line-height: 2;
 	padding-top: 20px;
 	margin: 20px 0 10px
@@ -941,7 +941,7 @@
 }
 
 .article-page .cmts .cmts-list li .cmt-content {
-	color: #333;
+	color: #d0d0d0;
 	line-height: 2;
 	margin: 8px 0;
 	overflow: hidden;
@@ -1182,7 +1182,7 @@
 
 .article-page .side .author-info .author {
 	font-size: 22px;
-	color: #333
+	color: #d0d0d0
 }
 
 .article-page .side .author-info span.author {
@@ -1223,7 +1223,7 @@
 }
 
 .article-page .side .side-title h2 {
-	color: #333;
+	color: #d0d0d0;
 	font-size: 20px;
 	font-weight: 400
 }
