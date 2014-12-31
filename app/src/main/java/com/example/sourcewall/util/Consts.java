@@ -71,7 +71,9 @@ public class Consts {
     }
 
     public static ArrayList<SubItem> getPosts() {
-        SubItem[] items = {new SubItem(SubItem.Section_Post, SubItem.Type_Collections, "小组热贴", "hot_posts"),
+        // new SubItem(SubItem.Section_Post, SubItem.Type_Private_Channel, "我的小组", "user_group"),
+        SubItem[] items = {
+                new SubItem(SubItem.Section_Post, SubItem.Type_Collections, "小组热贴", "hot_posts"),
                 new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, "谣言粉碎机", "40"),
                 new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, "DIY", "27"),
                 new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, "自然控", "36"),

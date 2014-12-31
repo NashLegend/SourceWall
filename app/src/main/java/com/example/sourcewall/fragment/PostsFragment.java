@@ -25,6 +25,7 @@ import java.util.ArrayList;
 
 /**
  * Created by NashLegend on 2014/9/18 0018
+ * 这几个Fragment结构几乎一模一样，浪费啊
  */
 public class PostsFragment extends ChannelsFragment implements LListView.OnRefreshListener {
     private LListView listView;
@@ -118,6 +119,9 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         }
     }
 
+    /**
+     * 这几个Task都长得很像，可以封装起来
+     */
     class LoaderTask extends AsyncTask<Integer, Integer, ResultObject> {
 
         int offset;
@@ -133,8 +137,13 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
             ArrayList<Post> posts = new ArrayList<Post>();
             ResultObject resultObject = new ResultObject();
             try {
+                //在前两种情况下offset好像不对……
                 if (subItem.getType() == SubItem.Type_Collections) {
-                    posts = PostAPI.getGroupHotPostListFromMobileUrl(offset);
+                    int tmp = (int) Math.ceil(offset / 20 + 0.0001);
+                    posts = PostAPI.getGroupHotPostListFromMobileUrl(tmp);
+                } else if (subItem.getType() == SubItem.Type_Private_Channel) {
+                    int tmp = (int) Math.ceil(offset / 20 + 0.0001);
+                    posts = PostAPI.getMyGroupRecentPosts(tmp);
                 } else {
                     posts = PostAPI.getGroupPostListByJsonUrl(subItem.getValue(), offset);
                 }
