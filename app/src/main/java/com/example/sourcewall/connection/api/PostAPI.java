@@ -25,6 +25,13 @@ public class PostAPI extends APIBase {
         // TODO Auto-generated constructor stub
     }
 
+    /**
+     * 返回《我的小组》主题列表，解析html获得
+     *
+     * @param pageNo
+     * @return
+     * @throws IOException
+     */
     public static ArrayList<Post> getMyGroupRecentPosts(int pageNo) throws IOException {
         //TODO
         ArrayList<Post> list = new ArrayList<Post>();
@@ -35,7 +42,7 @@ public class PostAPI extends APIBase {
 
 
     /**
-     * 获得小组热贴（与登录无关）
+     * 获得小组热贴，解析html获得（与登录无关）
      *
      * @param pageNo，要获取的页码
      * @return 帖子列表
@@ -89,7 +96,7 @@ public class PostAPI extends APIBase {
     }
 
     /**
-     * 根据小组id获得帖子列表
+     * 根据小组id获得帖子列表，json格式
      *
      * @param id     小组id
      * @param offset 从第几个帖子开始取
@@ -118,7 +125,7 @@ public class PostAPI extends APIBase {
                             .replaceAll("\\D+", ""));
                     post.setAuthorAvatarUrl(jo.getJSONObject("author").getJSONObject("avatar")
                             .getString("large").replaceAll("\\?\\S*$", ""));
-                    post.setDate(getJsonString(jo, "date_created"));
+                    post.setDate(parseDate(getJsonString(jo, "date_created")));
                     post.setReplyNum(getJsonInt(jo, "replies_count"));
                     post.setContent(getJsonString(jo, "html"));
                     // 无法获取赞的数量
@@ -133,7 +140,9 @@ public class PostAPI extends APIBase {
     }
 
     /**
+     * 解析html获得
      * 根据地址获取帖子列表，暂时没考虑个别小组，用于拦截链接点击，未解析热贴。
+     * 这东西用不着，拦截具体帖子地址才是王道啊
      *
      * @param url 浏览器里小组的地址。
      */
@@ -186,7 +195,7 @@ public class PostAPI extends APIBase {
     }
 
     /**
-     * 根据帖子地址解析帖子详细内容
+     * 根据帖子id解析帖子详细内容，解析html获得
      *
      * @param id，帖子id
      * @return
@@ -197,7 +206,7 @@ public class PostAPI extends APIBase {
     }
 
     /**
-     * 仅限第一页，根据帖子地址解析帖子详细内容
+     * 仅限第一页，根据帖子地址解析帖子详细内容，解析html获得
      *
      * @param url
      */
@@ -263,7 +272,7 @@ public class PostAPI extends APIBase {
                         .replaceAll("\\D+", ""));
                 comment.setAuthorAvatarUrl(getJsonObject(jo, "author").getJSONObject("avatar")
                         .getString("large").replaceAll("\\?\\S*$", ""));
-                comment.setDate(getJsonString(jo, "date_created"));
+                comment.setDate(parseDate(getJsonString(jo, "date_created")));
                 comment.setLikeNum(getJsonInt(jo, "likings_count"));
                 comment.setContent(getJsonString(jo, "html"));
                 comment.setFloor((offset + i + 1) + "楼");
@@ -297,6 +306,13 @@ public class PostAPI extends APIBase {
         return list;
     }
 
+    /**
+     * 解析出html中的帖子评论列表
+     *
+     * @param element
+     * @param postID
+     * @return
+     */
     public static ArrayList<UComment> extractPostComments(Element element, String postID) {
         ArrayList<UComment> list = new ArrayList<UComment>();
         Elements commentlist = element.getElementsByClass("comment");
@@ -329,6 +345,12 @@ public class PostAPI extends APIBase {
         return list;
     }
 
+    /**
+     * 赞一个帖子
+     *
+     * @param postID
+     * @return
+     */
     public static ResultObject likePost(String postID) {
         String url = "http://www.guokr.com/apis/group/post_liking.json";
         ResultObject resultObject = new ResultObject();
@@ -348,7 +370,8 @@ public class PostAPI extends APIBase {
     }
 
     /**
-     * 使用json请求
+     * 回复一个帖子，使用json请求，所以格式简单
+     * 回复一个评论不过是在回复帖子的时候@了这个人而已
      *
      * @param id
      * @param content
@@ -378,6 +401,12 @@ public class PostAPI extends APIBase {
         return resultObject;
     }
 
+    /**
+     * 赞一个评论
+     *
+     * @param id
+     * @return
+     */
     public static ResultObject likeComment(String id) {
         String url = "http://www.guokr.com/apis/group/post_reply_liking.json";
         ResultObject resultObject = new ResultObject();

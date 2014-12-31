@@ -35,7 +35,7 @@ public class APIBase {
     }
 
     /**
-     * 统一回复
+     * 统一回复，回复主题站、帖子、问题
      *
      * @return
      */
@@ -62,6 +62,13 @@ public class APIBase {
         return resultObject;
     }
 
+    /**
+     * 上传图片
+     *
+     * @param path
+     * @param watermark
+     * @return
+     */
     public static ResultObject uploadImage(String path, boolean watermark) {
         ResultObject resultObject = new ResultObject();
         File file = new File(path);
@@ -106,6 +113,12 @@ public class APIBase {
         return resultObject;
     }
 
+    /**
+     * 使用github的接口转换markdown为html
+     *
+     * @param text
+     * @return
+     */
     public static ResultObject parseMarkdownByGitHub(String text) {
         ResultObject resultObject = new ResultObject();
         String url = "https://api.github.com/markdown";
@@ -178,6 +191,13 @@ public class APIBase {
         }
     }
 
+    /**
+     * 果壳json返回的格式是固定的，这个可以先判断是否成功并剥离出有用信息。但是没使用……
+     *
+     * @param json
+     * @return
+     * @throws JSONException
+     */
     public static JSONObject getUniversalJsonObject(String json) throws JSONException {
         ResultObject resultObject = new ResultObject();
         JSONObject object = new JSONObject(json);
@@ -186,5 +206,15 @@ public class APIBase {
             return getJsonObject(object, "result");
         }
         return null;
+    }
+
+    /**
+     * 将时间转换成可见的。话说果壳返回的时间格式是什么标准
+     *
+     * @param dateString
+     * @return
+     */
+    public static String parseDate(String dateString) {
+        return dateString.replace("T", " ").replaceAll("[\\+\\.]\\S+$", "");
     }
 }

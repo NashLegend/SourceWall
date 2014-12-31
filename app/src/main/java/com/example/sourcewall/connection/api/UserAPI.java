@@ -48,6 +48,12 @@ public class UserAPI extends APIBase {
         return sb.toString().toLowerCase();
     }
 
+    /**
+     * 通过用户的ukey获取用户的详细信息
+     *
+     * @param ukey
+     * @return
+     */
     public static ResultObject getUserInfoByUkey(String ukey) {
         ResultObject resultObject = new ResultObject();
         try {
@@ -76,12 +82,19 @@ public class UserAPI extends APIBase {
         return resultObject;
     }
 
+    /**
+     * 通过用户id获取用户信息
+     *
+     * @param id
+     * @return
+     */
     public static ResultObject getUserInfoByID(String id) {
         return getUserInfoByUkey(base36Encode(Long.valueOf(id)));
     }
 
     /**
-     * 获取消息提醒的方式
+     * 通过获取消息提醒的方式测试是否登录或者登录是否有效
+     * 但是过期token是啥样子的还没见过…………
      *
      * @return
      */
@@ -124,6 +137,8 @@ public class UserAPI extends APIBase {
     }
 
     /**
+     * 收藏一个链接，理论是任意链接都行，吧……
+     *
      * @param link
      * @param title
      * @param basketID
@@ -154,6 +169,8 @@ public class UserAPI extends APIBase {
     }
 
     /**
+     * 推荐一个链接
+     *
      * @param link
      * @param title
      * @param summary
@@ -185,6 +202,8 @@ public class UserAPI extends APIBase {
     }
 
     /**
+     * 获取用户的果篮信息
+     *
      * @return ResultObject.result is ArrayList<Basket>
      */
     public static ResultObject getBaskets() {
@@ -227,6 +246,8 @@ public class UserAPI extends APIBase {
     }
 
     /**
+     * 创建一个果篮
+     *
      * @param title
      * @param introduction
      * @param category_id
@@ -271,6 +292,11 @@ public class UserAPI extends APIBase {
         return resultObject;
     }
 
+    /**
+     * 获取分类 ，创建果篮有关
+     *
+     * @return
+     */
     public static ResultObject getCategoryList() {
         ResultObject resultObject = new ResultObject();
         try {
@@ -306,14 +332,29 @@ public class UserAPI extends APIBase {
 
     }
 
+    /**
+     * 获取保存的用户token
+     *
+     * @return
+     */
     public static String getToken() {
         return SharedUtil.readString(Consts.Key_Access_Token, "");
     }
 
+    /**
+     * 获取保存的用户ukey
+     *
+     * @return
+     */
     public static String getUkey() {
         return SharedUtil.readString(Consts.Key_Ukey, "");
     }
 
+    /**
+     * 获取保存的用户cookie，实际上用不着
+     *
+     * @return
+     */
     public static String getCookie() {
         return SharedUtil.readString(Consts.Key_Cookie, "");
     }

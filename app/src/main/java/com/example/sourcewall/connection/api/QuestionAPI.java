@@ -31,7 +31,7 @@ public class QuestionAPI extends APIBase {
     }
 
     /**
-     * 根据tag获取相关问题
+     * 根据tag获取相关问题，json格式
      *
      * @param tag
      * @param offset
@@ -59,7 +59,7 @@ public class QuestionAPI extends APIBase {
                     question.setAuthorAvatarUrl(jsonObject.getJSONObject("author")
                             .getJSONObject("avatar").getString("large").replaceAll("\\?\\S*$", ""));
                     question.setSummary(getJsonString(jsonObject, "summary"));
-                    question.setDate(getJsonString(jsonObject, "date_created"));
+                    question.setDate(parseDate(getJsonString(jsonObject, "date_created")));
                     question.setFollowNum(getJsonInt(jsonObject, "followers_count"));
                     question.setId(getJsonString(jsonObject, "id"));
                     question.setTitle(getJsonString(jsonObject, "question"));
@@ -74,7 +74,7 @@ public class QuestionAPI extends APIBase {
     }
 
     /**
-     * 返回热门回答问题列表
+     * 返回热门回答问题列表，解析html获得
      *
      * @param pageNo
      * @return
@@ -86,9 +86,9 @@ public class QuestionAPI extends APIBase {
     }
 
     /**
-     * 返回精彩回答问题列表
+     * 返回精彩回答问题列表，解析html所得
      *
-     * @param pageNo
+     * @param pageNo 页码
      * @return
      * @throws IOException
      */
@@ -132,9 +132,9 @@ public class QuestionAPI extends APIBase {
     }
 
     /**
-     * 返回问题内容
+     * 返回问题内容,json格式
      *
-     * @param id
+     * @param id 问题ID
      * @return
      * @throws IOException
      * @throws JSONException
@@ -147,7 +147,7 @@ public class QuestionAPI extends APIBase {
     /**
      * 返回问题内容
      *
-     * @param url
+     * @param url 返回问题内容,json格式
      * @return
      * @throws IOException
      * @throws JSONException
@@ -169,7 +169,7 @@ public class QuestionAPI extends APIBase {
             question.setAuthorAvatarUrl(result.getJSONObject("author").getJSONObject("avatar")
                     .getString("large").replaceAll("\\?\\S*$", ""));
             question.setContent(getJsonString(result, "annotation_html").replaceAll("<img .*?/>", prefix + "$0" + suffix).replaceAll("style=\"max-width: \\d+px\"", "style=\"max-width: " + maxImageWidth + "px\""));
-            question.setDate(getJsonString(result, "date_created"));
+            question.setDate(parseDate(getJsonString(result, "date_created")));
             question.setFollowNum(getJsonInt(result, "followers_count"));
             question.setId(getJsonString(result, "id"));
             question.setRecommendNum(getJsonInt(result, "recommends_count"));
@@ -180,7 +180,7 @@ public class QuestionAPI extends APIBase {
     }
 
     /**
-     * 获取问题的答案
+     * 获取问题的答案，json格式
      *
      * @param id
      * @param offset
@@ -209,8 +209,8 @@ public class QuestionAPI extends APIBase {
                     ans.setAuthorTitle(getJsonString(getJsonObject(jo, "author"), "title"));
                     ans.setCommentNum(getJsonInt(jo, "replies_count"));
                     ans.setContent(getJsonString(jo, "html").replaceAll("<img .*?/>", prefix + "$0" + suffix).replaceAll("style=\"max-width: \\d+px\"", "style=\"max-width: " + maxImageWidth + "px\""));
-                    ans.setDate_created(getJsonString(jo, "date_created"));
-                    ans.setDate_modified(getJsonString(jo, "date_modified"));
+                    ans.setDate_created(parseDate(getJsonString(jo, "date_created")));
+                    ans.setDate_modified(parseDate(getJsonString(jo, "date_modified")));
                     ans.setHasDownVoted(getJsonBoolean(jo, "current_user_has_buried"));
                     ans.setHasUpvoted(getJsonBoolean(jo, "current_user_has_supported"));
                     ans.setHasThanked(getJsonBoolean(jo, "current_user_has_thanked"));
@@ -227,7 +227,7 @@ public class QuestionAPI extends APIBase {
     }
 
     /**
-     * 返回问题的评论
+     * 返回问题的评论，json格式
      *
      * @param id
      * @param offset
@@ -252,7 +252,7 @@ public class QuestionAPI extends APIBase {
                     comment.setAuthorAvatarUrl(jsonObject.getJSONObject("author")
                             .getJSONObject("avatar").getString("large").replaceAll("\\?\\S*$", ""));
                     comment.setContent(getJsonString(jsonObject, "text"));
-                    comment.setDate(getJsonString(jsonObject, "date_created"));
+                    comment.setDate(parseDate(getJsonString(jsonObject, "date_created")));
                     comment.setID(getJsonString(jsonObject, "id"));
                     comment.setHostID(getJsonString(jsonObject, "question_id"));
                     list.add(comment);
@@ -265,7 +265,7 @@ public class QuestionAPI extends APIBase {
     }
 
     /**
-     * 返回答案的评论
+     * 返回答案的评论，json格式
      *
      * @param id
      * @param offset
@@ -290,7 +290,7 @@ public class QuestionAPI extends APIBase {
                 comment.setAuthorAvatarUrl(jsonObject.getJSONObject("author")
                         .getJSONObject("avatar").getString("large").replaceAll("\\?\\S*$", ""));
                 comment.setContent(getJsonString(jsonObject, "text"));
-                comment.setDate(getJsonString(jsonObject, "date_created"));
+                comment.setDate(parseDate(getJsonString(jsonObject, "date_created")));
                 comment.setID(getJsonString(jsonObject, "id"));
                 comment.setHostID(getJsonString(jsonObject, "question_id"));
                 list.add(comment);
@@ -424,11 +424,27 @@ public class QuestionAPI extends APIBase {
         return resultObject;
     }
 
+    /**
+     * 推荐问题
+     *
+     * @param questionID
+     * @param title
+     * @param summary
+     * @param comment
+     * @return
+     */
     public static ResultObject recommendQuestion(String questionID, String title, String summary, String comment) {
         String url = "http://www.guokr.com/question/" + questionID + "/";
         return UserAPI.recommendLink(url, title, summary, comment);
     }
 
+    /**
+     * 评论问题
+     *
+     * @param questionID
+     * @param comment
+     * @return
+     */
     public static ResultObject commentOnQuestion(String questionID, String comment) {
         String url = "http://www.guokr.com/apis/ask/question_reply.json";
         ResultObject resultObject = new ResultObject();
@@ -449,7 +465,7 @@ public class QuestionAPI extends APIBase {
                 uComment.setAuthorAvatarUrl(jsonObject.getJSONObject("author")
                         .getJSONObject("avatar").getString("large").replaceAll("\\?\\S*$", ""));
                 uComment.setContent(getJsonString(jsonObject, "text"));
-                uComment.setDate(getJsonString(jsonObject, "date_created"));
+                uComment.setDate(parseDate(getJsonString(jsonObject, "date_created")));
                 uComment.setID(getJsonString(jsonObject, "id"));
                 uComment.setHostID(getJsonString(jsonObject, "question_id"));
                 resultObject.ok = true;
@@ -488,7 +504,7 @@ public class QuestionAPI extends APIBase {
                 uComment.setAuthorAvatarUrl(jsonObject.getJSONObject("author")
                         .getJSONObject("avatar").getString("large").replaceAll("\\?\\S*$", ""));
                 uComment.setContent(getJsonString(jsonObject, "text"));
-                uComment.setDate(getJsonString(jsonObject, "date_created"));
+                uComment.setDate(parseDate(getJsonString(jsonObject, "date_created")));
                 uComment.setID(getJsonString(jsonObject, "id"));
                 uComment.setHostID(getJsonString(jsonObject, "question_id"));
                 resultObject.ok = true;

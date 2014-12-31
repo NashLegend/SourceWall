@@ -24,23 +24,57 @@ public class ArticleAPI extends APIBase {
         // TODO Auto-generated constructor stub
     }
 
+    /**
+     * 获取《科学人》默认列表，取20个，我发现这样动态请求比果壳首页刷新的快……
+     *
+     * @param offset 从第offset个开始取
+     * @return
+     * @throws JSONException
+     * @throws IOException
+     */
     public static ArrayList<Article> getArticleListIndexPage(int offset) throws JSONException, IOException {
         String url = "http://www.guokr.com/apis/minisite/article.json?retrieve_type=by_subject" + "&limit=20&offset=" + offset;
         return getArticleListFromJsonUrl(url);
     }
 
+    /**
+     * 按频道取《科学人》的文章，比如热点、前沿什么的
+     *
+     * @param channelKey
+     * @param offset
+     * @return
+     * @throws JSONException
+     * @throws IOException
+     */
     public static ArrayList<Article> getArticleListByChannel(String channelKey, int offset) throws JSONException, IOException {
         String url = "http://www.guokr.com/apis/minisite/article.json?retrieve_type=by_channel&channel_key="
                 + channelKey + "&limit=20&offset=" + offset;
         return getArticleListFromJsonUrl(url);
     }
 
+    /**
+     * 按学科取《科学人》的文章
+     *
+     * @param subject_key
+     * @param offset
+     * @return
+     * @throws JSONException
+     * @throws IOException
+     */
     public static ArrayList<Article> getArticleListBySubject(String subject_key, int offset) throws JSONException, IOException {
         String url = "http://www.guokr.com/apis/minisite/article.json?retrieve_type=by_subject&subject_key="
                 + subject_key + "&limit=20&offset=" + offset;
         return getArticleListFromJsonUrl(url);
     }
 
+    /**
+     * 根据上面几个方法生成的url去取文章列表
+     *
+     * @param url
+     * @return
+     * @throws JSONException
+     * @throws IOException
+     */
     private static ArrayList<Article> getArticleListFromJsonUrl(String url) throws JSONException, IOException {
         ArrayList<Article> articleList = new ArrayList<Article>();
         String jString = HttpFetcher.get(url);
@@ -58,11 +92,7 @@ public class ArticleAPI extends APIBase {
                         .replaceAll("\\D+", ""));
                 article.setAuthorAvatarUrl(jo.getJSONObject("author").getJSONObject("avatar")
                         .getString("large").replaceAll("\\?\\S*$", ""));
-                String dateString = getJsonString(jo, "date_published");
-                dateString = dateString.replace("T", " ");
-                dateString = dateString.replaceAll("\\+\\S+$", "");
-                article.setDate(dateString);
-
+                article.setDate(parseDate(getJsonString(jo, "date_published")));
                 article.setSubjectName(getJsonString(getJsonObject(jo, "subject"), "name"));
                 article.setSubjectKey(getJsonString(getJsonObject(jo, "subject"), "key"));
                 article.setUrl(getJsonString(jo, "url"));
@@ -75,12 +105,19 @@ public class ArticleAPI extends APIBase {
         return articleList;
     }
 
+    /**
+     * 根据文章id，解析页面获得文章内容
+     *
+     * @param id
+     * @return
+     * @throws IOException
+     */
     public static Article getArticleDetailByID(String id) throws IOException {
         return getArticleDetailByUrl("http://www.guokr.com/article/" + id + "/");
     }
 
     /**
-     * 仅限第一页
+     * 直接解析页面获得文章内容
      *
      * @param url
      */
@@ -105,6 +142,13 @@ public class ArticleAPI extends APIBase {
         return article;
     }
 
+    /**
+     * 解析html获得文章热门评论
+     *
+     * @param hotElement
+     * @param aid
+     * @return
+     */
     public static ArrayList<UComment> getArticleHotComments(Element hotElement, String aid) {
         ArrayList<UComment> list = new ArrayList<>();
         Elements comments = hotElement.getElementsByTag("li");
@@ -144,6 +188,15 @@ public class ArticleAPI extends APIBase {
         return list;
     }
 
+    /**
+     * 获取文章评论，json格式
+     *
+     * @param id
+     * @param offset
+     * @return
+     * @throws IOException
+     * @throws JSONException
+     */
     public static ArrayList<UComment> getArticleComments(String id, int offset) throws IOException, JSONException {
         ArrayList<UComment> list = new ArrayList<>();
         String url = "http://apis.guokr.com/minisite/article_reply.json?article_id=" + id
@@ -164,10 +217,8 @@ public class ArticleAPI extends APIBase {
                 comment.setAuthorAvatarUrl(jo.getJSONObject("author").getJSONObject("avatar")
                         .getString("large").replaceAll("\\?\\S*$", ""));
                 comment.setAuthorTitle(getJsonString(getJsonObject(jo, "author"), "title"));
-                String dateString = getJsonString(jo, "date_created");
-                dateString = dateString.replace("T", " ");
-                dateString = dateString.replaceAll("\\.\\S+$", "");
-                comment.setDate(dateString);
+                //Date  TODO
+                comment.setDate(parseDate(getJsonString(jo, "date_created")));
                 comment.setFloor((offset + i + 1) + "楼");
                 comment.setContent(getJsonString(jo, "html"));
                 comment.setHostID(id);
@@ -177,11 +228,26 @@ public class ArticleAPI extends APIBase {
         return list;
     }
 
+    /**
+     * 推荐文章
+     *
+     * @param articleID
+     * @param title
+     * @param summary
+     * @param comment
+     * @return
+     */
     public static ResultObject recommendArticle(String articleID, String title, String summary, String comment) {
         String articleUrl = "http://www.guokr.com/article/" + articleID + "/";
         return UserAPI.recommendLink(articleUrl, title, summary, comment);
     }
 
+    /**
+     * 赞一个文章评论
+     *
+     * @param id
+     * @return
+     */
     public static ResultObject likeComment(String id) {
         String url = "http://www.guokr.com/apis/minisite/article_reply_liking.json";
         ResultObject resultObject = new ResultObject();
@@ -201,7 +267,7 @@ public class ArticleAPI extends APIBase {
     }
 
     /**
-     * 使用json请求
+     * 使用json请求回复文章
      *
      * @param id
      * @param content
@@ -261,6 +327,5 @@ public class ArticleAPI extends APIBase {
         }
         return resultObject;
     }
-
 
 }
