@@ -61,7 +61,6 @@ public class LoginActivity extends SwipeActivity {
                 SharedUtil.saveString(Consts.Key_Cookie, cookieStr);
                 parseRawCookie(cookieStr);
                 setResult(RESULT_OK);
-                UserAPI.setLoggedInOK();
                 finish();
             } else {
                 view.loadUrl(url);

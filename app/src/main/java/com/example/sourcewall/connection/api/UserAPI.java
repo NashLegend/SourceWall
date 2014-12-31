@@ -103,6 +103,7 @@ public class UserAPI extends APIBase {
         ResultObject resultObject = new ResultObject();
         String token = getToken();
         String ukey = getUkey();
+        //先判断有没有token，没有就是未登录，有的话检测一下是否过期
         if (!TextUtils.isEmpty(ukey) && ukey.length() == 6 && !TextUtils.isEmpty(token) && token.length() == 64) {
             resultObject = getMessageNum();
         } else {
