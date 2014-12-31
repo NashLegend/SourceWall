@@ -37,6 +37,8 @@ import com.example.sourcewall.util.ToastUtil;
 import com.example.sourcewall.view.SubItemView;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
@@ -76,7 +78,8 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     private View nightView;
     private ImageView avatarView;
     private TextView userName;
-
+    private boolean loginState = false;
+    private boolean isFirstLoad = true;
 
     public NavigationDrawerFragment() {
 
@@ -313,7 +316,43 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     @Override
     public void onResume() {
         super.onResume();
-        testLogin();
+        if (isFirstLoad) {
+            testLogin();
+        } else {
+            if (loginState == UserAPI.isLoggedIn()) {
+                //do nothing
+            } else {
+                checkChannelList();
+                if (UserAPI.isLoggedIn()) {
+                    loadUserInfo();
+                }
+            }
+        }
+
+    }
+
+    /**
+     * 临时办法  FIXME
+     */
+    private void checkChannelList() {
+        ArrayList<SubItem> subItems = adapter.getSubLists().get(1);
+        SubItem item = subItems.get(0);
+        boolean isItemMy = item.getType() == SubItem.Type_Private_Channel;
+        if (UserAPI.isLoggedIn()) {
+            if (!isItemMy) {
+                subItems.add(0, new SubItem(SubItem.Section_Post, SubItem.Type_Private_Channel, "我的小组", "user_group"));
+                adapter.notifyDataSetChanged();
+            } else {
+                //do nothing
+            }
+        } else {
+            if (isItemMy) {
+                subItems.remove(0);
+                adapter.notifyDataSetChanged();
+            } else {
+                // do nothing
+            }
+        }
     }
 
     private void testLogin() {
@@ -346,6 +385,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         @Override
         protected void onPostExecute(ResultObject resultObject) {
             if (resultObject.ok) {
+                checkChannelList();
                 loadUserInfo();
             } else {
                 switch (resultObject.code) {
