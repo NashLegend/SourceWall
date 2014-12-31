@@ -143,7 +143,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                     posts = PostAPI.getGroupHotPostListFromMobileUrl(tmp);
                 } else if (subItem.getType() == SubItem.Type_Private_Channel) {
                     int tmp = (int) Math.ceil(offset / 20 + 0.0001);
-                    posts = PostAPI.getMyGroupRecentPosts(tmp);
+                    posts = PostAPI.getMyGroupRecentRepliesPosts(tmp);
                 } else {
                     posts = PostAPI.getGroupPostListByJsonUrl(subItem.getValue(), offset);
                 }
@@ -151,7 +151,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                 if (posts != null) {
                     resultObject.ok = true;
                 }
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return resultObject;

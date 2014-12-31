@@ -26,16 +26,83 @@ public class PostAPI extends APIBase {
     }
 
     /**
-     * 返回《我的小组》主题列表，解析html获得
+     * 等会把返回值改成ResultObject
+     * 解析getMyGroupRecentRepliesPosts和getMyGroupHotPosts传过来的url
+     *
+     * @param url
+     * @return
+     * @throws IOException
+     */
+    private static ArrayList<Post> getMyGroupPostListFromMobileUrl(String url) throws IOException, Exception {
+        ArrayList<Post> list = new ArrayList<Post>();
+        String html = HttpFetcher.get(url);
+        Document doc = Jsoup.parse(html);
+        Elements elements = doc.getElementsByClass("post-list");
+        if (elements.size() == 1) {
+            Elements postlist = elements.get(0).getElementsByTag("li");
+            for (Iterator<Element> iterator = postlist.iterator(); iterator.hasNext(); ) {
+                Post item = new Post();
+                Element element = iterator.next();
+                Element link = element.getElementsByClass("post").get(0);
+                String postTitle = link.text();
+                String postUrl = link.attr("href");
+                String postImageUrl = "";
+                String postAuthor = "";//没有Author名……
+                String postGroup = element.getElementsByClass("post-author").get(0).text();//没错，post-author是小组名……
+                Elements Nums = element.getElementsByClass("post-info-right").get(0).children();
+                int postLike = Integer.valueOf(Nums.get(0).text().replaceAll("\\D*", ""));
+                int postComm = Integer.valueOf(Nums.get(0).text().replaceAll("\\D*", ""));
+                item.setTitle(postTitle);
+                item.setUrl(postUrl);
+                item.setId(postUrl.replaceAll("\\?\\S*$", "").replaceAll("\\D+", ""));
+                item.setTitleImageUrl(postImageUrl);
+                item.setAuthor(postAuthor);
+                item.setGroupName(postGroup);
+                item.setLikeNum(postLike);
+                item.setReplyNum(postComm);
+                list.add(item);
+            }
+        }
+        return list;
+    }
+
+    /**
+     * 返回《我的小组》最新回复的主题列表，解析html获得
      *
      * @param pageNo
      * @return
      * @throws IOException
      */
-    public static ArrayList<Post> getMyGroupRecentPosts(int pageNo) throws IOException {
+    public static ArrayList<Post> getMyGroupRecentRepliesPosts(int pageNo) throws IOException, Exception {
+        //TODO
+        String url = "http://m.guokr.com/group/user/recent_replies/?page=" + pageNo;
+        return getMyGroupPostListFromMobileUrl(url);
+    }
+
+    /**
+     * 返回《我的小组》热门主题列表，解析html获得
+     *
+     * @param pageNo
+     * @return
+     * @throws IOException
+     */
+    public static ArrayList<Post> getMyGroupHotPosts(int pageNo) throws IOException, Exception {
+        //TODO
+        String url = "http://m.guokr.com/group/user/hot_posts/?page=" + pageNo;
+        return getMyGroupPostListFromMobileUrl(url);
+    }
+
+    /**
+     * 返回《我的小组》最新主题列表，解析html获得，果壳移动版没有这个方式
+     *
+     * @param pageNo
+     * @return
+     * @throws IOException
+     */
+    public static ArrayList<Post> getMyGroupRecentPosts(int pageNo) throws IOException, Exception {
         //TODO
         ArrayList<Post> list = new ArrayList<Post>();
-        String url = "http://m.guokr.com/group/user/recent_replies/";
+        String url = "http://www.guokr.com/group/user/recent_posts/?page=" + pageNo;
         Document doc = Jsoup.connect(url).get();
         return null;
     }
@@ -48,7 +115,7 @@ public class PostAPI extends APIBase {
      * @return 帖子列表
      * @throws java.io.IOException
      */
-    public static ArrayList<Post> getGroupHotPostListFromMobileUrl(int pageNo) throws IOException {
+    public static ArrayList<Post> getGroupHotPostListFromMobileUrl(int pageNo) throws IOException, Exception {
         ArrayList<Post> list = new ArrayList<Post>();
         String url = "http://m.guokr.com/group/hot_posts/?page=" + pageNo;
         Document doc = Jsoup.connect(url).get();
@@ -201,7 +268,7 @@ public class PostAPI extends APIBase {
      * @return
      * @throws java.io.IOException
      */
-    public static Post getPostDetailByIDFromMobileUrl(String id) throws IOException {
+    public static Post getPostDetailByIDFromMobileUrl(String id) throws IOException, Exception {
         return getPostDetailByPostMobileUrl("http://m.guokr.com/post/" + id + "/");
     }
 
@@ -210,7 +277,7 @@ public class PostAPI extends APIBase {
      *
      * @param url
      */
-    public static Post getPostDetailByPostMobileUrl(String url) throws IOException {
+    public static Post getPostDetailByPostMobileUrl(String url) throws IOException, Exception {
         // 手机页面无法取得评论数，最好是从点击时带过来。TODO
         Post detail = new Post();
         Document doc = Jsoup.connect(url).get();

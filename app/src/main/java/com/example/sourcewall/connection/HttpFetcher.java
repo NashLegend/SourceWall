@@ -1,5 +1,7 @@
 package com.example.sourcewall.connection;
 
+import com.example.sourcewall.connection.api.UserAPI;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -39,6 +41,7 @@ public class HttpFetcher {
 
     public static String get(String url) throws IOException {
         HttpGet httpGet = new HttpGet(url);
+        httpGet.addHeader("Cookie", UserAPI.getSimpleCookie());
         HttpResponse response = getDefaultHttpClient().execute(httpGet);
         int statusCode = response.getStatusLine().getStatusCode();
         HttpEntity entity = response.getEntity();

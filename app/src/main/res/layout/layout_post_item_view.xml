@@ -32,6 +32,7 @@
                 android:id="@+id/text_author"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/list_standard_item_text_text_gap"
                 android:layout_weight="0"
                 android:text="@string/sample_author"
                 android:textColor="?attr/color_author_color"
@@ -41,7 +42,7 @@
                 android:id="@+id/text_group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/list_standard_item_text_text_gap"
+
                 android:singleLine="true"
                 android:text="@string/sample_group"
                 android:textColor="?attr/color_author_color"

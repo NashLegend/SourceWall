@@ -351,11 +351,20 @@ public class UserAPI extends APIBase {
     }
 
     /**
-     * 获取保存的用户cookie，实际上用不着
+     * 获取保存的用户cookie
      *
      * @return
      */
     public static String getCookie() {
         return SharedUtil.readString(Consts.Key_Cookie, "");
+    }
+
+    /**
+     * 获取保存的用户cookie
+     *
+     * @return
+     */
+    public static String getSimpleCookie() {
+        return "_32353_access_token=" + getToken() + "; _32353_ukey=" + getUkey() + ";";
     }
 }

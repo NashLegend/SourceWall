@@ -160,9 +160,10 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
             ResultObject resultObject = new ResultObject();
             try {
                 if (offset < 0) {
-                    Post tmpPost = PostAPI.getPostDetailByIDFromMobileUrl(PostActivity.this.post.getId());
-                    post.setContent(tmpPost.getContent());
-                    models.add(PostActivity.this.post);
+                    Post tmpPost = PostAPI.getPostDetailByIDFromMobileUrl(post.getId());
+                    tmpPost.setReplyNum(post.getReplyNum());
+                    post = tmpPost;
+                    models.add(post);
                     models.addAll(PostAPI.getPostCommentsFromJsonUrl(post.getId(), 0));
                 } else {
                     models.addAll(PostAPI.getPostCommentsFromJsonUrl(post.getId(), offset));
