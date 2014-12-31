@@ -18,7 +18,6 @@
         <!--夜间模式不用设置toolbarStyle-->
         <item name="toolbarStyle">@style/ToolbarStyleDay</item>
 
-        <item name="windowActionModeOverlay">true</item>
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
         <item name="colorPrimaryBright">@color/color_primary_bright</item>
@@ -84,7 +83,6 @@
         <item name="color_dialog_title">@color/dialog_title</item>
         <item name="color_dialog_list_text">@color/dialog_list_text</item>
         <item name="color_dialog_text">@color/dialog_text</item>
-        <item name="color_dialog_background">@color/dialog_background</item>
 
         <!--抽屉颜色-->
         <item name="drawable_drawer_button_background">@drawable/bg_drawer_button</item>
@@ -111,7 +109,6 @@
 
     <style name="DialogThemeNight" parent="Theme.AppCompat.Dialog">
         <item name="android:windowNoTitle">false</item>
-        <item name="android:windowBackground">@color/dialog_background_night</item>
         <item name="android:textColor">@color/dialog_text_night</item>
     </style>
 
@@ -217,7 +214,6 @@
         <item name="color_dialog_title">@color/dialog_title_night</item>
         <item name="color_dialog_list_text">@color/dialog_list_text_night</item>
         <item name="color_dialog_text">@color/dialog_text_night</item>
-        <item name="color_dialog_background">@color/dialog_background_night</item>
 
         <!--抽屉颜色-->
         <item name="drawable_drawer_button_background">@drawable/bg_drawer_button_night</item>

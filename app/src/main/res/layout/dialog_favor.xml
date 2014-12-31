@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/favor_dialog_height"
-    android:background="?attr/color_dialog_background"
     android:paddingLeft="@dimen/list_standard_item_padding_horizontal"
     android:paddingRight="@dimen/list_standard_item_padding_horizontal">
 
@@ -29,7 +28,6 @@
                 android:id="@+id/list_favor_dialog"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@android:color/transparent"
                 android:gravity="top"
                 android:minHeight="@dimen/input_dialog_input_height" />
         </RelativeLayout>

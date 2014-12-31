@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/color_dialog_background"
     android:layout_marginTop="10dp">
     <!--使用RelativeLayout是因为在Android5.0上使用LinearLayout太小了-->
 

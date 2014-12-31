@@ -59,7 +59,6 @@
     <attr name="color_dialog_title" format="color" />
     <attr name="color_dialog_text" format="color" />
     <attr name="color_dialog_list_text" format="color" />
-    <attr name="color_dialog_background" format="color" />
 
     <!--抽屉颜色-->
     <attr name="drawable_drawer_button_background" format="reference" />

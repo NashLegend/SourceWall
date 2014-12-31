@@ -88,8 +88,6 @@
     <color name="dialog_text_night">#dddddd</color>
     <color name="dialog_list_text">#888888</color>
     <color name="dialog_list_text_night">#999999</color>
-    <color name="dialog_background">#ffffff</color>
-    <color name="dialog_background_night">#424242</color>
 
     <!--抽屉颜色-->
     <color name="drawer_button_background">#ffffff</color>
