@@ -318,6 +318,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         super.onResume();
         if (isFirstLoad) {
             testLogin();
+            isFirstLoad = false;
         } else {
             if (loginState == UserAPI.isLoggedIn()) {
                 //do nothing
@@ -382,11 +383,20 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
             return UserAPI.testLogin();
         }
 
+        /**
+         * 目前尚未添加详细的Error Code
+         * 这么写其实不合理，因为有可能TestLogin失败只是因为网络错误或者服务器错误。
+         * 只能有两种情况是失败的，一是token过期，另一种是没有token
+         * 应该在某处添加方法，在发现Token过期后将清空token，
+         * 仅仅以是否有token作为登录状态判断。 TODO
+         *
+         * @param resultObject
+         */
         @Override
         protected void onPostExecute(ResultObject resultObject) {
+            boolean shouldMarkAsFailed = false;//是否视为登录失败
             if (resultObject.ok) {
-                checkChannelList();
-                loadUserInfo();
+
             } else {
                 switch (resultObject.code) {
                     case CODE_LOGIN_FAILED:
@@ -398,13 +408,26 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
                     case CODE_JSON_ERROR:
                         ToastUtil.toast(getActivity().getString(R.string.json_error));
                         break;
-                    case CODE_NO_TOKEN:
-                        ToastUtil.toast(getActivity().getString(R.string.have_not_login));
-                        break;
                     case CODE_UNKNOWN:
                         ToastUtil.toast(getActivity().getString(R.string.unknown_error));
                         break;
+                    case CODE_TOKEN_EXPIRED:
+                        ToastUtil.toast(getActivity().getString(R.string.token_expired));
+                        shouldMarkAsFailed = true;
+                        break;
+                    case CODE_NO_TOKEN:
+                        ToastUtil.toast(getActivity().getString(R.string.have_not_login));
+                        shouldMarkAsFailed = true;
+                        break;
                 }
+            }
+
+            if (!shouldMarkAsFailed) {
+                checkChannelList();
+                loadUserInfo();
+                loginState = true;
+            } else {
+
             }
         }
     }

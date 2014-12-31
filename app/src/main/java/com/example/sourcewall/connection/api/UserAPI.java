@@ -28,14 +28,15 @@ import java.util.ArrayList;
 public class UserAPI extends APIBase {
 
     public static ArrayList<Basket> myBaskets = new ArrayList<>();
-    public static boolean Logged = false;
 
     public static boolean isLoggedIn() {
-        return Logged;
-    }
-
-    public static void setLoggedInOK() {
-        Logged = true;
+        String token = getToken();
+        String ukey = getUkey();
+        if (!TextUtils.isEmpty(ukey) && ukey.length() == 6 && !TextUtils.isEmpty(token) && token.length() == 64) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public static String base36Encode(long id) {
@@ -108,7 +109,6 @@ public class UserAPI extends APIBase {
             clearMyInfo();
             resultObject.code = ResultObject.ResultCode.CODE_NO_TOKEN;
         }
-        Logged = resultObject.ok;
         return resultObject;
     }
 
