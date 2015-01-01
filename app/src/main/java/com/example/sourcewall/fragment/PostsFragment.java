@@ -20,12 +20,15 @@ import com.example.sourcewall.model.SubItem;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.view.PostListItemView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
  * Created by NashLegend on 2014/9/18 0018
- * 这几个Fragment结构几乎一模一样，浪费啊
+ * 这几个Fragment结构几乎一模一样，简直浪费
+ * 对于更新很快的地方，下拉加载更多的时候列表不应该只是简单的叠加在一起，
+ * 因为这样会导致一个列表里面出现多个相同的帖子，只能一屏展示一页才对。
+ * 因此要改为按页加载，还要提供加载上一页的功能，按时间倒序排列的都有这问题……
+ * 我擦……
  */
 public class PostsFragment extends ChannelsFragment implements LListView.OnRefreshListener {
     private LListView listView;
@@ -33,6 +36,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     private LoaderTask task;
     private SubItem subItem;
     private LoadingView loadingView;
+    private int currentPage = 1;//page从1开始而不是0
 
     @Override
     public View onCreateLayoutView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

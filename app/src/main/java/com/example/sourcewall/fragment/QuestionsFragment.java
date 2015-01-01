@@ -132,10 +132,11 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
             ResultObject resultObject = new ResultObject();
             try {
                 if (subItem.getType() == SubItem.Type_Collections) {
+                    int tmp = (int) Math.ceil(offset / 20 + 0.0001);
                     if (HOTTEST.equals(subItem.getValue())) {
-                        questions = QuestionAPI.getHotQuestions(offset);
+                        questions = QuestionAPI.getHotQuestions(tmp);
                     } else {
-                        questions = QuestionAPI.getHighlightQuestions(offset);
+                        questions = QuestionAPI.getHighlightQuestions(tmp);
                     }
                 } else {
                     questions = QuestionAPI.getQuestionsByTagFromJsonUrl(URLEncoder.encode(subItem.getValue(), "UTF-8"), offset);

@@ -98,7 +98,7 @@ public class MediumListItemView extends AceView<UComment> {
             @Override
             public Drawable getDrawable(String source) {
                 float stretch = DisplayUtil.getPixelDensity(getContext());
-                int maxWidth = (int) (DisplayUtil.getScreenWidth(getContext()) * 0.8);
+                double maxWidth = (DisplayUtil.getScreenWidth(getContext()) * 0.9);
                 Drawable drawable = null;
                 File file = new File(ImageCache.getBitmapCacheFileDir(source));
                 if (!file.exists()) {
@@ -112,6 +112,14 @@ public class MediumListItemView extends AceView<UComment> {
                 if (drawable != null) {
                     int width = (int) (drawable.getIntrinsicWidth() * stretch);
                     int height = (int) (drawable.getIntrinsicHeight() * stretch);
+
+                    System.out.println(width + " " + height);
+
+                    if (width > maxWidth) {
+                        height *= (maxWidth / width);
+                        width = (int) maxWidth;
+                    }
+
                     drawable.setBounds(0, 0, width, height);
                 }
                 return drawable;
