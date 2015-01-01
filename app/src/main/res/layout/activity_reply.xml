@@ -16,8 +16,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/action_bar"
-        android:paddingTop="@dimen/abc_action_bar_subtitle_bottom_margin_material"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingTop="@dimen/abc_action_bar_subtitle_bottom_margin_material">
 
         <TextView
             android:id="@+id/text_reply_host"
@@ -28,7 +28,8 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:text="@string/sample_title"
-            android:textColor="?attr/color_reply_quote_text" />
+            android:textColor="?attr/color_reply_quote_text"
+            android:visibility="gone" />
 
         <EditText
             android:id="@+id/text_reply"
