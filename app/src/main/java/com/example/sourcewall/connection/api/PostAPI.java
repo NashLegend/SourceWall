@@ -44,14 +44,14 @@ public class PostAPI extends APIBase {
                 Post item = new Post();
                 Element element = iterator.next();
                 Element link = element.getElementsByClass("post").get(0);
-                String postTitle = link.text();
+                String postTitle = link.getElementsByTag("h4").get(0).text();
                 String postUrl = link.attr("href");
                 String postImageUrl = "";
                 String postAuthor = "";//没有Author名……
                 String postGroup = element.getElementsByClass("post-author").get(0).text();//没错，post-author是小组名……
-                Elements Nums = element.getElementsByClass("post-info-right").get(0).children();
-                int postLike = Integer.valueOf(Nums.get(0).text().replaceAll("\\D*", ""));
-                int postComm = Integer.valueOf(Nums.get(0).text().replaceAll("\\D*", ""));
+                Elements children = element.getElementsByClass("post-info-right").get(0).children();
+                int postLike = Integer.valueOf(children.get(0).text().replaceAll("\\D*", ""));
+                int postComm = Integer.valueOf(children.get(0).text().replaceAll("\\D*", ""));
                 item.setTitle(postTitle);
                 item.setUrl(postUrl);
                 item.setId(postUrl.replaceAll("\\?\\S*$", "").replaceAll("\\D+", ""));

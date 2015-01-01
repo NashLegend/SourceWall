@@ -81,8 +81,8 @@
     <string name="sample_reply_title">回复文章</string>
     <string name="recommend_ok">推荐成功 ^_^</string>
     <string name="recommend_failed">推荐失败 0.0</string>
-    <string name="title_activity_answer">AnswerActivity</string>
-    <string name="title_activity_simple_reply">SimpleReplyActivity</string>
+    <string name="title_activity_answer">回答</string>
+    <string name="title_activity_simple_reply">评论区</string>
     <string name="have_not_login">尚未登录</string>
     <string name="network_error">网络错误</string>
     <string name="json_error">返回Json问题</string>
