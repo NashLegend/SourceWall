@@ -113,8 +113,6 @@ public class MediumListItemView extends AceView<UComment> {
                     int width = (int) (drawable.getIntrinsicWidth() * stretch);
                     int height = (int) (drawable.getIntrinsicHeight() * stretch);
 
-                    System.out.println(width + " " + height);
-
                     if (width > maxWidth) {
                         height *= (maxWidth / width);
                         width = (int) maxWidth;
