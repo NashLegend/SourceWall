@@ -1422,7 +1422,6 @@ body,html {
 }
 
 .msite-container {
-	min-height: 600px;
 	position: relative;
 	overflow: hidden;
 	-webkit-transition: -webkit-transform .2s cubic-bezier(0.2,.3,.25,.9);
