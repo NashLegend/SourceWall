@@ -103,7 +103,8 @@ public class PostAPI extends APIBase {
         //TODO
         ArrayList<Post> list = new ArrayList<Post>();
         String url = "http://www.guokr.com/group/user/recent_posts/?page=" + pageNo;
-        Document doc = Jsoup.connect(url).get();
+        String html = HttpFetcher.get(url);
+        Document doc = Jsoup.parse(html);
         return null;
     }
 
@@ -118,7 +119,8 @@ public class PostAPI extends APIBase {
     public static ArrayList<Post> getGroupHotPostListFromMobileUrl(int pageNo) throws IOException, Exception {
         ArrayList<Post> list = new ArrayList<Post>();
         String url = "http://m.guokr.com/group/hot_posts/?page=" + pageNo;
-        Document doc = Jsoup.connect(url).get();
+        String html = HttpFetcher.get(url);
+        Document doc = Jsoup.parse(html);
         Elements elements = doc.getElementsByClass("post-index-list");
         if (elements.size() == 1) {
             Elements postlist = elements.get(0).getElementsByTag("li");
@@ -216,7 +218,8 @@ public class PostAPI extends APIBase {
     public static void getGroupPostListByHtmlUrl(String url) {
         ArrayList<Post> list = new ArrayList<Post>();
         try {
-            Document doc = Jsoup.connect(url).get();
+            String html = HttpFetcher.get(url);
+            Document doc = Jsoup.parse(html);
             String postGroup = doc.getElementsByClass("group-name").text();
             Elements elements = doc.getElementsByClass("post-list");
             if (elements.size() == 1) {
@@ -280,7 +283,8 @@ public class PostAPI extends APIBase {
     public static Post getPostDetailByPostMobileUrl(String url) throws IOException, Exception {
         // 手机页面无法取得评论数，最好是从点击时带过来。TODO
         Post detail = new Post();
-        Document doc = Jsoup.connect(url).get();
+        String html = HttpFetcher.get(url);
+        Document doc = Jsoup.parse(html);
         String postID = url.replaceAll("\\?\\S*$", "").replaceAll("\\D+", "");
         String groupID = doc.getElementsByClass("crumbs").get(0).getElementsByTag("a")
                 .attr("href").replaceAll("\\D+", "");
@@ -361,7 +365,8 @@ public class PostAPI extends APIBase {
         ArrayList<UComment> list = new ArrayList<UComment>();
         String url = "http://m.guokr.com/post/" + id + "/?page=" + pageNo;
         try {
-            Document doc = Jsoup.connect(url).get();
+            String html = HttpFetcher.get(url);
+            Document doc = Jsoup.parse(html);
             String postID = url.replaceAll("\\?\\S*$", "").replaceAll("\\D+", "");
             Elements elements = doc.getElementsByClass("group-comments");
             if (elements.size() == 1) {

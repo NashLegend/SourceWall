@@ -106,7 +106,8 @@ public class QuestionAPI extends APIBase {
      */
     public static ArrayList<Question> getQuestionsFromMobileUrl(String url) throws IOException {
         ArrayList<Question> questions = new ArrayList<Question>();
-        Document doc = Jsoup.connect(url).get();
+        String html = HttpFetcher.get(url);
+        Document doc = Jsoup.parse(html);
         Elements elements = doc.getElementsByClass("ask-list");
         if (elements.size() == 1) {
             Elements questioList = elements.get(0).getElementsByTag("li");

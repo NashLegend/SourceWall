@@ -125,7 +125,8 @@ public class ArticleAPI extends APIBase {
         Article article = new Article();
         String aid = url.replaceAll("\\?\\S*$", "").replaceAll("\\D+", "");
 
-        Document doc = Jsoup.parse(HttpFetcher.get(url));
+        String html = HttpFetcher.get(url);
+        Document doc = Jsoup.parse(html);
         String articleContent = doc.getElementById("articleContent").outerHtml();
         String copyright = doc.getElementsByClass("copyright").outerHtml();
         article.setContent(articleContent + copyright);
