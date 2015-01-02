@@ -12,8 +12,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.Thread.UncaughtExceptionHandler;
-import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * 将下面两行添加到APP的Application文件的onCreate()方法里。 CrashReporter crashReporter=new
@@ -23,7 +23,7 @@ import java.text.SimpleDateFormat;
  * crashReporter.setOnCrashListener(xxx);
  * 如果在CrashListener.onCrash()里面想调用系统默认的Force Close对话框，可做如下操作：
  * 在执行Thread.setDefaultUncaughtExceptionHandler (crashReporter)之前先定义一个系统默认的
- * UncaughtExceptionHandler mUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();;
+ * UncaughtExceptionHandler mUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
  * 然后在CrashListener.onCrash()里面添加mUncaughtExceptionHandler
  * .uncaughtException(thread, ex);
  *
