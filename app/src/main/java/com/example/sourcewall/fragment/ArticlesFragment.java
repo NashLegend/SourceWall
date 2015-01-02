@@ -63,12 +63,12 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
                 getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
             }
         });
-        setTitle();
         loadOver();
         return view;
     }
 
-    private void setTitle() {
+    @Override
+    public void setTitle() {
         if (subItem.getType() == SubItem.Type_Collections) {
             getActivity().setTitle("科学人");
         } else {

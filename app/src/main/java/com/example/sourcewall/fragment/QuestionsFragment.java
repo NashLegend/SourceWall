@@ -62,7 +62,8 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
         return view;
     }
 
-    private void setTitle() {
+    @Override
+    public void setTitle() {
         getActivity().setTitle(this.subItem.getName() + " -- 问答");
     }
 

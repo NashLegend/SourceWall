@@ -64,7 +64,8 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         return view;
     }
 
-    private void setTitle() {
+    @Override
+    public void setTitle() {
         if (subItem.getType() == SubItem.Type_Collections) {
             getActivity().setTitle("小组热贴");
         } else {

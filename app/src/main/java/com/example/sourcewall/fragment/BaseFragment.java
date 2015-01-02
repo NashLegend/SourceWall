@@ -23,10 +23,12 @@ public abstract class BaseFragment extends Fragment {
                 ((ViewGroup) layoutView.getParent()).removeView(layoutView);
             }
         }
+        setTitle();
         return layoutView;
     }
 
     abstract public View onCreateLayoutView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
+    abstract public void setTitle();
 
 
 }

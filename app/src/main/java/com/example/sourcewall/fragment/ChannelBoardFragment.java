@@ -16,6 +16,11 @@ public class ChannelBoardFragment extends BaseFragment {
         return null;
     }
 
+    @Override
+    public void setTitle() {
+        
+    }
+
     public void setOnChannelSelectedListener(OnChannelSelectedListener onChannelSelectedListener) {
         this.onChannelSelectedListener = onChannelSelectedListener;
     }
