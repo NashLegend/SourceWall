@@ -51,7 +51,7 @@ public class PostAPI extends APIBase {
                 String postGroup = element.getElementsByClass("post-author").get(0).text();//没错，post-author是小组名……
                 Elements children = element.getElementsByClass("post-info-right").get(0).children();
                 int postLike = Integer.valueOf(children.get(0).text().replaceAll("\\D*", ""));
-                int postComm = Integer.valueOf(children.get(0).text().replaceAll("\\D*", ""));
+                int postComm = Integer.valueOf(children.get(1).text().replaceAll("\\D*", ""));
                 item.setTitle(postTitle);
                 item.setUrl(postUrl);
                 item.setId(postUrl.replaceAll("\\?\\S*$", "").replaceAll("\\D+", ""));
