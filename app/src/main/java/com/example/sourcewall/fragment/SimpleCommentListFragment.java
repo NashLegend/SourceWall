@@ -13,4 +13,9 @@ public class SimpleCommentListFragment extends BaseFragment {
     public View onCreateLayoutView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return null;
     }
+
+    @Override
+    public void setTitle() {
+
+    }
 }
