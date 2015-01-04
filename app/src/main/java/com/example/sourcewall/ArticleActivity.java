@@ -320,15 +320,15 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
                             //no data loaded
                         }
                     }
+                    if (adapter.getCount() > 0) {
+                        listView.setCanPullToLoadMore(ars.size() >= 20);
+                        listView.setCanPullToRefresh(false);
+                    } else {
+                        listView.setCanPullToLoadMore(false);
+                        listView.setCanPullToRefresh(false);
+                    }
                 } else {
                     // load error
-                }
-                if (adapter.getCount() > 0) {
-                    listView.setCanPullToLoadMore(true);
-                    listView.setCanPullToRefresh(false);
-                } else {
-                    listView.setCanPullToLoadMore(false);
-                    listView.setCanPullToRefresh(false);
                 }
                 listView.doneOperation();
             }

@@ -263,16 +263,17 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
                             //no data loaded
                         }
                     }
+                    if (adapter.getCount() > 0) {
+                        listView.setCanPullToLoadMore(ars.size() == 20);//请求下来20条说明已经后面可能还有数据
+                        listView.setCanPullToRefresh(true);
+                    } else {
+                        listView.setCanPullToLoadMore(false);
+                        listView.setCanPullToRefresh(true);
+                    }
                 } else {
                     // load error
                 }
-                if (adapter.getCount() > 0) {
-                    listView.setCanPullToLoadMore(true);
-                    listView.setCanPullToRefresh(true);
-                } else {
-                    listView.setCanPullToLoadMore(false);
-                    listView.setCanPullToRefresh(true);
-                }
+
                 listView.doneOperation();
             }
         }
