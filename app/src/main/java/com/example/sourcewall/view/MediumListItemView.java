@@ -1,13 +1,6 @@
 package com.example.sourcewall.view;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
-import android.text.Html;
-import android.text.Spanned;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
@@ -15,11 +8,8 @@ import android.widget.TextView;
 
 import com.example.sourcewall.R;
 import com.example.sourcewall.model.UComment;
-import com.example.sourcewall.util.DisplayUtil;
-import com.example.sourcewall.util.ImageUtil.ImageCache;
+import com.example.sourcewall.util.TextHtmlHelper;
 import com.squareup.picasso.Picasso;
-
-import java.io.File;
 
 /**
  * Created by NashLegend on 2014/9/18 0018.
@@ -34,11 +24,13 @@ public class MediumListItemView extends AceView<UComment> {
     private TextView floorView;
     private ImageView avatarImage;
     private UComment comment;
+    private TextHtmlHelper htmlHelper;
 
     public MediumListItemView(Context context) {
         super(context);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_medium_comment_item_view, this);
+        htmlHelper = new TextHtmlHelper(context);
         contentView = (TextView) findViewById(R.id.text_content);
         authorView = (TextView) findViewById(R.id.text_author);
         dateView = (TextView) findViewById(R.id.text_date);
@@ -62,12 +54,7 @@ public class MediumListItemView extends AceView<UComment> {
         dateView.setText(comment.getDate());
         likesView.setText(comment.getLikeNum() + "");
         floorView.setText(comment.getFloor());
-
-        if (htmlTask != null && htmlTask.getStatus() == AsyncTask.Status.RUNNING) {
-            htmlTask.cancel(true);
-        }
-        htmlTask = new HtmlLoaderTask();
-        htmlTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, comment.getContent());
+        htmlHelper.load(contentView, comment.getContent());
         Picasso.with(getContext()).load(comment.getAuthorAvatarUrl())
                 .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
                 .into(avatarImage);
@@ -76,92 +63,5 @@ public class MediumListItemView extends AceView<UComment> {
     @Override
     public UComment getData() {
         return comment;
-    }
-
-    Html.ImageGetter imageGetter = new Html.ImageGetter() {
-        @Override
-        public Drawable getDrawable(String source) {
-            float stretch = DisplayUtil.getPixelDensity(getContext());
-            double maxWidth = (DisplayUtil.getScreenWidth(getContext()) * 0.9);
-            Drawable drawable = null;
-            File file = new File(ImageCache.getBitmapCacheFileDir(source));
-            if (!file.exists()) {
-                ImageCache.downloadImageToFile(source, false);
-            }
-            if (file.exists()) {
-                //防止图片超出屏幕
-                drawable = decodeSampledBitmapFromFile(file.getAbsolutePath(), (int) (maxWidth / stretch));
-            }
-
-            if (drawable != null) {
-                int width = (int) (drawable.getIntrinsicWidth() * stretch);
-                int height = (int) (drawable.getIntrinsicHeight() * stretch);
-                if (width > maxWidth) {
-                    height *= (maxWidth / width);
-                    width = (int) maxWidth;
-                }
-                drawable.setBounds(0, 0, width, height);
-            }
-            return drawable;
-        }
-    };
-
-    /**
-     * 消除Html尾部空白
-     *
-     * @param s
-     * @return
-     */
-    public static CharSequence trimEnd(CharSequence s) {
-        int start = 0;
-        int end = s.length();
-        //消除头部空白
-        //while (start < end && Character.isWhitespace(s.charAt(start))) {
-        //     start++;
-        //}
-        while (end > start && Character.isWhitespace(s.charAt(end - 1))) {
-            end--;
-        }
-        return s.subSequence(start, end);
-    }
-
-    HtmlLoaderTask htmlTask;
-
-    class HtmlLoaderTask extends AsyncTask<String, Integer, CharSequence> {
-
-        @Override
-        protected CharSequence doInBackground(String... params) {
-            Spanned spanned = Html.fromHtml(params[0], imageGetter, null);
-            CharSequence charSequence = trimEnd(spanned);
-            return charSequence;
-        }
-
-        @Override
-        protected void onPostExecute(CharSequence spanned) {
-            contentView.setText(spanned);
-        }
-    }
-
-    public BitmapDrawable decodeSampledBitmapFromFile(String filename, int maxWidth) {
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(filename, options);
-        options.inSampleSize = calculateInSampleSize(options, maxWidth);
-        options.inJustDecodeBounds = false;
-        Bitmap bitmap = BitmapFactory.decodeFile(filename, options);
-        BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), bitmap);
-        return bitmapDrawable;
-    }
-
-    public int calculateInSampleSize(BitmapFactory.Options options, int reqWidth) {
-        final int width = options.outWidth;
-        int inSampleSize = 1;
-        if (width > reqWidth) {
-            final int halfWidth = width;
-            while ((halfWidth / inSampleSize) > reqWidth) {
-                inSampleSize *= 2;
-            }
-        }
-        return inSampleSize;
     }
 }

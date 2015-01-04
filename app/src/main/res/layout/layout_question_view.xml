@@ -45,11 +45,11 @@
                 android:textColor="?attr/color_author_color" />
         </LinearLayout>
 
-        <WebView
+        <TextView
             android:id="@+id/web_content"
-            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp" />
 
         <LinearLayout
             android:id="@+id/layout_comment"
