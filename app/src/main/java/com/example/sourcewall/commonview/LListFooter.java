@@ -209,7 +209,7 @@ public class LListFooter extends FrameLayout {
     }
 
     public void setHeight(int height) {
-        if (currentState == LListView.State_Refreshing && height < Loading_Height) {
+        if (currentState == LListView.State_Loading_More && height < Loading_Height) {
             height = Loading_Height;
         }
         if (height <= 0) {
