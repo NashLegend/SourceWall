@@ -209,6 +209,9 @@ public class LListFooter extends FrameLayout {
     }
 
     public void setHeight(int height) {
+        if (currentState == LListView.State_Refreshing && height < Loading_Height) {
+            height = Loading_Height;
+        }
         if (height <= 0) {
             setVisibility(View.GONE);
             ViewGroup.LayoutParams params = getLayoutParams();

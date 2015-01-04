@@ -62,14 +62,12 @@ public class MediumListItemView extends AceView<UComment> {
         dateView.setText(comment.getDate());
         likesView.setText(comment.getLikeNum() + "");
         floorView.setText(comment.getFloor());
-        contentView.setText(Html.fromHtml(comment.getContent()));
+
         if (htmlTask != null && htmlTask.getStatus() == AsyncTask.Status.RUNNING) {
             htmlTask.cancel(true);
         }
-        if (comment.getContent().contains("<img")) {
-            htmlTask = new HtmlLoaderTask();
-            htmlTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, comment.getContent());
-        }
+        htmlTask = new HtmlLoaderTask();
+        htmlTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, comment.getContent());
         Picasso.with(getContext()).load(comment.getAuthorAvatarUrl())
                 .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
                 .into(avatarImage);
@@ -80,49 +78,68 @@ public class MediumListItemView extends AceView<UComment> {
         return comment;
     }
 
+    Html.ImageGetter imageGetter = new Html.ImageGetter() {
+        @Override
+        public Drawable getDrawable(String source) {
+            float stretch = DisplayUtil.getPixelDensity(getContext());
+            double maxWidth = (DisplayUtil.getScreenWidth(getContext()) * 0.9);
+            Drawable drawable = null;
+            File file = new File(ImageCache.getBitmapCacheFileDir(source));
+            if (!file.exists()) {
+                ImageCache.downloadImageToFile(source, false);
+            }
+            if (file.exists()) {
+                //防止图片超出屏幕
+                drawable = decodeSampledBitmapFromFile(file.getAbsolutePath(), (int) (maxWidth / stretch));
+            }
+
+            if (drawable != null) {
+                int width = (int) (drawable.getIntrinsicWidth() * stretch);
+                int height = (int) (drawable.getIntrinsicHeight() * stretch);
+                if (width > maxWidth) {
+                    height *= (maxWidth / width);
+                    width = (int) maxWidth;
+                }
+                drawable.setBounds(0, 0, width, height);
+            }
+            return drawable;
+        }
+    };
+
+    /**
+     * 消除Html尾部空白
+     *
+     * @param s
+     * @return
+     */
+    public static CharSequence trimEnd(CharSequence s) {
+        int start = 0;
+        int end = s.length();
+        //消除头部空白
+        //while (start < end && Character.isWhitespace(s.charAt(start))) {
+        //     start++;
+        //}
+        while (end > start && Character.isWhitespace(s.charAt(end - 1))) {
+            end--;
+        }
+        return s.subSequence(start, end);
+    }
+
     HtmlLoaderTask htmlTask;
 
-    class HtmlLoaderTask extends AsyncTask<String, Integer, Spanned> {
+    class HtmlLoaderTask extends AsyncTask<String, Integer, CharSequence> {
 
         @Override
-        protected Spanned doInBackground(String... params) {
-            return Html.fromHtml(params[0], imageGetter, null);
+        protected CharSequence doInBackground(String... params) {
+            Spanned spanned = Html.fromHtml(params[0], imageGetter, null);
+            CharSequence charSequence = trimEnd(spanned);
+            return charSequence;
         }
 
         @Override
-        protected void onPostExecute(Spanned spanned) {
+        protected void onPostExecute(CharSequence spanned) {
             contentView.setText(spanned);
         }
-
-        Html.ImageGetter imageGetter = new Html.ImageGetter() {
-            @Override
-            public Drawable getDrawable(String source) {
-                float stretch = DisplayUtil.getPixelDensity(getContext());
-                double maxWidth = (DisplayUtil.getScreenWidth(getContext()) * 0.9);
-                Drawable drawable = null;
-                File file = new File(ImageCache.getBitmapCacheFileDir(source));
-                if (!file.exists()) {
-                    ImageCache.downloadImageToFile(source, false);
-                }
-                if (file.exists()) {
-                    //防止图片超出屏幕
-                    drawable = decodeSampledBitmapFromFile(file.getAbsolutePath(), (int) (maxWidth / stretch));
-                }
-
-                if (drawable != null) {
-                    int width = (int) (drawable.getIntrinsicWidth() * stretch);
-                    int height = (int) (drawable.getIntrinsicHeight() * stretch);
-
-                    if (width > maxWidth) {
-                        height *= (maxWidth / width);
-                        width = (int) maxWidth;
-                    }
-
-                    drawable.setBounds(0, 0, width, height);
-                }
-                return drawable;
-            }
-        };
     }
 
     public BitmapDrawable decodeSampledBitmapFromFile(String filename, int maxWidth) {
@@ -140,7 +157,7 @@ public class MediumListItemView extends AceView<UComment> {
         final int width = options.outWidth;
         int inSampleSize = 1;
         if (width > reqWidth) {
-            final int halfWidth = width / 2;
+            final int halfWidth = width;
             while ((halfWidth / inSampleSize) > reqWidth) {
                 inSampleSize *= 2;
             }

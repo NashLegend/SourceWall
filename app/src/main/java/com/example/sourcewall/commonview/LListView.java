@@ -158,14 +158,16 @@ public class LListView extends ListView {
                 default:
                     break;
             }
-            if (ev.getAction() == MotionEvent.ACTION_MOVE) {
-                if (pullingDown || (pullingUp && dist > 0)) {
-                    return true;
-                }
-                if (pullingUp && dist < 0) {
-                    smoothScrollBy((int) (-dist), 0);
-                    lastY = currentY;
-                    return true;
+            if (getState() != State_Refreshing && getState() != State_Loading_More) {
+                if (ev.getAction() == MotionEvent.ACTION_MOVE) {
+                    if (pullingDown || (pullingUp && dist > 0)) {
+                        return true;
+                    }
+                    if (pullingUp && dist < 0) {
+                        smoothScrollBy((int) (-dist), 0);
+                        lastY = currentY;
+                        return true;
+                    }
                 }
             }
         }
