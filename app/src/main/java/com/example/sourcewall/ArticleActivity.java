@@ -101,7 +101,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
     }
 
     private void replyArticle(UComment comment) {
-        if (!UserAPI.isLoggedIn()){
+        if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
             return;
         }
@@ -115,7 +115,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
     }
 
     private void recommend() {
-        if (!UserAPI.isLoggedIn()){
+        if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
             return;
         }
@@ -142,7 +142,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
     }
 
     private void favor() {
-        if (!UserAPI.isLoggedIn()){
+        if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
             return;
         }
@@ -168,7 +168,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
     }
 
     private void likeComment(UComment comment) {
-        if (!UserAPI.isLoggedIn()){
+        if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
             return;
         }
@@ -325,7 +325,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
                 }
                 if (adapter.getCount() > 0) {
                     listView.setCanPullToLoadMore(true);
-                    listView.setCanPullToRefresh(false);
+                    listView.setCanPullToRefresh(true);
                 } else {
                     listView.setCanPullToLoadMore(false);
                     listView.setCanPullToRefresh(true);

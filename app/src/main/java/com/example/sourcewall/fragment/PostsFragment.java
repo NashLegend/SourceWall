@@ -65,6 +65,12 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     }
 
     @Override
+    public void onCreateViewAgain(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        SubItem mSubItem = (SubItem) getArguments().getSerializable(Consts.Extra_SubItem);
+        resetData(mSubItem);
+    }
+
+    @Override
     public void setTitle() {
         if (subItem.getType() == SubItem.Type_Collections) {
             getActivity().setTitle("小组热贴");

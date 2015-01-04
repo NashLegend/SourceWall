@@ -10,7 +10,9 @@ import android.widget.TextView;
 
 import com.example.sourcewall.R;
 import com.example.sourcewall.model.UComment;
+import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.DisplayUtil;
+import com.example.sourcewall.util.SharedUtil;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -29,6 +31,11 @@ public class ArticleReplyListItemView extends AceView<UComment> {
 
     public ArticleReplyListItemView(Context context) {
         super(context);
+        if (SharedUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
+            setBackgroundColor(getContext().getResources().getColor(R.color.page_background_night));
+        } else {
+            setBackgroundColor(getContext().getResources().getColor(R.color.page_background));
+        }
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_article_reply_item_view, this);
         contentView = (WebView) findViewById(R.id.text_content);

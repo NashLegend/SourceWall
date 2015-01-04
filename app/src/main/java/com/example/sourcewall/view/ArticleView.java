@@ -1,7 +1,6 @@
 package com.example.sourcewall.view;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.webkit.WebView;
@@ -9,6 +8,8 @@ import android.widget.TextView;
 
 import com.example.sourcewall.R;
 import com.example.sourcewall.model.Article;
+import com.example.sourcewall.util.Consts;
+import com.example.sourcewall.util.SharedUtil;
 import com.example.sourcewall.util.StyleChecker;
 
 /**
@@ -43,6 +44,12 @@ public class ArticleView extends AceView<Article> {
     }
 
     private void initViews() {
+        if (SharedUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
+            setBackgroundColor(getContext().getResources().getColor(R.color.page_background_night));
+        } else {
+            setBackgroundColor(getContext().getResources().getColor(R.color.page_background));
+        }
+
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_article_view, this);
         titleView = (TextView) findViewById(R.id.text_title);

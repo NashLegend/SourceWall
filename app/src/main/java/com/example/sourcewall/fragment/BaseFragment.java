@@ -22,12 +22,16 @@ public abstract class BaseFragment extends Fragment {
             if (layoutView.getParent() != null) {
                 ((ViewGroup) layoutView.getParent()).removeView(layoutView);
             }
+            onCreateViewAgain(inflater, container, savedInstanceState);
         }
-        setTitle();
+
         return layoutView;
     }
 
     abstract public View onCreateLayoutView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
+
+    abstract public void onCreateViewAgain(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState);
+
     abstract public void setTitle();
 
 

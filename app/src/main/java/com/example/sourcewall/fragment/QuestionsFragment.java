@@ -63,6 +63,12 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
     }
 
     @Override
+    public void onCreateViewAgain(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        SubItem mSubItem = (SubItem) getArguments().getSerializable(Consts.Extra_SubItem);
+        resetData(mSubItem);
+    }
+
+    @Override
     public void setTitle() {
         getActivity().setTitle(this.subItem.getName() + " -- 问答");
     }

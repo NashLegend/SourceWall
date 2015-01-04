@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import com.example.sourcewall.R;
 import com.example.sourcewall.model.Post;
+import com.example.sourcewall.util.Consts;
+import com.example.sourcewall.util.SharedUtil;
 import com.example.sourcewall.util.StyleChecker;
 
 /**
@@ -22,6 +24,11 @@ public class PostView extends AceView<Post> {
 
     public PostView(Context context) {
         super(context);
+        if (SharedUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
+            setBackgroundColor(getContext().getResources().getColor(R.color.page_background_night));
+        } else {
+            setBackgroundColor(getContext().getResources().getColor(R.color.page_background));
+        }
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_post_view, this);
         titleView = (TextView) findViewById(R.id.text_title);

@@ -208,7 +208,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
                 }
                 if (adapter.getCount() > 0) {
                     listView.setCanPullToLoadMore(true);
-                    listView.setCanPullToRefresh(false);
+                    listView.setCanPullToRefresh(true);
                 } else {
                     listView.setCanPullToLoadMore(false);
                     listView.setCanPullToRefresh(true);

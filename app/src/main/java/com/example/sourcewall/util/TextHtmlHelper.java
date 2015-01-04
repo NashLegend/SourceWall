@@ -34,7 +34,7 @@ public class TextHtmlHelper {
         this.textView = tv;
         this.html = content;
         this.maxWidth = getMaxWidth();
-        Spanned spanned = Html.fromHtml(html, imageGetter, null);
+        Spanned spanned = Html.fromHtml(html);
         CharSequence charSequence = trimEnd(spanned);
         textView.setText(charSequence);
         if (html.contains("<img")) {
@@ -77,7 +77,10 @@ public class TextHtmlHelper {
             maxWidth = getMaxWidth();
             if (file.exists()) {
                 //防止图片超出屏幕
-                drawable = decodeSampledBitmapFromFile(file.getAbsolutePath(), (int) (maxWidth / stretch));
+                //显示尺寸为1dp=1px，这样显示一些小图如表情什么的时候不至于显示得太小
+                //但是对于一些本来就比较大的话，仍然要这样的话就有点压缩过份了
+                //如果对大图不压缩显示的话会导致小图有可能比大图还要大，这……
+                drawable = decodeSampledBitmapFromFile(file.getAbsolutePath(), (int) maxWidth);
             }
 
             if (drawable != null) {
@@ -87,6 +90,12 @@ public class TextHtmlHelper {
                     height *= (maxWidth / width);
                     width = (int) maxWidth;
                 }
+                System.out.println(width);
+                //这里不需要4096的限制
+                //while (height > 4096) {
+                //    height /= 2;
+                //    width /= 2;
+                //}
                 drawable.setBounds(0, 0, width, height);
             }
             return drawable;
@@ -119,12 +128,28 @@ public class TextHtmlHelper {
 
     private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth) {
         final int width = options.outWidth;
+        final int height = options.outHeight;
+        final int reqHeight = reqWidth * height / width;
         int inSampleSize = 1;
         if (width > reqWidth) {
             final int halfWidth = width / 2;
             while ((halfWidth / inSampleSize) > reqWidth) {
                 inSampleSize *= 2;
             }
+            long totalPixels = width * height / inSampleSize;
+            // 超过两倍像素的要接着压缩，也就是说最多1.4倍宽高
+            final long totalReqPixelsCap = reqWidth * reqHeight * 2;
+
+            while (totalPixels > totalReqPixelsCap) {
+                inSampleSize *= 2;
+                totalPixels /= 2;
+            }
+        }
+        //图片最大不能超过4096，宽度也不可能超过4096，所以不计了
+        int mHeight = height;
+        while (mHeight > 4096) {
+            inSampleSize *= 2;
+            mHeight /= 2;
         }
         return inSampleSize;
     }

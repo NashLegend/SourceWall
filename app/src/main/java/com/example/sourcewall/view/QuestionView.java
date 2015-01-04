@@ -11,6 +11,7 @@ import com.example.sourcewall.R;
 import com.example.sourcewall.SimpleReplyActivity;
 import com.example.sourcewall.model.Question;
 import com.example.sourcewall.util.Consts;
+import com.example.sourcewall.util.SharedUtil;
 import com.example.sourcewall.util.TextHtmlHelper;
 
 /**
@@ -28,6 +29,11 @@ public class QuestionView extends AceView<Question> {
 
     public QuestionView(Context context) {
         super(context);
+        if (SharedUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
+            setBackgroundColor(getContext().getResources().getColor(R.color.page_background_night));
+        } else {
+            setBackgroundColor(getContext().getResources().getColor(R.color.page_background));
+        }
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_question_view, this);
         htmlHelper = new TextHtmlHelper(context);

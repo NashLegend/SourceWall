@@ -7,6 +7,8 @@ import android.widget.TextView;
 
 import com.example.sourcewall.R;
 import com.example.sourcewall.model.Question;
+import com.example.sourcewall.util.Consts;
+import com.example.sourcewall.util.SharedUtil;
 
 /**
  * Created by NashLegend on 2014/9/15 0015
@@ -20,6 +22,11 @@ public class QuestionFeaturedListItemView extends AceView<Question> {
 
     public QuestionFeaturedListItemView(Context context) {
         super(context);
+        if (SharedUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
+            setBackgroundColor(getContext().getResources().getColor(R.color.page_background_night));
+        } else {
+            setBackgroundColor(getContext().getResources().getColor(R.color.page_background));
+        }
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_question_featured_item_view, this);
         titleView = (TextView) findViewById(R.id.text_title);
@@ -38,8 +45,14 @@ public class QuestionFeaturedListItemView extends AceView<Question> {
     @Override
     public void setData(Question model) {
         question = (Question) model;
-        titleView.setText(question.getTitle());
-        summaryView.setText(question.getSummary());
+        titleView.setText(question.getTitle().replaceAll("\\s", ""));
+        String text = question.getSummary().replaceAll("\\s", "");
+        summaryView.setText(text);
+        if (text == "") {
+            summaryView.setVisibility(GONE);
+        } else {
+            summaryView.setVisibility(VISIBLE);
+        }
         likeView.setText(question.getRecommendNum() + "");
     }
 

@@ -68,6 +68,12 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
     }
 
     @Override
+    public void onCreateViewAgain(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        SubItem mSubItem = (SubItem) getArguments().getSerializable(Consts.Extra_SubItem);
+        resetData(mSubItem);
+    }
+
+    @Override
     public void setTitle() {
         if (subItem.getType() == SubItem.Type_Collections) {
             getActivity().setTitle("科学人");

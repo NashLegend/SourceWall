@@ -17,8 +17,13 @@ public class ChannelBoardFragment extends BaseFragment {
     }
 
     @Override
+    public void onCreateViewAgain(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+    }
+
+    @Override
     public void setTitle() {
-        
+
     }
 
     public void setOnChannelSelectedListener(OnChannelSelectedListener onChannelSelectedListener) {

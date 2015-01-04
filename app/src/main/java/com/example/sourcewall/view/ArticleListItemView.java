@@ -9,7 +9,9 @@ import android.widget.TextView;
 
 import com.example.sourcewall.R;
 import com.example.sourcewall.model.Article;
+import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.DisplayUtil;
+import com.example.sourcewall.util.SharedUtil;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -31,6 +33,11 @@ public class ArticleListItemView extends AceView<Article> {
 
     public ArticleListItemView(Context context) {
         super(context);
+        if (SharedUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
+            setBackgroundColor(getContext().getResources().getColor(R.color.page_background_night));
+        } else {
+            setBackgroundColor(getContext().getResources().getColor(R.color.page_background));
+        }
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_article_item_view, this);
         titleView = (TextView) findViewById(R.id.text_title);

@@ -147,7 +147,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
     }
 
     private void favor() {
-        if (!UserAPI.isLoggedIn()){
+        if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
             return;
         }
@@ -155,7 +155,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
     }
 
     private void recommend() {
-        if (!UserAPI.isLoggedIn()){
+        if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
             return;
         }
@@ -182,7 +182,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
     }
 
     private void answerQuestion() {
-        if (!UserAPI.isLoggedIn()){
+        if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
             return;
         }
@@ -251,7 +251,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
                 }
                 if (adapter.getCount() > 0) {
                     listView.setCanPullToLoadMore(true);
-                    listView.setCanPullToRefresh(false);
+                    listView.setCanPullToRefresh(true);
                 } else {
                     listView.setCanPullToLoadMore(false);
                     listView.setCanPullToRefresh(true);

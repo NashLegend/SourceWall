@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import com.example.sourcewall.R;
 import com.example.sourcewall.model.UComment;
+import com.example.sourcewall.util.Consts;
+import com.example.sourcewall.util.SharedUtil;
 import com.example.sourcewall.util.TextHtmlHelper;
 import com.squareup.picasso.Picasso;
 
@@ -28,6 +30,11 @@ public class MediumListItemView extends AceView<UComment> {
 
     public MediumListItemView(Context context) {
         super(context);
+        if (SharedUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
+            setBackgroundColor(getContext().getResources().getColor(R.color.page_background_night));
+        } else {
+            setBackgroundColor(getContext().getResources().getColor(R.color.page_background));
+        }
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_medium_comment_item_view, this);
         htmlHelper = new TextHtmlHelper(context);
