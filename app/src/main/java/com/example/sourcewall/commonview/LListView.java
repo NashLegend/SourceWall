@@ -179,11 +179,11 @@ public class LListView extends ListView {
     }
 
     private boolean checkRefreshable() {
-        return canPullToRefresh && getChildAt(0) instanceof LListHeader;
+        return canPullToRefresh && getChildAt(0) instanceof LListHeader && getState() != State_Loading_More;
     }
 
     private boolean checkLoadable() {
-        return canPullToLoadMore && this.getChildAt(getChildCount() - 1) instanceof LListFooter;
+        return canPullToLoadMore && this.getChildAt(getChildCount() - 1) instanceof LListFooter && getState() != State_Refreshing;
     }
 
     public static interface OnRefreshListener {
