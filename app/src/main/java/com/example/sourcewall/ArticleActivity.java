@@ -325,10 +325,10 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
                 }
                 if (adapter.getCount() > 0) {
                     listView.setCanPullToLoadMore(true);
-                    listView.setCanPullToRefresh(true);
+                    listView.setCanPullToRefresh(false);
                 } else {
                     listView.setCanPullToLoadMore(false);
-                    listView.setCanPullToRefresh(true);
+                    listView.setCanPullToRefresh(false);
                 }
                 listView.doneOperation();
             }

@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 /**
  * Created by NashLegend on 2014/12/17 0017
+ * 这将导致LListView下拉刷新时的样式不好看
  */
 public class AutoHideUtil {
     public static void applyListViewAutoHide(Context context, ListView listView, View header, View footer, int headerHeight) {
@@ -48,7 +49,6 @@ public class AutoHideUtil {
             listView.setOnScrollListener(onScrollListener);
             listView.setOnTouchListener(onTouchListener);
         }
-
 
         AnimatorSet backAnimatorSet;
 

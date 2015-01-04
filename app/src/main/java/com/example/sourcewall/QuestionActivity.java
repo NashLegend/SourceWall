@@ -251,10 +251,10 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
                 }
                 if (adapter.getCount() > 0) {
                     listView.setCanPullToLoadMore(true);
-                    listView.setCanPullToRefresh(true);
+                    listView.setCanPullToRefresh(false);
                 } else {
                     listView.setCanPullToLoadMore(false);
-                    listView.setCanPullToRefresh(true);
+                    listView.setCanPullToRefresh(false);
                 }
                 listView.doneOperation();
             }

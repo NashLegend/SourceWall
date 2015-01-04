@@ -1,6 +1,8 @@
 package com.example.sourcewall;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 
 import com.example.sourcewall.util.ToastUtil;
@@ -10,7 +12,13 @@ import com.example.sourcewall.util.ToastUtil;
  */
 public class BaseActivity extends ActionBarActivity {
 
-    public void notifyNeedLog(){
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    }
+
+    public void notifyNeedLog() {
         ToastUtil.toastSingleton("需要登录");
     }
 
