@@ -16,6 +16,7 @@ public class LListFooter extends FrameLayout {
     private int lastState = currentState;
     private LListView.OnRefreshListener onRefreshListener;
     private TextView tvHint;
+    private LListView listView;
     private ObjectAnimator heightAnimator;
     private int Loading_Height_In_DP = 55;
     private int Release_Height_In_DP = 80;
@@ -24,8 +25,9 @@ public class LListFooter extends FrameLayout {
     private boolean layouted = false;
 
     //TODO 删掉，改成自动加载
-    public LListFooter(Context context) {
+    public LListFooter(Context context, LListView listView) {
         super(context);
+        this.listView = listView;
         Release_Height = (int) (DisplayUtil.getPixelDensity(context) * Release_Height_In_DP);
         Loading_Height = (int) (DisplayUtil.getPixelDensity(context) * Loading_Height_In_DP);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -39,9 +41,6 @@ public class LListFooter extends FrameLayout {
         if (dist < 0 && !isVisible()) {
             return false;
         }
-        float rat = 1.5f;
-        dist /= rat;
-        handleMotion(dist);
         if (currentState != LListView.State_Loading_More) {
             // TODO 或许可以做更多
             if (isVisible()) {
@@ -69,6 +68,9 @@ public class LListFooter extends FrameLayout {
                 pull2Release();
             }
         }
+        float rat = 1.5f;
+        dist /= rat;
+        handleMotion(dist);
         lastState = currentState;
         return true;
     }
@@ -85,11 +87,24 @@ public class LListFooter extends FrameLayout {
             pull2Normal();
         } else if (currentState == LListView.State_Loading_More) {
             // TODO 这里的值应该是动画的正常高度，是在初始化时就确定的
-            if (getHeight() > Release_Height) {
+            if (getActualHeight() > Release_Height) {
                 loading2Loading();
             }
         }
         lastState = LListView.State_Normal;
+    }
+
+    private void setTopPadding() {
+        int[] listPos = {0, 0};
+        int[] footPos = {0, 0};
+        listView.getLocationOnScreen(listPos);
+        this.getLocationOnScreen(footPos);
+        int mt = listPos[1] + listView.getHeight() - footPos[1] - 1;
+        setPadding(0, mt, 0, 0);
+    }
+
+    private void releaseTopPadding() {
+
     }
 
     private void normal2Loading() {
@@ -100,6 +115,7 @@ public class LListFooter extends FrameLayout {
     }
 
     private void normal2Pull() {
+        setTopPadding();
         tvHint.setText(R.string.pull_up_to_load_more);
     }
 
@@ -155,7 +171,11 @@ public class LListFooter extends FrameLayout {
 
                 break;
         }
-        setHeight((int) (getHeight() + dist));
+        if (getHeight() < getPaddingTop()) {
+            setHeight((int) (getHeight() + dist));
+        } else {
+            setHeight((int) (getHeight() + dist - getPaddingTop()));
+        }
     }
 
     protected void doneLoading() {
@@ -168,7 +188,7 @@ public class LListFooter extends FrameLayout {
 
     private boolean isOverReleaseThreshold() {
         //这里需要在初始化的时候就确定这个Threshold，TODO
-        return getHeight() > Release_Height;
+        return getActualHeight() > Release_Height;
     }
 
     @Override
@@ -203,20 +223,32 @@ public class LListFooter extends FrameLayout {
     private void animateToHeight(int height) {
         int duration = 300;
         cancelPotentialHeightAnimator();
-        heightAnimator = ObjectAnimator.ofInt(this, "height", getHeight(), height);
+        heightAnimator = ObjectAnimator.ofInt(this, "height", getActualHeight(), height);
         heightAnimator.setDuration(duration);
         heightAnimator.start();
+    }
+
+    public int getActualHeight() {
+        if (getHeight() < getPaddingTop()) {
+            return getHeight();
+        } else {
+            return getHeight() - getPaddingTop();
+        }
     }
 
     public void setHeight(int height) {
         if (currentState == LListView.State_Loading_More && height < Loading_Height) {
             height = Loading_Height;
         }
+        if (height > 0) {
+            height += getPaddingTop();
+        }
         if (height <= 0) {
             setVisibility(View.GONE);
             ViewGroup.LayoutParams params = getLayoutParams();
             params.height = 1;
             setLayoutParams(params);
+            setPadding(0, 0, 0, 0);
         } else {
             ViewGroup.LayoutParams params = getLayoutParams();
             params.height = height;

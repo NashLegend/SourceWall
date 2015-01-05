@@ -60,7 +60,6 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
 
         AutoHideUtil.applyListViewAutoHide(this, listView, toolbar, bottomLayout, (int) getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
 
-        listView.setCanPullToRefresh(false);
         listView.setCanPullToLoadMore(false);
         listView.setOnRefreshListener(this);
         listView.setOnItemClickListener(onItemClickListener);
@@ -247,11 +246,10 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
                         }
                     }
                     if (adapter.getCount() > 0) {
-                        listView.setCanPullToLoadMore(ars.size() >= 20);
-                        listView.setCanPullToRefresh(false);
+                        //listView.setCanPullToLoadMore(ars.size() >= 20);
+                        listView.setCanPullToLoadMore(true);
                     } else {
                         listView.setCanPullToLoadMore(false);
-                        listView.setCanPullToRefresh(false);
                     }
                 } else {
                     // load error

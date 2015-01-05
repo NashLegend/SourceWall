@@ -65,7 +65,6 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         AutoHideUtil.applyListViewAutoHide(this, listView, toolbar, bottomLayout, (int) getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
 
         listView.setOnItemClickListener(onItemClickListener);
-        listView.setCanPullToRefresh(false);
         listView.setCanPullToLoadMore(false);
         listView.setOnRefreshListener(this);
 
@@ -321,11 +320,10 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
                         }
                     }
                     if (adapter.getCount() > 0) {
-                        listView.setCanPullToLoadMore(ars.size() >= 20);
-                        listView.setCanPullToRefresh(false);
+                        //listView.setCanPullToLoadMore(ars.size() >= 20);
+                        listView.setCanPullToLoadMore(true);
                     } else {
                         listView.setCanPullToLoadMore(false);
-                        listView.setCanPullToRefresh(false);
                     }
                 } else {
                     // load error

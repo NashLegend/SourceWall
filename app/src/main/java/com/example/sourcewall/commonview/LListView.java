@@ -91,7 +91,7 @@ public class LListView extends ListView {
     private void addViews(Context context) {
         touchSlop = (int) (ViewConfiguration.get(getContext()).getScaledTouchSlop() * 1.5);
         headerView = new LListHeader(context);
-        footerView = new LListFooter(context);
+        footerView = new LListFooter(context, this);
         addHeaderView(headerView);
         addFooterView(footerView);
     }
