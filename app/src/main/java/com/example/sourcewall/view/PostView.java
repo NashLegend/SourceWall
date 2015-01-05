@@ -3,10 +3,10 @@ package com.example.sourcewall.view;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.webkit.WebView;
 import android.widget.TextView;
 
 import com.example.sourcewall.R;
+import com.example.sourcewall.commonview.WWebView;
 import com.example.sourcewall.model.Post;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.SharedUtil;
@@ -18,7 +18,7 @@ import com.example.sourcewall.util.StyleChecker;
 public class PostView extends AceView<Post> {
     private Post post;
     private TextView titleView;
-    private WebView contentView;
+    private WWebView contentView;
     private TextView authorView;
     private TextView dateView;
 
@@ -32,7 +32,7 @@ public class PostView extends AceView<Post> {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_post_view, this);
         titleView = (TextView) findViewById(R.id.text_title);
-        contentView = (WebView) findViewById(R.id.web_content);
+        contentView = (WWebView) findViewById(R.id.web_content);
         authorView = (TextView) findViewById(R.id.text_author);
         dateView = (TextView) findViewById(R.id.text_date);
     }
@@ -54,8 +54,7 @@ public class PostView extends AceView<Post> {
             dateView.setText(post.getDate());
             String html = StyleChecker.getPostHtml(post.getContent());
             contentView.setBackgroundColor(0);
-            contentView.getSettings().setDefaultTextEncodingName("UTF-8");
-            contentView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "charset=UTF-8", null);
+            contentView.loadDataWithBaseURL(Consts.Base_Url, html, "text/html", "charset=UTF-8", null);
         }
     }
 

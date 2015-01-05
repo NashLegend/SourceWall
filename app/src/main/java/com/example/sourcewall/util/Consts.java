@@ -39,6 +39,10 @@ public class Consts {
     public static final String Cookie_Token_Key = "_32353_access_token";
     public static final String Cookie_Ukey_Key = "_32353_ukey";
 
+    //webview
+    public static final String Base_Url = "http://www.guokr.com/";
+    public static final String Base_Url2 = "file:///android_asset/";
+
 
     public static ArrayList<SubItem> getSections() {
         SubItem[] items = {new SubItem(SubItem.Section_Article, SubItem.Type_Collections, AppApplication.getApplication().getResources().getString(R.string.article), "Article"),

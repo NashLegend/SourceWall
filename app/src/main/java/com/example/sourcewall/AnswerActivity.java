@@ -139,7 +139,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         String html = StyleChecker.getAnswerHtml(answer.getContent());
         webView.setBackgroundColor(0);
         webView.getSettings().setDefaultTextEncodingName("UTF-8");
-        webView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "charset=UTF-8", null);
+        webView.loadDataWithBaseURL(Consts.Base_Url, html, "text/html", "charset=UTF-8", null);
     }
 
 
