@@ -17,6 +17,7 @@ import java.io.File;
 
 /**
  * Created by NashLegend on 2015/1/4 0004
+ * 用来给TextView显示html外加图片的类
  */
 public class TextHtmlHelper {
     private TextView textView;
@@ -90,12 +91,6 @@ public class TextHtmlHelper {
                     height *= (maxWidth / width);
                     width = (int) maxWidth;
                 }
-                System.out.println(width);
-                //这里不需要4096的限制
-                //while (height > 4096) {
-                //    height /= 2;
-                //    width /= 2;
-                //}
                 drawable.setBounds(0, 0, width, height);
             }
             return drawable;
