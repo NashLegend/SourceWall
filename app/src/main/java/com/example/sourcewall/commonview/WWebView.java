@@ -43,22 +43,43 @@ public class WWebView extends WebView {
         setWebViewClient(webViewClient);//一旦设置了webViewClient，默认情况下链接就会在本页打开了……
         getSettings().setAllowFileAccess(true);
         getSettings().setAllowContentAccess(true);
+        getSettings().setBlockNetworkImage(true);//暂时不加载图片，因为要延迟加载，只渲染文字还是比较快的
         getSettings().setDefaultTextEncodingName("UTF-8");
     }
 
-    private boolean shouldInterceptResourceRequest(String uri) {
-        return true;
+    /**
+     * 是否不加载图片
+     *
+     * @return
+     */
+    private boolean shouldInterceptImage() {
+        return false;
     }
 
-    private boolean shouldRedirectLoading(String url) {
+    /**
+     * 是否拦截点击的链接
+     *
+     * @param url
+     * @return
+     */
+    private boolean shouldRedirectRequest(String url) {
         return false;
     }
 
     WebViewClient webViewClient = new WebViewClient() {
 
         @Override
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+            if (!shouldInterceptImage()) {
+                //图片在此进行延迟加载
+                getSettings().setBlockNetworkImage(false);
+            }
+        }
+
+        @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            if (shouldRedirectLoading(url)) {
+            if (shouldRedirectRequest(url)) {
                 // TODO，跳转到界面，比如PostActivity等
             } else {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
