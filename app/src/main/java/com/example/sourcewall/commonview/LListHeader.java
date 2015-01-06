@@ -37,9 +37,6 @@ public class LListHeader extends FrameLayout {
         if (dist < 0 && !isVisible()) {
             return false;
         }
-        float rat = 1.5f;
-        dist /= rat;
-        handleMotion(dist);
         if (currentState != LListView.State_Refreshing) {
             // 这时只有两种可能的状态State_Release_To_Refresh和State_Pull_To_Refresh
             // TODO 或许可以做更多
@@ -70,6 +67,9 @@ public class LListHeader extends FrameLayout {
                 pull2Release();
             }
         }
+        float rat = 1.5f;
+        dist /= rat;
+        handleMotion(dist);
         lastState = currentState;
         return true;
     }

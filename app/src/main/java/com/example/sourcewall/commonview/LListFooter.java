@@ -103,10 +103,6 @@ public class LListFooter extends FrameLayout {
         setPadding(0, mt, 0, 0);
     }
 
-    private void releaseTopPadding() {
-
-    }
-
     private void normal2Loading() {
         animateToHeight(Loading_Height);
         tvHint.setText(R.string.loading);

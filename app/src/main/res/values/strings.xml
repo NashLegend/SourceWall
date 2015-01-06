@@ -23,7 +23,7 @@
     <string name="pull_up_to_load_more">上拉以加载更多</string>
     <string name="release_to_load_more">放开以加载更多</string>
     <string name="loading">加载中</string>
-    <string name="idling">idling</string>
+    <string name="idling">done</string>
     <string name="cancel">取消</string>
     <string name="ok">确定</string>
     <string name="action_done">完成</string>
