@@ -232,7 +232,8 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                         currentPage = loadedPage;
                         adapter.setList(ars);
                         adapter.notifyDataSetInvalidated();
-                        listView.smoothScrollToPosition(0);
+                        // listView.smoothScrollToPosition(0);
+                        listView.scrollTo(0, 0);
                         if (currentPage > 0) {
                             headerView.setVisibility(View.VISIBLE);
                             headerView.getLayoutParams().height = 0;

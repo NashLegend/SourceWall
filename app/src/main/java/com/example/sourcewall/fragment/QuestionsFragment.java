@@ -139,7 +139,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
     @Override
     public void onStartLoadMore() {
         //TODO
-        loadData(adapter.getCount());
+        loadData(currentPage + 1);
     }
 
     private void loadPrePage() {
@@ -224,6 +224,8 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
                         currentPage = loadedPage;
                         adapter.setList(ars);
                         adapter.notifyDataSetInvalidated();
+                        // listView.smoothScrollToPosition(0);
+                        listView.scrollTo(0, 0);
                         if (currentPage > 0) {
                             headerView.setVisibility(View.VISIBLE);
                             headerView.getLayoutParams().height = 0;
