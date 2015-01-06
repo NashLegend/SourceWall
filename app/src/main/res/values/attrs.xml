@@ -73,5 +73,6 @@
 
     <!--LListView-->
     <attr name="color_llist_foot_head_text" format="color" />
+    <attr name="drawable_llist_header_button_background" format="reference" />
 
 </resources>

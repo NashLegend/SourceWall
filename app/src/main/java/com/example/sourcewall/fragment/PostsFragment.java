@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 
 import com.example.sourcewall.PostActivity;
@@ -18,6 +20,7 @@ import com.example.sourcewall.connection.api.PostAPI;
 import com.example.sourcewall.model.Post;
 import com.example.sourcewall.model.SubItem;
 import com.example.sourcewall.util.Consts;
+import com.example.sourcewall.util.ToastUtil;
 import com.example.sourcewall.view.PostListItemView;
 
 import java.util.ArrayList;
@@ -36,12 +39,14 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     private LoaderTask task;
     private SubItem subItem;
     private LoadingView loadingView;
-    private int currentPage = 1;//page从1开始而不是0
+    private int currentPage = -1;//page从0开始，-1表示还没有数据
+    private View headerView;
 
     @Override
     public View onCreateLayoutView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_posts, container, false);
         subItem = (SubItem) getArguments().getSerializable(Consts.Extra_SubItem);
+        headerView = inflater.inflate(R.layout.layout_header_load_pre_page, null, false);
         loadingView = (LoadingView) view.findViewById(R.id.post_progress_loading);
         listView = (LListView) view.findViewById(R.id.list_posts);
         adapter = new PostAdapter(getActivity());
@@ -59,6 +64,41 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                 getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
             }
         });
+
+        listView.addHeaderView(headerView);
+        headerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (headerView.getLayoutParams() != null) {
+                    headerView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                    headerView.getLayoutParams().height = 1;
+                    headerView.setVisibility(View.GONE);
+                }
+            }
+        });
+        headerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadPrePage();
+            }
+        });
+        //防止滑动headerView的时候下拉上拉
+        headerView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        listView.requestDisallowInterceptTouchEvent(true);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        listView.requestDisallowInterceptTouchEvent(false);
+                        break;
+                }
+                return false;
+            }
+        });
+
         setTitle();
         loadOver();
         return view;
@@ -85,6 +125,9 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     }
 
     private void loadData(int offset) {
+        if (offset < 0) {
+            offset = 0;
+        }
         cancelPotentialTask();
         task = new LoaderTask();
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, offset);
@@ -93,13 +136,23 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     @Override
     public void onStartRefresh() {
         //TODO
+        headerView.getLayoutParams().height = 1;
+        headerView.setVisibility(View.GONE);
         loadData(0);
     }
 
     @Override
     public void onStartLoadMore() {
         //TODO
-        loadData(adapter.getCount());
+        loadData(currentPage + 1);
+    }
+
+    private void loadPrePage() {
+        listView.setCanPullToLoadMore(false);
+        listView.setCanPullToRefresh(false);
+        headerView.findViewById(R.id.text_header_load_hint).setVisibility(View.INVISIBLE);
+        headerView.findViewById(R.id.progress_header_loading).setVisibility(View.VISIBLE);
+        loadData(currentPage - 1);
     }
 
     @Override
@@ -107,12 +160,15 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         if (subItem.equals(this.subItem)) {
             triggerRefresh();
         } else {
+            currentPage = -1;
             this.subItem = subItem;
             setTitle();
             adapter.clear();
             adapter.notifyDataSetInvalidated();
             listView.setCanPullToRefresh(false);
             listView.setCanPullToLoadMore(false);
+            headerView.getLayoutParams().height = 1;
+            headerView.setVisibility(View.GONE);
             loadOver();
         }
     }
@@ -135,28 +191,26 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
      */
     class LoaderTask extends AsyncTask<Integer, Integer, ResultObject> {
 
-        int offset;
+        int loadedPage;
 
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
+
         }
 
         @Override
         protected ResultObject doInBackground(Integer... datas) {
-            offset = datas[0];
+            loadedPage = datas[0];
             ArrayList<Post> posts = new ArrayList<Post>();
             ResultObject resultObject = new ResultObject();
             try {
-                //在前两种情况下offset好像不对……
+                //解析html的page是从1开始的，所以offset要+1
                 if (subItem.getType() == SubItem.Type_Collections) {
-                    int tmp = (int) Math.ceil(offset / 20 + 0.0001);
-                    posts = PostAPI.getGroupHotPostListFromMobileUrl(tmp);
+                    posts = PostAPI.getGroupHotPostListFromMobileUrl(loadedPage + 1);
                 } else if (subItem.getType() == SubItem.Type_Private_Channel) {
-                    int tmp = (int) Math.ceil(offset / 20 + 0.0001);
-                    posts = PostAPI.getMyGroupRecentRepliesPosts(tmp);
+                    posts = PostAPI.getMyGroupRecentRepliesPosts(loadedPage + 1);
                 } else {
-                    posts = PostAPI.getGroupPostListByJsonUrl(subItem.getValue(), offset);
+                    posts = PostAPI.getGroupPostListByJsonUrl(subItem.getValue(), loadedPage * 20);
                 }
                 resultObject.result = posts;
                 if (posts != null) {
@@ -174,25 +228,24 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
             if (!isCancelled()) {
                 if (o.ok) {
                     ArrayList<Post> ars = (ArrayList<Post>) o.result;
-                    if (offset > 0) {
-                        //Load More
-                        if (ars.size() > 0) {
-                            adapter.addAll(ars);
-                            adapter.notifyDataSetChanged();
+                    if (ars.size() > 0) {
+                        currentPage = loadedPage;
+                        adapter.setList(ars);
+                        adapter.notifyDataSetInvalidated();
+                        listView.smoothScrollToPosition(0);
+                        if (currentPage > 0) {
+                            headerView.setVisibility(View.VISIBLE);
+                            headerView.getLayoutParams().height = 0;
                         } else {
-                            //no data loaded
+                            headerView.getLayoutParams().height = 1;
+                            headerView.setVisibility(View.GONE);
                         }
                     } else {
-                        //Refresh
-                        if (ars.size() > 0) {
-                            adapter.setList(ars);
-                            adapter.notifyDataSetInvalidated();
-                        } else {
-                            //no data loaded,不要清除了，保留旧数据得了
-                        }
+                        //没有数据，页码不变
+                        ToastUtil.toast("No Data Loaded");
                     }
                 } else {
-                    //load error
+                    ToastUtil.toast("Load Error");
                 }
                 if (adapter.getCount() > 0) {
                     listView.setCanPullToLoadMore(true);
@@ -201,6 +254,8 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                     listView.setCanPullToLoadMore(false);
                     listView.setCanPullToRefresh(true);
                 }
+                headerView.findViewById(R.id.text_header_load_hint).setVisibility(View.VISIBLE);
+                headerView.findViewById(R.id.progress_header_loading).setVisibility(View.GONE);
                 listView.doneOperation();
             }
         }

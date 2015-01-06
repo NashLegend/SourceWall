@@ -99,6 +99,7 @@
 
         <!--LListView-->
         <item name="color_llist_foot_head_text">@color/llist_foot_head_text</item>
+        <item name="drawable_llist_header_button_background">@drawable/bg_header_button</item>
     </style>
 
     <!--MainActivity的主题-->
@@ -230,6 +231,7 @@
 
         <!--LListView-->
         <item name="color_llist_foot_head_text">@color/llist_foot_head_text_night</item>
+        <item name="drawable_llist_header_button_background">@drawable/bg_header_button_night</item>
     </style>
 
     <!--MainActivity的夜间主题-->
