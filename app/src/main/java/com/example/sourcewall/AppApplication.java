@@ -4,13 +4,16 @@ import android.app.Application;
 
 import com.example.sourcewall.util.CrashReporter;
 
+import java.lang.Thread.UncaughtExceptionHandler;
+
 /**
  * Created by NashLegend on 2014/9/24 0024
  */
 public class AppApplication extends Application {
 
     static AppApplication application;
-    Thread.UncaughtExceptionHandler mUncaughtExceptionHandler;
+    private UncaughtExceptionHandler uncaughtExceptionHandler;
+    private CrashReporter crashReporter = null;
     public static String cookieString = "";
     public static String tokenString = "";
     public static String ukeyString = "";
@@ -20,16 +23,18 @@ public class AppApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        application = this;
-        mUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
-        CrashReporter crashReporter = new CrashReporter(getApplicationContext());
-        Thread.setDefaultUncaughtExceptionHandler(crashReporter);
+        uncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
+        crashReporter = new CrashReporter(getApplicationContext());
         crashReporter.setOnCrashListener(new CrashReporter.CrashListener() {
+
             @Override
             public void onCrash(String info, Thread thread, Throwable ex) {
-                mUncaughtExceptionHandler.uncaughtException(thread, ex);
+                //用于调用系统关闭程序窗口
+                uncaughtExceptionHandler.uncaughtException(thread, ex);
             }
         });
+        Thread.setDefaultUncaughtExceptionHandler(crashReporter);
+        application = this;
     }
 
     public static Application getApplication() {

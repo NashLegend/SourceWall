@@ -57,7 +57,7 @@ public class CrashReporter implements UncaughtExceptionHandler {
             e1.printStackTrace();
         }
 
-        String mtypeString = android.os.Build.MODEL == null ? "-1"
+        String mTypeString = android.os.Build.MODEL == null ? "-1"
                 : android.os.Build.MODEL;
         String mSystem = android.os.Build.VERSION.RELEASE == null ? "-1"
                 : android.os.Build.VERSION.RELEASE;
@@ -65,16 +65,14 @@ public class CrashReporter implements UncaughtExceptionHandler {
                 : android.os.Build.MANUFACTURER;
         String networkOperator = telephonyManager.getNetworkOperatorName() == null ? "-1"
                 : telephonyManager.getNetworkOperatorName();
-        String IMEI = telephonyManager.getDeviceId() == null ? "-1"
-                : telephonyManager.getDeviceId();
 
         infoString += "APP版本号：" + versionCode + "\n";
         infoString += "APP版本名：" + versionName + "\n";
-        infoString += "手机型号：" + mtypeString + "\n";
+        infoString += "手机型号：" + mTypeString + "\n";
         infoString += "系统版本：" + mSystem + "\n";
         infoString += "手机厂商：" + manufacturer + "\n";
         infoString += "运营商：" + networkOperator + "\n";
-        infoString += "IMEI：" + IMEI + "\n";
+        //不读取IMEI
 
         long threadId = thread.getId();
         infoString += ("ThreadInfo : Thread.getName()=" + thread.getName()
