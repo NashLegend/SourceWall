@@ -41,7 +41,7 @@ public class HttpFetcher {
 
     public static String get(String url) throws IOException {
         HttpGet httpGet = new HttpGet(url);
-        httpGet.addHeader("Cookie", UserAPI.getSimpleCookie());
+        httpGet.setHeader("Cookie", UserAPI.getSimpleCookie());
         HttpResponse response = getDefaultHttpClient().execute(httpGet);
         int statusCode = response.getStatusLine().getStatusCode();
         HttpEntity entity = response.getEntity();
