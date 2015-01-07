@@ -52,7 +52,20 @@ Params:`access_token={token}&upload_file=<file>`
 Http Code:
 > 201 ok
 
+-------------------------------------------------------------
+发布帖子
+================
+POST:http://www.guokr.com/group/{group_id}/post/edit/
 
+Host: www.guokr.com
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+Content-Type: application/x-www-form-urlencoded
+Cookie:_32353_access_token={token}; _32353_ukey={ukey};session={session}
+
+Params:(UrlEncode)csrf_token={csrf_token}&title={title}&topic={topic}&body={html_body}&captcha=&share_opts=activity
+
+Http Code:
+> 302 ok
 
 -------------------------------------------------------------
 收藏一个帖子
