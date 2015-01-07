@@ -33,7 +33,6 @@ public class LListFooter extends FrameLayout {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_footer_view, this);
         tvHint = (TextView) findViewById(R.id.text_footer_hint);
-
     }
 
     protected boolean handleMoveDistance(float dist) {
@@ -111,7 +110,6 @@ public class LListFooter extends FrameLayout {
     }
 
     private void normal2Pull() {
-        setTopPadding();
         tvHint.setText(R.string.pull_up_to_load_more);
     }
 
@@ -239,7 +237,7 @@ public class LListFooter extends FrameLayout {
         if (height > 0) {
             height += getPaddingTop();
         }
-        if (height <= 0) {
+        if (height < 1) {
             setVisibility(View.GONE);
             ViewGroup.LayoutParams params = getLayoutParams();
             params.height = 1;
@@ -250,6 +248,7 @@ public class LListFooter extends FrameLayout {
             params.height = height;
             if (getVisibility() != View.VISIBLE) {
                 setVisibility(View.VISIBLE);
+                setTopPadding();
             }
             setLayoutParams(params);
         }

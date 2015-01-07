@@ -98,7 +98,6 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                 return false;
             }
         });
-
         setTitle();
         loadOver();
         return view;
@@ -162,7 +161,6 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         } else {
             currentPage = -1;
             this.subItem = subItem;
-            setTitle();
             adapter.clear();
             adapter.notifyDataSetInvalidated();
             listView.setCanPullToRefresh(false);
@@ -171,6 +169,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
             headerView.setVisibility(View.GONE);
             loadOver();
         }
+        setTitle();
     }
 
     @Override
@@ -201,25 +200,15 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         @Override
         protected ResultObject doInBackground(Integer... datas) {
             loadedPage = datas[0];
-            ArrayList<Post> posts = new ArrayList<Post>();
-            ResultObject resultObject = new ResultObject();
-            try {
-                //解析html的page是从1开始的，所以offset要+1
-                if (subItem.getType() == SubItem.Type_Collections) {
-                    posts = PostAPI.getGroupHotPostListFromMobileUrl(loadedPage + 1);
-                } else if (subItem.getType() == SubItem.Type_Private_Channel) {
-                    posts = PostAPI.getMyGroupRecentRepliesPosts(loadedPage + 1);
-                } else {
-                    posts = PostAPI.getGroupPostListByJsonUrl(subItem.getValue(), loadedPage * 20);
-                }
-                resultObject.result = posts;
-                if (posts != null) {
-                    resultObject.ok = true;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+            //解析html的page是从1开始的，所以offset要+1
+            if (subItem.getType() == SubItem.Type_Collections) {
+                return PostAPI.getGroupHotPostListFromMobileUrl(loadedPage + 1);
+            } else if (subItem.getType() == SubItem.Type_Private_Channel) {
+                return PostAPI.getMyGroupRecentRepliesPosts(loadedPage + 1);
+            } else {
+                //如果是最后一页，低于20条，那么就会有问题——也就是请求不到数据
+                return PostAPI.getGroupPostListByJsonUrl(subItem.getValue(), loadedPage * 20);
             }
-            return resultObject;
         }
 
         @Override
@@ -232,8 +221,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                         currentPage = loadedPage;
                         adapter.setList(ars);
                         adapter.notifyDataSetInvalidated();
-                        // listView.smoothScrollToPosition(0);
-                        listView.scrollTo(0, 0);
+                        listView.smoothScrollToPosition(0);
                         if (currentPage > 0) {
                             headerView.setVisibility(View.VISIBLE);
                             headerView.getLayoutParams().height = 0;

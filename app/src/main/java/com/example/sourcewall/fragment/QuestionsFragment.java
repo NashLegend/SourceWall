@@ -23,7 +23,7 @@ import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.ToastUtil;
 import com.example.sourcewall.view.QuestionFeaturedListItemView;
 
-import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
@@ -157,7 +157,6 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
         } else {
             currentPage = -1;
             this.subItem = subItem;
-            setTitle();
             adapter.clear();
             adapter.notifyDataSetInvalidated();
             listView.setCanPullToRefresh(false);
@@ -166,6 +165,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
             headerView.setVisibility(View.GONE);
             loadOver();
         }
+        setTitle();
     }
 
     @Override
@@ -192,26 +192,21 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
         @Override
         protected ResultObject doInBackground(Integer... datas) {
             loadedPage = datas[0];
-            ArrayList<Question> questions = new ArrayList<Question>();
-            ResultObject resultObject = new ResultObject();
-            try {
-                if (subItem.getType() == SubItem.Type_Collections) {
-                    if (HOTTEST.equals(subItem.getValue())) {
-                        questions = QuestionAPI.getHotQuestions(loadedPage + 1);
-                    } else {
-                        questions = QuestionAPI.getHighlightQuestions(loadedPage + 1);
-                    }
+            if (subItem.getType() == SubItem.Type_Collections) {
+                if (HOTTEST.equals(subItem.getValue())) {
+                    return QuestionAPI.getHotQuestions(loadedPage + 1);
                 } else {
-                    questions = QuestionAPI.getQuestionsByTagFromJsonUrl(URLEncoder.encode(subItem.getValue(), "UTF-8"), loadedPage * 20);
+                    return QuestionAPI.getHighlightQuestions(loadedPage + 1);
                 }
-                resultObject.result = questions;
-                if (questions != null) {
-                    resultObject.ok = true;
+            } else {
+                try {
+                    //如果是最后一页，低于20条，那么就会有问题——也就是请求不到数据
+                    return QuestionAPI.getQuestionsByTagFromJsonUrl(URLEncoder.encode(subItem.getValue(), "UTF-8"), loadedPage * 20);
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                    return new ResultObject();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
             }
-            return resultObject;
         }
 
         @Override
@@ -224,8 +219,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
                         currentPage = loadedPage;
                         adapter.setList(ars);
                         adapter.notifyDataSetInvalidated();
-                        // listView.smoothScrollToPosition(0);
-                        listView.scrollTo(0, 0);
+                        listView.smoothScrollToPosition(0);
                         if (currentPage > 0) {
                             headerView.setVisibility(View.VISIBLE);
                             headerView.getLayoutParams().height = 0;

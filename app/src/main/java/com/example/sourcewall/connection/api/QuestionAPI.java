@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import com.example.sourcewall.connection.HttpFetcher;
 import com.example.sourcewall.connection.ResultObject;
+import com.example.sourcewall.model.AceModel;
 import com.example.sourcewall.model.Question;
 import com.example.sourcewall.model.QuestionAnswer;
 import com.example.sourcewall.model.UComment;
@@ -32,19 +33,21 @@ public class QuestionAPI extends APIBase {
 
     /**
      * 根据tag获取相关问题，json格式
+     * 比html还特么浪费流量，垃圾数据太多了
+     * resultObject.result是ArrayList<Question>
      *
      * @param tag
      * @param offset
      * @return
      * @throws IOException
      */
-    public static ArrayList<Question> getQuestionsByTagFromJsonUrl(String tag, int offset) throws IOException {
-        // 比html还特么浪费流量…………
-        ArrayList<Question> questions = new ArrayList<Question>();
-        String url = "http://apis.guokr.com/ask/question.json?retrieve_type=by_tag&limit=20&tag_name="
-                + tag + "&offset=" + offset;
-        String jString = HttpFetcher.get(url);
+    public static ResultObject getQuestionsByTagFromJsonUrl(String tag, int offset) {
+        ResultObject resultObject = new ResultObject();
         try {
+            ArrayList<Question> questions = new ArrayList<Question>();
+            String url = "http://apis.guokr.com/ask/question.json?retrieve_type=by_tag&limit=20&tag_name="
+                    + tag + "&offset=" + offset;
+            String jString = HttpFetcher.get(url);
             JSONObject jss = new JSONObject(jString);
             boolean ok = jss.getBoolean("ok");
             if (ok) {
@@ -66,11 +69,17 @@ public class QuestionAPI extends APIBase {
                     question.setUrl(getJsonString(jsonObject, "url"));
                     questions.add(question);
                 }
+                resultObject.ok = true;
+                resultObject.result = questions;
             }
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return questions;
+        return resultObject;
     }
 
     /**
@@ -80,7 +89,7 @@ public class QuestionAPI extends APIBase {
      * @return
      * @throws IOException
      */
-    public static ArrayList<Question> getHotQuestions(int pageNo) throws IOException {
+    public static ResultObject getHotQuestions(int pageNo) {
         String url = "http://m.guokr.com/ask/hottest/?page=" + pageNo;
         return getQuestionsFromMobileUrl(url);
     }
@@ -92,7 +101,7 @@ public class QuestionAPI extends APIBase {
      * @return
      * @throws IOException
      */
-    public static ArrayList<Question> getHighlightQuestions(int pageNo) throws IOException {
+    public static ResultObject getHighlightQuestions(int pageNo) {
         String url = "http://m.guokr.com/ask/highlight/?page=" + pageNo;
         return getQuestionsFromMobileUrl(url);
     }
@@ -104,32 +113,42 @@ public class QuestionAPI extends APIBase {
      * @return
      * @throws IOException
      */
-    public static ArrayList<Question> getQuestionsFromMobileUrl(String url) throws IOException {
-        ArrayList<Question> questions = new ArrayList<Question>();
-        String html = HttpFetcher.get(url);
-        Document doc = Jsoup.parse(html);
-        Elements elements = doc.getElementsByClass("ask-list");
-        if (elements.size() == 1) {
-            Elements questioList = elements.get(0).getElementsByTag("li");
-            for (int i = 0; i < questioList.size(); i++) {
-                Question item = new Question();
-                Element element = questioList.get(i);
-                Element link = element.getElementsByTag("a").get(0);
-                String title = link.getElementsByTag("h4").text();
-                String id = link.attr("href").replaceAll("\\D+", "");
-                String summary = link.getElementsByTag("p").text();
-                String l = link.getElementsByClass("ask-descrip").text().replaceAll("\\D+", "");
-                if (!TextUtils.isEmpty(l)) {
-                    item.setRecommendNum(Integer.valueOf(l));
+    public static ResultObject getQuestionsFromMobileUrl(String url) {
+        ResultObject resultObject = new ResultObject();
+        try {
+            ArrayList<Question> questions = new ArrayList<Question>();
+            String html = HttpFetcher.get(url);
+            Document doc = Jsoup.parse(html);
+            Elements elements = doc.getElementsByClass("ask-list");
+            if (elements.size() == 1) {
+                Elements questioList = elements.get(0).getElementsByTag("li");
+                for (int i = 0; i < questioList.size(); i++) {
+                    Question item = new Question();
+                    Element element = questioList.get(i);
+                    Element link = element.getElementsByTag("a").get(0);
+                    String title = link.getElementsByTag("h4").text();
+                    String id = link.attr("href").replaceAll("\\D+", "");
+                    String summary = link.getElementsByTag("p").text();
+                    String l = link.getElementsByClass("ask-descrip").text().replaceAll("\\D+", "");
+                    if (!TextUtils.isEmpty(l)) {
+                        item.setRecommendNum(Integer.valueOf(l));
+                    }
+                    item.setTitle(title);
+                    item.setId(id);
+                    item.setSummary(summary);
+                    item.setFeatured(true);
+                    questions.add(item);
                 }
-                item.setTitle(title);
-                item.setId(id);
-                item.setSummary(summary);
-                item.setFeatured(true);
-                questions.add(item);
+                resultObject.ok = true;
+                resultObject.result = questions;
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return questions;
+
+        return resultObject;
     }
 
     /**
@@ -140,61 +159,75 @@ public class QuestionAPI extends APIBase {
      * @throws IOException
      * @throws JSONException
      */
-    public static Question getQuestionDetailByID(String id) throws IOException, JSONException {
+    public static ResultObject getQuestionDetailByID(String id) {
         String url = "http://apis.guokr.com/ask/question/" + id + ".json";
         return getQuestionDetailFromJsonUrl(url);
     }
 
     /**
      * 返回问题内容
+     * resultObject.result是Question
      *
      * @param url 返回问题内容,json格式
      * @return
      * @throws IOException
      * @throws JSONException
      */
-    public static Question getQuestionDetailFromJsonUrl(String url) throws IOException, JSONException {
-        Question question = null;
-        String jString = HttpFetcher.get(url);
-        JSONObject jss = new JSONObject(jString);
-        boolean ok = jss.getBoolean("ok");
-        if (ok) {
-            JSONObject result = getJsonObject(jss, "result");
-            question = new Question();
-            question.setAnswerable(getJsonBoolean(result, "is_answerable"));
-            question.setAnswerNum(getJsonInt(result, "answers_count"));
-            question.setCommentNum(getJsonInt(result, "replies_count"));
-            question.setAuthor(result.getJSONObject("author").getString("nickname"));
-            question.setAuthorID(result.getJSONObject("author").getString("url")
-                    .replaceAll("\\D+", ""));
-            question.setAuthorAvatarUrl(result.getJSONObject("author").getJSONObject("avatar")
-                    .getString("large").replaceAll("\\?\\S*$", ""));
-            question.setContent(getJsonString(result, "annotation_html").replaceAll("<img .*?/>", prefix + "$0" + suffix).replaceAll("style=\"max-width: \\d+px\"", "style=\"max-width: " + maxImageWidth + "px\""));
-            question.setDate(parseDate(getJsonString(result, "date_created")));
-            question.setFollowNum(getJsonInt(result, "followers_count"));
-            question.setId(getJsonString(result, "id"));
-            question.setRecommendNum(getJsonInt(result, "recommends_count"));
-            question.setTitle(getJsonString(result, "question"));
-            question.setUrl(getJsonString(result, "url"));
+    public static ResultObject getQuestionDetailFromJsonUrl(String url) {
+        ResultObject resultObject = new ResultObject();
+        try {
+            Question question = null;
+            String jString = HttpFetcher.get(url);
+            JSONObject jss = new JSONObject(jString);
+            boolean ok = jss.getBoolean("ok");
+            if (ok) {
+                JSONObject result = getJsonObject(jss, "result");
+                question = new Question();
+                question.setAnswerable(getJsonBoolean(result, "is_answerable"));
+                question.setAnswerNum(getJsonInt(result, "answers_count"));
+                question.setCommentNum(getJsonInt(result, "replies_count"));
+                question.setAuthor(result.getJSONObject("author").getString("nickname"));
+                question.setAuthorID(result.getJSONObject("author").getString("url")
+                        .replaceAll("\\D+", ""));
+                question.setAuthorAvatarUrl(result.getJSONObject("author").getJSONObject("avatar")
+                        .getString("large").replaceAll("\\?\\S*$", ""));
+                question.setContent(getJsonString(result, "annotation_html").replaceAll("<img .*?/>", prefix + "$0" + suffix).replaceAll("style=\"max-width: \\d+px\"", "style=\"max-width: " + maxImageWidth + "px\""));
+                question.setDate(parseDate(getJsonString(result, "date_created")));
+                question.setFollowNum(getJsonInt(result, "followers_count"));
+                question.setId(getJsonString(result, "id"));
+                question.setRecommendNum(getJsonInt(result, "recommends_count"));
+                question.setTitle(getJsonString(result, "question"));
+                question.setUrl(getJsonString(result, "url"));
+                resultObject.ok = true;
+                resultObject.result = question;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return question;
+
+        return resultObject;
     }
 
     /**
      * 获取问题的答案，json格式
+     * resultObject.result是ArrayList<QuestionAnswer>
      *
      * @param id
      * @param offset
      * @return
      * @throws IOException
      */
-    public static ArrayList<QuestionAnswer> getQuestionAnswers(String id, int offset) throws IOException {
-        ArrayList<QuestionAnswer> answers = new ArrayList<QuestionAnswer>();
-        String url = "http://apis.guokr.com/ask/answer.json?retrieve_type=by_question&limit=20&question_id="
-                + id + "&offset=" + offset;
-        String jString = HttpFetcher.get(url);
-
+    public static ResultObject getQuestionAnswers(String id, int offset) {
+        ResultObject resultObject = new ResultObject();
         try {
+            ArrayList<QuestionAnswer> answers = new ArrayList<QuestionAnswer>();
+            String url = "http://apis.guokr.com/ask/answer.json?retrieve_type=by_question&limit=20&question_id="
+                    + id + "&offset=" + offset;
+            String jString = HttpFetcher.get(url);
             JSONObject jss = new JSONObject(jString);
             boolean ok = jss.getBoolean("ok");
             if (ok) {
@@ -220,26 +253,59 @@ public class QuestionAPI extends APIBase {
                     ans.setUpvoteNum(getJsonInt(jo, "supportings_count"));
                     answers.add(ans);
                 }
+                resultObject.ok = true;
+                resultObject.result = answers;
             }
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return answers;
+        return resultObject;
+    }
+
+    /**
+     * 返回第一页数据，包括Post与第一页的评论列表
+     * resultObject.result是ArrayList<AceModel>
+     *
+     * @param id
+     * @return
+     */
+    public static ResultObject getQuestionFirstPage(String id) {
+        ResultObject resultObject = new ResultObject();
+        ArrayList<AceModel> aceModels = new ArrayList<>();
+        ResultObject articleResult = getQuestionDetailByID(id);
+        if (articleResult.ok) {
+            ResultObject commentsResult = getQuestionAnswers(id, 0);
+            if (commentsResult.ok) {
+                Question post = (Question) articleResult.result;
+                ArrayList<UComment> simpleComments = (ArrayList<UComment>) commentsResult.result;
+                aceModels.add(post);
+                aceModels.addAll(simpleComments);
+                resultObject.ok = true;
+                resultObject.result = aceModels;
+            }
+        }
+        return resultObject;
     }
 
     /**
      * 返回问题的评论，json格式
+     * resultObject.result是ArrayList<UComment>
      *
      * @param id
      * @param offset
      * @return
      */
-    public static ArrayList<UComment> getQuestionComments(String id, int offset) throws IOException {
-        ArrayList<UComment> list = new ArrayList<UComment>();
-        String url = "http://www.guokr.com/apis/ask/question_reply.json?retrieve_type=by_question&question_id="
-                + id + "&offset=" + offset;
-        String jString = HttpFetcher.get(url);
+    public static ResultObject getQuestionComments(String id, int offset) {
+        ResultObject resultObject = new ResultObject();
         try {
+            ArrayList<UComment> list = new ArrayList<UComment>();
+            String url = "http://www.guokr.com/apis/ask/question_reply.json?retrieve_type=by_question&question_id="
+                    + id + "&offset=" + offset;
+            String jString = HttpFetcher.get(url);
             JSONObject jss = new JSONObject(jString);
             boolean ok = jss.getBoolean("ok");
             if (ok) {
@@ -258,46 +324,65 @@ public class QuestionAPI extends APIBase {
                     comment.setHostID(getJsonString(jsonObject, "question_id"));
                     list.add(comment);
                 }
+                resultObject.ok = true;
+                resultObject.result = list;
             }
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return list;
+        return resultObject;
     }
 
     /**
      * 返回答案的评论，json格式
+     * resultObject.result是ArrayList<UComment>
      *
      * @param id
      * @param offset
      * @return
      * @throws IOException
      */
-    public static ArrayList<UComment> getAnswerComments(String id, int offset) throws IOException, JSONException {
-        ArrayList<UComment> list = new ArrayList<UComment>();
-        String url = "http://www.guokr.com/apis/ask/answer_reply.json?retrieve_type=by_answer&limit=20&answer_id="
-                + id + "&offset=" + offset;
-        String jString = HttpFetcher.get(url);
-        JSONObject jss = new JSONObject(jString);
-        boolean ok = jss.getBoolean("ok");
-        if (ok) {
-            JSONArray comments = jss.getJSONArray("result");
-            for (int i = 0; i < comments.length(); i++) {
-                JSONObject jsonObject = comments.getJSONObject(i);
-                UComment comment = new UComment();
-                comment.setAuthor(jsonObject.getJSONObject("author").getString("nickname"));
-                comment.setAuthorID(jsonObject.getJSONObject("author").getString("url")
-                        .replaceAll("\\D+", ""));
-                comment.setAuthorAvatarUrl(jsonObject.getJSONObject("author")
-                        .getJSONObject("avatar").getString("large").replaceAll("\\?\\S*$", ""));
-                comment.setContent(getJsonString(jsonObject, "text"));
-                comment.setDate(parseDate(getJsonString(jsonObject, "date_created")));
-                comment.setID(getJsonString(jsonObject, "id"));
-                comment.setHostID(getJsonString(jsonObject, "question_id"));
-                list.add(comment);
+    public static ResultObject getAnswerComments(String id, int offset) {
+        ResultObject resultObject = new ResultObject();
+        try {
+            ArrayList<UComment> list = new ArrayList<UComment>();
+            String url = "http://www.guokr.com/apis/ask/answer_reply.json?retrieve_type=by_answer&limit=20&answer_id="
+                    + id + "&offset=" + offset;
+            String jString = HttpFetcher.get(url);
+            JSONObject jss = new JSONObject(jString);
+            boolean ok = jss.getBoolean("ok");
+            if (ok) {
+                JSONArray comments = jss.getJSONArray("result");
+                for (int i = 0; i < comments.length(); i++) {
+                    JSONObject jsonObject = comments.getJSONObject(i);
+                    UComment comment = new UComment();
+                    comment.setAuthor(jsonObject.getJSONObject("author").getString("nickname"));
+                    comment.setAuthorID(jsonObject.getJSONObject("author").getString("url")
+                            .replaceAll("\\D+", ""));
+                    comment.setAuthorAvatarUrl(jsonObject.getJSONObject("author")
+                            .getJSONObject("avatar").getString("large").replaceAll("\\?\\S*$", ""));
+                    comment.setContent(getJsonString(jsonObject, "text"));
+                    comment.setDate(parseDate(getJsonString(jsonObject, "date_created")));
+                    comment.setID(getJsonString(jsonObject, "id"));
+                    comment.setHostID(getJsonString(jsonObject, "question_id"));
+                    list.add(comment);
+                }
+                resultObject.ok = true;
+                resultObject.result = list;
             }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return list;
+
+        return resultObject;
     }
 
     /**

@@ -31,9 +31,6 @@ import com.example.sourcewall.util.ToastUtil;
 import com.example.sourcewall.view.MediumListItemView;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
-import org.json.JSONException;
-
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class ArticleActivity extends SwipeActivity implements LListView.OnRefreshListener, View.OnClickListener {
@@ -273,27 +270,12 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         @Override
         protected ResultObject doInBackground(Integer... params) {
             offset = params[0];
-            ArrayList<AceModel> models = new ArrayList<AceModel>();
-            ResultObject resultObject = new ResultObject();
-            try {
-                if (offset < 0) {
-                    //同时取了热门回帖，但是在这里没有显示 TODO
-                    Article detailArticle = ArticleAPI.getArticleDetailByID(article.getId());
-                    ArrayList<UComment> simpleComments = ArticleAPI.getArticleComments(article.getId(), 0);
-                    article.setContent(detailArticle.getContent());
-                    models.add(article);
-                    models.addAll(simpleComments);
-                } else {
-                    models.addAll(ArticleAPI.getArticleComments(article.getId(), offset));
-                }
-                resultObject.result = models;
-                resultObject.ok = true;
-            } catch (IOException | JSONException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (offset < 0) {
+                //同时取了热门回帖，但是在这里没有显示 TODO
+                return ArticleAPI.getArticleFirstPage(article);
+            } else {
+                return ArticleAPI.getArticleComments(article.getId(), offset);
             }
-            return resultObject;
         }
 
         @Override

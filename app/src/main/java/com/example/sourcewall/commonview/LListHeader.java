@@ -225,7 +225,7 @@ public class LListHeader extends FrameLayout {
         if (currentState == LListView.State_Refreshing && height < Refreshing_Height) {
             height = Refreshing_Height;
         }
-        if (height <= 0) {
+        if (height < 1) {
             setVisibility(View.GONE);
             //TODO
             ViewGroup.LayoutParams params = getLayoutParams();

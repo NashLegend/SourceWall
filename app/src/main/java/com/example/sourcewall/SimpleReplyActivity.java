@@ -28,9 +28,6 @@ import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.ToastUtil;
 import com.example.sourcewall.view.SimpleCommentItemView;
 
-import org.json.JSONException;
-
-import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -220,24 +217,14 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
         @Override
         protected ResultObject doInBackground(Integer... params) {
             offset = params[0];
-            ArrayList<UComment> models = new ArrayList<>();
-            ResultObject resultObject = new ResultObject();
-            try {
-                if (aceModel instanceof Question) {
-                    models = QuestionAPI.getQuestionComments(((Question) aceModel).getId(), offset);
-                } else if (aceModel instanceof QuestionAnswer) {
-                    models = QuestionAPI.getAnswerComments(((QuestionAnswer) aceModel).getID(), offset);
-                }
-                resultObject.result = models;
-                resultObject.ok = true;
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (aceModel instanceof Question) {
+                return QuestionAPI.getQuestionComments(((Question) aceModel).getId(), offset);
+            } else if (aceModel instanceof QuestionAnswer) {
+                return QuestionAPI.getAnswerComments(((QuestionAnswer) aceModel).getID(), offset);
+            } else {
+                //执行不到的
+                return new ResultObject();
             }
-            return resultObject;
         }
 
         @Override

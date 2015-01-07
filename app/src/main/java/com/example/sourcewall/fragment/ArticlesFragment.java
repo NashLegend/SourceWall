@@ -21,9 +21,6 @@ import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.ToastUtil;
 import com.example.sourcewall.view.ArticleListItemView;
 
-import org.json.JSONException;
-
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -114,13 +111,13 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
             triggerRefresh();
         } else {
             this.subItem = subItem;
-            setTitle();
             adapter.clear();
             adapter.notifyDataSetInvalidated();
             listView.setCanPullToRefresh(false);
             listView.setCanPullToLoadMore(false);
             loadOver();
         }
+        setTitle();
     }
 
     @Override
@@ -147,24 +144,11 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
         @Override
         protected ResultObject doInBackground(Integer... datas) {
             offset = datas[0];
-            ArrayList<Article> articles = new ArrayList<Article>();
-            ResultObject resultObject = new ResultObject();
-            try {
-                if (subItem.getType() == SubItem.Type_Collections) {
-                    articles = ArticleAPI.getArticleListIndexPage(offset);
-                } else {
-                    articles = ArticleAPI.getArticleListByChannel(subItem.getValue(), offset);
-                }
-                resultObject.result = articles;
-                if (articles != null) {
-                    resultObject.ok = true;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (subItem.getType() == SubItem.Type_Collections) {
+                return ArticleAPI.getArticleListIndexPage(offset);
+            } else {
+                return ArticleAPI.getArticleListByChannel(subItem.getValue(), offset);
             }
-            return resultObject;
         }
 
         @Override

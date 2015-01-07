@@ -29,9 +29,6 @@ import com.example.sourcewall.util.RegUtil;
 import com.example.sourcewall.view.MediumListItemView;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
-import org.json.JSONException;
-
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class PostActivity extends SwipeActivity implements LListView.OnRefreshListener, View.OnClickListener {
@@ -155,28 +152,11 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         @Override
         protected ResultObject doInBackground(Integer... params) {
             offset = params[0];
-            ArrayList<AceModel> models = new ArrayList<AceModel>();
-            ResultObject resultObject = new ResultObject();
-            try {
-                if (offset < 0) {
-                    Post tmpPost = PostAPI.getPostDetailByIDFromMobileUrl(post.getId());
-                    tmpPost.setReplyNum(post.getReplyNum());
-                    post = tmpPost;
-                    models.add(post);
-                    models.addAll(PostAPI.getPostCommentsFromJsonUrl(post.getId(), 0));
-                } else {
-                    models.addAll(PostAPI.getPostCommentsFromJsonUrl(post.getId(), offset));
-                }
-                resultObject.result = models;
-                resultObject.ok = true;
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (offset < 0) {
+                return PostAPI.getPostFirstPage(post.getId());
+            } else {
+                return PostAPI.getPostCommentsFromJsonUrl(post.getId(), offset);
             }
-            return resultObject;
         }
 
         @Override

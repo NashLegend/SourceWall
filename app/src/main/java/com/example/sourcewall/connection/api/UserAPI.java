@@ -1,10 +1,7 @@
 package com.example.sourcewall.connection.api;
 
-import android.content.Context;
-import android.content.Intent;
 import android.text.TextUtils;
 
-import com.example.sourcewall.LoginActivity;
 import com.example.sourcewall.connection.HttpFetcher;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.model.Basket;
@@ -131,10 +128,6 @@ public class UserAPI extends APIBase {
             e.printStackTrace();
         }
         return resultObject;
-    }
-
-    public static void startLoginActivity(Context context) {
-        context.startActivity(new Intent(context, LoginActivity.class));
     }
 
     /**

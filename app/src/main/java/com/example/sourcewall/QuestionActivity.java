@@ -26,9 +26,6 @@ import com.example.sourcewall.util.ToastUtil;
 import com.example.sourcewall.view.AnswerListItemView;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
-import org.json.JSONException;
-
-import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -201,25 +198,11 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         @Override
         protected ResultObject doInBackground(Integer... params) {
             offset = params[0];
-            ArrayList<AceModel> models = new ArrayList<AceModel>();
-            ResultObject resultObject = new ResultObject();
-            try {
-                if (offset < 0) {
-                    Question question = QuestionAPI.getQuestionDetailByID(QuestionActivity.this.question.getId());
-                    QuestionActivity.this.question = question;
-                    models.add(question);
-                }
-                models.addAll(QuestionAPI.getQuestionAnswers(question.getId(), offset < 0 ? 0 : offset));
-                resultObject.result = models;
-                resultObject.ok = true;
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (offset < 0) {
+                return QuestionAPI.getQuestionFirstPage(question.getId());
+            } else {
+                return QuestionAPI.getQuestionAnswers(question.getId(), offset);
             }
-            return resultObject;
         }
 
         @Override
