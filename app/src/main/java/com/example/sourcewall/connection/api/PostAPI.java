@@ -1,5 +1,7 @@
 package com.example.sourcewall.connection.api;
 
+import android.text.TextUtils;
+
 import com.example.sourcewall.connection.HttpFetcher;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.model.AceModel;
@@ -519,6 +521,48 @@ public class PostAPI extends APIBase {
                 resultObject.ok = true;
             }
         } catch (JSONException | IOException e) {
+            e.printStackTrace();
+        }
+        return resultObject;
+    }
+
+    /**
+     * 获取发帖所需的csrf和topic列表
+     *
+     * @param url
+     * @return
+     */
+    public static ResultObject getCsrf_Token(String url) {
+        ResultObject resultObject = new ResultObject();
+        return resultObject;
+    }
+
+    /**
+     * 发帖
+     *
+     * @param group_id
+     * @param title
+     * @param body     html格式
+     * @param topic
+     * @return
+     */
+    public static ResultObject publishPost(String group_id, String csrf, String title, String body, String topic) {
+        ResultObject resultObject = new ResultObject();
+        String url = "http://www.guokr.com/group/" + group_id + "/post/edit/";
+        try {
+            if (!TextUtils.isEmpty(csrf)) {
+                ArrayList<NameValuePair> pairs = new ArrayList<>();
+                pairs.add(new BasicNameValuePair("csrf_toke", csrf));
+                pairs.add(new BasicNameValuePair("title", title));
+                pairs.add(new BasicNameValuePair("topic", topic));
+                pairs.add(new BasicNameValuePair("body", body));
+                pairs.add(new BasicNameValuePair("captcha", ""));
+                pairs.add(new BasicNameValuePair("share_opts", "activity"));
+                String result = HttpFetcher.post(url, pairs);
+            } else {
+                // get csrf_token failed
+            }
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return resultObject;

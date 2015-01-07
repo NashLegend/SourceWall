@@ -10,8 +10,11 @@ import android.webkit.SslErrorHandler;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.example.sourcewall.connection.HttpFetcher;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.SharedUtil;
+
+import org.apache.http.impl.cookie.BasicClientCookie;
 
 
 public class LoginActivity extends SwipeActivity {
@@ -43,6 +46,10 @@ public class LoginActivity extends SwipeActivity {
             }
             String paramName = rawCookieParamNameAndValue[0].trim();
             String paramValue = rawCookieParamNameAndValue[1].trim();
+            BasicClientCookie clientCookie = new BasicClientCookie(paramName, paramValue);
+            clientCookie.setDomain("guokr.com");
+            clientCookie.setPath("/");
+            HttpFetcher.getDefaultHttpClient().getCookieStore().addCookie(clientCookie);
             if (Consts.Cookie_Token_Key.equals(paramName)) {
                 SharedUtil.saveString(Consts.Key_Access_Token, paramValue);
                 AppApplication.tokenString = paramValue;

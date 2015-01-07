@@ -11,6 +11,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
@@ -41,8 +42,8 @@ public class HttpFetcher {
 
     public static String get(String url) throws IOException {
         HttpGet httpGet = new HttpGet(url);
-        httpGet.setHeader("Cookie", UserAPI.getSimpleCookie());
-        HttpResponse response = getDefaultHttpClient().execute(httpGet);
+        DefaultHttpClient defaultHttpClient1 = getDefaultHttpClient();
+        HttpResponse response = defaultHttpClient1.execute(httpGet);
         int statusCode = response.getStatusLine().getStatusCode();
         HttpEntity entity = response.getEntity();
         return EntityUtils.toString(entity, HTTP.UTF_8);
@@ -57,6 +58,14 @@ public class HttpFetcher {
             ClientConnectionManager manager = defaultHttpClient.getConnectionManager();
             HttpParams params = defaultHttpClient.getParams();
             defaultHttpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(params, manager.getSchemeRegistry()), params);
+            BasicClientCookie cookie1 = new BasicClientCookie("_32353_access_token", UserAPI.getToken());
+            cookie1.setDomain("guokr.com");
+            cookie1.setPath("/");
+            BasicClientCookie cookie2 = new BasicClientCookie("_32353_ukey", UserAPI.getUkey());
+            cookie2.setDomain("guokr.com");
+            cookie2.setPath("/");
+            defaultHttpClient.getCookieStore().addCookie(cookie1);
+            defaultHttpClient.getCookieStore().addCookie(cookie2);
         }
         return defaultHttpClient;
     }

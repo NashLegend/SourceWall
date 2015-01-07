@@ -54,6 +54,9 @@
         <activity
             android:name=".SimpleReplyActivity"
             android:label="@string/title_activity_simple_reply" />
+        <activity
+            android:name=".PublishPostActivity"
+            android:label="@string/title_activity_publish_post"></activity>
     </application>
 
 </manifest>
