@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -109,6 +111,11 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
     @Override
     public int getFragmentMenu() {
         return R.menu.menu_fragment_article;
+    }
+
+    @Override
+    public void takeOverMenu(MenuInflater inflater, Menu menu) {
+        inflater.inflate(getFragmentMenu(), menu);
     }
 
     @Override

@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -157,6 +159,11 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     @Override
     public int getFragmentMenu() {
         return R.menu.menu_fragment_post;
+    }
+
+    @Override
+    public void takeOverMenu(MenuInflater inflater, Menu menu) {
+        inflater.inflate(getFragmentMenu(), menu);
     }
 
     @Override

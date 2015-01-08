@@ -90,19 +90,13 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
             if (currentFragment != null) {
-                System.out.println("Current Fragment Not Null_" + currentFragment);
+                currentFragment.takeOverMenu(getMenuInflater(), menu);
             } else {
-                System.out.println("Current Fragment Is Null");
+                getMenuInflater().inflate(R.menu.main, menu);
             }
-            getMenuInflater().inflate(R.menu.main, menu);
             restoreActionBar();
             return true;
         }

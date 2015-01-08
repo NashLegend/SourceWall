@@ -236,11 +236,6 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
     public void onDetach() {
         super.onDetach();
     }
