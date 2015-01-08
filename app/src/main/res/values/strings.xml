@@ -54,6 +54,7 @@
     <string name="action_bury">不是答案</string>
     <string name="action_thank">感谢</string>
     <string name="hint_reply">请输入回复</string>
+    <string name="hint_write_post">……</string>
     <string name="hint_recommend">顺便说点什么吧</string>
     <string name="message_replying">稍等片刻……</string>
     <string name="add_image">添加图片</string>
@@ -74,6 +75,7 @@
     <string name="file_not_image">不是图片文件</string>
     <string name="file_not_exists">文件不存在</string>
     <string name="content_cannot_be_empty">内容不能为空</string>
+    <string name="title_cannot_be_empty">标题不能为空</string>
     <string name="reply_ok">回复成功</string>
     <string name="reply_failed">回复失败</string>
 
