@@ -97,7 +97,6 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
                 return false;
             }
         });
-
         setTitle();
         loadOver();
         return view;
@@ -148,6 +147,11 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
         headerView.findViewById(R.id.text_header_load_hint).setVisibility(View.INVISIBLE);
         headerView.findViewById(R.id.progress_header_loading).setVisibility(View.VISIBLE);
         loadData(currentPage - 1);
+    }
+
+    @Override
+    public int getFragmentMenu() {
+        return R.menu.menu_fragment_question;
     }
 
     @Override

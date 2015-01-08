@@ -155,6 +155,11 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     }
 
     @Override
+    public int getFragmentMenu() {
+        return R.menu.menu_fragment_post;
+    }
+
+    @Override
     public void resetData(SubItem subItem) {
         if (subItem.equals(this.subItem)) {
             triggerRefresh();

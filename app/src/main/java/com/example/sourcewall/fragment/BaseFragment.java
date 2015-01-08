@@ -24,7 +24,6 @@ public abstract class BaseFragment extends Fragment {
             }
             onCreateViewAgain(inflater, container, savedInstanceState);
         }
-
         return layoutView;
     }
 

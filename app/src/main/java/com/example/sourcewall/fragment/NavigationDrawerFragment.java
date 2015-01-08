@@ -191,7 +191,6 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
                 if (!isAdded()) {
                     return;
                 }
-
                 getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
             }
 
@@ -234,6 +233,11 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         intent.setAction(Consts.Action_Open_Content_Fragment);
         intent.putExtra(Consts.Extra_SubItem, subItem);
         getActivity().sendBroadcast(intent);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
     }
 
     @Override

@@ -94,8 +94,8 @@ public class AutoHideUtil {
 
         View.OnTouchListener onTouchListener = new View.OnTouchListener() {
 
-            float lastY = 0f;
-            float currentY = 0f;
+            float lastY = -1f;
+            float currentY = -1f;
             int lastDirection = 0;
             int currentDirection = 0;
 
@@ -103,11 +103,15 @@ public class AutoHideUtil {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+                        //Down事件是接收不到的
                         lastY = event.getY();
                         currentY = event.getY();
                         currentDirection = 0;
                         break;
                     case MotionEvent.ACTION_MOVE:
+                        if (lastY < 0) {
+                            lastY = event.getY();
+                        }
                         if (listView.getFirstVisiblePosition() > 1) {
                             float tmpCurrentY = event.getY();
                             if (Math.abs(tmpCurrentY - lastY) > touchSlop) {
@@ -127,6 +131,8 @@ public class AutoHideUtil {
                     case MotionEvent.ACTION_CANCEL:
                     case MotionEvent.ACTION_UP:
                         currentDirection = 0;
+                        currentY = -1f;
+                        lastY = -1f;
                         break;
                 }
                 return false;
@@ -142,6 +148,14 @@ public class AutoHideUtil {
                 state = scrollState;
             }
 
+            /**
+             * 这是针对LListView的，所以firstVisibleItem扩大到了1
+             *
+             * @param view
+             * @param firstVisibleItem
+             * @param visibleItemCount
+             * @param totalItemCount
+             */
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (firstVisibleItem == 0 || firstVisibleItem == 1) {

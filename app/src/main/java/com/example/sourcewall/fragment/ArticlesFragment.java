@@ -60,6 +60,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
                 getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
             }
         });
+        setTitle();
         loadOver();
         return view;
     }
@@ -103,6 +104,11 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
     @Override
     public void onStartLoadMore() {
         loadData(adapter.getCount());
+    }
+
+    @Override
+    public int getFragmentMenu() {
+        return R.menu.menu_fragment_article;
     }
 
     @Override
