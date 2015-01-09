@@ -8,6 +8,7 @@ import com.example.sourcewall.model.AceModel;
 import com.example.sourcewall.model.Question;
 import com.example.sourcewall.model.QuestionAnswer;
 import com.example.sourcewall.model.UComment;
+import com.example.sourcewall.util.MDUtil;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -597,6 +598,69 @@ public class QuestionAPI extends APIBase {
                 resultObject.result = uComment;
             }
         } catch (JSONException | IOException e) {
+            e.printStackTrace();
+        }
+        return resultObject;
+    }
+
+    /**
+     * 获取提问所需的csrf_token
+     * resultObject.result是String#csrf
+     *
+     * @return
+     */
+    public static ResultObject getQuestionPrepareData() {
+        ResultObject resultObject = new ResultObject();
+        try {
+            String url = "http://www.guokr.com/questions/new/";
+            String html = HttpFetcher.get(url);
+            Document doc = Jsoup.parse(html);
+            Element selects = doc.getElementById("topic");
+            ArrayList<BasicNameValuePair> pairs = new ArrayList<>();
+            String csrf = doc.getElementById("csrf_token").attr("value");
+            if (!TextUtils.isEmpty(csrf)) {
+                resultObject.ok = true;
+                resultObject.result = csrf;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resultObject;
+    }
+
+    /**
+     * 提问
+     *
+     * @param csrf
+     * @param askTitle
+     * @param askDesc
+     * @param tagContent
+     * @return
+     */
+    public static ResultObject publishQuestion(String csrf, String askTitle, String askDesc, String tagContent) {
+        ResultObject resultObject = new ResultObject();
+        String url = "http://www.guokr.com/questions/new/";
+        try {
+            ResultObject mdResult = MDUtil.parseMarkdownByGitHub(askDesc);
+            if (mdResult.ok) {
+                String htmlDesc = (String) mdResult.result;
+                ArrayList<NameValuePair> pairs = new ArrayList<>();
+                pairs.add(new BasicNameValuePair("csrf_token", csrf));
+                pairs.add(new BasicNameValuePair("askTitle", askTitle));
+                pairs.add(new BasicNameValuePair("askDesc", htmlDesc));
+                pairs.add(new BasicNameValuePair("tagContent", tagContent));
+                pairs.add(new BasicNameValuePair("captcha", ""));
+                String result = HttpFetcher.post(url, pairs);
+                resultObject.ok = true;
+                resultObject.result = result;
+            } else {
+                //转换失败……
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return resultObject;

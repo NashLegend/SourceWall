@@ -1,5 +1,7 @@
 package com.example.sourcewall.connection.api;
 
+import android.text.TextUtils;
+
 import com.example.sourcewall.connection.HttpFetcher;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.model.AceModel;
@@ -120,34 +122,40 @@ public class APIBase {
      * @return
      */
     public static ResultObject parseMarkdownByGitHub(String text) {
+
         ResultObject resultObject = new ResultObject();
-        String url = "https://api.github.com/markdown";
-        try {
-            HttpClient httpClient = HttpFetcher.getDefaultHttpClient();
-            httpClient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION,
-                    HttpVersion.HTTP_1_1);
-            HttpPost httpPost = new HttpPost(url);
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("text", text);
-            jsonObject.put("mode", "gfm");
-            StringEntity entity = new StringEntity(jsonObject.toString(), HTTP.UTF_8);
-            httpPost.setEntity(entity);
-            HttpResponse response;
-            String result = "";
+        if (TextUtils.isEmpty(text)) {
+            resultObject.ok = true;
+            resultObject.result = "";
+        } else {
+            String url = "https://api.github.com/markdown";
+            try {
+                HttpClient httpClient = HttpFetcher.getDefaultHttpClient();
+                httpClient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION,
+                        HttpVersion.HTTP_1_1);
+                HttpPost httpPost = new HttpPost(url);
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("text", text);
+                jsonObject.put("mode", "gfm");
+                StringEntity entity = new StringEntity(jsonObject.toString(), HTTP.UTF_8);
+                httpPost.setEntity(entity);
+                HttpResponse response;
 
-            response = httpClient.execute(httpPost);
-            HttpEntity resEntity = response.getEntity();
+                response = httpClient.execute(httpPost);
+                HttpEntity resEntity = response.getEntity();
 
-            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK && resEntity != null) {
-                result = EntityUtils.toString(resEntity, HTTP.UTF_8);
-                resultObject.ok = true;
-                resultObject.result = result;
+                if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK && resEntity != null) {
+                    String result = EntityUtils.toString(resEntity, HTTP.UTF_8);
+                    resultObject.ok = true;
+                    resultObject.result = result;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
+
         return resultObject;
     }
 

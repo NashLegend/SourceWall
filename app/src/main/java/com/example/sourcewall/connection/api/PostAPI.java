@@ -556,7 +556,7 @@ public class PostAPI extends APIBase {
                     }
                 }
             }
-            if (csrf != null) {
+            if (!TextUtils.isEmpty(csrf)) {
                 PostPrepareData prepareData = new PostPrepareData();
                 prepareData.setCsrf(csrf);
                 prepareData.setPairs(pairs);
@@ -576,6 +576,7 @@ public class PostAPI extends APIBase {
      * 发帖
      *
      * @param group_id
+     * @param csrf
      * @param title
      * @param body     html格式
      * @param topic
