@@ -12,15 +12,15 @@
 
     <style name="ToolbarStyleDay" parent="@style/Widget.AppCompat.Toolbar">
         <item name="titleTextAppearance">@style/ToolbarTextAppearance</item>
+
     </style>
 
     <style name="AppTheme" parent="BaseTheme">
         <!--夜间模式不用设置toolbarStyle-->
         <item name="toolbarStyle">@style/ToolbarStyleDay</item>
 
-        <item name="android:textColorPrimaryDisableOnly">
-            @color/abc_primary_text_disable_only_material_dark
-        </item>
+        <!--Toolbar的颜色，其默认值为?android:attr/textColorPrimaryDisableOnly，因此修改textColorPrimaryDisableOnly也有同样效果-->
+        <item name="actionMenuTextColor">@android:color/white</item>
 
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
