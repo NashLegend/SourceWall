@@ -44,6 +44,26 @@ public class TextHtmlHelper {
         }
     }
 
+    /**
+     * 省去Html.fromHtml一步，因为已经在fetch数据的时候就已经转换出simpleHtml，在getView时更有效
+     *
+     * @param tv
+     * @param content
+     * @param simpleHtml
+     */
+    public void load(TextView tv, String content, CharSequence simpleHtml) {
+        cancelPotentialTask();
+        this.textView = tv;
+        this.html = content;
+        this.maxWidth = getMaxWidth();
+        CharSequence charSequence = trimEnd(simpleHtml);
+        textView.setText(charSequence);
+        if (html.contains("<img")) {
+            htmlTask = new HtmlLoaderTask();
+            htmlTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, html);
+        }
+    }
+
     private void cancelPotentialTask() {
         if (htmlTask != null && htmlTask.getStatus() == AsyncTask.Status.RUNNING) {
             htmlTask.cancel(true);

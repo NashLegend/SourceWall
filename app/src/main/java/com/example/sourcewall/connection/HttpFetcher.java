@@ -76,6 +76,7 @@ public class HttpFetcher {
         HttpURLConnection urlConnection = null;
         InputStream inputStream = null;
         FileOutputStream fileOutputStream = null;
+        boolean errorCatch = false;
         try {
             final URL url = new URL(urlString);
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -88,12 +89,14 @@ public class HttpFetcher {
             inputStream = urlConnection.getInputStream();
             fileOutputStream = new FileOutputStream(new File(dest));
             byte[] buff = new byte[IO_BUFFER_SIZE];
-            int len = 0;
+            int len;
             while ((len = inputStream.read(buff)) != -1) {
                 fileOutputStream.write(buff, 0, len);
             }
-        } catch (final IOException e) {
-
+        } catch (IOException e) {
+            errorCatch = true;
+        } catch (Exception e) {
+            errorCatch = true;
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -104,7 +107,9 @@ public class HttpFetcher {
                 }
                 if (fileOutputStream != null) {
                     fileOutputStream.close();
-                    return true;
+                    if (!errorCatch) {
+                        return true;
+                    }
                 }
             } catch (IOException e) {
 

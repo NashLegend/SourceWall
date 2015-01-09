@@ -1,5 +1,7 @@
 package com.example.sourcewall.connection.api;
 
+import android.text.Html;
+
 import com.example.sourcewall.connection.HttpFetcher;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.model.AceModel;
@@ -256,7 +258,9 @@ public class ArticleAPI extends APIBase {
                     //Date  TODO
                     comment.setDate(parseDate(getJsonString(jo, "date_created")));
                     comment.setFloor((offset + i + 1) + "楼");
+                    String html = getJsonString(jo, "html");
                     comment.setContent(getJsonString(jo, "html"));
+                    comment.setSimpleHtml(Html.fromHtml(html));
                     comment.setHostID(id);
                     list.add(comment);
                 }

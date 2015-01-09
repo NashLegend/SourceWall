@@ -1,5 +1,6 @@
 package com.example.sourcewall.connection.api;
 
+import android.text.Html;
 import android.text.TextUtils;
 
 import com.example.sourcewall.connection.HttpFetcher;
@@ -337,7 +338,9 @@ public class PostAPI extends APIBase {
                             .getString("large").replaceAll("\\?\\S*$", ""));
                     comment.setDate(parseDate(getJsonString(jo, "date_created")));
                     comment.setLikeNum(getJsonInt(jo, "likings_count"));
+                    String html = getJsonString(jo, "html");
                     comment.setContent(getJsonString(jo, "html"));
+                    comment.setSimpleHtml(Html.fromHtml(html));
                     comment.setFloor((offset + i + 1) + "楼");
                     comment.setHostID(jo.getJSONObject("post").getString("id"));
                     list.add(comment);
