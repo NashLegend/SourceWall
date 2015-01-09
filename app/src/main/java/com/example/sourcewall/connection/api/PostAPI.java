@@ -1,9 +1,12 @@
 package com.example.sourcewall.connection.api;
 
+import android.text.TextUtils;
+
 import com.example.sourcewall.connection.HttpFetcher;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.model.AceModel;
 import com.example.sourcewall.model.Post;
+import com.example.sourcewall.model.PostPrepareData;
 import com.example.sourcewall.model.UComment;
 import com.example.sourcewall.util.MDUtil;
 
@@ -527,12 +530,46 @@ public class PostAPI extends APIBase {
 
     /**
      * 获取发帖所需的csrf和topic列表
+     * resultObject.result是PostPrepareData
      *
-     * @param url
+     * @param group_id
      * @return
      */
-    public static ResultObject getCsrf_Token(String url) {
+    public static ResultObject getPublishPrepareData(String group_id) {
         ResultObject resultObject = new ResultObject();
+        try {
+            String url = "http://www.guokr.com/group/" + group_id + "/post/edit/";
+            String html = HttpFetcher.get(url);
+            Document doc = Jsoup.parse(html);
+            Element selects = doc.getElementById("topic");
+            ArrayList<BasicNameValuePair> pairs = new ArrayList<>();
+            String csrf = doc.getElementById("csrf_token").attr("value");
+            if (selects != null) {
+                Elements elements = selects.getElementsByTag("option");
+                if (elements != null && elements.size() > 0) {
+                    for (int i = 0; i < elements.size(); i++) {
+                        Element topic = elements.get(i);
+                        String name = topic.text();
+                        String value = topic.attr("value");
+                        if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(value)) {
+                            pairs.add(new BasicNameValuePair(name, value));
+                        }
+                    }
+                }
+            }
+            if (csrf != null) {
+                PostPrepareData prepareData = new PostPrepareData();
+                prepareData.setCsrf(csrf);
+                prepareData.setPairs(pairs);
+                resultObject.ok = true;
+                resultObject.result = prepareData;
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return resultObject;
     }
 
@@ -560,6 +597,7 @@ public class PostAPI extends APIBase {
                 pairs.add(new BasicNameValuePair("body", htmlBody));
                 pairs.add(new BasicNameValuePair("captcha", ""));
                 pairs.add(new BasicNameValuePair("share_opts", "activity"));
+
                 String result = HttpFetcher.post(url, pairs);
                 resultObject.ok = true;
                 resultObject.result = result;

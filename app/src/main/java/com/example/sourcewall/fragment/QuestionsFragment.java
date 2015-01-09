@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -129,6 +130,18 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, offset);
     }
 
+    private void loadPrePage() {
+        listView.setCanPullToLoadMore(false);
+        listView.setCanPullToRefresh(false);
+        headerView.findViewById(R.id.text_header_load_hint).setVisibility(View.INVISIBLE);
+        headerView.findViewById(R.id.progress_header_loading).setVisibility(View.VISIBLE);
+        loadData(currentPage - 1);
+    }
+
+    private void writeAsk() {
+
+    }
+
     @Override
     public void onStartRefresh() {
         //TODO
@@ -143,22 +156,25 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
         loadData(currentPage + 1);
     }
 
-    private void loadPrePage() {
-        listView.setCanPullToLoadMore(false);
-        listView.setCanPullToRefresh(false);
-        headerView.findViewById(R.id.text_header_load_hint).setVisibility(View.INVISIBLE);
-        headerView.findViewById(R.id.progress_header_loading).setVisibility(View.VISIBLE);
-        loadData(currentPage - 1);
-    }
-
     @Override
     public int getFragmentMenu() {
         return R.menu.menu_fragment_question;
     }
 
     @Override
-    public void takeOverMenu(MenuInflater inflater, Menu menu) {
+    public void takeOverMenuInflate(MenuInflater inflater, Menu menu) {
         inflater.inflate(getFragmentMenu(), menu);
+    }
+
+    @Override
+    public boolean takeOverOptionsItemSelect(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_write_ask:
+                writeAsk();
+                break;
+        }
+        return true;
     }
 
     @Override

@@ -1,11 +1,13 @@
 package com.example.sourcewall.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 
 import com.example.sourcewall.PostActivity;
+import com.example.sourcewall.PublishPostActivity;
 import com.example.sourcewall.R;
 import com.example.sourcewall.adapters.PostAdapter;
 import com.example.sourcewall.commonview.LListView;
@@ -43,6 +46,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     private LoadingView loadingView;
     private int currentPage = -1;//page从0开始，-1表示还没有数据
     private View headerView;
+    private final int Code_Publish_post = 1044;
 
     @Override
     public View onCreateLayoutView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -134,6 +138,28 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, offset);
     }
 
+    private void loadPrePage() {
+        listView.setCanPullToLoadMore(false);
+        listView.setCanPullToRefresh(false);
+        headerView.findViewById(R.id.text_header_load_hint).setVisibility(View.INVISIBLE);
+        headerView.findViewById(R.id.progress_header_loading).setVisibility(View.VISIBLE);
+        loadData(currentPage - 1);
+    }
+
+    private void writePost() {
+        Intent intent = new Intent(getActivity(), PublishPostActivity.class);
+        intent.putExtra(Consts.Extra_SubItem, subItem);
+        startActivityForResult(intent, Code_Publish_post);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Code_Publish_post && resultCode == Activity.RESULT_OK) {
+            //Publish OK
+        }
+    }
+
     @Override
     public void onStartRefresh() {
         //TODO
@@ -148,22 +174,25 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         loadData(currentPage + 1);
     }
 
-    private void loadPrePage() {
-        listView.setCanPullToLoadMore(false);
-        listView.setCanPullToRefresh(false);
-        headerView.findViewById(R.id.text_header_load_hint).setVisibility(View.INVISIBLE);
-        headerView.findViewById(R.id.progress_header_loading).setVisibility(View.VISIBLE);
-        loadData(currentPage - 1);
-    }
-
     @Override
     public int getFragmentMenu() {
         return R.menu.menu_fragment_post;
     }
 
     @Override
-    public void takeOverMenu(MenuInflater inflater, Menu menu) {
+    public void takeOverMenuInflate(MenuInflater inflater, Menu menu) {
         inflater.inflate(getFragmentMenu(), menu);
+    }
+
+    @Override
+    public boolean takeOverOptionsItemSelect(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_write_post:
+                writePost();
+                break;
+        }
+        return true;
     }
 
     @Override

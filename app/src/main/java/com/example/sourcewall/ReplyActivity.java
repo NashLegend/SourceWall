@@ -7,6 +7,7 @@ import android.content.ClipboardManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -26,12 +27,14 @@ import com.example.sourcewall.model.UComment;
 import com.example.sourcewall.util.Config;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.FileUtil;
-import com.example.sourcewall.util.ImageFetcher.AsyncTask;
 import com.example.sourcewall.util.RegUtil;
 import com.example.sourcewall.util.ToastUtil;
 
 import java.io.File;
 
+/**
+ * 格式使用的应该是UBB代码
+ */
 public class ReplyActivity extends SwipeActivity implements View.OnClickListener {
 
     EditText editText;
@@ -205,7 +208,7 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
         if (comment != null) {
             header = "[blockquote]" + hostText.getText() + "[/blockquote]";
         }
-        task.execute(header, rep, tail, Simple_Reply);
+        task.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR, header, rep, tail, Simple_Reply);
     }
 
     private void publishAdvancedReply(String rep) {
@@ -215,7 +218,7 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
             header = "<blockquote>" + hostText.getText() + "<blockquote>";
         }
         String tail = Config.getComplexReplyTail();
-        task.execute(header, rep, tail, Advanced_Reply);
+        task.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR, header, rep, tail, Advanced_Reply);
     }
 
     @Override

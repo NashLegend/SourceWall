@@ -2,6 +2,7 @@ package com.example.sourcewall.fragment;
 
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.example.sourcewall.model.SubItem;
 
@@ -17,12 +18,14 @@ public abstract class ChannelsFragment extends BaseFragment {
     abstract public int getFragmentMenu();
 
     /**
-     * 接管Activity的Menu
+     * 接管Activity的Menu生成
      *
      * @param inflater
      * @param menu
      */
-    abstract public void takeOverMenu(MenuInflater inflater, Menu menu);
+    abstract public void takeOverMenuInflate(MenuInflater inflater, Menu menu);
+
+    abstract public boolean takeOverOptionsItemSelect(MenuItem item);
 
     abstract public void resetData(SubItem subItem);
 

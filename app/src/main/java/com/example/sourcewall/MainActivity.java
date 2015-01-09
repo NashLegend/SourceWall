@@ -38,13 +38,13 @@ public class MainActivity extends BaseActivity {
     Toolbar toolbar;
 
     @Override
-    public void setTheme(int resid) {
+    public void setTheme(int resId) {
         if (SharedUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
-            resid = R.style.BottomThemeNight;
+            resId = R.style.BottomThemeNight;
         } else {
-            resid = R.style.BottomTheme;
+            resId = R.style.BottomTheme;
         }
-        super.setTheme(resid);
+        super.setTheme(resId);
     }
 
     @Override
@@ -93,7 +93,7 @@ public class MainActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
             if (currentFragment != null) {
-                currentFragment.takeOverMenu(getMenuInflater(), menu);
+                currentFragment.takeOverMenuInflate(getMenuInflater(), menu);
             } else {
                 getMenuInflater().inflate(R.menu.main, menu);
             }
@@ -105,6 +105,9 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (currentFragment != null && currentFragment.takeOverOptionsItemSelect(item)) {
+            return true;
+        }
         int id = item.getItemId();
         return super.onOptionsItemSelected(item);
     }

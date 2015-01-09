@@ -7,26 +7,34 @@ import android.content.ClipboardManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.APIBase;
 import com.example.sourcewall.connection.api.PostAPI;
 import com.example.sourcewall.dialogs.InputDialog;
+import com.example.sourcewall.model.PostPrepareData;
+import com.example.sourcewall.model.SubItem;
 import com.example.sourcewall.util.Config;
+import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.FileUtil;
-import com.example.sourcewall.util.ImageFetcher.AsyncTask;
 import com.example.sourcewall.util.ToastUtil;
 
+import org.apache.http.message.BasicNameValuePair;
+
 import java.io.File;
+import java.util.ArrayList;
 
 
 public class PublishPostActivity extends SwipeActivity implements View.OnClickListener {
@@ -37,23 +45,36 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
     ImageButton insertButton;
     ImageButton cameraButton;
     ImageButton linkButton;
+    Spinner spinner;
     ProgressBar uploadingProgress;
     ProgressDialog progressDialog;
     String tmpImagePath;
     Toolbar toolbar;
+    SubItem subItem;
     String group_id = "";
     String group_name = "";
     String csrf = "";
     String topic = "";
+    ArrayList<BasicNameValuePair> topics = new ArrayList<>();
+    PrepareTask prepareTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_publish_post);
+        subItem = (SubItem) getIntent().getSerializableExtra(Consts.Extra_SubItem);
+        if (subItem != null) {
+            group_name = subItem.getName();
+            group_id = subItem.getValue();
+        } else {
+            ToastUtil.toast("No Group Received");
+            finish();
+        }
         toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         titleEditText = (EditText) findViewById(R.id.text_post_title);
         bodyEditText = (EditText) findViewById(R.id.text_post_body);
+        spinner = (Spinner) findViewById(R.id.spinner_post_topic);
         publishButton = (ImageButton) findViewById(R.id.btn_publish);
         imgButton = (ImageButton) findViewById(R.id.btn_add_img);
         insertButton = (ImageButton) findViewById(R.id.btn_insert_img);
@@ -65,6 +86,30 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         insertButton.setOnClickListener(this);
         cameraButton.setOnClickListener(this);
         linkButton.setOnClickListener(this);
+        prepare();
+    }
+
+    private void prepare() {
+        cancelPotentialTask();
+        prepareTask = new PrepareTask();
+        prepareTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, group_id);
+    }
+
+    private void onReceivePreparedData(PostPrepareData prepareData) {
+        csrf = prepareData.getCsrf();
+        topics = prepareData.getPairs();
+        String[] items = new String[topics.size()];
+        for (int i = 0; i < topics.size(); i++) {
+            items[i] = topics.get(i).getName();
+        }
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.simple_spinner_item, items);
+        spinner.setAdapter(arrayAdapter);
+    }
+
+    private void cancelPotentialTask() {
+        if (prepareTask != null && prepareTask.getStatus() == AsyncTask.Status.RUNNING) {
+            prepareTask.cancel(true);
+        }
     }
 
     private void invokeImageDialog() {
@@ -187,25 +232,27 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
     }
 
     private void publishPost() {
-        if (!TextUtils.isEmpty(titleEditText.getText().toString().trim())) {
+        if (TextUtils.isEmpty(titleEditText.getText().toString().trim())) {
             ToastUtil.toast(R.string.title_cannot_be_empty);
             return;
         }
 
-        if (!TextUtils.isEmpty(bodyEditText.getText().toString().trim())) {
+        if (TextUtils.isEmpty(bodyEditText.getText().toString().trim())) {
             ToastUtil.toast(R.string.content_cannot_be_empty);
             return;
         }
 
-        if (!TextUtils.isEmpty(csrf)) {
+        if (TextUtils.isEmpty(csrf)) {
             ToastUtil.toast("No csrf_token");
             return;
         }
 
+        //不必检测越界行为
+        topic = topics.get(spinner.getSelectedItemPosition()).getValue();
         PublishPostTask task = new PublishPostTask();
         String title = titleEditText.getText().toString();
         String body = bodyEditText.getText().toString() + Config.getComplexReplyTail();
-        task.execute(group_id, csrf, title, body, topic);
+        task.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR, group_id, csrf, title, body, topic);
     }
 
     @Override
@@ -280,6 +327,26 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         insertButton.setVisibility(View.VISIBLE);
         imgButton.setVisibility(View.GONE);
         uploadingProgress.setVisibility(View.GONE);
+    }
+
+    class PrepareTask extends android.os.AsyncTask<String, Integer, ResultObject> {
+
+        @Override
+        protected ResultObject doInBackground(String... params) {
+            String group_id = params[0];
+            return PostAPI.getPublishPrepareData(group_id);
+        }
+
+        @Override
+        protected void onPostExecute(ResultObject resultObject) {
+            if (resultObject.ok) {
+                PostPrepareData prepareData = (PostPrepareData) resultObject.result;
+                onReceivePreparedData(prepareData);
+
+            } else {
+                ToastUtil.toast("Prepare Failed");
+            }
+        }
     }
 
     class ImageUploadTask extends AsyncTask<String, Integer, ResultObject> {
