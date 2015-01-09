@@ -615,8 +615,6 @@ public class QuestionAPI extends APIBase {
             String url = "http://www.guokr.com/questions/new/";
             String html = HttpFetcher.get(url);
             Document doc = Jsoup.parse(html);
-            Element selects = doc.getElementById("topic");
-            ArrayList<BasicNameValuePair> pairs = new ArrayList<>();
             String csrf = doc.getElementById("csrf_token").attr("value");
             if (!TextUtils.isEmpty(csrf)) {
                 resultObject.ok = true;
