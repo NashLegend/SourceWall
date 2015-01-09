@@ -112,18 +112,18 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
     private void likePost() {
         if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
-            return;
+        } else {
+            LikePostTask likePostTask = new LikePostTask();
+            likePostTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, post);
         }
-        LikePostTask likePostTask = new LikePostTask();
-        likePostTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, post);
     }
 
     private void favor() {
         if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
-            return;
+        } else {
+            new FavorDialog.Builder(this).setTitle(R.string.action_favor).create(post).show();
         }
-        new FavorDialog.Builder(this).setTitle(R.string.action_favor).create(post).show();
     }
 
     @Override
@@ -203,14 +203,14 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
     private void replyPost(UComment comment) {
         if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
-            return;
+        } else {
+            Intent intent = new Intent(this, ReplyActivity.class);
+            intent.putExtra(Consts.Extra_Ace_Model, post);
+            if (comment != null) {
+                intent.putExtra(Consts.Extra_Simple_Comment, comment);
+            }
+            startActivity(intent);
         }
-        Intent intent = new Intent(this, ReplyActivity.class);
-        intent.putExtra(Consts.Extra_Ace_Model, post);
-        if (comment != null) {
-            intent.putExtra(Consts.Extra_Simple_Comment, comment);
-        }
-        startActivity(intent);
     }
 
     private void replyComment(UComment comment) {
@@ -220,10 +220,10 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
     private void likeComment(UComment comment) {
         if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
-            return;
+        } else {
+            LikeCommentTask likeCommentTask = new LikeCommentTask();
+            likeCommentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, comment);
         }
-        LikeCommentTask likeCommentTask = new LikeCommentTask();
-        likeCommentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, comment);
     }
 
     private void copyComment(UComment comment) {

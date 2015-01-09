@@ -8,7 +8,6 @@ import com.example.sourcewall.model.AceModel;
 import com.example.sourcewall.model.Post;
 import com.example.sourcewall.model.PostPrepareData;
 import com.example.sourcewall.model.UComment;
-import com.example.sourcewall.util.MDUtil;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -586,24 +585,34 @@ public class PostAPI extends APIBase {
         ResultObject resultObject = new ResultObject();
         String url = "http://www.guokr.com/group/" + group_id + "/post/edit/";
         try {
-            ResultObject mdResult = MDUtil.parseMarkdownByGitHub(body);
-            if (mdResult.ok) {
-                //使用github接口转换成html
-                String htmlBody = (String) mdResult.result;
-                ArrayList<NameValuePair> pairs = new ArrayList<>();
-                pairs.add(new BasicNameValuePair("csrf_toke", csrf));
-                pairs.add(new BasicNameValuePair("title", title));
-                pairs.add(new BasicNameValuePair("topic", topic));
-                pairs.add(new BasicNameValuePair("body", htmlBody));
-                pairs.add(new BasicNameValuePair("captcha", ""));
-                pairs.add(new BasicNameValuePair("share_opts", "activity"));
-
-                String result = HttpFetcher.post(url, pairs);
-                resultObject.ok = true;
-                resultObject.result = result;
-            } else {
-                //转换失败……
-            }
+//            ResultObject mdResult = MDUtil.parseMarkdownByGitHub(body);
+//            if (mdResult.ok) {
+//                //使用github接口转换成html
+//                String htmlBody = (String) mdResult.result;
+//                ArrayList<NameValuePair> pairs = new ArrayList<>();
+//                pairs.add(new BasicNameValuePair("csrf_toke", csrf));
+//                pairs.add(new BasicNameValuePair("title", title));
+//                pairs.add(new BasicNameValuePair("topic", topic));
+//                pairs.add(new BasicNameValuePair("body", htmlBody));
+//                pairs.add(new BasicNameValuePair("captcha", ""));
+//                pairs.add(new BasicNameValuePair("share_opts", "activity"));
+//                String result = HttpFetcher.post(url, pairs);
+//                resultObject.ok = true;
+//                resultObject.result = result;
+//            } else {
+//                //转换失败……
+//            }
+            String htmlBody = body;
+            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            pairs.add(new BasicNameValuePair("csrf_toke", csrf));
+            pairs.add(new BasicNameValuePair("title", title));
+            pairs.add(new BasicNameValuePair("topic", topic));
+            pairs.add(new BasicNameValuePair("body", htmlBody));
+            pairs.add(new BasicNameValuePair("captcha", ""));
+            pairs.add(new BasicNameValuePair("share_opts", "activity"));
+            String result = HttpFetcher.post(url, pairs);
+            resultObject.ok = true;
+            resultObject.result = result;
         } catch (IOException e) {
             e.printStackTrace();
         } catch (Exception e) {

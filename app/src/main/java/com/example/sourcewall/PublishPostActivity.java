@@ -26,7 +26,6 @@ import com.example.sourcewall.connection.api.PostAPI;
 import com.example.sourcewall.dialogs.InputDialog;
 import com.example.sourcewall.model.PostPrepareData;
 import com.example.sourcewall.model.SubItem;
-import com.example.sourcewall.util.Config;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.FileUtil;
 import com.example.sourcewall.util.ToastUtil;
@@ -251,7 +250,8 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         topic = topics.get(spinner.getSelectedItemPosition()).getValue();
         PublishPostTask task = new PublishPostTask();
         String title = titleEditText.getText().toString();
-        String body = bodyEditText.getText().toString() + Config.getComplexReplyTail();
+//        String body = bodyEditText.getText().toString() + Config.getComplexReplyTail();
+        String body = bodyEditText.getText().toString();
         task.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR, group_id, csrf, title, body, topic);
     }
 

@@ -56,7 +56,8 @@
             android:label="@string/title_activity_simple_reply" />
         <activity
             android:name=".PublishPostActivity"
-            android:label="@string/title_activity_publish_post"></activity>
+            android:label="@string/title_activity_publish_post"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

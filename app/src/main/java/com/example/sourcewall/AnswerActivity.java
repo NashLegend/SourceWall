@@ -265,35 +265,35 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
     private void invokeOpinionDialog() {
         if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
-            return;
+        } else {
+            String[] operations = {getString(R.string.action_support), getString(R.string.action_oppose)};
+            new AlertDialog.Builder(this).setTitle("").setItems(operations, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Boolean support = which == 0;
+                    OpinionTask task = new OpinionTask();
+                    task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, support);
+                }
+            }).create().show();
         }
-        String[] operations = {getString(R.string.action_support), getString(R.string.action_oppose)};
-        new AlertDialog.Builder(this).setTitle("").setItems(operations, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Boolean support = which == 0;
-                OpinionTask task = new OpinionTask();
-                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, support);
-            }
-        }).create().show();
     }
 
     private void buryAnswer() {
-        if (!UserAPI.isLoggedIn()){
+        if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
-            return;
+        } else {
+            BuryTask task = new BuryTask();
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
-        BuryTask task = new BuryTask();
-        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void thankAnswer() {
-        if (!UserAPI.isLoggedIn()){
+        if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
-            return;
+        } else {
+            ThankTask task = new ThankTask();
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
-        ThankTask task = new ThankTask();
-        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     class OpinionTask extends AsyncTask<Boolean, Integer, ResultObject> {

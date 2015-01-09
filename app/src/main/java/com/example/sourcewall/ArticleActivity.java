@@ -99,51 +99,51 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
     private void replyArticle(UComment comment) {
         if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
-            return;
+        } else {
+            Intent intent = new Intent(this, ReplyActivity.class);
+            intent.putExtra(Consts.Extra_Ace_Model, article);
+            if (comment != null) {
+                intent.putExtra(Consts.Extra_Simple_Comment, comment);
+            }
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, 0);
         }
-        Intent intent = new Intent(this, ReplyActivity.class);
-        intent.putExtra(Consts.Extra_Ace_Model, article);
-        if (comment != null) {
-            intent.putExtra(Consts.Extra_Simple_Comment, comment);
-        }
-        startActivity(intent);
-        overridePendingTransition(R.anim.slide_in_right, 0);
     }
 
     private void recommend() {
         if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
-            return;
-        }
-        InputDialog.Builder builder = new InputDialog.Builder(this);
-        builder.setTitle(R.string.recommend_article);
-        builder.setCancelable(true);
-        builder.setCanceledOnTouchOutside(false);
-        builder.setOnClickListener(new DialogInterface.OnClickListener() {
+        } else {
+            InputDialog.Builder builder = new InputDialog.Builder(this);
+            builder.setTitle(R.string.recommend_article);
+            builder.setCancelable(true);
+            builder.setCanceledOnTouchOutside(false);
+            builder.setOnClickListener(new DialogInterface.OnClickListener() {
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (which == DialogInterface.BUTTON_POSITIVE) {
-                    InputDialog d = (InputDialog) dialog;
-                    String text = d.InputString;
-                    RecommendTask recommendTask = new RecommendTask();
-                    recommendTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, article.getId(), article.getTitle(), article.getSummary(), text);
-                } else {
-                    // cancel recommend
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (which == DialogInterface.BUTTON_POSITIVE) {
+                        InputDialog d = (InputDialog) dialog;
+                        String text = d.InputString;
+                        RecommendTask recommendTask = new RecommendTask();
+                        recommendTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, article.getId(), article.getTitle(), article.getSummary(), text);
+                    } else {
+                        // cancel recommend
+                    }
                 }
-            }
-        });
-        InputDialog inputDialog = builder.create();
-        inputDialog.show();
+            });
+            InputDialog inputDialog = builder.create();
+            inputDialog.show();
+        }
     }
 
     private void favor() {
         if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
-            return;
+        } else {
+            // basket dialog
+            new FavorDialog.Builder(this).setTitle(R.string.action_favor).create(article).show();
         }
-        // basket dialog
-        new FavorDialog.Builder(this).setTitle(R.string.action_favor).create(article).show();
     }
 
     @Override
@@ -166,10 +166,10 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
     private void likeComment(UComment comment) {
         if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
-            return;
+        } else {
+            LikeCommentTask likeCommentTask = new LikeCommentTask();
+            likeCommentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, comment);
         }
-        LikeCommentTask likeCommentTask = new LikeCommentTask();
-        likeCommentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, comment);
     }
 
     private void copyComment(UComment comment) {

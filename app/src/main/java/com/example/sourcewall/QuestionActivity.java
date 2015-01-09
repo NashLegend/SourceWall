@@ -145,46 +145,46 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
     private void favor() {
         if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
-            return;
+        } else {
+            new FavorDialog.Builder(this).setTitle(R.string.action_favor).create(question).show();
         }
-        new FavorDialog.Builder(this).setTitle(R.string.action_favor).create(question).show();
     }
 
     private void recommend() {
         if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
-            return;
-        }
-        InputDialog.Builder builder = new InputDialog.Builder(this);
-        builder.setTitle(R.string.recommend_article);
-        builder.setCancelable(true);
-        builder.setCanceledOnTouchOutside(false);
-        builder.setOnClickListener(new DialogInterface.OnClickListener() {
+        } else {
+            InputDialog.Builder builder = new InputDialog.Builder(this);
+            builder.setTitle(R.string.recommend_article);
+            builder.setCancelable(true);
+            builder.setCanceledOnTouchOutside(false);
+            builder.setOnClickListener(new DialogInterface.OnClickListener() {
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (which == DialogInterface.BUTTON_POSITIVE) {
-                    InputDialog d = (InputDialog) dialog;
-                    String text = d.InputString;
-                    RecommendTask recommendTask = new RecommendTask();
-                    recommendTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, question.getId(), question.getTitle(), question.getSummary(), text);
-                } else {
-                    // cancel recommend
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (which == DialogInterface.BUTTON_POSITIVE) {
+                        InputDialog d = (InputDialog) dialog;
+                        String text = d.InputString;
+                        RecommendTask recommendTask = new RecommendTask();
+                        recommendTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, question.getId(), question.getTitle(), question.getSummary(), text);
+                    } else {
+                        // cancel recommend
+                    }
                 }
-            }
-        });
-        InputDialog inputDialog = builder.create();
-        inputDialog.show();
+            });
+            InputDialog inputDialog = builder.create();
+            inputDialog.show();
+        }
     }
 
     private void answerQuestion() {
         if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
-            return;
+        } else {
+            Intent intent = new Intent(this, ReplyActivity.class);
+            intent.putExtra(Consts.Extra_Ace_Model, question);
+            startActivity(intent);
         }
-        Intent intent = new Intent(this, ReplyActivity.class);
-        intent.putExtra(Consts.Extra_Ace_Model, question);
-        startActivity(intent);
     }
 
     class LoaderTask extends AsyncTask<Integer, Integer, ResultObject> {
