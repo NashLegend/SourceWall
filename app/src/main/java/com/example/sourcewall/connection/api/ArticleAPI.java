@@ -161,10 +161,11 @@ public class ArticleAPI extends APIBase {
             // 其他数据已经在列表取得，这里只要合过去就行了
 
             article.setLikeNum(likeNum);
-            Elements elements = doc.getElementsByClass("cmts-list");
-            if (elements != null && elements.size() > 0) {
-                article.setHotComments(getArticleHotComments(elements.get(0), aid));
-            }
+            //获取热门回帖
+            //Elements elements = doc.getElementsByClass("cmts-list");
+            //if (elements != null && elements.size() > 0) {
+            //    article.setHotComments(getArticleHotComments(elements.get(0), aid));
+            //}
             resultObject.ok = true;
             resultObject.result = article;
         } catch (IOException e) {

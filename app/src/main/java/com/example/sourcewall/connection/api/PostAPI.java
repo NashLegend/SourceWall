@@ -291,10 +291,6 @@ public class PostAPI extends APIBase {
             detail.setDate(date);
             detail.setContent(content);
             detail.setLikeNum(likeNum);
-            Elements elements = doc.getElementsByClass("group-comments");
-            if (elements.size() == 1) {
-                detail.setComments(extractPostComments(elements.get(0), postID));
-            }
             resultObject.ok = true;
             resultObject.result = detail;
         } catch (IOException e) {
@@ -436,7 +432,7 @@ public class PostAPI extends APIBase {
                     .replaceAll("^" + commentAuthor, "").replaceAll(commentDate + "$", "")
                     .replaceAll(" ", "");
             String commentContent = liElement.getElementsByClass("cmt-main").outerHtml();
-            int likes = Integer.valueOf(liElement.getElementsByClass("cmt-like").text());
+            int likes = Integer.valueOf(liElement.getElementsByClass("cmt-like-num").text());
             comment.setAuthorAvatarUrl(commentAuthorAvatarUrl);
             comment.setAuthorID(commentAuthorID);
             comment.setAuthor(commentAuthor);
