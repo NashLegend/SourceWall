@@ -98,5 +98,6 @@
     <string name="switch_to_normal_mode">日间模式</string>
     <string name="click_to_load_pre_page">点击加载上一页</string>
     <string name="title_activity_publish_post">发帖</string>
+    <string name="title_activity_publish_question">提问</string>
 
 </resources>

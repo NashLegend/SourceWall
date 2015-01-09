@@ -58,6 +58,10 @@
             android:name=".PublishPostActivity"
             android:label="@string/title_activity_publish_post"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".PublishQuestionActivity"
+            android:label="@string/title_activity_publish_question"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>
