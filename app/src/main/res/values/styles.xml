@@ -18,6 +18,10 @@
         <!--夜间模式不用设置toolbarStyle-->
         <item name="toolbarStyle">@style/ToolbarStyleDay</item>
 
+        <item name="android:textColorPrimaryDisableOnly">
+            @color/abc_primary_text_disable_only_material_dark
+        </item>
+
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
         <item name="colorPrimaryBright">@color/color_primary_bright</item>
@@ -139,8 +143,8 @@
         <item name="android:colorBackgroundCacheHint">
             @color/abc_background_cache_hint_selector_material_dark
         </item>
-
         <item name="isLightTheme">false</item>
+
         <!--提示框背景-->
         <item name="android:alertDialogTheme">@style/AlertDialogThemeNight</item>
         <!--对话框背景-->
