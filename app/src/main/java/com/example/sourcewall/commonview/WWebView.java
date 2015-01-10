@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -17,6 +16,7 @@ import com.example.sourcewall.AppApplication;
  * 用于显示内容的
  */
 public class WWebView extends WebView {
+
 
     public WWebView(Context context) {
         super(context);
@@ -40,11 +40,15 @@ public class WWebView extends WebView {
     }
 
     private void init() {
-        setWebViewClient(webViewClient);//一旦设置了webViewClient，默认情况下链接就会在本页打开了……
+        setWebViewClient(client);//一旦设置了webViewClient，默认情况下链接就会在本页打开了……
         getSettings().setAllowFileAccess(true);
         getSettings().setAllowContentAccess(true);
         getSettings().setBlockNetworkImage(true);//暂时不加载图片，因为要延迟加载，只渲染文字还是比较快的
         getSettings().setDefaultTextEncodingName("UTF-8");
+    }
+
+    public void setExtWebViewClient(WebViewClient client) {
+        extClient = client;
     }
 
     /**
@@ -66,7 +70,8 @@ public class WWebView extends WebView {
         return false;
     }
 
-    WebViewClient webViewClient = new WebViewClient() {
+    WebViewClient extClient;
+    WebViewClient client = new WebViewClient() {
 
         @Override
         public void onPageFinished(WebView view, String url) {
@@ -74,6 +79,9 @@ public class WWebView extends WebView {
             if (!shouldInterceptImage()) {
                 //图片在此进行延迟加载
                 getSettings().setBlockNetworkImage(false);
+            }
+            if (extClient != null) {
+                extClient.onPageFinished(view, url);
             }
         }
 
@@ -86,18 +94,10 @@ public class WWebView extends WebView {
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 AppApplication.getApplication().startActivity(intent);
             }
+            if (extClient != null) {
+                extClient.shouldOverrideUrlLoading(view, url);
+            }
             return true;
-        }
-
-        @Override
-        public void onLoadResource(WebView view, String url) {
-            super.onLoadResource(view, url);
-        }
-
-        @Override
-        public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
-            //非UI线程执行
-            return super.shouldInterceptRequest(view, url);
         }
     };
 

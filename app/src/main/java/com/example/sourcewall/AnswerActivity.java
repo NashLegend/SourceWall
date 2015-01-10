@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.sourcewall.commonview.SScrollView;
+import com.example.sourcewall.commonview.WWebView;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.QuestionAPI;
 import com.example.sourcewall.connection.api.UserAPI;
@@ -45,7 +46,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
     View headerHolder;
     View footerHolder;
     LinearLayout webHolder;
-    WebView webView;
+    WWebView webView;
     ImageView avatar;
     TextView questionText;
     TextView authorName;
@@ -77,7 +78,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         headerHolder = findViewById(R.id.headerHolder);
         footerHolder = findViewById(R.id.footerHolder);
         webHolder = (LinearLayout) findViewById(R.id.web_holder);
-        webView = (WebView) findViewById(R.id.web_content);
+        webView = (WWebView) findViewById(R.id.web_content);
         questionText = (TextView) findViewById(R.id.text_title);
         avatar = (ImageView) findViewById(R.id.image_avatar);
         authorName = (TextView) findViewById(R.id.text_author);
@@ -115,11 +116,10 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
                 }
             }
         });
-        webView.setWebViewClient(new WebViewClient() {
+        webView.setExtWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
                 resize();
-                super.onPageFinished(view, url);
             }
         });
     }
