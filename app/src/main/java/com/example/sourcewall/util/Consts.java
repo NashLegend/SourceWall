@@ -12,7 +12,7 @@ public class Consts {
     public static final String Action_Open_Posts_Fragment = "sourcewall.action.open.posts.fragment";
     public static final String Action_Open_Questions_Fragment = "sourcewall.action.open.questions.fragment";
 
-    // usually used in intent.put
+    // 用于Intent传值时的Extra_Key
     public static final String Extra_Ace_Model = "sourcewall.extra.ace.model.id";
     public static final String Extra_Article = "sourcewall.extra.article.id";
     public static final String Extra_Simple_Comment = "sourcewall.extra.simple.comment.id";
@@ -21,13 +21,13 @@ public class Consts {
     public static final String Extra_Answer = "sourcewall.extra.answer.id";
     public static final String Extra_SubItem = "sourcewall.extra.subitem.id";
 
-    // usually used in SharedPreferences
+    // 保存SharedPreferences的Key
     public static final String Key_Cookie = "sourcewall.key.cookie";
     public static final String Key_Access_Token = "sourcewall.key.access.token";
     public static final String Key_Ukey = "sourcewall.key.ukey";
     public static final String Key_Is_Night_Mode = "sourcewall.key.is.night.mode";
 
-    // login webpage
+    // 登录页保存Cookie
     public static final String LOGIN_URL = "https://account.guokr.com/sign_in/?display=mobile";
     public static final String SUCCESS_URL_1 = "http://m.guokr.com/";
     public static final String SUCCESS_URL_2 = "http://www.guokr.com/";

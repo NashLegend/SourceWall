@@ -322,6 +322,9 @@ public class UserAPI extends APIBase {
         return resultObject;
     }
 
+    /**
+     * 清除过期数据。TODO
+     */
     public static void clearMyInfo() {
 
     }

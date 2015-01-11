@@ -34,8 +34,8 @@ public class SharedUtil {
     }
 
     // 读String
-    public static String readString(String key, String defaultvalue) {
-        String str = getSharedPreferences().getString(key, defaultvalue);
+    public static String readString(String key, String defaultValue) {
+        String str = getSharedPreferences().getString(key, defaultValue);
         return str;
     }
 
@@ -46,8 +46,8 @@ public class SharedUtil {
     }
 
     // 读Boolean
-    public static boolean readBoolean(String key, boolean defaultvalue) {
-        return getSharedPreferences().getBoolean(key, defaultvalue);
+    public static boolean readBoolean(String key, boolean defaultValue) {
+        return getSharedPreferences().getBoolean(key, defaultValue);
     }
 
     // 写Boolean
@@ -69,8 +69,8 @@ public class SharedUtil {
     }
 
     // 布尔值读
-    public static boolean isActive(String key, boolean defaultvalue) {
-        return getSharedPreferences().getBoolean(key, defaultvalue);
+    public static boolean isActive(String key, boolean defaultValue) {
+        return getSharedPreferences().getBoolean(key, defaultValue);
     }
 
     // 布尔值写
