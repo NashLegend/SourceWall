@@ -1,5 +1,15 @@
 <resources>
 
+    <style name="AppTheme" parent="AppTheme_Basic_Day">
+        <!--平台有差异的Style-->
+        <item name="background_selectable_borderless">?android:attr/selectableItemBackground</item>
+    </style>
+
+    <style name="AppThemeNight" parent="AppTheme_Basic_Night">
+        <!--平台有差异的Style-->
+        <item name="background_selectable_borderless">?android:attr/selectableItemBackground</item>
+    </style>
+
     <style name="BaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="windowActionModeOverlay">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
@@ -12,10 +22,9 @@
 
     <style name="ToolbarStyleDay" parent="@style/Widget.AppCompat.Toolbar">
         <item name="titleTextAppearance">@style/ToolbarTextAppearance</item>
-
     </style>
 
-    <style name="AppTheme" parent="BaseTheme">
+    <style name="AppTheme_Basic_Day" parent="BaseTheme">
         <!--夜间模式不用设置toolbarStyle-->
         <item name="toolbarStyle">@style/ToolbarStyleDay</item>
 
@@ -78,7 +87,6 @@
             @color/reply_operation_bar_background
         </item>
 
-
         <!--对话框-->
         <item name="color_dialog_button_background">@color/dialog_button_background</item>
         <item name="drawable_dialog_button_text">@drawable/dialog_button_text_color</item>
@@ -89,7 +97,8 @@
         <item name="color_dialog_text">@color/dialog_text</item>
 
         <!--抽屉颜色-->
-        <item name="drawable_drawer_button_background">@drawable/bg_drawer_button</item>
+        <!--<item name="drawable_drawer_button_background">@drawable/bg_drawer_button</item>-->
+        <item name="drawable_drawer_button_background">?android:attr/selectableItemBackground</item>
         <item name="color_drawer_button_background">@color/drawer_button_background</item>
         <item name="color_drawer_button_background_pressed">
             @color/drawer_button_background_pressed
@@ -121,7 +130,7 @@
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
-    <style name="AppThemeNight" parent="BaseTheme">
+    <style name="AppTheme_Basic_Night" parent="BaseTheme">
         <item name="android:textColorPrimary">#eeeeee</item>
         <item name="android:textColorPrimaryInverse">@color/abc_primary_text_material_light</item>
         <item name="android:textColorPrimaryDisableOnly">
@@ -221,7 +230,8 @@
         <item name="color_dialog_text">@color/dialog_text_night</item>
 
         <!--抽屉颜色-->
-        <item name="drawable_drawer_button_background">@drawable/bg_drawer_button_night</item>
+        <!--<item name="drawable_drawer_button_background">@drawable/bg_drawer_button_night</item>-->
+        <item name="drawable_drawer_button_background">?android:attr/selectableItemBackground</item>
         <item name="color_drawer_button_background">@color/drawer_button_background_night</item>
         <item name="color_drawer_button_background_pressed">
             @color/drawer_button_background_pressed_night

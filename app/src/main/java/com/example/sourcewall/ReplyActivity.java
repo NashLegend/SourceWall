@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.sourcewall.connection.ResultObject;
@@ -45,7 +44,7 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
     ImageButton insertButton;
     ImageButton cameraButton;
     ImageButton linkButton;
-    ProgressBar uploadingProgress;
+    View uploadingProgress;
     ProgressDialog progressDialog;
     String tmpImagePath;
     Toolbar toolbar;
@@ -74,7 +73,7 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
         insertButton = (ImageButton) findViewById(R.id.btn_insert_img);
         cameraButton = (ImageButton) findViewById(R.id.btn_camera);
         linkButton = (ImageButton) findViewById(R.id.btn_link);
-        uploadingProgress = (ProgressBar) findViewById(R.id.prg_uploading_img);
+        uploadingProgress = findViewById(R.id.prg_uploading_img);
         publishButton.setOnClickListener(this);
         imgButton.setOnClickListener(this);
         insertButton.setOnClickListener(this);

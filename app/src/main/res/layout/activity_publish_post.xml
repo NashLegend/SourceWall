@@ -60,75 +60,68 @@
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="5dp">
 
-            <RelativeLayout
+
+            <ImageButton
+                android:id="@+id/btn_camera"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:background="?attr/background_selectable_borderless"
+                android:src="@drawable/ic_camera_holo_light_blue_36dp" />
 
-                <ImageButton
-                    android:id="@+id/btn_camera"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:src="@drawable/ic_camera_holo_light_blue_36dp" />
-            </RelativeLayout>
 
-            <RelativeLayout
+            <ImageButton
+                android:id="@+id/btn_add_img"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:background="?attr/background_selectable_borderless"
+                android:src="@drawable/ic_image_browse_color_blue_36dp" />
 
-                <ImageButton
-                    android:id="@+id/btn_add_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:src="@drawable/ic_image_browse_color_blue_36dp" />
+            <RelativeLayout
+                android:id="@+id/prg_uploading_img"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:visibility="gone">
 
                 <ProgressBar
-                    android:id="@+id/prg_uploading_img"
                     android:layout_width="@dimen/abc_action_bar_progress_bar_size"
                     android:layout_height="@dimen/abc_action_bar_progress_bar_size"
-                    android:layout_centerInParent="true"
-                    android:visibility="gone" />
-
-                <ImageButton
-                    android:id="@+id/btn_insert_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:src="@drawable/ic_insert_image_blue_36dp"
-                    android:visibility="gone" />
+                    android:layout_centerInParent="true" />
             </RelativeLayout>
+
+            <ImageButton
+                android:id="@+id/btn_insert_img"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?attr/background_selectable_borderless"
+                android:src="@drawable/ic_insert_image_blue_36dp"
+                android:visibility="gone" />
+
+            <ImageButton
+                android:id="@+id/btn_link"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?attr/background_selectable_borderless"
+                android:src="@drawable/ic_link_holo_light_blue_36dp" />
 
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
-
-                <ImageButton
-                    android:id="@+id/btn_link"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:src="@drawable/ic_link_holo_light_blue_36dp" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="48dp">
+                android:layout_weight="1.5">
 
                 <ImageButton
                     android:id="@+id/btn_publish"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
                     android:layout_centerInParent="true"
-                    android:background="?android:attr/selectableItemBackground"
+                    android:background="?attr/background_selectable_borderless"
+                    android:paddingLeft="13dp"
+                    android:paddingRight="13dp"
                     android:src="@drawable/ic_check_holo_light_blue_36dp" />
             </RelativeLayout>
 

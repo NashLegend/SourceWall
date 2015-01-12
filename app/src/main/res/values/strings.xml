@@ -56,7 +56,7 @@
     <string name="action_bury">不是答案</string>
     <string name="action_thank">感谢</string>
     <string name="hint_reply">请输入回复</string>
-    <string name="hint_write_post">……</string>
+    <string name="hint_write_post">Write Your Post</string>
     <string name="hint_recommend">顺便说点什么吧</string>
     <string name="message_replying">稍等片刻……</string>
     <string name="add_image">添加图片</string>

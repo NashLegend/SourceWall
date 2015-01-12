@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <style name="AppTheme" parent="AppTheme_Basic_Day">
+        <!--平台有差异的Style-->
+        <item name="background_selectable_borderless">
+            ?android:attr/selectableItemBackgroundBorderless
+        </item>
+    </style>
+
+    <style name="AppThemeNight" parent="AppTheme_Basic_Night">
+        <!--平台有差异的Style-->
+        <item name="background_selectable_borderless">
+            ?android:attr/selectableItemBackgroundBorderless
+        </item>
+    </style>
+
     <style name="AlertDialogThemeNight" parent="Theme.AppCompat.Dialog">
         <!--<item name="android:windowBackground">@android:color/transparent</item>-->
     </style>

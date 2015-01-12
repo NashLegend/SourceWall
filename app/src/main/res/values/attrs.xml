@@ -7,6 +7,8 @@
     <attr name="color_page_background" format="color" />
     <attr name="color_webview_background" format="color" />
 
+    <attr name="background_selectable_borderless" format="reference" />
+
     <!--卡片-->
     <attr name="color_card_background" format="color" />
     <!--ToolBar Theme-->
@@ -44,7 +46,7 @@
     <!--AnswerActivity问题文字颜色-->
     <attr name="color_answer_question_title_text" format="color" />
 
-    <!--回复-->
+    <!--发表相关-->
     <attr name="color_reply_quote_background" format="color" />
     <attr name="color_reply_quote_text" format="color" />
     <attr name="color_reply_input_text" format="color" />
