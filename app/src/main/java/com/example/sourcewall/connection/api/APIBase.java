@@ -81,15 +81,12 @@ public class APIBase {
                         HttpVersion.HTTP_1_1);
                 HttpPost httpPost = new HttpPost(
                         "http://www.guokr.com/apis/image.json?enable_watermark=" + (watermark ? "true" : "false"));
-
                 MultipartEntity multipartEntity = new MultipartEntity();
                 multipartEntity.addPart("upload_file", new FileBody(file));
                 multipartEntity.addPart("access_token", new StringBody(UserAPI.getToken()));
                 httpPost.setEntity(multipartEntity);
-
                 HttpResponse response;
                 String result = "";
-
                 response = httpClient.execute(httpPost);
                 HttpEntity resEntity = response.getEntity();
                 if (resEntity != null) {

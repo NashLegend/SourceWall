@@ -25,6 +25,7 @@ public class Consts {
     public static final String Key_Cookie = "sourcewall.key.cookie";
     public static final String Key_Access_Token = "sourcewall.key.access.token";
     public static final String Key_Ukey = "sourcewall.key.ukey";
+    public static final String Key_User_Name = "sourcewall.key.user.name";
     public static final String Key_Is_Night_Mode = "sourcewall.key.is.night.mode";
 
     // 登录页保存Cookie

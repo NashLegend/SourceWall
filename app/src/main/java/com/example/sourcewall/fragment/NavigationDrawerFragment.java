@@ -14,6 +14,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -316,15 +317,21 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     public void onResume() {
         super.onResume();
         if (isFirstLoad) {
-            testLogin();
+            if (UserAPI.isLoggedIn()) {
+                String nameString = SharedUtil.readString(Consts.Key_User_Name, "");
+                if (!TextUtils.isEmpty(nameString)) {
+                    userName.setText(nameString);
+                }
+                testLogin();
+            }
             isFirstLoad = false;
         } else {
-            if (loginState == UserAPI.isLoggedIn()) {
-                //do nothing
-            } else {
+            if (loginState != UserAPI.isLoggedIn()) {
                 checkChannelList();
                 if (UserAPI.isLoggedIn()) {
                     loadUserInfo();
+                } else {
+                    //TODO 清除头像与名称
                 }
             }
         }
@@ -449,6 +456,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     }
 
     private void setupUserInfo(UserInfo info) {
+        SharedUtil.saveString(Consts.Key_User_Name, info.getNickname());
         Picasso.with(getActivity()).load(info.getAvatar())
                 .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
                 .into(avatarView);

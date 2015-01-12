@@ -3,17 +3,26 @@ package com.example.sourcewall.connection;
 import com.example.sourcewall.connection.api.UserAPI;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpEntityEnclosingRequest;
+import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.NoHttpResponseException;
+import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.params.ConnManagerParams;
+import org.apache.http.conn.params.ConnPerRouteBean;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.impl.cookie.BasicClientCookie;
+import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HTTP;
+import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
 import java.io.File;
@@ -24,12 +33,20 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
+import javax.net.ssl.SSLHandshakeException;
+
 /**
  * Created by NashLegend on 2014/9/15 0015
  */
 public class HttpFetcher {
 
     public static DefaultHttpClient defaultHttpClient;
+    private static final int MAX_EXECUTION_COUNT = 2;
+    public final static int MAX_ROUTE_CONNECTIONS = 400;
+    public final static int MAX_TOTAL_CONNECTIONS = 800;
+    public final static int TIMEOUT = 2000;
+    public final static int SO_TIMEOUT = 3000;
+    public final static int CONNECTION_TIMEOUT = 10000;
 
     public static String post(String url, List<NameValuePair> params) throws IOException {
         HttpPost httpPost = new HttpPost(url);
@@ -55,9 +72,23 @@ public class HttpFetcher {
     public static DefaultHttpClient getDefaultHttpClient() {
         if (defaultHttpClient == null) {
             defaultHttpClient = new DefaultHttpClient();
+            defaultHttpClient.setHttpRequestRetryHandler(requestRetryHandler);
             ClientConnectionManager manager = defaultHttpClient.getConnectionManager();
             HttpParams params = defaultHttpClient.getParams();
+            //多线程请求
             defaultHttpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(params, manager.getSchemeRegistry()), params);
+
+            ConnManagerParams.setMaxTotalConnections(params, MAX_TOTAL_CONNECTIONS);
+            ConnManagerParams.setTimeout(params, TIMEOUT);//发起链接超时
+            ConnPerRouteBean connPerRoute = new ConnPerRouteBean(MAX_ROUTE_CONNECTIONS);
+            ConnManagerParams.setMaxConnectionsPerRoute(params, connPerRoute);
+
+            HttpConnectionParams.setStaleCheckingEnabled(params, false);
+            HttpConnectionParams.setConnectionTimeout(params, CONNECTION_TIMEOUT);//连接到服务器超时
+            HttpConnectionParams.setSoTimeout(params, SO_TIMEOUT);//服务器连接超时，连接过和
+            HttpConnectionParams.setSocketBufferSize(params, 8192);
+
+            //设置Cookie
             BasicClientCookie cookie1 = new BasicClientCookie("_32353_access_token", UserAPI.getToken());
             cookie1.setDomain("guokr.com");
             cookie1.setPath("/");
@@ -69,6 +100,29 @@ public class HttpFetcher {
         }
         return defaultHttpClient;
     }
+
+    /**
+     * 重试处理
+     */
+    private static HttpRequestRetryHandler requestRetryHandler = new HttpRequestRetryHandler() {
+        public boolean retryRequest(IOException exception, int executionCount, HttpContext context) {
+            if (executionCount >= MAX_EXECUTION_COUNT) {
+                return false;
+            }
+            if (exception instanceof NoHttpResponseException) {
+                return true;
+            }
+            if (exception instanceof SSLHandshakeException) {
+                return false;
+            }
+            HttpRequest request = (HttpRequest) context.getAttribute(ExecutionContext.HTTP_REQUEST);
+            boolean idempotent = (request instanceof HttpEntityEnclosingRequest);
+            if (!idempotent) {
+                return true;
+            }
+            return false;
+        }
+    };
 
     private static final int IO_BUFFER_SIZE = 8 * 1024;
 
