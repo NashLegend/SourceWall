@@ -36,6 +36,9 @@ import java.io.File;
 import java.util.ArrayList;
 
 
+/**
+ *
+ */
 public class PublishPostActivity extends SwipeActivity implements View.OnClickListener {
     EditText titleEditText;
     EditText bodyEditText;
@@ -194,7 +197,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
      * 插入图片
      */
     private void insertImagePath(String url) {
-        bodyEditText.getText().insert(bodyEditText.getSelectionStart(), "[image]" + url + "[/image]");
+        bodyEditText.getText().insert(bodyEditText.getSelectionStart(), "![](" + url + ")");
         resetImageButtons();
     }
 
@@ -221,7 +224,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
                     InputDialog d = (InputDialog) dialog;
                     String url = d.InputString;
                     String title = d.InputString2;
-                    String result = "[url=" + url + "]" + title + "[/url]";
+                    String result = "[" + title + "](" + url + ")";
                     bodyEditText.getText().insert(bodyEditText.getSelectionStart(), result);
                 }
             }
