@@ -632,23 +632,25 @@ public class QuestionAPI extends APIBase {
      * 提问
      *
      * @param csrf
-     * @param askTitle
-     * @param askDesc
-     * @param tagContent
+     * @param question
+     * @param annotation
+     * @param tags
      * @return
      */
-    public static ResultObject publishQuestion(String csrf, String askTitle, String askDesc, String tagContent) {
+    public static ResultObject publishQuestion(String csrf, String question, String annotation, String[] tags) {
         ResultObject resultObject = new ResultObject();
         String url = "http://www.guokr.com/questions/new/";
         try {
-            ResultObject mdResult = MDUtil.parseMarkdownByGitHub(askDesc);
+            ResultObject mdResult = MDUtil.parseMarkdownByGitHub(annotation);
             if (mdResult.ok) {
                 String htmlDesc = (String) mdResult.result;
                 ArrayList<NameValuePair> pairs = new ArrayList<>();
                 pairs.add(new BasicNameValuePair("csrf_token", csrf));
-                pairs.add(new BasicNameValuePair("askTitle", askTitle));
-                pairs.add(new BasicNameValuePair("askDesc", htmlDesc));
-                pairs.add(new BasicNameValuePair("tagContent", tagContent));
+                pairs.add(new BasicNameValuePair("question", question));
+                pairs.add(new BasicNameValuePair("annotation", htmlDesc));
+                for (int i = 0; i < tags.length; i++) {
+                    pairs.add(new BasicNameValuePair("ags", tags[i]));
+                }
                 pairs.add(new BasicNameValuePair("captcha", ""));
                 String result = HttpFetcher.post(url, pairs);
                 resultObject.ok = true;

@@ -99,5 +99,6 @@
     <string name="click_to_load_pre_page">点击加载上一页</string>
     <string name="title_activity_publish_post">发帖</string>
     <string name="title_activity_publish_question">提问</string>
+    <string name="hint_input_question_tag">输入问题标签，以","分隔</string>
 
 </resources>

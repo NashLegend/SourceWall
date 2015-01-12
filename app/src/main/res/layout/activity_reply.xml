@@ -54,7 +54,8 @@
             android:paddingBottom="5dp"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="5dp">
+            android:paddingTop="5dp"
+            android:weightSum="4.5">
 
 
             <ImageButton
@@ -65,36 +66,35 @@
                 android:background="?attr/background_selectable_borderless"
                 android:src="@drawable/ic_camera_holo_light_blue_36dp" />
 
-
-            <ImageButton
-                android:id="@+id/btn_add_img"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="?attr/background_selectable_borderless"
-                android:src="@drawable/ic_image_browse_color_blue_36dp" />
-
             <RelativeLayout
-                android:id="@+id/prg_uploading_img"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:visibility="gone">
+                android:layout_weight="1">
+
+                <ImageButton
+                    android:id="@+id/btn_add_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/background_selectable_borderless"
+                    android:src="@drawable/ic_image_browse_color_blue_36dp" />
+
 
                 <ProgressBar
+                    android:id="@+id/prg_uploading_img"
                     android:layout_width="@dimen/abc_action_bar_progress_bar_size"
                     android:layout_height="@dimen/abc_action_bar_progress_bar_size"
-                    android:layout_centerInParent="true" />
-            </RelativeLayout>
+                    android:layout_centerInParent="true"
+                    android:visibility="gone" />
 
-            <ImageButton
-                android:id="@+id/btn_insert_img"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="?attr/background_selectable_borderless"
-                android:src="@drawable/ic_insert_image_blue_36dp"
-                android:visibility="gone" />
+
+                <ImageButton
+                    android:id="@+id/btn_insert_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/background_selectable_borderless"
+                    android:src="@drawable/ic_insert_image_blue_36dp"
+                    android:visibility="gone" />
+            </RelativeLayout>
 
             <ImageButton
                 android:id="@+id/btn_link"
