@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.example.sourcewall.connection.HttpFetcher;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.model.AceModel;
+import com.example.sourcewall.model.PrepareData;
 import com.example.sourcewall.model.Question;
 import com.example.sourcewall.model.QuestionAnswer;
 import com.example.sourcewall.model.UComment;
@@ -48,7 +49,7 @@ public class QuestionAPI extends APIBase {
             ArrayList<Question> questions = new ArrayList<Question>();
             String url = "http://apis.guokr.com/ask/question.json?retrieve_type=by_tag&limit=20&tag_name="
                     + tag + "&offset=" + offset;
-            String jString = HttpFetcher.get(url);
+            String jString = HttpFetcher.get(url).toString();
             JSONObject jss = new JSONObject(jString);
             boolean ok = jss.getBoolean("ok");
             if (ok) {
@@ -118,7 +119,7 @@ public class QuestionAPI extends APIBase {
         ResultObject resultObject = new ResultObject();
         try {
             ArrayList<Question> questions = new ArrayList<Question>();
-            String html = HttpFetcher.get(url);
+            String html = HttpFetcher.get(url).toString();
             Document doc = Jsoup.parse(html);
             Elements elements = doc.getElementsByClass("ask-list");
             if (elements.size() == 1) {
@@ -178,7 +179,7 @@ public class QuestionAPI extends APIBase {
         ResultObject resultObject = new ResultObject();
         try {
             Question question = null;
-            String jString = HttpFetcher.get(url);
+            String jString = HttpFetcher.get(url).toString();
             JSONObject jss = new JSONObject(jString);
             boolean ok = jss.getBoolean("ok");
             if (ok) {
@@ -228,7 +229,7 @@ public class QuestionAPI extends APIBase {
             ArrayList<QuestionAnswer> answers = new ArrayList<QuestionAnswer>();
             String url = "http://apis.guokr.com/ask/answer.json?retrieve_type=by_question&limit=20&question_id="
                     + id + "&offset=" + offset;
-            String jString = HttpFetcher.get(url);
+            String jString = HttpFetcher.get(url).toString();
             JSONObject jss = new JSONObject(jString);
             boolean ok = jss.getBoolean("ok");
             if (ok) {
@@ -306,7 +307,7 @@ public class QuestionAPI extends APIBase {
             ArrayList<UComment> list = new ArrayList<UComment>();
             String url = "http://www.guokr.com/apis/ask/question_reply.json?retrieve_type=by_question&question_id="
                     + id + "&offset=" + offset;
-            String jString = HttpFetcher.get(url);
+            String jString = HttpFetcher.get(url).toString();
             JSONObject jss = new JSONObject(jString);
             boolean ok = jss.getBoolean("ok");
             if (ok) {
@@ -353,7 +354,7 @@ public class QuestionAPI extends APIBase {
             ArrayList<UComment> list = new ArrayList<UComment>();
             String url = "http://www.guokr.com/apis/ask/answer_reply.json?retrieve_type=by_answer&limit=20&answer_id="
                     + id + "&offset=" + offset;
-            String jString = HttpFetcher.get(url);
+            String jString = HttpFetcher.get(url).toString();
             JSONObject jss = new JSONObject(jString);
             boolean ok = jss.getBoolean("ok");
             if (ok) {
@@ -401,7 +402,7 @@ public class QuestionAPI extends APIBase {
             pairs.add(new BasicNameValuePair("question_id", id));
             pairs.add(new BasicNameValuePair("content", content));
             pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
-            String result = HttpFetcher.post(url, pairs);
+            String result = HttpFetcher.post(url, pairs).toString();
             JSONObject object = new JSONObject(result);
             if (getJsonBoolean(object, "ok")) {
                 JSONObject resultJson = getJsonObject(object, "result");
@@ -452,7 +453,7 @@ public class QuestionAPI extends APIBase {
             pairs.add(new BasicNameValuePair("answer_id", id));
             pairs.add(new BasicNameValuePair("opinion", opinion));
             pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
-            String result = HttpFetcher.post(url, pairs);
+            String result = HttpFetcher.post(url, pairs).toString();
             JSONObject object = new JSONObject(result);
             if (getJsonBoolean(object, "ok")) {
                 resultObject.ok = true;
@@ -476,7 +477,7 @@ public class QuestionAPI extends APIBase {
             ArrayList<NameValuePair> pairs = new ArrayList<>();
             pairs.add(new BasicNameValuePair("answer_id", id));
             pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
-            String result = HttpFetcher.post(url, pairs);
+            String result = HttpFetcher.post(url, pairs).toString();
             JSONObject object = new JSONObject(result);
             if (getJsonBoolean(object, "ok")) {
                 resultObject.ok = true;
@@ -500,7 +501,7 @@ public class QuestionAPI extends APIBase {
             ArrayList<NameValuePair> pairs = new ArrayList<>();
             pairs.add(new BasicNameValuePair("answer_id", id));
             pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
-            String result = HttpFetcher.post(url, pairs);
+            String result = HttpFetcher.post(url, pairs).toString();
             JSONObject object = new JSONObject(result);
             if (getJsonBoolean(object, "ok")) {
                 resultObject.ok = true;
@@ -541,7 +542,7 @@ public class QuestionAPI extends APIBase {
             pairs.add(new BasicNameValuePair("content", comment));
             pairs.add(new BasicNameValuePair("retrieve_type", "by_question"));
             pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
-            String result = HttpFetcher.post(url, pairs);
+            String result = HttpFetcher.post(url, pairs).toString();
             JSONObject object = new JSONObject(result);
             if (getJsonBoolean(object, "ok")) {
                 JSONObject jsonObject = object.getJSONObject("result");
@@ -580,7 +581,7 @@ public class QuestionAPI extends APIBase {
             pairs.add(new BasicNameValuePair("content", comment));
             pairs.add(new BasicNameValuePair("retrieve_type", "by_answer"));
             pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
-            String result = HttpFetcher.post(url, pairs);
+            String result = HttpFetcher.post(url, pairs).toString();
             JSONObject object = new JSONObject(result);
             if (getJsonBoolean(object, "ok")) {
                 JSONObject jsonObject = object.getJSONObject("result");
@@ -605,7 +606,7 @@ public class QuestionAPI extends APIBase {
 
     /**
      * 获取提问所需的csrf_token
-     * resultObject.result是String#csrf
+     * resultObject.result是PrepareData#csrf
      *
      * @return
      */
@@ -613,12 +614,14 @@ public class QuestionAPI extends APIBase {
         ResultObject resultObject = new ResultObject();
         try {
             String url = "http://www.guokr.com/questions/new/";
-            String html = HttpFetcher.get(url);
+            String html = HttpFetcher.get(url).toString();
             Document doc = Jsoup.parse(html);
             String csrf = doc.getElementById("csrf_token").attr("value");
             if (!TextUtils.isEmpty(csrf)) {
+                PrepareData prepareData = new PrepareData();
+                prepareData.setCsrf(csrf);
                 resultObject.ok = true;
-                resultObject.result = csrf;
+                resultObject.result = prepareData;
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -649,12 +652,18 @@ public class QuestionAPI extends APIBase {
                 pairs.add(new BasicNameValuePair("question", question));
                 pairs.add(new BasicNameValuePair("annotation", htmlDesc));
                 for (int i = 0; i < tags.length; i++) {
-                    pairs.add(new BasicNameValuePair("ags", tags[i]));
+                    String tag = tags[i].trim();
+                    if (!TextUtils.isEmpty(tag)) {
+                        pairs.add(new BasicNameValuePair("tags", tag));
+                    }
                 }
                 pairs.add(new BasicNameValuePair("captcha", ""));
-                String result = HttpFetcher.post(url, pairs);
-                resultObject.ok = true;
-                resultObject.result = result;
+
+                ResultObject result = HttpFetcher.post(url, pairs);
+                if (result.statusCode == 302 && testPublishResult(result.toString())) {
+                    resultObject.ok = true;
+                    resultObject.result = result.toString();
+                }
             } else {
                 //转换失败……
             }
@@ -664,6 +673,22 @@ public class QuestionAPI extends APIBase {
             e.printStackTrace();
         }
         return resultObject;
+    }
+
+    /**
+     * 解析页面结果，看看是不是发表成功了
+     *
+     * @param res
+     * @return
+     */
+    private static boolean testPublishResult(String res) {
+        try {
+            Document doc = Jsoup.parse(res);
+            String href = doc.getElementsByTag("a").attr("href");
+            return href.matches("/question/\\d+/");
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 }

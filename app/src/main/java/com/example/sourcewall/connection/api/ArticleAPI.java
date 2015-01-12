@@ -86,7 +86,7 @@ public class ArticleAPI extends APIBase {
         ResultObject resultObject = new ResultObject();
         try {
             ArrayList<Article> articleList = new ArrayList<Article>();
-            String jString = HttpFetcher.get(url);
+            String jString = HttpFetcher.get(url).toString();
             JSONObject jss = new JSONObject(jString);
             boolean ok = jss.getBoolean("ok");
             if (ok) {
@@ -149,7 +149,7 @@ public class ArticleAPI extends APIBase {
         try {
             Article article = new Article();
             String aid = url.replaceAll("\\?\\S*$", "").replaceAll("\\D+", "");
-            String html = HttpFetcher.get(url);
+            String html = HttpFetcher.get(url).toString();
             Document doc = Jsoup.parse(html);
             //replaceAll("line-height: normal;","");只是简单的处理，以防止Article样式不正确，字体过于紧凑
             //可能还有其他样式没有被我发现，所以加一个 TODO
@@ -240,7 +240,7 @@ public class ArticleAPI extends APIBase {
             ArrayList<UComment> list = new ArrayList<>();
             String url = "http://apis.guokr.com/minisite/article_reply.json?article_id=" + id
                     + "&limit=20&offset=" + offset;
-            String jString = HttpFetcher.get(url);
+            String jString = HttpFetcher.get(url).toString();
             JSONObject jss = new JSONObject(jString);
             boolean ok = jss.getBoolean("ok");
             if (ok) {
@@ -334,7 +334,7 @@ public class ArticleAPI extends APIBase {
             ArrayList<NameValuePair> pairs = new ArrayList<>();
             pairs.add(new BasicNameValuePair("reply_id", id));
             pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
-            String result = HttpFetcher.post(url, pairs);
+            String result = HttpFetcher.post(url, pairs).toString();
             JSONObject object = new JSONObject(result);
             if (getJsonBoolean(object, "ok")) {
                 resultObject.ok = true;
@@ -360,7 +360,7 @@ public class ArticleAPI extends APIBase {
             pairs.add(new BasicNameValuePair("article_id", id));
             pairs.add(new BasicNameValuePair("content", content));
             pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
-            String result = HttpFetcher.post(url, pairs);
+            String result = HttpFetcher.post(url, pairs).toString();
             JSONObject object = new JSONObject(result);
             if (getJsonBoolean(object, "ok")) {
                 JSONObject resultJson = getJsonObject(object, "result");
@@ -391,7 +391,7 @@ public class ArticleAPI extends APIBase {
             pairs.add(new BasicNameValuePair("article_id", id));
             pairs.add(new BasicNameValuePair("content", content));
             pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
-            String result = HttpFetcher.post(url, pairs);
+            String result = HttpFetcher.post(url, pairs).toString();
             JSONObject object = new JSONObject(result);
             if (getJsonBoolean(object, "ok")) {
                 JSONObject resultJson = getJsonObject(object, "result");

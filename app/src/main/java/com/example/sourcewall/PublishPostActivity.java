@@ -22,8 +22,9 @@ import android.widget.Spinner;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.APIBase;
 import com.example.sourcewall.connection.api.PostAPI;
+import com.example.sourcewall.connection.api.QuestionAPI;
 import com.example.sourcewall.dialogs.InputDialog;
-import com.example.sourcewall.model.PostPrepareData;
+import com.example.sourcewall.model.PrepareData;
 import com.example.sourcewall.model.SubItem;
 import com.example.sourcewall.util.Config;
 import com.example.sourcewall.util.Consts;
@@ -41,6 +42,7 @@ import java.util.ArrayList;
  */
 public class PublishPostActivity extends SwipeActivity implements View.OnClickListener {
     EditText titleEditText;
+    EditText tagEditText;
     EditText bodyEditText;
     ImageButton publishButton;
     ImageButton imgButton;
@@ -64,17 +66,10 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_publish_post);
-        subItem = (SubItem) getIntent().getSerializableExtra(Consts.Extra_SubItem);
-        if (subItem != null) {
-            group_name = subItem.getName();
-            group_id = subItem.getValue();
-        } else {
-            ToastUtil.toast("No Group Received");
-            finish();
-        }
         toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         titleEditText = (EditText) findViewById(R.id.text_post_title);
+        tagEditText = (EditText) findViewById(R.id.text_question_tag);
         bodyEditText = (EditText) findViewById(R.id.text_post_body);
         spinner = (Spinner) findViewById(R.id.spinner_post_topic);
         publishButton = (ImageButton) findViewById(R.id.btn_publish);
@@ -83,6 +78,27 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         cameraButton = (ImageButton) findViewById(R.id.btn_camera);
         linkButton = (ImageButton) findViewById(R.id.btn_link);
         uploadingProgress = findViewById(R.id.prg_uploading_img);
+        subItem = (SubItem) getIntent().getSerializableExtra(Consts.Extra_SubItem);
+        if (subItem != null) {
+            if (subItem.getSection() == SubItem.Section_Post) {
+                setTitle(R.string.title_activity_publish_post);
+                group_name = subItem.getName();
+                group_id = subItem.getValue();
+                spinner.setVisibility(View.VISIBLE);
+                tagEditText.setVisibility(View.GONE);
+                titleEditText.setHint(R.string.hint_input_post_title);
+                bodyEditText.setHint(R.string.hint_input_post_content);
+            } else {
+                setTitle(R.string.title_activity_publish_question);
+                spinner.setVisibility(View.GONE);
+                tagEditText.setVisibility(View.VISIBLE);
+                titleEditText.setHint(R.string.hint_input_question);
+                bodyEditText.setHint(R.string.hint_input_question_desc);
+            }
+        } else {
+            ToastUtil.toast("No Data Received");
+            finish();
+        }
         publishButton.setOnClickListener(this);
         imgButton.setOnClickListener(this);
         insertButton.setOnClickListener(this);
@@ -91,21 +107,28 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         prepare();
     }
 
+    private boolean isPost() {
+        return subItem != null && subItem.getSection() == SubItem.Section_Post;
+    }
+
     private void prepare() {
         cancelPotentialTask();
         prepareTask = new PrepareTask();
         prepareTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, group_id);
     }
 
-    private void onReceivePreparedData(PostPrepareData prepareData) {
+    private void onReceivePreparedData(PrepareData prepareData) {
         csrf = prepareData.getCsrf();
         topics = prepareData.getPairs();
-        String[] items = new String[topics.size()];
-        for (int i = 0; i < topics.size(); i++) {
-            items[i] = topics.get(i).getName();
+        if (isPost() && topic != null) {
+            String[] items = new String[topics.size()];
+            for (int i = 0; i < topics.size(); i++) {
+                items[i] = topics.get(i).getName();
+            }
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.simple_spinner_item, items);
+            spinner.setAdapter(arrayAdapter);
         }
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.simple_spinner_item, items);
-        spinner.setAdapter(arrayAdapter);
+
     }
 
     private void cancelPotentialTask() {
@@ -233,13 +256,13 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         inputDialog.show();
     }
 
-    private void publishPost() {
+    private void publish() {
         if (TextUtils.isEmpty(titleEditText.getText().toString().trim())) {
             ToastUtil.toast(R.string.title_cannot_be_empty);
             return;
         }
 
-        if (TextUtils.isEmpty(bodyEditText.getText().toString().trim())) {
+        if (TextUtils.isEmpty(bodyEditText.getText().toString().trim()) && isPost()) {
             ToastUtil.toast(R.string.content_cannot_be_empty);
             return;
         }
@@ -249,19 +272,25 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
             return;
         }
 
-        //不必检测越界行为
-        topic = topics.get(spinner.getSelectedItemPosition()).getValue();
-        PublishPostTask task = new PublishPostTask();
+        if (isPost()) {
+            //不必检测越界行为
+            topic = topics.get(spinner.getSelectedItemPosition()).getValue();
+        } else {
+            topic = tagEditText.getText().toString();
+        }
+
+        PublishTask task = new PublishTask();
         String title = titleEditText.getText().toString();
         String body = bodyEditText.getText().toString() + Config.getComplexReplyTail();
         task.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR, group_id, csrf, title, body, topic);
+
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_publish:
-                publishPost();
+                publish();
                 break;
             case R.id.btn_add_img:
                 invokeImageDialog();
@@ -278,7 +307,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         }
     }
 
-    class PublishPostTask extends AsyncTask<String, Integer, ResultObject> {
+    class PublishTask extends AsyncTask<String, Integer, ResultObject> {
 
         @Override
         protected void onPreExecute() {
@@ -296,7 +325,12 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
             String title = params[2];
             String body = params[3];
             String topic = params[4];
-            return PostAPI.publishPost(group_id, csrf, title, body, topic);
+            if (isPost()) {
+                return PostAPI.publishPost(group_id, csrf, title, body, topic);
+            } else {
+                String[] topics = topic.split(",");
+                return QuestionAPI.publishQuestion(csrf, title, body, topics);
+            }
         }
 
         @Override
@@ -336,15 +370,18 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         @Override
         protected ResultObject doInBackground(String... params) {
             String group_id = params[0];
-            return PostAPI.getPublishPrepareData(group_id);
+            if (isPost()) {
+                return PostAPI.getPostPrepareData(group_id);
+            } else {
+                return QuestionAPI.getQuestionPrepareData();
+            }
         }
 
         @Override
         protected void onPostExecute(ResultObject resultObject) {
             if (resultObject.ok) {
-                PostPrepareData prepareData = (PostPrepareData) resultObject.result;
+                PrepareData prepareData = (PrepareData) resultObject.result;
                 onReceivePreparedData(prepareData);
-
             } else {
                 ToastUtil.toast("Prepare Failed");
             }

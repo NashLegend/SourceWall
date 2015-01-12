@@ -7,7 +7,7 @@ import com.example.sourcewall.connection.HttpFetcher;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.model.AceModel;
 import com.example.sourcewall.model.Post;
-import com.example.sourcewall.model.PostPrepareData;
+import com.example.sourcewall.model.PrepareData;
 import com.example.sourcewall.model.UComment;
 import com.example.sourcewall.util.MDUtil;
 
@@ -43,7 +43,7 @@ public class PostAPI extends APIBase {
         ResultObject resultObject = new ResultObject();
         try {
             ArrayList<Post> list = new ArrayList<Post>();
-            String html = HttpFetcher.get(url);
+            String html = HttpFetcher.get(url).toString();
             Document doc = Jsoup.parse(html);
             Elements elements = doc.getElementsByClass("post-list");
             if (elements.size() == 1) {
@@ -120,7 +120,7 @@ public class PostAPI extends APIBase {
         ResultObject resultObject = new ResultObject();
         ArrayList<Post> list = new ArrayList<Post>();
         String url = "http://www.guokr.com/group/user/recent_posts/?page=" + pageNo;
-        String html = HttpFetcher.get(url);
+        String html = HttpFetcher.get(url).toString();
         Document doc = Jsoup.parse(html);
         return resultObject;
     }
@@ -138,7 +138,7 @@ public class PostAPI extends APIBase {
         try {
             ArrayList<Post> list = new ArrayList<Post>();
             String url = "http://m.guokr.com/group/hot_posts/?page=" + pageNo;
-            String html = HttpFetcher.get(url);
+            String html = HttpFetcher.get(url).toString();
             Document doc = Jsoup.parse(html);
             Elements elements = doc.getElementsByClass("post-index-list");
             if (elements.size() == 1) {
@@ -205,7 +205,7 @@ public class PostAPI extends APIBase {
             String url = "http://apis.guokr.com/group/post.json?retrieve_type=by_group&group_id=" + id
                     + "&limit=20&offset=" + offset;
             ArrayList<Post> list = new ArrayList<Post>();
-            String jString = HttpFetcher.get(url);
+            String jString = HttpFetcher.get(url).toString();
             JSONObject jss = new JSONObject(jString);
             boolean ok = jss.getBoolean("ok");
             if (ok) {
@@ -265,7 +265,7 @@ public class PostAPI extends APIBase {
         ResultObject resultObject = new ResultObject();
         try {
             Post detail = new Post();
-            String html = HttpFetcher.get(url);
+            String html = HttpFetcher.get(url).toString();
             Document doc = Jsoup.parse(html);
             String postID = url.replaceAll("\\?\\S*$", "").replaceAll("\\D+", "");
             String groupID = doc.getElementsByClass("crumbs").get(0).getElementsByTag("a")
@@ -318,7 +318,7 @@ public class PostAPI extends APIBase {
             ArrayList<UComment> list = new ArrayList<UComment>();
             String url = "http://apis.guokr.com/group/post_reply.json?retrieve_type=by_post&post_id="
                     + id + "&limit=20&offset=" + offset;
-            String jString = HttpFetcher.get(url);
+            String jString = HttpFetcher.get(url).toString();
             JSONObject jss = new JSONObject(jString);
             boolean ok = jss.getBoolean("ok");
             if (ok) {
@@ -392,7 +392,7 @@ public class PostAPI extends APIBase {
         ArrayList<UComment> list = new ArrayList<UComment>();
         String url = "http://m.guokr.com/post/" + id + "/?page=" + pageNo;
         try {
-            String html = HttpFetcher.get(url);
+            String html = HttpFetcher.get(url).toString();
             Document doc = Jsoup.parse(html);
             String postID = url.replaceAll("\\?\\S*$", "").replaceAll("\\D+", "");
             Elements elements = doc.getElementsByClass("group-comments");
@@ -460,7 +460,7 @@ public class PostAPI extends APIBase {
             ArrayList<NameValuePair> pairs = new ArrayList<>();
             pairs.add(new BasicNameValuePair("post_id", postID));
             pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
-            String result = HttpFetcher.post(url, pairs);
+            String result = HttpFetcher.post(url, pairs).toString();
             JSONObject object = new JSONObject(result);
             if (getJsonBoolean(object, "ok")) {
                 resultObject.ok = true;
@@ -487,7 +487,7 @@ public class PostAPI extends APIBase {
             pairs.add(new BasicNameValuePair("post_id", id));
             pairs.add(new BasicNameValuePair("content", content));
             pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
-            String result = HttpFetcher.post(url, pairs);
+            String result = HttpFetcher.post(url, pairs).toString();
             JSONObject object = new JSONObject(result);
             if (getJsonBoolean(object, "ok")) {
                 JSONObject resultJson = getJsonObject(object, "result");
@@ -516,7 +516,7 @@ public class PostAPI extends APIBase {
             ArrayList<NameValuePair> pairs = new ArrayList<>();
             pairs.add(new BasicNameValuePair("reply_id", id));
             pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
-            String result = HttpFetcher.post(url, pairs);
+            String result = HttpFetcher.post(url, pairs).toString();
             JSONObject object = new JSONObject(result);
             if (getJsonBoolean(object, "ok")) {
                 resultObject.ok = true;
@@ -534,11 +534,11 @@ public class PostAPI extends APIBase {
      * @param group_id
      * @return
      */
-    public static ResultObject getPublishPrepareData(String group_id) {
+    public static ResultObject getPostPrepareData(String group_id) {
         ResultObject resultObject = new ResultObject();
         try {
             String url = "http://www.guokr.com/group/" + group_id + "/post/edit/";
-            String html = HttpFetcher.get(url);
+            String html = HttpFetcher.get(url).toString();
             Document doc = Jsoup.parse(html);
             Element selects = doc.getElementById("topic");
             ArrayList<BasicNameValuePair> pairs = new ArrayList<>();
@@ -557,7 +557,7 @@ public class PostAPI extends APIBase {
                 }
             }
             if (!TextUtils.isEmpty(csrf)) {
-                PostPrepareData prepareData = new PostPrepareData();
+                PrepareData prepareData = new PrepareData();
                 prepareData.setCsrf(csrf);
                 prepareData.setPairs(pairs);
                 resultObject.ok = true;
@@ -597,9 +597,12 @@ public class PostAPI extends APIBase {
                 pairs.add(new BasicNameValuePair("body", htmlBody));
                 pairs.add(new BasicNameValuePair("captcha", ""));
                 pairs.add(new BasicNameValuePair("share_opts", "activity"));
-                String result = HttpFetcher.post(url, pairs);
-                resultObject.ok = true;
-                resultObject.result = result;
+
+                ResultObject result = HttpFetcher.post(url, pairs);
+                if (result.statusCode == 302 && testPublishResult(result.toString())) {
+                    resultObject.ok = true;
+                    resultObject.result = result.toString();
+                }
             } else {
                 //转换失败……
             }
@@ -609,6 +612,16 @@ public class PostAPI extends APIBase {
             e.printStackTrace();
         }
         return resultObject;
+    }
+
+    private static boolean testPublishResult(String res) {
+        try {
+            Document doc = Jsoup.parse(res);
+            String href = doc.getElementsByTag("a").attr("href");
+            return href.matches("/post/\\d+/");
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 }

@@ -48,22 +48,30 @@ public class HttpFetcher {
     public final static int SO_TIMEOUT = 3000;
     public final static int CONNECTION_TIMEOUT = 10000;
 
-    public static String post(String url, List<NameValuePair> params) throws IOException {
+    public static ResultObject post(String url, List<NameValuePair> params) throws IOException {
+        ResultObject resultObject = new ResultObject();
         HttpPost httpPost = new HttpPost(url);
         httpPost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
         HttpResponse response = getDefaultHttpClient().execute(httpPost);
         int statusCode = response.getStatusLine().getStatusCode();
         HttpEntity entity = response.getEntity();
-        return EntityUtils.toString(entity, HTTP.UTF_8);
+        String result = EntityUtils.toString(entity, HTTP.UTF_8);
+        resultObject.statusCode = statusCode;
+        resultObject.result = result;
+        return resultObject;
     }
 
-    public static String get(String url) throws IOException {
+    public static ResultObject get(String url) throws IOException {
+        ResultObject resultObject = new ResultObject();
         HttpGet httpGet = new HttpGet(url);
         DefaultHttpClient defaultHttpClient1 = getDefaultHttpClient();
         HttpResponse response = defaultHttpClient1.execute(httpGet);
         int statusCode = response.getStatusLine().getStatusCode();
         HttpEntity entity = response.getEntity();
-        return EntityUtils.toString(entity, HTTP.UTF_8);
+        String result = EntityUtils.toString(entity, HTTP.UTF_8);
+        resultObject.statusCode = statusCode;
+        resultObject.result = result;
+        return resultObject;
     }
 
     /**

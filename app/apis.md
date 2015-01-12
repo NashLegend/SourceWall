@@ -185,7 +185,20 @@ Http Code:
 > 201 ok
 > 400 already liked
 
+-------------------------------------------------------------
+提问
+================
+POST:http://www.guokr.com/questions/new/
 
+Host: www.guokr.com
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+Content-Type: application/x-www-form-urlencoded
+Cookie:_32353_access_token={token}; _32353_ukey={ukey};session={session}
+
+Params:(UrlEncode)csrf_token={csrf_token}&question={question}&annotation={annotation}&tags={tag1}&tags={tag2}&captcha=
+
+Http Code:
+> 302 ok
 
 -------------------------------------------------------------
 收藏问题

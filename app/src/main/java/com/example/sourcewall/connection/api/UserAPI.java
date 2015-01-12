@@ -55,7 +55,7 @@ public class UserAPI extends APIBase {
     public static ResultObject getUserInfoByUkey(String ukey) {
         ResultObject resultObject = new ResultObject();
         try {
-            JSONObject object = new JSONObject(HttpFetcher.get("http://apis.guokr.com/community/user/" + ukey + ".json"));
+            JSONObject object = new JSONObject(HttpFetcher.get("http://apis.guokr.com/community/user/" + ukey + ".json").toString());
             if (getJsonBoolean(object, "ok")) {
                 JSONObject subObject = getJsonObject(object, "result");
                 UserInfo info = new UserInfo();
@@ -114,7 +114,7 @@ public class UserAPI extends APIBase {
         ResultObject resultObject = new ResultObject();
         String token = getToken();
         try {
-            JSONObject object = new JSONObject(HttpFetcher.get("http://www.guokr.com/apis/community/rn_num.json?_=" + System.currentTimeMillis() + "&access_token=" + token));
+            JSONObject object = new JSONObject(HttpFetcher.get("http://www.guokr.com/apis/community/rn_num.json?_=" + System.currentTimeMillis() + "&access_token=" + token).toString());
             if (getJsonBoolean(object, "ok")) {
                 resultObject.ok = true;
             } else {
@@ -147,7 +147,7 @@ public class UserAPI extends APIBase {
             params.add(new BasicNameValuePair("url", link));
             params.add(new BasicNameValuePair("title", title));
             params.add(new BasicNameValuePair("access_token", getToken()));
-            String result = HttpFetcher.post(url, params);
+            String result = HttpFetcher.post(url, params).toString();
             JSONObject object = new JSONObject(result);
             if (getJsonBoolean(object, "ok")) {
                 resultObject.ok = true;
@@ -182,7 +182,7 @@ public class UserAPI extends APIBase {
             pairs.add(new BasicNameValuePair("comment", comment));
             pairs.add(new BasicNameValuePair("target", "activity"));
             pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
-            String result = HttpFetcher.post(url, pairs);
+            String result = HttpFetcher.post(url, pairs).toString();
             JSONObject object = new JSONObject(result);
             if (getJsonBoolean(object, "ok")) {
                 resultObject.ok = true;
@@ -204,7 +204,7 @@ public class UserAPI extends APIBase {
         ResultObject resultObject = new ResultObject();
         String url = "http://www.guokr.com/apis/favorite/basket.json?t=" + System.currentTimeMillis() + "&retrieve_type=by_ukey&ukey=" + getUkey() + "&limit=100&access_token=" + getToken();
         try {
-            String result = HttpFetcher.get(url);
+            String result = HttpFetcher.get(url).toString();
             JSONObject object = new JSONObject(result);
             if (getJsonBoolean(object, "ok")) {
                 JSONArray jsonArray = getJsonArray(object, "result");
@@ -256,7 +256,7 @@ public class UserAPI extends APIBase {
             params.add(new BasicNameValuePair("introduction", introduction));
             params.add(new BasicNameValuePair("category_id", category_id));
             params.add(new BasicNameValuePair("access_token", getToken()));
-            String result = HttpFetcher.post(url, params);
+            String result = HttpFetcher.post(url, params).toString();
             JSONObject object = new JSONObject(result);
             if (getJsonBoolean(object, "ok")) {
                 JSONObject subObject = getJsonObject(object, "result");
@@ -295,7 +295,7 @@ public class UserAPI extends APIBase {
         ResultObject resultObject = new ResultObject();
         try {
             String url = "http://www.guokr.com/apis/favorite/category.json?access_token=" + getToken();
-            String result = HttpFetcher.get(url);
+            String result = HttpFetcher.get(url).toString();
             JSONObject object = new JSONObject(result);
             if (getJsonBoolean(object, "ok")) {
                 JSONArray jsonArray = getJsonArray(object, "result");

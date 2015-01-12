@@ -6,8 +6,14 @@ package com.example.sourcewall.connection;
 public class ResultObject {
     public ResultCode code = ResultCode.CODE_OK;
     public boolean ok = false;
+    public int statusCode = 200;
     public String message = "";
     public Object result;
+
+    @Override
+    public String toString() {
+        return result == null ? "" : result.toString();
+    }
 
     public static enum ResultCode {
         CODE_OK,

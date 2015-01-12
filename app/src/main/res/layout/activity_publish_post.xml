@@ -22,9 +22,16 @@
         <EditText
             android:id="@+id/text_post_title"
             android:layout_width="match_parent"
+            android:hint="@string/hint_input_post_title"
+            android:layout_height="wrap_content"
+            android:layout_weight="0" />
+
+        <EditText
+            android:id="@+id/text_question_tag"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0"
-            android:singleLine="true" />
+            android:visibility="gone" />
 
         <Spinner
             android:id="@+id/spinner_post_topic"
@@ -32,7 +39,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="3dp"
             android:layout_weight="0"
-            android:spinnerMode="dialog" />
+            android:spinnerMode="dialog"
+            android:visibility="gone" />
 
         <EditText
             android:id="@+id/text_post_body"
@@ -42,7 +50,7 @@
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:gravity="top"
-            android:hint="@string/hint_write_post"
+            android:hint="@string/hint_input_post_content"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:textColor="?attr/color_reply_input_text"
