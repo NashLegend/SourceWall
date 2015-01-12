@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 
+import com.example.sourcewall.PublishPostActivity;
 import com.example.sourcewall.QuestionActivity;
 import com.example.sourcewall.R;
 import com.example.sourcewall.adapters.QuestionAdapter;
@@ -43,6 +44,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
     private LoadingView loadingView;
     private int currentPage = -1;//page从0开始，-1表示还没有数据
     private View headerView;
+    private final int Code_Publish_Question = 1055;
 
     @Override
     public View onCreateLayoutView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -139,7 +141,9 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
     }
 
     private void writeAsk() {
-
+        Intent intent = new Intent(getActivity(), PublishPostActivity.class);
+        intent.putExtra(Consts.Extra_SubItem, subItem);
+        startActivityForResult(intent, Code_Publish_Question);
     }
 
     @Override

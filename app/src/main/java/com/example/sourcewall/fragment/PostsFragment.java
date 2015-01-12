@@ -46,7 +46,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     private LoadingView loadingView;
     private int currentPage = -1;//page从0开始，-1表示还没有数据
     private View headerView;
-    private final int Code_Publish_post = 1044;
+    private final int Code_Publish_Post = 1044;
 
     @Override
     public View onCreateLayoutView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -149,13 +149,13 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     private void writePost() {
         Intent intent = new Intent(getActivity(), PublishPostActivity.class);
         intent.putExtra(Consts.Extra_SubItem, subItem);
-        startActivityForResult(intent, Code_Publish_post);
+        startActivityForResult(intent, Code_Publish_Post);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Code_Publish_post && resultCode == Activity.RESULT_OK) {
+        if (requestCode == Code_Publish_Post && resultCode == Activity.RESULT_OK) {
             //Publish OK
         }
     }
