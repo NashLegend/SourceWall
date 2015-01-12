@@ -22,15 +22,16 @@
         <EditText
             android:id="@+id/text_post_title"
             android:layout_width="match_parent"
-            android:hint="@string/hint_input_post_title"
             android:layout_height="wrap_content"
-            android:layout_weight="0" />
+            android:layout_weight="0"
+            android:hint="@string/hint_input_post_title" />
 
         <EditText
             android:id="@+id/text_question_tag"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0"
+            android:hint="@string/hint_input_question_tag"
             android:visibility="gone" />
 
         <Spinner
@@ -51,8 +52,6 @@
             android:background="@android:color/transparent"
             android:gravity="top"
             android:hint="@string/hint_input_post_content"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
             android:textColor="?attr/color_reply_input_text"
             android:textColorHint="?attr/color_reply_hint" />
 

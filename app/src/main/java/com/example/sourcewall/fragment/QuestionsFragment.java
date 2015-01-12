@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 
+import com.example.sourcewall.BaseActivity;
 import com.example.sourcewall.PublishPostActivity;
 import com.example.sourcewall.QuestionActivity;
 import com.example.sourcewall.R;
@@ -21,6 +22,7 @@ import com.example.sourcewall.commonview.LListView;
 import com.example.sourcewall.commonview.LoadingView;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.QuestionAPI;
+import com.example.sourcewall.connection.api.UserAPI;
 import com.example.sourcewall.model.Question;
 import com.example.sourcewall.model.SubItem;
 import com.example.sourcewall.util.Consts;
@@ -141,9 +143,14 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
     }
 
     private void writeAsk() {
-        Intent intent = new Intent(getActivity(), PublishPostActivity.class);
-        intent.putExtra(Consts.Extra_SubItem, subItem);
-        startActivityForResult(intent, Code_Publish_Question);
+        if (UserAPI.isLoggedIn()) {
+            Intent intent = new Intent(getActivity(), PublishPostActivity.class);
+            intent.putExtra(Consts.Extra_SubItem, subItem);
+            startActivityForResult(intent, Code_Publish_Question);
+        } else {
+            ((BaseActivity) getActivity()).notifyNeedLog();
+        }
+
     }
 
     @Override

@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 
+import com.example.sourcewall.BaseActivity;
 import com.example.sourcewall.PostActivity;
 import com.example.sourcewall.PublishPostActivity;
 import com.example.sourcewall.R;
@@ -22,6 +23,7 @@ import com.example.sourcewall.commonview.LListView;
 import com.example.sourcewall.commonview.LoadingView;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.PostAPI;
+import com.example.sourcewall.connection.api.UserAPI;
 import com.example.sourcewall.model.Post;
 import com.example.sourcewall.model.SubItem;
 import com.example.sourcewall.util.Consts;
@@ -147,9 +149,13 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     }
 
     private void writePost() {
-        Intent intent = new Intent(getActivity(), PublishPostActivity.class);
-        intent.putExtra(Consts.Extra_SubItem, subItem);
-        startActivityForResult(intent, Code_Publish_Post);
+        if (UserAPI.isLoggedIn()) {
+            Intent intent = new Intent(getActivity(), PublishPostActivity.class);
+            intent.putExtra(Consts.Extra_SubItem, subItem);
+            startActivityForResult(intent, Code_Publish_Post);
+        } else {
+            ((BaseActivity) getActivity()).notifyNeedLog();
+        }
     }
 
     @Override
