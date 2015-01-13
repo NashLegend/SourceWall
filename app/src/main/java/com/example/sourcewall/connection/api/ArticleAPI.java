@@ -7,6 +7,7 @@ import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.model.AceModel;
 import com.example.sourcewall.model.Article;
 import com.example.sourcewall.model.UComment;
+import com.example.sourcewall.util.TextHtmlHelper;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -261,7 +262,7 @@ public class ArticleAPI extends APIBase {
                     comment.setFloor((offset + i + 1) + "楼");
                     String html = getJsonString(jo, "html");
                     comment.setContent(getJsonString(jo, "html"));
-                    comment.setSimpleHtml(Html.fromHtml(html));
+                    comment.setSimpleHtml(TextHtmlHelper.correctLinkPaths(Html.fromHtml(html)));
                     comment.setHostID(id);
                     list.add(comment);
                 }

@@ -7,8 +7,10 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.text.Html;
+import android.text.Spannable;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
+import android.text.style.URLSpan;
 import android.widget.TextView;
 
 import com.example.sourcewall.AppApplication;
@@ -47,13 +49,12 @@ public class TextHtmlHelper {
         textView = tv;
         html = content;
         maxWidth = getMaxWidth();
-        //可是相对路径点击会怎样呢？TODO
         textView.setMovementMethod(LinkMovementMethod.getInstance());
         if (simpleHtml != null) {
             CharSequence charSequence = trimEnd(simpleHtml);
             textView.setText(charSequence);
         } else {
-            Spanned spanned = Html.fromHtml(html);
+            Spanned spanned = correctLinkPaths(Html.fromHtml(html));
             CharSequence charSequence = trimEnd(spanned);
             textView.setText(charSequence);
         }
@@ -177,5 +178,33 @@ public class TextHtmlHelper {
             end--;
         }
         return s.subSequence(start, end);
+    }
+
+    /**
+     * 解决相对路径的问题
+     *
+     * @param spannedText
+     * @return
+     */
+    public static Spanned correctLinkPaths(Spanned spannedText) {
+        Object[] spans = spannedText.getSpans(0, spannedText.length(), Object.class);
+        for (Object span : spans) {
+            int start = spannedText.getSpanStart(span);
+            int end = spannedText.getSpanEnd(span);
+            int flags = spannedText.getSpanFlags(span);
+            if (span instanceof URLSpan) {
+                URLSpan urlSpan = (URLSpan) span;
+                if (!urlSpan.getURL().startsWith("http")) {
+                    if (urlSpan.getURL().startsWith("/")) {
+                        urlSpan = new URLSpan("http://www.guokr.com" + urlSpan.getURL());
+                    } else {
+                        urlSpan = new URLSpan("http://www.guokr.com/" + urlSpan.getURL());
+                    }
+                }
+                ((Spannable) spannedText).removeSpan(span);
+                ((Spannable) spannedText).setSpan(urlSpan, start, end, flags);
+            }
+        }
+        return spannedText;
     }
 }
