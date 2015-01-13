@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
 
 import com.example.sourcewall.AppApplication;
@@ -31,17 +32,7 @@ public class TextHtmlHelper {
     }
 
     public void load(TextView tv, String content) {
-        cancelPotentialTask();
-        this.textView = tv;
-        this.html = content;
-        this.maxWidth = getMaxWidth();
-        Spanned spanned = Html.fromHtml(html);
-        CharSequence charSequence = trimEnd(spanned);
-        textView.setText(charSequence);
-        if (html.contains("<img")) {
-            htmlTask = new HtmlLoaderTask();
-            htmlTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, html);
-        }
+        load(tv, content, null);
     }
 
     /**
@@ -57,9 +48,15 @@ public class TextHtmlHelper {
         html = content;
         maxWidth = getMaxWidth();
         //可是相对路径点击会怎样呢？TODO
-//        textView.setMovementMethod(LinkMovementMethod.getInstance());
-        CharSequence charSequence = trimEnd(simpleHtml);
-        textView.setText(charSequence);
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
+        if (simpleHtml != null) {
+            CharSequence charSequence = trimEnd(simpleHtml);
+            textView.setText(charSequence);
+        } else {
+            Spanned spanned = Html.fromHtml(html);
+            CharSequence charSequence = trimEnd(spanned);
+            textView.setText(charSequence);
+        }
         if (html.contains("<img")) {
             htmlTask = new HtmlLoaderTask();
             htmlTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, html);
@@ -68,7 +65,7 @@ public class TextHtmlHelper {
 
     private void cancelPotentialTask() {
         if (htmlTask != null && htmlTask.getStatus() == AsyncTask.Status.RUNNING) {
-            htmlTask.cancel(true);
+            htmlTask.cancel(false);
         }
     }
 
