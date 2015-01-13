@@ -139,6 +139,20 @@ abstract class RequestHandler {
             mWidth /= 2;
         }
 
+        if (request.targetSizeAsMax) {
+            mHeight = height / sampleSize;
+            while (mHeight > reqHeight) {
+                sampleSize *= 2;
+                mHeight /= 2;
+            }
+
+            mWidth = width / sampleSize;
+            while (mWidth > reqWidth) {
+                sampleSize *= 2;
+                mWidth /= 2;
+            }
+        }
+
         options.inSampleSize = sampleSize;
         options.inJustDecodeBounds = false;
     }

@@ -65,6 +65,15 @@ public final class Request {
      */
     public final List<Transformation> transformations;
     /**
+     * 因为有时候我们不确定需要的图片的大小，BitmapHunter.hunt的时候有可能会把一张小图resize成
+     * targetWidth和targetHeight的尺寸，导致内存的浪费
+     * 这个属性的真正作用是把targetWidth和targetHeight当作maxWidth和maxHeight来用。
+     * 当然不是精确的，本来targetWidth只是一个参考值，图片的尺寸如果原本就比target大，
+     * 那么downSample出来的，也基本上是大于targetWidth的。
+     * 但是如果targetSizeAsMax值为true，那么就真要使downSample出来的小于targetSize了
+     */
+    public boolean targetSizeAsMax = false;
+    /**
      * 不能是final，万一大于4096呢
      * Target image width for resizing.
      */
@@ -114,7 +123,7 @@ public final class Request {
     public final Priority priority;
 
     private Request(Uri uri, int resourceId, List<Transformation> transformations, int targetWidth,
-                    int targetHeight,
+                    int targetHeight, boolean targetSizeAsMax,
                     boolean centerCrop, boolean centerInside, float rotationDegrees, float rotationPivotX,
                     float rotationPivotY, boolean hasRotationPivot, String cacheKey, Bitmap.Config config,
                     Priority priority) {
@@ -127,6 +136,7 @@ public final class Request {
         }
         this.targetWidth = targetWidth;
         this.targetHeight = targetHeight;
+        this.targetSizeAsMax = targetSizeAsMax;
         this.centerCrop = centerCrop;
         this.centerInside = centerInside;
         this.rotationDegrees = rotationDegrees;
@@ -220,6 +230,7 @@ public final class Request {
     public static final class Builder {
         private Uri uri;
         private int resourceId;
+        private boolean targetSizeAsMax;
         private int targetWidth;
         private int targetHeight;
         private boolean centerCrop;
@@ -255,6 +266,7 @@ public final class Request {
         private Builder(Request request) {
             uri = request.uri;
             resourceId = request.resourceId;
+            targetSizeAsMax = request.targetSizeAsMax;
             targetWidth = request.targetWidth;
             targetHeight = request.targetHeight;
             centerCrop = request.centerCrop;
@@ -312,6 +324,11 @@ public final class Request {
             }
             this.resourceId = resourceId;
             this.uri = null;
+            return this;
+        }
+
+        public Builder setTargetSizeAsMax(boolean targetSizeAsMax) {
+            this.targetSizeAsMax = targetSizeAsMax;
             return this;
         }
 
@@ -494,7 +511,7 @@ public final class Request {
             if (priority == null) {
                 priority = Priority.NORMAL;
             }
-            return new Request(uri, resourceId, transformations, targetWidth, targetHeight,
+            return new Request(uri, resourceId, transformations, targetWidth, targetHeight, targetSizeAsMax,
                     centerCrop, centerInside,
                     rotationDegrees, rotationPivotX, rotationPivotY, hasRotationPivot, cacheKey,
                     config, priority);

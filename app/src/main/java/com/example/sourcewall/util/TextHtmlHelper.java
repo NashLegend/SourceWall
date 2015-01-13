@@ -91,7 +91,7 @@ public class TextHtmlHelper {
             maxWidth = getMaxWidth();
             Drawable drawable = null;
             try {
-                Bitmap bitmap = Picasso.with(context).load(source).resize((int) maxWidth, 0).get();
+                Bitmap bitmap = Picasso.with(context).load(source).resize((int) maxWidth, 0).setTargetSizeAsMax(true).get();
                 if (bitmap != null) {
                     drawable = new BitmapDrawable(context.getResources(), bitmap);
                     int width = (int) (drawable.getIntrinsicWidth() * stretch);

@@ -237,6 +237,19 @@ public class RequestCreator {
     }
 
     /**
+     * 是否将targetWidth和targetHeight当作maxWidth和maxHeight。
+     * 如果设置为true，最终出来的图片大小将不会是targetWidth * targetHeight，而将小于这个尺寸
+     * 如果没有设置targetWidth和targetHeight，那么设置这个没用
+     *
+     * @param targetAsMax
+     * @return
+     */
+    public RequestCreator setTargetSizeAsMax(boolean targetAsMax) {
+        mRequestBuilder.setTargetSizeAsMax(targetAsMax);
+        return this;
+    }
+
+    /**
      * Crops an image inside of the bounds specified by
      * {@link #resize(int, int)} rather than distorting the aspect ratio. This
      * cropping technique scales the image so that it fills the requested bounds
