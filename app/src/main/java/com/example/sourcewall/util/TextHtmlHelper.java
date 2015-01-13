@@ -88,11 +88,10 @@ public class TextHtmlHelper {
         @Override
         public Drawable getDrawable(String source) {
             float stretch = DisplayUtil.getPixelDensity(AppApplication.getApplication());
-            Bitmap bitmap = null;
-            Drawable drawable = null;
             maxWidth = getMaxWidth();
+            Drawable drawable = null;
             try {
-                bitmap = Picasso.with(context).load(source).resize((int) maxWidth, 0).get();
+                Bitmap bitmap = Picasso.with(context).load(source).resize((int) maxWidth, 0).get();
                 if (bitmap != null) {
                     drawable = new BitmapDrawable(context.getResources(), bitmap);
                     int width = (int) (drawable.getIntrinsicWidth() * stretch);
