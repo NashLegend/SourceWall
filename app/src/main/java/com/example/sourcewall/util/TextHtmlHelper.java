@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
 
 import com.example.sourcewall.AppApplication;
@@ -53,9 +54,11 @@ public class TextHtmlHelper {
      */
     public void load(TextView tv, String content, CharSequence simpleHtml) {
         cancelPotentialTask();
-        this.textView = tv;
-        this.html = content;
-        this.maxWidth = getMaxWidth();
+        textView = tv;
+        html = content;
+        maxWidth = getMaxWidth();
+        //可是相对路径点击会怎样呢？TODO
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
         CharSequence charSequence = trimEnd(simpleHtml);
         textView.setText(charSequence);
         if (html.contains("<img")) {
