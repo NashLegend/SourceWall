@@ -9,7 +9,6 @@ import android.os.AsyncTask;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
 import android.text.style.URLSpan;
 import android.widget.TextView;
 
@@ -49,7 +48,6 @@ public class TextHtmlHelper {
         textView = tv;
         html = content;
         maxWidth = getMaxWidth();
-        textView.setMovementMethod(LinkMovementMethod.getInstance());
         if (simpleHtml != null) {
             CharSequence charSequence = trimEnd(simpleHtml);
             textView.setText(charSequence);

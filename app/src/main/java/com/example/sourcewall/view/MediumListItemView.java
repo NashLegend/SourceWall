@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.sourcewall.R;
+import com.example.sourcewall.commonview.TTextView;
 import com.example.sourcewall.model.UComment;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.SharedUtil;
@@ -19,7 +20,7 @@ import com.squareup.picasso.Picasso;
  */
 public class MediumListItemView extends AceView<UComment> {
 
-    private TextView contentView;
+    private TTextView contentView;
     private TextView authorView;
     private TextView dateView;
     private TextView likesView;
@@ -38,7 +39,7 @@ public class MediumListItemView extends AceView<UComment> {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_medium_comment_item_view, this);
         htmlHelper = new TextHtmlHelper(context);
-        contentView = (TextView) findViewById(R.id.text_content);
+        contentView = (TTextView) findViewById(R.id.text_content);
         authorView = (TextView) findViewById(R.id.text_author);
         dateView = (TextView) findViewById(R.id.text_date);
         likesView = (TextView) findViewById(R.id.text_like_num);
