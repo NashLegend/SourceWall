@@ -65,9 +65,10 @@ public final class Request {
      */
     public final List<Transformation> transformations;
     /**
+     * 不能是final，万一大于4096呢
      * Target image width for resizing.
      */
-    public final int targetWidth;
+    public int targetWidth;
     /**
      * Target image height for resizing.
      */

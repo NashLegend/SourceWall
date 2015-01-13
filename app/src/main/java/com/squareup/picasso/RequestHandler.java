@@ -125,6 +125,20 @@ abstract class RequestHandler {
             final int widthRatio = (int) Math.floor((float) width / (float) reqWidth);
             sampleSize = request.centerInside ? Math.max(heightRatio, widthRatio) : Math.min(heightRatio, widthRatio);
         }
+
+        //宽高不能超过4096
+        int mHeight = height / sampleSize;
+        while (mHeight > 4096) {
+            sampleSize *= 2;
+            mHeight /= 2;
+        }
+
+        int mWidth = width / sampleSize;
+        while (mWidth > 4096) {
+            sampleSize *= 2;
+            mWidth /= 2;
+        }
+
         options.inSampleSize = sampleSize;
         options.inJustDecodeBounds = false;
     }

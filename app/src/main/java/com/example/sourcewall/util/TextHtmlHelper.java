@@ -11,9 +11,9 @@ import android.text.Spanned;
 import android.widget.TextView;
 
 import com.example.sourcewall.AppApplication;
-import com.example.sourcewall.util.ImageUtil.ImageCache;
+import com.squareup.picasso.Picasso;
 
-import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by NashLegend on 2015/1/4 0004
@@ -75,8 +75,7 @@ public class TextHtmlHelper {
         @Override
         protected CharSequence doInBackground(String... params) {
             Spanned spanned = Html.fromHtml(params[0], imageGetter, null);
-            CharSequence charSequence = trimEnd(spanned);
-            return charSequence;
+            return trimEnd(spanned);
         }
 
         @Override
@@ -89,29 +88,23 @@ public class TextHtmlHelper {
         @Override
         public Drawable getDrawable(String source) {
             float stretch = DisplayUtil.getPixelDensity(AppApplication.getApplication());
+            Bitmap bitmap = null;
             Drawable drawable = null;
-            File file = new File(ImageCache.getBitmapCacheFileDir(source));
-            if (!file.exists()) {
-                ImageCache.downloadImageToFile(source, false);
-            }
-            //通常来说，就算之前textView.getWidth()是小于0的，那么到此处应该已经是正常宽度了
             maxWidth = getMaxWidth();
-            if (file.exists()) {
-                //防止图片超出屏幕
-                //显示尺寸为1dp=1px，这样显示一些小图如表情什么的时候不至于显示得太小
-                //但是对于一些本来就比较大的话，仍然要这样的话就有点压缩过份了
-                //如果对大图不压缩显示的话会导致小图有可能比大图还要大，这……
-                drawable = decodeSampledBitmapFromFile(file.getAbsolutePath(), (int) maxWidth);
-            }
-
-            if (drawable != null) {
-                int width = (int) (drawable.getIntrinsicWidth() * stretch);
-                int height = (int) (drawable.getIntrinsicHeight() * stretch);
-                if (width > maxWidth) {
-                    height *= (maxWidth / width);
-                    width = (int) maxWidth;
+            try {
+                bitmap = Picasso.with(context).load(source).resize((int) maxWidth, 0).get();
+                if (bitmap != null) {
+                    drawable = new BitmapDrawable(context.getResources(), bitmap);
+                    int width = (int) (drawable.getIntrinsicWidth() * stretch);
+                    int height = (int) (drawable.getIntrinsicHeight() * stretch);
+                    if (width > maxWidth) {
+                        height *= (maxWidth / width);
+                        width = (int) maxWidth;
+                    }
+                    drawable.setBounds(0, 0, width, height);
                 }
-                drawable.setBounds(0, 0, width, height);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
             return drawable;
         }
@@ -161,7 +154,7 @@ public class TextHtmlHelper {
             }
         }
         //图片最大不能超过4096，宽度也不可能超过4096，所以不计了
-        int mHeight = height;
+        int mHeight = height / inSampleSize;
         while (mHeight > 4096) {
             inSampleSize *= 2;
             mHeight /= 2;
