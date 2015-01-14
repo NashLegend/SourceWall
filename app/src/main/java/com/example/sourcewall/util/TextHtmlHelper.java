@@ -89,18 +89,22 @@ public class TextHtmlHelper {
             maxWidth = getMaxWidth();
             Drawable drawable = null;
             try {
-                Bitmap bitmap = Picasso.with(context).load(source).resize((int) maxWidth, 0).setTargetSizeAsMax(true).get();
-                if (bitmap != null) {
-                    drawable = new BitmapDrawable(context.getResources(), bitmap);
-                    int width = (int) (drawable.getIntrinsicWidth() * stretch);
-                    int height = (int) (drawable.getIntrinsicHeight() * stretch);
-                    if (width > maxWidth) {
-                        height *= (maxWidth / width);
-                        width = (int) maxWidth;
+                if (source.startsWith("http")) {
+                    Bitmap bitmap = Picasso.with(context).load(source).resize((int) maxWidth, 0).setTargetSizeAsMax(true).get();
+                    if (bitmap != null) {
+                        drawable = new BitmapDrawable(context.getResources(), bitmap);
+                        int width = (int) (drawable.getIntrinsicWidth() * stretch);
+                        int height = (int) (drawable.getIntrinsicHeight() * stretch);
+                        if (width > maxWidth) {
+                            height *= (maxWidth / width);
+                            width = (int) maxWidth;
+                        }
+                        drawable.setBounds(0, 0, width, height);
                     }
-                    drawable.setBounds(0, 0, width, height);
                 }
             } catch (IOException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return drawable;
