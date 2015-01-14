@@ -2,14 +2,11 @@ package com.example.sourcewall.commonview;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.example.sourcewall.AppApplication;
 import com.example.sourcewall.util.UrlCheckUtil;
 
 /**
@@ -78,13 +75,7 @@ public class WWebView extends WebView {
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            if (UrlCheckUtil.shouldRedirectRequest(url)) {
-                // TODO，跳转到界面，比如PostActivity等
-            } else {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                AppApplication.getApplication().startActivity(intent);
-            }
+            UrlCheckUtil.redirectRequest(url);
             if (extClient != null) {
                 extClient.shouldOverrideUrlLoading(view, url);
             }

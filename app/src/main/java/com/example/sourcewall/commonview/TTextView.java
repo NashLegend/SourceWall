@@ -2,10 +2,7 @@ package com.example.sourcewall.commonview;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
-import android.provider.Browser;
 import android.text.Layout;
 import android.text.Selection;
 import android.text.Spannable;
@@ -57,15 +54,8 @@ public class TTextView extends TextView {
 
     }
 
-    private static void handleURLSpanClick(TextView widget, URLSpan urlSpan) {
-        Uri uri = Uri.parse(urlSpan.getURL());
-        if (!UrlCheckUtil.shouldRedirectRequest(uri)) {
-            Context context = widget.getContext();
-            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            intent.putExtra(Browser.EXTRA_APPLICATION_ID, context.getPackageName());
-            context.startActivity(intent);
-        }
-
+    private static void handleURLSpanClick(URLSpan urlSpan) {
+        UrlCheckUtil.redirectRequest(urlSpan.getURL());
     }
 
 
@@ -103,8 +93,7 @@ public class TTextView extends TextView {
 
                 if (link.length != 0) {
                     if (action == MotionEvent.ACTION_UP) {
-                        handleURLSpanClick(widget, link[0]);
-//                        link[0].onClick(widget);
+                        handleURLSpanClick(link[0]);
                     } else {
                         Selection.setSelection(buffer,
                                 buffer.getSpanStart(link[0]),

@@ -13,7 +13,7 @@ public class AppApplication extends Application {
 
     static AppApplication application;
     private UncaughtExceptionHandler uncaughtExceptionHandler;
-    private CrashReporter crashReporter = null;
+    private CrashReporter crashReporter;
     public static String cookieString = "";
     public static String tokenString = "";
     public static String ukeyString = "";

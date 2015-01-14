@@ -1,6 +1,10 @@
 package com.example.sourcewall.util;
 
+import android.content.Intent;
 import android.net.Uri;
+import android.provider.Browser;
+
+import com.example.sourcewall.AppApplication;
 
 /**
  * Created by NashLegend on 2015/1/14 0014
@@ -13,8 +17,8 @@ public class UrlCheckUtil {
      * @param url
      * @return
      */
-    public static boolean shouldRedirectRequest(String url) {
-        return false;
+    public static void redirectRequest(String url) {
+        redirectRequest(Uri.parse(url));
     }
 
     /**
@@ -23,7 +27,10 @@ public class UrlCheckUtil {
      * @param uri
      * @return
      */
-    public static boolean shouldRedirectRequest(Uri uri) {
-        return false;
+    public static void redirectRequest(Uri uri) {
+        //TODO 可以在此接管链接的跳转
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        intent.putExtra(Browser.EXTRA_APPLICATION_ID, AppApplication.getApplication().getPackageName());
+        AppApplication.getApplication().startActivity(intent);
     }
 }
