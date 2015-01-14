@@ -92,6 +92,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:focusable="false"
+            android:textColorLink="@color/color_text_link"
             android:lineSpacingMultiplier="@dimen/lineSpacingMultiplier"
             android:layout_marginTop="@dimen/content_top_span_dimen"
             android:textColor="?attr/color_list_summary"
