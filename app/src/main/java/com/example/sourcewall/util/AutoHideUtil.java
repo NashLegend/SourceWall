@@ -66,10 +66,10 @@ public class AutoHideUtil {
             this.header = header;
             this.footer = footer;
 
-            header = new View(listView.getContext());
-            header.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, headerHeight));
-            header.setBackgroundColor(Color.parseColor("#00000000"));
-            listView.addHeaderView(header);
+            View mHeader = new View(listView.getContext());
+            mHeader.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, headerHeight));
+            mHeader.setBackgroundColor(Color.parseColor("#00000000"));
+            listView.addHeaderView(mHeader);
 
             listView.setOnScrollListener(onScrollListener);
             listView.setOnTouchListener(onTouchListener);
