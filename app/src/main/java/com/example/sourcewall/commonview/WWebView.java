@@ -10,6 +10,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.example.sourcewall.AppApplication;
+import com.example.sourcewall.util.UrlCheckUtil;
 
 /**
  * Created by NashLegend on 2015/1/4 0004
@@ -60,16 +61,6 @@ public class WWebView extends WebView {
         return false;
     }
 
-    /**
-     * 是否拦截点击的链接
-     *
-     * @param url
-     * @return
-     */
-    private boolean shouldRedirectRequest(String url) {
-        return false;
-    }
-
     WebViewClient extClient;
     WebViewClient client = new WebViewClient() {
 
@@ -87,7 +78,7 @@ public class WWebView extends WebView {
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            if (shouldRedirectRequest(url)) {
+            if (UrlCheckUtil.shouldRedirectRequest(url)) {
                 // TODO，跳转到界面，比如PostActivity等
             } else {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));

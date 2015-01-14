@@ -2,16 +2,21 @@ package com.example.sourcewall.commonview;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
+import android.provider.Browser;
 import android.text.Layout;
 import android.text.Selection;
 import android.text.Spannable;
 import android.text.method.LinkMovementMethod;
 import android.text.method.Touch;
-import android.text.style.ClickableSpan;
+import android.text.style.URLSpan;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.TextView;
+
+import com.example.sourcewall.util.UrlCheckUtil;
 
 /**
  * Created by NashLegend on 2015/1/13 0013
@@ -52,6 +57,17 @@ public class TTextView extends TextView {
 
     }
 
+    private static void handleURLSpanClick(TextView widget, URLSpan urlSpan) {
+        Uri uri = Uri.parse(urlSpan.getURL());
+        if (!UrlCheckUtil.shouldRedirectRequest(uri)) {
+            Context context = widget.getContext();
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            intent.putExtra(Browser.EXTRA_APPLICATION_ID, context.getPackageName());
+            context.startActivity(intent);
+        }
+
+    }
+
 
     public static class LocalLinkMovementMethod extends LinkMovementMethod {
         static LocalLinkMovementMethod sInstance;
@@ -83,12 +99,13 @@ public class TTextView extends TextView {
                 int line = layout.getLineForVertical(y);
                 int off = layout.getOffsetForHorizontal(line, x);
 
-                ClickableSpan[] link = buffer.getSpans(off, off, ClickableSpan.class);
+                URLSpan[] link = buffer.getSpans(off, off, URLSpan.class);
 
                 if (link.length != 0) {
                     if (action == MotionEvent.ACTION_UP) {
-                        link[0].onClick(widget);
-                    } else if (action == MotionEvent.ACTION_DOWN) {
+                        handleURLSpanClick(widget, link[0]);
+//                        link[0].onClick(widget);
+                    } else {
                         Selection.setSelection(buffer,
                                 buffer.getSpanStart(link[0]),
                                 buffer.getSpanEnd(link[0]));
