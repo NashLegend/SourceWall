@@ -8,8 +8,7 @@ import android.view.ViewGroup;
 /**
  * Created by NashLegend on 2014/9/18 0018
  */
-public class ChannelBoardFragment extends BaseFragment {
-    OnChannelSelectedListener onChannelSelectedListener;
+public abstract class ChannelBoardFragment extends BaseFragment {
 
     @Override
     public View onCreateLayoutView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -21,18 +20,4 @@ public class ChannelBoardFragment extends BaseFragment {
 
     }
 
-    @Override
-    public void setTitle() {
-
-    }
-
-    public void setOnChannelSelectedListener(OnChannelSelectedListener onChannelSelectedListener) {
-        this.onChannelSelectedListener = onChannelSelectedListener;
-    }
-
-    public static interface OnChannelSelectedListener {
-        void onChannelSelected(String key);
-
-        void onSubjectSelected(String key);
-    }
 }
