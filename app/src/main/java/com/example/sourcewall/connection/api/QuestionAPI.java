@@ -34,6 +34,17 @@ public class QuestionAPI extends APIBase {
     }
 
     /**
+     * 返回所有我感兴趣的标签
+     *
+     * @return ResultObject，resultObject.result是ArrayList[SubItem]
+     */
+    public static ResultObject getAllMyTags() {
+        ResultObject resultObject = new ResultObject();
+
+        return resultObject;
+    }
+
+    /**
      * 根据tag获取相关问题，json格式
      * 比html还特么浪费流量，垃圾数据太多了
      * resultObject.result是ArrayList<Question>

@@ -33,8 +33,18 @@ public class PostAPI extends APIBase {
     }
 
     /**
+     * 返回所有我加入的小组
+     * @return ResultObject，resultObject.result是ArrayList[SubItem]
+     */
+    public static ResultObject getAllMyGroups() {
+        ResultObject resultObject = new ResultObject();
+
+        return resultObject;
+    }
+
+    /**
      * 解析getMyGroupRecentRepliesPosts和getMyGroupHotPosts传过来的url
-     * resultObject.result是ArrayList<Post> list
+     * resultObject.result是ArrayList[Post] list
      *
      * @param url
      * @return
@@ -358,7 +368,7 @@ public class PostAPI extends APIBase {
 
     /**
      * 返回第一页数据，包括Post与第一页的评论列表
-     * resultObject.result是ArrayList<AceModel>
+     * resultObject.result是ArrayList[AceModel]
      *
      * @param id
      * @return
