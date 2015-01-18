@@ -62,7 +62,7 @@ public class MediumListItemView extends AceView<UComment> {
         dateView.setText(comment.getDate());
         likesView.setText(comment.getLikeNum() + "");
         floorView.setText(comment.getFloor());
-        htmlHelper.load(contentView, comment.getContent(), comment.getSimpleHtml());
+        htmlHelper.load(contentView, comment.getContent());
         Picasso.with(getContext()).load(comment.getAuthorAvatarUrl())
                 .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
                 .into(avatarImage);

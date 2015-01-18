@@ -6,7 +6,7 @@ package com.example.sourcewall.model;
 public class UComment extends AceModel {
 
     private String content = "";
-    private CharSequence simpleHtml = "";
+    //    private CharSequence simpleHtml = "";
     private String date = "";
     private String author = "";
     private String authorAvatarUrl = "";
@@ -26,13 +26,13 @@ public class UComment extends AceModel {
         this.content = content;
     }
 
-    public CharSequence getSimpleHtml() {
-        return simpleHtml;
-    }
-
-    public void setSimpleHtml(CharSequence simpleHtml) {
-        this.simpleHtml = simpleHtml;
-    }
+//    public CharSequence getSimpleHtml() {
+//        return simpleHtml;
+//    }
+//
+//    public void setSimpleHtml(CharSequence simpleHtml) {
+//        this.simpleHtml = simpleHtml;
+//    }
 
     public String getDate() {
         return date;

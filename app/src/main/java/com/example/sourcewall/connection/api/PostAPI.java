@@ -1,6 +1,5 @@
 package com.example.sourcewall.connection.api;
 
-import android.text.Html;
 import android.text.TextUtils;
 
 import com.example.sourcewall.connection.HttpFetcher;
@@ -10,7 +9,6 @@ import com.example.sourcewall.model.Post;
 import com.example.sourcewall.model.PrepareData;
 import com.example.sourcewall.model.UComment;
 import com.example.sourcewall.util.MDUtil;
-import com.example.sourcewall.util.TextHtmlHelper;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -347,7 +345,7 @@ public class PostAPI extends APIBase {
                     comment.setLikeNum(getJsonInt(jo, "likings_count"));
                     String html = getJsonString(jo, "html");
                     comment.setContent(getJsonString(jo, "html"));
-                    comment.setSimpleHtml(TextHtmlHelper.correctLinkPaths(Html.fromHtml(html)));
+//                    comment.setSimpleHtml(TextHtmlHelper.correctLinkPaths(Html.fromHtml(html)));
                     comment.setFloor((offset + i + 1) + "楼");
                     comment.setHostID(jo.getJSONObject("post").getString("id"));
                     list.add(comment);
