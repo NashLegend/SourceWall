@@ -322,6 +322,12 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
                 if (!TextUtils.isEmpty(nameString)) {
                     userName.setText(nameString);
                 }
+                String avatarString = SharedUtil.readString(Consts.Key_User_Avatar, "");
+                if (!TextUtils.isEmpty(avatarString)) {
+                    Picasso.with(getActivity()).load(avatarString)
+                            .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
+                            .into(avatarView);
+                }
                 testLogin();
             }
             isFirstLoad = false;
@@ -457,6 +463,8 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
 
     private void setupUserInfo(UserInfo info) {
         SharedUtil.saveString(Consts.Key_User_Name, info.getNickname());
+        SharedUtil.saveString(Consts.Key_User_ID, info.getId());
+        SharedUtil.saveString(Consts.Key_User_Avatar, info.getAvatar());
         Picasso.with(getActivity()).load(info.getAvatar())
                 .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
                 .into(avatarView);
