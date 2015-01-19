@@ -46,11 +46,14 @@
                 android:textColor="?attr/color_author_color" />
         </LinearLayout>
 
-        <TextView
+        <com.example.sourcewall.commonview.TTextView
             android:id="@+id/web_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp" />
+            android:layout_marginTop="10dp"
+            android:focusable="false"
+            android:lineSpacingMultiplier="@dimen/lineSpacingMultiplier"
+            android:textColorLink="@color/color_text_link" />
 
         <LinearLayout
             android:id="@+id/layout_comment"

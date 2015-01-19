@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.example.sourcewall.R;
 import com.example.sourcewall.SimpleReplyActivity;
+import com.example.sourcewall.commonview.TTextView;
 import com.example.sourcewall.model.Question;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.SharedUtil;
@@ -22,7 +23,7 @@ public class QuestionView extends AceView<Question> {
     private TextView titleView;
     private TextView authorView;
     private TextView dateView;
-    private TextView contentView;
+    private TTextView contentView;
     private View layoutComments;
     private TextView commentNumView;
     private TextHtmlHelper htmlHelper;
@@ -40,7 +41,7 @@ public class QuestionView extends AceView<Question> {
         titleView = (TextView) findViewById(R.id.text_title);
         authorView = (TextView) findViewById(R.id.text_author);
         dateView = (TextView) findViewById(R.id.text_date);
-        contentView = (TextView) findViewById(R.id.web_content);
+        contentView = (TTextView) findViewById(R.id.web_content);
         commentNumView = (TextView) findViewById(R.id.text_replies_num);
         layoutComments = findViewById(R.id.layout_comment);
         layoutComments.setOnClickListener(new OnClickListener() {

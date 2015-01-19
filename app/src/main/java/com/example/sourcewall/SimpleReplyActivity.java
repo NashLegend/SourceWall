@@ -200,13 +200,14 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
             if (result.ok) {
                 mMenu.findItem(R.id.action_cancel_simple_reply).setVisible(false);
                 textReply.setHint(R.string.hint_reply);
+                textReply.setText("");
                 hideInput(textReply);
                 UComment uComment = (UComment) result.result;
                 adapter.add(0, uComment);
                 adapter.notifyDataSetChanged();
-                ToastUtil.toast("Reply OK");
+                ToastUtil.toast("回复成功");
             } else {
-                ToastUtil.toast("Reply Failed");
+                ToastUtil.toast("回复失败");
             }
         }
     }
