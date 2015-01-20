@@ -22,11 +22,7 @@ public class ShuffleCard extends RelativeLayout {
     public LinearLayout parentLayout;
     private Object animator;
     public int targetHeight;
-    private OnSizeChangingListener onSizeChangingListener;
     public ArrayList<MovableButton> list;
-
-    public static final int MODE_SHRINK = 0;
-    public static final int MODE_EXPAND = 1;
 
     public ShuffleCard(Context context) {
         super(context);
@@ -81,13 +77,11 @@ public class ShuffleCard extends RelativeLayout {
     public void shrink() {
         targetHeight -= ShuffleDesk.buttonCellHeight;
         changeSize(targetHeight);
-        notifySizeChanging(targetHeight, MODE_SHRINK);
     }
 
     public void expand() {
         targetHeight += ShuffleDesk.buttonCellHeight;
         changeSize(targetHeight);
-        notifySizeChanging(targetHeight, MODE_EXPAND);
     }
 
     public void shuffleButtons() {
@@ -120,12 +114,6 @@ public class ShuffleCard extends RelativeLayout {
             animator = ObjectAnimator.ofInt(this, "height", getHeight(), height);
             ((ValueAnimator) animator).setDuration(100);
             ((ValueAnimator) animator).start();
-        }
-    }
-
-    public void notifySizeChanging(int height, int mode) {
-        if (onSizeChangingListener != null) {
-            onSizeChangingListener.onSizeChanging(height, mode);
         }
     }
 
@@ -270,24 +258,12 @@ public class ShuffleCard extends RelativeLayout {
         }
     }
 
-    public interface OnSizeChangingListener {
-        public abstract void onSizeChanging(int height, int mode);
-    }
-
     public int getTargetHeight() {
         return targetHeight;
     }
 
     public void setTargetHeight(int targetHeight) {
         this.targetHeight = targetHeight;
-    }
-
-    public OnSizeChangingListener getOnSizeChangingListener() {
-        return onSizeChangingListener;
-    }
-
-    public void setOnSizeChangingListener(OnSizeChangingListener onSizeChangingListener) {
-        this.onSizeChangingListener = onSizeChangingListener;
     }
 
     public ArrayList<MovableButton> getList() {

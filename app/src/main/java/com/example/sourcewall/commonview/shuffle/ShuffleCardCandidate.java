@@ -80,7 +80,7 @@ public class ShuffleCardCandidate extends ShuffleCard {
                 banishButton((MovableButton) v);
                 desk.getSenator().getResident(((MovableButton) v).clone());
             } else {
-                ToastUtil.toast("订阅数不能超过" + ShuffleDesk.maxButtons + "个");
+                ToastUtil.toastSingleton("订阅数不能超过" + ShuffleDesk.maxButtons + "个");
             }
         }
     };

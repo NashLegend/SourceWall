@@ -7,13 +7,13 @@
         android:id="@+id/button_mov"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/bg_movable_button"
         android:layout_margin="4dp"
-        android:background="?android:attr/selectableItemBackground"
         android:clickable="false"
         android:minHeight="1dp"
         android:minWidth="1dp"
         android:textColor="#305676"
-        android:textSize="15sp" />
+        android:textSize="14sp" />
 
     <ImageView
         android:id="@+id/section_new_hint"

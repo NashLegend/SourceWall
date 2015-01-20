@@ -24,6 +24,8 @@ import java.util.List;
 public class ShuffleActivity extends BaseActivity {
 
     private ShuffleDesk desk;
+    LoaderFromDBTask dbTask;
+    LoaderFromNetTask netTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,13 +37,11 @@ public class ShuffleActivity extends BaseActivity {
             @Override
             public void onGlobalLayout() {
                 desk.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                desk.InitDatas();
-                desk.initView();
+                initView();
             }
         });
-        LoaderTask task = new LoaderTask();
-        task.execute();
-
+        dbTask = new LoaderFromDBTask();
+        dbTask.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -56,6 +56,22 @@ public class ShuffleActivity extends BaseActivity {
         commitChange(desk.getButtons());
         setResult(RESULT_OK);
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (netTask != null && netTask.getStatus() == AsyncTask.Status.RUNNING) {
+            netTask.cancel(false);
+        }
+        if (dbTask != null && dbTask.getStatus() == AsyncTask.Status.RUNNING) {
+            dbTask.cancel(false);
+        }
+        super.onDestroy();
+    }
+
+    private void initView() {
+        desk.InitDatas();
+        desk.initView();
     }
 
     public void getButtons() {
@@ -78,7 +94,6 @@ public class ShuffleActivity extends BaseActivity {
             button.setSection(section);
             unselectedButtons.add(button);
         }
-
         desk.setSelectedButtons(selectedButtons);
         desk.setUnselectedButtons(unselectedButtons);
     }
@@ -86,14 +101,32 @@ public class ShuffleActivity extends BaseActivity {
     public void commitChange(ArrayList<MovableButton> buttons) {
         ArrayList<MyGroup> sections = new ArrayList<>();
         for (int i = 0; i < buttons.size(); i++) {
-            sections.add((MyGroup) buttons.get(i).getSection());
+            MyGroup myGroup = (MyGroup) buttons.get(i).getSection();
+            if (!myGroup.getSelected()) {
+                myGroup.setOrder(1024 + myGroup.getOrder());
+            }
+            sections.add(myGroup);
         }
         if (sections.size() > 0) {
             GroupHelper.putAllMyGroups(sections);
         }
     }
 
-    class LoaderTask extends AsyncTask<String, Integer, Boolean> {
+    class LoaderFromDBTask extends AsyncTask<String, Integer, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(String[] params) {
+            getButtons();
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            initView();
+        }
+    }
+
+    class LoaderFromNetTask extends AsyncTask<String, Integer, Boolean> {
 
         @Override
         protected Boolean doInBackground(String[] params) {
@@ -101,7 +134,7 @@ public class ShuffleActivity extends BaseActivity {
             if (resultObject.ok) {
                 ArrayList<SubItem> subItems = (ArrayList<SubItem>) resultObject.result;
                 ArrayList<MyGroup> myGroups = new ArrayList<>();
-                int sel = 24;
+                int sel = 18;
                 for (int i = 0; i < subItems.size(); i++) {
                     SubItem item = subItems.get(i);
                     MyGroup mygroup = new MyGroup();
@@ -121,7 +154,6 @@ public class ShuffleActivity extends BaseActivity {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             if (aBoolean) {
-                ToastUtil.toast("OK");
                 getButtons();
             } else {
                 ToastUtil.toast("Failed");

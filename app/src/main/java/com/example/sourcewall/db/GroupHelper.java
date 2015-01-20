@@ -20,13 +20,16 @@ public class GroupHelper {
 
     public static List<MyGroup> getSelectedGroups() {
         MyGroupDao myGroupDao = AppApplication.getDaoSession().getMyGroupDao();
-        QueryBuilder<MyGroup> builder = myGroupDao.queryBuilder().where(MyGroupDao.Properties.Selected.eq(true));
+        QueryBuilder<MyGroup> builder = myGroupDao.queryBuilder().where(MyGroupDao.Properties.Selected.eq(true)).
+                orderAsc(MyGroupDao.Properties.Order);
         return builder.list();
     }
 
     public static List<MyGroup> getUnselectedGroups() {
         MyGroupDao myGroupDao = AppApplication.getDaoSession().getMyGroupDao();
-        QueryBuilder<MyGroup> builder = myGroupDao.queryBuilder().where(MyGroupDao.Properties.Selected.eq(false));
+        QueryBuilder<MyGroup> builder = myGroupDao.queryBuilder().
+                where(MyGroupDao.Properties.Selected.eq(false)).
+                orderAsc(MyGroupDao.Properties.Order);
         return builder.list();
     }
 

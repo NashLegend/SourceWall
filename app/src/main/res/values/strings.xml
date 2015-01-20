@@ -104,5 +104,8 @@
     <string name="hint_input_question_desc">输入问题补充说明(可选)</string>
     <string name="hint_input_question">输入问题</string>
     <string name="hint_input_post_title">输入帖子标题</string>
+    <string name="selected_section">已选中项</string>
+    <string name="selected_section_tip">点击增删，长按排序</string>
+    <string name="more_unselected_sections">更多项</string>
 
 </resources>

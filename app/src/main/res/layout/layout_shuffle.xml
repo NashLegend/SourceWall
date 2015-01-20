@@ -28,7 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
-                android:text="My Section"
+                android:text="@string/selected_section"
                 android:textColor="#3780d9"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -37,7 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
-                android:text="Tips"
+                android:text="@string/selected_section_tip"
                 android:textColor="#cbcbcb"
                 android:textSize="14sp" />
         </LinearLayout>
@@ -75,7 +75,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
-                android:text="More Columns"
+                android:text="@string/more_unselected_sections"
                 android:textColor="#3780d9"
                 android:textSize="18sp"
                 android:textStyle="bold" />

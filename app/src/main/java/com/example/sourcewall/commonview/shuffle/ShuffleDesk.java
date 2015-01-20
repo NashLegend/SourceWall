@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.example.sourcewall.R;
 
@@ -16,10 +15,10 @@ import java.util.ArrayList;
 public class ShuffleDesk extends RelativeLayout {
     private ArrayList<MovableButton> selectedButtons = new ArrayList<>();
     private ArrayList<MovableButton> unselectedButtons = new ArrayList<>();
-    private int buttonHeightDip = 38;
+    private int buttonHeightDip = 48;
     public static int buttonWidth = 0;
     public static int buttonHeight = 0;
-    public static int Columns = 4;
+    public static int Columns = 3;
     private int vGapDip = 2;// x2
     private int hGapDip = 1;// x2
     public static int vGap = 0;
@@ -27,14 +26,13 @@ public class ShuffleDesk extends RelativeLayout {
     public static int buttonCellWidth = 0;
     public static int buttonCellHeight = 0;
     public static int animateVersion = 11;
-    private int minSelectedZoneHeight = 0;
+    private static int minSelectedZoneHeight;
     private ShuffleCardSenator senator;
     private LinearLayout senatorLayout;
     private ShuffleCardCandidate candidate;
     private LinearLayout candidateLayout;
     public static int minButtons = 1;
-    public static int maxButtons = 24;
-    private static Toast mToast = null;
+    public static int maxButtons = 18;
 
     public ShuffleDesk(Context context) {
         this(context, null);
@@ -78,7 +76,7 @@ public class ShuffleDesk extends RelativeLayout {
         buttonWidth = buttonCellWidth - hGap * 2;
         buttonCellHeight = buttonHeight + vGap * 2;
 
-        minSelectedZoneHeight = buttonCellHeight * 4;
+        minSelectedZoneHeight = buttonCellHeight * 3;
         senator.setStandardMinHeight(minSelectedZoneHeight);
 
         senator.setList(selectedButtons);
