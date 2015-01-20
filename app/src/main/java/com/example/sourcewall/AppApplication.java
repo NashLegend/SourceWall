@@ -2,6 +2,9 @@ package com.example.sourcewall;
 
 import android.app.Application;
 
+import com.example.sourcewall.db.BaseDB;
+import com.example.sourcewall.db.gen.DaoMaster;
+import com.example.sourcewall.db.gen.DaoSession;
 import com.example.sourcewall.util.CrashReporter;
 
 import java.lang.Thread.UncaughtExceptionHandler;
@@ -11,9 +14,11 @@ import java.lang.Thread.UncaughtExceptionHandler;
  */
 public class AppApplication extends Application {
 
-    static AppApplication application;
+    private static AppApplication application;
     private UncaughtExceptionHandler uncaughtExceptionHandler;
     private CrashReporter crashReporter;
+    private static DaoMaster daoMaster;
+    private static DaoSession daoSession;
     public static String cookieString = "";
     public static String tokenString = "";
     public static String ukeyString = "";
@@ -39,6 +44,21 @@ public class AppApplication extends Application {
 
     public static Application getApplication() {
         return application;
+    }
+
+    public static DaoMaster getDaoMaster() {
+        if (daoMaster == null) {
+            DaoMaster.OpenHelper helper = new DaoMaster.DevOpenHelper(application, BaseDB.DB_NAME, null);
+            daoMaster = new DaoMaster(helper.getWritableDatabase());
+        }
+        return daoMaster;
+    }
+
+    public static DaoSession getDaoSession() {
+        if (daoSession == null) {
+            daoSession = getDaoMaster().newSession();
+        }
+        return daoSession;
     }
 
 

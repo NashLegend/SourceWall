@@ -336,6 +336,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
                 checkChannelList();
                 if (UserAPI.isLoggedIn()) {
                     loadUserInfo();
+                    loginState = true;
                 } else {
                     //TODO 清除头像与名称
                 }

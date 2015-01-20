@@ -33,6 +33,9 @@
                 android:value="com.example.sourcewall.BaseActivity" />
         </activity>
         <activity
+            android:name=".ShuffleActivity"
+            android:label="@string/shuffle" />
+        <activity
             android:name=".ArticleActivity"
             android:label="@string/article" />
         <activity

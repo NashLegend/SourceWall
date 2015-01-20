@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import com.example.sourcewall.BaseActivity;
 import com.example.sourcewall.PostActivity;
 import com.example.sourcewall.R;
+import com.example.sourcewall.ShuffleActivity;
 import com.example.sourcewall.adapters.PostAdapter;
 import com.example.sourcewall.commonview.LListView;
 import com.example.sourcewall.commonview.LoadingView;
@@ -149,15 +150,10 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
 
     private void writePost() {
         if (UserAPI.isLoggedIn()) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    PostAPI.getAllMyGroups();
-                }
-            }).start();
 //            Intent intent = new Intent(getActivity(), PublishPostActivity.class);
-//            intent.putExtra(Consts.Extra_SubItem, subItem);
-//            startActivityForResult(intent, Code_Publish_Post);
+            Intent intent = new Intent(getActivity(), ShuffleActivity.class);
+            intent.putExtra(Consts.Extra_SubItem, subItem);
+            startActivityForResult(intent, Code_Publish_Post);
         } else {
             ((BaseActivity) getActivity()).notifyNeedLog();
         }

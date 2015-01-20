@@ -15,6 +15,7 @@
     <string name="hello_world">泥嚎！</string>
     <string name="title_activity_setting">设置</string>
     <string name="article">科学人</string>
+    <string name="shuffle">Shuffle</string>
     <string name="post">小组</string>
     <string name="question">问答</string>
     <string name="title_activity_login">登录</string>

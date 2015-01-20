@@ -60,6 +60,7 @@ public class PostAPI extends APIBase {
             }
             if (numPages > 1) {
                 for (int j = 2; j <= numPages; j++) {
+                    Thread.sleep(1000);
                     String url = pageUrl + "?page=" + j;
                     Document pageDoc = Jsoup.parse(HttpFetcher.get(url).toString());
                     Elements pageLis = pageDoc.getElementsByClass("group-list").get(0).getElementsByTag("li");
