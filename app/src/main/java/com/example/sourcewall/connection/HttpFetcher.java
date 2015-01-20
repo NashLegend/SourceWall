@@ -115,19 +115,25 @@ public class HttpFetcher {
     private static HttpRequestRetryHandler requestRetryHandler = new HttpRequestRetryHandler() {
         public boolean retryRequest(IOException exception, int executionCount, HttpContext context) {
             if (executionCount >= MAX_EXECUTION_COUNT) {
+                System.out.println("Retry Failed executionCount");
                 return false;
             }
+            System.out.println("Retry executionCount");
             if (exception instanceof NoHttpResponseException) {
+                System.out.println("Retry NoHttpResponseException");
                 return true;
             }
             if (exception instanceof SSLHandshakeException) {
+                System.out.println("Retry Fail SSLHandshakeException");
                 return false;
             }
             HttpRequest request = (HttpRequest) context.getAttribute(ExecutionContext.HTTP_REQUEST);
             boolean idempotent = (request instanceof HttpEntityEnclosingRequest);
             if (!idempotent) {
+                System.out.println("Retry !idempotent");
                 return true;
             }
+            System.out.println("Retry False");
             return false;
         }
     };

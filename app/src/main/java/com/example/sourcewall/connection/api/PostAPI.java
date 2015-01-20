@@ -7,6 +7,7 @@ import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.model.AceModel;
 import com.example.sourcewall.model.Post;
 import com.example.sourcewall.model.PrepareData;
+import com.example.sourcewall.model.SubItem;
 import com.example.sourcewall.model.UComment;
 import com.example.sourcewall.util.MDUtil;
 
@@ -32,12 +33,71 @@ public class PostAPI extends APIBase {
 
     /**
      * 返回所有我加入的小组
+     *
      * @return ResultObject，resultObject.result是ArrayList[SubItem]
      */
     public static ResultObject getAllMyGroups() {
         ResultObject resultObject = new ResultObject();
+        String pageUrl = "http://m.guokr.com/group/i/" + UserAPI.getUserID() + "/joined/";
+        ArrayList<SubItem> subItems = new ArrayList<>();
+        int numPages;
+        try {
+            String firstPage = HttpFetcher.get(pageUrl).toString();
+            Document doc1 = Jsoup.parse(firstPage);
+            Elements lis = doc1.getElementsByClass("group-list").get(0).getElementsByTag("li");
+            numPages = Integer.valueOf(doc1.getElementsByClass("page-num").text().replaceAll("1/", ""));
 
+            //第一页
+            for (int i = 0; i < lis.size(); i++) {
+                Element element = lis.get(i).getElementsByTag("a").get(0);
+                String groupUrl = element.attr("href");//
+                String groupID = groupUrl.replaceAll("^\\D+(\\d+)\\D*", "$1");
+                String groupName = element.getElementsByTag("b").text();
+                SubItem subItem = new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, groupName, groupID);
+                subItems.add(subItem);
+                //String groupIcon = element.getElementsByTag("img").get(0).attr("src").replaceAll("\\?\\S*$", "");
+                //String groupMembers = element.getElementsByClass("group-member").get(0).text();
+            }
+            if (numPages > 1) {
+                for (int j = 2; j <= numPages; j++) {
+                    String url = pageUrl + "?page=" + j;
+                    Document pageDoc = Jsoup.parse(HttpFetcher.get(url).toString());
+                    Elements pageLis = pageDoc.getElementsByClass("group-list").get(0).getElementsByTag("li");
+                    for (int i = 0; i < pageLis.size(); i++) {
+                        Element element = pageLis.get(i).getElementsByTag("a").get(0);
+                        String groupUrl = element.attr("href");//
+                        String groupID = groupUrl.replaceAll("^\\D+(\\d+)\\D*", "$1");
+                        String groupName = element.getElementsByTag("b").text();
+                        SubItem subItem = new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, groupName, groupID);
+                        subItems.add(subItem);
+                    }
+                }
+            }
+            resultObject.ok = true;
+            resultObject.result = subItems;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return resultObject;
+    }
+
+    /**
+     * @param url
+     * @return
+     */
+    private static ArrayList<SubItem> getMyGroupInOnePage(String url) throws Exception {
+        ArrayList<SubItem> subItems = new ArrayList<>();
+        Document doc1 = Jsoup.parse(HttpFetcher.get(url).toString());
+        Elements lis = doc1.getElementsByClass("group-list").get(0).getElementsByTag("li");
+        for (int i = 0; i < lis.size(); i++) {
+            Element element = lis.get(i).getElementsByTag("a").get(0);
+            String groupUrl = element.attr("href");//
+            String groupID = groupUrl.replaceAll("^\\D+(\\d+)\\D*", "$1");
+            String groupName = element.getElementsByTag("b").text();
+            SubItem subItem = new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, groupName, groupID);
+            subItems.add(subItem);
+        }
+        return subItems;
     }
 
     /**

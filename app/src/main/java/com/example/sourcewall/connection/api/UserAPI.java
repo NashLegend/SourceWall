@@ -348,6 +348,24 @@ public class UserAPI extends APIBase {
     }
 
     /**
+     * 获取保存的用户ukey
+     *
+     * @return
+     */
+    public static String getUserID() {
+        return SharedUtil.readString(Consts.Key_User_ID, "");
+    }
+
+    /**
+     * 获取保存的用户ukey
+     *
+     * @return
+     */
+    public static String getUserAvatar() {
+        return SharedUtil.readString(Consts.Key_User_Avatar, "");
+    }
+
+    /**
      * 获取保存的用户cookie
      *
      * @return
