@@ -148,6 +148,10 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         loadData(currentPage - 1);
     }
 
+    private void expandMoreGroup() {
+
+    }
+
     private void writePost() {
         if (UserAPI.isLoggedIn()) {
             Intent intent = new Intent(getActivity(), PublishPostActivity.class);
@@ -200,6 +204,9 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         switch (id) {
             case R.id.action_write_post:
                 writePost();
+                break;
+            case R.id.action_more_group:
+                expandMoreGroup();
                 break;
         }
         return true;

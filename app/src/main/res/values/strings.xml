@@ -107,5 +107,6 @@
     <string name="selected_section">已选中项</string>
     <string name="selected_section_tip">点击增删，长按排序</string>
     <string name="more_unselected_sections">更多项</string>
+    <string name="more_groups">更多小组</string>
 
 </resources>

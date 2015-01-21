@@ -45,8 +45,8 @@ public class HttpFetcher {
     public final static int MAX_ROUTE_CONNECTIONS = 400;
     public final static int MAX_TOTAL_CONNECTIONS = 800;
     public final static int TIMEOUT = 2000;
-    public final static int SO_TIMEOUT = 3000;
-    public final static int CONNECTION_TIMEOUT = 10000;
+    public final static int CONNECTION_TIMEOUT = 5000;
+    public final static int SO_TIMEOUT = 15000;
 
     public static ResultObject post(String url, List<NameValuePair> params) throws IOException {
         ResultObject resultObject = new ResultObject();
@@ -92,8 +92,8 @@ public class HttpFetcher {
             ConnManagerParams.setMaxConnectionsPerRoute(params, connPerRoute);
 
             HttpConnectionParams.setStaleCheckingEnabled(params, false);
-            HttpConnectionParams.setConnectionTimeout(params, CONNECTION_TIMEOUT);//连接到服务器超时
-            HttpConnectionParams.setSoTimeout(params, SO_TIMEOUT);//服务器连接超时，连接过和
+            HttpConnectionParams.setConnectionTimeout(params, CONNECTION_TIMEOUT);//连接服务器超时
+            HttpConnectionParams.setSoTimeout(params, SO_TIMEOUT);//请求服务器超时
             HttpConnectionParams.setSocketBufferSize(params, 8192);
 
             //设置Cookie
