@@ -14,9 +14,9 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import com.example.sourcewall.CommonView.LListView;
+import com.example.sourcewall.CommonView.LoadingView;
 import com.example.sourcewall.adapters.SimpleCommentAdapter;
-import com.example.sourcewall.commonview.LListView;
-import com.example.sourcewall.commonview.LoadingView;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.QuestionAPI;
 import com.example.sourcewall.connection.api.UserAPI;

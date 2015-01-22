@@ -1,5 +1,4 @@
-
-package com.example.sourcewall.commonview.shuffle;
+package com.example.sourcewall.CommonView.shuffle;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
@@ -10,6 +9,7 @@ import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,6 +23,8 @@ public class ShuffleCard extends RelativeLayout {
     private Object animator;
     public int targetHeight;
     public ArrayList<MovableButton> list;
+    public ShuffleDeskSimple deskSimple;
+    public ScrollView scrollView;
 
     public ShuffleCard(Context context) {
         super(context);
@@ -37,12 +39,21 @@ public class ShuffleCard extends RelativeLayout {
         parentLayout = layout;
     }
 
-    public ShuffleDesk getDesk() {
-        return this.desk;
+    /**
+     * Just for SimpleDesk
+     *
+     * @param shuffleDeskSimple
+     * @param layout
+     * @param scrollView
+     */
+    public void setDeskSimple(ShuffleDeskSimple shuffleDeskSimple, LinearLayout layout, ScrollView scrollView) {
+        this.deskSimple = shuffleDeskSimple;
+        this.scrollView = scrollView;
+        parentLayout = layout;
     }
 
     public void setHeight(int height) {
-        ViewGroup.LayoutParams params = (ViewGroup.LayoutParams) getLayoutParams();
+        ViewGroup.LayoutParams params = getLayoutParams();
         params.height = height;
         setLayoutParams(params);
     }

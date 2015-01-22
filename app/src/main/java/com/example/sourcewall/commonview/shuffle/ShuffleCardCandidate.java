@@ -1,4 +1,4 @@
-package com.example.sourcewall.commonview.shuffle;
+package com.example.sourcewall.CommonView.shuffle;
 
 import android.content.Context;
 import android.graphics.Point;

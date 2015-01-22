@@ -10,9 +10,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 
+import com.example.sourcewall.CommonView.LListView;
+import com.example.sourcewall.CommonView.LoadingView;
 import com.example.sourcewall.adapters.QuestionDetailAdapter;
-import com.example.sourcewall.commonview.LListView;
-import com.example.sourcewall.commonview.LoadingView;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.QuestionAPI;
 import com.example.sourcewall.connection.api.UserAPI;

@@ -10,12 +10,12 @@ import android.os.Vibrator;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
 @SuppressLint("ClickableViewAccessibility")
-public class ShuffleCardSenator extends ShuffleCard {
+public class ShuffleCardSimple extends ShuffleCard {
     private int standardMinHeight = 0;
     private MovableButton currentButton;
     private int lastRow = 0;
@@ -25,50 +25,12 @@ public class ShuffleCardSenator extends ShuffleCard {
     private float ddx = 0f;
     private float ddy = 0f;
 
-    public ShuffleCardSenator(Context context) {
+    public ShuffleCardSimple(Context context) {
         super(context);
     }
 
-    public ShuffleCardSenator(Context context, AttributeSet attrs) {
+    public ShuffleCardSimple(Context context, AttributeSet attrs) {
         super(context, attrs);
-    }
-
-    @Override
-    public void banishButton(MovableButton button) {
-        list.remove(button);
-        if ((targetHeight > standardMinHeight) && (computeHeight() < targetHeight)) {
-            shrink();
-        }
-        setupAnimator(animateAfter(button.getPosition().y, button.getPosition().x, false));
-        removeView(button);
-        setFinalPosition();
-        button.setOnLongClickListener(null);
-        button.setOnTouchListener(null);
-        button.setOnClickListener(null);
-    }
-
-    @Override
-    public void getResident(MovableButton button) {
-        super.getResident(button);
-        if (computeHeight() > targetHeight && computeHeight() > standardMinHeight) {
-            expand();
-        }
-        int i = list.size() - 1;
-        Point point = new Point();
-        point.x = i % ShuffleDesk.Columns;
-        point.y = i / ShuffleDesk.Columns;
-        button.setPosition(point);
-        button.setTargetPosition(new Point(point.x, point.y));
-
-        LayoutParams params = (LayoutParams) button.getLayoutParams();
-
-        params.leftMargin = point.x * ShuffleDesk.buttonCellWidth + ShuffleDesk.hGap;
-        params.topMargin = point.y * ShuffleDesk.buttonCellHeight + ShuffleDesk.vGap;
-
-        button.setSelected(true);
-        button.setOnClickListener(clickListener);
-        button.setOnLongClickListener(longClickListener);
-        this.addView(button);
     }
 
     private void moveButton(float dx, float dy) {
@@ -174,7 +136,7 @@ public class ShuffleCardSenator extends ShuffleCard {
         super.shuffleButtons();
         setLongListener();
         setClickListener();
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) getLayoutParams();
+        ViewGroup.LayoutParams params = getLayoutParams();
         if (computeHeight() < standardMinHeight) {
             params.height = standardMinHeight;
             setLayoutParams(params);
@@ -187,13 +149,12 @@ public class ShuffleCardSenator extends ShuffleCard {
 
     public void startEditMode() {
         setTouchListener();
-        desk.switch2Edit();
         fulfill();
     }
 
     public void fulfill() {
         //TODO
-        targetHeight = desk.getHeight() - parentLayout.getHeight() + getHeight();
+        targetHeight = deskSimple.getHeight() - parentLayout.getHeight() + getHeight();
         changeSize(targetHeight);
     }
 
@@ -209,7 +170,6 @@ public class ShuffleCardSenator extends ShuffleCard {
     public void endEditMode() {
         setLongListener();
         setClickListener();
-        desk.switch2Normal();
         restore();
     }
 
@@ -235,10 +195,6 @@ public class ShuffleCardSenator extends ShuffleCard {
         }
     }
 
-    public int getStandardMinHeight() {
-        return standardMinHeight;
-    }
-
     public void setStandardMinHeight(int standardMinHeight) {
         this.standardMinHeight = standardMinHeight;
     }
@@ -247,11 +203,7 @@ public class ShuffleCardSenator extends ShuffleCard {
 
         @Override
         public void onClick(View v) {
-            if (list.size() > ShuffleDesk.minButtons) {
-                MovableButton button = (MovableButton) v;
-                banishButton(button);//
-                desk.getCandidate().getResident(button.clone());
-            }
+            //TODO
         }
     };
 
@@ -276,6 +228,7 @@ public class ShuffleCardSenator extends ShuffleCard {
             lastRow = currentButton.getPosition().y;
             lastCol = currentButton.getPosition().x;
             currentButton.bringToFront();
+            scrollView.requestDisallowInterceptTouchEvent(true);
             return false;
         }
     };
@@ -303,17 +256,34 @@ public class ShuffleCardSenator extends ShuffleCard {
                         break;
                     case MotionEvent.ACTION_MOVE:
                         if (currentButton != null) {
-                            float dx = event.getRawX() - lastX;
-                            float dy = event.getRawY() - lastY;
-                            if (dx * dx + dy * dy > 9) {
-                                lastX = event.getRawX();
-                                lastY = event.getRawY();
-                                moveButton(event.getRawX() - ddx, event.getRawY() - ddy);
+                            float rawX = event.getRawX();
+                            float rawY = event.getRawY();
+
+                            int offset = 9;
+                            int[] pos = {0, 0};
+                            scrollView.getLocationOnScreen(pos);
+                            int top = pos[1];
+                            int bottom = top + scrollView.getHeight();
+                            if (rawY - ShuffleDesk.buttonHeight / 2 < top) {
+                                scrollView.scrollBy(0, -10);
+                                offset = 0;
+                            } else if (rawY + ShuffleDesk.buttonHeight / 2 > bottom) {
+                                scrollView.scrollBy(0, 10);
+                                offset = 0;
+                            }
+
+                            float dx = rawX - lastX;
+                            float dy = rawY - lastY;
+                            if (dx * dx + dy * dy > offset) {
+                                lastX = rawX;
+                                lastY = rawY;
+                                moveButton(rawX - ddx, offset + rawY - ddy);
                             }
                         }
                         break;
                     case MotionEvent.ACTION_UP:
                     case MotionEvent.ACTION_CANCEL:
+                        scrollView.requestDisallowInterceptTouchEvent(false);
                         if (currentButton != null) {
                             moveButton(event.getRawX() - ddx, event.getRawY() - ddy);
                             putButtonDown();

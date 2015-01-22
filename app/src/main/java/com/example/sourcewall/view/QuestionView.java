@@ -7,9 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.sourcewall.CommonView.TTextView;
 import com.example.sourcewall.R;
 import com.example.sourcewall.SimpleReplyActivity;
-import com.example.sourcewall.commonview.TTextView;
 import com.example.sourcewall.model.Question;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.SharedUtil;

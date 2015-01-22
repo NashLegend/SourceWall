@@ -42,7 +42,7 @@
                 android:textSize="14sp" />
         </LinearLayout>
 
-        <com.example.sourcewall.commonview.shuffle.ShuffleCardSenator
+        <com.example.sourcewall.CommonView.shuffle.ShuffleCardSenator
             android:id="@+id/senator"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -85,7 +85,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.example.sourcewall.commonview.shuffle.ShuffleCardCandidate
+            <com.example.sourcewall.CommonView.shuffle.ShuffleCardCandidate
                 android:id="@+id/candidate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

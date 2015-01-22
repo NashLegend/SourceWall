@@ -5,9 +5,9 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 
-import com.example.sourcewall.commonview.shuffle.GroupMovableButton;
-import com.example.sourcewall.commonview.shuffle.MovableButton;
-import com.example.sourcewall.commonview.shuffle.ShuffleDesk;
+import com.example.sourcewall.CommonView.shuffle.GroupMovableButton;
+import com.example.sourcewall.CommonView.shuffle.MovableButton;
+import com.example.sourcewall.CommonView.shuffle.ShuffleDesk;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.PostAPI;
 import com.example.sourcewall.db.GroupHelper;

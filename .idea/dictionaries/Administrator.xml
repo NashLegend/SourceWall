@@ -2,6 +2,7 @@
   <dictionary name="Administrator">
     <words>
       <w>blockquote</w>
+      <w>commonview</w>
       <w>consolas</w>
       <w>csrf</w>
       <w>dropdownitem</w>
@@ -18,10 +19,12 @@
       <w>mozilla</w>
       <w>muhaha</w>
       <w>recom</w>
+      <w>scroller</w>
       <w>swdb</w>
       <w>ukey</w>
       <w>webkit</w>
       <w>webpage</w>
+      <w>xone</w>
     </words>
   </dictionary>
 </component>

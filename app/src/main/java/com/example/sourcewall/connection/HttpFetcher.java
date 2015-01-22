@@ -44,9 +44,9 @@ public class HttpFetcher {
     private static final int MAX_EXECUTION_COUNT = 2;
     public final static int MAX_ROUTE_CONNECTIONS = 400;
     public final static int MAX_TOTAL_CONNECTIONS = 800;
-    public final static int TIMEOUT = 2000;
-    public final static int CONNECTION_TIMEOUT = 5000;
-    public final static int SO_TIMEOUT = 15000;
+    public final static int TIMEOUT = 3000;
+    public final static int CONNECTION_TIMEOUT = 10000;
+    public final static int SO_TIMEOUT = 20000;
 
     public static ResultObject post(String url, List<NameValuePair> params) throws IOException {
         ResultObject resultObject = new ResultObject();

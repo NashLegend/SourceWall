@@ -6,8 +6,8 @@ import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.sourcewall.CommonView.TTextView;
 import com.example.sourcewall.R;
-import com.example.sourcewall.commonview.TTextView;
 import com.example.sourcewall.model.UComment;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.SharedUtil;

@@ -1,19 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.example.sourcewall.commonview.LListView
+    <com.example.sourcewall.CommonView.LListView
         android:id="@+id/list_posts"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="false" />
 
-    <com.example.sourcewall.commonview.LoadingView
+    <com.example.sourcewall.CommonView.LoadingView
         android:id="@+id/post_progress_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone" />
+
+    <com.example.sourcewall.CommonView.PlasticLayout
+        android:id="@+id/layout_more_groups"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true">
+
+        <ScrollView
+            android:id="@+id/plastic_scroller"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </ScrollView>
+    </com.example.sourcewall.CommonView.PlasticLayout>
 </RelativeLayout>

@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="#ffffff">
 
-    <com.example.sourcewall.commonview.shuffle.ShuffleDesk
+    <com.example.sourcewall.CommonView.shuffle.ShuffleDesk
         android:id="@+id/shuffle_desk"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

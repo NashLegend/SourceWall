@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.example.sourcewall.commonview.LListView
+        <com.example.sourcewall.CommonView.LListView
             android:id="@+id/list_detail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -18,7 +18,7 @@
             android:footerDividersEnabled="false"
             android:headerDividersEnabled="false" />
 
-        <com.example.sourcewall.commonview.LoadingView
+        <com.example.sourcewall.CommonView.LoadingView
             android:id="@+id/article_progress_loading"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

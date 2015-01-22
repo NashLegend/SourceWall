@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/SenatorLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f6f7f5"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp">
+
+        <View
+            android:layout_width="4dp"
+            android:layout_height="24dp"
+            android:background="#3579cc" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:text="@string/more_unselected_sections"
+            android:textColor="#3780d9"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:text="@string/tip_of_more_groups"
+            android:textColor="#cbcbcb"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.example.sourcewall.CommonView.shuffle.ShuffleCardSimple
+            android:id="@+id/senator"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:minHeight="144dp" />
+    </ScrollView>
+
+</LinearLayout>

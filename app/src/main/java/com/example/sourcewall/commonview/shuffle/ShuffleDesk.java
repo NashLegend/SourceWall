@@ -1,14 +1,14 @@
-package com.example.sourcewall.commonview.shuffle;
+package com.example.sourcewall.CommonView.shuffle;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.example.sourcewall.R;
+import com.example.sourcewall.util.DisplayUtil;
 
 import java.util.ArrayList;
 
@@ -19,14 +19,14 @@ public class ShuffleDesk extends RelativeLayout {
     public static int buttonWidth = 0;
     public static int buttonHeight = 0;
     public static int Columns = 3;
-    private int vGapDip = 2;// x2
-    private int hGapDip = 1;// x2
+    public static int vGapDip = 2;// x2
+    public static int hGapDip = 1;// x2
     public static int vGap = 0;
     public static int hGap = 0;
     public static int buttonCellWidth = 0;
     public static int buttonCellHeight = 0;
     public static int animateVersion = 11;
-    private static int minSelectedZoneHeight;
+    public static int minSelectedZoneHeight;
     private ShuffleCardSenator senator;
     private LinearLayout senatorLayout;
     private ShuffleCardCandidate candidate;
@@ -70,7 +70,7 @@ public class ShuffleDesk extends RelativeLayout {
         vGap = dip2px(vGapDip, getContext());
         hGap = dip2px(hGapDip, getContext());
 
-        buttonCellWidth = this.getWidth() / Columns;
+        buttonCellWidth = DisplayUtil.getScreenWidth(getContext()) / Columns;
         buttonHeight = dip2px(buttonHeightDip, getContext());
 
         buttonWidth = buttonCellWidth - hGap * 2;
@@ -99,10 +99,6 @@ public class ShuffleDesk extends RelativeLayout {
         return buttons;
     }
 
-    public void slog(String string) {
-        Log.i("shuffle", string);
-    }
-
     public static int dip2px(float dp, Context context) {
         float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dp * scale + 0.5f);
@@ -117,28 +113,12 @@ public class ShuffleDesk extends RelativeLayout {
         return senator;
     }
 
-    public void setSenator(ShuffleCardSenator senator) {
-        this.senator = senator;
-    }
-
     public ShuffleCardCandidate getCandidate() {
         return candidate;
     }
 
-    public void setCandidate(ShuffleCardCandidate candidate) {
-        this.candidate = candidate;
-    }
-
-    public ArrayList<MovableButton> getSelectedButtons() {
-        return selectedButtons;
-    }
-
     public void setSelectedButtons(ArrayList<MovableButton> selectedButtons) {
         this.selectedButtons = selectedButtons;
-    }
-
-    public ArrayList<MovableButton> getUnselectedButtons() {
-        return unselectedButtons;
     }
 
     public void setUnselectedButtons(ArrayList<MovableButton> unselectedButtons) {

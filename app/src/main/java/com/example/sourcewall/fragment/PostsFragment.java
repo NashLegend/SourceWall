@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,17 +14,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
+import android.widget.ScrollView;
 
 import com.example.sourcewall.BaseActivity;
+import com.example.sourcewall.CommonView.LListView;
+import com.example.sourcewall.CommonView.LoadingView;
+import com.example.sourcewall.CommonView.shuffle.GroupMovableButton;
+import com.example.sourcewall.CommonView.shuffle.MovableButton;
+import com.example.sourcewall.CommonView.shuffle.ShuffleDeskSimple;
 import com.example.sourcewall.PostActivity;
 import com.example.sourcewall.PublishPostActivity;
 import com.example.sourcewall.R;
 import com.example.sourcewall.adapters.PostAdapter;
-import com.example.sourcewall.commonview.LListView;
-import com.example.sourcewall.commonview.LoadingView;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.PostAPI;
 import com.example.sourcewall.connection.api.UserAPI;
+import com.example.sourcewall.db.GroupHelper;
+import com.example.sourcewall.db.gen.MyGroup;
 import com.example.sourcewall.model.Post;
 import com.example.sourcewall.model.SubItem;
 import com.example.sourcewall.util.Consts;
@@ -31,6 +38,7 @@ import com.example.sourcewall.util.ToastUtil;
 import com.example.sourcewall.view.PostListItemView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by NashLegend on 2014/9/18 0018
@@ -49,6 +57,9 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     private int currentPage = -1;//page从0开始，-1表示还没有数据
     private View headerView;
     private final int Code_Publish_Post = 1044;
+    ViewGroup moreGroupsLayout;
+    ScrollView scrollView;
+    ShuffleDeskSimple deskSimple;
 
     @Override
     public View onCreateLayoutView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -106,9 +117,41 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                 return false;
             }
         });
+
+        scrollView = (ScrollView) view.findViewById(R.id.plastic_scroller);
+        moreGroupsLayout = (ViewGroup) view.findViewById(R.id.layout_more_groups);
+        deskSimple = new ShuffleDeskSimple(getActivity(), scrollView);
+        scrollView.addView(deskSimple);
+
         setTitle();
         loadOver();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getButtons();
+                initView();
+            }
+        }, 1000);
+
         return view;
+    }
+
+    private void initView() {
+        deskSimple.InitDatas();
+        deskSimple.initView();
+    }
+
+    public void getButtons() {
+        List<MyGroup> unselectedSections = GroupHelper.getUnselectedGroups();
+        ArrayList<MovableButton> unselectedButtons = new ArrayList<>();
+        for (int i = 0; i < unselectedSections.size(); i++) {
+            MyGroup section = unselectedSections.get(i);
+            GroupMovableButton button = new GroupMovableButton(getActivity());
+            button.setSection(section);
+            unselectedButtons.add(button);
+        }
+        deskSimple.setButtons(unselectedButtons);
     }
 
     @Override
@@ -124,6 +167,14 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         } else {
             getActivity().setTitle(this.subItem.getName() + " -- 小组");
         }
+    }
+
+    private void showMoreGroups() {
+
+    }
+
+    private void hideMoreGroups() {
+
     }
 
     private void loadOver() {
@@ -146,10 +197,6 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         headerView.findViewById(R.id.text_header_load_hint).setVisibility(View.INVISIBLE);
         headerView.findViewById(R.id.progress_header_loading).setVisibility(View.VISIBLE);
         loadData(currentPage - 1);
-    }
-
-    private void expandMoreGroup() {
-
     }
 
     private void writePost() {
@@ -206,7 +253,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                 writePost();
                 break;
             case R.id.action_more_group:
-                expandMoreGroup();
+                showMoreGroups();
                 break;
         }
         return true;

@@ -1,4 +1,4 @@
-package com.example.sourcewall.commonview.shuffle;
+package com.example.sourcewall.CommonView.shuffle;
 
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
