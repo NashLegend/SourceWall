@@ -27,7 +27,7 @@
                 android:id="@+id/image_avatar"
                 android:layout_width="@dimen/list_standard_comment_avatar_dimen"
                 android:layout_height="@dimen/list_standard_comment_avatar_dimen"
-                android:src="@drawable/avatar" />
+                android:src="@drawable/default_avatar" />
 
             <TextView
                 android:id="@+id/text_num_support"

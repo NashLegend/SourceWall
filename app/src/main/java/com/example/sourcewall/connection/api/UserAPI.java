@@ -114,11 +114,19 @@ public class UserAPI extends APIBase {
         ResultObject resultObject = new ResultObject();
         String token = getToken();
         try {
-            JSONObject object = new JSONObject(HttpFetcher.get("http://www.guokr.com/apis/community/rn_num.json?_=" + System.currentTimeMillis() + "&access_token=" + token).toString());
+            String result = HttpFetcher.get("http://www.guokr.com/apis/community/rn_num.json?_=" + System.currentTimeMillis() + "&access_token=" + token).toString();
+            System.out.println(result);
+            JSONObject object = new JSONObject(result);
             if (getJsonBoolean(object, "ok")) {
                 resultObject.ok = true;
             } else {
-                resultObject.code = ResultObject.ResultCode.CODE_LOGIN_FAILED;
+                //String invalidToken = " {\"error_code\": 200004, \"request_uri\": \"/apis/community/rn_num.json?_=1422011885139&access_token=51096037c7aa15ccd08c12c3fba8f856ae65d672cda50f25cec883343f3597a6\", \"ok\": false, \"error\": \"Illegal access token.\"}\n";
+                if (getJsonInt(object, "error_code") == 200004) {
+                    resultObject.code = ResultObject.ResultCode.CODE_TOKEN_INVALID;
+                } else {
+                    resultObject.code = ResultObject.ResultCode.CODE_LOGIN_FAILED;
+                }
+                clearMyInfo();
             }
         } catch (IOException e) {
             resultObject.code = ResultObject.ResultCode.CODE_NETWORK_ERROR;
@@ -326,7 +334,12 @@ public class UserAPI extends APIBase {
      * 清除过期数据。TODO
      */
     public static void clearMyInfo() {
-
+        SharedUtil.remove(Consts.Key_Access_Token);
+        SharedUtil.remove(Consts.Key_Ukey);
+        SharedUtil.remove(Consts.Key_User_Avatar);
+        SharedUtil.remove(Consts.Key_User_ID);
+        SharedUtil.remove(Consts.Key_User_Name);
+        //同时清除的还应该有：数据库？ TODO
     }
 
     /**

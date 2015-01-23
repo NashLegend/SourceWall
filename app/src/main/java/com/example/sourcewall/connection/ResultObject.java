@@ -18,7 +18,7 @@ public class ResultObject {
     public static enum ResultCode {
         CODE_OK,
         CODE_LOGIN_FAILED,
-        CODE_TOKEN_EXPIRED,
+        CODE_TOKEN_INVALID,
         CODE_NETWORK_ERROR,
         CODE_JSON_ERROR,
         CODE_UNKNOWN,

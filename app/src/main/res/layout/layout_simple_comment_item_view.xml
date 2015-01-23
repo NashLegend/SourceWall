@@ -14,7 +14,7 @@
         android:layout_height="@dimen/list_standard_comment_avatar_dimen"
         android:layout_marginRight="@dimen/avatar_right_span_dimen"
         android:layout_weight="0"
-        android:src="@drawable/avatar" />
+        android:src="@drawable/default_avatar" />
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"

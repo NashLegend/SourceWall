@@ -3,6 +3,5 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     style="@style/Base.Widget.AppCompat.ActionButton"
-    android:background="?android:attr/selectableItemBackground"
     android:contentDescription="@string/more_groups"
     android:src="@drawable/chevron_down" />
