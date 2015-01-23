@@ -4,7 +4,7 @@
     android:id="@+id/SenatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f6f7f5"
+    android:background="#ffffff"
     android:orientation="vertical">
 
     <LinearLayout
@@ -38,15 +38,10 @@
             android:textSize="14sp" />
     </LinearLayout>
 
-    <ScrollView
+    <com.example.sourcewall.commonview.shuffle.ShuffleCardSimple
+        android:id="@+id/senator"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <com.example.sourcewall.CommonView.shuffle.ShuffleCardSimple
-            android:id="@+id/senator"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:minHeight="144dp" />
-    </ScrollView>
+        android:layout_height="match_parent"
+        android:minHeight="144dp" />
 
 </LinearLayout>

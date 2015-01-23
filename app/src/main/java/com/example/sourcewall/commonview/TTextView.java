@@ -1,4 +1,4 @@
-package com.example.sourcewall.CommonView;
+package com.example.sourcewall.commonview;
 
 import android.annotation.TargetApi;
 import android.content.Context;

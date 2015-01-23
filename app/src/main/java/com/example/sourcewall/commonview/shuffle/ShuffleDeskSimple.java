@@ -1,12 +1,16 @@
-package com.example.sourcewall.CommonView.shuffle;
+package com.example.sourcewall.commonview.shuffle;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
 import com.example.sourcewall.R;
+import com.example.sourcewall.db.gen.MyGroup;
+import com.example.sourcewall.model.SubItem;
+import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.DisplayUtil;
 
 import java.util.ArrayList;
@@ -16,6 +20,12 @@ public class ShuffleDeskSimple extends RelativeLayout {
     private int buttonHeightDip = 48;
     private ShuffleCardSimple senator;
     private LinearLayout senatorLayout;
+
+    public void setOnButtonClickListener(OnButtonClickListener onButtonClickListener) {
+        this.onButtonClickListener = onButtonClickListener;
+    }
+
+    OnButtonClickListener onButtonClickListener;
 
     public ShuffleDeskSimple(Context context, ScrollView scrollView) {
         super(context);
@@ -56,7 +66,7 @@ public class ShuffleDeskSimple extends RelativeLayout {
     }
 
     public ArrayList<MovableButton> getButtons() {
-        ArrayList<MovableButton> buttons = new ArrayList<MovableButton>();
+        ArrayList<MovableButton> buttons = new ArrayList<>();
         buttons.addAll(senator.getSortedList());
         return buttons;
     }
@@ -66,12 +76,13 @@ public class ShuffleDeskSimple extends RelativeLayout {
         return (int) (dp * scale + 0.5f);
     }
 
-    public static int px2dip(float px, Context context) {
-        float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (px / scale + 0.5f);
+    public void onButtonClicked(MovableButton btn) {
+        if (onButtonClickListener!=null){
+            onButtonClickListener.onClick(btn);
+        }
     }
 
-    public ShuffleCardSimple getSenator() {
-        return senator;
+    public static interface OnButtonClickListener{
+        void onClick(MovableButton btn);
     }
 }

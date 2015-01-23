@@ -3,30 +3,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.example.sourcewall.CommonView.LListView
+    <com.example.sourcewall.commonview.LListView
         android:id="@+id/list_posts"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="false" />
 
-    <com.example.sourcewall.CommonView.LoadingView
+    <com.example.sourcewall.commonview.LoadingView
         android:id="@+id/post_progress_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone" />
 
-    <com.example.sourcewall.CommonView.PlasticLayout
+    <FrameLayout
         android:id="@+id/layout_more_groups"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true">
+        android:layout_alignParentTop="true"
+        android:background="#ffffff"
+        android:visibility="invisible">
 
         <ScrollView
             android:id="@+id/plastic_scroller"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        </ScrollView>
-    </com.example.sourcewall.CommonView.PlasticLayout>
+            android:layout_height="match_parent" />
+    </FrameLayout>
 </RelativeLayout>

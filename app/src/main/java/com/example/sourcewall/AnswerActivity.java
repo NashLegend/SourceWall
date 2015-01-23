@@ -21,8 +21,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.sourcewall.CommonView.SScrollView;
-import com.example.sourcewall.CommonView.WWebView;
+import com.example.sourcewall.commonview.SScrollView;
+import com.example.sourcewall.commonview.WWebView;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.QuestionAPI;
 import com.example.sourcewall.connection.api.UserAPI;

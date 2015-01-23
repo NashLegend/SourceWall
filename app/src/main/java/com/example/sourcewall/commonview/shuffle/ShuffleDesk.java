@@ -1,4 +1,4 @@
-package com.example.sourcewall.CommonView.shuffle;
+package com.example.sourcewall.commonview.shuffle;
 
 import android.content.Context;
 import android.util.AttributeSet;

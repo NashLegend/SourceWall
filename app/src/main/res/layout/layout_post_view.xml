@@ -48,7 +48,7 @@
                 android:textSize="@dimen/text_author_view_font_size_dimen" />
         </LinearLayout>
 
-        <com.example.sourcewall.CommonView.WWebView
+        <com.example.sourcewall.commonview.WWebView
             android:id="@+id/web_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

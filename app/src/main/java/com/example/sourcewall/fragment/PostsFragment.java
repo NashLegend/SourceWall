@@ -1,10 +1,14 @@
 package com.example.sourcewall.fragment;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
+import android.support.v4.view.MenuItemCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,19 +17,21 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 
 import com.example.sourcewall.BaseActivity;
-import com.example.sourcewall.CommonView.LListView;
-import com.example.sourcewall.CommonView.LoadingView;
-import com.example.sourcewall.CommonView.shuffle.GroupMovableButton;
-import com.example.sourcewall.CommonView.shuffle.MovableButton;
-import com.example.sourcewall.CommonView.shuffle.ShuffleDeskSimple;
 import com.example.sourcewall.PostActivity;
-import com.example.sourcewall.PublishPostActivity;
 import com.example.sourcewall.R;
+import com.example.sourcewall.ShuffleActivity;
 import com.example.sourcewall.adapters.PostAdapter;
+import com.example.sourcewall.commonview.LListView;
+import com.example.sourcewall.commonview.LoadingView;
+import com.example.sourcewall.commonview.shuffle.GroupMovableButton;
+import com.example.sourcewall.commonview.shuffle.MovableButton;
+import com.example.sourcewall.commonview.shuffle.ShuffleDeskSimple;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.PostAPI;
 import com.example.sourcewall.connection.api.UserAPI;
@@ -122,19 +128,38 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         moreGroupsLayout = (ViewGroup) view.findViewById(R.id.layout_more_groups);
         deskSimple = new ShuffleDeskSimple(getActivity(), scrollView);
         scrollView.addView(deskSimple);
-
+        deskSimple.setOnButtonClickListener(new ShuffleDeskSimple.OnButtonClickListener() {
+            @Override
+            public void onClick(MovableButton btn) {
+                if (btn instanceof GroupMovableButton) {
+                    onGroupButtonClicked((GroupMovableButton) btn);
+                }
+            }
+        });
+        moreGroupsLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (moreGroupsLayout.getHeight() > 0) {
+                    moreGroupsLayout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                    moreGroupsLayout.setTranslationY(-moreGroupsLayout.getHeight());
+                    moreGroupsLayout.setVisibility(View.VISIBLE);
+                }
+            }
+        });
         setTitle();
         loadOver();
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getButtons();
-                initView();
-            }
-        }, 1000);
-
         return view;
+    }
+
+    private void onGroupButtonClicked(GroupMovableButton button) {
+        MyGroup myGroup = button.getSection();
+        SubItem subItem = new SubItem(myGroup.getSection(), myGroup.getType(), myGroup.getName(), myGroup.getValue());
+        Intent intent = new Intent();
+        intent.setAction(Consts.Action_Open_Content_Fragment);
+        intent.putExtra(Consts.Extra_SubItem, subItem);
+        intent.putExtra(Consts.Extra_Should_Invalidate_Menu, true);
+        getActivity().sendBroadcast(intent);
+        hideMoreGroups();
     }
 
     private void initView() {
@@ -169,12 +194,111 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         }
     }
 
-    private void showMoreGroups() {
+    boolean hasLoadedGroups;
 
+    private void showMoreGroups() {
+        isMoreGroupsButtonShowing = true;
+        if (animatorSet != null && animatorSet.isRunning()) {
+            animatorSet.cancel();
+        }
+        animatorSet = new AnimatorSet();
+        ObjectAnimator layoutAnimator = ObjectAnimator.ofFloat(moreGroupsLayout, "translationY", moreGroupsLayout.getTranslationY(), 0);
+        layoutAnimator.setInterpolator(new DecelerateInterpolator());
+        ObjectAnimator imageAnimator = ObjectAnimator.ofFloat(moreGroupImageView, "rotation", moreGroupImageView.getRotation(), 180);
+        imageAnimator.setInterpolator(new DecelerateInterpolator());
+
+        ArrayList<Animator> animators = new ArrayList<>();
+        animators.add(layoutAnimator);
+        animators.add(imageAnimator);
+
+        animatorSet.addListener(new Animator.AnimatorListener() {
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if (!hasLoadedGroups) {
+                    getButtons();
+                    initView();
+                    hasLoadedGroups = true;
+                }
+            }
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+            }
+
+        });
+
+        animatorSet.playTogether(animators);
+        animatorSet.setDuration(350);
+        animatorSet.start();
     }
 
-    private void hideMoreGroups() {
+    AnimatorSet animatorSet;
 
+    private void hideMoreGroups() {
+        isMoreGroupsButtonShowing = false;
+        moreGroupsLayout.setVisibility(View.VISIBLE);
+        if (animatorSet != null && animatorSet.isRunning()) {
+            animatorSet.cancel();
+        }
+        animatorSet = new AnimatorSet();
+        ObjectAnimator layoutAnimator = ObjectAnimator.ofFloat(moreGroupsLayout, "translationY", moreGroupsLayout.getTranslationY(), -moreGroupsLayout.getHeight());
+        layoutAnimator.setInterpolator(new DecelerateInterpolator());
+        ObjectAnimator imageAnimator = ObjectAnimator.ofFloat(moreGroupImageView, "rotation", moreGroupImageView.getRotation(), 360);
+        imageAnimator.setInterpolator(new DecelerateInterpolator());
+
+        ArrayList<Animator> animators = new ArrayList<>();
+        animators.add(layoutAnimator);
+        animators.add(imageAnimator);
+
+        animatorSet.addListener(new Animator.AnimatorListener() {
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                moreGroupImageView.setRotation(0);
+                commitChange(deskSimple.getButtons());
+            }
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+
+        });
+
+        animatorSet.playTogether(animators);
+        animatorSet.setDuration(250);
+        animatorSet.start();
+    }
+
+    public void commitChange(ArrayList<MovableButton> buttons) {
+        List<MyGroup> sections = new ArrayList<>();
+        for (int i = 0; i < buttons.size(); i++) {
+            MyGroup myGroup = (MyGroup) buttons.get(i).getSection();
+            if (!myGroup.getSelected()) {
+                myGroup.setOrder(1024 + myGroup.getOrder());
+            }
+            sections.add(myGroup);
+        }
+        GroupHelper.putUnselectedGroups(sections);
     }
 
     private void loadOver() {
@@ -201,8 +325,8 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
 
     private void writePost() {
         if (UserAPI.isLoggedIn()) {
-            Intent intent = new Intent(getActivity(), PublishPostActivity.class);
-//            Intent intent = new Intent(getActivity(), ShuffleActivity.class);
+//            Intent intent = new Intent(getActivity(), PublishPostActivity.class);
+            Intent intent = new Intent(getActivity(), ShuffleActivity.class);
             intent.putExtra(Consts.Extra_SubItem, subItem);
             startActivityForResult(intent, Code_Publish_Post);
         } else {
@@ -237,11 +361,30 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         return R.menu.menu_fragment_post;
     }
 
+    ImageView moreGroupImageView;
+    boolean isMoreGroupsButtonShowing;
+
     @Override
     public void takeOverMenuInflate(MenuInflater inflater, Menu menu) {
         inflater.inflate(getFragmentMenu(), menu);
         if (subItem.getType() == SubItem.Type_Collections || subItem.getType() == SubItem.Type_Private_Channel) {
             menu.findItem(R.id.action_write_post).setVisible(false);
+        }
+        if (!UserAPI.isLoggedIn()) {
+            menu.findItem(R.id.action_more_group).setVisible(false);
+        } else {
+            moreGroupImageView = (ImageView) ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.action_view_more_group, null);
+            MenuItemCompat.setActionView(menu.findItem(R.id.action_more_group), moreGroupImageView);
+            moreGroupImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (isMoreGroupsButtonShowing) {
+                        hideMoreGroups();
+                    } else {
+                        showMoreGroups();
+                    }
+                }
+            });
         }
     }
 
@@ -251,9 +394,6 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         switch (id) {
             case R.id.action_write_post:
                 writePost();
-                break;
-            case R.id.action_more_group:
-                showMoreGroups();
                 break;
         }
         return true;

@@ -14,8 +14,8 @@ import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 
 import com.example.sourcewall.BaseActivity;
-import com.example.sourcewall.CommonView.LListView;
-import com.example.sourcewall.CommonView.LoadingView;
+import com.example.sourcewall.commonview.LListView;
+import com.example.sourcewall.commonview.LoadingView;
 import com.example.sourcewall.PublishPostActivity;
 import com.example.sourcewall.QuestionActivity;
 import com.example.sourcewall.R;

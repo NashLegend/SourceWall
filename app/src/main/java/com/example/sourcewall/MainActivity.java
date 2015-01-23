@@ -121,6 +121,10 @@ public class MainActivity extends BaseActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             SubItem subItem = (SubItem) intent.getSerializableExtra(Consts.Extra_SubItem);
+            boolean shouldInvalidateMenu = intent.getBooleanExtra(Consts.Extra_Should_Invalidate_Menu, false);
+            if (shouldInvalidateMenu){
+                MainActivity.this.invalidateOptionsMenu();
+            }
             switch (subItem.getSection()) {
                 case SubItem.Section_Article:
                     if (articlesFragment == null) {

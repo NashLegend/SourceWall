@@ -20,6 +20,7 @@ public class Consts {
     public static final String Extra_Question = "sourcewall.extra.question.id";
     public static final String Extra_Answer = "sourcewall.extra.answer.id";
     public static final String Extra_SubItem = "sourcewall.extra.subitem.id";
+    public static final String Extra_Should_Invalidate_Menu = "sourcewall.extra.should.invalidate.menu";
 
     // 保存SharedPreferences的Key
     public static final String Key_Cookie = "sourcewall.key.cookie";

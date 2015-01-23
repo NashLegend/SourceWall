@@ -39,5 +39,16 @@ public class GroupHelper {
         myGroupDao.insertInTx(myGroups);
     }
 
+    public static void putUnselectedGroups(List<MyGroup> myGroups) {
+        List<MyGroup> groups = getSelectedGroups();
+        groups.addAll(myGroups);
+        for (int i = 0; i < groups.size(); i++) {
+            groups.get(i).setId(null);
+            System.out.println(groups.get(i).getOrder() + "," + groups.get(i).getName());
+        }
+        MyGroupDao myGroupDao = AppApplication.getDaoSession().getMyGroupDao();
+        myGroupDao.deleteAll();
+        myGroupDao.insertInTx(groups);
+    }
 
 }

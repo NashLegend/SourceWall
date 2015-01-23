@@ -1,4 +1,4 @@
-package com.example.sourcewall.CommonView;
+package com.example.sourcewall.commonview;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.example.sourcewall.CommonView.LListView.OnRefreshListener;
+import com.example.sourcewall.commonview.LListView.OnRefreshListener;
 import com.example.sourcewall.R;
 import com.example.sourcewall.util.DisplayUtil;
 
