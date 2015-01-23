@@ -36,7 +36,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp"
+                android:layout_marginLeft="10dp"
                 android:text="@string/selected_section_tip"
                 android:textColor="#cbcbcb"
                 android:textSize="14sp" />
@@ -79,6 +79,14 @@
                 android:textColor="#3780d9"
                 android:textSize="18sp"
                 android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="@string/unselected_section_tip"
+                android:textColor="#cbcbcb"
+                android:textSize="14sp" />
         </LinearLayout>
 
         <ScrollView
@@ -90,7 +98,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </ScrollView>
-
 
     </LinearLayout>
 
