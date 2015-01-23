@@ -55,16 +55,11 @@ public class ShuffleActivity extends BaseActivity {
         return false;
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        commitChange(desk.getButtons());
-//        setResult(RESULT_OK);
-//        super.onBackPressed();
-//    }
-
     private void commitAndFinish() {
-        commitChange(desk.getButtons());
-        setResult(RESULT_OK);
+        if (desk.getSenator().getList() != null && desk.getSenator().getList().size() > 0) {
+            commitChange(desk.getButtons());
+            setResult(RESULT_OK);
+        }
         finish();
     }
 

@@ -169,8 +169,10 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         deskSimple.initView();
     }
 
+    List<MyGroup> unselectedSections;
+
     public void getButtons() {
-        List<MyGroup> unselectedSections = GroupHelper.getUnselectedGroups();
+        unselectedSections = GroupHelper.getUnselectedGroups();
         ArrayList<MovableButton> unselectedButtons = new ArrayList<>();
         for (int i = 0; i < unselectedSections.size(); i++) {
             MyGroup section = unselectedSections.get(i);
@@ -266,7 +268,9 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
             @Override
             public void onAnimationEnd(Animator animation) {
                 moreGroupImageView.setRotation(0);
-                commitChange(deskSimple.getButtons());
+                if (deskSimple.getButtons() != null && deskSimple.getButtons().size() > 0) {
+                    commitChange(deskSimple.getSortedButtons());
+                }
             }
 
             @Override
@@ -416,7 +420,9 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
             headerView.setVisibility(View.GONE);
             loadOver();
         }
-        hideMoreGroups();
+        if (isMoreGroupsButtonShowing) {
+            hideMoreGroups();
+        }
         setTitle();
     }
 

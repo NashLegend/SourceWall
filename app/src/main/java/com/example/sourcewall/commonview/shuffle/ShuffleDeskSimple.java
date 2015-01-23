@@ -1,16 +1,12 @@
 package com.example.sourcewall.commonview.shuffle;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
 import com.example.sourcewall.R;
-import com.example.sourcewall.db.gen.MyGroup;
-import com.example.sourcewall.model.SubItem;
-import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.DisplayUtil;
 
 import java.util.ArrayList;
@@ -66,6 +62,10 @@ public class ShuffleDeskSimple extends RelativeLayout {
     }
 
     public ArrayList<MovableButton> getButtons() {
+        return buttons;
+    }
+
+    public ArrayList<MovableButton> getSortedButtons() {
         ArrayList<MovableButton> buttons = new ArrayList<>();
         buttons.addAll(senator.getSortedList());
         return buttons;
@@ -77,12 +77,12 @@ public class ShuffleDeskSimple extends RelativeLayout {
     }
 
     public void onButtonClicked(MovableButton btn) {
-        if (onButtonClickListener!=null){
+        if (onButtonClickListener != null) {
             onButtonClickListener.onClick(btn);
         }
     }
 
-    public static interface OnButtonClickListener{
+    public static interface OnButtonClickListener {
         void onClick(MovableButton btn);
     }
 }
