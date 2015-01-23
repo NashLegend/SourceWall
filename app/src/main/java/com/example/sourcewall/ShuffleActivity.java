@@ -40,11 +40,11 @@ public class ShuffleActivity extends BaseActivity {
                 initView();
             }
         });
-//        dbTask = new LoaderFromDBTask();
-//        dbTask.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR);
+        dbTask = new LoaderFromDBTask();
+        dbTask.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR);
 
-        netTask=new LoaderFromNetTask();
-        netTask.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR);
+//        netTask=new LoaderFromNetTask();
+//        netTask.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

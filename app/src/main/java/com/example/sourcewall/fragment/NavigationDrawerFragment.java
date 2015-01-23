@@ -33,6 +33,7 @@ import com.example.sourcewall.connection.api.UserAPI;
 import com.example.sourcewall.db.GroupHelper;
 import com.example.sourcewall.model.SubItem;
 import com.example.sourcewall.model.UserInfo;
+import com.example.sourcewall.util.ChannelHelper;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.SharedUtil;
 import com.example.sourcewall.util.ToastUtil;
@@ -314,6 +315,8 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         }
     }
 
+    long currentDBVersion = -1;
+
     @Override
     public void onResume() {
         super.onResume();
@@ -341,6 +344,17 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
                 } else {
                     //TODO 清除头像与名称
                 }
+            } else {
+                long lastDBVersion = SharedUtil.readLong(Consts.Key_Last_Post_Groups_Version, 0);
+                if (currentDBVersion != lastDBVersion) {
+                    ArrayList<SubItem> subItems = adapter.getSubLists().get(1);
+                    subItems.clear();
+                    subItems.add(new SubItem(SubItem.Section_Post, SubItem.Type_Private_Channel, "我的小组", "user_group"));
+                    subItems.add(new SubItem(SubItem.Section_Post, SubItem.Type_Collections, "小组热贴", "hot_posts"));
+                    subItems.addAll(GroupHelper.getSelectedGroupSubItems());
+                    adapter.notifyDataSetChanged();
+                    currentDBVersion = lastDBVersion;
+                }
             }
         }
     }
@@ -356,22 +370,19 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
             if (GroupHelper.getMyGroupsNumber() > 0) {
                 //如果已经加载了栏目
                 subItems.clear();
-                subItems.add(0, new SubItem(SubItem.Section_Post, SubItem.Type_Private_Channel, "我的小组", "user_group"));
+                subItems.add(new SubItem(SubItem.Section_Post, SubItem.Type_Private_Channel, "我的小组", "user_group"));
+                subItems.add(new SubItem(SubItem.Section_Post, SubItem.Type_Collections, "小组热贴", "hot_posts"));
                 subItems.addAll(GroupHelper.getSelectedGroupSubItems());
             } else {
                 if (!isItemMy) {
                     subItems.add(0, new SubItem(SubItem.Section_Post, SubItem.Type_Private_Channel, "我的小组", "user_group"));
-                    adapter.notifyDataSetChanged();
                 }
             }
         } else {
-            if (isItemMy) {
-                subItems.remove(0);
-                adapter.notifyDataSetChanged();
-            } else {
-                // do nothing
-            }
+            subItems.clear();
+            subItems.addAll(ChannelHelper.getPosts());
         }
+        adapter.notifyDataSetInvalidated();
     }
 
     private void testLogin() {

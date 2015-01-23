@@ -4,6 +4,8 @@ import com.example.sourcewall.AppApplication;
 import com.example.sourcewall.db.gen.MyGroup;
 import com.example.sourcewall.db.gen.MyGroupDao;
 import com.example.sourcewall.model.SubItem;
+import com.example.sourcewall.util.Consts;
+import com.example.sourcewall.util.SharedUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,20 +57,42 @@ public class GroupHelper {
     }
 
     public static void putAllMyGroups(List<MyGroup> myGroups) {
-        MyGroupDao myGroupDao = AppApplication.getDaoSession().getMyGroupDao();
-        myGroupDao.deleteAll();
-        myGroupDao.insertInTx(myGroups);
+        AppApplication.getDaoSession().getDatabase().beginTransaction();
+        try {
+            MyGroupDao myGroupDao = AppApplication.getDaoSession().getMyGroupDao();
+            myGroupDao.deleteAll();
+            myGroupDao.insertInTx(myGroups);
+            AppApplication.getDaoSession().getDatabase().setTransactionSuccessful();
+            SharedUtil.saveLong(Consts.Key_Last_Post_Groups_Version, System.currentTimeMillis());
+        } catch (Exception e) {
+            System.out.println("putAllMyGroups Failed");
+        } finally {
+            AppApplication.getDaoSession().getDatabase().endTransaction();
+        }
     }
 
+    /**
+     * 调整未选中项的顺序，不修改Key_Last_Post_Groups_Version
+     *
+     * @param myGroups
+     */
     public static void putUnselectedGroups(List<MyGroup> myGroups) {
-        List<MyGroup> groups = getSelectedGroups();
-        groups.addAll(myGroups);
-        for (int i = 0; i < groups.size(); i++) {
-            groups.get(i).setId(null);
+        AppApplication.getDaoSession().getDatabase().beginTransaction();
+        try {
+            List<MyGroup> groups = getSelectedGroups();
+            groups.addAll(myGroups);
+            for (int i = 0; i < groups.size(); i++) {
+                groups.get(i).setId(null);
+            }
+            MyGroupDao myGroupDao = AppApplication.getDaoSession().getMyGroupDao();
+            myGroupDao.deleteAll();
+            myGroupDao.insertInTx(groups);
+            AppApplication.getDaoSession().getDatabase().setTransactionSuccessful();
+        } catch (Exception e) {
+            System.out.println("putUnselectedGroups Failed");
+        } finally {
+            AppApplication.getDaoSession().getDatabase().endTransaction();
         }
-        MyGroupDao myGroupDao = AppApplication.getDaoSession().getMyGroupDao();
-        myGroupDao.deleteAll();
-        myGroupDao.insertInTx(groups);
     }
 
 }

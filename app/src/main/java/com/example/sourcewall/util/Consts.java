@@ -30,6 +30,7 @@ public class Consts {
     public static final String Key_User_ID = "sourcewall.key.user.id";
     public static final String Key_User_Avatar = "sourcewall.key.user.avatar";
     public static final String Key_Is_Night_Mode = "sourcewall.key.is.night.mode";
+    public static final String Key_Last_Post_Groups_Version = "sourcewall.key.last.post.groups.version";
 
     // 登录页保存Cookie
     public static final String LOGIN_URL = "https://account.guokr.com/sign_in/?display=mobile";

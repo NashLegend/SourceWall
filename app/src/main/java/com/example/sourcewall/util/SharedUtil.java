@@ -68,6 +68,18 @@ public class SharedUtil {
         return getEditor().commit();
     }
 
+    // 读Int
+    public static long readLong(String key, long defValue) {
+        long n = getSharedPreferences().getLong(key, defValue);
+        return n;
+    }
+
+    // 写Int
+    public static boolean saveLong(String key, long value) {
+        getEditor().putLong(key, value);
+        return getEditor().commit();
+    }
+
     // 布尔值读
     public static boolean isActive(String key, boolean defaultValue) {
         return getSharedPreferences().getBoolean(key, defaultValue);

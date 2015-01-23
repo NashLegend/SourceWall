@@ -24,8 +24,8 @@ import android.widget.ScrollView;
 
 import com.example.sourcewall.BaseActivity;
 import com.example.sourcewall.PostActivity;
-import com.example.sourcewall.PublishPostActivity;
 import com.example.sourcewall.R;
+import com.example.sourcewall.ShuffleActivity;
 import com.example.sourcewall.adapters.PostAdapter;
 import com.example.sourcewall.commonview.LListView;
 import com.example.sourcewall.commonview.LoadingView;
@@ -40,6 +40,7 @@ import com.example.sourcewall.db.gen.MyGroup;
 import com.example.sourcewall.model.Post;
 import com.example.sourcewall.model.SubItem;
 import com.example.sourcewall.util.Consts;
+import com.example.sourcewall.util.SharedUtil;
 import com.example.sourcewall.util.ToastUtil;
 import com.example.sourcewall.view.PostListItemView;
 
@@ -66,6 +67,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     ViewGroup moreGroupsLayout;
     ScrollView scrollView;
     ShuffleDeskSimple deskSimple;
+    long currentDBVersion = -1;
 
     @Override
     public View onCreateLayoutView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -194,8 +196,6 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         }
     }
 
-    boolean hasLoadedGroups;
-
     private void showMoreGroups() {
         isMoreGroupsButtonShowing = true;
         if (animatorSet != null && animatorSet.isRunning()) {
@@ -215,10 +215,12 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                if (!hasLoadedGroups) {
+
+                long lastDBVersion = SharedUtil.readLong(Consts.Key_Last_Post_Groups_Version, 0);
+                if (currentDBVersion != lastDBVersion) {
                     getButtons();
                     initView();
-                    hasLoadedGroups = true;
+                    currentDBVersion = SharedUtil.readLong(Consts.Key_Last_Post_Groups_Version, 0);
                 }
             }
 
@@ -325,8 +327,8 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
 
     private void writePost() {
         if (UserAPI.isLoggedIn()) {
-            Intent intent = new Intent(getActivity(), PublishPostActivity.class);
-//            Intent intent = new Intent(getActivity(), ShuffleActivity.class);
+//            Intent intent = new Intent(getActivity(), PublishPostActivity.class);
+            Intent intent = new Intent(getActivity(), ShuffleActivity.class);
             intent.putExtra(Consts.Extra_SubItem, subItem);
             startActivityForResult(intent, Code_Publish_Post);
         } else {
@@ -414,6 +416,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
             headerView.setVisibility(View.GONE);
             loadOver();
         }
+        hideMoreGroups();
         setTitle();
     }
 
