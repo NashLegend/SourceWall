@@ -44,7 +44,6 @@ public class GroupHelper {
         groups.addAll(myGroups);
         for (int i = 0; i < groups.size(); i++) {
             groups.get(i).setId(null);
-            System.out.println(groups.get(i).getOrder() + "," + groups.get(i).getName());
         }
         MyGroupDao myGroupDao = AppApplication.getDaoSession().getMyGroupDao();
         myGroupDao.deleteAll();

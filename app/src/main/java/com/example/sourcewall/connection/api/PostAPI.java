@@ -46,7 +46,6 @@ public class PostAPI extends APIBase {
             Document doc1 = Jsoup.parse(firstPage);
             Elements lis = doc1.getElementsByClass("group-list").get(0).getElementsByTag("li");
             numPages = Integer.valueOf(doc1.getElementsByClass("page-num").text().replaceAll("1/", ""));
-            System.out.println("get Page ");
             //第一页
             for (int i = 0; i < lis.size(); i++) {
                 Element element = lis.get(i).getElementsByTag("a").get(0);
@@ -61,7 +60,6 @@ public class PostAPI extends APIBase {
             if (numPages > 1) {
                 for (int j = 2; j <= numPages; j++) {
                     Thread.sleep(1000);
-                    System.out.println("get Page " + j);
                     String url = pageUrl + "?page=" + j;
                     Document pageDoc = Jsoup.parse(HttpFetcher.get(url).toString());
                     Elements pageLis = pageDoc.getElementsByClass("group-list").get(0).getElementsByTag("li");
