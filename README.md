@@ -8,4 +8,4 @@ SourceWall——果壳网第三方客户端
 4. 夜间模式
 
 ===============
-周末添加自定义栏目页面
+SVG Support will come soon……
