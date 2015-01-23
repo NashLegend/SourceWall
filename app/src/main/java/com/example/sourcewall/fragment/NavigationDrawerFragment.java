@@ -346,7 +346,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
                 }
             } else {
                 long lastDBVersion = SharedUtil.readLong(Consts.Key_Last_Post_Groups_Version, 0);
-                if (currentDBVersion != lastDBVersion) {
+                if (currentDBVersion != lastDBVersion && GroupHelper.getMyGroupsNumber() > 0) {
                     ArrayList<SubItem> subItems = adapter.getSubLists().get(1);
                     subItems.clear();
                     subItems.add(new SubItem(SubItem.Section_Post, SubItem.Type_Private_Channel, "我的小组", "user_group"));

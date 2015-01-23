@@ -23,19 +23,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="2dp"
-            android:text="@string/more_unselected_sections"
-            android:textColor="#3780d9"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="2dp"
+            android:layout_marginLeft="10dp"
             android:text="@string/tip_of_more_groups"
             android:textColor="#cbcbcb"
-            android:textSize="14sp" />
+            android:textSize="16sp" />
     </LinearLayout>
 
     <com.example.sourcewall.commonview.shuffle.ShuffleCardSimple
