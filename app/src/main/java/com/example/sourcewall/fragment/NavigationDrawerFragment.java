@@ -30,6 +30,7 @@ import com.example.sourcewall.R;
 import com.example.sourcewall.adapters.ChannelsAdapter;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.UserAPI;
+import com.example.sourcewall.db.GroupHelper;
 import com.example.sourcewall.model.SubItem;
 import com.example.sourcewall.model.UserInfo;
 import com.example.sourcewall.util.Consts;
@@ -342,7 +343,6 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
                 }
             }
         }
-
     }
 
     /**
@@ -353,11 +353,16 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         SubItem item = subItems.get(0);
         boolean isItemMy = item.getType() == SubItem.Type_Private_Channel;
         if (UserAPI.isLoggedIn()) {
-            if (!isItemMy) {
+            if (GroupHelper.getMyGroupsNumber() > 0) {
+                //如果已经加载了栏目
+                subItems.clear();
                 subItems.add(0, new SubItem(SubItem.Section_Post, SubItem.Type_Private_Channel, "我的小组", "user_group"));
-                adapter.notifyDataSetChanged();
+                subItems.addAll(GroupHelper.getSelectedGroupSubItems());
             } else {
-                //do nothing
+                if (!isItemMy) {
+                    subItems.add(0, new SubItem(SubItem.Section_Post, SubItem.Type_Private_Channel, "我的小组", "user_group"));
+                    adapter.notifyDataSetChanged();
+                }
             }
         } else {
             if (isItemMy) {

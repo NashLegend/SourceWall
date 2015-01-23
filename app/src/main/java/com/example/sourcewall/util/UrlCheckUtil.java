@@ -31,6 +31,7 @@ public class UrlCheckUtil {
         //TODO 可以在此接管链接的跳转
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         intent.putExtra(Browser.EXTRA_APPLICATION_ID, AppApplication.getApplication().getPackageName());
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         AppApplication.getApplication().startActivity(intent);
     }
 }
