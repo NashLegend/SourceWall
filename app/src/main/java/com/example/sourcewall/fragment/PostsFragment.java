@@ -24,8 +24,8 @@ import android.widget.ScrollView;
 
 import com.example.sourcewall.BaseActivity;
 import com.example.sourcewall.PostActivity;
+import com.example.sourcewall.PublishPostActivity;
 import com.example.sourcewall.R;
-import com.example.sourcewall.ShuffleActivity;
 import com.example.sourcewall.adapters.PostAdapter;
 import com.example.sourcewall.commonview.LListView;
 import com.example.sourcewall.commonview.LoadingView;
@@ -331,8 +331,8 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
 
     private void writePost() {
         if (UserAPI.isLoggedIn()) {
-//            Intent intent = new Intent(getActivity(), PublishPostActivity.class);
-            Intent intent = new Intent(getActivity(), ShuffleActivity.class);
+            Intent intent = new Intent(getActivity(), PublishPostActivity.class);
+//            Intent intent = new Intent(getActivity(), ShuffleActivity.class);
             intent.putExtra(Consts.Extra_SubItem, subItem);
             startActivityForResult(intent, Code_Publish_Post);
         } else {
