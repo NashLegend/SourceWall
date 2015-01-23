@@ -3,7 +3,6 @@ package com.example.sourcewall.commonview.shuffle;
 import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.os.Handler;
@@ -12,10 +11,6 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.example.sourcewall.db.gen.MyGroup;
-import com.example.sourcewall.model.SubItem;
-import com.example.sourcewall.util.Consts;
 
 import java.util.ArrayList;
 
@@ -207,7 +202,7 @@ public class ShuffleCardSimple extends ShuffleCard {
 
         @Override
         public void onClick(View v) {
-            if (v instanceof MovableButton){
+            if (v instanceof MovableButton) {
                 deskSimple.onButtonClicked((MovableButton) v);
             }
 
