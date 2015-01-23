@@ -2,13 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f6f7f5">
+    android:background="#ffffff">
 
-    <LinearLayout
+<LinearLayout
         android:id="@+id/SenatorLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#ffffff"
         android:orientation="vertical">
 
         <LinearLayout

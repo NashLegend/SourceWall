@@ -2,7 +2,10 @@ package com.example.sourcewall;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 
 import com.example.sourcewall.commonview.shuffle.GroupMovableButton;
@@ -21,16 +24,19 @@ import java.util.List;
 /**
  * @author NashLegend
  */
-public class ShuffleActivity extends BaseActivity {
+public class ShuffleActivity extends SwipeActivity {
 
     private ShuffleDesk desk;
     LoaderFromDBTask dbTask;
     LoaderFromNetTask netTask;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shuffle);
+        toolbar = (Toolbar) findViewById(R.id.action_bar);
+        setSupportActionBar(toolbar);
         desk = (ShuffleDesk) findViewById(R.id.shuffle_desk);
         desk.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
 
@@ -45,6 +51,22 @@ public class ShuffleActivity extends BaseActivity {
 
 //        netTask=new LoaderFromNetTask();
 //        netTask.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.shuffle, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -115,6 +137,10 @@ public class ShuffleActivity extends BaseActivity {
         if (sections.size() > 0) {
             GroupHelper.putAllMyGroups(sections);
         }
+    }
+
+    private void mergeMyGroups() {
+
     }
 
     class LoaderFromDBTask extends AsyncTask<String, Integer, Boolean> {

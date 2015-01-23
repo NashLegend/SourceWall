@@ -15,7 +15,7 @@
     <string name="hello_world">泥嚎！</string>
     <string name="title_activity_setting">设置</string>
     <string name="article">科学人</string>
-    <string name="shuffle">Shuffle</string>
+    <string name="shuffle">小组管理</string>
     <string name="post">小组</string>
     <string name="question">问答</string>
     <string name="title_activity_login">登录</string>
@@ -104,11 +104,12 @@
     <string name="hint_input_question_desc">输入问题补充说明(可选)</string>
     <string name="hint_input_question">输入问题</string>
     <string name="hint_input_post_title">输入帖子标题</string>
-    <string name="selected_section">左侧边栏项</string>
+    <string name="selected_section">首页左侧常用小组</string>
     <string name="selected_section_tip">点击增删，长按排序</string>
-    <string name="more_unselected_sections">页面顶部项</string>
+    <string name="more_unselected_sections">首页顶部小组们</string>
     <string name="more_groups">更多小组</string>
     <string name="tip_of_more_groups">点击进入小组，长按排序</string>
     <string name="unselected_section_tip">点击添加到左侧边栏</string>
+    <string name="action_reload_my_groups">重新加载</string>
 
 </resources>
