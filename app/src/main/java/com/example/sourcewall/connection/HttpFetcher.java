@@ -71,7 +71,6 @@ public class HttpFetcher {
         String result = EntityUtils.toString(entity, HTTP.UTF_8);
         resultObject.statusCode = statusCode;
         resultObject.result = result;
-        System.out.println(result);
         return resultObject;
     }
 

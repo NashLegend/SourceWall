@@ -8,4 +8,3 @@ SourceWall——果壳网第三方客户端
 4. 夜间模式
 
 ===============
-SVG Support will come soon……

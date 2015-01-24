@@ -115,7 +115,6 @@ public class UserAPI extends APIBase {
         String token = getToken();
         try {
             String result = HttpFetcher.get("http://www.guokr.com/apis/community/rn_num.json?_=" + System.currentTimeMillis() + "&access_token=" + token).toString();
-            System.out.println(result);
             JSONObject object = new JSONObject(result);
             if (getJsonBoolean(object, "ok")) {
                 resultObject.ok = true;
