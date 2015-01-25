@@ -80,6 +80,14 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        if (currentFragment != null && currentFragment.takeOverBackPressed()) {
+            return;
+        }
+        super.onBackPressed();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
             if (currentFragment != null) {
@@ -122,7 +130,7 @@ public class MainActivity extends BaseActivity {
         public void onReceive(Context context, Intent intent) {
             SubItem subItem = (SubItem) intent.getSerializableExtra(Consts.Extra_SubItem);
             boolean shouldInvalidateMenu = intent.getBooleanExtra(Consts.Extra_Should_Invalidate_Menu, false);
-            if (shouldInvalidateMenu){
+            if (shouldInvalidateMenu) {
                 MainActivity.this.invalidateOptionsMenu();
             }
             switch (subItem.getSection()) {

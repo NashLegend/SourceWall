@@ -61,10 +61,8 @@ public class QuestionAPI extends APIBase {
             String url = "http://apis.guokr.com/ask/question.json?retrieve_type=by_tag&limit=20&tag_name="
                     + tag + "&offset=" + offset;
             String jString = HttpFetcher.get(url).toString();
-            JSONObject jss = new JSONObject(jString);
-            boolean ok = jss.getBoolean("ok");
-            if (ok) {
-                JSONArray results = jss.getJSONArray("result");
+            JSONArray results = getUniversalJsonArray(jString, resultObject);
+            if (results != null) {
                 for (int i = 0; i < results.length(); i++) {
                     JSONObject jsonObject = results.getJSONObject(i);
                     Question question = new Question();
@@ -191,10 +189,8 @@ public class QuestionAPI extends APIBase {
         try {
             Question question = null;
             String jString = HttpFetcher.get(url).toString();
-            JSONObject jss = new JSONObject(jString);
-            boolean ok = jss.getBoolean("ok");
-            if (ok) {
-                JSONObject result = getJsonObject(jss, "result");
+            JSONObject result = getUniversalJsonObject(jString, resultObject);
+            if (result != null) {
                 question = new Question();
                 question.setAnswerable(getJsonBoolean(result, "is_answerable"));
                 question.setAnswerNum(getJsonInt(result, "answers_count"));
@@ -241,10 +237,8 @@ public class QuestionAPI extends APIBase {
             String url = "http://apis.guokr.com/ask/answer.json?retrieve_type=by_question&limit=20&question_id="
                     + id + "&offset=" + offset;
             String jString = HttpFetcher.get(url).toString();
-            JSONObject jss = new JSONObject(jString);
-            boolean ok = jss.getBoolean("ok");
-            if (ok) {
-                JSONArray comments = jss.getJSONArray("result");
+            JSONArray comments = getUniversalJsonArray(jString, resultObject);
+            if (comments != null) {
                 for (int i = 0; i < comments.length(); i++) {
                     JSONObject jo = comments.getJSONObject(i);
                     QuestionAnswer ans = new QuestionAnswer();
@@ -319,10 +313,8 @@ public class QuestionAPI extends APIBase {
             String url = "http://www.guokr.com/apis/ask/question_reply.json?retrieve_type=by_question&question_id="
                     + id + "&offset=" + offset;
             String jString = HttpFetcher.get(url).toString();
-            JSONObject jss = new JSONObject(jString);
-            boolean ok = jss.getBoolean("ok");
-            if (ok) {
-                JSONArray comments = jss.getJSONArray("result");
+            JSONArray comments = getUniversalJsonArray(jString, resultObject);
+            if (comments != null) {
                 for (int i = 0; i < comments.length(); i++) {
                     JSONObject jsonObject = comments.getJSONObject(i);
                     UComment comment = new UComment();
@@ -362,14 +354,12 @@ public class QuestionAPI extends APIBase {
     public static ResultObject getAnswerComments(String id, int offset) {
         ResultObject resultObject = new ResultObject();
         try {
-            ArrayList<UComment> list = new ArrayList<UComment>();
+            ArrayList<UComment> list = new ArrayList<>();
             String url = "http://www.guokr.com/apis/ask/answer_reply.json?retrieve_type=by_answer&limit=20&answer_id="
                     + id + "&offset=" + offset;
             String jString = HttpFetcher.get(url).toString();
-            JSONObject jss = new JSONObject(jString);
-            boolean ok = jss.getBoolean("ok");
-            if (ok) {
-                JSONArray comments = jss.getJSONArray("result");
+            JSONArray comments = getUniversalJsonArray(jString, resultObject);
+            if (comments != null) {
                 for (int i = 0; i < comments.length(); i++) {
                     JSONObject jsonObject = comments.getJSONObject(i);
                     UComment comment = new UComment();
@@ -414,9 +404,8 @@ public class QuestionAPI extends APIBase {
             pairs.add(new BasicNameValuePair("content", content));
             pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
             String result = HttpFetcher.post(url, pairs).toString();
-            JSONObject object = new JSONObject(result);
-            if (getJsonBoolean(object, "ok")) {
-                JSONObject resultJson = getJsonObject(object, "result");
+            JSONObject resultJson = getUniversalJsonObject(result, resultObject);
+            if (resultJson != null) {
                 String replyID = getJsonString(resultJson, "id");
                 resultObject.ok = true;
                 resultObject.result = replyID;
@@ -465,8 +454,7 @@ public class QuestionAPI extends APIBase {
             pairs.add(new BasicNameValuePair("opinion", opinion));
             pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
             String result = HttpFetcher.post(url, pairs).toString();
-            JSONObject object = new JSONObject(result);
-            if (getJsonBoolean(object, "ok")) {
+            if (getUniversalJsonSimpleBoolean(result, resultObject)) {
                 resultObject.ok = true;
             }
         } catch (JSONException | IOException e) {
@@ -489,8 +477,7 @@ public class QuestionAPI extends APIBase {
             pairs.add(new BasicNameValuePair("answer_id", id));
             pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
             String result = HttpFetcher.post(url, pairs).toString();
-            JSONObject object = new JSONObject(result);
-            if (getJsonBoolean(object, "ok")) {
+            if (getUniversalJsonSimpleBoolean(result, resultObject)) {
                 resultObject.ok = true;
             }
         } catch (JSONException | IOException e) {
@@ -513,8 +500,7 @@ public class QuestionAPI extends APIBase {
             pairs.add(new BasicNameValuePair("answer_id", id));
             pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
             String result = HttpFetcher.post(url, pairs).toString();
-            JSONObject object = new JSONObject(result);
-            if (getJsonBoolean(object, "ok")) {
+            if (getUniversalJsonSimpleBoolean(result, resultObject)) {
                 resultObject.ok = true;
             }
         } catch (JSONException | IOException e) {
@@ -554,9 +540,8 @@ public class QuestionAPI extends APIBase {
             pairs.add(new BasicNameValuePair("retrieve_type", "by_question"));
             pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
             String result = HttpFetcher.post(url, pairs).toString();
-            JSONObject object = new JSONObject(result);
-            if (getJsonBoolean(object, "ok")) {
-                JSONObject jsonObject = object.getJSONObject("result");
+            JSONObject jsonObject = getUniversalJsonObject(result, resultObject);
+            if (jsonObject != null) {
                 UComment uComment = new UComment();
                 uComment.setAuthor(jsonObject.getJSONObject("author").getString("nickname"));
                 uComment.setAuthorID(jsonObject.getJSONObject("author").getString("url")
@@ -593,9 +578,8 @@ public class QuestionAPI extends APIBase {
             pairs.add(new BasicNameValuePair("retrieve_type", "by_answer"));
             pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
             String result = HttpFetcher.post(url, pairs).toString();
-            JSONObject object = new JSONObject(result);
-            if (getJsonBoolean(object, "ok")) {
-                JSONObject jsonObject = object.getJSONObject("result");
+            JSONObject jsonObject = getUniversalJsonObject(result, resultObject);
+            if (jsonObject != null) {
                 UComment uComment = new UComment();
                 uComment.setAuthor(jsonObject.getJSONObject("author").getString("nickname"));
                 uComment.setAuthorID(jsonObject.getJSONObject("author").getString("url")

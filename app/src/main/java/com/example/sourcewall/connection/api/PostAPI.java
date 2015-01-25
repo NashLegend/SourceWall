@@ -273,12 +273,10 @@ public class PostAPI extends APIBase {
         try {
             String url = "http://apis.guokr.com/group/post.json?retrieve_type=by_group&group_id=" + id
                     + "&limit=20&offset=" + offset;
-            ArrayList<Post> list = new ArrayList<Post>();
+            ArrayList<Post> list = new ArrayList<>();
             String jString = HttpFetcher.get(url).toString();
-            JSONObject jss = new JSONObject(jString);
-            boolean ok = jss.getBoolean("ok");
-            if (ok) {
-                JSONArray articles = jss.getJSONArray("result");
+            JSONArray articles = APIBase.getUniversalJsonArray(jString, resultObject);
+            if (articles != null) {
                 for (int i = 0; i < articles.length(); i++) {
                     JSONObject jo = articles.getJSONObject(i);
                     Post post = new Post();
@@ -388,10 +386,8 @@ public class PostAPI extends APIBase {
             String url = "http://apis.guokr.com/group/post_reply.json?retrieve_type=by_post&post_id="
                     + id + "&limit=20&offset=" + offset;
             String jString = HttpFetcher.get(url).toString();
-            JSONObject jss = new JSONObject(jString);
-            boolean ok = jss.getBoolean("ok");
-            if (ok) {
-                JSONArray comments = jss.getJSONArray("result");
+            JSONArray comments = getUniversalJsonArray(jString, resultObject);
+            if (comments != null) {
                 for (int i = 0; i < comments.length(); i++) {
                     JSONObject jo = comments.getJSONObject(i);
                     UComment comment = new UComment();
@@ -530,8 +526,7 @@ public class PostAPI extends APIBase {
             pairs.add(new BasicNameValuePair("post_id", postID));
             pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
             String result = HttpFetcher.post(url, pairs).toString();
-            JSONObject object = new JSONObject(result);
-            if (getJsonBoolean(object, "ok")) {
+            if (getUniversalJsonSimpleBoolean(result, resultObject)) {
                 resultObject.ok = true;
             }
         } catch (JSONException | IOException e) {
@@ -557,9 +552,8 @@ public class PostAPI extends APIBase {
             pairs.add(new BasicNameValuePair("content", content));
             pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
             String result = HttpFetcher.post(url, pairs).toString();
-            JSONObject object = new JSONObject(result);
-            if (getJsonBoolean(object, "ok")) {
-                JSONObject resultJson = getJsonObject(object, "result");
+            JSONObject resultJson = getUniversalJsonObject(result, resultObject);
+            if (resultJson != null) {
                 String replyID = getJsonString(resultJson, "id");
                 resultObject.ok = true;
                 resultObject.result = replyID;
@@ -586,8 +580,7 @@ public class PostAPI extends APIBase {
             pairs.add(new BasicNameValuePair("reply_id", id));
             pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
             String result = HttpFetcher.post(url, pairs).toString();
-            JSONObject object = new JSONObject(result);
-            if (getJsonBoolean(object, "ok")) {
+            if (getUniversalJsonSimpleBoolean(result, resultObject)) {
                 resultObject.ok = true;
             }
         } catch (JSONException | IOException e) {

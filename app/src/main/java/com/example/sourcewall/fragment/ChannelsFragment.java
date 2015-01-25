@@ -27,6 +27,8 @@ public abstract class ChannelsFragment extends BaseFragment {
 
     abstract public boolean takeOverOptionsItemSelect(MenuItem item);
 
+    abstract public boolean takeOverBackPressed();
+
     abstract public void resetData(SubItem subItem);
 
     abstract public void triggerRefresh();

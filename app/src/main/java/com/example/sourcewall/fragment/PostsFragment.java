@@ -452,6 +452,15 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     }
 
     @Override
+    public boolean takeOverBackPressed() {
+        if (isMoreGroupsButtonShowing) {
+            hideMoreGroups();
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public void resetData(SubItem subItem) {
         if (subItem.equals(this.subItem)) {
             triggerRefresh();

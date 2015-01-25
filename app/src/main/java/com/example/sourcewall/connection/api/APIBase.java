@@ -91,10 +91,9 @@ public class APIBase {
                 HttpEntity resEntity = response.getEntity();
                 if (resEntity != null) {
                     result = EntityUtils.toString(resEntity, HTTP.UTF_8);
-                    JSONObject object = new JSONObject(result);
-                    if (getJsonBoolean(object, "ok")) {
-                        JSONObject resultJson = getJsonObject(object, "result");
-                        String url = getJsonString(resultJson, "url");
+                    JSONObject object = getUniversalJsonObject(result, resultObject);
+                    if (object != null) {
+                        String url = getJsonString(object, "url");
                         resultObject.ok = true;
                         resultObject.result = url;
                     }
@@ -197,20 +196,72 @@ public class APIBase {
     }
 
     /**
-     * 果壳json返回的格式是固定的，这个可以先判断是否成功并剥离出有用信息。但是没使用……
+     * 果壳json返回的格式是固定的，这个可以先判断是否成功并剥离出有用信息。
+     * 这里还可以做一些token过期失败问题的处理，省得在每个地方都判断了。
      *
      * @param json
      * @return
      * @throws JSONException
      */
-    public static JSONObject getUniversalJsonObject(String json) throws JSONException {
-        ResultObject resultObject = new ResultObject();
+    public static JSONObject getUniversalJsonObject(String json, ResultObject resultObject) throws JSONException {
         JSONObject object = new JSONObject(json);
         if (getJsonBoolean(object, "ok")) {
             resultObject.ok = getJsonBoolean(object, "ok");
             return getJsonObject(object, "result");
+        } else {
+            handleBadJson(object, resultObject);
         }
         return null;
+    }
+
+    /**
+     * 果壳json返回的格式是固定的，这个可以先判断是否成功并剥离出有用信息。
+     * 这里还可以做一些token过期失败问题的处理，省得在每个地方都判断了。
+     *
+     * @param json
+     * @return
+     * @throws JSONException
+     */
+    public static JSONArray getUniversalJsonArray(String json, ResultObject resultObject) throws JSONException {
+        JSONObject object = new JSONObject(json);
+        if (getJsonBoolean(object, "ok")) {
+            resultObject.ok = getJsonBoolean(object, "ok");
+            return getJsonArray(object, "result");
+        } else {
+            handleBadJson(object, resultObject);
+        }
+        return null;
+    }
+
+    /**
+     * 果壳json返回的格式是固定的，这个可以先判断是否成功并剥离出有用信息。
+     * 这里还可以做一些token过期失败问题的处理，省得在每个地方都判断了。
+     *
+     * @param json
+     * @return
+     * @throws JSONException
+     */
+    public static boolean getUniversalJsonSimpleBoolean(String json, ResultObject resultObject) throws JSONException {
+        JSONObject object = new JSONObject(json);
+        if (getJsonBoolean(object, "ok")) {
+            resultObject.ok = getJsonBoolean(object, "ok");
+            return true;
+        } else {
+            handleBadJson(object, resultObject);
+        }
+        return false;
+    }
+
+    public static void handleBadJson(JSONObject object, ResultObject resultObject) throws JSONException {
+        int error_code = getJsonInt(object, "error_code");
+        String error_msg = getJsonString(object, "error");
+        resultObject.message = error_msg;
+        if (error_code == 200004) {
+            resultObject.code = ResultObject.ResultCode.CODE_TOKEN_INVALID;
+        } else {
+            resultObject.code = ResultObject.ResultCode.CODE_UNKNOWN;
+        }
+        //String invalidToken = " {\"error_code\": 200004, \"request_uri\": \"/apis/community/rn_num.json?_=1422011885139&access_token=51096037c7aa15ccd08c12c3fba8f856ae65d672cda50f25cec883343f3597a6\", \"ok\": false, \"error\": \"Illegal access token.\"}\n";
     }
 
     /**

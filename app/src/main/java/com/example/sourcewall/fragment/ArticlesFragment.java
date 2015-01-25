@@ -12,10 +12,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import com.example.sourcewall.ArticleActivity;
-import com.example.sourcewall.commonview.LListView;
-import com.example.sourcewall.commonview.LoadingView;
 import com.example.sourcewall.R;
 import com.example.sourcewall.adapters.ArticleAdapter;
+import com.example.sourcewall.commonview.LListView;
+import com.example.sourcewall.commonview.LoadingView;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.ArticleAPI;
 import com.example.sourcewall.model.Article;
@@ -123,6 +123,11 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
     public boolean takeOverOptionsItemSelect(MenuItem item) {
         int id = item.getItemId();
         return true;
+    }
+
+    @Override
+    public boolean takeOverBackPressed() {
+        return false;
     }
 
     @Override

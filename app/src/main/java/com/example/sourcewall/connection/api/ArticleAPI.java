@@ -85,10 +85,8 @@ public class ArticleAPI extends APIBase {
         try {
             ArrayList<Article> articleList = new ArrayList<Article>();
             String jString = HttpFetcher.get(url).toString();
-            JSONObject jss = new JSONObject(jString);
-            boolean ok = jss.getBoolean("ok");
-            if (ok) {
-                JSONArray articles = jss.getJSONArray("result");
+            JSONArray articles = APIBase.getUniversalJsonArray(jString, resultObject);
+            if (articles != null) {
                 for (int i = 0; i < articles.length(); i++) {
                     JSONObject jo = articles.getJSONObject(i);
                     Article article = new Article();
@@ -239,10 +237,8 @@ public class ArticleAPI extends APIBase {
             String url = "http://apis.guokr.com/minisite/article_reply.json?article_id=" + id
                     + "&limit=20&offset=" + offset;
             String jString = HttpFetcher.get(url).toString();
-            JSONObject jss = new JSONObject(jString);
-            boolean ok = jss.getBoolean("ok");
-            if (ok) {
-                JSONArray articles = jss.getJSONArray("result");
+            JSONArray articles = APIBase.getUniversalJsonArray(jString, resultObject);
+            if (articles != null) {
                 for (int i = 0; i < articles.length(); i++) {
                     JSONObject jo = articles.getJSONObject(i);
                     UComment comment = new UComment();
@@ -254,19 +250,14 @@ public class ArticleAPI extends APIBase {
                     comment.setAuthorAvatarUrl(jo.getJSONObject("author").getJSONObject("avatar")
                             .getString("large").replaceAll("\\?\\S*$", ""));
                     comment.setAuthorTitle(getJsonString(getJsonObject(jo, "author"), "title"));
-                    //Date  TODO
                     comment.setDate(parseDate(getJsonString(jo, "date_created")));
                     comment.setFloor((offset + i + 1) + "楼");
-                    String html = getJsonString(jo, "html");
                     comment.setContent(getJsonString(jo, "html"));
-//                    comment.setSimpleHtml(TextHtmlHelper.correctLinkPaths(Html.fromHtml(html)));
                     comment.setHostID(id);
                     list.add(comment);
                 }
                 resultObject.ok = true;
                 resultObject.result = list;
-            } else {
-                resultObject.ok = false;
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -333,8 +324,7 @@ public class ArticleAPI extends APIBase {
             pairs.add(new BasicNameValuePair("reply_id", id));
             pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
             String result = HttpFetcher.post(url, pairs).toString();
-            JSONObject object = new JSONObject(result);
-            if (getJsonBoolean(object, "ok")) {
+            if (getUniversalJsonSimpleBoolean(result, resultObject)) {
                 resultObject.ok = true;
             }
         } catch (JSONException | IOException e) {
@@ -359,9 +349,8 @@ public class ArticleAPI extends APIBase {
             pairs.add(new BasicNameValuePair("content", content));
             pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
             String result = HttpFetcher.post(url, pairs).toString();
-            JSONObject object = new JSONObject(result);
-            if (getJsonBoolean(object, "ok")) {
-                JSONObject resultJson = getJsonObject(object, "result");
+            JSONObject resultJson = APIBase.getUniversalJsonObject(result, resultObject);
+            if (resultJson != null) {
                 String replyID = getJsonString(resultJson, "id");
                 resultObject.ok = true;
                 resultObject.result = replyID;
@@ -390,9 +379,8 @@ public class ArticleAPI extends APIBase {
             pairs.add(new BasicNameValuePair("content", content));
             pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
             String result = HttpFetcher.post(url, pairs).toString();
-            JSONObject object = new JSONObject(result);
-            if (getJsonBoolean(object, "ok")) {
-                JSONObject resultJson = getJsonObject(object, "result");
+            JSONObject resultJson = APIBase.getUniversalJsonObject(result, resultObject);
+            if (resultJson != null) {
                 String replyID = getJsonString(resultJson, "id");
                 resultObject.ok = true;
                 resultObject.result = replyID;

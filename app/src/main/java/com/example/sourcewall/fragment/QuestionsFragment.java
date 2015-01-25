@@ -189,6 +189,11 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
     }
 
     @Override
+    public boolean takeOverBackPressed() {
+        return false;
+    }
+
+    @Override
     public void resetData(SubItem subItem) {
         if (subItem.equals(this.subItem)) {
             triggerRefresh();

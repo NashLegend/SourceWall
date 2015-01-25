@@ -55,9 +55,9 @@ public class UserAPI extends APIBase {
     public static ResultObject getUserInfoByUkey(String ukey) {
         ResultObject resultObject = new ResultObject();
         try {
-            JSONObject object = new JSONObject(HttpFetcher.get("http://apis.guokr.com/community/user/" + ukey + ".json").toString());
-            if (getJsonBoolean(object, "ok")) {
-                JSONObject subObject = getJsonObject(object, "result");
+            String result = HttpFetcher.get("http://apis.guokr.com/community/user/" + ukey + ".json").toString();
+            JSONObject subObject = getUniversalJsonObject(result, resultObject);
+            if (subObject != null) {
                 UserInfo info = new UserInfo();
                 info.setDate_created(getJsonString(subObject, "date_created"));
                 info.setIntroduction(getJsonString(subObject, "introduction"));
@@ -155,8 +155,7 @@ public class UserAPI extends APIBase {
             params.add(new BasicNameValuePair("title", title));
             params.add(new BasicNameValuePair("access_token", getToken()));
             String result = HttpFetcher.post(url, params).toString();
-            JSONObject object = new JSONObject(result);
-            if (getJsonBoolean(object, "ok")) {
+            if (getUniversalJsonSimpleBoolean(result, resultObject)) {
                 resultObject.ok = true;
             }
         } catch (JSONException e) {
@@ -190,8 +189,7 @@ public class UserAPI extends APIBase {
             pairs.add(new BasicNameValuePair("target", "activity"));
             pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
             String result = HttpFetcher.post(url, pairs).toString();
-            JSONObject object = new JSONObject(result);
-            if (getJsonBoolean(object, "ok")) {
+            if (getUniversalJsonSimpleBoolean(result, resultObject)) {
                 resultObject.ok = true;
             }
         } catch (IOException e) {
@@ -212,29 +210,26 @@ public class UserAPI extends APIBase {
         String url = "http://www.guokr.com/apis/favorite/basket.json?t=" + System.currentTimeMillis() + "&retrieve_type=by_ukey&ukey=" + getUkey() + "&limit=100&access_token=" + getToken();
         try {
             String result = HttpFetcher.get(url).toString();
-            JSONObject object = new JSONObject(result);
-            if (getJsonBoolean(object, "ok")) {
-                JSONArray jsonArray = getJsonArray(object, "result");
-                if (jsonArray != null) {
-                    ArrayList<Basket> baskets = new ArrayList<>();
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject subObject = jsonArray.getJSONObject(i);
-                        Basket basket = new Basket();
-                        basket.setId(getJsonString(subObject, "id"));
-                        basket.setIntroduction(getJsonString(subObject, "introduction"));
-                        basket.setLinks_count(getJsonInt(subObject, "links_count"));
-                        basket.setName(getJsonString(subObject, "title"));
-                        JSONObject category = getJsonObject(subObject, "category");
-                        if (category != null) {
-                            basket.setCategory_id(getJsonString(category, "id"));
-                            basket.setCategory_name(getJsonString(category, "name"));
-                        }
-                        baskets.add(basket);
+            JSONArray jsonArray = getUniversalJsonArray(result, resultObject);
+            if (jsonArray != null) {
+                ArrayList<Basket> baskets = new ArrayList<>();
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject subObject = jsonArray.getJSONObject(i);
+                    Basket basket = new Basket();
+                    basket.setId(getJsonString(subObject, "id"));
+                    basket.setIntroduction(getJsonString(subObject, "introduction"));
+                    basket.setLinks_count(getJsonInt(subObject, "links_count"));
+                    basket.setName(getJsonString(subObject, "title"));
+                    JSONObject category = getJsonObject(subObject, "category");
+                    if (category != null) {
+                        basket.setCategory_id(getJsonString(category, "id"));
+                        basket.setCategory_name(getJsonString(category, "name"));
                     }
-                    resultObject.ok = true;
-                    resultObject.result = baskets;
-                    myBaskets = baskets;
+                    baskets.add(basket);
                 }
+                resultObject.ok = true;
+                resultObject.result = baskets;
+                myBaskets = baskets;
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -264,24 +259,22 @@ public class UserAPI extends APIBase {
             params.add(new BasicNameValuePair("category_id", category_id));
             params.add(new BasicNameValuePair("access_token", getToken()));
             String result = HttpFetcher.post(url, params).toString();
-            JSONObject object = new JSONObject(result);
-            if (getJsonBoolean(object, "ok")) {
-                JSONObject subObject = getJsonObject(object, "result");
-                if (subObject != null) {
-                    Basket basket = new Basket();
-                    basket.setId(getJsonString(subObject, "id"));
-                    basket.setIntroduction(getJsonString(subObject, "introduction"));
-                    basket.setLinks_count(0);
-                    basket.setName(getJsonString(subObject, "title"));
-                    JSONObject category = getJsonObject(subObject, "category");
-                    if (category != null) {
-                        basket.setCategory_id(getJsonString(category, "id"));
-                        basket.setCategory_name(getJsonString(category, "name"));
-                    }
-                    resultObject.ok = true;
-                    resultObject.result = basket;
-                    myBaskets.add(basket);
+            JSONObject subObject = getUniversalJsonObject(result, resultObject);
+            if (subObject != null) {
+                Basket basket = new Basket();
+                basket.setId(getJsonString(subObject, "id"));
+                basket.setIntroduction(getJsonString(subObject, "introduction"));
+                basket.setLinks_count(0);
+                basket.setName(getJsonString(subObject, "title"));
+                JSONObject category = getJsonObject(subObject, "category");
+                if (category != null) {
+                    basket.setCategory_id(getJsonString(category, "id"));
+                    basket.setCategory_name(getJsonString(category, "name"));
                 }
+                resultObject.ok = true;
+                resultObject.result = basket;
+                myBaskets.add(basket);
+
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -303,21 +296,18 @@ public class UserAPI extends APIBase {
         try {
             String url = "http://www.guokr.com/apis/favorite/category.json?access_token=" + getToken();
             String result = HttpFetcher.get(url).toString();
-            JSONObject object = new JSONObject(result);
-            if (getJsonBoolean(object, "ok")) {
-                JSONArray jsonArray = getJsonArray(object, "result");
-                if (jsonArray != null) {
-                    ArrayList<Category> categories = new ArrayList<>();
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject subObject = jsonArray.getJSONObject(i);
-                        Category category = new Category();
-                        category.setId(getJsonString(subObject, "id"));
-                        category.setName(getJsonString(subObject, "name"));
-                        categories.add(category);
-                    }
-                    resultObject.ok = true;
-                    resultObject.result = categories;
+            JSONArray jsonArray = getUniversalJsonArray(result, resultObject);
+            if (jsonArray != null) {
+                ArrayList<Category> categories = new ArrayList<>();
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject subObject = jsonArray.getJSONObject(i);
+                    Category category = new Category();
+                    category.setId(getJsonString(subObject, "id"));
+                    category.setName(getJsonString(subObject, "name"));
+                    categories.add(category);
                 }
+                resultObject.ok = true;
+                resultObject.result = categories;
             }
         } catch (JSONException e) {
             e.printStackTrace();
