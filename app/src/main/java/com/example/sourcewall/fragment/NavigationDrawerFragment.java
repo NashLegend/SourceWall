@@ -291,7 +291,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     private void onUserViewClicked() {
         if (!UserAPI.isLoggedIn()) {
             Intent intent = new Intent(getActivity(), LoginActivity.class);
-            startActivityForResult(intent, Code_Login);
+            startActivityForResult(intent, Consts.Code_Login);
         }
     }
 
@@ -371,7 +371,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     /**
      * 临时办法  FIXME
      */
-    private void checkChannelList() {
+    synchronized private void checkChannelList() {
         ArrayList<SubItem> subItems = adapter.getSubLists().get(1);
         SubItem item = subItems.get(0);
         boolean isItemMy = item.getType() == SubItem.Type_Private_Channel;

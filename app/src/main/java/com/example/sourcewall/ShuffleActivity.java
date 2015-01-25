@@ -16,6 +16,7 @@ import com.example.sourcewall.connection.api.PostAPI;
 import com.example.sourcewall.db.GroupHelper;
 import com.example.sourcewall.db.gen.MyGroup;
 import com.example.sourcewall.model.SubItem;
+import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.ToastUtil;
 
 import java.util.ArrayList;
@@ -46,11 +47,14 @@ public class ShuffleActivity extends SwipeActivity {
                 initView();
             }
         });
-        dbTask = new LoaderFromDBTask();
-        dbTask.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR);
 
-//        netTask=new LoaderFromNetTask();
-//        netTask.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR);
+        if (getIntent().getBooleanExtra(Consts.Extra_Should_Load_Before_Shuffle, false)) {
+            netTask = new LoaderFromNetTask();
+            netTask.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            dbTask = new LoaderFromDBTask();
+            dbTask.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR);
+        }
     }
 
     @Override

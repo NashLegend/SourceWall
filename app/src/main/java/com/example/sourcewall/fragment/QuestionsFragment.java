@@ -14,12 +14,12 @@ import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 
 import com.example.sourcewall.BaseActivity;
-import com.example.sourcewall.commonview.LListView;
-import com.example.sourcewall.commonview.LoadingView;
 import com.example.sourcewall.PublishPostActivity;
 import com.example.sourcewall.QuestionActivity;
 import com.example.sourcewall.R;
 import com.example.sourcewall.adapters.QuestionAdapter;
+import com.example.sourcewall.commonview.LListView;
+import com.example.sourcewall.commonview.LoadingView;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.QuestionAPI;
 import com.example.sourcewall.connection.api.UserAPI;
@@ -146,7 +146,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
         if (UserAPI.isLoggedIn()) {
             Intent intent = new Intent(getActivity(), PublishPostActivity.class);
             intent.putExtra(Consts.Extra_SubItem, subItem);
-            startActivityForResult(intent, Code_Publish_Question);
+            startActivityForResult(intent, Consts.Code_Publish_Question);
         } else {
             ((BaseActivity) getActivity()).notifyNeedLog();
         }

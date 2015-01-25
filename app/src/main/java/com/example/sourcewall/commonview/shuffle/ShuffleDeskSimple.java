@@ -54,6 +54,7 @@ public class ShuffleDeskSimple extends RelativeLayout {
     }
 
     private void shuffleButtons() {
+        senator.removeAllViews();
         senator.shuffleButtons();
     }
 

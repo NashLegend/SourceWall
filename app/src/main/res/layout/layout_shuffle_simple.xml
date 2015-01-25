@@ -18,15 +18,37 @@
         <View
             android:layout_width="4dp"
             android:layout_height="24dp"
+            android:layout_weight="0"
             android:background="#3579cc" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
+            android:layout_weight="0"
             android:text="@string/tip_of_more_groups"
-            android:textColor="#cbcbcb"
+            android:textColor="#9c9c9c"
             android:textSize="16sp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent" />
+
+        <Button
+            android:id="@+id/button_manage_my_sections"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_weight="0"
+            android:background="@android:color/transparent"
+            android:minHeight="20dp"
+            android:minWidth="20dp"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:text="管理"
+            android:textColor="?attr/drawable_dialog_button_text" />
     </LinearLayout>
 
     <com.example.sourcewall.commonview.shuffle.ShuffleCardSimple

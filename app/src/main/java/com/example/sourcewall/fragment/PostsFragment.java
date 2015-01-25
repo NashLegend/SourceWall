@@ -4,10 +4,13 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.view.MenuItemCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,6 +22,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 
@@ -26,6 +30,7 @@ import com.example.sourcewall.BaseActivity;
 import com.example.sourcewall.PostActivity;
 import com.example.sourcewall.PublishPostActivity;
 import com.example.sourcewall.R;
+import com.example.sourcewall.ShuffleActivity;
 import com.example.sourcewall.adapters.PostAdapter;
 import com.example.sourcewall.commonview.LListView;
 import com.example.sourcewall.commonview.LoadingView;
@@ -67,6 +72,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     ViewGroup moreGroupsLayout;
     ScrollView scrollView;
     ShuffleDeskSimple deskSimple;
+    Button manageButton;
     long currentDBVersion = -1;
 
     @Override
@@ -138,6 +144,17 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                 }
             }
         });
+        manageButton = (Button) deskSimple.findViewById(R.id.button_manage_my_sections);
+        manageButton.setText("管理所有小组");
+        manageButton.setVisibility(View.INVISIBLE);
+        manageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideMoreGroups();
+                Intent intent = new Intent(getActivity(), ShuffleActivity.class);
+                startActivityForResult(intent, Consts.Code_Start_Shuffle_Groups);
+            }
+        });
         moreGroupsLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -165,6 +182,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     }
 
     private void initView() {
+        System.out.println("InitViews");
         deskSimple.InitDatas();
         deskSimple.initView();
     }
@@ -217,12 +235,36 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
 
             @Override
             public void onAnimationEnd(Animator animation) {
+                if (GroupHelper.getMyGroupsNumber() > 0) {
+                    long lastDBVersion = SharedUtil.readLong(Consts.Key_Last_Post_Groups_Version, 0);
+                    if (currentDBVersion != lastDBVersion) {
+                        getButtons();
+                        initView();
+                        currentDBVersion = SharedUtil.readLong(Consts.Key_Last_Post_Groups_Version, 0);
+                    }
+                    manageButton.setVisibility(View.VISIBLE);
+                } else {
+                    manageButton.setVisibility(View.INVISIBLE);
+                    AlertDialog dialog = new AlertDialog.Builder(getActivity()).setTitle("提示").setMessage("尚未加载我关注的小组，是否开始加载？").setPositiveButton("加载我的小组", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            hideMoreGroups();
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Intent intent = new Intent(getActivity(), ShuffleActivity.class);
+                                    intent.putExtra(Consts.Extra_Should_Load_Before_Shuffle, true);
+                                    startActivityForResult(intent, Consts.Code_Start_Shuffle_Groups);
+                                }
+                            }, 270);
+                        }
+                    }).setNegativeButton("使用默认小组", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
 
-                long lastDBVersion = SharedUtil.readLong(Consts.Key_Last_Post_Groups_Version, 0);
-                if (currentDBVersion != lastDBVersion) {
-                    getButtons();
-                    initView();
-                    currentDBVersion = SharedUtil.readLong(Consts.Key_Last_Post_Groups_Version, 0);
+                        }
+                    }).create();
+                    dialog.show();
                 }
             }
 
@@ -332,9 +374,8 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     private void writePost() {
         if (UserAPI.isLoggedIn()) {
             Intent intent = new Intent(getActivity(), PublishPostActivity.class);
-//            Intent intent = new Intent(getActivity(), ShuffleActivity.class);
             intent.putExtra(Consts.Extra_SubItem, subItem);
-            startActivityForResult(intent, Code_Publish_Post);
+            startActivityForResult(intent, Consts.Code_Publish_Post);
         } else {
             ((BaseActivity) getActivity()).notifyNeedLog();
         }

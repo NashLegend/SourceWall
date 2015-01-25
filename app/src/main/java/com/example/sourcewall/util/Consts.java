@@ -21,6 +21,7 @@ public class Consts {
     public static final String Extra_Answer = "sourcewall.extra.answer.id";
     public static final String Extra_SubItem = "sourcewall.extra.subitem.id";
     public static final String Extra_Should_Invalidate_Menu = "sourcewall.extra.should.invalidate.menu";
+    public static final String Extra_Should_Load_Before_Shuffle = "sourcewall.extra.should.load.before.shuffle";
 
     // 保存SharedPreferences的Key
     public static final String Key_Cookie = "sourcewall.key.cookie";
@@ -31,6 +32,12 @@ public class Consts {
     public static final String Key_User_Avatar = "sourcewall.key.user.avatar";
     public static final String Key_Is_Night_Mode = "sourcewall.key.is.night.mode";
     public static final String Key_Last_Post_Groups_Version = "sourcewall.key.last.post.groups.version";
+
+    // 保存startActivityForResult的RequestCode
+    public static final int Code_Login = 1025;
+    public static final int Code_Publish_Post = 1026;
+    public static final int Code_Publish_Question = 1027;
+    public static final int Code_Start_Shuffle_Groups = 1028;
 
     // 登录页保存Cookie
     public static final String LOGIN_URL = "https://account.guokr.com/sign_in/?display=mobile";
