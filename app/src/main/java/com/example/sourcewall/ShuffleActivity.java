@@ -1,5 +1,6 @@
 package com.example.sourcewall;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -31,6 +32,7 @@ public class ShuffleActivity extends SwipeActivity {
     LoaderFromDBTask dbTask;
     LoaderFromNetTask netTask;
     Toolbar toolbar;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,17 +61,21 @@ public class ShuffleActivity extends SwipeActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.shuffle, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        if (id == R.id.action_reload_my_groups) {
+            if (netTask != null && netTask.getStatus() == AsyncTask.Status.RUNNING) {
+                netTask.cancel(false);
+            }
+            netTask = new LoaderFromNetTask();
+            netTask.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR);
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -143,8 +149,26 @@ public class ShuffleActivity extends SwipeActivity {
         }
     }
 
-    private void mergeMyGroups() {
-
+    private void mergeMyGroups(ArrayList<MyGroup> myGroups) {
+        if (GroupHelper.getMyGroupsNumber() > 0) {
+            List<MyGroup> selectedGroups = GroupHelper.getSelectedGroups();
+            for (int i = 0; i < myGroups.size(); i++) {
+                MyGroup tmpGroup = myGroups.get(i);
+                boolean selected = false;
+                for (int j = 0; j < selectedGroups.size(); j++) {
+                    if (selectedGroups.get(j).getValue().equals(tmpGroup.getValue())) {
+                        selected = true;
+                        break;
+                    }
+                }
+                tmpGroup.setSelected(selected);
+                if (selected) {
+                    tmpGroup.setOrder(i);
+                } else {
+                    tmpGroup.setOrder(1024 + i);
+                }
+            }
+        }
     }
 
     class LoaderFromDBTask extends AsyncTask<String, Integer, Boolean> {
@@ -164,12 +188,21 @@ public class ShuffleActivity extends SwipeActivity {
     class LoaderFromNetTask extends AsyncTask<String, Integer, Boolean> {
 
         @Override
+        protected void onPreExecute() {
+            progressDialog = new ProgressDialog(ShuffleActivity.this);
+            progressDialog.setCancelable(false);
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.setMessage(getString(R.string.message_replying));
+            progressDialog.show();
+        }
+
+        @Override
         protected Boolean doInBackground(String[] params) {
             ResultObject resultObject = PostAPI.getAllMyGroups();
             if (resultObject.ok) {
                 ArrayList<SubItem> subItems = (ArrayList<SubItem>) resultObject.result;
                 ArrayList<MyGroup> myGroups = new ArrayList<>();
-                int sel = 18;
+                int sel = 12;
                 for (int i = 0; i < subItems.size(); i++) {
                     SubItem item = subItems.get(i);
                     MyGroup mygroup = new MyGroup();
@@ -178,9 +211,12 @@ public class ShuffleActivity extends SwipeActivity {
                     mygroup.setType(item.getType());
                     mygroup.setSection(item.getSection());
                     mygroup.setSelected(i < sel);
+                    mygroup.setOrder(i);
                     myGroups.add(mygroup);
                 }
+                mergeMyGroups(myGroups);
                 GroupHelper.putAllMyGroups(myGroups);
+                getButtons();
                 return true;
             }
             return false;
@@ -188,8 +224,8 @@ public class ShuffleActivity extends SwipeActivity {
 
         @Override
         protected void onPostExecute(Boolean aBoolean) {
+            progressDialog.dismiss();
             if (aBoolean) {
-                getButtons();
                 initView();
             } else {
                 ToastUtil.toast("Failed");

@@ -110,6 +110,6 @@
     <string name="more_groups">更多小组</string>
     <string name="tip_of_more_groups">点击进入小组，长按排序</string>
     <string name="unselected_section_tip">点击添加到左侧边栏</string>
-    <string name="action_reload_my_groups">重新加载</string>
+    <string name="action_reload_my_groups">重新加载小组</string>
 
 </resources>

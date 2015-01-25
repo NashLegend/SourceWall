@@ -151,8 +151,13 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
             @Override
             public void onClick(View v) {
                 hideMoreGroups();
-                Intent intent = new Intent(getActivity(), ShuffleActivity.class);
-                startActivityForResult(intent, Consts.Code_Start_Shuffle_Groups);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent intent = new Intent(getActivity(), ShuffleActivity.class);
+                        startActivityForResult(intent, Consts.Code_Start_Shuffle_Groups);
+                    }
+                }, 320);
             }
         });
         moreGroupsLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
