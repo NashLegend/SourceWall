@@ -13,9 +13,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 
+import com.example.sourcewall.adapters.PostDetailAdapter;
 import com.example.sourcewall.commonview.LListView;
 import com.example.sourcewall.commonview.LoadingView;
-import com.example.sourcewall.adapters.PostDetailAdapter;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.PostAPI;
 import com.example.sourcewall.connection.api.UserAPI;
@@ -28,6 +28,7 @@ import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.RegUtil;
 import com.example.sourcewall.view.MediumListItemView;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.ArrayList;
 
@@ -35,9 +36,9 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
     LListView listView;
     PostDetailAdapter adapter;
     Post post;
-    View bottomLayout;
     LoaderTask task;
     Toolbar toolbar;
+    FloatingActionsMenu floatingActionsMenu;
     FloatingActionButton replyButton;
     FloatingActionButton recomButton;
     FloatingActionButton favorButton;
@@ -50,18 +51,16 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         loadingView = (LoadingView) findViewById(R.id.post_progress_loading);
         toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
-        bottomLayout = findViewById(R.id.layout_operation);
         post = (Post) getIntent().getSerializableExtra(Consts.Extra_Post);
         listView = (LListView) findViewById(R.id.list_detail);
         adapter = new PostDetailAdapter(this);
         listView.setAdapter(adapter);
 
-        AutoHideUtil.applyListViewAutoHide(this, listView, toolbar, bottomLayout, (int) getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
-
         listView.setOnItemClickListener(onItemClickListener);
         listView.setCanPullToLoadMore(false);
         listView.setOnRefreshListener(this);
 
+        floatingActionsMenu = (FloatingActionsMenu) findViewById(R.id.layout_operation);
         replyButton = (FloatingActionButton) findViewById(R.id.button_reply);
         recomButton = (FloatingActionButton) findViewById(R.id.button_recommend);
         favorButton = (FloatingActionButton) findViewById(R.id.button_favor);
@@ -69,6 +68,8 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         replyButton.setOnClickListener(this);
         recomButton.setOnClickListener(this);
         favorButton.setOnClickListener(this);
+
+        AutoHideUtil.applyListViewAutoHide(this, listView, toolbar, floatingActionsMenu, (int) getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
 
         loadData(-1);
     }
@@ -210,6 +211,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
                 intent.putExtra(Consts.Extra_Simple_Comment, comment);
             }
             startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, 0);
         }
     }
 

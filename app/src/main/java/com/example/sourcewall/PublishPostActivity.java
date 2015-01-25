@@ -81,9 +81,9 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         subItem = (SubItem) getIntent().getSerializableExtra(Consts.Extra_SubItem);
         if (subItem != null) {
             if (subItem.getSection() == SubItem.Section_Post) {
-                setTitle(R.string.title_activity_publish_post);
                 group_name = subItem.getName();
                 group_id = subItem.getValue();
+                setTitle(group_name + " -- " + getString(R.string.title_activity_publish_post));
                 spinner.setVisibility(View.VISIBLE);
                 tagEditText.setVisibility(View.GONE);
                 titleEditText.setHint(R.string.hint_input_post_title);

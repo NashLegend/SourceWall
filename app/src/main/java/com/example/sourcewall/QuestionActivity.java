@@ -10,9 +10,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 
+import com.example.sourcewall.adapters.QuestionDetailAdapter;
 import com.example.sourcewall.commonview.LListView;
 import com.example.sourcewall.commonview.LoadingView;
-import com.example.sourcewall.adapters.QuestionDetailAdapter;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.QuestionAPI;
 import com.example.sourcewall.connection.api.UserAPI;
@@ -25,6 +25,7 @@ import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.ToastUtil;
 import com.example.sourcewall.view.AnswerListItemView;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.ArrayList;
 
@@ -36,7 +37,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
     Question question;
     LoaderTask task;
     Toolbar toolbar;
-    View bottomLayout;
+    FloatingActionsMenu floatingActionsMenu;
     FloatingActionButton replyButton;
     FloatingActionButton recomButton;
     FloatingActionButton favorButton;
@@ -49,18 +50,16 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         loadingView = (LoadingView) findViewById(R.id.question_progress_loading);
         toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
-        bottomLayout = findViewById(R.id.layout_operation);
         question = (Question) getIntent().getSerializableExtra(Consts.Extra_Question);
         listView = (LListView) findViewById(R.id.list_detail);
         adapter = new QuestionDetailAdapter(this);
         listView.setAdapter(adapter);
 
-        AutoHideUtil.applyListViewAutoHide(this, listView, toolbar, bottomLayout, (int) getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
-
         listView.setCanPullToLoadMore(false);
         listView.setOnRefreshListener(this);
         listView.setOnItemClickListener(onItemClickListener);
 
+        floatingActionsMenu = (FloatingActionsMenu) findViewById(R.id.layout_operation);
         replyButton = (FloatingActionButton) findViewById(R.id.button_reply);
         recomButton = (FloatingActionButton) findViewById(R.id.button_recommend);
         favorButton = (FloatingActionButton) findViewById(R.id.button_favor);
@@ -68,6 +67,8 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         replyButton.setOnClickListener(this);
         recomButton.setOnClickListener(this);
         favorButton.setOnClickListener(this);
+
+        AutoHideUtil.applyListViewAutoHide(this, listView, toolbar, floatingActionsMenu, (int) getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
 
         loadData(-1);
     }
@@ -124,6 +125,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
             intent.putExtra(Consts.Extra_Answer, ((AnswerListItemView) view).getData());
             intent.putExtra(Consts.Extra_Question, question);
             startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, 0);
         }
     }
 
@@ -184,6 +186,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
             Intent intent = new Intent(this, ReplyActivity.class);
             intent.putExtra(Consts.Extra_Ace_Model, question);
             startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, 0);
         }
     }
 

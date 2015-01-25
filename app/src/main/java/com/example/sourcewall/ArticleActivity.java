@@ -13,9 +13,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 
+import com.example.sourcewall.adapters.ArticleDetailAdapter;
 import com.example.sourcewall.commonview.LListView;
 import com.example.sourcewall.commonview.LoadingView;
-import com.example.sourcewall.adapters.ArticleDetailAdapter;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.ArticleAPI;
 import com.example.sourcewall.connection.api.UserAPI;
@@ -30,6 +30,7 @@ import com.example.sourcewall.util.RegUtil;
 import com.example.sourcewall.util.ToastUtil;
 import com.example.sourcewall.view.MediumListItemView;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.ArrayList;
 
@@ -40,7 +41,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
     Article article;
     LoaderTask task;
     Toolbar toolbar;
-    View bottomLayout;
+    FloatingActionsMenu floatingActionsMenu;
     FloatingActionButton replyButton;
     FloatingActionButton recomButton;
     FloatingActionButton favorButton;
@@ -54,17 +55,15 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         article = (Article) getIntent().getSerializableExtra(Consts.Extra_Article);
-        bottomLayout = findViewById(R.id.layout_operation);
         listView = (LListView) findViewById(R.id.list_detail);
         adapter = new ArticleDetailAdapter(this);
         listView.setAdapter(adapter);
-
-        AutoHideUtil.applyListViewAutoHide(this, listView, toolbar, bottomLayout, (int) getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
 
         listView.setOnItemClickListener(onItemClickListener);
         listView.setCanPullToLoadMore(false);
         listView.setOnRefreshListener(this);
 
+        floatingActionsMenu = (FloatingActionsMenu) findViewById(R.id.layout_operation);
         replyButton = (FloatingActionButton) findViewById(R.id.button_reply);
         recomButton = (FloatingActionButton) findViewById(R.id.button_recommend);
         favorButton = (FloatingActionButton) findViewById(R.id.button_favor);
@@ -72,6 +71,8 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         replyButton.setOnClickListener(this);
         recomButton.setOnClickListener(this);
         favorButton.setOnClickListener(this);
+
+        AutoHideUtil.applyListViewAutoHide(this, listView, toolbar, floatingActionsMenu, (int) getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
 
         loadData(-1);
     }

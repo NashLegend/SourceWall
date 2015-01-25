@@ -32,6 +32,7 @@ import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.StyleChecker;
 import com.example.sourcewall.util.ToastUtil;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -41,7 +42,6 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
     View rootView;
     View authorLayout;
     Toolbar toolbar;
-    View bottomLayout;
     SScrollView scrollView;
     View headerHolder;
     View footerHolder;
@@ -55,6 +55,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
     View supportView;
     Question question;
     QuestionAnswer answer;
+    FloatingActionsMenu floatingActionsMenu;
     FloatingActionButton replyButton;
     FloatingActionButton notAnButton;
     FloatingActionButton thankButton;
@@ -73,7 +74,6 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         authorLayout = findViewById(R.id.layout_author);
-        bottomLayout = findViewById(R.id.layout_operation);
         scrollView = (SScrollView) findViewById(R.id.scrollView);
         headerHolder = findViewById(R.id.headerHolder);
         footerHolder = findViewById(R.id.footerHolder);
@@ -85,6 +85,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         authorTitle = (TextView) findViewById(R.id.text_author_title);
         supportView = findViewById(R.id.layout_opinion);
         supportText = (TextView) findViewById(R.id.text_num_support);
+        floatingActionsMenu = (FloatingActionsMenu) findViewById(R.id.layout_operation);
         replyButton = (FloatingActionButton) findViewById(R.id.button_reply);
         notAnButton = (FloatingActionButton) findViewById(R.id.button_Bury);
         thankButton = (FloatingActionButton) findViewById(R.id.button_thank);
@@ -173,7 +174,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
                 ObjectAnimator toolBarAnimator = ObjectAnimator.ofFloat(toolbar, "translationY", toolbar.getTranslationY(), 0f);
                 ObjectAnimator titleAnimator = ObjectAnimator.ofFloat(questionText, "translationY", questionText.getTranslationY(), 0f);
                 ObjectAnimator authorAnimator = ObjectAnimator.ofFloat(authorLayout, "translationY", authorLayout.getTranslationY(), 0f);
-                ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(bottomLayout, "translationY", bottomLayout.getTranslationY(), 0f);
+                ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(floatingActionsMenu, "translationY", floatingActionsMenu.getTranslationY(), 0f);
                 ArrayList<Animator> animators = new ArrayList<>();
                 animators.add(toolBarAnimator);
                 animators.add(titleAnimator);
@@ -196,7 +197,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
                 //do nothing
             } else {
                 backFooterAnimatorSet = new AnimatorSet();
-                ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(bottomLayout, "translationY", bottomLayout.getTranslationY(), 0f);
+                ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(floatingActionsMenu, "translationY", floatingActionsMenu.getTranslationY(), 0f);
                 ArrayList<Animator> animators = new ArrayList<>();
                 animators.add(footerAnimator);
                 backFooterAnimatorSet.setDuration(300);
@@ -222,7 +223,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
                 ObjectAnimator toolBarAnimator = ObjectAnimator.ofFloat(toolbar, "translationY", toolbar.getTranslationY(), -toolbar.getBottom());
                 ObjectAnimator titleAnimator = ObjectAnimator.ofFloat(questionText, "translationY", questionText.getTranslationY(), -questionText.getBottom());
                 ObjectAnimator authorAnimator = ObjectAnimator.ofFloat(authorLayout, "translationY", authorLayout.getTranslationY(), -authorLayout.getTop());
-                ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(bottomLayout, "translationY", bottomLayout.getTranslationY(), bottomLayout.getHeight());
+                ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(floatingActionsMenu, "translationY", floatingActionsMenu.getTranslationY(), floatingActionsMenu.getHeight());
                 ArrayList<Animator> animators = new ArrayList<>();
                 animators.add(toolBarAnimator);
                 animators.add(titleAnimator);
@@ -260,6 +261,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         Intent intent = new Intent(this, SimpleReplyActivity.class);
         intent.putExtra(Consts.Extra_Ace_Model, answer);
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, 0);
     }
 
     private void invokeOpinionDialog() {
