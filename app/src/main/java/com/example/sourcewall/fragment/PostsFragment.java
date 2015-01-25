@@ -256,7 +256,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                                     intent.putExtra(Consts.Extra_Should_Load_Before_Shuffle, true);
                                     startActivityForResult(intent, Consts.Code_Start_Shuffle_Groups);
                                 }
-                            }, 270);
+                            }, 320);
                         }
                     }).setNegativeButton("使用默认小组", new DialogInterface.OnClickListener() {
                         @Override
@@ -283,7 +283,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         });
 
         animatorSet.playTogether(animators);
-        animatorSet.setDuration(350);
+        animatorSet.setDuration(400);
         animatorSet.start();
     }
 
@@ -333,7 +333,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         });
 
         animatorSet.playTogether(animators);
-        animatorSet.setDuration(250);
+        animatorSet.setDuration(300);
         animatorSet.start();
     }
 
