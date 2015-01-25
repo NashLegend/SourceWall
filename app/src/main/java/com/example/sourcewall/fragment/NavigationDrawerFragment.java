@@ -439,24 +439,24 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
             } else {
                 switch (resultObject.code) {
                     case CODE_LOGIN_FAILED:
-                        ToastUtil.toast(getActivity().getString(R.string.login_failed_for_other_reason));
+                        ToastUtil.toast(getResources().getString(R.string.login_failed_for_other_reason));
                         shouldMarkAsFailed = true;
                         break;
                     case CODE_NETWORK_ERROR:
-                        ToastUtil.toast(getActivity().getString(R.string.network_error));
+                        ToastUtil.toast(getResources().getString(R.string.network_error));
                         break;
                     case CODE_JSON_ERROR:
-                        ToastUtil.toast(getActivity().getString(R.string.json_error));
+                        ToastUtil.toast(getResources().getString(R.string.json_error));
                         break;
                     case CODE_UNKNOWN:
-                        ToastUtil.toast(getActivity().getString(R.string.unknown_error));
+                        ToastUtil.toast(getResources().getString(R.string.unknown_error));
                         break;
                     case CODE_TOKEN_INVALID:
-                        ToastUtil.toast(getActivity().getString(R.string.token_invalid));
+                        ToastUtil.toast(getResources().getString(R.string.token_invalid));
                         shouldMarkAsFailed = true;
                         break;
                     case CODE_NO_TOKEN:
-                        ToastUtil.toast(getActivity().getString(R.string.have_not_login));
+                        ToastUtil.toast(getResources().getString(R.string.have_not_login));
                         shouldMarkAsFailed = true;
                         break;
                 }
