@@ -292,6 +292,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         if (!UserAPI.isLoggedIn()) {
             Intent intent = new Intent(getActivity(), LoginActivity.class);
             startActivityForResult(intent, Consts.Code_Login);
+            getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
         }
     }
 

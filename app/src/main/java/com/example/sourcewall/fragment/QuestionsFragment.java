@@ -147,6 +147,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
             Intent intent = new Intent(getActivity(), PublishPostActivity.class);
             intent.putExtra(Consts.Extra_SubItem, subItem);
             startActivityForResult(intent, Consts.Code_Publish_Question);
+            getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
         } else {
             ((BaseActivity) getActivity()).notifyNeedLog();
         }
