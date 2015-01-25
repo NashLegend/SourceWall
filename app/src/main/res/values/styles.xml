@@ -110,6 +110,16 @@
         <item name="color_drawer_list_sub_text">@color/drawer_list_sub_text</item>
         <item name="color_drawer_background">@color/drawer_background</item>
 
+        <!--Shuffle-->
+        <item name="color_shuffle_desk_background">@color/shuffle_desk_background</item>
+        <item name="color_shuffle_desk_title">@color/shuffle_desk_title</item>
+        <item name="color_shuffle_tip">@color/shuffle_tip_color</item>
+        <item name="color_shuffle_card_candidate_background">
+            @color/shuffle_card_candidate_background
+        </item>
+        <item name="color_shuffle_movable_button_text">@color/shuffle_movable_button_text</item>
+        <item name="drawable_shuffle_movable_button_background">@drawable/bg_movable_button</item>
+
         <!--LListView-->
         <item name="color_llist_foot_head_text">@color/llist_foot_head_text</item>
         <item name="drawable_llist_header_button_background">@drawable/bg_header_button</item>
@@ -242,6 +252,18 @@
         <item name="color_drawer_list_text">@color/drawer_list_text_night</item>
         <item name="color_drawer_list_sub_text">@color/drawer_list_sub_text_night</item>
         <item name="color_drawer_background">@color/drawer_background_night</item>
+
+        <!--Shuffle-->
+        <item name="color_shuffle_desk_background">@color/shuffle_desk_background_night</item>
+        <item name="color_shuffle_desk_title">@color/shuffle_desk_title_night</item>
+        <item name="color_shuffle_tip">@color/shuffle_tip_color_night</item>
+        <item name="color_shuffle_card_candidate_background">
+            @color/shuffle_card_candidate_background_night
+        </item>
+        <item name="color_shuffle_movable_button_text">@color/shuffle_movable_button_text_night
+        </item>
+        <item name="drawable_shuffle_movable_button_background">@drawable/bg_movable_button_night
+        </item>
 
         <!--LListView-->
         <item name="color_llist_foot_head_text">@color/llist_foot_head_text_night</item>

@@ -107,6 +107,18 @@
     <color name="drawer_background">#ffffff</color>
     <color name="drawer_background_night">#424242</color>
 
+    <!--Shuffle-->
+    <color name="shuffle_desk_background">#ffffff</color>
+    <color name="shuffle_desk_background_night">#424242</color>
+    <color name="shuffle_desk_title">#3579cc</color>
+    <color name="shuffle_desk_title_night">#aaaaaa</color>
+    <color name="shuffle_tip_color">#9c9c9c</color>
+    <color name="shuffle_tip_color_night">#9c9c9c</color>
+    <color name="shuffle_card_candidate_background">#f6f7f5</color>
+    <color name="shuffle_card_candidate_background_night">#494949</color>
+    <color name="shuffle_movable_button_text">#305676</color>
+    <color name="shuffle_movable_button_text_night">#b2b2b2</color>
+
     <!--LListView-->
     <color name="llist_foot_head_text">#888888</color>
     <color name="llist_foot_head_text_night">#777777</color>

@@ -3,8 +3,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/SenatorLayout"
     android:layout_width="match_parent"
+    android:background="?attr/color_shuffle_desk_background"
     android:layout_height="match_parent"
-    android:background="#ffffff"
     android:orientation="vertical">
 
     <LinearLayout
@@ -19,7 +19,7 @@
             android:layout_width="4dp"
             android:layout_height="24dp"
             android:layout_weight="0"
-            android:background="#3579cc" />
+            android:background="?attr/color_shuffle_desk_title" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -27,7 +27,7 @@
             android:layout_marginLeft="10dp"
             android:layout_weight="0"
             android:text="@string/tip_of_more_groups"
-            android:textColor="#9c9c9c"
+            android:textColor="?attr/color_shuffle_tip"
             android:textSize="16sp" />
 
         <View
@@ -54,7 +54,6 @@
     <com.example.sourcewall.commonview.shuffle.ShuffleCardSimple
         android:id="@+id/senator"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:minHeight="144dp" />
+        android:layout_height="match_parent" />
 
 </LinearLayout>

@@ -2,9 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff">
+    android:background="?attr/color_shuffle_desk_background">
 
-<LinearLayout
+    <LinearLayout
         android:id="@+id/SenatorLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,14 +21,14 @@
             <View
                 android:layout_width="4dp"
                 android:layout_height="24dp"
-                android:background="#3579cc" />
+                android:background="?attr/color_shuffle_desk_title" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
                 android:text="@string/selected_section"
-                android:textColor="#3780d9"
+                android:textColor="?attr/color_shuffle_desk_title"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:text="@string/selected_section_tip"
-                android:textColor="#cbcbcb"
+                android:textColor="?attr/color_shuffle_tip"
                 android:textSize="14sp" />
         </LinearLayout>
 
@@ -45,7 +45,6 @@
             android:id="@+id/senator"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#ffffff"
             android:minHeight="144dp" />
     </LinearLayout>
 
@@ -54,7 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/SenatorLayout"
-        android:background="#f6f7f5"
+        android:background="?attr/color_shuffle_card_candidate_background"
         android:orientation="vertical">
 
         <LinearLayout
@@ -68,14 +67,14 @@
             <View
                 android:layout_width="4dp"
                 android:layout_height="24dp"
-                android:background="#3579cc" />
+                android:background="?attr/color_shuffle_desk_title" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
                 android:text="@string/more_unselected_sections"
-                android:textColor="#3780d9"
+                android:textColor="?attr/color_shuffle_desk_title"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -84,7 +83,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:text="@string/unselected_section_tip"
-                android:textColor="#cbcbcb"
+                android:textColor="?attr/color_shuffle_tip"
                 android:textSize="14sp" />
         </LinearLayout>
 
