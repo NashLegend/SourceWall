@@ -266,7 +266,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                     }).setNegativeButton("使用默认小组", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-
+                            hideMoreGroups();
                         }
                     }).create();
                     dialog.show();
