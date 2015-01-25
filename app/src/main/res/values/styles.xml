@@ -59,8 +59,6 @@
         <item name="color_list_summary">@color/list_summary</item>
         <!--列表背景色-->
         <item name="color_list_background">@color/list_background</item>
-        <!--列表背景色（按下）-->
-        <item name="color_list_background_pressed">@color/list_background_pressed</item>
 
         <!--答案页面-->
         <!--AnswerActivity回答者背景-->
@@ -202,8 +200,6 @@
         <item name="color_list_summary">@color/list_summary_night</item>
         <!--列表背景色-->
         <item name="color_list_background">@color/list_background_night</item>
-        <!--列表背景色（按下）-->
-        <item name="color_list_background_pressed">@color/list_background_pressed_night</item>
 
         <!--答案页面-->
         <!--AnswerActivity回答者背景-->

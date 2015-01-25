@@ -32,8 +32,6 @@
     <attr name="color_list_summary" format="color" />
     <!--列表背景色-->
     <attr name="color_list_background" format="color" />
-    <!--列表背景色（按下）-->
-    <attr name="color_list_background_pressed" format="color" />
 
     <!--问答-->
     <!--AnswerActivity回答者背景-->

@@ -45,9 +45,7 @@
     <color name="list_summary">#777777</color>
     <color name="list_summary_night">#d0d0d0</color>
     <color name="list_background">#ffffff</color>
-    <color name="list_background_night">#515151</color>
-    <color name="list_background_pressed">#dddddd</color>
-    <color name="list_background_pressed_night">#616161</color>
+    <color name="list_background_night">#424242</color>
 
     <!--答案页面-->
     <color name="answer_author_background">#f5f5f5</color>
