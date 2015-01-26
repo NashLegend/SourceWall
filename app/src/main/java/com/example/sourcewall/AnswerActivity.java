@@ -356,18 +356,14 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
             if (resultObject.ok) {
                 //TODO
                 if (bury) {
-                    ToastUtil.toast("Bury 成功");
+                    ToastUtil.toast("已标记为\"不是答案\"");
                     answer.setHasBuried(true);
                 } else {
-                    ToastUtil.toastSingleton("挖出来了");
+                    ToastUtil.toastSingleton("取消\"不是答案\"标记");
                     answer.setHasBuried(false);
                 }
             } else {
-                if (bury) {
-                    ToastUtil.toast("Bury 未遂");
-                } else {
-                    ToastUtil.toastSingleton("没挖出来");
-                }
+                ToastUtil.toastSingleton("操作失败");
             }
 
         }
