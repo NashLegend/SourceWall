@@ -188,7 +188,6 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     }
 
     private void initView() {
-        System.out.println("InitViews");
         deskSimple.InitDatas();
         deskSimple.initView();
     }
