@@ -77,8 +77,7 @@ public class HttpFetcher {
     public static ResultObject get(String url) throws Exception {
         ResultObject resultObject = new ResultObject();
         HttpGet httpGet = new HttpGet(url);
-        DefaultHttpClient defaultHttpClient1 = getDefaultHttpClient();
-        HttpResponse response = defaultHttpClient1.execute(httpGet);
+        HttpResponse response = getDefaultHttpClient().execute(httpGet);
         int statusCode = response.getStatusLine().getStatusCode();
         HttpEntity entity = response.getEntity();
         String result = EntityUtils.toString(entity, HTTP.UTF_8);

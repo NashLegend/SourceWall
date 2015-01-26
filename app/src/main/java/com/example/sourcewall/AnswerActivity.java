@@ -302,7 +302,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
             notifyNeedLog();
         } else {
             if (answer.isHasThanked()) {
-                ToastUtil.toastSingleton("已感谢");
+                ToastUtil.toastSingleton("已经感谢过");
             } else {
                 ThankTask task = new ThankTask();
                 task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

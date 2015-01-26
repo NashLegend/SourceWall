@@ -182,9 +182,9 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
     public boolean takeOverOptionsItemSelect(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
-            case R.id.action_write_ask:
-                writeAsk();
-                break;
+//            case R.id.action_write_ask:
+//                writeAsk();
+//                break;
         }
         return true;
     }

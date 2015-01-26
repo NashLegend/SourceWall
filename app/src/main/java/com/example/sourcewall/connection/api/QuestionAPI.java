@@ -682,7 +682,8 @@ public class QuestionAPI extends APIBase {
     }
 
     /**
-     * 提问
+     * 提问，卧槽Cookie里面还需要两个值，给跪了_32382_access_token和_32382_ukey=5p6t9t
+     * 由https://www.guokr.com/sso/ask/提供，妈蛋先不搞提问了
      *
      * @param csrf
      * @param question
@@ -695,8 +696,9 @@ public class QuestionAPI extends APIBase {
         String url = "http://www.guokr.com/questions/new/";
         try {
             ResultObject mdResult = MDUtil.parseMarkdownByGitHub(annotation);
+            String htmlDesc = "";
             if (mdResult.ok) {
-                String htmlDesc = (String) mdResult.result;
+                htmlDesc = (String) mdResult.result;
                 ArrayList<NameValuePair> pairs = new ArrayList<>();
                 pairs.add(new BasicNameValuePair("csrf_token", csrf));
                 pairs.add(new BasicNameValuePair("question", question));
@@ -715,7 +717,24 @@ public class QuestionAPI extends APIBase {
                     resultObject.result = result.toString();
                 }
             } else {
-                //转换失败……
+                htmlDesc = MDUtil.Markdown2HtmlDumb(annotation);
+            }
+            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            pairs.add(new BasicNameValuePair("csrf_token", csrf));
+            pairs.add(new BasicNameValuePair("question", question));
+            pairs.add(new BasicNameValuePair("annotation", htmlDesc));
+            for (int i = 0; i < tags.length; i++) {
+                String tag = tags[i].trim();
+                if (!TextUtils.isEmpty(tag)) {
+                    pairs.add(new BasicNameValuePair("tags", tag));
+                }
+            }
+            pairs.add(new BasicNameValuePair("captcha", ""));
+
+            ResultObject result = HttpFetcher.post(url, pairs, false);
+            if (result.statusCode == 302 && testPublishResult(result.toString())) {
+                resultObject.ok = true;
+                resultObject.result = result.toString();
             }
         } catch (IOException e) {
             e.printStackTrace();

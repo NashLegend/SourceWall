@@ -12,6 +12,7 @@ import com.example.sourcewall.model.UComment;
 import com.example.sourcewall.util.MDUtil;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -593,6 +594,7 @@ public class PostAPI extends APIBase {
         try {
             String url = "http://www.guokr.com/group/" + group_id + "/post/edit/";
             String html = HttpFetcher.get(url).toString();
+            HttpClient client = HttpFetcher.getDefaultHttpClient();
             Document doc = Jsoup.parse(html);
             Element selects = doc.getElementById("topic");
             ArrayList<BasicNameValuePair> pairs = new ArrayList<>();
@@ -641,26 +643,28 @@ public class PostAPI extends APIBase {
         String url = "http://www.guokr.com/group/" + group_id + "/post/edit/";
         try {
             ResultObject mdResult = MDUtil.parseMarkdownByGitHub(body);
+            String htmlBody = "";
             if (mdResult.ok) {
                 //使用github接口转换成html
-                String htmlBody = (String) mdResult.result;
-                ArrayList<NameValuePair> pairs = new ArrayList<>();
-                pairs.add(new BasicNameValuePair("csrf_token", csrf));
-                pairs.add(new BasicNameValuePair("title", title));
-                pairs.add(new BasicNameValuePair("topic", topic));
-                pairs.add(new BasicNameValuePair("body", htmlBody));
-                pairs.add(new BasicNameValuePair("captcha", ""));
-                pairs.add(new BasicNameValuePair("share_opts", "activity"));
-
-                ResultObject result = HttpFetcher.post(url, pairs, false);
-                //本来是302，自动跳转就成了200，我日，这会消耗流量的，以后再说，TODO
-                //if (result.statusCode == 302 && testPublishResult(result.toString())) {
-                if (result.statusCode == 200) {
-                    resultObject.ok = true;
-                    resultObject.result = result.toString();
-                }
+                htmlBody = (String) mdResult.result;
             } else {
                 System.out.println("Github Failed");
+                htmlBody = MDUtil.Markdown2HtmlDumb(body);
+            }
+            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            pairs.add(new BasicNameValuePair("csrf_token", csrf));
+            pairs.add(new BasicNameValuePair("title", title));
+            pairs.add(new BasicNameValuePair("topic", topic));
+            pairs.add(new BasicNameValuePair("body", htmlBody));
+            pairs.add(new BasicNameValuePair("captcha", ""));
+            pairs.add(new BasicNameValuePair("share_opts", "activity"));
+
+            ResultObject result = HttpFetcher.post(url, pairs, false);
+            //本来是302，自动跳转就成了200，我日，这会消耗流量的，以后再说，TODO
+            //if (result.statusCode == 302 && testPublishResult(result.toString())) {
+            if (result.statusCode == 200) {
+                resultObject.ok = true;
+                resultObject.result = result.toString();
             }
         } catch (IOException e) {
             e.printStackTrace();
