@@ -60,7 +60,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/color_reply_operation_bar_background"
-            android:gravity="end"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingBottom="5dp"
             android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -89,11 +89,10 @@
                     android:background="?attr/background_selectable_borderless"
                     android:src="@drawable/ic_image_browse_color_blue_36dp" />
 
-
                 <ProgressBar
                     android:id="@+id/prg_uploading_img"
-                    android:layout_width="@dimen/abc_action_bar_progress_bar_size"
-                    android:layout_height="@dimen/abc_action_bar_progress_bar_size"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_centerInParent="true"
                     android:visibility="gone" />
 

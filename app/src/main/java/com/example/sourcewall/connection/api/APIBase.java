@@ -8,6 +8,7 @@ import com.example.sourcewall.model.AceModel;
 import com.example.sourcewall.model.Article;
 import com.example.sourcewall.model.Post;
 import com.example.sourcewall.model.Question;
+import com.example.sourcewall.util.Config;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -44,23 +45,12 @@ public class APIBase {
     public static ResultObject reply(AceModel data, String content) {
         ResultObject resultObject = new ResultObject();
         if (data instanceof Article) {
-            return ArticleAPI.replyArticle(((Article) data).getId(), content);
+            return ArticleAPI.replyArticle(((Article) data).getId(), content + Config.getSimpleReplyTail());
         } else if (data instanceof Post) {
-            return PostAPI.replyPost(((Post) data).getId(), content);
+            return PostAPI.replyPost(((Post) data).getId(), content + Config.getSimpleReplyTail());
         } else if (data instanceof Question) {
-            return QuestionAPI.answerQuestion(((Question) data).getId(), content);
+            return QuestionAPI.answerQuestion(((Question) data).getId(), content + Config.getSimpleReplyTail());
         }
-        return resultObject;
-    }
-
-    /**
-     * 统一回复
-     *
-     * @return
-     */
-    public static ResultObject replyAdvanced(AceModel data, String content) {
-        ResultObject resultObject = new ResultObject();
-
         return resultObject;
     }
 
@@ -76,7 +66,7 @@ public class APIBase {
         File file = new File(path);
         if (file != null && file.exists() && !file.isDirectory() && file.length() >= 0) {
             try {
-                HttpClient httpClient = HttpFetcher.getDefaultHttpClient();
+                HttpClient httpClient = HttpFetcher.getDefaultUploadHttpClient();
                 httpClient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION,
                         HttpVersion.HTTP_1_1);
                 HttpPost httpPost = new HttpPost(

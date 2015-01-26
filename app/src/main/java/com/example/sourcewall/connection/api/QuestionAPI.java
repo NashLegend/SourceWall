@@ -9,6 +9,7 @@ import com.example.sourcewall.model.PrepareData;
 import com.example.sourcewall.model.Question;
 import com.example.sourcewall.model.QuestionAnswer;
 import com.example.sourcewall.model.UComment;
+import com.example.sourcewall.util.Config;
 import com.example.sourcewall.util.MDUtil;
 
 import org.apache.http.NameValuePair;
@@ -690,6 +691,7 @@ public class QuestionAPI extends APIBase {
      * @param annotation
      * @param tags
      * @return
+     * @deprecated
      */
     public static ResultObject publishQuestion(String csrf, String question, String annotation, String[] tags) {
         ResultObject resultObject = new ResultObject();
@@ -699,26 +701,10 @@ public class QuestionAPI extends APIBase {
             String htmlDesc = "";
             if (mdResult.ok) {
                 htmlDesc = (String) mdResult.result;
-                ArrayList<NameValuePair> pairs = new ArrayList<>();
-                pairs.add(new BasicNameValuePair("csrf_token", csrf));
-                pairs.add(new BasicNameValuePair("question", question));
-                pairs.add(new BasicNameValuePair("annotation", htmlDesc));
-                for (int i = 0; i < tags.length; i++) {
-                    String tag = tags[i].trim();
-                    if (!TextUtils.isEmpty(tag)) {
-                        pairs.add(new BasicNameValuePair("tags", tag));
-                    }
-                }
-                pairs.add(new BasicNameValuePair("captcha", ""));
-
-                ResultObject result = HttpFetcher.post(url, pairs, false);
-                if (result.statusCode == 302 && testPublishResult(result.toString())) {
-                    resultObject.ok = true;
-                    resultObject.result = result.toString();
-                }
             } else {
                 htmlDesc = MDUtil.Markdown2HtmlDumb(annotation);
             }
+            htmlDesc += Config.getComplexReplyTail();
             ArrayList<NameValuePair> pairs = new ArrayList<>();
             pairs.add(new BasicNameValuePair("csrf_token", csrf));
             pairs.add(new BasicNameValuePair("question", question));

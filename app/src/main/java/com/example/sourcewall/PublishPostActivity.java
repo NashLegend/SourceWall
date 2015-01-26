@@ -26,7 +26,6 @@ import com.example.sourcewall.connection.api.QuestionAPI;
 import com.example.sourcewall.dialogs.InputDialog;
 import com.example.sourcewall.model.PrepareData;
 import com.example.sourcewall.model.SubItem;
-import com.example.sourcewall.util.Config;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.FileUtil;
 import com.example.sourcewall.util.ToastUtil;
@@ -141,7 +140,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         String[] ways = {getString(R.string.add_image_from_disk),
                 getString(R.string.add_image_from_camera),
                 getString(R.string.add_image_from_link)};
-        new AlertDialog.Builder(this).setTitle(R.string.way_to_add_image).setItems(ways, new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(this).setTitle("").setItems(ways, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
@@ -281,7 +280,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
 
         PublishTask task = new PublishTask();
         String title = titleEditText.getText().toString();
-        String body = bodyEditText.getText().toString() + Config.getComplexReplyTail();
+        String body = bodyEditText.getText().toString();
         task.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR, group_id, csrf, title, body, topic);
     }
 

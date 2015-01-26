@@ -46,12 +46,14 @@ import javax.net.ssl.SSLHandshakeException;
 public class HttpFetcher {
 
     public static DefaultHttpClient defaultHttpClient;
+    private static DefaultHttpClient uploadHttpClient;
     private static final int MAX_EXECUTION_COUNT = 2;
     public final static int MAX_ROUTE_CONNECTIONS = 400;
     public final static int MAX_TOTAL_CONNECTIONS = 800;
     public final static int TIMEOUT = 3000;
     public final static int CONNECTION_TIMEOUT = 10000;
-    public final static int SO_TIMEOUT = 20000;
+    public final static int SO_TIMEOUT = 30000;
+    public final static int UPLOAD_SO_TIMEOUT = 180000;//180秒的上传时间
 
     public static ResultObject post(String url, List<NameValuePair> params) throws Exception {
         return post(url, params, true);
@@ -175,6 +177,39 @@ public class HttpFetcher {
             defaultHttpClient.getCookieStore().addCookie(cookie2);
         }
         return defaultHttpClient;
+    }
+
+    /**
+     * @return 返回一个线程安全的上传用HttpClient。
+     */
+    public static DefaultHttpClient getDefaultUploadHttpClient() {
+        if (uploadHttpClient == null) {
+            uploadHttpClient = new DefaultHttpClient();
+            ClientConnectionManager manager = uploadHttpClient.getConnectionManager();
+            HttpParams params = uploadHttpClient.getParams();
+            //多线程请求
+            uploadHttpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(params, manager.getSchemeRegistry()), params);
+            ConnManagerParams.setMaxTotalConnections(params, MAX_TOTAL_CONNECTIONS);
+            ConnManagerParams.setTimeout(params, TIMEOUT);//发起链接超时
+            ConnPerRouteBean connPerRoute = new ConnPerRouteBean(MAX_ROUTE_CONNECTIONS);
+            ConnManagerParams.setMaxConnectionsPerRoute(params, connPerRoute);
+
+            HttpConnectionParams.setStaleCheckingEnabled(params, false);
+            HttpConnectionParams.setConnectionTimeout(params, CONNECTION_TIMEOUT);//连接服务器超时
+            HttpConnectionParams.setSoTimeout(params, UPLOAD_SO_TIMEOUT);//请求服务器超时
+            HttpConnectionParams.setSocketBufferSize(params, 8192);
+
+            //设置Cookie
+            BasicClientCookie cookie1 = new BasicClientCookie("_32353_access_token", UserAPI.getToken());
+            cookie1.setDomain("guokr.com");
+            cookie1.setPath("/");
+            BasicClientCookie cookie2 = new BasicClientCookie("_32353_ukey", UserAPI.getUkey());
+            cookie2.setDomain("guokr.com");
+            cookie2.setPath("/");
+            uploadHttpClient.getCookieStore().addCookie(cookie1);
+            uploadHttpClient.getCookieStore().addCookie(cookie2);
+        }
+        return uploadHttpClient;
     }
 
     private static DefaultRedirectHandler redirectHandler = new DefaultRedirectHandler() {

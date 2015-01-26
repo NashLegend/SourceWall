@@ -9,6 +9,7 @@ import com.example.sourcewall.model.Post;
 import com.example.sourcewall.model.PrepareData;
 import com.example.sourcewall.model.SubItem;
 import com.example.sourcewall.model.UComment;
+import com.example.sourcewall.util.Config;
 import com.example.sourcewall.util.MDUtil;
 
 import org.apache.http.NameValuePair;
@@ -651,6 +652,7 @@ public class PostAPI extends APIBase {
             } else {
                 htmlBody = MDUtil.Markdown2HtmlDumb(body);
             }
+            htmlBody += Config.getComplexReplyTail();
             ArrayList<NameValuePair> pairs = new ArrayList<>();
             pairs.add(new BasicNameValuePair("csrf_token", csrf));
             pairs.add(new BasicNameValuePair("title", title));

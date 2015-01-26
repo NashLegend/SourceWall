@@ -23,7 +23,6 @@ import com.example.sourcewall.connection.api.APIBase;
 import com.example.sourcewall.dialogs.InputDialog;
 import com.example.sourcewall.model.AceModel;
 import com.example.sourcewall.model.UComment;
-import com.example.sourcewall.util.Config;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.FileUtil;
 import com.example.sourcewall.util.RegUtil;
@@ -203,21 +202,10 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
     private void publishReply(String rep) {
         PublishReplyTask task = new PublishReplyTask();
         String header = "";
-        String tail = Config.getSimpleReplyTail();
         if (comment != null) {
             header = "[blockquote]" + hostText.getText() + "[/blockquote]";
         }
-        task.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR, header, rep, tail, Simple_Reply);
-    }
-
-    private void publishAdvancedReply(String rep) {
-        PublishReplyTask task = new PublishReplyTask();
-        String header = "";
-        if (comment != null) {
-            header = "<blockquote>" + hostText.getText() + "<blockquote>";
-        }
-        String tail = Config.getComplexReplyTail();
-        task.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR, header, rep, tail, Advanced_Reply);
+        task.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR, header, rep);
     }
 
     @Override
@@ -245,9 +233,6 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
         }
     }
 
-    final String Simple_Reply = "Simple_Reply";
-    final String Advanced_Reply = "Advanced_Reply";
-
     class PublishReplyTask extends AsyncTask<String, Integer, ResultObject> {
 
         @Override
@@ -263,22 +248,7 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
         protected ResultObject doInBackground(String... params) {
             String header = params[0];
             String content = params[1];
-            String tail = params[2];
-            String reply_format = params[3];
-            String result;
-            //高级回复，等会再说
-//            if (Advanced_Reply.equals(reply_format)) {
-//                ResultObject resultObject = MDUtil.parseMarkdownByGitHub(content);
-//                if (resultObject.ok) {
-//                    content = (String) resultObject.result;
-//                } else {
-//                    content = MDUtil.Markdown2HtmlDumb(content);
-//                }
-//                result = header + content + tail;
-//                return APIBase.replyAdvanced(aceModel, result);
-//            }
-            result = header + content + tail;
-            return APIBase.reply(aceModel, result);
+            return APIBase.reply(aceModel, header + content);
         }
 
         @Override

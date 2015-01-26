@@ -1,54 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <EditText
-        android:id="@+id/input_dialog_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:gravity="top"
-        android:hint="@string/hint_input_url"
-        android:padding="5dp"
-        android:singleLine="true"
-        android:textColor="?attr/color_reply_input_text"
-        android:textColorHint="?attr/color_reply_hint" />
-
-    <EditText
-        android:id="@+id/input_dialog_text2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:gravity="top"
-        android:hint="@string/hint_input_title"
-        android:padding="5dp"
-        android:singleLine="true"
-        android:textColor="?attr/color_reply_input_text"
-        android:textColorHint="?attr/color_reply_hint" />
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="end"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <Button
-            android:id="@+id/button_dialog_input_cancel"
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/input_dialog_text"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/color_dialog_button_background"
-            android:text="@string/cancel"
-            android:textColor="?attr/drawable_dialog_button_text" />
+            android:layout_marginTop="10dp"
+            android:gravity="top"
+            android:hint="@string/hint_input_url"
+            android:padding="5dp"
+            android:singleLine="true"
+            android:textColor="?attr/color_reply_input_text"
+            android:textColorHint="?attr/color_reply_hint" />
 
-        <Button
-            android:id="@+id/button_dialog_input_ok"
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/input_dialog_text2"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/color_dialog_button_background"
-            android:text="@string/ok"
-            android:textColor="?attr/drawable_dialog_button_text" />
+            android:layout_marginTop="10dp"
+            android:gravity="top"
+            android:hint="@string/hint_input_title"
+            android:padding="5dp"
+            android:singleLine="true"
+            android:textColor="?attr/color_reply_input_text"
+            android:textColorHint="?attr/color_reply_hint" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/button_dialog_input_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/color_dialog_button_background"
+                android:text="@string/cancel"
+                android:textColor="?attr/drawable_dialog_button_text" />
+
+            <Button
+                android:id="@+id/button_dialog_input_ok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/color_dialog_button_background"
+                android:text="@string/ok"
+                android:textColor="?attr/drawable_dialog_button_text" />
+        </LinearLayout>
+
     </LinearLayout>
-
-</LinearLayout>
+</RelativeLayout>
