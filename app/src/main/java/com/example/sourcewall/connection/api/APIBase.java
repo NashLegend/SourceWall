@@ -256,13 +256,21 @@ public class APIBase {
         int error_code = getJsonInt(object, "error_code");
         String error_msg = getJsonString(object, "error");
         resultObject.message = error_msg;
-        if (error_code == 200004) {
-            resultObject.code = ResultObject.ResultCode.CODE_TOKEN_INVALID;
-            UserAPI.clearMyInfo();
-        } else {
-            resultObject.code = ResultObject.ResultCode.CODE_UNKNOWN;
+        switch (error_code) {
+            case 200004:
+                resultObject.code = ResultObject.ResultCode.CODE_TOKEN_INVALID;
+                UserAPI.clearMyInfo();
+                break;
+            case 240004:
+                resultObject.code = ResultObject.ResultCode.CODE_ALREADY_LIKED;
+                break;
+            default:
+                resultObject.code = ResultObject.ResultCode.CODE_UNKNOWN;
+                break;
         }
         //String invalidToken = " {\"error_code\": 200004, \"request_uri\": \"/apis/community/rn_num.json?_=1422011885139&access_token=51096037c7aa15ccd08c12c3fba8f856ae65d672cda50f25cec883343f3597a6\", \"ok\": false, \"error\": \"Illegal access token.\"}\n";
+        //String alreadyLiked = "{\"error_code\": 240004, \"request_uri\": \"/apis/group/post_reply_liking.json\", \"ok\": false, \"error\": \"You have already liked this reply!\"}";
+
     }
 
     /**

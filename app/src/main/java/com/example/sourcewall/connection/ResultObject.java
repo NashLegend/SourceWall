@@ -21,6 +21,7 @@ public class ResultObject {
         CODE_TOKEN_INVALID,
         CODE_NETWORK_ERROR,
         CODE_JSON_ERROR,
+        CODE_ALREADY_LIKED,
         CODE_UNKNOWN,
         CODE_NO_TOKEN
     }

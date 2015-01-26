@@ -315,7 +315,9 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
                 comment.setLikeNum(comment.getLikeNum() + 1);
                 adapter.notifyDataSetChanged();
             } else {
-                //do nothing
+                if (resultObject.code == ResultObject.ResultCode.CODE_ALREADY_LIKED) {
+                    comment.setHasLiked(true);
+                }
             }
         }
     }
