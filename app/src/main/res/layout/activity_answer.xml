@@ -153,7 +153,7 @@
             android:paddingTop="10dp"
             fab:fab_colorNormal="?attr/colorPrimaryBright"
             fab:fab_colorPressed="?attr/colorPrimaryDark"
-            fab:fab_icon="@drawable/close_circle" />
+            fab:fab_icon="@drawable/dustbin" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/button_reply"

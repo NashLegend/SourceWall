@@ -430,6 +430,8 @@ public class QuestionAPI extends APIBase {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return resultObject;
     }
@@ -472,7 +474,11 @@ public class QuestionAPI extends APIBase {
             if (getUniversalJsonSimpleBoolean(result, resultObject)) {
                 resultObject.ok = true;
             }
-        } catch (JSONException | IOException e) {
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return resultObject;
@@ -485,16 +491,21 @@ public class QuestionAPI extends APIBase {
      * @return
      */
     public static ResultObject thankAnswer(String id) {
-        String url = "http://www.guokr.com/apis/ask/answer_thanking.json?v=" + System.currentTimeMillis();
+        String url = "http://www.guokr.com/apis/ask/answer_thanking.json";
         ResultObject resultObject = new ResultObject();
         try {
             ArrayList<NameValuePair> pairs = new ArrayList<>();
+            pairs.add(new BasicNameValuePair("v", System.currentTimeMillis() + ""));
             pairs.add(new BasicNameValuePair("answer_id", id));
             String result = HttpFetcher.post(url, pairs).toString();
             if (getUniversalJsonSimpleBoolean(result, resultObject)) {
                 resultObject.ok = true;
             }
-        } catch (JSONException | IOException e) {
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return resultObject;
@@ -507,16 +518,45 @@ public class QuestionAPI extends APIBase {
      * @return
      */
     public static ResultObject buryAnswer(String id) {
-        String url = "http://www.guokr.com/apis/ask/answer_burying.json?v=" + System.currentTimeMillis();
+        String url = "http://www.guokr.com/apis/ask/answer_burying.json";
         ResultObject resultObject = new ResultObject();
         try {
             ArrayList<NameValuePair> pairs = new ArrayList<>();
+            pairs.add(new BasicNameValuePair("v", System.currentTimeMillis() + ""));
             pairs.add(new BasicNameValuePair("answer_id", id));
             String result = HttpFetcher.post(url, pairs).toString();
             if (getUniversalJsonSimpleBoolean(result, resultObject)) {
                 resultObject.ok = true;
             }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resultObject;
+    }
+
+    /**
+     * 取消不是答案
+     *
+     * @param id
+     * @return
+     */
+    public static ResultObject unBuryAnswer(String id) {
+        String url = "http://www.guokr.com/apis/ask/answer_burying.json";
+        ResultObject resultObject = new ResultObject();
+        try {
+            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            pairs.add(new BasicNameValuePair("answer_id", id));
+            String result = HttpFetcher.delete(url, pairs).toString();
+            if (getUniversalJsonSimpleBoolean(result, resultObject)) {
+                resultObject.ok = true;
+            }
         } catch (JSONException | IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return resultObject;
@@ -569,6 +609,8 @@ public class QuestionAPI extends APIBase {
             }
         } catch (JSONException | IOException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return resultObject;
     }
@@ -605,6 +647,8 @@ public class QuestionAPI extends APIBase {
                 resultObject.result = uComment;
             }
         } catch (JSONException | IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return resultObject;

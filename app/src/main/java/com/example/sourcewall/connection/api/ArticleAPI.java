@@ -343,6 +343,8 @@ public class ArticleAPI extends APIBase {
             }
         } catch (JSONException | IOException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return resultObject;
     }
@@ -372,6 +374,8 @@ public class ArticleAPI extends APIBase {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return resultObject;
     }
@@ -400,6 +404,8 @@ public class ArticleAPI extends APIBase {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return resultObject;

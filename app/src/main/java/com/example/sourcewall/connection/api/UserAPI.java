@@ -75,6 +75,8 @@ public class UserAPI extends APIBase {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return resultObject;
@@ -134,6 +136,8 @@ public class UserAPI extends APIBase {
             e.printStackTrace();
         } catch (JSONException e) {
             resultObject.code = ResultObject.ResultCode.CODE_JSON_ERROR;
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return resultObject;
@@ -195,6 +199,8 @@ public class UserAPI extends APIBase {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return resultObject;

@@ -519,6 +519,8 @@ public class PostAPI extends APIBase {
             }
         } catch (JSONException | IOException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return resultObject;
     }
@@ -549,6 +551,8 @@ public class PostAPI extends APIBase {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return resultObject;
     }
@@ -570,6 +574,8 @@ public class PostAPI extends APIBase {
                 resultObject.ok = true;
             }
         } catch (JSONException | IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return resultObject;
@@ -647,12 +653,14 @@ public class PostAPI extends APIBase {
                 pairs.add(new BasicNameValuePair("share_opts", "activity"));
 
                 ResultObject result = HttpFetcher.post(url, pairs, false);
-                if (result.statusCode == 302 && testPublishResult(result.toString())) {
+                //本来是302，自动跳转就成了200，我日，这会消耗流量的，以后再说，TODO
+                //if (result.statusCode == 302 && testPublishResult(result.toString())) {
+                if (result.statusCode == 200) {
                     resultObject.ok = true;
                     resultObject.result = result.toString();
                 }
             } else {
-                //转换失败……
+                System.out.println("Github Failed");
             }
         } catch (IOException e) {
             e.printStackTrace();

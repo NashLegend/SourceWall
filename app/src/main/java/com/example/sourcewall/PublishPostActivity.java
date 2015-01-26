@@ -283,7 +283,6 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         String title = titleEditText.getText().toString();
         String body = bodyEditText.getText().toString() + Config.getComplexReplyTail();
         task.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR, group_id, csrf, title, body, topic);
-
     }
 
     @Override

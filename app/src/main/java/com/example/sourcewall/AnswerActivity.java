@@ -273,6 +273,14 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     Boolean support = which == 0;
+                    if (answer.isHasUpVoted() && support) {
+                        ToastUtil.toastSingleton("已经赞同过");
+                        return;
+                    }
+                    if (answer.isHasDownVoted() && !support) {
+                        ToastUtil.toastSingleton("已经反对过");
+                        return;
+                    }
                     OpinionTask task = new OpinionTask();
                     task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, support);
                 }
@@ -293,8 +301,12 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
         } else {
-            ThankTask task = new ThankTask();
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            if (answer.isHasThanked()) {
+                ToastUtil.toastSingleton("已感谢");
+            } else {
+                ThankTask task = new ThankTask();
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
         }
     }
 
@@ -316,6 +328,8 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
             if (resultObject.ok) {
                 answer.setUpvoteNum(answer.getUpvoteNum() + 1);
                 supportText.setText(answer.getUpvoteNum() + "");
+                answer.setHasDownVoted(!isSupport);
+                answer.setHasUpVoted(isSupport);
                 ToastUtil.toast((isSupport ? "赞同" : "反对") + "成功");
             } else {
                 ToastUtil.toast((isSupport ? "赞同" : "反对") + "未遂");
@@ -323,20 +337,37 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         }
     }
 
-    class BuryTask extends AsyncTask<String, Integer, ResultObject> {
+    class BuryTask extends AsyncTask<Boolean, Integer, ResultObject> {
+        boolean bury = true;
 
         @Override
-        protected ResultObject doInBackground(String... params) {
-            return QuestionAPI.buryAnswer(answer.getID());
+        protected ResultObject doInBackground(Boolean... params) {
+            bury = !answer.isHasBuried();
+            if (bury) {
+                return QuestionAPI.buryAnswer(answer.getID());
+            } else {
+                return QuestionAPI.unBuryAnswer(answer.getID());
+            }
+
         }
 
         @Override
         protected void onPostExecute(ResultObject resultObject) {
             if (resultObject.ok) {
                 //TODO
-                ToastUtil.toast("Bury 成功");
+                if (bury) {
+                    ToastUtil.toast("Bury 成功");
+                    answer.setHasBuried(true);
+                } else {
+                    ToastUtil.toastSingleton("挖出来了");
+                    answer.setHasBuried(false);
+                }
             } else {
-                ToastUtil.toast("Bury 未遂");
+                if (bury) {
+                    ToastUtil.toast("Bury 未遂");
+                } else {
+                    ToastUtil.toastSingleton("没挖出来");
+                }
             }
 
         }
@@ -354,6 +385,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
             if (resultObject.ok) {
                 //TODO
                 ToastUtil.toast("感谢成功");
+                answer.setHasThanked(true);
             } else {
                 ToastUtil.toast("感谢未遂");
             }

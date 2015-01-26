@@ -10,7 +10,7 @@ public class Config {
      * @return
      */
     public static String getComplexReplyTail() {
-        return "<p></p><p>来自<a href=\"http://www.guokr.com/blog/798434/\" target=\"_blank\">SourceWall</a></p>";
+        return "<p></p><p>来自 <a href=\"http://www.guokr.com/blog/798434/\" target=\"_blank\">SourceWall</a></p>";
     }
 
     /**

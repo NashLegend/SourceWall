@@ -12,12 +12,14 @@ import org.apache.http.NameValuePair;
 import org.apache.http.NoHttpResponseException;
 import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnManagerParams;
 import org.apache.http.conn.params.ConnPerRouteBean;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.DefaultRedirectHandler;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.message.BasicNameValuePair;
@@ -51,11 +53,11 @@ public class HttpFetcher {
     public final static int CONNECTION_TIMEOUT = 10000;
     public final static int SO_TIMEOUT = 20000;
 
-    public static ResultObject post(String url, List<NameValuePair> params) throws IOException {
+    public static ResultObject post(String url, List<NameValuePair> params) throws Exception {
         return post(url, params, true);
     }
 
-    public static ResultObject post(String url, List<NameValuePair> params, boolean needToken) throws IOException {
+    public static ResultObject post(String url, List<NameValuePair> params, boolean needToken) throws Exception {
         ResultObject resultObject = new ResultObject();
         HttpPost httpPost = new HttpPost(url);
         String token = UserAPI.getToken();
@@ -72,7 +74,7 @@ public class HttpFetcher {
         return resultObject;
     }
 
-    public static ResultObject get(String url) throws IOException {
+    public static ResultObject get(String url) throws Exception {
         ResultObject resultObject = new ResultObject();
         HttpGet httpGet = new HttpGet(url);
         DefaultHttpClient defaultHttpClient1 = getDefaultHttpClient();
@@ -85,7 +87,7 @@ public class HttpFetcher {
         return resultObject;
     }
 
-    public static ResultObject get(String url, List<NameValuePair> params, boolean needToken) throws IOException {
+    public static ResultObject get(String url, List<NameValuePair> params, boolean needToken) throws Exception {
         StringBuilder paramString = new StringBuilder("");
         String token = UserAPI.getToken();
         if (needToken && !TextUtils.isEmpty(token)) {
@@ -99,11 +101,45 @@ public class HttpFetcher {
             }
             paramString.deleteCharAt(paramString.length() - 1);
         }
-        return get(url + paramString);
+        return get(url + paramString.toString());
     }
 
-    public static ResultObject get(String url, List<NameValuePair> params) throws IOException {
+    public static ResultObject get(String url, List<NameValuePair> params) throws Exception {
         return get(url, params, true);
+    }
+
+    public static ResultObject delete(String url) throws Exception {
+        ResultObject resultObject = new ResultObject();
+        HttpDelete httpDelete = new HttpDelete(url);
+        DefaultHttpClient defaultHttpClient1 = getDefaultHttpClient();
+        HttpResponse response = defaultHttpClient1.execute(httpDelete);
+        int statusCode = response.getStatusLine().getStatusCode();
+        HttpEntity entity = response.getEntity();
+        String result = EntityUtils.toString(entity, HTTP.UTF_8);
+        resultObject.statusCode = statusCode;
+        resultObject.result = result;
+        return resultObject;
+    }
+
+    public static ResultObject delete(String url, List<NameValuePair> params) throws Exception {
+        return delete(url, params, true);
+    }
+
+    public static ResultObject delete(String url, List<NameValuePair> params, boolean needToken) throws Exception {
+        StringBuilder paramString = new StringBuilder("");
+        String token = UserAPI.getToken();
+        if (needToken && !TextUtils.isEmpty(token)) {
+            params.add(new BasicNameValuePair("access_token", token));
+        }
+        if (params.size() > 0) {
+            paramString.append("?");
+            for (int i = 0; i < params.size(); i++) {
+                NameValuePair p = params.get(i);
+                paramString.append(p.getName()).append("=").append(p.getValue()).append("&");
+            }
+            paramString.deleteCharAt(paramString.length() - 1);
+        }
+        return delete(url + paramString.toString());
     }
 
     /**
@@ -113,6 +149,7 @@ public class HttpFetcher {
         if (defaultHttpClient == null) {
             defaultHttpClient = new DefaultHttpClient();
             defaultHttpClient.setHttpRequestRetryHandler(requestRetryHandler);
+            defaultHttpClient.setRedirectHandler(redirectHandler);
             ClientConnectionManager manager = defaultHttpClient.getConnectionManager();
             HttpParams params = defaultHttpClient.getParams();
             //多线程请求
@@ -140,6 +177,14 @@ public class HttpFetcher {
         }
         return defaultHttpClient;
     }
+
+    private static DefaultRedirectHandler redirectHandler = new DefaultRedirectHandler() {
+
+        @Override
+        public boolean isRedirectRequested(HttpResponse response, HttpContext context) {
+            return false;
+        }
+    };
 
     /**
      * 重试处理
