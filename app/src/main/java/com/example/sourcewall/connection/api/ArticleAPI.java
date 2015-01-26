@@ -259,6 +259,7 @@ public class ArticleAPI extends APIBase {
                     UComment comment = new UComment();
                     comment.setID(getJsonString(jo, "id"));
                     comment.setLikeNum(jo.getInt("likings_count"));
+                    comment.setHasLiked(jo.getBoolean("current_user_has_liked"));
                     comment.setAuthor(getJsonString(getJsonObject(jo, "author"), "nickname"));
                     comment.setAuthorID(getJsonString(getJsonObject(jo, "author"), "url")
                             .replaceAll("\\D+", ""));

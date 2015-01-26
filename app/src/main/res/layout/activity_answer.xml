@@ -62,61 +62,73 @@
         android:layout_below="@id/text_title"
         android:background="?attr/color_answer_author_background"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="5dp">
-
-        <ImageView
-            android:id="@+id/image_avatar"
-            android:layout_width="@dimen/list_standard_comment_avatar_dimen"
-            android:layout_height="@dimen/list_standard_comment_avatar_dimen"
-            android:layout_marginRight="@dimen/avatar_right_span_dimen"
-            android:layout_weight="0"
-            android:src="@drawable/default_avatar" />
+        android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/text_author"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/sample_author"
-                android:textColor="?attr/color_answer_author_text" />
-
-            <TextView
-                android:id="@+id/text_author_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/sample_author_title"
-                android:textColor="?attr/color_answer_author_sub_text" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layout_opinion"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="5dp">
 
             <ImageView
-                android:layout_width="@dimen/list_standard_item_like_image_dimen"
-                android:layout_height="@dimen/list_standard_item_like_image_dimen"
+                android:id="@+id/image_avatar"
+                android:layout_width="@dimen/list_standard_comment_avatar_dimen"
+                android:layout_height="@dimen/list_standard_comment_avatar_dimen"
+                android:layout_marginRight="@dimen/avatar_right_span_dimen"
                 android:layout_weight="0"
-                android:src="@drawable/like" />
+                android:src="@drawable/default_avatar" />
 
-            <TextView
-                android:id="@+id/text_num_support"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/list_standard_item_text_icon_gap"
-                android:layout_weight="0"
-                android:text="@string/sample_like_num"
-                android:textColor="?attr/color_answer_author_sub_text" />
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/text_author"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sample_author"
+                    android:textColor="?attr/color_answer_author_text" />
+
+                <TextView
+                    android:id="@+id/text_author_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sample_author_title"
+                    android:textColor="?attr/color_answer_author_sub_text" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_opinion"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="@dimen/list_standard_item_like_image_dimen"
+                    android:layout_height="@dimen/list_standard_item_like_image_dimen"
+                    android:layout_weight="0"
+                    android:src="@drawable/like" />
+
+                <TextView
+                    android:id="@+id/text_num_support"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/list_standard_item_text_icon_gap"
+                    android:layout_weight="0"
+                    android:text="@string/sample_like_num"
+                    android:textColor="?attr/color_answer_author_sub_text" />
+            </LinearLayout>
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.4dp"
+            android:layout_weight="0"
+            android:background="@android:color/darker_gray" />
     </LinearLayout>
 
     <android.support.v7.widget.Toolbar

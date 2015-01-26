@@ -382,6 +382,7 @@ public class PostAPI extends APIBase {
                     JSONObject jo = comments.getJSONObject(i);
                     UComment comment = new UComment();
                     comment.setID(getJsonString(jo, "id"));
+                    comment.setHasLiked(jo.getBoolean("current_user_has_liked"));//始终是false，不知怎么搞了，猜不出
                     comment.setAuthor(getJsonObject(jo, "author").getString("nickname"));
                     comment.setAuthorID(getJsonObject(jo, "author").getString("url")
                             .replaceAll("\\D+", ""));
@@ -648,7 +649,6 @@ public class PostAPI extends APIBase {
                 //使用github接口转换成html
                 htmlBody = (String) mdResult.result;
             } else {
-                System.out.println("Github Failed");
                 htmlBody = MDUtil.Markdown2HtmlDumb(body);
             }
             ArrayList<NameValuePair> pairs = new ArrayList<>();

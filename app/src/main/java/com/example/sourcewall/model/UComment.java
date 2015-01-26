@@ -18,6 +18,8 @@ public class UComment extends AceModel {
     private int likeNum = 0;
     private boolean isContentComplex = false;
 
+    private boolean hasLiked = false;
+
     public String getContent() {
         return content;
     }
@@ -104,6 +106,14 @@ public class UComment extends AceModel {
 
     public void setLikeNum(int likeNum) {
         this.likeNum = likeNum;
+    }
+
+    public boolean isHasLiked() {
+        return hasLiked;
+    }
+
+    public void setHasLiked(boolean hasLiked) {
+        this.hasLiked = hasLiked;
     }
 
     public boolean isContentComplex() {
