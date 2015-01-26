@@ -1,5 +1,7 @@
 package com.example.sourcewall.connection;
 
+import android.text.TextUtils;
+
 import com.example.sourcewall.connection.api.UserAPI;
 
 import org.apache.http.HttpEntity;
@@ -18,6 +20,7 @@ import org.apache.http.conn.params.ConnPerRouteBean;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.impl.cookie.BasicClientCookie;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.ExecutionContext;
@@ -49,8 +52,16 @@ public class HttpFetcher {
     public final static int SO_TIMEOUT = 20000;
 
     public static ResultObject post(String url, List<NameValuePair> params) throws IOException {
+        return post(url, params, true);
+    }
+
+    public static ResultObject post(String url, List<NameValuePair> params, boolean needToken) throws IOException {
         ResultObject resultObject = new ResultObject();
         HttpPost httpPost = new HttpPost(url);
+        String token = UserAPI.getToken();
+        if (needToken && !TextUtils.isEmpty(token)) {
+            params.add(new BasicNameValuePair("access_token", token));
+        }
         httpPost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
         HttpResponse response = getDefaultHttpClient().execute(httpPost);
         int statusCode = response.getStatusLine().getStatusCode();
@@ -72,6 +83,27 @@ public class HttpFetcher {
         resultObject.statusCode = statusCode;
         resultObject.result = result;
         return resultObject;
+    }
+
+    public static ResultObject get(String url, List<NameValuePair> params, boolean needToken) throws IOException {
+        StringBuilder paramString = new StringBuilder("");
+        String token = UserAPI.getToken();
+        if (needToken && !TextUtils.isEmpty(token)) {
+            params.add(new BasicNameValuePair("access_token", token));
+        }
+        if (params.size() > 0) {
+            paramString.append("?");
+            for (int i = 0; i < params.size(); i++) {
+                NameValuePair p = params.get(i);
+                paramString.append(p.getName()).append("=").append(p.getValue()).append("&");
+            }
+            paramString.deleteCharAt(paramString.length() - 1);
+        }
+        return get(url + paramString);
+    }
+
+    public static ResultObject get(String url, List<NameValuePair> params) throws IOException {
+        return get(url, params, true);
     }
 
     /**

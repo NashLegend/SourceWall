@@ -58,9 +58,13 @@ public class QuestionAPI extends APIBase {
         ResultObject resultObject = new ResultObject();
         try {
             ArrayList<Question> questions = new ArrayList<Question>();
-            String url = "http://apis.guokr.com/ask/question.json?retrieve_type=by_tag&limit=20&tag_name="
-                    + tag + "&offset=" + offset;
-            String jString = HttpFetcher.get(url).toString();
+            String url = "http://apis.guokr.com/ask/question.json";
+            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            pairs.add(new BasicNameValuePair("retrieve_type", "by_tag"));
+            pairs.add(new BasicNameValuePair("tag_name", tag));
+            pairs.add(new BasicNameValuePair("limit", "20"));
+            pairs.add(new BasicNameValuePair("offset", offset + ""));
+            String jString = HttpFetcher.get(url, pairs).toString();
             JSONArray results = getUniversalJsonArray(jString, resultObject);
             if (results != null) {
                 for (int i = 0; i < results.length(); i++) {
@@ -127,7 +131,7 @@ public class QuestionAPI extends APIBase {
     public static ResultObject getQuestionsFromMobileUrl(String url) {
         ResultObject resultObject = new ResultObject();
         try {
-            ArrayList<Question> questions = new ArrayList<Question>();
+            ArrayList<Question> questions = new ArrayList<>();
             String html = HttpFetcher.get(url).toString();
             Document doc = Jsoup.parse(html);
             Elements elements = doc.getElementsByClass("ask-list");
@@ -234,9 +238,13 @@ public class QuestionAPI extends APIBase {
         ResultObject resultObject = new ResultObject();
         try {
             ArrayList<QuestionAnswer> answers = new ArrayList<QuestionAnswer>();
-            String url = "http://apis.guokr.com/ask/answer.json?retrieve_type=by_question&limit=20&question_id="
-                    + id + "&offset=" + offset;
-            String jString = HttpFetcher.get(url).toString();
+            String url = "http://apis.guokr.com/ask/answer.json";
+            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            pairs.add(new BasicNameValuePair("retrieve_type", "by_question"));
+            pairs.add(new BasicNameValuePair("question_id", id));
+            pairs.add(new BasicNameValuePair("limit", "20"));
+            pairs.add(new BasicNameValuePair("offset", offset + ""));
+            String jString = HttpFetcher.get(url, pairs).toString();
             JSONArray comments = getUniversalJsonArray(jString, resultObject);
             if (comments != null) {
                 for (int i = 0; i < comments.length(); i++) {
@@ -252,8 +260,9 @@ public class QuestionAPI extends APIBase {
                     ans.setContent(getJsonString(jo, "html").replaceAll("<img .*?/>", prefix + "$0" + suffix).replaceAll("style=\"max-width: \\d+px\"", "style=\"max-width: " + maxImageWidth + "px\""));
                     ans.setDate_created(parseDate(getJsonString(jo, "date_created")));
                     ans.setDate_modified(parseDate(getJsonString(jo, "date_modified")));
-                    ans.setHasDownVoted(getJsonBoolean(jo, "current_user_has_buried"));
-                    ans.setHasUpvoted(getJsonBoolean(jo, "current_user_has_supported"));
+                    ans.setHasDownVoted(getJsonBoolean(jo, "current_user_has_opposed"));
+                    ans.setHasBuried(getJsonBoolean(jo, "current_user_has_buried"));
+                    ans.setHasUpVoted(getJsonBoolean(jo, "current_user_has_supported"));
                     ans.setHasThanked(getJsonBoolean(jo, "current_user_has_thanked"));
                     ans.setID(getJsonString(jo, "id"));
                     ans.setQuestionID(getJsonString(jo, "question_id"));
@@ -310,9 +319,13 @@ public class QuestionAPI extends APIBase {
         ResultObject resultObject = new ResultObject();
         try {
             ArrayList<UComment> list = new ArrayList<UComment>();
-            String url = "http://www.guokr.com/apis/ask/question_reply.json?retrieve_type=by_question&question_id="
-                    + id + "&offset=" + offset;
-            String jString = HttpFetcher.get(url).toString();
+            String url = "http://www.guokr.com/apis/ask/question_reply.json";//没有limit？
+            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            pairs.add(new BasicNameValuePair("retrieve_type", "by_question"));
+            pairs.add(new BasicNameValuePair("question_id", id));
+            //pairs.add(new BasicNameValuePair("limit", "20"));// TODO
+            pairs.add(new BasicNameValuePair("offset", offset + ""));
+            String jString = HttpFetcher.get(url, pairs).toString();
             JSONArray comments = getUniversalJsonArray(jString, resultObject);
             if (comments != null) {
                 for (int i = 0; i < comments.length(); i++) {
@@ -355,9 +368,13 @@ public class QuestionAPI extends APIBase {
         ResultObject resultObject = new ResultObject();
         try {
             ArrayList<UComment> list = new ArrayList<>();
-            String url = "http://www.guokr.com/apis/ask/answer_reply.json?retrieve_type=by_answer&limit=20&answer_id="
-                    + id + "&offset=" + offset;
-            String jString = HttpFetcher.get(url).toString();
+            String url = "http://www.guokr.com/apis/ask/answer_reply.json";
+            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            pairs.add(new BasicNameValuePair("retrieve_type", "by_answer"));
+            pairs.add(new BasicNameValuePair("answer_id", id));
+            pairs.add(new BasicNameValuePair("limit", "20"));
+            pairs.add(new BasicNameValuePair("offset", offset + ""));
+            String jString = HttpFetcher.get(url, pairs).toString();
             JSONArray comments = getUniversalJsonArray(jString, resultObject);
             if (comments != null) {
                 for (int i = 0; i < comments.length(); i++) {
@@ -402,7 +419,6 @@ public class QuestionAPI extends APIBase {
             ArrayList<NameValuePair> pairs = new ArrayList<>();
             pairs.add(new BasicNameValuePair("question_id", id));
             pairs.add(new BasicNameValuePair("content", content));
-            pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
             String result = HttpFetcher.post(url, pairs).toString();
             JSONObject resultJson = getUniversalJsonObject(result, resultObject);
             if (resultJson != null) {
@@ -452,7 +468,6 @@ public class QuestionAPI extends APIBase {
             ArrayList<NameValuePair> pairs = new ArrayList<>();
             pairs.add(new BasicNameValuePair("answer_id", id));
             pairs.add(new BasicNameValuePair("opinion", opinion));
-            pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
             String result = HttpFetcher.post(url, pairs).toString();
             if (getUniversalJsonSimpleBoolean(result, resultObject)) {
                 resultObject.ok = true;
@@ -475,7 +490,6 @@ public class QuestionAPI extends APIBase {
         try {
             ArrayList<NameValuePair> pairs = new ArrayList<>();
             pairs.add(new BasicNameValuePair("answer_id", id));
-            pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
             String result = HttpFetcher.post(url, pairs).toString();
             if (getUniversalJsonSimpleBoolean(result, resultObject)) {
                 resultObject.ok = true;
@@ -498,7 +512,6 @@ public class QuestionAPI extends APIBase {
         try {
             ArrayList<NameValuePair> pairs = new ArrayList<>();
             pairs.add(new BasicNameValuePair("answer_id", id));
-            pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
             String result = HttpFetcher.post(url, pairs).toString();
             if (getUniversalJsonSimpleBoolean(result, resultObject)) {
                 resultObject.ok = true;
@@ -538,7 +551,6 @@ public class QuestionAPI extends APIBase {
             pairs.add(new BasicNameValuePair("question_id", questionID));
             pairs.add(new BasicNameValuePair("content", comment));
             pairs.add(new BasicNameValuePair("retrieve_type", "by_question"));
-            pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
             String result = HttpFetcher.post(url, pairs).toString();
             JSONObject jsonObject = getUniversalJsonObject(result, resultObject);
             if (jsonObject != null) {
@@ -576,7 +588,6 @@ public class QuestionAPI extends APIBase {
             pairs.add(new BasicNameValuePair("answer_id", answerID));
             pairs.add(new BasicNameValuePair("content", comment));
             pairs.add(new BasicNameValuePair("retrieve_type", "by_answer"));
-            pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
             String result = HttpFetcher.post(url, pairs).toString();
             JSONObject jsonObject = getUniversalJsonObject(result, resultObject);
             if (jsonObject != null) {
@@ -654,7 +665,7 @@ public class QuestionAPI extends APIBase {
                 }
                 pairs.add(new BasicNameValuePair("captcha", ""));
 
-                ResultObject result = HttpFetcher.post(url, pairs);
+                ResultObject result = HttpFetcher.post(url, pairs, false);
                 if (result.statusCode == 302 && testPublishResult(result.toString())) {
                     resultObject.ok = true;
                     resultObject.result = result.toString();

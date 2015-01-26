@@ -35,8 +35,12 @@ public class ArticleAPI extends APIBase {
      * @throws IOException
      */
     public static ResultObject getArticleListIndexPage(int offset) {
-        String url = "http://www.guokr.com/apis/minisite/article.json?retrieve_type=by_subject" + "&limit=20&offset=" + offset;
-        return getArticleListFromJsonUrl(url);
+        String url = "http://www.guokr.com/apis/minisite/article.json";
+        ArrayList<NameValuePair> pairs = new ArrayList<>();
+        pairs.add(new BasicNameValuePair("retrieve_type", "by_subject"));
+        pairs.add(new BasicNameValuePair("limit", "20"));
+        pairs.add(new BasicNameValuePair("offset", offset + ""));
+        return getArticleListFromJsonUrl(url, pairs);
     }
 
     /**
@@ -50,9 +54,13 @@ public class ArticleAPI extends APIBase {
      * @throws IOException
      */
     public static ResultObject getArticleListByChannel(String channelKey, int offset) {
-        String url = "http://www.guokr.com/apis/minisite/article.json?retrieve_type=by_channel&channel_key="
-                + channelKey + "&limit=20&offset=" + offset;
-        return getArticleListFromJsonUrl(url);
+        String url = "http://www.guokr.com/apis/minisite/article.json";
+        ArrayList<NameValuePair> pairs = new ArrayList<>();
+        pairs.add(new BasicNameValuePair("retrieve_type", "by_channel"));
+        pairs.add(new BasicNameValuePair("channel_key", channelKey));
+        pairs.add(new BasicNameValuePair("limit", "20"));
+        pairs.add(new BasicNameValuePair("offset", offset + ""));
+        return getArticleListFromJsonUrl(url, pairs);
     }
 
     /**
@@ -66,9 +74,13 @@ public class ArticleAPI extends APIBase {
      * @throws IOException
      */
     public static ResultObject getArticleListBySubject(String subject_key, int offset) {
-        String url = "http://www.guokr.com/apis/minisite/article.json?retrieve_type=by_subject&subject_key="
-                + subject_key + "&limit=20&offset=" + offset;
-        return getArticleListFromJsonUrl(url);
+        String url = "http://www.guokr.com/apis/minisite/article.json";
+        ArrayList<NameValuePair> pairs = new ArrayList<>();
+        pairs.add(new BasicNameValuePair("retrieve_type", "by_subject"));
+        pairs.add(new BasicNameValuePair("subject_key", subject_key));
+        pairs.add(new BasicNameValuePair("limit", "20"));
+        pairs.add(new BasicNameValuePair("offset", offset + ""));
+        return getArticleListFromJsonUrl(url, pairs);
     }
 
     /**
@@ -80,11 +92,11 @@ public class ArticleAPI extends APIBase {
      * @throws JSONException
      * @throws IOException
      */
-    private static ResultObject getArticleListFromJsonUrl(String url) {
+    private static ResultObject getArticleListFromJsonUrl(String url, ArrayList<NameValuePair> pairs) {
         ResultObject resultObject = new ResultObject();
         try {
-            ArrayList<Article> articleList = new ArrayList<Article>();
-            String jString = HttpFetcher.get(url).toString();
+            ArrayList<Article> articleList = new ArrayList<>();
+            String jString = HttpFetcher.get(url, pairs, false).toString();
             JSONArray articles = APIBase.getUniversalJsonArray(jString, resultObject);
             if (articles != null) {
                 for (int i = 0; i < articles.length(); i++) {
@@ -234,9 +246,12 @@ public class ArticleAPI extends APIBase {
         ResultObject resultObject = new ResultObject();
         try {
             ArrayList<UComment> list = new ArrayList<>();
-            String url = "http://apis.guokr.com/minisite/article_reply.json?article_id=" + id
-                    + "&limit=20&offset=" + offset;
-            String jString = HttpFetcher.get(url).toString();
+            String url = "http://apis.guokr.com/minisite/article_reply.json";
+            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            pairs.add(new BasicNameValuePair("article_id", id));
+            pairs.add(new BasicNameValuePair("limit", "20"));
+            pairs.add(new BasicNameValuePair("offset", offset + ""));
+            String jString = HttpFetcher.get(url, pairs).toString();
             JSONArray articles = APIBase.getUniversalJsonArray(jString, resultObject);
             if (articles != null) {
                 for (int i = 0; i < articles.length(); i++) {
@@ -322,7 +337,6 @@ public class ArticleAPI extends APIBase {
         try {
             ArrayList<NameValuePair> pairs = new ArrayList<>();
             pairs.add(new BasicNameValuePair("reply_id", id));
-            pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
             String result = HttpFetcher.post(url, pairs).toString();
             if (getUniversalJsonSimpleBoolean(result, resultObject)) {
                 resultObject.ok = true;
@@ -347,7 +361,6 @@ public class ArticleAPI extends APIBase {
             ArrayList<NameValuePair> pairs = new ArrayList<>();
             pairs.add(new BasicNameValuePair("article_id", id));
             pairs.add(new BasicNameValuePair("content", content));
-            pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
             String result = HttpFetcher.post(url, pairs).toString();
             JSONObject resultJson = APIBase.getUniversalJsonObject(result, resultObject);
             if (resultJson != null) {
@@ -377,7 +390,6 @@ public class ArticleAPI extends APIBase {
             ArrayList<NameValuePair> pairs = new ArrayList<>();
             pairs.add(new BasicNameValuePair("article_id", id));
             pairs.add(new BasicNameValuePair("content", content));
-            pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
             String result = HttpFetcher.post(url, pairs).toString();
             JSONObject resultJson = APIBase.getUniversalJsonObject(result, resultObject);
             if (resultJson != null) {

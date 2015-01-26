@@ -12,7 +12,6 @@
     <dimen name="input_dialog_input_height">96dp</dimen>
     <dimen name="favor_dialog_height">300dp</dimen>
 
-
     <!--通用系列-->
     <dimen name="text_author_view_font_size_dimen">12sp</dimen>
     <dimen name="avatar_right_span_dimen">12dp</dimen>
@@ -27,8 +26,8 @@
     <dimen name="list_standard_comment_avatar_dimen">36dp</dimen>
     <dimen name="list_standard_item_padding_horizontal">6dp</dimen>
     <dimen name="list_standard_item_padding_vertical">6dp</dimen>
-    <dimen name="list_standard_item_like_image_dimen">12dp</dimen>
-    <dimen name="list_standard_item_reply_image_dimen">12dp</dimen>
+    <dimen name="list_standard_item_like_image_dimen">16dp</dimen>
+    <dimen name="list_standard_item_reply_image_dimen">16dp</dimen>
     <dimen name="list_standard_item_author_text_dimen">10dp</dimen>
     <dimen name="list_standard_item_text_text_gap">10dp</dimen>
     <dimen name="list_standard_item_text_icon_gap">5dp</dimen>

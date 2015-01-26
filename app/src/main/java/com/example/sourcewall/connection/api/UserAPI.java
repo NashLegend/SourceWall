@@ -112,9 +112,11 @@ public class UserAPI extends APIBase {
 
     public static ResultObject getMessageNum() {
         ResultObject resultObject = new ResultObject();
-        String token = getToken();
         try {
-            String result = HttpFetcher.get("http://www.guokr.com/apis/community/rn_num.json?_=" + System.currentTimeMillis() + "&access_token=" + token).toString();
+            String url = "http://www.guokr.com/apis/community/rn_num.json";
+            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            pairs.add(new BasicNameValuePair("_", System.currentTimeMillis() + ""));
+            String result = HttpFetcher.get(url, pairs).toString();
             JSONObject object = new JSONObject(result);
             if (getJsonBoolean(object, "ok")) {
                 resultObject.ok = true;
@@ -153,7 +155,6 @@ public class UserAPI extends APIBase {
             params.add(new BasicNameValuePair("basket_id", basketID));
             params.add(new BasicNameValuePair("url", link));
             params.add(new BasicNameValuePair("title", title));
-            params.add(new BasicNameValuePair("access_token", getToken()));
             String result = HttpFetcher.post(url, params).toString();
             if (getUniversalJsonSimpleBoolean(result, resultObject)) {
                 resultObject.ok = true;
@@ -187,7 +188,6 @@ public class UserAPI extends APIBase {
             pairs.add(new BasicNameValuePair("summary", summary));
             pairs.add(new BasicNameValuePair("comment", comment));
             pairs.add(new BasicNameValuePair("target", "activity"));
-            pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
             String result = HttpFetcher.post(url, pairs).toString();
             if (getUniversalJsonSimpleBoolean(result, resultObject)) {
                 resultObject.ok = true;
@@ -207,9 +207,14 @@ public class UserAPI extends APIBase {
      */
     public static ResultObject getBaskets() {
         ResultObject resultObject = new ResultObject();
-        String url = "http://www.guokr.com/apis/favorite/basket.json?t=" + System.currentTimeMillis() + "&retrieve_type=by_ukey&ukey=" + getUkey() + "&limit=100&access_token=" + getToken();
+        String url = "http://www.guokr.com/apis/favorite/basket.json";
         try {
-            String result = HttpFetcher.get(url).toString();
+            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            pairs.add(new BasicNameValuePair("t", System.currentTimeMillis() + ""));
+            pairs.add(new BasicNameValuePair("retrieve_type", "by_ukey"));
+            pairs.add(new BasicNameValuePair("ukey", getUkey()));
+            pairs.add(new BasicNameValuePair("limit", "100"));
+            String result = HttpFetcher.get(url, pairs).toString();
             JSONArray jsonArray = getUniversalJsonArray(result, resultObject);
             if (jsonArray != null) {
                 ArrayList<Basket> baskets = new ArrayList<>();
@@ -257,7 +262,6 @@ public class UserAPI extends APIBase {
             params.add(new BasicNameValuePair("title", title));
             params.add(new BasicNameValuePair("introduction", introduction));
             params.add(new BasicNameValuePair("category_id", category_id));
-            params.add(new BasicNameValuePair("access_token", getToken()));
             String result = HttpFetcher.post(url, params).toString();
             JSONObject subObject = getUniversalJsonObject(result, resultObject);
             if (subObject != null) {
@@ -294,8 +298,9 @@ public class UserAPI extends APIBase {
     public static ResultObject getCategoryList() {
         ResultObject resultObject = new ResultObject();
         try {
-            String url = "http://www.guokr.com/apis/favorite/category.json?access_token=" + getToken();
-            String result = HttpFetcher.get(url).toString();
+            String url = "http://www.guokr.com/apis/favorite/category.json";
+            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            String result = HttpFetcher.get(url, pairs).toString();
             JSONArray jsonArray = getUniversalJsonArray(result, resultObject);
             if (jsonArray != null) {
                 ArrayList<Category> categories = new ArrayList<>();

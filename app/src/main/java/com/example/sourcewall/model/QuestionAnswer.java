@@ -16,8 +16,9 @@ public class QuestionAnswer extends AceModel {
     private String questionID = "";
     private int commentNum = 0;
     private int upvoteNum = 0;
-    private boolean hasUpvoted = false;
+    private boolean hasUpVoted = false;
     private boolean hasDownVoted = false;
+    private boolean hasBuried = false;
     private boolean hasThanked = false;
     private boolean isContentComplex = false;
 
@@ -109,12 +110,12 @@ public class QuestionAnswer extends AceModel {
         this.upvoteNum = upvoteNum;
     }
 
-    public boolean isHasUpvoted() {
-        return hasUpvoted;
+    public boolean isHasUpVoted() {
+        return hasUpVoted;
     }
 
-    public void setHasUpvoted(boolean hasUpvoted) {
-        this.hasUpvoted = hasUpvoted;
+    public void setHasUpVoted(boolean hasUpVoted) {
+        this.hasUpVoted = hasUpVoted;
     }
 
     public boolean isHasDownVoted() {
@@ -123,6 +124,14 @@ public class QuestionAnswer extends AceModel {
 
     public void setHasDownVoted(boolean hasDownVoted) {
         this.hasDownVoted = hasDownVoted;
+    }
+
+    public boolean isHasBuried() {
+        return hasBuried;
+    }
+
+    public void setHasBuried(boolean hasBuried) {
+        this.hasBuried = hasBuried;
     }
 
     public boolean isHasThanked() {

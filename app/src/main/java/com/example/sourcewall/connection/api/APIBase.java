@@ -258,6 +258,7 @@ public class APIBase {
         resultObject.message = error_msg;
         if (error_code == 200004) {
             resultObject.code = ResultObject.ResultCode.CODE_TOKEN_INVALID;
+            UserAPI.clearMyInfo();
         } else {
             resultObject.code = ResultObject.ResultCode.CODE_UNKNOWN;
         }

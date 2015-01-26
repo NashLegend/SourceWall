@@ -58,7 +58,7 @@
             android:paddingTop="10dp"
             fab:fab_colorNormal="?attr/colorPrimaryBright"
             fab:fab_colorPressed="?attr/colorPrimaryDark"
-            fab:fab_icon="@drawable/ic_plus_one_white_36dp" />
+            fab:fab_icon="@drawable/white_like" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/button_reply"

@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
                 android:singleLine="true"
-                android:text="Author"
+                android:text="@string/sample_author"
                 android:textColor="?attr/color_author_color" />
 
             <TextView
@@ -47,7 +47,7 @@
                 android:layout_marginLeft="@dimen/list_standard_item_text_text_gap"
                 android:layout_weight="0"
                 android:singleLine="true"
-                android:text="2014-09-24 08:00:09"
+                android:text="@string/sample_date"
                 android:textColor="?attr/color_author_color" />
 
             <View
@@ -69,7 +69,8 @@
                 android:layout_weight="0"
                 android:singleLine="true"
                 android:text="@string/sample_like_num"
-                android:textColor="?attr/color_author_color" />
+                android:textColor="?attr/color_author_color"
+                android:textSize="14sp" />
         </LinearLayout>
 
         <ImageView

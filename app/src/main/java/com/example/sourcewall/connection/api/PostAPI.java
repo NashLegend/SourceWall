@@ -82,25 +82,6 @@ public class PostAPI extends APIBase {
     }
 
     /**
-     * @param url
-     * @return
-     */
-    private static ArrayList<SubItem> getMyGroupInOnePage(String url) throws Exception {
-        ArrayList<SubItem> subItems = new ArrayList<>();
-        Document doc1 = Jsoup.parse(HttpFetcher.get(url).toString());
-        Elements lis = doc1.getElementsByClass("group-list").get(0).getElementsByTag("li");
-        for (int i = 0; i < lis.size(); i++) {
-            Element element = lis.get(i).getElementsByTag("a").get(0);
-            String groupUrl = element.attr("href");//
-            String groupID = groupUrl.replaceAll("^\\D+(\\d+)\\D*", "$1");
-            String groupName = element.getElementsByTag("b").text();
-            SubItem subItem = new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, groupName, groupID);
-            subItems.add(subItem);
-        }
-        return subItems;
-    }
-
-    /**
      * 解析getMyGroupRecentRepliesPosts和getMyGroupHotPosts传过来的url
      * resultObject.result是ArrayList[Post] list
      *
@@ -111,7 +92,7 @@ public class PostAPI extends APIBase {
     private static ResultObject getMyGroupPostListFromMobileUrl(String url) {
         ResultObject resultObject = new ResultObject();
         try {
-            ArrayList<Post> list = new ArrayList<Post>();
+            ArrayList<Post> list = new ArrayList<>();
             String html = HttpFetcher.get(url).toString();
             Document doc = Jsoup.parse(html);
             Elements elements = doc.getElementsByClass("post-list");
@@ -271,10 +252,14 @@ public class PostAPI extends APIBase {
     public static ResultObject getGroupPostListByJsonUrl(String id, int offset) {
         ResultObject resultObject = new ResultObject();
         try {
-            String url = "http://apis.guokr.com/group/post.json?retrieve_type=by_group&group_id=" + id
-                    + "&limit=20&offset=" + offset;
+            String url = "http://apis.guokr.com/group/post.json";
             ArrayList<Post> list = new ArrayList<>();
-            String jString = HttpFetcher.get(url).toString();
+            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            pairs.add(new BasicNameValuePair("retrieve_type", "by_group"));
+            pairs.add(new BasicNameValuePair("group_id", id));
+            pairs.add(new BasicNameValuePair("limit", "20"));
+            pairs.add(new BasicNameValuePair("offset", offset + ""));
+            String jString = HttpFetcher.get(url, pairs).toString();
             JSONArray articles = APIBase.getUniversalJsonArray(jString, resultObject);
             if (articles != null) {
                 for (int i = 0; i < articles.length(); i++) {
@@ -383,9 +368,13 @@ public class PostAPI extends APIBase {
         ResultObject resultObject = new ResultObject();
         try {
             ArrayList<UComment> list = new ArrayList<UComment>();
-            String url = "http://apis.guokr.com/group/post_reply.json?retrieve_type=by_post&post_id="
-                    + id + "&limit=20&offset=" + offset;
-            String jString = HttpFetcher.get(url).toString();
+            String url = "http://apis.guokr.com/group/post_reply.json";
+            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            pairs.add(new BasicNameValuePair("retrieve_type", "by_post"));
+            pairs.add(new BasicNameValuePair("post_id", id));
+            pairs.add(new BasicNameValuePair("limit", "20"));
+            pairs.add(new BasicNameValuePair("offset", offset + ""));
+            String jString = HttpFetcher.get(url, pairs).toString();
             JSONArray comments = getUniversalJsonArray(jString, resultObject);
             if (comments != null) {
                 for (int i = 0; i < comments.length(); i++) {
@@ -524,7 +513,6 @@ public class PostAPI extends APIBase {
         try {
             ArrayList<NameValuePair> pairs = new ArrayList<>();
             pairs.add(new BasicNameValuePair("post_id", postID));
-            pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
             String result = HttpFetcher.post(url, pairs).toString();
             if (getUniversalJsonSimpleBoolean(result, resultObject)) {
                 resultObject.ok = true;
@@ -550,7 +538,6 @@ public class PostAPI extends APIBase {
             ArrayList<NameValuePair> pairs = new ArrayList<>();
             pairs.add(new BasicNameValuePair("post_id", id));
             pairs.add(new BasicNameValuePair("content", content));
-            pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
             String result = HttpFetcher.post(url, pairs).toString();
             JSONObject resultJson = getUniversalJsonObject(result, resultObject);
             if (resultJson != null) {
@@ -578,7 +565,6 @@ public class PostAPI extends APIBase {
         try {
             ArrayList<NameValuePair> pairs = new ArrayList<>();
             pairs.add(new BasicNameValuePair("reply_id", id));
-            pairs.add(new BasicNameValuePair("access_token", UserAPI.getToken()));
             String result = HttpFetcher.post(url, pairs).toString();
             if (getUniversalJsonSimpleBoolean(result, resultObject)) {
                 resultObject.ok = true;
@@ -660,7 +646,7 @@ public class PostAPI extends APIBase {
                 pairs.add(new BasicNameValuePair("captcha", ""));
                 pairs.add(new BasicNameValuePair("share_opts", "activity"));
 
-                ResultObject result = HttpFetcher.post(url, pairs);
+                ResultObject result = HttpFetcher.post(url, pairs, false);
                 if (result.statusCode == 302 && testPublishResult(result.toString())) {
                     resultObject.ok = true;
                     resultObject.result = result.toString();
