@@ -286,8 +286,6 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         return ((ActionBarActivity) getActivity()).getSupportActionBar();
     }
 
-    private final int Code_Login = 1033;
-
     private void onUserViewClicked() {
         if (!UserAPI.isLoggedIn()) {
             Intent intent = new Intent(getActivity(), LoginActivity.class);
@@ -410,7 +408,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Code_Login && resultCode == Activity.RESULT_OK) {
+        if (requestCode == Consts.Code_Login && resultCode == Activity.RESULT_OK) {
             loadUserInfo();
         }
     }
