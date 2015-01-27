@@ -33,6 +33,13 @@ public class Consts {
     public static final String Key_Is_Night_Mode = "sourcewall.key.is.night.mode";
     public static final String Key_Last_Post_Groups_Version = "sourcewall.key.last.post.groups.version";
 
+    // 保存SharedPreferences的Key，用于保存草稿
+    public static final String Key_Sketch_Article_Reply = "sourcewall.key.sketch.article.reply";
+    public static final String Key_Sketch_Post_Reply = "sourcewall.key.sketch.post.reply";
+    public static final String Key_Sketch_Question_Answer = "sourcewall.key.sketch.question.answer";
+    public static final String Key_Sketch_Publish_Post_Title = "sourcewall.key.sketch.publish.post.title";
+    public static final String Key_Sketch_Publish_Post_Content = "sourcewall.key.sketch.publish.post.content";
+
     // 保存startActivityForResult的RequestCode
     public static final int Code_Login = 1025;
     public static final int Code_Publish_Post = 1026;

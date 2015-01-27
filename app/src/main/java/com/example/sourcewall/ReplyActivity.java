@@ -24,10 +24,14 @@ import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.APIBase;
 import com.example.sourcewall.dialogs.InputDialog;
 import com.example.sourcewall.model.AceModel;
+import com.example.sourcewall.model.Article;
+import com.example.sourcewall.model.Post;
+import com.example.sourcewall.model.Question;
 import com.example.sourcewall.model.UComment;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.FileUtil;
 import com.example.sourcewall.util.RegUtil;
+import com.example.sourcewall.util.SketchSharedUtil;
 import com.example.sourcewall.util.ToastUtil;
 
 import java.io.File;
@@ -49,6 +53,7 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
     String tmpImagePath;
     Toolbar toolbar;
     UComment comment;
+    boolean replyOK;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +82,7 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
         imgButton.setOnClickListener(this);
         insertButton.setOnClickListener(this);
         linkButton.setOnClickListener(this);
+        tryRestoreReply();
     }
 
     private void invokeImageDialog() {
@@ -268,11 +274,58 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
             if (resultObject.ok) {
                 ToastUtil.toast(R.string.reply_ok);
                 setResult(RESULT_OK);
+                replyOK = true;
+                tryClearSketch();
                 finish();
             } else {
                 ToastUtil.toast(R.string.reply_failed);
             }
         }
+    }
+
+    private void tryRestoreReply() {
+        String content = "";
+        if (aceModel != null) {
+            if (aceModel instanceof Article) {
+                content = SketchSharedUtil.readString(Consts.Key_Sketch_Article_Reply + "_" + ((Article) aceModel).getId(), "");
+            } else if (aceModel instanceof Post) {
+                content = SketchSharedUtil.readString(Consts.Key_Sketch_Post_Reply + "_" + ((Post) aceModel).getId(), "");
+            } else if (aceModel instanceof Question) {
+                content = SketchSharedUtil.readString(Consts.Key_Sketch_Question_Answer + "_" + ((Question) aceModel).getId(), "");
+            }
+        }
+        editText.setText(content);
+    }
+
+    private void tryClearSketch() {
+        if (aceModel instanceof Article) {
+            SketchSharedUtil.remove(Consts.Key_Sketch_Article_Reply + "_" + ((Article) aceModel).getId());
+        } else if (aceModel instanceof Post) {
+            SketchSharedUtil.remove(Consts.Key_Sketch_Post_Reply + "_" + ((Post) aceModel).getId());
+        } else if (aceModel instanceof Question) {
+            SketchSharedUtil.remove(Consts.Key_Sketch_Question_Answer + "_" + ((Question) aceModel).getId());
+        }
+    }
+
+    private void saveSketch() {
+        if (!replyOK && !TextUtils.isEmpty(editText.getText().toString().trim()) && aceModel != null) {
+            String sketch = editText.getText().toString();
+            if (aceModel instanceof Article) {
+                SketchSharedUtil.saveString(Consts.Key_Sketch_Article_Reply + "_" + ((Article) aceModel).getId(), sketch);
+            } else if (aceModel instanceof Post) {
+                SketchSharedUtil.saveString(Consts.Key_Sketch_Post_Reply + "_" + ((Post) aceModel).getId(), sketch);
+            } else if (aceModel instanceof Question) {
+                SketchSharedUtil.saveString(Consts.Key_Sketch_Question_Answer + "_" + ((Question) aceModel).getId(), sketch);
+            }
+        } else if (!replyOK && TextUtils.isEmpty(editText.getText().toString().trim())) {
+            tryClearSketch();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        saveSketch();
+        super.onDestroy();
     }
 
     private void resetImageButtons() {

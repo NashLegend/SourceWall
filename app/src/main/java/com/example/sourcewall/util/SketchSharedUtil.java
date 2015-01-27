@@ -9,10 +9,10 @@ import com.example.sourcewall.AppApplication;
 /**
  * Created by NashLegend on 2014/11/25 0025
  */
-public class SharedUtil {
+public class SketchSharedUtil {
 
     // 本地xml文件名
-    private final static String SP_NAME = "sourcewall";
+    private final static String SP_NAME = "sketch";
 
     private static SharedPreferences mSharedPreferences;
     private static Editor mEditor;

@@ -30,6 +30,7 @@ import com.example.sourcewall.model.PrepareData;
 import com.example.sourcewall.model.SubItem;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.FileUtil;
+import com.example.sourcewall.util.SketchSharedUtil;
 import com.example.sourcewall.util.ToastUtil;
 
 import org.apache.http.message.BasicNameValuePair;
@@ -61,6 +62,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
     String topic = "";
     ArrayList<BasicNameValuePair> topics = new ArrayList<>();
     PrepareTask prepareTask;
+    boolean replyOK;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +105,45 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         insertButton.setOnClickListener(this);
         linkButton.setOnClickListener(this);
         prepare();
+        tryRestoreReply();
+    }
+
+
+    private void tryRestoreReply() {
+        String sketchTitle = "";
+        String sketchContent = "";
+        if (isPost()) {
+            sketchTitle = SketchSharedUtil.readString(Consts.Key_Sketch_Publish_Post_Title + "_" + subItem.getValue(), "");
+            sketchContent = SketchSharedUtil.readString(Consts.Key_Sketch_Publish_Post_Content + "_" + subItem.getValue(), "");
+        }
+        titleEditText.setText(sketchTitle);
+        bodyEditText.setText(sketchContent);
+    }
+
+    private void tryClearSketch() {
+        if (isPost()) {
+            SketchSharedUtil.remove(Consts.Key_Sketch_Publish_Post_Content + "_" + subItem.getValue());
+            SketchSharedUtil.remove(Consts.Key_Sketch_Publish_Post_Title + "_" + subItem.getValue());
+        }
+    }
+
+    private void saveSketch() {
+        if (!replyOK && isPost() && subItem != null) {
+            if (!TextUtils.isEmpty(titleEditText.getText().toString().trim()) || !TextUtils.isEmpty(bodyEditText.getText().toString().trim())) {
+                String sketchTitle = titleEditText.getText().toString();
+                String sketchContent = bodyEditText.getText().toString();
+                SketchSharedUtil.saveString(Consts.Key_Sketch_Publish_Post_Title + "_" + subItem.getValue(), sketchTitle);
+                SketchSharedUtil.saveString(Consts.Key_Sketch_Publish_Post_Content + "_" + subItem.getValue(), sketchContent);
+            } else if (TextUtils.isEmpty(titleEditText.getText().toString().trim()) && TextUtils.isEmpty(bodyEditText.getText().toString().trim())) {
+                tryClearSketch();
+            }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        saveSketch();
+        super.onDestroy();
     }
 
     private boolean isPost() {
@@ -349,6 +390,8 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
             if (resultObject.ok) {
                 ToastUtil.toast(R.string.reply_ok);
                 setResult(RESULT_OK);
+                replyOK = true;
+                tryClearSketch();
                 finish();
             } else {
                 ToastUtil.toast(R.string.reply_failed);
