@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -92,10 +94,11 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
                         Intent intent = new Intent();
                         intent.setType("image/*");
                         intent.setAction(Intent.ACTION_GET_CONTENT);
-                        startActivityForResult(intent, 1024);
+                        startActivityForResult(intent, Consts.Code_Invoke_Image_Selector);
                         break;
                     case 1:
                         invokeCamera();
+                        break;
                     case 2:
                         invokeImageUrlDialog();
                         break;
@@ -141,8 +144,7 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
 
     public void uploadImage(String path) {
         if (FileUtil.isImage(path)) {
-            File file = new File(path);
-            if (file.exists()) {
+            if (new File(path).isFile()) {
                 ImageUploadTask task = new ImageUploadTask();
                 task.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR, path);
             } else {
@@ -167,8 +169,24 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
         resetImageButtons();
     }
 
+    File tmpUploadFile = null;
+
     private void invokeCamera() {
         //TODO
+        String parentPath;
+        File pFile = null;
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            pFile = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        }
+        if (pFile == null) {
+            pFile = getFilesDir();
+        }
+        parentPath = pFile.getAbsolutePath();
+        tmpUploadFile = new File(parentPath, System.currentTimeMillis() + ".jpg");
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        Uri localUri = Uri.fromFile(tmpUploadFile);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, localUri);
+        startActivityForResult(intent, Consts.Code_Invoke_Camera);
     }
 
     /**
@@ -301,6 +319,9 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
             if (resultObject.ok) {
                 // tap to insert image
                 doneUploadingImage((String) resultObject.result);
+                if (tmpUploadFile != null && tmpUploadFile.exists()) {
+                    tmpUploadFile.delete();
+                }
             } else {
                 resetImageButtons();
                 ToastUtil.toast("Upload Failed");
@@ -315,15 +336,29 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1024 && resultCode == RESULT_OK) {
-            Uri uri = data.getData();
-            String path = FileUtil.getActualPath(this, uri);
-            if (!TextUtils.isEmpty(path)) {
-                uploadImage(path);
-            } else {
-                //么有图
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case Consts.Code_Invoke_Image_Selector:
+                    Uri uri = data.getData();
+                    String path = FileUtil.getActualPath(this, uri);
+                    if (!TextUtils.isEmpty(path)) {
+                        uploadImage(path);
+                    } else {
+                        //么有图
+                    }
+                    break;
+                case Consts.Code_Invoke_Camera:
+                    if (tmpUploadFile != null) {
+                        uploadImage(tmpUploadFile.getAbsolutePath());
+                    } else {
+                        //么有图
+                    }
+                    break;
+                default:
+                    break;
             }
         }
+
         super.onActivityResult(requestCode, resultCode, data);
     }
 

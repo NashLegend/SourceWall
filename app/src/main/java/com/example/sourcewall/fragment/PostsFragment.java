@@ -269,7 +269,13 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                         public void onClick(DialogInterface dialog, int which) {
                             hideMoreGroups();
                         }
+                    }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialog) {
+                            hideMoreGroups();
+                        }
                     }).create();
+                    dialog.dismiss();
                     dialog.show();
                 }
             }

@@ -148,7 +148,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
                         Intent intent = new Intent();
                         intent.setType("image/*");
                         intent.setAction(Intent.ACTION_GET_CONTENT);
-                        startActivityForResult(intent, 1024);
+                        startActivityForResult(intent, Consts.Code_Invoke_Image_Selector);
                         break;
                     case 1:
                         invokeCamera();
@@ -418,7 +418,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1024 && resultCode == RESULT_OK) {
+        if (requestCode == Consts.Code_Invoke_Image_Selector && resultCode == RESULT_OK) {
             Uri uri = data.getData();
             String path = FileUtil.getActualPath(this, uri);
             if (!TextUtils.isEmpty(path)) {

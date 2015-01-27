@@ -38,6 +38,8 @@ public class Consts {
     public static final int Code_Publish_Post = 1026;
     public static final int Code_Publish_Question = 1027;
     public static final int Code_Start_Shuffle_Groups = 1028;
+    public static final int Code_Invoke_Image_Selector = 1029;
+    public static final int Code_Invoke_Camera = 1030;
 
     // 登录页保存Cookie
     public static final String LOGIN_URL = "https://account.guokr.com/sign_in/?display=mobile";

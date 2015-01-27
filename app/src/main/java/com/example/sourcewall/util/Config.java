@@ -4,6 +4,11 @@ package com.example.sourcewall.util;
  * Created by NashLegend on 2014/12/15 0015
  */
 public class Config {
+
+    public static int getUploadImageSizeRestrict() {
+        return 720;
+    }
+
     /**
      * html格式
      *
