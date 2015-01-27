@@ -419,17 +419,18 @@ public class PostAPI extends APIBase {
      * 返回第一页数据，包括Post与第一页的评论列表
      * resultObject.result是ArrayList[AceModel]
      *
-     * @param id
+     * @param pPost
      * @return
      */
-    public static ResultObject getPostFirstPage(String id) {
+    public static ResultObject getPostFirstPage(Post pPost) {
         ResultObject resultObject = new ResultObject();
         ArrayList<AceModel> aceModels = new ArrayList<>();
-        ResultObject articleResult = getPostDetailByIDFromMobileUrl(id);
+        ResultObject articleResult = getPostDetailByIDFromMobileUrl(pPost.getId());
         if (articleResult.ok) {
-            ResultObject commentsResult = getPostCommentsFromJsonUrl(id, 0);
+            ResultObject commentsResult = getPostCommentsFromJsonUrl(pPost.getId(), 0);
             if (commentsResult.ok) {
                 Post post = (Post) articleResult.result;
+                pPost.setTitle(post.getTitle());
                 ArrayList<UComment> simpleComments = (ArrayList<UComment>) commentsResult.result;
                 aceModels.add(post);
                 aceModels.addAll(simpleComments);

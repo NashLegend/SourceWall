@@ -155,7 +155,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         protected ResultObject doInBackground(Integer... params) {
             offset = params[0];
             if (offset < 0) {
-                return PostAPI.getPostFirstPage(post.getId());
+                return PostAPI.getPostFirstPage(post);
             } else {
                 return PostAPI.getPostCommentsFromJsonUrl(post.getId(), offset);
             }
@@ -292,6 +292,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
             if (resultObject.ok) {
                 post.setLikeNum(post.getLikeNum() + 1);
                 adapter.notifyDataSetChanged();
+                ToastUtil.toastSingleton("已赞");
             } else {
                 //do nothing
             }

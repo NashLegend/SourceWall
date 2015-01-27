@@ -202,7 +202,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         protected ResultObject doInBackground(Integer... params) {
             offset = params[0];
             if (offset < 0) {
-                return QuestionAPI.getQuestionFirstPage(question.getId());
+                return QuestionAPI.getQuestionFirstPage(question);
             } else {
                 return QuestionAPI.getQuestionAnswers(question.getId(), offset);
             }

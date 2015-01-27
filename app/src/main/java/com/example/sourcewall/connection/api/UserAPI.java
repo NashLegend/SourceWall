@@ -185,6 +185,9 @@ public class UserAPI extends APIBase {
     public static ResultObject recommendLink(String link, String title, String summary, String comment) {
         String url = "http://www.guokr.com/apis/community/user/recommend.json";
         ResultObject resultObject = new ResultObject();
+        if (TextUtils.isEmpty(summary)) {
+            summary = title;
+        }
         try {
             ArrayList<NameValuePair> pairs = new ArrayList<>();
             pairs.add(new BasicNameValuePair("title", title));

@@ -5,6 +5,14 @@ import android.net.Uri;
 import android.provider.Browser;
 
 import com.example.sourcewall.AppApplication;
+import com.example.sourcewall.ArticleActivity;
+import com.example.sourcewall.PostActivity;
+import com.example.sourcewall.QuestionActivity;
+import com.example.sourcewall.model.Article;
+import com.example.sourcewall.model.Post;
+import com.example.sourcewall.model.Question;
+
+import java.util.List;
 
 /**
  * Created by NashLegend on 2015/1/14 0014
@@ -29,6 +37,45 @@ public class UrlCheckUtil {
      */
     public static void redirectRequest(Uri uri) {
         //TODO 可以在此接管链接的跳转
+        String host = uri.getHost();
+        List<String> segments = uri.getPathSegments();
+        if ((host.equals("www.guokr.com") || host.equals("m.guokr.com")) && (segments != null && segments.size() == 2)) {
+            String section = segments.get(0);
+            String id = segments.get(1);
+            Intent intent = new Intent();
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            switch (section) {
+                case "article":
+                    intent.setClass(AppApplication.getApplication(), ArticleActivity.class);
+                    Article article = new Article();
+                    article.setId(id);
+                    intent.putExtra(Consts.Extra_Article, article);
+                    AppApplication.getApplication().startActivity(intent);
+                    break;
+                case "post":
+                    intent.setClass(AppApplication.getApplication(), PostActivity.class);
+                    Post post = new Post();
+                    post.setId(id);
+                    intent.putExtra(Consts.Extra_Post, post);
+                    AppApplication.getApplication().startActivity(intent);
+                    break;
+                case "question":
+                    intent.setClass(AppApplication.getApplication(), QuestionActivity.class);
+                    Question question = new Question();
+                    question.setId(id);
+                    intent.putExtra(Consts.Extra_Question, question);
+                    AppApplication.getApplication().startActivity(intent);
+                    break;
+                default:
+                    openWithBrowser(uri);
+                    break;
+            }
+        } else {
+            openWithBrowser(uri);
+        }
+    }
+
+    public static void openWithBrowser(Uri uri) {
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         intent.putExtra(Browser.EXTRA_APPLICATION_ID, AppApplication.getApplication().getPackageName());
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

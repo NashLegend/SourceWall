@@ -19,10 +19,6 @@ import com.squareup.picasso.Picasso;
  */
 public class ArticleListItemView extends AceView<Article> {
 
-    public Article getArticle() {
-        return article;
-    }
-
     private TextView titleView;
     private TextView contentView;
     private TextView authorView;

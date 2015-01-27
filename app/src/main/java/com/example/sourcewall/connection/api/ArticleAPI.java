@@ -166,14 +166,30 @@ public class ArticleAPI extends APIBase {
             article.setContent(articleContent + copyright);
             int likeNum = Integer.valueOf(doc.getElementsByClass("recom-num").get(0).text()
                     .replaceAll("\\D+", ""));
-            // 其他数据已经在列表取得，这里只要合过去就行了
-
-            article.setLikeNum(likeNum);
-            //获取热门回帖
-            //Elements elements = doc.getElementsByClass("cmts-list");
-            //if (elements != null && elements.size() > 0) {
-            //    article.setHotComments(getArticleHotComments(elements.get(0), aid));
-            //}
+            // 其他数据已经在列表取得，按理说这里只要合过去就行了，
+            // 但是因为有可能从其他地方进入这个页面，所以下面的数据还是要取
+            // 但是可以尽量少取，因为很多数据基本已经用不到了
+            article.setId(aid);
+            Elements infos = doc.getElementsByClass("content-th-info");
+            if (infos != null && infos.size() == 1) {
+                Element info = infos.get(0);
+                Elements infoSubs = info.getElementsByTag("a");//记得见过不是a的
+                if (infoSubs != null && infoSubs.size() > 0) {
+//                    String authorId = info.getElementsByTag("a").attr("href").replaceAll("\\D+", "");
+                    String author = info.getElementsByTag("a").text();
+                    article.setAuthor(author);
+//                    article.setAuthorID(authorId);
+                }
+                Elements meta = info.getElementsByTag("meta");
+                if (meta != null && meta.size() > 0) {
+                    String date = parseDate(info.getElementsByTag("meta").attr("content"));
+                    article.setDate(date);
+                }
+            }
+//            String num = doc.select(".cmts-title").select(".cmts-hide").get(0).getElementsByClass("gfl").get(0).text().replaceAll("\\D+", "");
+//            article.setCommentNum(Integer.valueOf(num));
+            article.setTitle(doc.getElementById("articleTitle").text());
+//            article.setLikeNum(likeNum);
             resultObject.ok = true;
             resultObject.result = article;
         } catch (IOException e) {
@@ -288,7 +304,10 @@ public class ArticleAPI extends APIBase {
 
     /**
      * 返回第一页数据，包括Article与第一页的评论列表
-     * resultObject.result是ArrayList<AceModel>
+     * resultObject.result是ArrayList[AceModel]
+     * article很有可能只有一个id属性，而其余的都是空的
+     * 因为有时候我们要用到其他属性，主要是title和summary
+     * 所以还要在这里再赋值一次，但是这里取不到summary了……
      *
      * @param article
      * @return
@@ -301,9 +320,9 @@ public class ArticleAPI extends APIBase {
             ResultObject commentsResult = ArticleAPI.getArticleComments(article.getId(), 0);
             if (commentsResult.ok) {
                 Article detailArticle = (Article) articleResult.result;
-                article.setContent(detailArticle.getContent());
+                article.setTitle(detailArticle.getTitle());
                 ArrayList<UComment> simpleComments = (ArrayList<UComment>) commentsResult.result;
-                aceModels.add(article);
+                aceModels.add(detailArticle);
                 aceModels.addAll(simpleComments);
                 resultObject.ok = true;
                 resultObject.result = aceModels;

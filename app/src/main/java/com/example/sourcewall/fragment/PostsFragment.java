@@ -91,7 +91,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent();
                 intent.setClass(getActivity(), PostActivity.class);
-                intent.putExtra(Consts.Extra_Post, ((PostListItemView) view).getPost());
+                intent.putExtra(Consts.Extra_Post, ((PostListItemView) view).getData());
                 startActivity(intent);
                 getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
             }

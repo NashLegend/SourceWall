@@ -14,10 +14,6 @@ import com.example.sourcewall.model.Post;
  */
 public class PostListItemView extends AceView<Post> {
 
-    public Post getPost() {
-        return mPost;
-    }
-
     private Post mPost;
     private TextView titleView;
     private TextView authorView;

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
+import com.example.sourcewall.AppApplication;
 import com.example.sourcewall.ArticleActivity;
 import com.example.sourcewall.R;
 import com.example.sourcewall.adapters.ArticleAdapter;
@@ -57,8 +58,8 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent();
-                intent.setClass(getActivity(), ArticleActivity.class);
-                intent.putExtra(Consts.Extra_Article, ((ArticleListItemView) view).getArticle());
+                intent.setClass(AppApplication.getApplication(), ArticleActivity.class);
+                intent.putExtra(Consts.Extra_Article, ((ArticleListItemView) view).getData());
                 startActivity(intent);
                 getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
             }

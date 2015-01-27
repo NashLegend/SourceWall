@@ -287,19 +287,20 @@ public class QuestionAPI extends APIBase {
      * 返回第一页数据，包括Post与第一页的评论列表
      * resultObject.result是ArrayList<AceModel>
      *
-     * @param id
+     * @param qQuestion
      * @return
      */
-    public static ResultObject getQuestionFirstPage(String id) {
+    public static ResultObject getQuestionFirstPage(Question qQuestion) {
         ResultObject resultObject = new ResultObject();
         ArrayList<AceModel> aceModels = new ArrayList<>();
-        ResultObject articleResult = getQuestionDetailByID(id);
+        ResultObject articleResult = getQuestionDetailByID(qQuestion.getId());
         if (articleResult.ok) {
-            ResultObject commentsResult = getQuestionAnswers(id, 0);
+            ResultObject commentsResult = getQuestionAnswers(qQuestion.getId(), 0);
             if (commentsResult.ok) {
-                Question post = (Question) articleResult.result;
+                Question question = (Question) articleResult.result;
+                qQuestion.setTitle(question.getTitle());
                 ArrayList<UComment> simpleComments = (ArrayList<UComment>) commentsResult.result;
-                aceModels.add(post);
+                aceModels.add(question);
                 aceModels.addAll(simpleComments);
                 resultObject.ok = true;
                 resultObject.result = aceModels;
