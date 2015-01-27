@@ -13,14 +13,12 @@ import com.example.sourcewall.util.SharedUtil;
 /**
  * Created by NashLegend on 2014/9/15 0015
  */
-public class QuestionFeaturedListItemView extends AceView<Question> {
-    private boolean featured = false;
+public class QuestionListItemView extends AceView<Question> {
     private Question question;
     private TextView titleView;
     private TextView summaryView;
-    private TextView likeView;
 
-    public QuestionFeaturedListItemView(Context context) {
+    public QuestionListItemView(Context context) {
         super(context);
         if (SharedUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
             setBackgroundColor(getContext().getResources().getColor(R.color.page_background_night));
@@ -28,32 +26,30 @@ public class QuestionFeaturedListItemView extends AceView<Question> {
             setBackgroundColor(getContext().getResources().getColor(R.color.page_background));
         }
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.layout_question_featured_item_view, this);
+        inflater.inflate(R.layout.layout_question_item_view, this);
         titleView = (TextView) findViewById(R.id.text_title);
         summaryView = (TextView) findViewById(R.id.text_summary);
-        likeView = (TextView) findViewById(R.id.text_like_num);
     }
 
-    public QuestionFeaturedListItemView(Context context, AttributeSet attrs) {
+    public QuestionListItemView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public QuestionFeaturedListItemView(Context context, AttributeSet attrs, int defStyle) {
+    public QuestionListItemView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
     @Override
     public void setData(Question model) {
-        question = (Question) model;
+        question = model;
         titleView.setText(question.getTitle().replaceAll("\\s", ""));
         String text = question.getSummary().replaceAll("\\s", "");
         summaryView.setText(text);
-        if (text == "") {
+        if (text.equals("")) {
             summaryView.setVisibility(GONE);
         } else {
             summaryView.setVisibility(VISIBLE);
         }
-        likeView.setText(question.getRecommendNum() + "");
     }
 
     @Override

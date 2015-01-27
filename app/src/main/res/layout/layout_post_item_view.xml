@@ -42,7 +42,6 @@
                 android:id="@+id/text_group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
                 android:singleLine="true"
                 android:text="@string/sample_group"
                 android:textColor="?attr/color_author_color"

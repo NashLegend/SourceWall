@@ -120,6 +120,7 @@ public class PostAPI extends APIBase {
                     item.setGroupName(postGroup);
                     item.setLikeNum(postLike);
                     item.setReplyNum(postComm);
+                    item.setFeatured(false);
                     list.add(item);
                 }
                 resultObject.ok = true;
@@ -229,6 +230,7 @@ public class PostAPI extends APIBase {
                     item.setGroupName(postGroup);
                     item.setLikeNum(postLike);
                     item.setReplyNum(postComment);
+                    item.setFeatured(false);
                     list.add(item);
                 }
                 resultObject.ok = true;
@@ -278,9 +280,10 @@ public class PostAPI extends APIBase {
                             .getString("large").replaceAll("\\?\\S*$", ""));
                     post.setDate(parseDate(getJsonString(jo, "date_created")));
                     post.setReplyNum(getJsonInt(jo, "replies_count"));
+                    post.setLikeNum(getJsonInt(jo, "recommends_count"));
                     post.setContent(getJsonString(jo, "html"));
-                    // 无法获取赞的数量
-                    // 无法获取titleImageUrl
+                    post.setFeatured(true);
+                    // 无法获取titleImageUrl，也用不着，太TMD费流量了
                     list.add(post);
                 }
                 resultObject.ok = true;

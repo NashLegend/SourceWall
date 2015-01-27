@@ -513,12 +513,12 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
             loadedPage = datas[0];
             //解析html的page是从1开始的，所以offset要+1
             if (subItem.getType() == SubItem.Type_Collections) {
-                return PostAPI.getGroupHotPostListFromMobileUrl(loadedPage + 1);
+                return PostAPI.getGroupHotPostListFromMobileUrl(loadedPage + 1);// not featured
             } else if (subItem.getType() == SubItem.Type_Private_Channel) {
-                return PostAPI.getMyGroupRecentRepliesPosts(loadedPage + 1);
+                return PostAPI.getMyGroupRecentRepliesPosts(loadedPage + 1);// not featured
             } else {
                 //如果是最后一页，低于20条，那么就会有问题——也就是请求不到数据
-                return PostAPI.getGroupPostListByJsonUrl(subItem.getValue(), loadedPage * 20);
+                return PostAPI.getGroupPostListByJsonUrl(subItem.getValue(), loadedPage * 20);// featured
             }
         }
 

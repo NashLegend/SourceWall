@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 
 import com.example.sourcewall.model.Question;
 import com.example.sourcewall.view.AceView;
-import com.example.sourcewall.view.QuestionFeaturedListItemView;
+import com.example.sourcewall.view.QuestionListItemView;
 
 /**
  * Created by NashLegend on 2014/9/15 0015.
@@ -34,7 +34,7 @@ public class QuestionAdapter extends AceAdapter<Question> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = new QuestionFeaturedListItemView(getContext());
+            convertView = new QuestionListItemView(getContext());
         }
         ((AceView) convertView).setData(list.get(position));
         return convertView;

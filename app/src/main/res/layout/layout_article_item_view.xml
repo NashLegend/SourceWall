@@ -68,9 +68,10 @@
                 android:layout_marginLeft="@dimen/list_standard_item_text_icon_gap"
                 android:layout_weight="0"
                 android:singleLine="true"
+                android:paddingBottom="1.5dp"
                 android:text="@string/sample_like_num"
                 android:textColor="?attr/color_author_color"
-                android:textSize="14sp" />
+                android:textSize="12sp" />
         </LinearLayout>
 
         <ImageView

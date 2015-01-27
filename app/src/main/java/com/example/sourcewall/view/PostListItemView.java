@@ -1,6 +1,7 @@
 package com.example.sourcewall.view;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.TextView;
@@ -50,7 +51,17 @@ public class PostListItemView extends AceView<Post> {
         authorView.setText(mPost.getAuthor());
         replyView.setText(mPost.getReplyNum() + "");
         likesView.setText(mPost.getLikeNum() + "");
-        groupView.setText(mPost.getGroupName());
+        if (TextUtils.isEmpty(mPost.getAuthor())) {
+            authorView.setVisibility(GONE);
+        } else {
+            authorView.setVisibility(VISIBLE);
+        }
+        if (mPost.isFeatured()) {
+            groupView.setText("");
+        } else {
+            groupView.setText(mPost.getGroupName());
+        }
+
     }
 
     @Override

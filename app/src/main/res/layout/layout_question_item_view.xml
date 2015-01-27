@@ -35,14 +35,6 @@
             android:text="@string/sample_summary"
             android:textColor="?attr/color_list_summary"
             android:textSize="@dimen/list_standard_summary_font_size" />
-
-        <TextView
-            android:id="@+id/text_like_num"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:text="@string/sample_like_num"
-            android:textColor="?attr/color_author_color" />
     </LinearLayout>
 
 </android.support.v7.widget.CardView>

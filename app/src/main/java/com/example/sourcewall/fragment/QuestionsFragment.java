@@ -27,7 +27,7 @@ import com.example.sourcewall.model.Question;
 import com.example.sourcewall.model.SubItem;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.ToastUtil;
-import com.example.sourcewall.view.QuestionFeaturedListItemView;
+import com.example.sourcewall.view.QuestionListItemView;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -65,7 +65,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent();
                 intent.setClass(getActivity(), QuestionActivity.class);
-                intent.putExtra(Consts.Extra_Question, ((QuestionFeaturedListItemView) view).getData());
+                intent.putExtra(Consts.Extra_Question, ((QuestionListItemView) view).getData());
                 startActivity(intent);
                 getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
             }

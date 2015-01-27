@@ -18,6 +18,7 @@ public class Post extends AceModel {
     private int replyNum = 0;
     private String content = "";
     private String date = "";
+    private boolean featured = true;//是否展现在集合列表还是单个小组。true表示展示在单个小组列表中
 
     private ArrayList<UComment> hotComments = new ArrayList<UComment>();
     private ArrayList<UComment> comments = new ArrayList<UComment>();
@@ -152,6 +153,14 @@ public class Post extends AceModel {
 
     public void setComments(ArrayList<UComment> comments) {
         this.comments = comments;
+    }
+
+    public boolean isFeatured() {
+        return featured;
+    }
+
+    public void setFeatured(boolean featured) {
+        this.featured = featured;
     }
 
 }
