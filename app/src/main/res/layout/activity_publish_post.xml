@@ -66,18 +66,9 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="5dp"
-            android:weightSum="4.5">
+            android:weightSum="3.5">
 
-
-            <ImageButton
-                android:id="@+id/btn_camera"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="?attr/background_selectable_borderless"
-                android:src="@drawable/ic_camera_holo_light_blue_36dp" />
-
-            <RelativeLayout
+        <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1">

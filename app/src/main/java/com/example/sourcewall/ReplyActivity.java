@@ -43,7 +43,6 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
     ImageButton publishButton;
     ImageButton imgButton;
     ImageButton insertButton;
-    ImageButton cameraButton;
     ImageButton linkButton;
     View uploadingProgress;
     ProgressDialog progressDialog;
@@ -72,13 +71,11 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
         publishButton = (ImageButton) findViewById(R.id.btn_publish);
         imgButton = (ImageButton) findViewById(R.id.btn_add_img);
         insertButton = (ImageButton) findViewById(R.id.btn_insert_img);
-        cameraButton = (ImageButton) findViewById(R.id.btn_camera);
         linkButton = (ImageButton) findViewById(R.id.btn_link);
         uploadingProgress = findViewById(R.id.prg_uploading_img);
         publishButton.setOnClickListener(this);
         imgButton.setOnClickListener(this);
         insertButton.setOnClickListener(this);
-        cameraButton.setOnClickListener(this);
         linkButton.setOnClickListener(this);
     }
 
@@ -172,7 +169,6 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
     File tmpUploadFile = null;
 
     private void invokeCamera() {
-        //TODO
         String parentPath;
         File pFile = null;
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
@@ -241,9 +237,6 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
                 break;
             case R.id.btn_insert_img:
                 insertImagePath(tmpImagePath);
-                break;
-            case R.id.btn_camera:
-                invokeCamera();
                 break;
             case R.id.btn_link:
                 insertLink();

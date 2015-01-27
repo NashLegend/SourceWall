@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -46,7 +48,6 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
     ImageButton publishButton;
     ImageButton imgButton;
     ImageButton insertButton;
-    ImageButton cameraButton;
     ImageButton linkButton;
     Spinner spinner;
     View uploadingProgress;
@@ -74,7 +75,6 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         publishButton = (ImageButton) findViewById(R.id.btn_publish);
         imgButton = (ImageButton) findViewById(R.id.btn_add_img);
         insertButton = (ImageButton) findViewById(R.id.btn_insert_img);
-        cameraButton = (ImageButton) findViewById(R.id.btn_camera);
         linkButton = (ImageButton) findViewById(R.id.btn_link);
         uploadingProgress = findViewById(R.id.prg_uploading_img);
         subItem = (SubItem) getIntent().getSerializableExtra(Consts.Extra_SubItem);
@@ -101,7 +101,6 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         publishButton.setOnClickListener(this);
         imgButton.setOnClickListener(this);
         insertButton.setOnClickListener(this);
-        cameraButton.setOnClickListener(this);
         linkButton.setOnClickListener(this);
         prepare();
     }
@@ -140,7 +139,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         String[] ways = {getString(R.string.add_image_from_disk),
                 getString(R.string.add_image_from_camera),
                 getString(R.string.add_image_from_link)};
-        new AlertDialog.Builder(this).setTitle("").setItems(ways, new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(this).setTitle(R.string.way_to_add_image).setItems(ways, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
@@ -152,6 +151,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
                         break;
                     case 1:
                         invokeCamera();
+                        break;
                     case 2:
                         invokeImageUrlDialog();
                         break;
@@ -223,8 +223,23 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         resetImageButtons();
     }
 
+    File tmpUploadFile = null;
+
     private void invokeCamera() {
-        //TODO
+        String parentPath;
+        File pFile = null;
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            pFile = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        }
+        if (pFile == null) {
+            pFile = getFilesDir();
+        }
+        parentPath = pFile.getAbsolutePath();
+        tmpUploadFile = new File(parentPath, System.currentTimeMillis() + ".jpg");
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        Uri localUri = Uri.fromFile(tmpUploadFile);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, localUri);
+        startActivityForResult(intent, Consts.Code_Invoke_Camera);
     }
 
     /**
@@ -295,9 +310,6 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
                 break;
             case R.id.btn_insert_img:
                 insertImagePath(tmpImagePath);
-                break;
-            case R.id.btn_camera:
-                invokeCamera();
                 break;
             case R.id.btn_link:
                 insertLink();
@@ -418,13 +430,26 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Consts.Code_Invoke_Image_Selector && resultCode == RESULT_OK) {
-            Uri uri = data.getData();
-            String path = FileUtil.getActualPath(this, uri);
-            if (!TextUtils.isEmpty(path)) {
-                uploadImage(path);
-            } else {
-                //么有图
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case Consts.Code_Invoke_Image_Selector:
+                    Uri uri = data.getData();
+                    String path = FileUtil.getActualPath(this, uri);
+                    if (!TextUtils.isEmpty(path)) {
+                        uploadImage(path);
+                    } else {
+                        //么有图
+                    }
+                    break;
+                case Consts.Code_Invoke_Camera:
+                    if (tmpUploadFile != null) {
+                        uploadImage(tmpUploadFile.getAbsolutePath());
+                    } else {
+                        //么有图
+                    }
+                    break;
+                default:
+                    break;
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
