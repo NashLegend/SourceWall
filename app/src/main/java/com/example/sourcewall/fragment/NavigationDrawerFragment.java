@@ -293,6 +293,11 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
             Intent intent = new Intent(getActivity(), LoginActivity.class);
             startActivityForResult(intent, Consts.Code_Login);
             getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
+        } else {
+            String nameString = SharedUtil.readString(Consts.Key_User_Name, "");
+            if (TextUtils.isEmpty(nameString)) {
+                loadUserInfo();
+            }
         }
     }
 
@@ -510,7 +515,8 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
             if (resultObject.ok) {
                 setupUserInfo((UserInfo) resultObject.result);
             } else {
-                ToastUtil.toast("Get UserInfo Failed");
+                SharedUtil.remove(Consts.Key_User_Name);
+                userName.setText(R.string.click_to_reload);
             }
         }
     }

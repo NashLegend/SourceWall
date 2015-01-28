@@ -126,5 +126,6 @@
     <string name="confirm_to_load_my_groups">加载我的小组</string>
     <string name="hint">提示</string>
     <string name="way_to_load_image">选择图片加载模式</string>
+    <string name="click_to_reload">点击重新加载</string>
 
 </resources>
