@@ -44,11 +44,10 @@ public class QuestionListItemView extends AceView<Question> {
         question = model;
         titleView.setText(question.getTitle().replaceAll("\\s", ""));
         String text = question.getSummary().replaceAll("\\s", "");
-        summaryView.setText(text);
         if (text.equals("")) {
-            summaryView.setVisibility(GONE);
+            summaryView.setText("暂无描述");
         } else {
-            summaryView.setVisibility(VISIBLE);
+            summaryView.setText(text);
         }
     }
 
