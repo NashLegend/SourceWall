@@ -55,6 +55,22 @@ public class Config {
      * @return html格式的尾巴，评论、发贴、回答时都带，但是评论答案和评论问题不带
      */
     public static String getComplexReplyTail() {
+        if (SharedUtil.readBoolean(Consts.Key_Use_Post_Tail, true)) {
+            if (SharedUtil.readBoolean(Consts.key_Use_Default_Tail, true)) {
+                return getDefaultComplexTail();
+            } else {
+                return SharedUtil.readString(Consts.Key_Custom_Tail, getDefaultComplexTail());
+            }
+        }
+        return "";
+    }
+
+    /**
+     * 返回默认尾巴
+     *
+     * @return 默认尾巴
+     */
+    public static String getDefaultComplexTail() {
         return "<p></p><p>来自 <a href=\"http://www.guokr.com/blog/798434/\" target=\"_blank\">SourceWall</a></p>";
     }
 
@@ -64,6 +80,22 @@ public class Config {
      * @return html格式的尾巴，评论、发贴、回答时都带，但是评论答案和评论问题不带
      */
     public static String getSimpleReplyTail() {
+        if (SharedUtil.readBoolean(Consts.Key_Use_Post_Tail, true)) {
+            if (SharedUtil.readBoolean(Consts.key_Use_Default_Tail, true)) {
+                return getDefaultSimpleReplyTail();
+            } else {
+                return SharedUtil.readString(Consts.Key_Custom_Tail, getDefaultSimpleReplyTail());
+            }
+        }
+        return "";
+    }
+
+    /**
+     * 返回默认尾巴
+     *
+     * @return 默认尾巴
+     */
+    public static String getDefaultSimpleReplyTail() {
         return "\n\n[blockquote]来自 [url=http://www.guokr.com/blog/798434/]SourceWall[/url][/blockquote]";
     }
 }
