@@ -95,4 +95,9 @@ public class GroupHelper {
         }
     }
 
+    public static void clearAllMyGroups() {
+        MyGroupDao myGroupDao = AppApplication.getDaoSession().getMyGroupDao();
+        myGroupDao.deleteAll();
+    }
+
 }

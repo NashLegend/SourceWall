@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import com.example.sourcewall.connection.HttpFetcher;
 import com.example.sourcewall.connection.ResultObject;
+import com.example.sourcewall.db.GroupHelper;
 import com.example.sourcewall.model.Basket;
 import com.example.sourcewall.model.Category;
 import com.example.sourcewall.model.UserInfo;
@@ -334,7 +335,7 @@ public class UserAPI extends APIBase {
     }
 
     /**
-     * 清除过期数据。TODO
+     * 退出登录、清除过期数据
      */
     public static void clearMyInfo() {
         SharedUtil.remove(Consts.Key_Access_Token);
@@ -342,7 +343,9 @@ public class UserAPI extends APIBase {
         SharedUtil.remove(Consts.Key_User_Avatar);
         SharedUtil.remove(Consts.Key_User_ID);
         SharedUtil.remove(Consts.Key_User_Name);
-        //同时清除的还应该有：数据库？ TODO
+        GroupHelper.clearAllMyGroups();
+        HttpFetcher.getDefaultHttpClient().getCookieStore().clear();
+        HttpFetcher.getDefaultUploadHttpClient().getCookieStore().clear();
     }
 
     /**
