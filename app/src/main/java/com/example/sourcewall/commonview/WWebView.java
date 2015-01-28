@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.example.sourcewall.util.Config;
 import com.example.sourcewall.util.UrlCheckUtil;
 
 /**
@@ -49,22 +50,13 @@ public class WWebView extends WebView {
         extClient = client;
     }
 
-    /**
-     * 是否不加载图片
-     *
-     * @return
-     */
-    private boolean shouldInterceptImage() {
-        return false;
-    }
-
     WebViewClient extClient;
     WebViewClient client = new WebViewClient() {
 
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
-            if (!shouldInterceptImage()) {
+            if (Config.shouldLoadImage()) {
                 //图片在此进行延迟加载
                 getSettings().setBlockNetworkImage(false);
             }

@@ -28,6 +28,7 @@ import com.example.sourcewall.connection.api.QuestionAPI;
 import com.example.sourcewall.connection.api.UserAPI;
 import com.example.sourcewall.model.Question;
 import com.example.sourcewall.model.QuestionAnswer;
+import com.example.sourcewall.util.Config;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.StyleChecker;
 import com.example.sourcewall.util.ToastUtil;
@@ -100,9 +101,11 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         supportText.setText(answer.getUpvoteNum() + "");
         authorName.setText(answer.getAuthor());
         authorTitle.setText(answer.getAuthorTitle());
-        Picasso.with(this).load(answer.getAuthorAvatarUrl())
-                .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
-                .into(avatar);
+        if (Config.shouldLoadImage()) {
+            Picasso.with(this).load(answer.getAuthorAvatarUrl())
+                    .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
+                    .into(avatar);
+        }
         rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {

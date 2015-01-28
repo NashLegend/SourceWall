@@ -79,8 +79,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/list_standard_image_author_span"
-            android:src="@drawable/example" />
+            android:layout_marginTop="@dimen/list_standard_image_author_span" />
 
         <TextView
             android:id="@+id/text_content"

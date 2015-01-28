@@ -6,9 +6,10 @@ import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.sourcewall.commonview.TTextView;
 import com.example.sourcewall.R;
+import com.example.sourcewall.commonview.TTextView;
 import com.example.sourcewall.model.UComment;
+import com.example.sourcewall.util.Config;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.SharedUtil;
 import com.example.sourcewall.util.TextHtmlHelper;
@@ -63,9 +64,11 @@ public class MediumListItemView extends AceView<UComment> {
         likesView.setText(comment.getLikeNum() + "");
         floorView.setText(comment.getFloor());
         htmlHelper.load(contentView, comment.getContent());
-        Picasso.with(getContext()).load(comment.getAuthorAvatarUrl())
-                .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
-                .into(avatarImage);
+        if (Config.shouldLoadImage()) {
+            Picasso.with(getContext()).load(comment.getAuthorAvatarUrl())
+                    .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
+                    .into(avatarImage);
+        }
     }
 
     @Override

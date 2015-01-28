@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.example.sourcewall.R;
 import com.example.sourcewall.model.UComment;
+import com.example.sourcewall.util.Config;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -45,9 +46,11 @@ public class SimpleCommentItemView extends AceView<UComment> {
         authorView.setText(comment.getAuthor());
         dateView.setText(comment.getDate());
         contentView.setText(comment.getContent());
-        Picasso.with(getContext()).load(comment.getAuthorAvatarUrl())
-                .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
-                .into(avatarImage);
+        if (Config.shouldLoadImage()) {
+            Picasso.with(getContext()).load(comment.getAuthorAvatarUrl())
+                    .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
+                    .into(avatarImage);
+        }
     }
 
     @Override

@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.example.sourcewall.R;
 import com.example.sourcewall.model.QuestionAnswer;
+import com.example.sourcewall.util.Config;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.RegUtil;
 import com.example.sourcewall.util.SharedUtil;
@@ -57,9 +58,11 @@ public class AnswerListItemView extends AceView<QuestionAnswer> {
         authorView.setText(answer.getAuthor());
         authorTitleView.setText(answer.getAuthorTitle());
         dateView.setText(answer.getDate_created());
-        Picasso.with(getContext()).load(answer.getAuthorAvatarUrl())
-                .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
-                .into(avatar);
+        if (Config.shouldLoadImage()) {
+            Picasso.with(getContext()).load(answer.getAuthorAvatarUrl())
+                    .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
+                    .into(avatar);
+        }
         String simplifiedStr = RegUtil.tryGetStringByLength(RegUtil.html2PlainTextWithImageTag(answer.getContent()), 100);
         contentView.setText(simplifiedStr);
     }

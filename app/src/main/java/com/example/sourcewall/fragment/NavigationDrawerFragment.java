@@ -34,6 +34,7 @@ import com.example.sourcewall.db.GroupHelper;
 import com.example.sourcewall.model.SubItem;
 import com.example.sourcewall.model.UserInfo;
 import com.example.sourcewall.util.ChannelHelper;
+import com.example.sourcewall.util.Config;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.SharedUtil;
 import com.example.sourcewall.util.ToastUtil;
@@ -327,9 +328,11 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
                 }
                 String avatarString = SharedUtil.readString(Consts.Key_User_Avatar, "");
                 if (!TextUtils.isEmpty(avatarString)) {
-                    Picasso.with(getActivity()).load(avatarString)
-                            .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
-                            .into(avatarView);
+                    if (Config.shouldLoadImage()) {
+                        Picasso.with(getActivity()).load(avatarString)
+                                .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
+                                .into(avatarView);
+                    }
                 }
                 testLogin();
             }
@@ -494,9 +497,11 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         SharedUtil.saveString(Consts.Key_User_Name, info.getNickname());
         SharedUtil.saveString(Consts.Key_User_ID, info.getId());
         SharedUtil.saveString(Consts.Key_User_Avatar, info.getAvatar());
-        Picasso.with(getActivity()).load(info.getAvatar())
-                .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
-                .into(avatarView);
+        if (Config.shouldLoadImage()) {
+            Picasso.with(getActivity()).load(info.getAvatar())
+                    .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
+                    .into(avatarView);
+        }
         userName.setText(info.getNickname());
     }
 }

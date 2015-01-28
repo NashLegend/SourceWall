@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.example.sourcewall.R;
 import com.example.sourcewall.model.Article;
+import com.example.sourcewall.util.Config;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.DisplayUtil;
 import com.example.sourcewall.util.SharedUtil;
@@ -63,9 +64,11 @@ public class ArticleListItemView extends AceView<Article> {
         if (TextUtils.isEmpty(article.getImageUrl())) {
             titleImage.setImageResource(R.drawable.ic_launcher);
         } else {
-            Picasso.with(getContext()).load(article.getImageUrl())
-                    .resize(DisplayUtil.getScreenWidth(getContext()), -1)
-                    .into(titleImage);
+            if (Config.shouldLoadImage()) {
+                Picasso.with(getContext()).load(article.getImageUrl())
+                        .resize(DisplayUtil.getScreenWidth(getContext()), -1)
+                        .into(titleImage);
+            }
         }
     }
 

@@ -32,6 +32,7 @@ public class Consts {
     public static final String Key_User_Avatar = "sourcewall.key.user.avatar";
     public static final String Key_Is_Night_Mode = "sourcewall.key.is.night.mode";
     public static final String Key_Last_Post_Groups_Version = "sourcewall.key.last.post.groups.version";
+    public static final String Key_Image_Load_Mode = "sourcewall.key.image.load.mode";
 
     // 保存SharedPreferences的Key，用于保存草稿
     public static final String Key_Sketch_Article_Reply = "sourcewall.key.sketch.article.reply";
@@ -58,5 +59,10 @@ public class Consts {
     //webview
     public static final String Base_Url = "http://www.guokr.com/";
     public static final String Base_Url2 = "file:///android_asset/";
+
+    //图片加载模式
+    public static final int MODE_ALWAYS_LOAD = 0;
+    public static final int MODE_NEVER_LOAD = 1;
+    public static final int MODE_LOAD_WHEN_WIFI = 2;
 
 }
