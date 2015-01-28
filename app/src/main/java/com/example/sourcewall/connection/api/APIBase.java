@@ -14,6 +14,7 @@ import com.example.sourcewall.model.Article;
 import com.example.sourcewall.model.Post;
 import com.example.sourcewall.model.Question;
 import com.example.sourcewall.util.Config;
+import com.example.sourcewall.util.FileUtil;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -60,13 +61,16 @@ public class APIBase {
     }
 
     /**
-     * 压缩图片，差不多可以压缩到140k左右
+     * 压缩图片，jpg格式差不多可以压缩到100k左右
      *
      * @param path 要压缩的图片路径
      * @return 是否成功压缩
      * @throws IOException
      */
     public static String compressImage(String path) throws IOException {
+        if (FileUtil.getFileSuffix(new File(path)).equals("gif")) {
+            return path;
+        }
         float maxSize = Config.getUploadImageSizeRestrict();//将其中一边至少压缩到maxSize，而不是两边都压缩到maxSize，否则有可能图片很不清楚
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
