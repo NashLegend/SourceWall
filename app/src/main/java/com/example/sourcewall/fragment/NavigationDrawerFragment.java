@@ -392,7 +392,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     /**
      * 临时办法  FIXME
      */
-    synchronized private void checkChannelList() {
+    private void checkChannelList() {
         ArrayList<SubItem> subItems = adapter.getSubLists().get(1);
         SubItem item = subItems.get(0);
         boolean isItemMy = item.getType() == SubItem.Type_Private_Channel;
