@@ -119,7 +119,7 @@
                     android:background="?attr/background_selectable_borderless"
                     android:paddingLeft="13dp"
                     android:paddingRight="13dp"
-                    android:src="@drawable/ic_check_holo_light_blue_36dp" />
+                    android:src="@drawable/send" />
             </RelativeLayout>
 
         </LinearLayout>

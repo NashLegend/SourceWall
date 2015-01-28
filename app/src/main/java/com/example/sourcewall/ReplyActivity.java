@@ -73,6 +73,10 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
             }
             hostText.setText("引用@" + comment.getAuthor() + " 的话：" + cont);
         }
+        if (aceModel instanceof Question) {
+            setTitle("回答问题");
+            editText.setHint(R.string.hint_answer);
+        }
         publishButton = (ImageButton) findViewById(R.id.btn_publish);
         imgButton = (ImageButton) findViewById(R.id.btn_add_img);
         insertButton = (ImageButton) findViewById(R.id.btn_insert_img);
