@@ -98,6 +98,7 @@ public class GroupHelper {
     public static void clearAllMyGroups() {
         MyGroupDao myGroupDao = AppApplication.getDaoSession().getMyGroupDao();
         myGroupDao.deleteAll();
+        SharedUtil.saveLong(Consts.Key_Last_Post_Groups_Version, System.currentTimeMillis());
     }
 
 }

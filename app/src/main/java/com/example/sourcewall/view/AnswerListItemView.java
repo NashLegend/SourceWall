@@ -62,6 +62,8 @@ public class AnswerListItemView extends AceView<QuestionAnswer> {
             Picasso.with(getContext()).load(answer.getAuthorAvatarUrl())
                     .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
                     .into(avatar);
+        } else {
+            avatar.setImageResource(R.drawable.default_avatar);
         }
         String simplifiedStr = RegUtil.tryGetStringByLength(RegUtil.html2PlainTextWithImageTag(answer.getContent()), 100);
         contentView.setText(simplifiedStr);

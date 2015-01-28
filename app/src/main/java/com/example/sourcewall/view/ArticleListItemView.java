@@ -68,6 +68,8 @@ public class ArticleListItemView extends AceView<Article> {
                 Picasso.with(getContext()).load(article.getImageUrl())
                         .resize(DisplayUtil.getScreenWidth(getContext()), -1)
                         .into(titleImage);
+            } else {
+                titleImage.setImageBitmap(null);
             }
         }
     }

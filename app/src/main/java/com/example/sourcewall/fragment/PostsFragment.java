@@ -249,31 +249,33 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                     manageButton.setVisibility(View.VISIBLE);
                 } else {
                     manageButton.setVisibility(View.INVISIBLE);
-                    AlertDialog dialog = new AlertDialog.Builder(getActivity()).setTitle("提示").setMessage("尚未加载我关注的小组，是否开始加载？").setPositiveButton("加载我的小组", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            hideMoreGroups();
-                            new Handler().postDelayed(new Runnable() {
+                    AlertDialog dialog = new AlertDialog.Builder(getActivity()).setTitle(R.string.hint)
+                            .setMessage(R.string.ok_to_load_groups)
+                            .setPositiveButton(R.string.confirm_to_load_my_groups, new DialogInterface.OnClickListener() {
                                 @Override
-                                public void run() {
-                                    Intent intent = new Intent(getActivity(), ShuffleActivity.class);
-                                    intent.putExtra(Consts.Extra_Should_Load_Before_Shuffle, true);
-                                    startActivityForResult(intent, Consts.Code_Start_Shuffle_Groups);
-                                    getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
+                                public void onClick(DialogInterface dialog, int which) {
+                                    hideMoreGroups();
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Intent intent = new Intent(getActivity(), ShuffleActivity.class);
+                                            intent.putExtra(Consts.Extra_Should_Load_Before_Shuffle, true);
+                                            startActivityForResult(intent, Consts.Code_Start_Shuffle_Groups);
+                                            getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
+                                        }
+                                    }, 320);
                                 }
-                            }, 320);
-                        }
-                    }).setNegativeButton("使用默认小组", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            hideMoreGroups();
-                        }
-                    }).setOnCancelListener(new DialogInterface.OnCancelListener() {
-                        @Override
-                        public void onCancel(DialogInterface dialog) {
-                            hideMoreGroups();
-                        }
-                    }).create();
+                            }).setNegativeButton(R.string.use_default_groups, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    hideMoreGroups();
+                                }
+                            }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                @Override
+                                public void onCancel(DialogInterface dialog) {
+                                    hideMoreGroups();
+                                }
+                            }).create();
                     dialog.dismiss();
                     dialog.show();
                 }

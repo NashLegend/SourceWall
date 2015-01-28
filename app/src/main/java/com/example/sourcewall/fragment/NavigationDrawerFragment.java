@@ -27,6 +27,7 @@ import android.widget.TextView;
 
 import com.example.sourcewall.LoginActivity;
 import com.example.sourcewall.R;
+import com.example.sourcewall.SettingActivity;
 import com.example.sourcewall.adapters.ChannelsAdapter;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.UserAPI;
@@ -307,6 +308,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
                 onUserViewClicked();
                 break;
             case R.id.view_setting:
+                startActivity(new Intent(getActivity(), SettingActivity.class));
                 break;
             case R.id.view_switch_to_day:
             case R.id.view_switch_to_night:
@@ -332,6 +334,8 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
                         Picasso.with(getActivity()).load(avatarString)
                                 .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
                                 .into(avatarView);
+                    } else {
+                        avatarView.setImageResource(R.drawable.default_avatar);
                     }
                 }
                 testLogin();
@@ -342,11 +346,20 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
                 checkChannelList();
                 if (UserAPI.isLoggedIn()) {
                     loadUserInfo();
-                    loginState = true;
                 } else {
                     back2UnLogged();
                 }
             } else {
+                String avatarString = SharedUtil.readString(Consts.Key_User_Avatar, "");
+                if (!TextUtils.isEmpty(avatarString)) {
+                    if (Config.shouldLoadImage()) {
+                        Picasso.with(getActivity()).load(avatarString)
+                                .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
+                                .into(avatarView);
+                    } else {
+                        avatarView.setImageResource(R.drawable.default_avatar);
+                    }
+                }
                 long lastDBVersion = SharedUtil.readLong(Consts.Key_Last_Post_Groups_Version, 0);
                 if (currentDBVersion != lastDBVersion && GroupHelper.getMyGroupsNumber() > 0) {
                     ArrayList<SubItem> subItems = adapter.getSubLists().get(1);
@@ -359,6 +372,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
                 }
             }
         }
+        loginState = UserAPI.isLoggedIn();
     }
 
     /**
@@ -479,6 +493,14 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     class UserInfoTask extends AsyncTask<String, Intent, ResultObject> {
 
         @Override
+        protected void onPreExecute() {
+            String nameString = SharedUtil.readString(Consts.Key_User_Name, "");
+            if (TextUtils.isEmpty(nameString)) {
+                userName.setText(R.string.loading);
+            }
+        }
+
+        @Override
         protected ResultObject doInBackground(String... params) {
             return UserAPI.getUserInfoByUkey(UserAPI.getUkey());
         }
@@ -501,6 +523,8 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
             Picasso.with(getActivity()).load(info.getAvatar())
                     .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
                     .into(avatarView);
+        } else {
+            avatarView.setImageResource(R.drawable.default_avatar);
         }
         userName.setText(info.getNickname());
     }

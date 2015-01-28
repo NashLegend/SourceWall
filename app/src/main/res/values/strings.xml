@@ -25,7 +25,7 @@
     <string name="refreshing">刷新中</string>
     <string name="pull_up_to_load_more">上拉以加载更多</string>
     <string name="release_to_load_more">放开以加载更多</string>
-    <string name="loading">加载中</string>
+    <string name="loading">加载中……</string>
     <string name="idling">done</string>
     <string name="cancel">取消</string>
     <string name="ok">确定</string>
@@ -112,5 +112,19 @@
     <string name="tip_of_more_groups">点击进入小组，长按排序</string>
     <string name="unselected_section_tip">点击添加到左侧边栏</string>
     <string name="action_reload_my_groups">重新加载小组</string>
+    <string name="image_load_mode">图片加载模式</string>
+    <string name="custom_tail">自定义尾巴</string>
+    <string name="log_out">退出登录</string>
+    <string name="log_in">登录</string>
+
+    <string name="mode_always_load">始终加载</string>
+    <string name="mode_never_load">从不加载</string>
+    <string name="mode_load_load_when_wifi">仅在wifi下加载图片</string>
+    <string name="ok_to_logout">确定退出登录？</string>
+    <string name="ok_to_load_groups">尚未加载我关注的小组，是否开始加载？</string>
+    <string name="use_default_groups">使用默认小组</string>
+    <string name="confirm_to_load_my_groups">加载我的小组</string>
+    <string name="hint">提示</string>
+    <string name="way_to_load_image">选择图片加载模式</string>
 
 </resources>

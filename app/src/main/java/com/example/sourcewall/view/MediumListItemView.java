@@ -68,6 +68,8 @@ public class MediumListItemView extends AceView<UComment> {
             Picasso.with(getContext()).load(comment.getAuthorAvatarUrl())
                     .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
                     .into(avatarImage);
+        } else {
+            avatarImage.setImageResource(R.drawable.default_avatar);
         }
     }
 
