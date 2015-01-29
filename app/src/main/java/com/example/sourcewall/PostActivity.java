@@ -233,6 +233,15 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         }
     }
 
+    private void deleteComment(UComment comment) {
+        if (!UserAPI.isLoggedIn()) {
+            notifyNeedLog();
+        } else {
+            DeleteCommentTask deleteCommentTask = new DeleteCommentTask();
+            deleteCommentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, comment);
+        }
+    }
+
     private void copyComment(UComment comment) {
         //do nothing
         ClipboardManager manager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
@@ -241,14 +250,21 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
 
     private void onReplyItemClick(final View view, int position, long id) {
         if (view instanceof MediumListItemView) {
-            String[] operations;
             final UComment comment = ((MediumListItemView) view).getData();
-            if (comment.isHasLiked()) {
-                operations = new String[]{getString(R.string.action_reply), getString(R.string.action_copy)};
-            } else {
-                operations = new String[]{getString(R.string.action_reply), getString(R.string.action_like), getString(R.string.action_copy)};
+            ArrayList<String> ops = new ArrayList<>();
+            ops.add(getString(R.string.action_reply));
+            ops.add(getString(R.string.action_copy));
+            if (!comment.isHasLiked()) {
+                ops.add(getString(R.string.action_like));
             }
-            new AlertDialog.Builder(this).setTitle("").setItems(operations, new DialogInterface.OnClickListener() {
+            if (comment.getAuthorID().equals(UserAPI.getUserID())) {
+                ops.add(getString(R.string.action_delete));
+            }
+            String[] operations = new String[ops.size()];
+            for (int i = 0; i < ops.size(); i++) {
+                operations[i] = ops.get(i);
+            }
+            new AlertDialog.Builder(this).setItems(operations, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     switch (which) {
@@ -256,14 +272,13 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
                             replyComment(comment);
                             break;
                         case 1:
-                            if (comment.isHasLiked()) {
-                                copyComment(comment);
-                            } else {
-                                likeComment(comment);
-                            }
+                            copyComment(comment);
                             break;
                         case 2:
-                            copyComment(comment);
+                            likeComment(comment);
+                            break;
+                        case 3:
+                            deleteComment(comment);
                             break;
                     }
                 }
@@ -319,6 +334,27 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
                 if (resultObject.code == ResultObject.ResultCode.CODE_ALREADY_LIKED) {
                     comment.setHasLiked(true);
                 }
+            }
+        }
+    }
+
+    class DeleteCommentTask extends AsyncTask<UComment, Integer, ResultObject> {
+
+        UComment comment;
+
+        @Override
+        protected ResultObject doInBackground(UComment... params) {
+            comment = params[0];
+            return PostAPI.deleteMyComment(comment.getID());
+        }
+
+        @Override
+        protected void onPostExecute(ResultObject resultObject) {
+            if (resultObject.ok) {
+                adapter.remove(comment);
+                adapter.notifyDataSetChanged();
+            } else {
+                ToastUtil.toastSingleton("删除失败~");
             }
         }
     }

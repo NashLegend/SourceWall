@@ -52,6 +52,7 @@
     <string name="recommend_article">推荐文章</string>
     <string name="action_copy">复制</string>
     <string name="action_like">点赞</string>
+    <string name="action_delete">删除</string>
     <string name="action_support">赞同</string>
     <string name="action_oppose">反对</string>
     <string name="action_bury">不是答案</string>
