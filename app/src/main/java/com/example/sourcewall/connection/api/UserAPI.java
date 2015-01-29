@@ -26,16 +26,12 @@ import java.util.ArrayList;
  */
 public class UserAPI extends APIBase {
 
-    public static ArrayList<Basket> myBaskets = new ArrayList<>();
+    private static ArrayList<Basket> myBaskets = new ArrayList<>();
 
     public static boolean isLoggedIn() {
         String token = getToken();
         String ukey = getUkey();
-        if (!TextUtils.isEmpty(ukey) && ukey.length() == 6 && !TextUtils.isEmpty(token) && token.length() == 64) {
-            return true;
-        } else {
-            return false;
-        }
+        return !TextUtils.isEmpty(ukey) && ukey.length() == 6 && !TextUtils.isEmpty(token) && token.length() == 64;
     }
 
     public static String base36Encode(long id) {

@@ -31,10 +31,9 @@
     <dimen name="list_standard_item_author_text_dimen">10dp</dimen>
     <dimen name="list_standard_item_text_text_gap">10dp</dimen>
     <dimen name="list_standard_item_text_icon_gap">5dp</dimen>
-    <dimen name="list_post_item_title_image_dimen">36dp</dimen>
 
     <!--正文系列-->
-    <dimen name="Text_title_size_dimen">18dp</dimen>
+    <dimen name="Text_title_size_dimen">18sp</dimen>
     <dimen name="text_content_font_size_dimen">16sp</dimen>
     <dimen name="basket_item_height">48dp</dimen>
     <item name="lineSpacingMultiplier" format="float" type="dimen">1.3</item>

@@ -13,7 +13,7 @@ public class StyleChecker {
         if (isNight) {
             style = "  <link rel=\"stylesheet\" href=\"file:///android_asset/night.static.guokr.com/apps/minisite/styles/f79e35f9.main.css\" /> \n" +
                     "  <link rel=\"stylesheet\" href=\"file:///android_asset/night.static.guokr.com/apps/minisite/styles/e8ff5a9c.gbbcode.css\" /> \n" +
-                    "  <link rel=\"stylesheet\" href=\"file:///android_asset/night.static.guokr.com/apps/minisite/styles/e263077d.article.css\" /> \n" ;
+                    "  <link rel=\"stylesheet\" href=\"file:///android_asset/night.static.guokr.com/apps/minisite/styles/e263077d.article.css\" /> \n";
         } else {
             style = "  <link rel=\"stylesheet\" href=\"file:///android_asset/static.guokr.com/apps/minisite/styles/f79e35f9.main.css\" /> \n" +
                     "  <link rel=\"stylesheet\" href=\"file:///android_asset/static.guokr.com/apps/minisite/styles/e8ff5a9c.gbbcode.css\" /> \n" +
@@ -63,8 +63,7 @@ public class StyleChecker {
                 "  </div> \n" +
                 " </body>\n" +
                 "</html>";
-        String html = prefix + content + suffix;
-        return html;
+        return prefix + content + suffix;
     }
 
     public static String getQuestionHtml(String content) {
@@ -101,8 +100,7 @@ public class StyleChecker {
                 "  </div>  \n" +
                 " </body>\n" +
                 "</html>";
-        String html = prefix + content + suffix;
-        return html;
+        return prefix + content + suffix;
     }
 
     public static String getAnswerHtml(String content) {
@@ -139,8 +137,7 @@ public class StyleChecker {
                 "  </div>  \n" +
                 " </body>\n" +
                 "</html>";
-        String html = prefix + content + suffix;
-        return html;
+        return prefix + content + suffix;
     }
 
 }

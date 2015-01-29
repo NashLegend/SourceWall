@@ -56,8 +56,7 @@ public class SharedUtil {
 
     // 读Int
     public static int readInt(String key, int defValue) {
-        int n = getSharedPreferences().getInt(key, defValue);
-        return n;
+        return getSharedPreferences().getInt(key, defValue);
     }
 
     // 写Int
@@ -68,8 +67,7 @@ public class SharedUtil {
 
     // 读Int
     public static long readLong(String key, long defValue) {
-        long n = getSharedPreferences().getLong(key, defValue);
-        return n;
+        return getSharedPreferences().getLong(key, defValue);
     }
 
     // 写Int

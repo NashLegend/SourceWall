@@ -25,9 +25,9 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 
 public class QuestionAPI extends APIBase {
-    static int maxImageWidth = 240;
-    static String prefix = "<div class=\"ZoomBox\"><div class=\"content-zoom ZoomIn\">";
-    static String suffix = "</div></div>";
+    private static int maxImageWidth = 240;
+    private static String prefix = "<div class=\"ZoomBox\"><div class=\"content-zoom ZoomIn\">";
+    private static String suffix = "</div></div>";
 
     public QuestionAPI() {
 

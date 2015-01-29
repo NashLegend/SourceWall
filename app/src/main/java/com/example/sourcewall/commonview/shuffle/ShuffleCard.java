@@ -18,13 +18,13 @@ import java.util.Iterator;
 
 public class ShuffleCard extends RelativeLayout {
 
-    public ShuffleDesk desk;
-    public LinearLayout parentLayout;
-    private Object animator;
-    public int targetHeight;
-    public ArrayList<MovableButton> list;
-    public ShuffleDeskSimple deskSimple;
-    public ScrollView scrollView;
+    ShuffleDesk desk;
+    LinearLayout parentLayout;
+    Object animator;
+    int targetHeight;
+    ArrayList<MovableButton> list;
+    ShuffleDeskSimple deskSimple;
+    ScrollView scrollView;
 
     public ShuffleCard(Context context) {
         super(context);
@@ -217,15 +217,7 @@ public class ShuffleCard extends RelativeLayout {
     private boolean isAfterPoint(int row, int col, int crtRow, int crtCol, boolean isTarget) {
         int tis = row * ShuffleDesk.Columns + col;
         int crt = crtRow * ShuffleDesk.Columns + crtCol;
-        if (isTarget && tis >= crt) {
-            return true;
-        }
-
-        if (!isTarget && tis > crt) {
-            return true;
-        }
-
-        return false;
+        return isTarget && tis >= crt || !isTarget && tis > crt;
     }
 
     public ArrayList<MovableButton> getBetweenButtons() {

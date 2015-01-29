@@ -19,15 +19,14 @@ import org.apache.http.impl.cookie.BasicClientCookie;
 
 public class LoginActivity extends SwipeActivity {
 
-    WebView webView;
-    String cookieStr;
-    Toolbar toolbar;
+    private WebView webView;
+    private String cookieStr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        toolbar = (Toolbar) findViewById(R.id.action_bar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         webView = (WebView) findViewById(R.id.web_login);
         webView.setWebViewClient(webViewClient);

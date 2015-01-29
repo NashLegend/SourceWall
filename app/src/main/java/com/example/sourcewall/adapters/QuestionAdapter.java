@@ -9,7 +9,7 @@ import com.example.sourcewall.view.AceView;
 import com.example.sourcewall.view.QuestionListItemView;
 
 /**
- * Created by NashLegend on 2014/9/15 0015.
+ * Created by NashLegend on 2014/9/15 0015
  */
 public class QuestionAdapter extends AceAdapter<Question> {
     public QuestionAdapter(Context context) {

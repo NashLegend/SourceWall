@@ -30,10 +30,10 @@ public class SScrollView extends ScrollView {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    float lastY = 0f;
-    float currentY = 0f;
-    int lastDirection = 0;
-    int currentDirection = 0;
+    private float lastY = 0f;
+    private float currentY = 0f;
+    private int lastDirection = 0;
+    private int currentDirection = 0;
 
     @Override
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
@@ -49,6 +49,7 @@ public class SScrollView extends ScrollView {
                     } else {
                         animateBackFooter();
                     }
+                    lastDirection = currentDirection;
                 }
                 lastY = currentY;
             }
@@ -57,9 +58,9 @@ public class SScrollView extends ScrollView {
         }
     }
 
-    int touchSlop = 10;
-    int headerHeight;
-    AutoHideListener autoHideListener;
+    private int touchSlop = 10;
+    private int headerHeight;
+    private AutoHideListener autoHideListener;
 
     public static interface AutoHideListener {
         void animateHide();
@@ -94,7 +95,7 @@ public class SScrollView extends ScrollView {
         }
     }
 
-    View.OnTouchListener onTouchListener = new View.OnTouchListener() {
+    private View.OnTouchListener onTouchListener = new View.OnTouchListener() {
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {

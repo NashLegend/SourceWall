@@ -41,25 +41,22 @@ import java.io.File;
  */
 public class ReplyActivity extends SwipeActivity implements View.OnClickListener {
 
-    EditText editText;
-    TextView hostText;
-    AceModel aceModel;
-    ImageButton publishButton;
-    ImageButton imgButton;
-    ImageButton insertButton;
-    ImageButton linkButton;
-    View uploadingProgress;
-    ProgressDialog progressDialog;
-    String tmpImagePath;
-    Toolbar toolbar;
-    UComment comment;
-    boolean replyOK;
+    private EditText editText;
+    private TextView hostText;
+    private AceModel aceModel;
+    private ImageButton imgButton;
+    private ImageButton insertButton;
+    private View uploadingProgress;
+    private ProgressDialog progressDialog;
+    private String tmpImagePath;
+    private UComment comment;
+    private boolean replyOK;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reply);
-        toolbar = (Toolbar) findViewById(R.id.action_bar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         aceModel = (AceModel) getIntent().getSerializableExtra(Consts.Extra_Ace_Model);
         comment = (UComment) getIntent().getSerializableExtra(Consts.Extra_Simple_Comment);
@@ -77,10 +74,10 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
             setTitle("回答问题");
             editText.setHint(R.string.hint_answer);
         }
-        publishButton = (ImageButton) findViewById(R.id.btn_publish);
+        ImageButton publishButton = (ImageButton) findViewById(R.id.btn_publish);
         imgButton = (ImageButton) findViewById(R.id.btn_add_img);
         insertButton = (ImageButton) findViewById(R.id.btn_insert_img);
-        linkButton = (ImageButton) findViewById(R.id.btn_link);
+        ImageButton linkButton = (ImageButton) findViewById(R.id.btn_link);
         uploadingProgress = findViewById(R.id.prg_uploading_img);
         publishButton.setOnClickListener(this);
         imgButton.setOnClickListener(this);

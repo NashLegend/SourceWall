@@ -79,7 +79,7 @@ public class Config {
      *
      * @return 默认尾巴
      */
-    public static String getDefaultComplexTail() {
+    private static String getDefaultComplexTail() {
         return "<p></p><p>来自 <a href=\"http://www.guokr.com/blog/798434/\" target=\"_blank\">SourceWall</a></p>";
     }
 
@@ -88,7 +88,7 @@ public class Config {
      *
      * @return 手机尾巴
      */
-    public static String getPhoneComplexTail() {
+    private static String getPhoneComplexTail() {
         String mTypeString = android.os.Build.MODEL == null ? AppApplication.getApplication().getString(R.string.unknown_phone)
                 : android.os.Build.MODEL;
         return "<p></p><p>来自 <a href=\"http://www.guokr.com/blog/798434/\" target=\"_blank\">" + mTypeString + "</a></p>";
@@ -123,7 +123,7 @@ public class Config {
      *
      * @return 手机尾巴
      */
-    public static String getPhoneSimpleTail() {
+    private static String getPhoneSimpleTail() {
         String mTypeString = android.os.Build.MODEL == null ? AppApplication.getApplication().getString(R.string.unknown_phone)
                 : android.os.Build.MODEL;
         return "\n\n[blockquote]来自 [url=http://www.guokr.com/blog/798434/]" + mTypeString + "[/url][/blockquote]";
@@ -135,7 +135,7 @@ public class Config {
      *
      * @return 默认尾巴
      */
-    public static String getDefaultSimpleTail() {
+    private static String getDefaultSimpleTail() {
         return "\n\n[blockquote]来自 [url=http://www.guokr.com/blog/798434/]SourceWall[/url][/blockquote]";
     }
 

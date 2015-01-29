@@ -17,7 +17,7 @@ import java.io.File;
  */
 public class FileUtil {
 
-    public static final String[] imageSuffixArray = {
+    private static final String[] imageSuffixArray = {
             "jpg", "jpeg", "png",
             "bmp", "gif"
     };

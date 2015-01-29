@@ -16,7 +16,6 @@ public class AppApplication extends Application {
 
     private static AppApplication application;
     private UncaughtExceptionHandler uncaughtExceptionHandler;
-    private CrashReporter crashReporter;
     private static DaoMaster daoMaster;
     private static DaoSession daoSession;
     public static String cookieString = "";
@@ -29,7 +28,7 @@ public class AppApplication extends Application {
     public void onCreate() {
         super.onCreate();
         uncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
-        crashReporter = new CrashReporter(getApplicationContext());
+        CrashReporter crashReporter = new CrashReporter(getApplicationContext());
         crashReporter.setOnCrashListener(new CrashReporter.CrashListener() {
 
             @Override

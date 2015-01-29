@@ -93,7 +93,7 @@ public class ShuffleDesk extends RelativeLayout {
     }
 
     public ArrayList<MovableButton> getButtons() {
-        ArrayList<MovableButton> buttons = new ArrayList<MovableButton>();
+        ArrayList<MovableButton> buttons = new ArrayList<>();
         buttons.addAll(senator.getSortedList());
         buttons.addAll(candidate.getSortedList());
         return buttons;

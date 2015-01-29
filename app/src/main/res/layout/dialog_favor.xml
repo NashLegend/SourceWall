@@ -41,6 +41,7 @@
 
             <Button
                 android:id="@+id/button_favor_dialog_invoke_create"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:background="?attr/color_dialog_button_background"
@@ -49,6 +50,7 @@
 
             <Button
                 android:id="@+id/button_favor_dialog_ok"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:background="?attr/color_dialog_button_background"
@@ -70,8 +72,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="3dp"
             android:layout_weight="0"
-            android:gravity="top"
             android:background="@android:color/transparent"
+            android:gravity="top"
             android:hint="@string/hint_input_basket_name"
             android:singleLine="true"
             android:textColor="?attr/color_reply_input_text"
@@ -108,6 +110,7 @@
 
             <Button
                 android:id="@+id/button_cancel_create_basket"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:background="?attr/color_dialog_button_background"
@@ -116,6 +119,7 @@
 
             <Button
                 android:id="@+id/button_create_basket"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:background="?attr/color_dialog_button_background"

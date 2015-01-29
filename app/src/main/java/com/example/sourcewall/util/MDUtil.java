@@ -27,8 +27,8 @@ public class MDUtil {
     public static String Markdown2HtmlDumb(String text) {
         StringBuilder sb = new StringBuilder();
         String[] paragraphs = text.split("\n");
-        for (int i = 0; i < paragraphs.length; i++) {
-            sb.append("<p>" + markdown2HtmlImage(paragraphs[i]) + "</p>");
+        for (String paragraph : paragraphs) {
+            sb.append("<p>").append(markdown2HtmlImage(paragraph)).append("</p>");
         }
         return sb.toString();
     }
@@ -42,8 +42,8 @@ public class MDUtil {
     public static String Markdown2TextDumb(String text) {
         StringBuilder sb = new StringBuilder();
         String[] paragraphs = text.split("\n");
-        for (int i = 0; i < paragraphs.length; i++) {
-            sb.append("<p>" + markdown2TextImage(paragraphs[i]) + "</p>");
+        for (String paragraph : paragraphs) {
+            sb.append("<p>").append(markdown2TextImage(paragraph)).append("</p>");
         }
         return sb.toString();
     }
@@ -57,8 +57,8 @@ public class MDUtil {
     public static String Text2HtmlDumb(String text) {
         StringBuilder sb = new StringBuilder();
         String[] paragraphs = text.split("\n");
-        for (int i = 0; i < paragraphs.length; i++) {
-            sb.append("<p>" + markdown2TextImage(paragraphs[i]) + "</p>");
+        for (String paragraph : paragraphs) {
+            sb.append("<p>").append(markdown2TextImage(paragraph)).append("</p>");
         }
         return sb.toString();
     }
@@ -69,7 +69,7 @@ public class MDUtil {
      * @param image
      * @return
      */
-    public static String markdown2HtmlImage(String image) {
+    private static String markdown2HtmlImage(String image) {
         return image.replaceAll("\\!\\[[^\\]]*?\\]\\((.*?)\\)", "<img src=\"" + "$1" + "\" style=\"max-width:100%;\">");
     }
 
@@ -79,7 +79,7 @@ public class MDUtil {
      * @param image
      * @return
      */
-    public static String markdown2TextImage(String image) {
+    private static String markdown2TextImage(String image) {
         return image.replaceAll("\\!\\[[^\\]]*?\\]\\((.*?)\\)", "[image]" + "$1" + "[/image]");
     }
 

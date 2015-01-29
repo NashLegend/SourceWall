@@ -33,14 +33,24 @@ public class TextHtmlHelper {
     }
 
     public void load(TextView tv, String content) {
-        load(tv, content, null);
+        cancelPotentialTask();
+        textView = tv;
+        html = content;
+        maxWidth = getMaxWidth();
+        Spanned spanned = correctLinkPaths(Html.fromHtml(html));
+        CharSequence charSequence = trimEnd(spanned);
+        textView.setText(charSequence);
+        if (html.contains("<img")) {
+            htmlTask = new HtmlLoaderTask();
+            htmlTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, html);
+        }
     }
 
     /**
      * 省去Html.fromHtml一步，因为已经在fetch数据的时候就已经转换出simpleHtml，在getView时更有效
      *
-     * @param tv
-     * @param content
+     * @param tv         操作的TextView
+     * @param content    html文本
      * @param simpleHtml
      */
     public void load(TextView tv, String content, CharSequence simpleHtml) {

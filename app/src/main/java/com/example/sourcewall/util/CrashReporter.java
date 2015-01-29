@@ -97,7 +97,7 @@ public class CrashReporter implements UncaughtExceptionHandler {
             result.close();
             printWriter.close();
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
 
         writeCrashLog(infoString);
@@ -179,25 +179,20 @@ public class CrashReporter implements UncaughtExceptionHandler {
      * @return
      */
     public static File getCrashLogFile(Context context) {
-        File file = new File(context.getExternalFilesDir("log"), "crashlog");
-        return file;
+        return new File(context.getExternalFilesDir("log"), "crashlog");
     }
 
     public static void clearCrashLog(Context context) {
         File file = new File(context.getExternalFilesDir("log"), "crashlog");
         if (file.exists()) {
-            try {
-                file.delete();
-            } catch (Exception e) {
-
-            }
+            file.delete();
         }
     }
 
     /**
      * 设置崩溃时的回调
      *
-     * @param crashListener
+     * @param crashListener 崩溃时的回调
      */
     public void setOnCrashListener(CrashListener crashListener) {
         onCrashListener = crashListener;

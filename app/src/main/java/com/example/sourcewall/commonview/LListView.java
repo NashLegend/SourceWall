@@ -121,18 +121,10 @@ public class LListView extends ListView {
                         dist = currentY - lastY;
                         if (Math.abs(dist) > handMoveThreshold) {
                             if (!pullingUp && checkRefreshable()) {
-                                if (headerView.handleMoveDistance(dist)) {
-                                    pullingDown = true;
-                                } else {
-                                    pullingDown = false;
-                                }
+                                pullingDown = headerView.handleMoveDistance(dist);
                             }
                             if (!pullingDown && checkLoadable()) {
-                                if (footerView.handleMoveDistance(dist)) {
-                                    pullingUp = true;
-                                } else {
-                                    pullingUp = false;
-                                }
+                                pullingUp = footerView.handleMoveDistance(dist);
                             }
                             lastY = currentY;
                         }

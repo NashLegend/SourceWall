@@ -50,8 +50,8 @@ public class WWebView extends WebView {
         extClient = client;
     }
 
-    WebViewClient extClient;
-    WebViewClient client = new WebViewClient() {
+    private WebViewClient extClient;
+    private WebViewClient client = new WebViewClient() {
 
         @Override
         public void onPageFinished(WebView view, String url) {

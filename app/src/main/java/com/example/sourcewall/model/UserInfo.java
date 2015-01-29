@@ -5,14 +5,14 @@ package com.example.sourcewall.model;
  */
 public class UserInfo extends AceModel {
 
-    String id = "";
-    String ukey = "";
-    String title = "";
-    String nickname = "";
-    String introduction = "";
-    String avatar = "";
-    String date_created = "";
-    String url = "";
+    private String id = "";
+    private String ukey = "";
+    private String title = "";
+    private String nickname = "";
+    private String introduction = "";
+    private String avatar = "";
+    private String date_created = "";
+    private String url = "";
 
     public String getId() {
         return id;

@@ -135,7 +135,7 @@ public class ShuffleCardSenator extends ShuffleCard {
         PointF pointF = getCurrentButtonCenter();
         int crtRow = 0;
         int crtCol = 0;
-        ArrayList<MovableButton> buttons = new ArrayList<MovableButton>();
+        ArrayList<MovableButton> buttons = new ArrayList<>();
         if (pointF == null) {
             return;
         }

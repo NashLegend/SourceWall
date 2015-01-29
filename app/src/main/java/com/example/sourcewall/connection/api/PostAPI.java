@@ -21,7 +21,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class PostAPI extends APIBase {
@@ -195,9 +194,9 @@ public class PostAPI extends APIBase {
      *
      * @param pageNo 页码
      * @return resultObject
-     * @throws IOException
+     * @throws Exception
      */
-    public static ResultObject getMyGroupRecentPosts(int pageNo) throws IOException, Exception {
+    public static ResultObject getMyGroupRecentPosts(int pageNo) throws Exception {
         ResultObject resultObject = new ResultObject();
         ArrayList<Post> list = new ArrayList<Post>();
         String url = "http://www.guokr.com/group/user/recent_posts/?page=" + pageNo;

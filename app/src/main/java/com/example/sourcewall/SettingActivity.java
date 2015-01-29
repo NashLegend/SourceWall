@@ -20,29 +20,25 @@ import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.SharedUtil;
 
 public class SettingActivity extends SwipeActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
-    Toolbar toolbar;
-    View imageModeView;
-    View customTailView;
-    View logInOutView;
-    TextView imageText;
-    TextView logText;
-    View tailsView;
-    ImageView tailArrow;
-    EditText tailText;
-    RadioButton buttonDefault;
-    RadioButton buttonPhone;
-    RadioButton buttonCustom;
-    int tailsHeight;
+    private TextView imageText;
+    private TextView logText;
+    private View tailsView;
+    private ImageView tailArrow;
+    private EditText tailText;
+    private RadioButton buttonDefault;
+    private RadioButton buttonPhone;
+    private RadioButton buttonCustom;
+    private int tailsHeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
-        toolbar = (Toolbar) findViewById(R.id.action_bar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
-        imageModeView = findViewById(R.id.layout_image_mode);
-        customTailView = findViewById(R.id.layout_custom_tail);
-        logInOutView = findViewById(R.id.layout_log_in_out);
+        View imageModeView = findViewById(R.id.layout_image_mode);
+        View customTailView = findViewById(R.id.layout_custom_tail);
+        View logInOutView = findViewById(R.id.layout_log_in_out);
         imageText = (TextView) findViewById(R.id.text_image_mode);
         logText = (TextView) findViewById(R.id.text_log_in_out);
         tailsView = findViewById(R.id.layout_tails);

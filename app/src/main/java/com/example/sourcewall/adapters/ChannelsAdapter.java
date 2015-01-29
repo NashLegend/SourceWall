@@ -33,8 +33,8 @@ public class ChannelsAdapter extends BaseExpandableListAdapter {
         this.subLists = subLists;
     }
 
-    private ArrayList<SubItem> groupList = new ArrayList<SubItem>();
-    private ArrayList<ArrayList<SubItem>> subLists = new ArrayList<ArrayList<SubItem>>();
+    private ArrayList<SubItem> groupList = new ArrayList<>();
+    private ArrayList<ArrayList<SubItem>> subLists = new ArrayList<>();
     private Context mContext;
 
     public ChannelsAdapter(Context context) {
@@ -103,7 +103,7 @@ public class ChannelsAdapter extends BaseExpandableListAdapter {
     public void createDefaultChannels() {
 
         ArrayList<SubItem> groups = ChannelHelper.getSections();
-        ArrayList<ArrayList<SubItem>> cols = new ArrayList<ArrayList<SubItem>>();
+        ArrayList<ArrayList<SubItem>> cols = new ArrayList<>();
         cols.add(ChannelHelper.getArticles());
         cols.add(ChannelHelper.getPosts());
         cols.add(ChannelHelper.getQuestions());

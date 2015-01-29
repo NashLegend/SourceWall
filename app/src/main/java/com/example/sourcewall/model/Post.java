@@ -20,8 +20,8 @@ public class Post extends AceModel {
     private String date = "";
     private boolean featured = true;//是否展现在集合列表还是单个小组。true表示展示在单个小组列表中
 
-    private ArrayList<UComment> hotComments = new ArrayList<UComment>();
-    private ArrayList<UComment> comments = new ArrayList<UComment>();
+    private ArrayList<UComment> hotComments = new ArrayList<>();
+    private ArrayList<UComment> comments = new ArrayList<>();
 
     public Post() {
 

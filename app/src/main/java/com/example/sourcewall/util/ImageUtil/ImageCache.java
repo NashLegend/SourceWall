@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ImageCache {
 
-    private final static ConcurrentHashMap<String, SoftReference<BitmapDrawable>> cachedBitmaps = new ConcurrentHashMap<String, SoftReference<BitmapDrawable>>();
+    private final static ConcurrentHashMap<String, SoftReference<BitmapDrawable>> cachedBitmaps = new ConcurrentHashMap<>();
 
     public static BitmapDrawable get(String key) {
         BitmapDrawable bitmap = null;

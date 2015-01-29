@@ -32,23 +32,18 @@ import java.util.ArrayList;
 
 public class QuestionActivity extends SwipeActivity implements LListView.OnRefreshListener, View.OnClickListener {
 
-    LListView listView;
-    QuestionDetailAdapter adapter;
-    Question question;
-    LoaderTask task;
-    Toolbar toolbar;
-    FloatingActionsMenu floatingActionsMenu;
-    FloatingActionButton replyButton;
-    FloatingActionButton recomButton;
-    FloatingActionButton favorButton;
-    LoadingView loadingView;
+    private LListView listView;
+    private QuestionDetailAdapter adapter;
+    private Question question;
+    private LoaderTask task;
+    private LoadingView loadingView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question);
         loadingView = (LoadingView) findViewById(R.id.question_progress_loading);
-        toolbar = (Toolbar) findViewById(R.id.action_bar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         question = (Question) getIntent().getSerializableExtra(Consts.Extra_Question);
         listView = (LListView) findViewById(R.id.list_detail);
@@ -59,10 +54,10 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         listView.setOnRefreshListener(this);
         listView.setOnItemClickListener(onItemClickListener);
 
-        floatingActionsMenu = (FloatingActionsMenu) findViewById(R.id.layout_operation);
-        replyButton = (FloatingActionButton) findViewById(R.id.button_reply);
-        recomButton = (FloatingActionButton) findViewById(R.id.button_recommend);
-        favorButton = (FloatingActionButton) findViewById(R.id.button_favor);
+        FloatingActionsMenu floatingActionsMenu = (FloatingActionsMenu) findViewById(R.id.layout_operation);
+        FloatingActionButton replyButton = (FloatingActionButton) findViewById(R.id.button_reply);
+        FloatingActionButton recomButton = (FloatingActionButton) findViewById(R.id.button_recommend);
+        FloatingActionButton favorButton = (FloatingActionButton) findViewById(R.id.button_favor);
 
         replyButton.setOnClickListener(this);
         recomButton.setOnClickListener(this);

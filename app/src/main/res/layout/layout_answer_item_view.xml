@@ -10,6 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:baselineAligned="false"
         android:orientation="horizontal"
         android:paddingBottom="@dimen/list_standard_item_padding_vertical"
         android:paddingLeft="@dimen/list_standard_item_padding_horizontal"
@@ -35,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:gravity="center"
-                android:text="9999"
+                android:text="@string/sample_support_number"
                 android:textColor="?attr/color_author_color"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -49,7 +50,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
                 android:orientation="horizontal">
 
                 <TextView

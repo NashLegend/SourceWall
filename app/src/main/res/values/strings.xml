@@ -2,20 +2,16 @@
 <resources>
 
     <string name="app_name">SourceWall</string>
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Section 3</string>
     <string name="navigation_drawer_open">打开导航抽屉</string>
     <string name="navigation_drawer_close">关闭导航抽屉</string>
-    <string name="action_login">登录</string>
     <string name="write_post">发帖</string>
     <string name="write_question">提问题</string>
     <string name="action_settings">设置</string>
     <string name="action_cancel_simple_reply">取消回复</string>
-    <string name="hello_world">泥嚎！</string>
     <string name="title_activity_setting">设置</string>
     <string name="article">科学人</string>
-    <string name="shuffle">小组管理</string>
+    <string name="shuffle_groups">小组管理</string>
+    <string name="shuffle_tags">标签管理</string>
     <string name="post">小组</string>
     <string name="question">问答</string>
     <string name="title_activity_login">登录</string>
@@ -46,32 +42,24 @@
     <string name="action_create_basket">创建</string>
     <string name="action_invoke_create_basket">创建果篮</string>
     <string name="action_favor">收藏</string>
-    <string name="action_action">Action</string>
     <string name="action_reply">回复</string>
-    <string name="action_recommend">推荐</string>
     <string name="recommend_article">推荐文章</string>
     <string name="action_copy">复制</string>
     <string name="action_like">点赞</string>
     <string name="action_delete">删除</string>
     <string name="action_support">赞同</string>
     <string name="action_oppose">反对</string>
-    <string name="action_bury">不是答案</string>
-    <string name="action_thank">感谢</string>
     <string name="hint_reply">请输入回复</string>
     <string name="hint_answer">在这里写下您的答案</string>
     <string name="hint_input_post_content">在这里输入帖子正文</string>
     <string name="hint_recommend">顺便说点什么吧</string>
     <string name="message_replying">稍等片刻……</string>
-    <string name="add_image">添加图片</string>
-    <string name="insert_image">插入图片</string>
     <string name="input_image_url">输入图片地址</string>
     <string name="input_link_url">插入链接</string>
     <string name="way_to_add_image">选择添加图片的方式</string>
     <string name="add_image_from_disk">本地相册上传</string>
     <string name="add_image_from_camera">拍照上传</string>
     <string name="add_image_from_link">使用图片网址</string>
-    <string name="add_link">LINK</string>
-    <string name="publish_reply">发布</string>
     <string name="hint_input_basket_name">输入果篮名</string>
     <string name="hint_input_basket_introduction">输入果篮介绍，选填</string>
     <string name="hint_input_image_url">输入图片网址</string>
@@ -139,5 +127,7 @@
     <string name="have_not_join_this_group">尚未加入该小组~</string>
     <string name="get_csrf_failed">拉取验证失败</string>
     <string name="hint_reload_csrf">拉取验证失败，请点击右上角重新加载验证~</string>
+    <string name="sample_support_number">9999</string>
+    <string name="hint_input_your_tail">输入自定义尾巴，不输入则不添加尾巴~</string>
 
 </resources>

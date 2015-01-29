@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import java.lang.ref.WeakReference;
 
 /**
- * Created by NashLegend on 2014/9/24 0024.
+ * Created by NashLegend on 2014/9/24 0024
  */
 public class ImageLoader {
 

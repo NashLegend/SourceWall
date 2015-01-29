@@ -10,7 +10,7 @@ import java.util.ArrayList;
  */
 public abstract class AceAdapter<T> extends BaseAdapter {
 
-    public final ArrayList<T> list = new ArrayList<T>();
+    public final ArrayList<T> list = new ArrayList<>();
     private Context context;
 
     public AceAdapter(Context context) {

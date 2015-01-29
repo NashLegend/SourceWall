@@ -257,14 +257,15 @@ public class ImageCache {
                     } else {
                         snapshot.getInputStream(DISK_CACHE_INDEX).close();
                     }
-                } catch (final IOException e) {
                 } catch (Exception e) {
+                    e.printStackTrace();
                 } finally {
                     try {
                         if (out != null) {
                             out.close();
                         }
                     } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 }
             }
@@ -306,6 +307,7 @@ public class ImageCache {
                 try {
                     mDiskCacheLock.wait();
                 } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
             if (mDiskLruCache != null) {
@@ -323,13 +325,15 @@ public class ImageCache {
                                     fd, Integer.MAX_VALUE, Integer.MAX_VALUE, this);
                         }
                     }
-                } catch (final IOException e) {
+                } catch (Exception e) {
+                    e.printStackTrace();
                 } finally {
                     try {
                         if (inputStream != null) {
                             inputStream.close();
                         }
                     } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 }
             }
@@ -389,7 +393,8 @@ public class ImageCache {
             if (mDiskLruCache != null && !mDiskLruCache.isClosed()) {
                 try {
                     mDiskLruCache.delete();
-                } catch (IOException e) {
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
                 mDiskLruCache = null;
                 initDiskCache();
@@ -406,7 +411,8 @@ public class ImageCache {
             if (mDiskLruCache != null) {
                 try {
                     mDiskLruCache.flush();
-                } catch (IOException e) {
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }
@@ -424,8 +430,8 @@ public class ImageCache {
                         mDiskLruCache.close();
                         mDiskLruCache = null;
                     }
-                } catch (IOException e) {
-
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }
@@ -606,10 +612,7 @@ public class ImageCache {
      */
     @TargetApi(VERSION_CODES.GINGERBREAD)
     public static boolean isExternalStorageRemovable() {
-        if (Utils.hasGingerbread()) {
-            return Environment.isExternalStorageRemovable();
-        }
-        return true;
+        return !Utils.hasGingerbread() || Environment.isExternalStorageRemovable();
     }
 
     /**

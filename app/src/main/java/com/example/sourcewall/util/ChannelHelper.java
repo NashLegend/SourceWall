@@ -17,10 +17,8 @@ public class ChannelHelper {
         SubItem[] items = {new SubItem(SubItem.Section_Article, SubItem.Type_Collections, AppApplication.getApplication().getResources().getString(R.string.article), "Article"),
                 new SubItem(SubItem.Section_Post, SubItem.Type_Collections, AppApplication.getApplication().getResources().getString(R.string.post), "Post"),
                 new SubItem(SubItem.Section_Question, SubItem.Type_Collections, AppApplication.getApplication().getResources().getString(R.string.question), "Question")};
-        ArrayList<SubItem> subItems = new ArrayList<SubItem>();
-        for (int i = 0; i < items.length; i++) {
-            subItems.add(items[i]);
-        }
+        ArrayList<SubItem> subItems = new ArrayList<>();
+        Collections.addAll(subItems, items);
         return subItems;
     }
 
@@ -35,7 +33,7 @@ public class ChannelHelper {
                 new SubItem(SubItem.Section_Article, SubItem.Type_Single_Channel, "谣言粉碎机", "fact"),
                 new SubItem(SubItem.Section_Article, SubItem.Type_Single_Channel, "商业科技", "techb")
         };
-        ArrayList<SubItem> subItems = new ArrayList<SubItem>();
+        ArrayList<SubItem> subItems = new ArrayList<>();
         Collections.addAll(subItems, items);
         return subItems;
     }
@@ -55,7 +53,7 @@ public class ChannelHelper {
                 new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, "情感夜夜话", "127"),
                 new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, "心事鉴定组", "33"),
         };
-        ArrayList<SubItem> subItems = new ArrayList<SubItem>();
+        ArrayList<SubItem> subItems = new ArrayList<>();
         Collections.addAll(subItems, items);
         return subItems;
     }
@@ -80,7 +78,7 @@ public class ChannelHelper {
                 new SubItem(SubItem.Section_Question, SubItem.Type_Single_Channel, "运动", "运动"),
                 new SubItem(SubItem.Section_Question, SubItem.Type_Single_Channel, "计算机", "计算机"),
         };
-        ArrayList<SubItem> subItems = new ArrayList<SubItem>();
+        ArrayList<SubItem> subItems = new ArrayList<>();
         Collections.addAll(subItems, items);
         return subItems;
     }

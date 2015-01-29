@@ -36,23 +36,27 @@ import java.util.ArrayList;
 
 public class ArticleActivity extends SwipeActivity implements LListView.OnRefreshListener, View.OnClickListener {
 
-    LListView listView;
-    ArticleDetailAdapter adapter;
-    Article article;
-    LoaderTask task;
-    Toolbar toolbar;
-    FloatingActionsMenu floatingActionsMenu;
-    FloatingActionButton replyButton;
-    FloatingActionButton recomButton;
-    FloatingActionButton favorButton;
-    LoadingView loadingView;
+    private LListView listView;
+    private ArticleDetailAdapter adapter;
+    private Article article;
+    private LoaderTask task;
+    private LoadingView loadingView;
+
+    public ArticleActivity() {
+        onItemClickListener = new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                onReplyItemClick(view, position, id);
+            }
+        };
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article);
         loadingView = (LoadingView) findViewById(R.id.article_progress_loading);
-        toolbar = (Toolbar) findViewById(R.id.action_bar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         article = (Article) getIntent().getSerializableExtra(Consts.Extra_Article);
         listView = (LListView) findViewById(R.id.list_detail);
@@ -63,10 +67,10 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         listView.setCanPullToLoadMore(false);
         listView.setOnRefreshListener(this);
 
-        floatingActionsMenu = (FloatingActionsMenu) findViewById(R.id.layout_operation);
-        replyButton = (FloatingActionButton) findViewById(R.id.button_reply);
-        recomButton = (FloatingActionButton) findViewById(R.id.button_recommend);
-        favorButton = (FloatingActionButton) findViewById(R.id.button_favor);
+        FloatingActionsMenu floatingActionsMenu = (FloatingActionsMenu) findViewById(R.id.layout_operation);
+        FloatingActionButton replyButton = (FloatingActionButton) findViewById(R.id.button_reply);
+        FloatingActionButton recomButton = (FloatingActionButton) findViewById(R.id.button_recommend);
+        FloatingActionButton favorButton = (FloatingActionButton) findViewById(R.id.button_favor);
 
         replyButton.setOnClickListener(this);
         recomButton.setOnClickListener(this);
@@ -231,12 +235,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         }
     }
 
-    AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            onReplyItemClick(view, position, id);
-        }
-    };
+    private AdapterView.OnItemClickListener onItemClickListener;
 
     @Override
     public void onClick(View v) {
@@ -253,7 +252,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         }
     }
 
-    class RecommendTask extends AsyncTask<String, Integer, ResultObject> {
+    private class RecommendTask extends AsyncTask<String, Integer, ResultObject> {
 
         @Override
         protected void onPreExecute() {

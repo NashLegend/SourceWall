@@ -46,7 +46,7 @@ public class APIBase {
     /**
      * 统一回复，回复主题站、帖子、问题
      *
-     * @return
+     * @return ResultObject
      */
     public static ResultObject reply(AceModel data, String content) {
         ResultObject resultObject = new ResultObject();

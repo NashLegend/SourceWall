@@ -45,15 +45,15 @@ import javax.net.ssl.SSLHandshakeException;
  */
 public class HttpFetcher {
 
-    public static DefaultHttpClient defaultHttpClient;
+    private static DefaultHttpClient defaultHttpClient;
     private static DefaultHttpClient uploadHttpClient;
     private static final int MAX_EXECUTION_COUNT = 2;
-    public final static int MAX_ROUTE_CONNECTIONS = 400;
-    public final static int MAX_TOTAL_CONNECTIONS = 800;
-    public final static int TIMEOUT = 3000;
-    public final static int CONNECTION_TIMEOUT = 10000;
-    public final static int SO_TIMEOUT = 30000;
-    public final static int UPLOAD_SO_TIMEOUT = 180000;//180秒的上传时间
+    private final static int MAX_ROUTE_CONNECTIONS = 400;
+    private final static int MAX_TOTAL_CONNECTIONS = 800;
+    private final static int TIMEOUT = 3000;
+    private final static int CONNECTION_TIMEOUT = 10000;
+    private final static int SO_TIMEOUT = 30000;
+    private final static int UPLOAD_SO_TIMEOUT = 180000;//180秒的上传时间
 
     public static ResultObject post(String url, List<NameValuePair> params) throws Exception {
         return post(url, params, true);

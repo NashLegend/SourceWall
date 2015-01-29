@@ -15,7 +15,7 @@ public class GroupMovableButton extends MovableButton<MyGroup> {
 
     @Override
     public MovableButton clone() {
-        MovableButton button = new GroupMovableButton(getContext());
+        GroupMovableButton button = new GroupMovableButton(getContext());
         LayoutParams params = new LayoutParams(ShuffleDesk.buttonWidth, ShuffleDesk.buttonHeight);
         button.setLayoutParams(params);
         button.setSection(section);

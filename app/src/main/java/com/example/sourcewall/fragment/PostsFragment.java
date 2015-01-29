@@ -68,11 +68,10 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     private LoadingView loadingView;
     private int currentPage = -1;//page从0开始，-1表示还没有数据
     private View headerView;
-    ViewGroup moreGroupsLayout;
-    ScrollView scrollView;
-    ShuffleDeskSimple deskSimple;
-    Button manageButton;
-    long currentDBVersion = -1;
+    private ViewGroup moreGroupsLayout;
+    private ShuffleDeskSimple deskSimple;
+    private Button manageButton;
+    private long currentDBVersion = -1;
 
     @Override
     public View onCreateLayoutView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -131,7 +130,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
             }
         });
 
-        scrollView = (ScrollView) view.findViewById(R.id.plastic_scroller);
+        ScrollView scrollView = (ScrollView) view.findViewById(R.id.plastic_scroller);
         moreGroupsLayout = (ViewGroup) view.findViewById(R.id.layout_more_groups);
         deskSimple = new ShuffleDeskSimple(getActivity(), scrollView);
         scrollView.addView(deskSimple);
@@ -191,9 +190,9 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         deskSimple.initView();
     }
 
-    List<MyGroup> unselectedSections;
+    private List<MyGroup> unselectedSections;
 
-    public void getButtons() {
+    private void getButtons() {
         unselectedSections = GroupHelper.getUnselectedGroups();
         ArrayList<MovableButton> unselectedButtons = new ArrayList<>();
         for (int i = 0; i < unselectedSections.size(); i++) {
@@ -299,7 +298,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         animatorSet.start();
     }
 
-    AnimatorSet animatorSet;
+    private AnimatorSet animatorSet;
 
     private void hideMoreGroups() {
         isMoreGroupsButtonShowing = false;
@@ -349,7 +348,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         animatorSet.start();
     }
 
-    public void commitChange(ArrayList<MovableButton> buttons) {
+    private void commitChange(ArrayList<MovableButton> buttons) {
         List<MyGroup> sections = new ArrayList<>();
         for (int i = 0; i < buttons.size(); i++) {
             MyGroup myGroup = (MyGroup) buttons.get(i).getSection();
@@ -419,8 +418,8 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         return R.menu.menu_fragment_post;
     }
 
-    ImageView moreGroupImageView;
-    boolean isMoreGroupsButtonShowing;
+    private ImageView moreGroupImageView;
+    private boolean isMoreGroupsButtonShowing;
 
     @Override
     public void takeOverMenuInflate(MenuInflater inflater, Menu menu) {

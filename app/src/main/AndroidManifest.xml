@@ -36,7 +36,10 @@
         </activity>
         <activity
             android:name=".ShuffleGroupActivity"
-            android:label="@string/shuffle" />
+            android:label="@string/shuffle_groups" />
+        <activity
+            android:name=".ShuffleTagActivity"
+            android:label="@string/shuffle_tags" />
         <activity
             android:name=".ArticleActivity"
             android:label="@string/article" />

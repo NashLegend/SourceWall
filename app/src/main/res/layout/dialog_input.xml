@@ -16,9 +16,9 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:gravity="top"
+            android:hint="@string/hint_recommend"
             android:minHeight="@dimen/input_dialog_input_height"
             android:padding="5dp"
-            android:hint="@string/hint_recommend"
             android:textColor="?attr/color_reply_input_text"
             android:textColorHint="?attr/color_reply_hint" />
 
@@ -31,6 +31,7 @@
 
             <Button
                 android:id="@+id/button_dialog_input_cancel"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:background="?attr/color_dialog_button_background"
@@ -39,6 +40,7 @@
 
             <Button
                 android:id="@+id/button_dialog_input_ok"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:background="?attr/color_dialog_button_background"

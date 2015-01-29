@@ -31,11 +31,10 @@ public class MainActivity extends BaseActivity {
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
-    Receiver receiver;
-    ArticlesFragment articlesFragment;
-    PostsFragment postsFragment;
-    QuestionsFragment questionsFragment;
-    Toolbar toolbar;
+    private Receiver receiver;
+    private ArticlesFragment articlesFragment;
+    private PostsFragment postsFragment;
+    private QuestionsFragment questionsFragment;
 
     @Override
     public void setTheme(int resId) {
@@ -55,7 +54,7 @@ public class MainActivity extends BaseActivity {
         IntentFilter filter = new IntentFilter();
         filter.addAction(Consts.Action_Open_Content_Fragment);
         registerReceiver(receiver, filter);
-        toolbar = (Toolbar) findViewById(R.id.action_bar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);

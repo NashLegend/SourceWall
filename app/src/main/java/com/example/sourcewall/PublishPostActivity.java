@@ -43,46 +43,42 @@ import java.util.ArrayList;
  *
  */
 public class PublishPostActivity extends SwipeActivity implements View.OnClickListener {
-    EditText titleEditText;
-    EditText tagEditText;
-    EditText bodyEditText;
-    ImageButton publishButton;
-    ImageButton imgButton;
-    ImageButton insertButton;
-    ImageButton linkButton;
-    Spinner spinner;
-    View uploadingProgress;
-    ProgressDialog progressDialog;
-    String tmpImagePath;
-    Toolbar toolbar;
-    SubItem subItem;
-    String group_id = "";
-    String group_name = "";
-    String csrf = "";
-    String topic = "";
-    ArrayList<BasicNameValuePair> topics = new ArrayList<>();
-    PrepareTask prepareTask;
-    boolean replyOK;
+    private EditText titleEditText;
+    private EditText tagEditText;
+    private EditText bodyEditText;
+    private ImageButton imgButton;
+    private ImageButton insertButton;
+    private Spinner spinner;
+    private View uploadingProgress;
+    private ProgressDialog progressDialog;
+    private String tmpImagePath;
+    private SubItem subItem;
+    private String group_id = "";
+    private String csrf = "";
+    private String topic = "";
+    private ArrayList<BasicNameValuePair> topics = new ArrayList<>();
+    private PrepareTask prepareTask;
+    private boolean replyOK;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_publish_post);
-        toolbar = (Toolbar) findViewById(R.id.action_bar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         titleEditText = (EditText) findViewById(R.id.text_post_title);
         tagEditText = (EditText) findViewById(R.id.text_question_tag);
         bodyEditText = (EditText) findViewById(R.id.text_post_body);
         spinner = (Spinner) findViewById(R.id.spinner_post_topic);
-        publishButton = (ImageButton) findViewById(R.id.btn_publish);
+        ImageButton publishButton = (ImageButton) findViewById(R.id.btn_publish);
         imgButton = (ImageButton) findViewById(R.id.btn_add_img);
         insertButton = (ImageButton) findViewById(R.id.btn_insert_img);
-        linkButton = (ImageButton) findViewById(R.id.btn_link);
+        ImageButton linkButton = (ImageButton) findViewById(R.id.btn_link);
         uploadingProgress = findViewById(R.id.prg_uploading_img);
         subItem = (SubItem) getIntent().getSerializableExtra(Consts.Extra_SubItem);
         if (subItem != null) {
             if (subItem.getSection() == SubItem.Section_Post) {
-                group_name = subItem.getName();
+                String group_name = subItem.getName();
                 group_id = subItem.getValue();
                 setTitle(group_name + " -- " + getString(R.string.title_activity_publish_post));
                 spinner.setVisibility(View.VISIBLE);

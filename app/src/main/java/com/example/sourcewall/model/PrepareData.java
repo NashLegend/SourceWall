@@ -10,8 +10,8 @@ import java.util.ArrayList;
  */
 public class PrepareData {
 
-    String csrf = "";
-    ArrayList<BasicNameValuePair> pairs = new ArrayList<>();
+    private String csrf = "";
+    private ArrayList<BasicNameValuePair> pairs = new ArrayList<>();
 
     public String getCsrf() {
         return csrf;
