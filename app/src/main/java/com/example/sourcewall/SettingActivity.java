@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -26,6 +27,7 @@ public class SettingActivity extends SwipeActivity implements View.OnClickListen
     TextView imageText;
     TextView logText;
     View tailsView;
+    ImageView tailArrow;
     EditText tailText;
     RadioButton buttonDefault;
     RadioButton buttonPhone;
@@ -45,6 +47,7 @@ public class SettingActivity extends SwipeActivity implements View.OnClickListen
         logText = (TextView) findViewById(R.id.text_log_in_out);
         tailsView = findViewById(R.id.layout_tails);
         tailText = (EditText) findViewById(R.id.text_tail);
+        tailArrow = (ImageView) findViewById(R.id.image_tail_arrow);
         buttonDefault = (RadioButton) findViewById(R.id.button_use_default);
         buttonPhone = (RadioButton) findViewById(R.id.button_use_phone);
         buttonCustom = (RadioButton) findViewById(R.id.button_use_custom);
@@ -153,8 +156,10 @@ public class SettingActivity extends SwipeActivity implements View.OnClickListen
         ViewGroup.LayoutParams params = tailsView.getLayoutParams();
         if (params.height > 0) {
             params.height = 0;
+            tailArrow.setRotation(0);
         } else {
             params.height = tailsHeight;
+            tailArrow.setRotation(-90);
         }
         tailsView.setLayoutParams(params);
     }
