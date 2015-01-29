@@ -37,7 +37,6 @@ public class ShuffleCardCandidate extends ShuffleCard {
 
     @Override
     public void getResident(final MovableButton button) {
-        // TODO 自动生成的方法存根
         setupAnimator(animateAfter(button.getPosition().y, button.getPosition().x, true));
         button.setSelected(false);
         addButtonAt(button, new Point(0, 0));

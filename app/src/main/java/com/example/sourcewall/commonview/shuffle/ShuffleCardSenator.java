@@ -192,7 +192,6 @@ public class ShuffleCardSenator extends ShuffleCard {
     }
 
     public void fulfill() {
-        //TODO
         targetHeight = desk.getHeight() - parentLayout.getHeight() + getHeight();
         changeSize(targetHeight);
     }

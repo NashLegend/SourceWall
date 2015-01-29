@@ -5,6 +5,7 @@ import com.example.sourcewall.R;
 import com.example.sourcewall.model.SubItem;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by NashLegend on 2015/1/9 0009
@@ -34,11 +35,8 @@ public class ChannelHelper {
                 new SubItem(SubItem.Section_Article, SubItem.Type_Single_Channel, "谣言粉碎机", "fact"),
                 new SubItem(SubItem.Section_Article, SubItem.Type_Single_Channel, "商业科技", "techb")
         };
-        //FIXME，暂时先无学科。
         ArrayList<SubItem> subItems = new ArrayList<SubItem>();
-        for (int i = 0; i < items.length; i++) {
-            subItems.add(items[i]);
-        }
+        Collections.addAll(subItems, items);
         return subItems;
     }
 
@@ -57,11 +55,8 @@ public class ChannelHelper {
                 new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, "情感夜夜话", "127"),
                 new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, "心事鉴定组", "33"),
         };
-        //FIXME，前十而已
         ArrayList<SubItem> subItems = new ArrayList<SubItem>();
-        for (int i = 0; i < items.length; i++) {
-            subItems.add(items[i]);
-        }
+        Collections.addAll(subItems, items);
         return subItems;
     }
 
@@ -86,9 +81,7 @@ public class ChannelHelper {
                 new SubItem(SubItem.Section_Question, SubItem.Type_Single_Channel, "计算机", "计算机"),
         };
         ArrayList<SubItem> subItems = new ArrayList<SubItem>();
-        for (int i = 0; i < items.length; i++) {
-            subItems.add(items[i]);
-        }
+        Collections.addAll(subItems, items);
         return subItems;
     }
 }

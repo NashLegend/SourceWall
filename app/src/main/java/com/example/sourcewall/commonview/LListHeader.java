@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.example.sourcewall.commonview.LListView.OnRefreshListener;
 import com.example.sourcewall.R;
+import com.example.sourcewall.commonview.LListView.OnRefreshListener;
 import com.example.sourcewall.util.DisplayUtil;
 
 public class LListHeader extends FrameLayout {
@@ -39,7 +39,7 @@ public class LListHeader extends FrameLayout {
         }
         if (currentState != LListView.State_Refreshing) {
             // 这时只有两种可能的状态State_Release_To_Refresh和State_Pull_To_Refresh
-            // TODO 或许可以做更多
+            // 或许可以做更多
             if (isVisible()) {
                 if (isOverReleaseThreshold()) {
                     currentState = LListView.State_Release_To_Refresh;
@@ -76,7 +76,7 @@ public class LListHeader extends FrameLayout {
 
     protected void handleUpOperation() {
         if (currentState == LListView.State_Release_To_Refresh) {
-            // TODO start refresh
+            // start refresh
             if (onRefreshListener != null) {
                 release2Refreshing();
             } else {
@@ -85,7 +85,6 @@ public class LListHeader extends FrameLayout {
         } else if (currentState == LListView.State_Pull_Down_To_Refresh) {
             pull2Normal();
         } else if (currentState == LListView.State_Refreshing) {
-            // TODO 这里的值应该是动画的正常高度，是在初始化时就确定的
             if (getHeight() > Release_Height) {
                 refreshing2Refreshing();
             }
@@ -134,7 +133,6 @@ public class LListHeader extends FrameLayout {
     }
 
     private void refreshing2Refreshing() {
-        //TODO
         animateToHeight(Refreshing_Height);
     }
 
@@ -180,14 +178,12 @@ public class LListHeader extends FrameLayout {
     }
 
     private boolean isOverReleaseThreshold() {
-        //这里需要在初始化的时候就确定这个Threshold，TODO
         return getHeight() > Release_Height;
     }
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right,
                             int bottom) {
-        // TODO Auto-generated method stub
         super.onLayout(changed, left, top, right, bottom);
         if (!layouted) {
             layouted = true;
@@ -227,7 +223,6 @@ public class LListHeader extends FrameLayout {
         }
         if (height < 1) {
             setVisibility(View.GONE);
-            //TODO
             ViewGroup.LayoutParams params = getLayoutParams();
             if (params != null) {
                 params.height = 1;

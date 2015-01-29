@@ -24,7 +24,7 @@ public class Post extends AceModel {
     private ArrayList<UComment> comments = new ArrayList<UComment>();
 
     public Post() {
-        // TODO Auto-generated constructor stub
+
     }
 
     public String getId() {

@@ -156,7 +156,6 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
 
     @Override
     public void onStartRefresh() {
-        //TODO
         headerView.getLayoutParams().height = 1;
         headerView.setVisibility(View.GONE);
         loadData(0);
@@ -164,7 +163,6 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
 
     @Override
     public void onStartLoadMore() {
-        //TODO
         loadData(currentPage + 1);
     }
 
@@ -214,7 +212,6 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
 
     @Override
     public void triggerRefresh() {
-        //TODO
         listView.startRefreshing();
     }
 

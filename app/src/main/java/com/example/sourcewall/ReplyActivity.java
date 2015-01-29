@@ -199,7 +199,6 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
      * 插入链接
      */
     private void insertLink() {
-        //TODO
         InputDialog.Builder builder = new InputDialog.Builder(this);
         builder.setTitle(R.string.input_link_url);
         builder.setCancelable(true);

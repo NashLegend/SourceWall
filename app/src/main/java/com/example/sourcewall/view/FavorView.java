@@ -101,7 +101,6 @@ public class FavorView extends FrameLayout implements View.OnClickListener {
     }
 
     private void openCreateBasketView() {
-        //TODO show view
         editLayout.setVisibility(VISIBLE);
         listLayout.setVisibility(GONE);
         if (categories == null) {
@@ -160,8 +159,7 @@ public class FavorView extends FrameLayout implements View.OnClickListener {
                 }
                 adapter.notifyDataSetChanged();
             } else {
-                //TODO fetch failed
-                ToastUtil.toast("Load Basket Failed");
+                ToastUtil.toast("加载果篮失败");
             }
             progressBaskets.setVisibility(INVISIBLE);
             listView.setVisibility(VISIBLE);
@@ -185,10 +183,8 @@ public class FavorView extends FrameLayout implements View.OnClickListener {
                 }
                 ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(), R.layout.simple_spinner_item, items);
                 spinner.setAdapter(arrayAdapter);
-                //TODO
             } else {
-                //TODO fetch failed
-                ToastUtil.toast("Load Category Failed");
+                ToastUtil.toast("加载目录失败");
             }
         }
     }
@@ -207,14 +203,13 @@ public class FavorView extends FrameLayout implements View.OnClickListener {
         @Override
         protected void onPostExecute(ResultObject resultObject) {
             if (resultObject.ok) {
-                ToastUtil.toast("Create OK");
+                ToastUtil.toast("创建成功");
                 Basket basket = (Basket) resultObject.result;
                 adapter.add(basket);
                 adapter.notifyDataSetChanged();
                 openBasketListView();
             } else {
-                ToastUtil.toast("Create Failed");
-                //TODO create failed
+                ToastUtil.toast("创建失败");
             }
         }
     }

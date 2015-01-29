@@ -359,7 +359,6 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         @Override
         protected void onPostExecute(ResultObject resultObject) {
             if (resultObject.ok) {
-                //TODO
                 if (bury) {
                     ToastUtil.toast("已标记为\"不是答案\"");
                     answer.setHasBuried(true);
@@ -384,7 +383,6 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         @Override
         protected void onPostExecute(ResultObject resultObject) {
             if (resultObject.ok) {
-                //TODO
                 ToastUtil.toast("感谢成功");
                 answer.setHasThanked(true);
             } else {

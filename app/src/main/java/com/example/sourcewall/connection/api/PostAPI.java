@@ -27,7 +27,7 @@ import java.util.ArrayList;
 public class PostAPI extends APIBase {
 
     public PostAPI() {
-        // TODO Auto-generated constructor stub
+
     }
 
     /**
@@ -175,7 +175,6 @@ public class PostAPI extends APIBase {
      * @return resultObject
      */
     public static ResultObject getMyGroupRecentRepliesPosts(int pageNo) {
-        //TODO
         String url = "http://m.guokr.com/group/user/recent_replies/?page=" + pageNo;
         return getMyGroupPostListFromMobileUrl(url);
     }
@@ -187,7 +186,6 @@ public class PostAPI extends APIBase {
      * @return resultObject
      */
     public static ResultObject getMyGroupHotPosts(int pageNo) {
-        //TODO
         String url = "http://m.guokr.com/group/user/hot_posts/?page=" + pageNo;
         return getMyGroupPostListFromMobileUrl(url);
     }
@@ -200,7 +198,6 @@ public class PostAPI extends APIBase {
      * @throws IOException
      */
     public static ResultObject getMyGroupRecentPosts(int pageNo) throws IOException, Exception {
-        //TODO
         ResultObject resultObject = new ResultObject();
         ArrayList<Post> list = new ArrayList<Post>();
         String url = "http://www.guokr.com/group/user/recent_posts/?page=" + pageNo;
@@ -337,7 +334,7 @@ public class PostAPI extends APIBase {
      * @param url 帖子地址
      */
     public static ResultObject getPostDetailByPostMobileUrl(String url) {
-        // 手机页面无法取得评论数，最好是从点击时带过来。TODO
+        // 手机页面无法取得评论数，最好是从点击时带过来。
         ResultObject resultObject = new ResultObject();
         try {
             Post detail = new Post();

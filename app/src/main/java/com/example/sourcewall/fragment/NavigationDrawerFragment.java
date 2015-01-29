@@ -390,7 +390,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     }
 
     /**
-     * 临时办法  FIXME
+     * 重新验证当前ChannelList是否是对的
      */
     private void checkChannelList() {
         ArrayList<SubItem> subItems = adapter.getSubLists().get(1);
@@ -450,7 +450,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
          * 应该在某处添加方法，在发现Token过期后将清空token，
          * 应该统一在HttpFetcher里面添加状态操作才对。TODO
          *
-         * @param resultObject
+         * @param resultObject 返回结果
          */
         @Override
         protected void onPostExecute(ResultObject resultObject) {

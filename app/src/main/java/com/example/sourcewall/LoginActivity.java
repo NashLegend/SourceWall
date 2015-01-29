@@ -38,7 +38,6 @@ public class LoginActivity extends SwipeActivity {
 
     private void parseRawCookie(String rawCookie) {
         String[] rawCookieParams = rawCookie.split(";");
-        //TODO check access_token valid
         for (int i = 1; i < rawCookieParams.length; i++) {
             String rawCookieParamNameAndValue[] = rawCookieParams[i].trim().split("=");
             if (rawCookieParamNameAndValue.length != 2) {

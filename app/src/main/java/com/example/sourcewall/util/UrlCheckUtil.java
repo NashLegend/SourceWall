@@ -22,8 +22,7 @@ public class UrlCheckUtil {
     /**
      * 是否拦截打开的链接
      *
-     * @param url
-     * @return
+     * @param url 要检查的链接
      */
     public static void redirectRequest(String url) {
         redirectRequest(Uri.parse(url));
@@ -32,11 +31,9 @@ public class UrlCheckUtil {
     /**
      * 是否拦截打开的链接
      *
-     * @param uri
-     * @return
+     * @param uri 要检查的链接
      */
     public static void redirectRequest(Uri uri) {
-        //TODO 可以在此接管链接的跳转
         String host = uri.getHost();
         List<String> segments = uri.getPathSegments();
         if ((host.equals("www.guokr.com") || host.equals("m.guokr.com")) && (segments != null && segments.size() == 2)) {

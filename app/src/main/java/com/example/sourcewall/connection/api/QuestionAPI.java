@@ -30,7 +30,7 @@ public class QuestionAPI extends APIBase {
     static String suffix = "</div></div>";
 
     public QuestionAPI() {
-        // TODO Auto-generated constructor stub
+
     }
 
     /**
@@ -78,7 +78,6 @@ public class QuestionAPI extends APIBase {
             }
             resultObject.ok = true;
             resultObject.result = subItems;
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -90,9 +89,9 @@ public class QuestionAPI extends APIBase {
      * 比html还特么浪费流量，垃圾数据太多了
      * resultObject.result是ArrayList[Question]
      *
-     * @param tag
-     * @param offset
-     * @return
+     * @param tag    标签名
+     * @param offset 从第几个开始加载
+     * @return ResultObject
      */
     public static ResultObject getQuestionsByTagFromJsonUrl(String tag, int offset) {
         ResultObject resultObject = new ResultObject();
@@ -136,8 +135,8 @@ public class QuestionAPI extends APIBase {
     /**
      * 返回热门回答问题列表，解析html获得
      *
-     * @param pageNo
-     * @return
+     * @param pageNo 页码
+     * @return ResultObject
      */
     public static ResultObject getHotQuestions(int pageNo) {
         String url = "http://m.guokr.com/ask/hottest/?page=" + pageNo;
@@ -148,7 +147,7 @@ public class QuestionAPI extends APIBase {
      * 返回精彩回答问题列表，解析html所得
      *
      * @param pageNo 页码
-     * @return
+     * @return ResultObject
      */
     public static ResultObject getHighlightQuestions(int pageNo) {
         String url = "http://m.guokr.com/ask/highlight/?page=" + pageNo;
@@ -158,8 +157,8 @@ public class QuestionAPI extends APIBase {
     /**
      * 解析html页面获得问题列表
      *
-     * @param url
-     * @return
+     * @param url 页面地址
+     * @return ResultObject
      */
     public static ResultObject getQuestionsFromMobileUrl(String url) {
         ResultObject resultObject = new ResultObject();
@@ -201,7 +200,7 @@ public class QuestionAPI extends APIBase {
      * 返回问题内容,json格式
      *
      * @param id 问题ID
-     * @return
+     * @return ResultObject
      */
     public static ResultObject getQuestionDetailByID(String id) {
         String url = "http://apis.guokr.com/ask/question/" + id + ".json";
@@ -213,7 +212,7 @@ public class QuestionAPI extends APIBase {
      * resultObject.result是Question
      *
      * @param url 返回问题内容,json格式
-     * @return
+     * @return ResultObject
      */
     public static ResultObject getQuestionDetailFromJsonUrl(String url) {
         ResultObject resultObject = new ResultObject();
@@ -250,11 +249,11 @@ public class QuestionAPI extends APIBase {
 
     /**
      * 获取问题的答案，json格式
-     * resultObject.result是ArrayList<QuestionAnswer>
+     * resultObject.result是ArrayList[QuestionAnswer]
      *
-     * @param id
-     * @param offset
-     * @return
+     * @param id     问题id
+     * @param offset 从第几个开始加载
+     * @return ResultObject
      */
     public static ResultObject getQuestionAnswers(String id, int offset) {
         ResultObject resultObject = new ResultObject();
@@ -304,8 +303,8 @@ public class QuestionAPI extends APIBase {
      * 返回第一页数据，包括Post与第一页的评论列表
      * resultObject.result是ArrayList<AceModel>
      *
-     * @param qQuestion
-     * @return
+     * @param qQuestion 问题对象，至少有一个id属性不为空
+     * @return ResultObject
      */
     public static ResultObject getQuestionFirstPage(Question qQuestion) {
         ResultObject resultObject = new ResultObject();
@@ -330,19 +329,19 @@ public class QuestionAPI extends APIBase {
      * 返回问题的评论，json格式
      * resultObject.result是ArrayList[UComment]
      *
-     * @param id
-     * @param offset
-     * @return
+     * @param id     问题id
+     * @param offset 从第几个开始加载
+     * @return ResultObject
      */
     public static ResultObject getQuestionComments(String id, int offset) {
         ResultObject resultObject = new ResultObject();
         try {
             ArrayList<UComment> list = new ArrayList<UComment>();
-            String url = "http://www.guokr.com/apis/ask/question_reply.json";//没有limit？
+            String url = "http://www.guokr.com/apis/ask/question_reply.json";
             ArrayList<NameValuePair> pairs = new ArrayList<>();
             pairs.add(new BasicNameValuePair("retrieve_type", "by_question"));
             pairs.add(new BasicNameValuePair("question_id", id));
-            //pairs.add(new BasicNameValuePair("limit", "20"));// TODO
+            pairs.add(new BasicNameValuePair("limit", "20"));
             pairs.add(new BasicNameValuePair("offset", offset + ""));
             String jString = HttpFetcher.get(url, pairs).toString();
             JSONArray comments = getUniversalJsonArray(jString, resultObject);
@@ -372,11 +371,11 @@ public class QuestionAPI extends APIBase {
 
     /**
      * 返回答案的评论，json格式
-     * resultObject.result是ArrayList<UComment>
+     * resultObject.result是ArrayList[UComment]
      *
-     * @param id
-     * @param offset
-     * @return
+     * @param id     答案id
+     * @param offset 从第几个开始加载
+     * @return ResultObject
      */
     public static ResultObject getAnswerComments(String id, int offset) {
         ResultObject resultObject = new ResultObject();
@@ -418,8 +417,8 @@ public class QuestionAPI extends APIBase {
     /**
      * 回答问题，使用json请求
      *
-     * @param id
-     * @param content
+     * @param id      问题id
+     * @param content 答案内容
      * @return ResultObject.result is the reply_id if ok;
      */
     public static ResultObject answerQuestion(String id, String content) {
@@ -445,8 +444,8 @@ public class QuestionAPI extends APIBase {
     /**
      * 支持答案
      *
-     * @param id
-     * @return
+     * @param id 答案id
+     * @return ResultObject
      */
     public static ResultObject supportAnswer(String id) {
         return supportOrOpposeAnswer(id, "support");
@@ -455,8 +454,8 @@ public class QuestionAPI extends APIBase {
     /**
      * 反对答案
      *
-     * @param id
-     * @return
+     * @param id 答案id
+     * @return ResultObject
      */
     public static ResultObject opposeAnswer(String id) {
         return supportOrOpposeAnswer(id, "oppose");
@@ -465,9 +464,9 @@ public class QuestionAPI extends APIBase {
     /**
      * 支持或者反对答案
      *
-     * @param id
-     * @param opinion
-     * @return
+     * @param id      答案id
+     * @param opinion 反对或者赞同，参数
+     * @return ResultObject
      */
     private static ResultObject supportOrOpposeAnswer(String id, String opinion) {
         String url = "http://www.guokr.com/apis/ask/answer_polling.json";
@@ -489,8 +488,8 @@ public class QuestionAPI extends APIBase {
     /**
      * 感谢答案
      *
-     * @param id
-     * @return
+     * @param id 答案id
+     * @return ResultObject
      */
     public static ResultObject thankAnswer(String id) {
         String url = "http://www.guokr.com/apis/ask/answer_thanking.json";
@@ -512,8 +511,8 @@ public class QuestionAPI extends APIBase {
     /**
      * 不是答案
      *
-     * @param id
-     * @return
+     * @param id 答案id
+     * @return ResultObject
      */
     public static ResultObject buryAnswer(String id) {
         String url = "http://www.guokr.com/apis/ask/answer_burying.json";
@@ -535,8 +534,8 @@ public class QuestionAPI extends APIBase {
     /**
      * 取消不是答案
      *
-     * @param id
-     * @return
+     * @param id 答案id
+     * @return ResultObject
      */
     public static ResultObject unBuryAnswer(String id) {
         String url = "http://www.guokr.com/apis/ask/answer_burying.json";
@@ -557,11 +556,11 @@ public class QuestionAPI extends APIBase {
     /**
      * 推荐问题
      *
-     * @param questionID
-     * @param title
-     * @param summary
-     * @param comment
-     * @return
+     * @param questionID 问题id
+     * @param title      问题标题
+     * @param summary    问题summary
+     * @param comment    推荐评语
+     * @return ResultObject
      */
     public static ResultObject recommendQuestion(String questionID, String title, String summary, String comment) {
         String url = "http://www.guokr.com/question/" + questionID + "/";
@@ -571,9 +570,9 @@ public class QuestionAPI extends APIBase {
     /**
      * 评论问题
      *
-     * @param questionID
-     * @param comment
-     * @return
+     * @param questionID 问题id
+     * @param comment    评论内容
+     * @return ResultObject
      */
     public static ResultObject commentOnQuestion(String questionID, String comment) {
         String url = "http://www.guokr.com/apis/ask/question_reply.json";
@@ -609,7 +608,7 @@ public class QuestionAPI extends APIBase {
      * 删除我的答案
      *
      * @param id 答案id
-     * @return
+     * @return ResultObject
      */
     public static ResultObject deleteMyComment(String id) {
         ResultObject resultObject = new ResultObject();
@@ -627,9 +626,9 @@ public class QuestionAPI extends APIBase {
     /**
      * 评论一个答案，resultObject.result 是一个UComment
      *
-     * @param answerID
-     * @param comment
-     * @return
+     * @param answerID 答案id
+     * @param comment  评论内容
+     * @return ResultObject
      */
     public static ResultObject commentOnAnswer(String answerID, String comment) {
         String url = "http://www.guokr.com/apis/ask/answer_reply.json";
@@ -665,7 +664,7 @@ public class QuestionAPI extends APIBase {
      * 获取提问所需的csrf_token
      * resultObject.result是PrepareData#csrf
      *
-     * @return
+     * @return ResultObject
      */
     public static ResultObject getQuestionPrepareData() {
         ResultObject resultObject = new ResultObject();
@@ -690,11 +689,11 @@ public class QuestionAPI extends APIBase {
      * 提问，卧槽Cookie里面还需要两个值，给跪了_32382_access_token和_32382_ukey=5p6t9t
      * 由https://www.guokr.com/sso/ask/提供，妈蛋先不搞提问了
      *
-     * @param csrf
-     * @param question
-     * @param annotation
-     * @param tags
-     * @return
+     * @param csrf       csrf
+     * @param question   标题
+     * @param annotation 补充
+     * @param tags       标签
+     * @return ResultObject
      * @deprecated
      */
     public static ResultObject publishQuestion(String csrf, String question, String annotation, String[] tags) {
@@ -713,8 +712,8 @@ public class QuestionAPI extends APIBase {
             pairs.add(new BasicNameValuePair("csrf_token", csrf));
             pairs.add(new BasicNameValuePair("question", question));
             pairs.add(new BasicNameValuePair("annotation", htmlDesc));
-            for (int i = 0; i < tags.length; i++) {
-                String tag = tags[i].trim();
+            for (String tag1 : tags) {
+                String tag = tag1.trim();
                 if (!TextUtils.isEmpty(tag)) {
                     pairs.add(new BasicNameValuePair("tags", tag));
                 }
@@ -735,8 +734,8 @@ public class QuestionAPI extends APIBase {
     /**
      * 解析页面结果，看看是不是发表成功了
      *
-     * @param res
-     * @return
+     * @param res 发表问题返回的结果
+     * @return 是否成功
      */
     private static boolean testPublishResult(String res) {
         try {

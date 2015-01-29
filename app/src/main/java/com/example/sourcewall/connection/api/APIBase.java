@@ -40,7 +40,7 @@ import java.io.IOException;
 public class APIBase {
 
     public APIBase() {
-        // TODO Auto-generated constructor stub
+
     }
 
     /**
@@ -163,8 +163,8 @@ public class APIBase {
     /**
      * 使用github的接口转换markdown为html
      *
-     * @param text
-     * @return
+     * @param text 要转换的文本内容
+     * @return ResultObject
      */
     public static ResultObject parseMarkdownByGitHub(String text) {
 
@@ -194,13 +194,10 @@ public class APIBase {
                     resultObject.ok = true;
                     resultObject.result = result;
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-
         return resultObject;
     }
 
@@ -213,11 +210,7 @@ public class APIBase {
     }
 
     public static boolean getJsonBoolean(JSONObject jsonObject, String key) throws JSONException {
-        if ((jsonObject.has(key)) && (!jsonObject.isNull(key))) {
-            return jsonObject.getBoolean(key);
-        } else {
-            return false;
-        }
+        return (jsonObject.has(key)) && (!jsonObject.isNull(key)) && jsonObject.getBoolean(key);
     }
 
     public static String getJsonString(JSONObject jsonObject, String key) throws JSONException {
@@ -248,8 +241,8 @@ public class APIBase {
      * 果壳json返回的格式是固定的，这个可以先判断是否成功并剥离出有用信息。
      * 这里还可以做一些token过期失败问题的处理，省得在每个地方都判断了。
      *
-     * @param json
-     * @return
+     * @param json 要进行json解析的文本内容
+     * @return JSONObject
      * @throws JSONException
      */
     public static JSONObject getUniversalJsonObject(String json, ResultObject resultObject) throws JSONException {
@@ -267,8 +260,8 @@ public class APIBase {
      * 果壳json返回的格式是固定的，这个可以先判断是否成功并剥离出有用信息。
      * 这里还可以做一些token过期失败问题的处理，省得在每个地方都判断了。
      *
-     * @param json
-     * @return
+     * @param json 要进行json解析的文本内容
+     * @return JSONArray
      * @throws JSONException
      */
     public static JSONArray getUniversalJsonArray(String json, ResultObject resultObject) throws JSONException {
@@ -286,8 +279,8 @@ public class APIBase {
      * 果壳json返回的格式是固定的，这个可以先判断是否成功并剥离出有用信息。
      * 这里还可以做一些token过期失败问题的处理，省得在每个地方都判断了。
      *
-     * @param json
-     * @return
+     * @param json 要进行json解析的文本内容
+     * @return 是否为true
      * @throws JSONException
      */
     public static boolean getUniversalJsonSimpleBoolean(String json, ResultObject resultObject) throws JSONException {
@@ -303,8 +296,7 @@ public class APIBase {
 
     public static void handleBadJson(JSONObject object, ResultObject resultObject) throws JSONException {
         int error_code = getJsonInt(object, "error_code");
-        String error_msg = getJsonString(object, "error");
-        resultObject.message = error_msg;
+        resultObject.message = getJsonString(object, "error");
         switch (error_code) {
             case 200004:
                 resultObject.code = ResultObject.ResultCode.CODE_TOKEN_INVALID;
@@ -319,14 +311,13 @@ public class APIBase {
         }
         //String invalidToken = " {\"error_code\": 200004, \"request_uri\": \"/apis/community/rn_num.json?_=1422011885139&access_token=51096037c7aa15ccd08c12c3fba8f856ae65d672cda50f25cec883343f3597a6\", \"ok\": false, \"error\": \"Illegal access token.\"}\n";
         //String alreadyLiked = "{\"error_code\": 240004, \"request_uri\": \"/apis/group/post_reply_liking.json\", \"ok\": false, \"error\": \"You have already liked this reply!\"}";
-
     }
 
     /**
      * 将时间转换成可见的。话说果壳返回的时间格式是什么标准
      *
-     * @param dateString
-     * @return
+     * @param dateString 传入的时间字符串
+     * @return 解析后的时间 yyyy-mm-dd hh:mm:ss
      */
     public static String parseDate(String dateString) {
         return dateString.replace("T", " ").replaceAll("[\\+\\.]\\S+$", "");

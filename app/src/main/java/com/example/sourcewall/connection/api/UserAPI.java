@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import com.example.sourcewall.connection.HttpFetcher;
 import com.example.sourcewall.connection.ResultObject;
+import com.example.sourcewall.db.AskTagHelper;
 import com.example.sourcewall.db.GroupHelper;
 import com.example.sourcewall.model.Basket;
 import com.example.sourcewall.model.Category;
@@ -50,8 +51,8 @@ public class UserAPI extends APIBase {
     /**
      * 通过用户的ukey获取用户的详细信息
      *
-     * @param ukey
-     * @return
+     * @param ukey 用户ukey
+     * @return ResultObject
      */
     public static ResultObject getUserInfoByUkey(String ukey) {
         ResultObject resultObject = new ResultObject();
@@ -82,8 +83,8 @@ public class UserAPI extends APIBase {
     /**
      * 通过用户id获取用户信息
      *
-     * @param id
-     * @return
+     * @param id 用户id
+     * @return ResultObject
      */
     public static ResultObject getUserInfoByID(String id) {
         return getUserInfoByUkey(base36Encode(Long.valueOf(id)));
@@ -91,9 +92,8 @@ public class UserAPI extends APIBase {
 
     /**
      * 通过获取消息提醒的方式测试是否登录或者登录是否有效
-     * 但是过期token是啥样子的还没见过…………
      *
-     * @return
+     * @return ResultObject
      */
     public static ResultObject testLogin() {
         ResultObject resultObject = new ResultObject();
@@ -120,7 +120,6 @@ public class UserAPI extends APIBase {
             if (getJsonBoolean(object, "ok")) {
                 resultObject.ok = true;
             } else {
-                //String invalidToken = " {\"error_code\": 200004, \"request_uri\": \"/apis/community/rn_num.json?_=1422011885139&access_token=51096037c7aa15ccd08c12c3fba8f856ae65d672cda50f25cec883343f3597a6\", \"ok\": false, \"error\": \"Illegal access token.\"}\n";
                 if (getJsonInt(object, "error_code") == 200004) {
                     resultObject.code = ResultObject.ResultCode.CODE_TOKEN_INVALID;
                 } else {
@@ -143,10 +142,10 @@ public class UserAPI extends APIBase {
     /**
      * 收藏一个链接，理论是任意链接都行，吧……
      *
-     * @param link
-     * @param title
-     * @param basketID
-     * @return
+     * @param link     链接地址
+     * @param title    链接标题
+     * @param basketID 收藏果篮的id
+     * @return ResultObject
      */
     public static ResultObject favorLink(String link, String title, String basketID) {
         ResultObject resultObject = new ResultObject();
@@ -160,10 +159,6 @@ public class UserAPI extends APIBase {
             if (getUniversalJsonSimpleBoolean(result, resultObject)) {
                 resultObject.ok = true;
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -173,11 +168,11 @@ public class UserAPI extends APIBase {
     /**
      * 推荐一个链接
      *
-     * @param link
-     * @param title
-     * @param summary
-     * @param comment
-     * @return
+     * @param link    链接地址
+     * @param title   链接标题
+     * @param summary 内容概述
+     * @param comment 评语
+     * @return ResultObject
      */
     public static ResultObject recommendLink(String link, String title, String summary, String comment) {
         String url = "http://www.guokr.com/apis/community/user/recommend.json";
@@ -196,10 +191,6 @@ public class UserAPI extends APIBase {
             if (getUniversalJsonSimpleBoolean(result, resultObject)) {
                 resultObject.ok = true;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -209,7 +200,7 @@ public class UserAPI extends APIBase {
     /**
      * 获取用户的果篮信息
      *
-     * @return ResultObject.result is ArrayList<Basket>
+     * @return ResultObject.result is ArrayList[Basket]
      */
     public static ResultObject getBaskets() {
         ResultObject resultObject = new ResultObject();
@@ -242,10 +233,6 @@ public class UserAPI extends APIBase {
                 resultObject.result = baskets;
                 myBaskets = baskets;
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -255,9 +242,9 @@ public class UserAPI extends APIBase {
     /**
      * 创建一个果篮
      *
-     * @param title
-     * @param introduction
-     * @param category_id
+     * @param title        果篮名
+     * @param introduction 果篮介绍
+     * @param category_id  category
      * @return ResultObject.result is Basket
      */
     public static ResultObject createBasket(String title, String introduction, String category_id) {
@@ -286,10 +273,6 @@ public class UserAPI extends APIBase {
                 myBaskets.add(basket);
 
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -299,7 +282,7 @@ public class UserAPI extends APIBase {
     /**
      * 获取分类 ，创建果篮有关
      *
-     * @return
+     * @return ResultObject
      */
     public static ResultObject getCategoryList() {
         ResultObject resultObject = new ResultObject();
@@ -320,10 +303,6 @@ public class UserAPI extends APIBase {
                 resultObject.ok = true;
                 resultObject.result = categories;
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -340,6 +319,7 @@ public class UserAPI extends APIBase {
         SharedUtil.remove(Consts.Key_User_ID);
         SharedUtil.remove(Consts.Key_User_Name);
         GroupHelper.clearAllMyGroups();
+        AskTagHelper.clearAllMyTags();
         HttpFetcher.getDefaultHttpClient().getCookieStore().clear();
         HttpFetcher.getDefaultUploadHttpClient().getCookieStore().clear();
     }
@@ -347,7 +327,7 @@ public class UserAPI extends APIBase {
     /**
      * 获取保存的用户token
      *
-     * @return
+     * @return 用户token，正确的话，64位长度
      */
     public static String getToken() {
         return SharedUtil.readString(Consts.Key_Access_Token, "");
@@ -356,25 +336,25 @@ public class UserAPI extends APIBase {
     /**
      * 获取保存的用户ukey
      *
-     * @return
+     * @return 用户ukey，6位长度
      */
     public static String getUkey() {
         return SharedUtil.readString(Consts.Key_Ukey, "");
     }
 
     /**
-     * 获取保存的用户ukey
+     * 获取保存的用户id
      *
-     * @return
+     * @return 用户id，一串数字
      */
     public static String getUserID() {
         return SharedUtil.readString(Consts.Key_User_ID, "");
     }
 
     /**
-     * 获取保存的用户ukey
+     * 获取保存的用户头像地址
      *
-     * @return
+     * @return 头像地址为http链接
      */
     public static String getUserAvatar() {
         return SharedUtil.readString(Consts.Key_User_Avatar, "");
@@ -383,7 +363,7 @@ public class UserAPI extends APIBase {
     /**
      * 获取保存的用户cookie
      *
-     * @return
+     * @return 用户登录时保存下来的cookie，未使用
      */
     public static String getCookie() {
         return SharedUtil.readString(Consts.Key_Cookie, "");
@@ -392,7 +372,7 @@ public class UserAPI extends APIBase {
     /**
      * 获取保存的用户cookie
      *
-     * @return
+     * @return 生成一个简单的cookie
      */
     public static String getSimpleCookie() {
         return "_32353_access_token=" + getToken() + "; _32353_ukey=" + getUkey() + ";";

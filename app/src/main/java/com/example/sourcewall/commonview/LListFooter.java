@@ -24,7 +24,6 @@ public class LListFooter extends FrameLayout {
     private int Release_Height = 300;
     private boolean layouted = false;
 
-    //TODO 删掉，改成自动加载
     public LListFooter(Context context, LListView listView) {
         super(context);
         this.listView = listView;
@@ -41,7 +40,7 @@ public class LListFooter extends FrameLayout {
             return false;
         }
         if (currentState != LListView.State_Loading_More) {
-            // TODO 或许可以做更多
+            // 或许可以做更多
             if (isVisible()) {
                 if (isOverReleaseThreshold()) {
                     currentState = LListView.State_Release_To_Load_More;
@@ -76,7 +75,7 @@ public class LListFooter extends FrameLayout {
 
     protected void handleUpOperation() {
         if (currentState == LListView.State_Release_To_Load_More) {
-            // TODO start loading more
+            // start loading more
             if (onRefreshListener != null) {
                 release2Loading();
             } else {
@@ -85,7 +84,6 @@ public class LListFooter extends FrameLayout {
         } else if (currentState == LListView.State_Pull_Up_To_Load_More) {
             pull2Normal();
         } else if (currentState == LListView.State_Loading_More) {
-            // TODO 这里的值应该是动画的正常高度，是在初始化时就确定的
             if (getActualHeight() > Release_Height) {
                 loading2Loading();
             }
@@ -181,14 +179,12 @@ public class LListFooter extends FrameLayout {
     }
 
     private boolean isOverReleaseThreshold() {
-        //这里需要在初始化的时候就确定这个Threshold，TODO
         return getActualHeight() > Release_Height;
     }
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right,
                             int bottom) {
-        // TODO Auto-generated method stub
         super.onLayout(changed, left, top, right, bottom);
         if (!layouted) {
             layouted = true;
