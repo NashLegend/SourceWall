@@ -618,6 +618,24 @@ public class QuestionAPI extends APIBase {
     }
 
     /**
+     * 删除我的答案
+     * @param id 答案id
+     * @return
+     */
+    public static ResultObject deleteMyComment(String id) {
+        ResultObject resultObject = new ResultObject();
+        String url = "http://www.guokr.com/apis/ask/answer/" + id + ".json";
+        ArrayList<NameValuePair> pairs = new ArrayList<>();
+        try {
+            String result = HttpFetcher.delete(url, pairs).toString();
+            resultObject.ok = getUniversalJsonSimpleBoolean(result, resultObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resultObject;
+    }
+
+    /**
      * 评论一个答案，resultObject.result 是一个UComment
      *
      * @param answerID

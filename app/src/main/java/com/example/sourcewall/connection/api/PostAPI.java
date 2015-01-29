@@ -34,6 +34,46 @@ public class PostAPI extends APIBase {
     }
 
     /**
+     * 加入小组
+     *
+     * @param id 小组id
+     * @return
+     */
+    public static ResultObject joinGroup(String id) {
+        ResultObject resultObject = new ResultObject();
+        String url = "http://www.guokr.com/apis/group/member.json";
+        ArrayList<NameValuePair> pairs = new ArrayList<>();
+        pairs.add(new BasicNameValuePair("group_id", id));
+        try {
+            String result = HttpFetcher.post(url, pairs).toString();
+            resultObject.ok = getUniversalJsonSimpleBoolean(result, resultObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resultObject;
+    }
+
+    /**
+     * 退出小组
+     *
+     * @param id 小组id
+     * @return
+     */
+    public static ResultObject quitGroup(String id) {
+        ResultObject resultObject = new ResultObject();
+        String url = "http://www.guokr.com/apis/group/member.json";
+        ArrayList<NameValuePair> pairs = new ArrayList<>();
+        pairs.add(new BasicNameValuePair("group_id", id));
+        try {
+            String result = HttpFetcher.delete(url, pairs).toString();
+            resultObject.ok = getUniversalJsonSimpleBoolean(result, resultObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resultObject;
+    }
+
+    /**
      * 返回所有我加入的小组
      *
      * @return ResultObject，resultObject.result是ArrayList[SubItem]
@@ -558,6 +598,27 @@ public class PostAPI extends APIBase {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resultObject;
+    }
+
+    /**
+     * 删除我的评论
+     *
+     * @param id 评论id
+     * @return
+     */
+    public static ResultObject deleteMyComment(String id) {
+        ResultObject resultObject = new ResultObject();
+        String url = "http://www.guokr.com/apis/group/post_reply.json";
+        ArrayList<NameValuePair> pairs = new ArrayList<>();
+        pairs.add(new BasicNameValuePair("reply_id", id));
+        pairs.add(new BasicNameValuePair("reason", id));
+        try {
+            String result = HttpFetcher.delete(url, pairs).toString();
+            resultObject.ok = getUniversalJsonSimpleBoolean(result, resultObject);
         } catch (Exception e) {
             e.printStackTrace();
         }

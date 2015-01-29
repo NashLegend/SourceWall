@@ -370,6 +370,25 @@ public class ArticleAPI extends APIBase {
     }
 
     /**
+     * 删除我的评论
+     * @param id 评论id
+     * @return
+     */
+    public static ResultObject deleteMyComment(String id) {
+        ResultObject resultObject = new ResultObject();
+        String url = "http://www.guokr.com/apis/minisite/article_reply.json";
+        ArrayList<NameValuePair> pairs = new ArrayList<>();
+        pairs.add(new BasicNameValuePair("reply_id", id));
+        try {
+            String result = HttpFetcher.delete(url, pairs).toString();
+            resultObject.ok = getUniversalJsonSimpleBoolean(result, resultObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resultObject;
+    }
+
+    /**
      * 使用json请求回复文章
      *
      * @param id
@@ -430,5 +449,4 @@ public class ArticleAPI extends APIBase {
         }
         return resultObject;
     }
-
 }
