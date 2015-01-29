@@ -13,7 +13,6 @@ import com.example.sourcewall.util.Config;
 import com.example.sourcewall.util.MDUtil;
 
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -660,8 +659,10 @@ public class PostAPI extends APIBase {
         ResultObject resultObject = new ResultObject();
         try {
             String url = "http://www.guokr.com/group/" + group_id + "/post/edit/";
-            String html = HttpFetcher.get(url).toString();
-            HttpClient client = HttpFetcher.getDefaultHttpClient();
+            ResultObject response = HttpFetcher.get(url);
+            int code = response.statusCode;
+            resultObject.statusCode = code;
+            String html = response.toString();
             Document doc = Jsoup.parse(html);
             Element selects = doc.getElementById("topic");
             ArrayList<BasicNameValuePair> pairs = new ArrayList<>();

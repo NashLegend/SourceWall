@@ -436,7 +436,11 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
                 PrepareData prepareData = (PrepareData) resultObject.result;
                 onReceivePreparedData(prepareData);
             } else {
-                ToastUtil.toast("Prepare Failed");
+                if (resultObject.statusCode == 403) {
+                    ToastUtil.toast("尚未加入该小组");//TODO
+                } else {
+                    ToastUtil.toast("Prepare Failed");
+                }
             }
         }
     }

@@ -23,6 +23,7 @@ public class ResultObject {
         CODE_JSON_ERROR,
         CODE_ALREADY_LIKED,
         CODE_UNKNOWN,
-        CODE_NO_TOKEN
+        CODE_NO_TOKEN,
+        CODE_FORBIDDEN,
     }
 }
