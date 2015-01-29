@@ -32,6 +32,7 @@ public class Consts {
     public static final String Key_User_Avatar = "sourcewall.key.user.avatar";
     public static final String Key_Is_Night_Mode = "sourcewall.key.is.night.mode";
     public static final String Key_Last_Post_Groups_Version = "sourcewall.key.last.post.groups.version";
+    public static final String Key_Last_Ask_Tags_Version = "sourcewall.key.last.ask.tag.groups.version";
     public static final String Key_Image_Load_Mode = "sourcewall.key.image.load.mode";
     public static final String key_Use_Tail_Type = "sourcewall.key.use.tail.type";
     public static final String key_Custom_Tail = "sourcewall.key.custom.tail";

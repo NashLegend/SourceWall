@@ -354,7 +354,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
                 adapter.remove(comment);
                 adapter.notifyDataSetChanged();
             } else {
-                ToastUtil.toastSingleton("删除失败~");
+                ToastUtil.toastSingleton(getString(R.string.delete_failed));
             }
         }
     }

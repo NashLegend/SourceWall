@@ -8,6 +8,7 @@ import com.example.sourcewall.model.AceModel;
 import com.example.sourcewall.model.PrepareData;
 import com.example.sourcewall.model.Question;
 import com.example.sourcewall.model.QuestionAnswer;
+import com.example.sourcewall.model.SubItem;
 import com.example.sourcewall.model.UComment;
 import com.example.sourcewall.util.Config;
 import com.example.sourcewall.util.MDUtil;
@@ -15,14 +16,12 @@ import com.example.sourcewall.util.MDUtil;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class QuestionAPI extends APIBase {
@@ -41,19 +40,60 @@ public class QuestionAPI extends APIBase {
      */
     public static ResultObject getAllMyTags() {
         ResultObject resultObject = new ResultObject();
+        String pageUrl = "http://www.guokr.com/ask/i/" + UserAPI.getUserID() + "/following_tags/";
+        ArrayList<SubItem> subItems = new ArrayList<>();
+        int numPages;
+        try {
+            String firstPage = HttpFetcher.get(pageUrl).toString();
+            Document doc1 = Jsoup.parse(firstPage);
+            Elements as = doc1.getElementsByClass("gpages");
+            if (as.size() == 0) {
+                numPages = 1;
+            } else {
+                numPages = Integer.valueOf(as.get(0).getElementsByTag("a").last().attr("href").replaceAll("^\\S+?page=", ""));
+            }
+            Elements lis = doc1.getElementsByClass("join-list").get(0).getElementsByTag("li");
+            //第一页
+            for (int i = 0; i < lis.size(); i++) {
+                Element element = lis.get(i).getElementsByClass("join-list-desc").get(0);
+                String groupName = element.getElementsByTag("a").text();
+                SubItem subItem = new SubItem(SubItem.Section_Question, SubItem.Type_Single_Channel, groupName, "");
+                subItems.add(subItem);
+                System.out.println(groupName);
+            }
+            if (numPages > 1) {
+                for (int j = 2; j <= numPages; j++) {
+                    Thread.sleep(100);
+                    String url = pageUrl + "?page=" + j;
+                    Document pageDoc = Jsoup.parse(HttpFetcher.get(url).toString());
+                    Elements liss = pageDoc.getElementsByClass("join-list").get(0).getElementsByTag("li");
+                    //第一页
+                    for (int i = 0; i < liss.size(); i++) {
+                        Element element = liss.get(i).getElementsByClass("join-list-desc").get(0);
+                        String groupName = element.getElementsByTag("a").text();
+                        SubItem subItem = new SubItem(SubItem.Section_Question, SubItem.Type_Single_Channel, groupName, "");
+                        subItems.add(subItem);
+                        System.out.println(groupName);
+                    }
+                }
+            }
+            resultObject.ok = true;
+            resultObject.result = subItems;
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return resultObject;
     }
 
     /**
      * 根据tag获取相关问题，json格式
      * 比html还特么浪费流量，垃圾数据太多了
-     * resultObject.result是ArrayList<Question>
+     * resultObject.result是ArrayList[Question]
      *
      * @param tag
      * @param offset
      * @return
-     * @throws IOException
      */
     public static ResultObject getQuestionsByTagFromJsonUrl(String tag, int offset) {
         ResultObject resultObject = new ResultObject();
@@ -88,10 +128,6 @@ public class QuestionAPI extends APIBase {
                 resultObject.ok = true;
                 resultObject.result = questions;
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -103,7 +139,6 @@ public class QuestionAPI extends APIBase {
      *
      * @param pageNo
      * @return
-     * @throws IOException
      */
     public static ResultObject getHotQuestions(int pageNo) {
         String url = "http://m.guokr.com/ask/hottest/?page=" + pageNo;
@@ -115,7 +150,6 @@ public class QuestionAPI extends APIBase {
      *
      * @param pageNo 页码
      * @return
-     * @throws IOException
      */
     public static ResultObject getHighlightQuestions(int pageNo) {
         String url = "http://m.guokr.com/ask/highlight/?page=" + pageNo;
@@ -127,7 +161,6 @@ public class QuestionAPI extends APIBase {
      *
      * @param url
      * @return
-     * @throws IOException
      */
     public static ResultObject getQuestionsFromMobileUrl(String url) {
         ResultObject resultObject = new ResultObject();
@@ -158,8 +191,6 @@ public class QuestionAPI extends APIBase {
                 resultObject.ok = true;
                 resultObject.result = questions;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -172,8 +203,6 @@ public class QuestionAPI extends APIBase {
      *
      * @param id 问题ID
      * @return
-     * @throws IOException
-     * @throws JSONException
      */
     public static ResultObject getQuestionDetailByID(String id) {
         String url = "http://apis.guokr.com/ask/question/" + id + ".json";
@@ -186,8 +215,6 @@ public class QuestionAPI extends APIBase {
      *
      * @param url 返回问题内容,json格式
      * @return
-     * @throws IOException
-     * @throws JSONException
      */
     public static ResultObject getQuestionDetailFromJsonUrl(String url) {
         ResultObject resultObject = new ResultObject();
@@ -215,10 +242,6 @@ public class QuestionAPI extends APIBase {
                 resultObject.ok = true;
                 resultObject.result = question;
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -233,7 +256,6 @@ public class QuestionAPI extends APIBase {
      * @param id
      * @param offset
      * @return
-     * @throws IOException
      */
     public static ResultObject getQuestionAnswers(String id, int offset) {
         ResultObject resultObject = new ResultObject();
@@ -273,10 +295,6 @@ public class QuestionAPI extends APIBase {
                 resultObject.ok = true;
                 resultObject.result = answers;
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -311,7 +329,7 @@ public class QuestionAPI extends APIBase {
 
     /**
      * 返回问题的评论，json格式
-     * resultObject.result是ArrayList<UComment>
+     * resultObject.result是ArrayList[UComment]
      *
      * @param id
      * @param offset
@@ -347,10 +365,6 @@ public class QuestionAPI extends APIBase {
                 resultObject.ok = true;
                 resultObject.result = list;
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -364,7 +378,6 @@ public class QuestionAPI extends APIBase {
      * @param id
      * @param offset
      * @return
-     * @throws IOException
      */
     public static ResultObject getAnswerComments(String id, int offset) {
         ResultObject resultObject = new ResultObject();
@@ -396,10 +409,6 @@ public class QuestionAPI extends APIBase {
                 resultObject.ok = true;
                 resultObject.result = list;
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -428,10 +437,6 @@ public class QuestionAPI extends APIBase {
                 resultObject.ok = true;
                 resultObject.result = replyID;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -476,10 +481,6 @@ public class QuestionAPI extends APIBase {
             if (getUniversalJsonSimpleBoolean(result, resultObject)) {
                 resultObject.ok = true;
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -503,10 +504,6 @@ public class QuestionAPI extends APIBase {
             if (getUniversalJsonSimpleBoolean(result, resultObject)) {
                 resultObject.ok = true;
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -530,10 +527,6 @@ public class QuestionAPI extends APIBase {
             if (getUniversalJsonSimpleBoolean(result, resultObject)) {
                 resultObject.ok = true;
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -556,8 +549,6 @@ public class QuestionAPI extends APIBase {
             if (getUniversalJsonSimpleBoolean(result, resultObject)) {
                 resultObject.ok = true;
             }
-        } catch (JSONException | IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -609,8 +600,6 @@ public class QuestionAPI extends APIBase {
                 resultObject.ok = true;
                 resultObject.result = uComment;
             }
-        } catch (JSONException | IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -619,6 +608,7 @@ public class QuestionAPI extends APIBase {
 
     /**
      * 删除我的答案
+     *
      * @param id 答案id
      * @return
      */
@@ -666,8 +656,6 @@ public class QuestionAPI extends APIBase {
                 resultObject.ok = true;
                 resultObject.result = uComment;
             }
-        } catch (JSONException | IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -693,8 +681,6 @@ public class QuestionAPI extends APIBase {
                 resultObject.ok = true;
                 resultObject.result = prepareData;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -741,8 +727,6 @@ public class QuestionAPI extends APIBase {
                 resultObject.ok = true;
                 resultObject.result = result.toString();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }

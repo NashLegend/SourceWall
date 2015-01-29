@@ -133,5 +133,10 @@
     <string name="use_custom_tail">自定义尾巴</string>
     <string name="unknown_phone">不明手机</string>
     <string name="reload_csrf_token">重新验证</string>
+    <string name="delete_failed">删除失败~</string>
+    <string name="get_csrf_ok">验证成功</string>
+    <string name="have_not_join_this_group">尚未加入该小组~</string>
+    <string name="get_csrf_failed">拉取验证失败</string>
+    <string name="hint_reload_csrf">拉取验证失败，请点击右上角重新加载验证~</string>
 
 </resources>

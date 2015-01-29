@@ -15,7 +15,6 @@ import com.example.sourcewall.util.MDUtil;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -24,7 +23,6 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class PostAPI extends APIBase {
 
@@ -36,7 +34,7 @@ public class PostAPI extends APIBase {
      * 加入小组
      *
      * @param id 小组id
-     * @return
+     * @return resultObject
      */
     public static ResultObject joinGroup(String id) {
         ResultObject resultObject = new ResultObject();
@@ -56,7 +54,7 @@ public class PostAPI extends APIBase {
      * 退出小组
      *
      * @param id 小组id
-     * @return
+     * @return resultObject
      */
     public static ResultObject quitGroup(String id) {
         ResultObject resultObject = new ResultObject();
@@ -126,9 +124,8 @@ public class PostAPI extends APIBase {
      * 解析getMyGroupRecentRepliesPosts和getMyGroupHotPosts传过来的url
      * resultObject.result是ArrayList[Post] list
      *
-     * @param url
-     * @return
-     * @throws IOException
+     * @param url 请求地址
+     * @return resultObject
      */
     private static ResultObject getMyGroupPostListFromMobileUrl(String url) {
         ResultObject resultObject = new ResultObject();
@@ -139,16 +136,15 @@ public class PostAPI extends APIBase {
             Elements elements = doc.getElementsByClass("post-list");
             if (elements.size() == 1) {
                 Elements postlist = elements.get(0).getElementsByTag("li");
-                for (Iterator<Element> iterator = postlist.iterator(); iterator.hasNext(); ) {
+                for (Element aPostlist : postlist) {
                     Post item = new Post();
-                    Element element = iterator.next();
-                    Element link = element.getElementsByClass("post").get(0);
+                    Element link = aPostlist.getElementsByClass("post").get(0);
                     String postTitle = link.getElementsByTag("h4").get(0).text();
                     String postUrl = link.attr("href");
                     String postImageUrl = "";
                     String postAuthor = "";//没有Author名……
-                    String postGroup = element.getElementsByClass("post-author").get(0).text();//没错，post-author是小组名……
-                    Elements children = element.getElementsByClass("post-info-right").get(0).children();
+                    String postGroup = aPostlist.getElementsByClass("post-author").get(0).text();//没错，post-author是小组名……
+                    Elements children = aPostlist.getElementsByClass("post-info-right").get(0).children();
                     int postLike = Integer.valueOf(children.get(0).text().replaceAll("\\D*", ""));
                     int postComm = Integer.valueOf(children.get(1).text().replaceAll("\\D*", ""));
                     item.setTitle(postTitle);
@@ -165,8 +161,6 @@ public class PostAPI extends APIBase {
                 resultObject.ok = true;
                 resultObject.result = list;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -177,9 +171,8 @@ public class PostAPI extends APIBase {
     /**
      * 返回《我的小组》最新回复的主题列表，解析html获得
      *
-     * @param pageNo
-     * @return
-     * @throws IOException
+     * @param pageNo 页码
+     * @return resultObject
      */
     public static ResultObject getMyGroupRecentRepliesPosts(int pageNo) {
         //TODO
@@ -190,9 +183,8 @@ public class PostAPI extends APIBase {
     /**
      * 返回《我的小组》热门主题列表，解析html获得
      *
-     * @param pageNo
-     * @return
-     * @throws IOException
+     * @param pageNo 页码
+     * @return resultObject
      */
     public static ResultObject getMyGroupHotPosts(int pageNo) {
         //TODO
@@ -203,8 +195,8 @@ public class PostAPI extends APIBase {
     /**
      * 返回《我的小组》最新主题列表，解析html获得，果壳移动版没有这个方式
      *
-     * @param pageNo
-     * @return
+     * @param pageNo 页码
+     * @return resultObject
      * @throws IOException
      */
     public static ResultObject getMyGroupRecentPosts(int pageNo) throws IOException, Exception {
@@ -223,7 +215,6 @@ public class PostAPI extends APIBase {
      *
      * @param pageNo，要获取的页码
      * @return 帖子列表
-     * @throws java.io.IOException
      */
     public static ResultObject getGroupHotPostListFromMobileUrl(int pageNo) {
         ResultObject resultObject = new ResultObject();
@@ -235,10 +226,9 @@ public class PostAPI extends APIBase {
             Elements elements = doc.getElementsByClass("post-index-list");
             if (elements.size() == 1) {
                 Elements postlist = elements.get(0).getElementsByTag("li");
-                for (Iterator<Element> iterator = postlist.iterator(); iterator.hasNext(); ) {
+                for (Element aPostlist : postlist) {
                     Post item = new Post();
-                    Element element = (Element) iterator.next();
-                    Element link = element.getElementsByClass("post").get(0);
+                    Element link = aPostlist.getElementsByClass("post").get(0);
                     String postTitle = link.text();
                     String postUrl = link.attr("href");
                     String postImageUrl = "";
@@ -253,13 +243,13 @@ public class PostAPI extends APIBase {
                     }
                     String postAuthor = "";
                     String postGroup = "";
-                    String[] ang = element.getElementsByClass("post-info-content").get(0).text()
+                    String[] ang = aPostlist.getElementsByClass("post-info-content").get(0).text()
                             .split(" 发表于 ");
                     postAuthor = ang[0];
                     postGroup = ang[1];
-                    int postLike = Integer.valueOf(element.getElementsByClass("like-num").get(0)
+                    int postLike = Integer.valueOf(aPostlist.getElementsByClass("like-num").get(0)
                             .text());
-                    int postComment = Integer.valueOf(element.getElementsByClass("post-reply-num")
+                    int postComment = Integer.valueOf(aPostlist.getElementsByClass("post-reply-num")
                             .get(0).text().replaceAll(" 回应$", ""));
                     item.setTitle(postTitle);
                     item.setUrl(postUrl);
@@ -275,8 +265,6 @@ public class PostAPI extends APIBase {
                 resultObject.ok = true;
                 resultObject.result = list;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -289,8 +277,7 @@ public class PostAPI extends APIBase {
      *
      * @param id     小组id
      * @param offset 从第几个帖子开始取
-     * @return
-     * @throws java.io.IOException
+     * @return resultObject
      */
     public static ResultObject getGroupPostListByJsonUrl(String id, int offset) {
         ResultObject resultObject = new ResultObject();
@@ -327,13 +314,7 @@ public class PostAPI extends APIBase {
                 }
                 resultObject.ok = true;
                 resultObject.result = list;
-            } else {
-
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -344,8 +325,7 @@ public class PostAPI extends APIBase {
      * 根据帖子id解析帖子详细内容，解析html获得
      *
      * @param id，帖子id
-     * @return
-     * @throws java.io.IOException
+     * @return resultObject
      */
     public static ResultObject getPostDetailByIDFromMobileUrl(String id) {
         return getPostDetailByPostMobileUrl("http://m.guokr.com/post/" + id + "/");
@@ -354,7 +334,7 @@ public class PostAPI extends APIBase {
     /**
      * 仅限第一页，根据帖子地址解析帖子详细内容，解析html获得
      *
-     * @param url
+     * @param url 帖子地址
      */
     public static ResultObject getPostDetailByPostMobileUrl(String url) {
         // 手机页面无法取得评论数，最好是从点击时带过来。TODO
@@ -389,8 +369,6 @@ public class PostAPI extends APIBase {
             detail.setLikeNum(likeNum);
             resultObject.ok = true;
             resultObject.result = detail;
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -402,16 +380,14 @@ public class PostAPI extends APIBase {
      * 使用Json解析方式获得帖子评论列表
      * resultObject.result是ArrayList[UComment]
      *
-     * @param id
-     * @param offset
-     * @return
-     * @throws java.io.IOException
-     * @throws org.json.JSONException
+     * @param id     帖子id
+     * @param offset 从第offset个开始加载
+     * @return resultObject
      */
     public static ResultObject getPostCommentsFromJsonUrl(String id, int offset) {
         ResultObject resultObject = new ResultObject();
         try {
-            ArrayList<UComment> list = new ArrayList<UComment>();
+            ArrayList<UComment> list = new ArrayList<>();
             String url = "http://apis.guokr.com/group/post_reply.json";
             ArrayList<NameValuePair> pairs = new ArrayList<>();
             pairs.add(new BasicNameValuePair("retrieve_type", "by_post"));
@@ -433,9 +409,7 @@ public class PostAPI extends APIBase {
                             .getString("large").replaceAll("\\?\\S*$", ""));
                     comment.setDate(parseDate(getJsonString(jo, "date_created")));
                     comment.setLikeNum(getJsonInt(jo, "likings_count"));
-                    String html = getJsonString(jo, "html");
                     comment.setContent(getJsonString(jo, "html"));
-//                    comment.setSimpleHtml(TextHtmlHelper.correctLinkPaths(Html.fromHtml(html)));
                     comment.setFloor((offset + i + 1) + "楼");
                     comment.setHostID(jo.getJSONObject("post").getString("id"));
                     list.add(comment);
@@ -443,10 +417,6 @@ public class PostAPI extends APIBase {
                 resultObject.ok = true;
                 resultObject.result = list;
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -458,8 +428,8 @@ public class PostAPI extends APIBase {
      * 返回第一页数据，包括Post与第一页的评论列表
      * resultObject.result是ArrayList[AceModel]
      *
-     * @param pPost
-     * @return
+     * @param pPost 帖子对象
+     * @return resultObject
      */
     public static ResultObject getPostFirstPage(Post pPost) {
         ResultObject resultObject = new ResultObject();
@@ -484,12 +454,12 @@ public class PostAPI extends APIBase {
      * 使用Html解析方式获得帖子评论列表
      * 用不着，可删
      *
-     * @param id
-     * @param pageNo
-     * @return
+     * @param id     帖子id
+     * @param pageNo 页码
+     * @return ArrayList[UComment]
      */
     public static ArrayList<UComment> getPostCommentsFromHtmlUrl(String id, int pageNo) {
-        ArrayList<UComment> list = new ArrayList<UComment>();
+        ArrayList<UComment> list = new ArrayList<>();
         String url = "http://m.guokr.com/post/" + id + "/?page=" + pageNo;
         try {
             String html = HttpFetcher.get(url).toString();
@@ -499,8 +469,6 @@ public class PostAPI extends APIBase {
             if (elements.size() == 1) {
                 return extractPostComments(elements.get(0), postID);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -511,12 +479,12 @@ public class PostAPI extends APIBase {
      * 解析出html中的帖子评论列表
      * 返回值直接是列表就够了
      *
-     * @param element
-     * @param postID
-     * @return
+     * @param element 取出来的html元素
+     * @param postID  帖子id
+     * @return ArrayList[UComment]
      */
     private static ArrayList<UComment> extractPostComments(Element element, String postID) throws Exception {
-        ArrayList<UComment> list = new ArrayList<UComment>();
+        ArrayList<UComment> list = new ArrayList<>();
         Elements commentList = element.getElementsByClass("comment");
         for (int i = 0; i < commentList.size(); i++) {
             UComment comment = new UComment();
@@ -550,8 +518,8 @@ public class PostAPI extends APIBase {
     /**
      * 赞一个帖子
      *
-     * @param postID
-     * @return
+     * @param postID 帖子id
+     * @return resultObject
      */
     public static ResultObject likePost(String postID) {
         String url = "http://www.guokr.com/apis/group/post_liking.json";
@@ -563,8 +531,6 @@ public class PostAPI extends APIBase {
             if (getUniversalJsonSimpleBoolean(result, resultObject)) {
                 resultObject.ok = true;
             }
-        } catch (JSONException | IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -575,8 +541,8 @@ public class PostAPI extends APIBase {
      * 回复一个帖子，使用json请求，所以格式简单
      * 回复一个评论不过是在回复帖子的时候@了这个人而已
      *
-     * @param id
-     * @param content
+     * @param id      帖子id
+     * @param content 回复内容
      * @return ResultObject.result is the reply_id if ok;
      */
     public static ResultObject replyPost(String id, String content) {
@@ -593,10 +559,6 @@ public class PostAPI extends APIBase {
                 resultObject.ok = true;
                 resultObject.result = replyID;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -607,7 +569,7 @@ public class PostAPI extends APIBase {
      * 删除我的评论
      *
      * @param id 评论id
-     * @return
+     * @return resultObject
      */
     public static ResultObject deleteMyComment(String id) {
         ResultObject resultObject = new ResultObject();
@@ -627,8 +589,8 @@ public class PostAPI extends APIBase {
     /**
      * 赞一个评论
      *
-     * @param id
-     * @return
+     * @param id 评论id
+     * @return resultObject
      */
     public static ResultObject likeComment(String id) {
         String url = "http://www.guokr.com/apis/group/post_reply_liking.json";
@@ -640,8 +602,6 @@ public class PostAPI extends APIBase {
             if (getUniversalJsonSimpleBoolean(result, resultObject)) {
                 resultObject.ok = true;
             }
-        } catch (JSONException | IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -652,16 +612,15 @@ public class PostAPI extends APIBase {
      * 获取发帖所需的csrf和topic列表
      * resultObject.result是PostPrepareData
      *
-     * @param group_id
-     * @return
+     * @param group_id 小组id
+     * @return resultObject
      */
     public static ResultObject getPostPrepareData(String group_id) {
         ResultObject resultObject = new ResultObject();
         try {
             String url = "http://www.guokr.com/group/" + group_id + "/post/edit/";
             ResultObject response = HttpFetcher.get(url);
-            int code = response.statusCode;
-            resultObject.statusCode = code;
+            resultObject.statusCode = response.statusCode;
             String html = response.toString();
             Document doc = Jsoup.parse(html);
             Element selects = doc.getElementById("topic");
@@ -688,8 +647,6 @@ public class PostAPI extends APIBase {
                 resultObject.result = prepareData;
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -699,12 +656,12 @@ public class PostAPI extends APIBase {
     /**
      * 发帖
      *
-     * @param group_id
-     * @param csrf
-     * @param title
-     * @param body     html格式
-     * @param topic
-     * @return
+     * @param group_id 小组id
+     * @param csrf     csrf_token
+     * @param title    标题
+     * @param body     帖子内容   html格式
+     * @param topic    帖子主题
+     * @return resultObject
      */
     public static ResultObject publishPost(String group_id, String csrf, String title, String body, String topic) {
         ResultObject resultObject = new ResultObject();
@@ -734,8 +691,6 @@ public class PostAPI extends APIBase {
                 resultObject.ok = true;
                 resultObject.result = result.toString();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }

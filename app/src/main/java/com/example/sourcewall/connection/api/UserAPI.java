@@ -72,10 +72,6 @@ public class UserAPI extends APIBase {
                 resultObject.result = info;
                 resultObject.ok = true;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }

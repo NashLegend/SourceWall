@@ -433,16 +433,16 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         @Override
         protected void onPostExecute(ResultObject resultObject) {
             if (resultObject.ok) {
-                ToastUtil.toast("验证成功");
+                ToastUtil.toast(getString(R.string.get_csrf_ok));
                 PrepareData prepareData = (PrepareData) resultObject.result;
                 onReceivePreparedData(prepareData);
             } else {
                 if (resultObject.statusCode == 403) {
                     new AlertDialog.Builder(PublishPostActivity.this).setTitle(R.string.hint)
-                            .setMessage("尚未加入该小组~").setPositiveButton("确定", null).create().show();
+                            .setMessage(getString(R.string.have_not_join_this_group)).setPositiveButton(R.string.ok, null).create().show();
                 } else {
-                    new AlertDialog.Builder(PublishPostActivity.this).setTitle("拉取验证失败")
-                            .setMessage("拉取验证失败，请点击右上角重新加载验证~").setPositiveButton("确定", null).create().show();
+                    new AlertDialog.Builder(PublishPostActivity.this).setTitle(getString(R.string.get_csrf_failed))
+                            .setMessage(getString(R.string.hint_reload_csrf)).setPositiveButton(R.string.ok, null).create().show();
                 }
             }
         }
