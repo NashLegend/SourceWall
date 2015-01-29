@@ -512,8 +512,10 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
             if (resultObject.ok) {
                 setupUserInfo((UserInfo) resultObject.result);
             } else {
-                SharedUtil.remove(Consts.Key_User_Name);
-                userName.setText(R.string.click_to_reload);
+                String nameString = SharedUtil.readString(Consts.Key_User_Name, "");
+                if (TextUtils.isEmpty(nameString)) {
+                    userName.setText(R.string.click_to_reload);
+                }
             }
         }
     }
