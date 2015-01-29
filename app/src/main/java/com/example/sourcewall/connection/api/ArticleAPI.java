@@ -77,7 +77,7 @@ public class ArticleAPI extends APIBase {
 
     /**
      * 根据上面几个方法生成的url去取文章列表
-     * resultObject.result是ArrayList<Article>
+     * resultObject.result是ArrayList[Article]
      *
      * @param url jsonUrl
      * @return ResultObject

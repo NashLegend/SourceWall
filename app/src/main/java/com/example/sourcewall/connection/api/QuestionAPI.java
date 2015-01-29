@@ -301,7 +301,7 @@ public class QuestionAPI extends APIBase {
 
     /**
      * 返回第一页数据，包括Post与第一页的评论列表
-     * resultObject.result是ArrayList<AceModel>
+     * resultObject.result是ArrayList[AceModel]
      *
      * @param qQuestion 问题对象，至少有一个id属性不为空
      * @return ResultObject
@@ -686,7 +686,7 @@ public class QuestionAPI extends APIBase {
     }
 
     /**
-     * 提问，卧槽Cookie里面还需要两个值，给跪了_32382_access_token和_32382_ukey=5p6t9t
+     * 提问，卧槽Cookie里面还需要两个值，给跪了_32382_access_token和_32382_ukey=
      * 由https://www.guokr.com/sso/ask/提供，妈蛋先不搞提问了
      *
      * @param csrf       csrf
