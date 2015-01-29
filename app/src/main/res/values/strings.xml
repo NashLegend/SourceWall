@@ -127,5 +127,9 @@
     <string name="hint">提示</string>
     <string name="way_to_load_image">选择图片加载模式</string>
     <string name="click_to_reload">点击重新加载</string>
+    <string name="use_default_tail">使用默认尾巴</string>
+    <string name="use_phone_as_tail">使用手机型号</string>
+    <string name="use_custom_tail">自定义尾巴</string>
+    <string name="unknown_phone">不明手机</string>
 
 </resources>

@@ -6,6 +6,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.example.sourcewall.connection.api.UserAPI;
@@ -13,13 +18,19 @@ import com.example.sourcewall.util.Config;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.SharedUtil;
 
-public class SettingActivity extends SwipeActivity implements View.OnClickListener {
+public class SettingActivity extends SwipeActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     Toolbar toolbar;
     View imageModeView;
     View customTailView;
     View logInOutView;
     TextView imageText;
     TextView logText;
+    View tailsView;
+    EditText tailText;
+    RadioButton buttonDefault;
+    RadioButton buttonPhone;
+    RadioButton buttonCustom;
+    int tailsHeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +43,30 @@ public class SettingActivity extends SwipeActivity implements View.OnClickListen
         logInOutView = findViewById(R.id.layout_log_in_out);
         imageText = (TextView) findViewById(R.id.text_image_mode);
         logText = (TextView) findViewById(R.id.text_log_in_out);
+        tailsView = findViewById(R.id.layout_tails);
+        tailText = (EditText) findViewById(R.id.text_tail);
+        buttonDefault = (RadioButton) findViewById(R.id.button_use_default);
+        buttonPhone = (RadioButton) findViewById(R.id.button_use_phone);
+        buttonCustom = (RadioButton) findViewById(R.id.button_use_custom);
+        buttonDefault.setOnCheckedChangeListener(this);
+        buttonPhone.setOnCheckedChangeListener(this);
+        buttonCustom.setOnCheckedChangeListener(this);
+
         imageModeView.setOnClickListener(this);
         customTailView.setOnClickListener(this);
         logInOutView.setOnClickListener(this);
+        tailsView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (tailsView.getHeight() > 0) {
+                    tailsView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                    tailsHeight = tailsView.getHeight();
+                    tailsView.getLayoutParams().height = 0;
+                }
+            }
+        });
     }
+
 
     @Override
     protected void onResume() {
@@ -58,6 +89,24 @@ public class SettingActivity extends SwipeActivity implements View.OnClickListen
                 imageText.setText(R.string.mode_load_load_when_wifi);
                 break;
         }
+
+        switch (SharedUtil.readInt(Consts.key_Use_Tail_Type, Consts.Type_Use_Default_Tail)) {
+            case Consts.Type_Use_Default_Tail:
+                buttonDefault.setChecked(true);
+                tailText.setText(Config.getDefaultPlainTail());
+                tailText.setEnabled(false);
+                break;
+            case Consts.Type_Use_Phone_Tail:
+                buttonPhone.setChecked(true);
+                tailText.setText(Config.getPhonePlainTail());
+                tailText.setEnabled(false);
+                break;
+            case Consts.Type_Use_Custom_Tail:
+                buttonCustom.setChecked(true);
+                tailText.setText(SharedUtil.readString(Consts.key_Custom_Tail, ""));
+                tailText.setEnabled(true);
+                break;
+        }
     }
 
     @Override
@@ -67,7 +116,7 @@ public class SettingActivity extends SwipeActivity implements View.OnClickListen
                 popupImageMode();
                 break;
             case R.id.layout_custom_tail:
-                showCustomTailLayout();
+                toggleCustomTailLayout();
                 break;
             case R.id.layout_log_in_out:
                 toggleLoginState();
@@ -100,8 +149,14 @@ public class SettingActivity extends SwipeActivity implements View.OnClickListen
         }).create().show();
     }
 
-    private void showCustomTailLayout() {
-
+    private void toggleCustomTailLayout() {
+        ViewGroup.LayoutParams params = tailsView.getLayoutParams();
+        if (params.height > 0) {
+            params.height = 0;
+        } else {
+            params.height = tailsHeight;
+        }
+        tailsView.setLayoutParams(params);
     }
 
     private void toggleLoginState() {
@@ -119,5 +174,37 @@ public class SettingActivity extends SwipeActivity implements View.OnClickListen
         } else {
             startActivity(new Intent(this, LoginActivity.class));
         }
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (isChecked) {
+            switch (buttonView.getId()) {
+                case R.id.button_use_default:
+                    tailText.setText(Config.getDefaultPlainTail());
+                    tailText.setEnabled(false);
+                    break;
+                case R.id.button_use_phone:
+                    tailText.setText(Config.getPhonePlainTail());
+                    tailText.setEnabled(false);
+                    break;
+                case R.id.button_use_custom:
+                    tailText.setEnabled(true);
+                    break;
+            }
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        if (buttonDefault.isChecked()) {
+            SharedUtil.saveInt(Consts.key_Use_Tail_Type, Consts.Type_Use_Default_Tail);
+        } else if (buttonPhone.isChecked()) {
+            SharedUtil.saveInt(Consts.key_Use_Tail_Type, Consts.Type_Use_Phone_Tail);
+        } else {
+            SharedUtil.saveInt(Consts.key_Use_Tail_Type, Consts.Type_Use_Custom_Tail);
+            SharedUtil.saveString(Consts.key_Custom_Tail, tailText.getText().toString());
+        }
+        super.onPause();
     }
 }

@@ -5,6 +5,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import com.example.sourcewall.AppApplication;
+import com.example.sourcewall.R;
 
 /**
  * Created by NashLegend on 2014/12/15 0015
@@ -55,14 +56,22 @@ public class Config {
      * @return html格式的尾巴，评论、发贴、回答时都带，但是评论答案和评论问题不带
      */
     public static String getComplexReplyTail() {
-        if (SharedUtil.readBoolean(Consts.Key_Use_Post_Tail, true)) {
-            if (SharedUtil.readBoolean(Consts.key_Use_Default_Tail, true)) {
-                return getDefaultComplexTail();
-            } else {
-                return SharedUtil.readString(Consts.Key_Custom_Tail, getDefaultComplexTail());
-            }
+        String tail = "";
+        switch (SharedUtil.readInt(Consts.key_Use_Tail_Type, Consts.Type_Use_Default_Tail)) {
+            case Consts.Type_Use_Default_Tail:
+                tail = getDefaultComplexTail();
+                break;
+            case Consts.Type_Use_Phone_Tail:
+                tail = getPhoneComplexTail();
+                break;
+            case Consts.Type_Use_Custom_Tail:
+                tail = SharedUtil.readString(Consts.key_Custom_Tail, "");
+                if (!tail.trim().equals("")) {
+                    tail = "<p></p><p>" + tail + "</p>";
+                }
+                break;
         }
-        return "";
+        return tail;
     }
 
     /**
@@ -75,27 +84,68 @@ public class Config {
     }
 
     /**
+     * 返回手机尾巴
+     *
+     * @return 手机尾巴
+     */
+    public static String getPhoneComplexTail() {
+        String mTypeString = android.os.Build.MODEL == null ? AppApplication.getApplication().getString(R.string.unknown_phone)
+                : android.os.Build.MODEL;
+        return "<p></p><p>来自 <a href=\"http://www.guokr.com/blog/798434/\" target=\"_blank\">" + mTypeString + "</a></p>";
+    }
+
+    /**
      * 返回尾巴，UBB格式
      *
      * @return html格式的尾巴，评论、发贴、回答时都带，但是评论答案和评论问题不带
      */
     public static String getSimpleReplyTail() {
-        if (SharedUtil.readBoolean(Consts.Key_Use_Post_Tail, true)) {
-            if (SharedUtil.readBoolean(Consts.key_Use_Default_Tail, true)) {
-                return getDefaultSimpleReplyTail();
-            } else {
-                return SharedUtil.readString(Consts.Key_Custom_Tail, getDefaultSimpleReplyTail());
-            }
+        String tail = "";
+        switch (SharedUtil.readInt(Consts.key_Use_Tail_Type, Consts.Type_Use_Default_Tail)) {
+            case Consts.Type_Use_Default_Tail:
+                tail = getDefaultSimpleTail();
+                break;
+            case Consts.Type_Use_Phone_Tail:
+                tail = getPhoneSimpleTail();
+                break;
+            case Consts.Type_Use_Custom_Tail:
+                tail = SharedUtil.readString(Consts.key_Custom_Tail, "");
+                if (!tail.trim().equals("")) {
+                    tail = "\n\n[blockquote]" + tail + "[/blockquote]";
+                }
+                break;
         }
-        return "";
+        return tail;
     }
+
+    /**
+     * 返回手机尾巴
+     *
+     * @return 手机尾巴
+     */
+    public static String getPhoneSimpleTail() {
+        String mTypeString = android.os.Build.MODEL == null ? AppApplication.getApplication().getString(R.string.unknown_phone)
+                : android.os.Build.MODEL;
+        return "\n\n[blockquote]来自 [url=http://www.guokr.com/blog/798434/]" + mTypeString + "[/url][/blockquote]";
+    }
+
 
     /**
      * 返回默认尾巴
      *
      * @return 默认尾巴
      */
-    public static String getDefaultSimpleReplyTail() {
+    public static String getDefaultSimpleTail() {
         return "\n\n[blockquote]来自 [url=http://www.guokr.com/blog/798434/]SourceWall[/url][/blockquote]";
+    }
+
+    public static String getDefaultPlainTail() {
+        return "来自 SourceWall";
+    }
+
+    public static String getPhonePlainTail() {
+        String mTypeString = android.os.Build.MODEL == null ? AppApplication.getApplication().getString(R.string.unknown_phone)
+                : android.os.Build.MODEL;
+        return "来自 " + mTypeString;
     }
 }

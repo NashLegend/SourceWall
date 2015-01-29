@@ -33,12 +33,12 @@
             android:textSize="16sp" />
 
         <TextView
-            android:layout_toRightOf="@id/text_image_mode_view"
             android:id="@+id/text_image_mode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"
+            android:layout_toRightOf="@id/text_image_mode_view"
             android:textSize="12sp" />
 
         <ImageView
@@ -55,32 +55,79 @@
         android:layout_weight="0"
         android:background="@android:color/darker_gray" />
 
-    <RelativeLayout
-        android:id="@+id/layout_custom_tail"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:background="?android:attr/selectableItemBackground"
-        android:clickable="true"
-        android:paddingBottom="10dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="0dp"
-        android:paddingTop="10dp">
+        android:orientation="vertical">
 
-        <TextView
+        <RelativeLayout
+            android:id="@+id/layout_custom_tail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="@string/custom_tail"
-            android:textSize="16sp" />
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="0dp"
+            android:paddingTop="10dp">
 
-        <ImageView
-            android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/custom_tail"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/chevron_right" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:paddingTop="10dp"
+            android:id="@+id/layout_tails"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="16dp"
-            android:background="@drawable/chevron_right" />
-    </RelativeLayout>
+            android:orientation="vertical">
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/button_use_default"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/use_default_tail" />
+
+                <RadioButton
+                    android:id="@+id/button_use_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/use_phone_as_tail" />
+
+                <RadioButton
+                    android:id="@+id/button_use_custom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/use_custom_tail" />
+            </RadioGroup>
+
+            <EditText
+                android:id="@+id/text_tail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true" />
+        </LinearLayout>
+    </LinearLayout>
+
 
     <View
         android:layout_width="match_parent"
