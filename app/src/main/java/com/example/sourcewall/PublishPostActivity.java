@@ -433,13 +433,16 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         @Override
         protected void onPostExecute(ResultObject resultObject) {
             if (resultObject.ok) {
+                ToastUtil.toast("验证成功");
                 PrepareData prepareData = (PrepareData) resultObject.result;
                 onReceivePreparedData(prepareData);
             } else {
                 if (resultObject.statusCode == 403) {
-                    ToastUtil.toast("尚未加入该小组");//TODO
+                    new AlertDialog.Builder(PublishPostActivity.this).setTitle(R.string.hint)
+                            .setMessage("尚未加入该小组~").setPositiveButton("确定", null).create().show();
                 } else {
-                    ToastUtil.toast("Prepare Failed");
+                    new AlertDialog.Builder(PublishPostActivity.this).setTitle("拉取验证失败")
+                            .setMessage("拉取验证失败，请点击右上角重新加载验证~").setPositiveButton("确定", null).create().show();
                 }
             }
         }
@@ -517,7 +520,8 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_reload_csrf) {
+            prepare();
             return true;
         }
 

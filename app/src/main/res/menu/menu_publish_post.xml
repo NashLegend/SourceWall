@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.sourcewall.PublishPostActivity">
     <item
-        android:id="@+id/action_settings"
-        android:title="@string/action_settings"
+        android:id="@+id/action_reload_csrf"
+        android:title="@string/reload_csrf_token"
         android:orderInCategory="100"
         app:showAsAction="never" />
 </menu>

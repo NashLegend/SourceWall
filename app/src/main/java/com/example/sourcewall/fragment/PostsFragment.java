@@ -276,7 +276,6 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                                     hideMoreGroups();
                                 }
                             }).create();
-                    dialog.dismiss();
                     dialog.show();
                 }
             }

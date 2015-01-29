@@ -131,5 +131,6 @@
     <string name="use_phone_as_tail">使用手机型号</string>
     <string name="use_custom_tail">自定义尾巴</string>
     <string name="unknown_phone">不明手机</string>
+    <string name="reload_csrf_token">重新验证</string>
 
 </resources>
