@@ -9,13 +9,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 
-import com.example.sourcewall.commonview.shuffle.GroupMovableButton;
+import com.example.sourcewall.commonview.shuffle.AskTagMovableButton;
 import com.example.sourcewall.commonview.shuffle.MovableButton;
 import com.example.sourcewall.commonview.shuffle.ShuffleDesk;
 import com.example.sourcewall.connection.ResultObject;
-import com.example.sourcewall.connection.api.PostAPI;
-import com.example.sourcewall.db.GroupHelper;
-import com.example.sourcewall.db.gen.MyGroup;
+import com.example.sourcewall.connection.api.QuestionAPI;
+import com.example.sourcewall.db.AskTagHelper;
+import com.example.sourcewall.db.gen.AskTag;
 import com.example.sourcewall.model.SubItem;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.ToastUtil;
@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * @author NashLegend
  */
-public class ShuffleActivity extends SwipeActivity {
+public class ShuffleTagActivity extends SwipeActivity {
 
     private ShuffleDesk desk;
     LoaderFromDBTask dbTask;
@@ -49,31 +49,30 @@ public class ShuffleActivity extends SwipeActivity {
                 initView();
             }
         });
-
         if (getIntent().getBooleanExtra(Consts.Extra_Should_Load_Before_Shuffle, false)) {
             netTask = new LoaderFromNetTask();
-            netTask.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR);
+            netTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
             dbTask = new LoaderFromDBTask();
-            dbTask.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR);
+            dbTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.shuffle, menu);
+        getMenuInflater().inflate(R.menu.shuffle_tag, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_reload_my_groups) {
+        if (id == R.id.action_reload_my_tags) {
             if (netTask != null && netTask.getStatus() == AsyncTask.Status.RUNNING) {
                 netTask.cancel(false);
             }
             netTask = new LoaderFromNetTask();
-            netTask.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR);
+            netTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -113,21 +112,21 @@ public class ShuffleActivity extends SwipeActivity {
 
     public void getButtons() {
 
-        List<MyGroup> selectedSections = GroupHelper.getSelectedGroups();
-        List<MyGroup> unselectedSections = GroupHelper.getUnselectedGroups();
+        List<AskTag> selectedSections = AskTagHelper.getSelectedTags();
+        List<AskTag> unselectedSections = AskTagHelper.getUnselectedTags();
 
         ArrayList<MovableButton> selectedButtons = new ArrayList<>();
         for (int i = 0; i < selectedSections.size(); i++) {
-            MyGroup section = selectedSections.get(i);
-            GroupMovableButton button = new GroupMovableButton(this);
+            AskTag section = selectedSections.get(i);
+            AskTagMovableButton button = new AskTagMovableButton(this);
             button.setSection(section);
             selectedButtons.add(button);
         }
 
         ArrayList<MovableButton> unselectedButtons = new ArrayList<>();
         for (int i = 0; i < unselectedSections.size(); i++) {
-            MyGroup section = unselectedSections.get(i);
-            GroupMovableButton button = new GroupMovableButton(this);
+            AskTag section = unselectedSections.get(i);
+            AskTagMovableButton button = new AskTagMovableButton(this);
             button.setSection(section);
             unselectedButtons.add(button);
         }
@@ -136,36 +135,36 @@ public class ShuffleActivity extends SwipeActivity {
     }
 
     public void commitChange(ArrayList<MovableButton> buttons) {
-        ArrayList<MyGroup> sections = new ArrayList<>();
+        ArrayList<AskTag> sections = new ArrayList<>();
         for (int i = 0; i < buttons.size(); i++) {
-            MyGroup myGroup = (MyGroup) buttons.get(i).getSection();
-            if (!myGroup.getSelected()) {
-                myGroup.setOrder(1024 + myGroup.getOrder());
+            AskTag askTag = (AskTag) buttons.get(i).getSection();
+            if (!askTag.getSelected()) {
+                askTag.setOrder(1024 + askTag.getOrder());
             }
-            sections.add(myGroup);
+            sections.add(askTag);
         }
         if (sections.size() > 0) {
-            GroupHelper.putAllMyGroups(sections);
+            AskTagHelper.putAllMyTags(sections);
         }
     }
 
-    private void mergeMyGroups(ArrayList<MyGroup> myGroups) {
-        if (GroupHelper.getMyGroupsNumber() > 0) {
-            List<MyGroup> selectedGroups = GroupHelper.getSelectedGroups();
-            for (int i = 0; i < myGroups.size(); i++) {
-                MyGroup tmpGroup = myGroups.get(i);
+    private void mergeMyGroups(ArrayList<AskTag> myTags) {
+        if (AskTagHelper.getAskTagsNumber() > 0) {
+            List<AskTag> selectedGroups = AskTagHelper.getSelectedTags();
+            for (int i = 0; i < myTags.size(); i++) {
+                AskTag tmpTag = myTags.get(i);
                 boolean selected = false;
                 for (int j = 0; j < selectedGroups.size(); j++) {
-                    if (selectedGroups.get(j).getValue().equals(tmpGroup.getValue())) {
+                    if (selectedGroups.get(j).getValue().equals(tmpTag.getValue())) {
                         selected = true;
                         break;
                     }
                 }
-                tmpGroup.setSelected(selected);
+                tmpTag.setSelected(selected);
                 if (selected) {
-                    tmpGroup.setOrder(i);
+                    tmpTag.setOrder(i);
                 } else {
-                    tmpGroup.setOrder(1024 + i);
+                    tmpTag.setOrder(1024 + i);
                 }
             }
         }
@@ -189,7 +188,7 @@ public class ShuffleActivity extends SwipeActivity {
 
         @Override
         protected void onPreExecute() {
-            progressDialog = new ProgressDialog(ShuffleActivity.this);
+            progressDialog = new ProgressDialog(ShuffleTagActivity.this);
             progressDialog.setCancelable(false);
             progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.setMessage(getString(R.string.message_replying));
@@ -198,24 +197,24 @@ public class ShuffleActivity extends SwipeActivity {
 
         @Override
         protected Boolean doInBackground(String[] params) {
-            ResultObject resultObject = PostAPI.getAllMyGroups();
+            ResultObject resultObject = QuestionAPI.getAllMyTags();
             if (resultObject.ok) {
                 ArrayList<SubItem> subItems = (ArrayList<SubItem>) resultObject.result;
-                ArrayList<MyGroup> myGroups = new ArrayList<>();
+                ArrayList<AskTag> myTags = new ArrayList<>();
                 int sel = 12;
                 for (int i = 0; i < subItems.size(); i++) {
                     SubItem item = subItems.get(i);
-                    MyGroup mygroup = new MyGroup();
-                    mygroup.setName(item.getName());
-                    mygroup.setValue(item.getValue());
-                    mygroup.setType(item.getType());
-                    mygroup.setSection(item.getSection());
-                    mygroup.setSelected(i < sel);
-                    mygroup.setOrder(i);
-                    myGroups.add(mygroup);
+                    AskTag myTag = new AskTag();
+                    myTag.setName(item.getName());
+                    myTag.setValue(item.getValue());
+                    myTag.setType(item.getType());
+                    myTag.setSection(item.getSection());
+                    myTag.setSelected(i < sel);
+                    myTag.setOrder(i);
+                    myTags.add(myTag);
                 }
-                mergeMyGroups(myGroups);
-                GroupHelper.putAllMyGroups(myGroups);
+                mergeMyGroups(myTags);
+                AskTagHelper.putAllMyTags(myTags);
                 getButtons();
                 return true;
             }

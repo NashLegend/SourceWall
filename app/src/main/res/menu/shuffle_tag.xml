@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.sourcewall.SimpleReplyActivity">
+    <item
+        android:id="@+id/action_reload_my_tags"
+        android:orderInCategory="100"
+        android:title="@string/action_reload_my_tags"
+        app:showAsAction="never" />
+</menu>

@@ -113,6 +113,7 @@
     <string name="tip_of_more_groups">点击进入小组，长按排序</string>
     <string name="unselected_section_tip">点击添加到左侧边栏</string>
     <string name="action_reload_my_groups">重新加载小组</string>
+    <string name="action_reload_my_tags">重新加载标签</string>
     <string name="image_load_mode">图片加载模式</string>
     <string name="custom_tail">自定义尾巴</string>
     <string name="log_out">退出登录</string>

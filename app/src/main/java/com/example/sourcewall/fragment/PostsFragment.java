@@ -30,7 +30,7 @@ import com.example.sourcewall.BaseActivity;
 import com.example.sourcewall.PostActivity;
 import com.example.sourcewall.PublishPostActivity;
 import com.example.sourcewall.R;
-import com.example.sourcewall.ShuffleActivity;
+import com.example.sourcewall.ShuffleGroupActivity;
 import com.example.sourcewall.adapters.PostAdapter;
 import com.example.sourcewall.commonview.LListView;
 import com.example.sourcewall.commonview.LoadingView;
@@ -153,7 +153,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        Intent intent = new Intent(getActivity(), ShuffleActivity.class);
+                        Intent intent = new Intent(getActivity(), ShuffleGroupActivity.class);
                         startActivityForResult(intent, Consts.Code_Start_Shuffle_Groups);
                         getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
                     }
@@ -258,7 +258,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                                     new Handler().postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
-                                            Intent intent = new Intent(getActivity(), ShuffleActivity.class);
+                                            Intent intent = new Intent(getActivity(), ShuffleGroupActivity.class);
                                             intent.putExtra(Consts.Extra_Should_Load_Before_Shuffle, true);
                                             startActivityForResult(intent, Consts.Code_Start_Shuffle_Groups);
                                             getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
