@@ -57,7 +57,7 @@ public class QuestionAPI extends APIBase {
             for (int i = 0; i < lis.size(); i++) {
                 Element element = lis.get(i).getElementsByClass("join-list-desc").get(0);
                 String groupName = element.getElementsByTag("a").text();
-                SubItem subItem = new SubItem(SubItem.Section_Question, SubItem.Type_Single_Channel, groupName, "");
+                SubItem subItem = new SubItem(SubItem.Section_Question, SubItem.Type_Single_Channel, groupName, groupName);
                 subItems.add(subItem);
                 System.out.println(groupName);
             }
@@ -66,12 +66,11 @@ public class QuestionAPI extends APIBase {
                     Thread.sleep(100);
                     String url = pageUrl + "?page=" + j;
                     Document pageDoc = Jsoup.parse(HttpFetcher.get(url).toString());
-                    Elements liss = pageDoc.getElementsByClass("join-list").get(0).getElementsByTag("li");
-                    //第一页
-                    for (int i = 0; i < liss.size(); i++) {
-                        Element element = liss.get(i).getElementsByClass("join-list-desc").get(0);
+                    Elements lis2 = pageDoc.getElementsByClass("join-list").get(0).getElementsByTag("li");
+                    for (int i = 0; i < lis2.size(); i++) {
+                        Element element = lis2.get(i).getElementsByClass("join-list-desc").get(0);
                         String groupName = element.getElementsByTag("a").text();
-                        SubItem subItem = new SubItem(SubItem.Section_Question, SubItem.Type_Single_Channel, groupName, "");
+                        SubItem subItem = new SubItem(SubItem.Section_Question, SubItem.Type_Single_Channel, groupName, groupName);
                         subItems.add(subItem);
                         System.out.println(groupName);
                     }

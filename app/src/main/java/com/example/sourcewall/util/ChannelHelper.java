@@ -56,8 +56,6 @@ public class ChannelHelper {
                 new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, "美丽也是技术活", "73"),
                 new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, "情感夜夜话", "127"),
                 new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, "心事鉴定组", "33"),
-                new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, "Hello world!", "60"),
-                new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, "【水组】-水煮果壳", "376"),
         };
         //FIXME，前十而已
         ArrayList<SubItem> subItems = new ArrayList<SubItem>();
@@ -76,13 +74,13 @@ public class ChannelHelper {
                 new SubItem(SubItem.Section_Question, SubItem.Type_Single_Channel, "医学", "医学"),
                 new SubItem(SubItem.Section_Question, SubItem.Type_Single_Channel, "心理学", "心理学"),
                 new SubItem(SubItem.Section_Question, SubItem.Type_Single_Channel, "物理学", "物理学"),
+                new SubItem(SubItem.Section_Question, SubItem.Type_Single_Channel, "求真相", "求真相"),
                 new SubItem(SubItem.Section_Question, SubItem.Type_Single_Channel, "化学", "化学"),
-                new SubItem(SubItem.Section_Question, SubItem.Type_Single_Channel, "物理", "物理"),
                 new SubItem(SubItem.Section_Question, SubItem.Type_Single_Channel, "生物学", "生物学"),
                 new SubItem(SubItem.Section_Question, SubItem.Type_Single_Channel, "社会科学", "社会科学"),
                 new SubItem(SubItem.Section_Question, SubItem.Type_Single_Channel, "互联网", "互联网"),
                 new SubItem(SubItem.Section_Question, SubItem.Type_Single_Channel, "数学", "数学"),
-                new SubItem(SubItem.Section_Question, SubItem.Type_Single_Channel, "我好想问", "我好想问"),
+                new SubItem(SubItem.Section_Question, SubItem.Type_Single_Channel, "电子", "电子"),
                 new SubItem(SubItem.Section_Question, SubItem.Type_Single_Channel, "食物", "食物"),
                 new SubItem(SubItem.Section_Question, SubItem.Type_Single_Channel, "运动", "运动"),
                 new SubItem(SubItem.Section_Question, SubItem.Type_Single_Channel, "计算机", "计算机"),
