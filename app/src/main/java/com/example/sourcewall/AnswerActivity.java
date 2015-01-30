@@ -87,6 +87,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         supportView = findViewById(R.id.layout_opinion);
         supportText = (TextView) findViewById(R.id.text_num_support);
         floatingActionsMenu = (FloatingActionsMenu) findViewById(R.id.layout_operation);
+
         replyButton = (FloatingActionButton) findViewById(R.id.button_reply);
         notAnButton = (FloatingActionButton) findViewById(R.id.button_Bury);
         thankButton = (FloatingActionButton) findViewById(R.id.button_thank);
@@ -101,6 +102,16 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         supportText.setText(answer.getUpvoteNum() + "");
         authorName.setText(answer.getAuthor());
         authorTitle.setText(answer.getAuthorTitle());
+        if (answer.isHasBuried()) {
+            notAnButton.setIcon(R.drawable.dustbin);
+        } else {
+            notAnButton.setIcon(R.drawable.dustbin_outline);
+        }
+        if (answer.isHasThanked()) {
+            thankButton.setIcon(R.drawable.heart);
+        } else {
+            thankButton.setIcon(R.drawable.heart_outline);
+        }
         if (Config.shouldLoadImage()) {
             Picasso.with(this).load(answer.getAuthorAvatarUrl())
                     .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
@@ -362,12 +373,18 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
                 if (bury) {
                     ToastUtil.toast("已标记为\"不是答案\"");
                     answer.setHasBuried(true);
+                    notAnButton.setIcon(R.drawable.dustbin);
                 } else {
                     ToastUtil.toastSingleton("取消\"不是答案\"标记");
                     answer.setHasBuried(false);
+                    notAnButton.setIcon(R.drawable.dustbin_outline);
                 }
             } else {
-                ToastUtil.toastSingleton("操作失败");
+                if (bury && resultObject.code == ResultObject.ResultCode.CODE_ALREADY_BURIED) {
+                    ToastUtil.toastSingleton("已经标记过了");
+                } else {
+                    ToastUtil.toastSingleton("操作失败");
+                }
             }
 
         }
@@ -385,8 +402,15 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
             if (resultObject.ok) {
                 ToastUtil.toast("感谢成功");
                 answer.setHasThanked(true);
+                thankButton.setIcon(R.drawable.heart);
             } else {
-                ToastUtil.toast("感谢未遂");
+                if (resultObject.code == ResultObject.ResultCode.CODE_ALREADY_THANKED) {
+                    ToastUtil.toast("已经感谢过了");
+                    answer.setHasThanked(true);
+                    thankButton.setIcon(R.drawable.heart);
+                } else {
+                    ToastUtil.toast("感谢未遂");
+                }
             }
         }
     }
