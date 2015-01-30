@@ -30,7 +30,7 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import java.util.ArrayList;
 
 
-public class QuestionActivity extends SwipeActivity implements LListView.OnRefreshListener, View.OnClickListener {
+public class QuestionActivity extends SwipeActivity implements LListView.OnRefreshListener, View.OnClickListener, LoadingView.ReloadListener {
 
     private LListView listView;
     private QuestionDetailAdapter adapter;
@@ -43,6 +43,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question);
         loadingView = (LoadingView) findViewById(R.id.question_progress_loading);
+        loadingView.setReloadListener(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         question = (Question) getIntent().getSerializableExtra(Consts.Extra_Question);
@@ -185,6 +186,11 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         }
     }
 
+    @Override
+    public void reload() {
+        loadData(-1);
+    }
+
     class LoaderTask extends AsyncTask<Integer, Integer, ResultObject> {
         int offset;
 
@@ -205,35 +211,31 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
 
         @Override
         protected void onPostExecute(ResultObject result) {
-            loadingView.setVisibility(View.GONE);
             if (!isCancelled()) {
                 if (result.ok) {
+                    loadingView.onLoadSuccess();
                     ArrayList<AceModel> ars = (ArrayList<AceModel>) result.result;
                     if (offset < 0) {
                         //Refresh
                         if (ars.size() > 0) {
                             adapter.setList(ars);
                             adapter.notifyDataSetInvalidated();
-                        } else {
-                            //no data loaded,不清除，保留旧数据
                         }
                     } else {
                         //Load More
                         if (ars.size() > 0) {
                             adapter.addAll(ars);
                             adapter.notifyDataSetChanged();
-                        } else {
-                            //no data loaded
                         }
                     }
                     if (adapter.getCount() > 0) {
-                        //listView.setCanPullToLoadMore(ars.size() >= 20);
                         listView.setCanPullToLoadMore(true);
                     } else {
                         listView.setCanPullToLoadMore(false);
                     }
                 } else {
-                    // load error
+                    ToastUtil.toast(getString(R.string.load_failed));
+                    loadingView.onLoadFailed();
                 }
                 listView.doneOperation();
             }

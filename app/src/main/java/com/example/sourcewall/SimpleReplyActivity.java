@@ -31,7 +31,7 @@ import com.example.sourcewall.view.SimpleCommentItemView;
 import java.util.ArrayList;
 
 
-public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRefreshListener, View.OnClickListener {
+public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRefreshListener, View.OnClickListener, LoadingView.ReloadListener {
 
     private AceModel aceModel;
     LoaderTask task;
@@ -49,6 +49,7 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_simple_reply);
         loadingView = (LoadingView) findViewById(R.id.replies_progress_loading);
+        loadingView.setReloadListener(this);
         toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         textReply = (EditText) findViewById(R.id.text_simple_reply);
@@ -171,6 +172,11 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
 
     }
 
+    @Override
+    public void reload() {
+        loadData(0);
+    }
+
     class ReplyTask extends AsyncTask<String, Integer, ResultObject> {
 
         @Override
@@ -230,39 +236,33 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
 
         @Override
         protected void onPostExecute(ResultObject result) {
-            loadingView.setVisibility(View.GONE);
-            if (!isCancelled()) {
-                if (result.ok) {
-                    ArrayList<UComment> ars = (ArrayList<UComment>) result.result;
-                    if (offset == 0) {
-                        //Refresh
-                        if (ars.size() > 0) {
-                            adapter.setList(ars);
-                            adapter.notifyDataSetInvalidated();
-                        } else {
-                            //no data loaded,不清除，保留旧数据
-                        }
-                    } else {
-                        //Load More
-                        if (ars.size() > 0) {
-                            adapter.addAll(ars);
-                            adapter.notifyDataSetChanged();
-                        } else {
-                            //no data loaded
-                        }
+            if (result.ok) {
+                loadingView.onLoadSuccess();
+                ArrayList<UComment> ars = (ArrayList<UComment>) result.result;
+                if (offset == 0) {
+                    //Refresh
+                    if (ars.size() > 0) {
+                        adapter.setList(ars);
+                        adapter.notifyDataSetInvalidated();
                     }
-                    if (adapter.getCount() > 0) {
-                        listView.setCanPullToLoadMore(ars.size() >= 20);//请求下来20条说明已经后面可能还有数据
-                    } else {
-                        listView.setCanPullToLoadMore(false);
-                    }
-                    listView.setCanPullToRefresh(true);
                 } else {
-                    // load error
+                    //Load More
+                    if (ars.size() > 0) {
+                        adapter.addAll(ars);
+                        adapter.notifyDataSetChanged();
+                    }
                 }
-
-                listView.doneOperation();
+                if (adapter.getCount() > 0) {
+                    listView.setCanPullToLoadMore(ars.size() >= 20);//请求下来20条说明已经后面可能还有数据
+                } else {
+                    listView.setCanPullToLoadMore(false);
+                }
+                listView.setCanPullToRefresh(true);
+            } else {
+                ToastUtil.toast(getString(R.string.load_failed));
+                loadingView.onLoadFailed();
             }
+            listView.doneOperation();
         }
     }
 }

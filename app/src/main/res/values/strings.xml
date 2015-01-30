@@ -129,5 +129,6 @@
     <string name="hint_reload_csrf">拉取验证失败，请点击右上角重新加载验证~</string>
     <string name="sample_support_number">9999</string>
     <string name="hint_input_your_tail">输入自定义尾巴，不输入则不添加尾巴~</string>
+    <string name="load_failed">加载失败</string>
 
 </resources>

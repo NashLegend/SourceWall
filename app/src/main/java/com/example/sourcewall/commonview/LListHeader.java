@@ -233,8 +233,10 @@ public class LListHeader extends FrameLayout {
                 setVisibility(View.VISIBLE);
             }
             ViewGroup.LayoutParams params = getLayoutParams();
-            params.height = height;
-            setLayoutParams(params);
+            if (params != null) {
+                params.height = height;
+                setLayoutParams(params);
+            }
         }
     }
 }

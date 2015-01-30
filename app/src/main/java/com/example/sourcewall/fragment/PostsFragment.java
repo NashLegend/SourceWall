@@ -60,7 +60,7 @@ import java.util.List;
  * 因此要改为按页加载，还要提供加载上一页的功能，按时间倒序排列的都有这问题……
  * 我擦……
  */
-public class PostsFragment extends ChannelsFragment implements LListView.OnRefreshListener {
+public class PostsFragment extends ChannelsFragment implements LListView.OnRefreshListener, LoadingView.ReloadListener {
     private LListView listView;
     private PostAdapter adapter;
     private LoaderTask task;
@@ -79,6 +79,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         subItem = (SubItem) getArguments().getSerializable(Consts.Extra_SubItem);
         headerView = inflater.inflate(R.layout.layout_header_load_pre_page, null, false);
         loadingView = (LoadingView) view.findViewById(R.id.post_progress_loading);
+        loadingView.setReloadListener(this);
         listView = (LListView) view.findViewById(R.id.list_posts);
         adapter = new PostAdapter(getActivity());
         listView.setCanPullToRefresh(false);
@@ -361,7 +362,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     }
 
     private void loadOver() {
-        loadingView.setVisibility(View.VISIBLE);
+        loadingView.startLoading();
         loadData(0);
     }
 
@@ -498,6 +499,11 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         }
     }
 
+    @Override
+    public void reload() {
+        loadData(0);
+    }
+
     /**
      * 这几个Task都长得很像，可以封装起来
      */
@@ -526,9 +532,9 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
 
         @Override
         protected void onPostExecute(ResultObject o) {
-            loadingView.setVisibility(View.GONE);
             if (!isCancelled()) {
                 if (o.ok) {
+                    loadingView.onLoadSuccess();
                     ArrayList<Post> ars = (ArrayList<Post>) o.result;
                     if (ars.size() > 0) {
                         currentPage = loadedPage;
@@ -540,10 +546,8 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                         ToastUtil.toast("No Data Loaded");
                     }
                 } else {
-                    if (currentPage > 0) {
-                        headerView.setVisibility(View.VISIBLE);
-                        headerView.getLayoutParams().height = 0;
-                    }
+                    ToastUtil.toast(getString(R.string.load_failed));
+                    loadingView.onLoadFailed();
                 }
                 if (currentPage > 0) {
                     headerView.setVisibility(View.VISIBLE);

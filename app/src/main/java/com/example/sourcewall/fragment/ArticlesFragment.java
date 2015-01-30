@@ -30,7 +30,7 @@ import java.util.ArrayList;
 /**
  * Created by NashLegend on 2014/9/18 0018
  */
-public class ArticlesFragment extends ChannelsFragment implements LListView.OnRefreshListener {
+public class ArticlesFragment extends ChannelsFragment implements LListView.OnRefreshListener, LoadingView.ReloadListener {
 
     private LListView listView;
     private ArticleAdapter adapter;
@@ -47,6 +47,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
     public View onCreateLayoutView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_articles, container, false);
         loadingView = (LoadingView) view.findViewById(R.id.article_progress_loading);
+        loadingView.setReloadListener(this);
         subItem = (SubItem) getArguments().getSerializable(Consts.Extra_SubItem);
         listView = (LListView) view.findViewById(R.id.list_articles);
         adapter = new ArticleAdapter(getActivity());
@@ -85,7 +86,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
     }
 
     private void loadOver() {
-        loadingView.setVisibility(View.VISIBLE);
+        loadingView.startLoading();
         loadData(0);
     }
 
@@ -158,6 +159,11 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
         }
     }
 
+    @Override
+    public void reload() {
+        loadData(0);
+    }
+
     class LoaderTask extends AsyncTask<Integer, Integer, ResultObject> {
 
         int offset;
@@ -179,39 +185,34 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
 
         @Override
         protected void onPostExecute(ResultObject o) {
-            loadingView.setVisibility(View.GONE);
-            if (!isCancelled()) {
-                if (o.ok) {
-                    ArrayList<Article> ars = (ArrayList<Article>) o.result;
-                    if (offset > 0) {
-                        //Load More
-                        if (ars.size() > 0) {
-                            adapter.addAll(ars);
-                            adapter.notifyDataSetChanged();
-                        } else {
-                            //no data loaded
-                        }
-                    } else {
-                        //Refresh
-                        if (ars.size() > 0) {
-                            adapter.setList(ars);
-                            adapter.notifyDataSetInvalidated();
-                        } else {
-                            //no data loaded,不要清除了，保留旧数据得了
-                        }
+            if (o.ok) {
+                loadingView.onLoadSuccess();
+                ArrayList<Article> ars = (ArrayList<Article>) o.result;
+                if (offset > 0) {
+                    //Load More
+                    if (ars.size() > 0) {
+                        adapter.addAll(ars);
+                        adapter.notifyDataSetChanged();
                     }
                 } else {
-                    ToastUtil.toast("Load Error");
+                    //Refresh
+                    if (ars.size() > 0) {
+                        adapter.setList(ars);
+                        adapter.notifyDataSetInvalidated();
+                    }
                 }
-                if (adapter.getCount() > 0) {
-                    listView.setCanPullToLoadMore(true);
-                    listView.setCanPullToRefresh(true);
-                } else {
-                    listView.setCanPullToLoadMore(false);
-                    listView.setCanPullToRefresh(true);
-                }
-                listView.doneOperation();
+            } else {
+                ToastUtil.toast(getString(R.string.load_failed));
+                loadingView.onLoadFailed();
             }
+            if (adapter.getCount() > 0) {
+                listView.setCanPullToLoadMore(true);
+                listView.setCanPullToRefresh(true);
+            } else {
+                listView.setCanPullToLoadMore(false);
+                listView.setCanPullToRefresh(true);
+            }
+            listView.doneOperation();
         }
     }
 

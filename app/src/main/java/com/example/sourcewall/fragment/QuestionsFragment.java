@@ -36,7 +36,7 @@ import java.util.ArrayList;
 /**
  * Created by NashLegend on 2014/9/18 0018
  */
-public class QuestionsFragment extends ChannelsFragment implements LListView.OnRefreshListener {
+public class QuestionsFragment extends ChannelsFragment implements LListView.OnRefreshListener, LoadingView.ReloadListener {
     private final String HOTTEST = "hottest";
     private final String HIGHLIGHT = "highlight";
     private LListView listView;
@@ -52,6 +52,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
     public View onCreateLayoutView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_questions, container, false);
         loadingView = (LoadingView) view.findViewById(R.id.question_progress_loading);
+        loadingView.setReloadListener(this);
         subItem = (SubItem) getArguments().getSerializable(Consts.Extra_SubItem);
         headerView = inflater.inflate(R.layout.layout_header_load_pre_page, null, false);
         listView = (LListView) view.findViewById(R.id.list_questions);
@@ -121,7 +122,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
     }
 
     private void loadOver() {
-        loadingView.setVisibility(View.VISIBLE);
+        loadingView.startLoading();
         loadData(0);
     }
 
@@ -221,6 +222,11 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
         }
     }
 
+    @Override
+    public void reload() {
+        loadData(0);
+    }
+
     class LoaderTask extends AsyncTask<Integer, Integer, ResultObject> {
 
         int loadedPage;
@@ -255,6 +261,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
             loadingView.setVisibility(View.GONE);
             if (!isCancelled()) {
                 if (o.ok) {
+                    loadingView.onLoadSuccess();
                     ArrayList<Question> ars = (ArrayList<Question>) o.result;
                     if (ars.size() > 0) {
                         currentPage = loadedPage;
@@ -266,7 +273,8 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
                         ToastUtil.toast("No Data Loaded");
                     }
                 } else {
-                    ToastUtil.toast("Load Error");
+                    ToastUtil.toast(getString(R.string.load_failed));
+                    loadingView.onLoadFailed();
                 }
                 if (currentPage > 0) {
                     headerView.setVisibility(View.VISIBLE);

@@ -33,7 +33,7 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.ArrayList;
 
-public class PostActivity extends SwipeActivity implements LListView.OnRefreshListener, View.OnClickListener {
+public class PostActivity extends SwipeActivity implements LListView.OnRefreshListener, View.OnClickListener, LoadingView.ReloadListener {
     private LListView listView;
     private PostDetailAdapter adapter;
     private Post post;
@@ -55,6 +55,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
         loadingView = (LoadingView) findViewById(R.id.post_progress_loading);
+        loadingView.setReloadListener(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         post = (Post) getIntent().getSerializableExtra(Consts.Extra_Post);
@@ -148,6 +149,11 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         }
     }
 
+    @Override
+    public void reload() {
+        loadData(-1);
+    }
+
     class LoaderTask extends AsyncTask<Integer, Integer, ResultObject> {
         int offset;
 
@@ -168,15 +174,15 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
 
         @Override
         protected void onPostExecute(ResultObject result) {
-            loadingView.setVisibility(View.GONE);
             if (result.ok) {
+                loadingView.onLoadSuccess();
                 ArrayList<AceModel> ars = (ArrayList<AceModel>) result.result;
                 if (offset < 0) {
                     //Refresh
                     if (ars.size() > 0) {
                         adapter.setList(ars);
                         adapter.notifyDataSetInvalidated();
-                    }
+                    }//否则就是页面不存在，这种情况在ok的情况下不存在
                 } else {
                     //Load More
                     if (ars.size() > 0) {
@@ -185,7 +191,6 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
                     }
                 }
                 if (adapter.getCount() > 0) {
-                    //listView.setCanPullToLoadMore(ars.size() >= 20);
                     listView.setCanPullToLoadMore(true);
                 } else {
                     listView.setCanPullToLoadMore(false);
@@ -195,7 +200,8 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
                     ToastUtil.toastSingleton("页面不存在");
                     finish();
                 } else {
-                    ToastUtil.toastSingleton("加载失败");
+                    ToastUtil.toast(getString(R.string.load_failed));
+                    loadingView.onLoadFailed();
                 }
             }
             listView.doneOperation();
