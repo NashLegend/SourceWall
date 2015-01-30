@@ -259,41 +259,39 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
         @Override
         protected void onPostExecute(ResultObject o) {
             loadingView.setVisibility(View.GONE);
-            if (!isCancelled()) {
-                if (o.ok) {
-                    loadingView.onLoadSuccess();
-                    ArrayList<Question> ars = (ArrayList<Question>) o.result;
-                    if (ars.size() > 0) {
-                        currentPage = loadedPage;
-                        adapter.setList(ars);
-                        adapter.notifyDataSetInvalidated();
-                        listView.smoothScrollToPosition(0);
-                    } else {
-                        //没有数据，页码不变
-                        ToastUtil.toast("No Data Loaded");
-                    }
+            if (o.ok) {
+                loadingView.onLoadSuccess();
+                ArrayList<Question> ars = (ArrayList<Question>) o.result;
+                if (ars.size() > 0) {
+                    currentPage = loadedPage;
+                    adapter.setList(ars);
+                    adapter.notifyDataSetInvalidated();
+                    listView.smoothScrollToPositionFromTop(0, 0, 0);
                 } else {
-                    ToastUtil.toast(getString(R.string.load_failed));
-                    loadingView.onLoadFailed();
+                    //没有数据，页码不变
+                    ToastUtil.toast("No Data Loaded");
                 }
-                if (currentPage > 0) {
-                    headerView.setVisibility(View.VISIBLE);
-                    headerView.getLayoutParams().height = 0;
-                } else {
-                    headerView.getLayoutParams().height = 1;
-                    headerView.setVisibility(View.GONE);
-                }
-                if (adapter.getCount() > 0) {
-                    listView.setCanPullToLoadMore(true);
-                    listView.setCanPullToRefresh(true);
-                } else {
-                    listView.setCanPullToLoadMore(false);
-                    listView.setCanPullToRefresh(true);
-                }
-                headerView.findViewById(R.id.text_header_load_hint).setVisibility(View.VISIBLE);
-                headerView.findViewById(R.id.progress_header_loading).setVisibility(View.GONE);
-                listView.doneOperation();
+            } else {
+                ToastUtil.toast(getString(R.string.load_failed));
+                loadingView.onLoadFailed();
             }
+            if (currentPage > 0) {
+                headerView.setVisibility(View.VISIBLE);
+                headerView.getLayoutParams().height = 0;
+            } else {
+                headerView.getLayoutParams().height = 1;
+                headerView.setVisibility(View.GONE);
+            }
+            if (adapter.getCount() > 0) {
+                listView.setCanPullToLoadMore(true);
+                listView.setCanPullToRefresh(true);
+            } else {
+                listView.setCanPullToLoadMore(false);
+                listView.setCanPullToRefresh(true);
+            }
+            headerView.findViewById(R.id.text_header_load_hint).setVisibility(View.VISIBLE);
+            headerView.findViewById(R.id.progress_header_loading).setVisibility(View.GONE);
+            listView.doneOperation();
         }
     }
 }

@@ -211,34 +211,32 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
 
         @Override
         protected void onPostExecute(ResultObject result) {
-            if (!isCancelled()) {
-                if (result.ok) {
-                    loadingView.onLoadSuccess();
-                    ArrayList<AceModel> ars = (ArrayList<AceModel>) result.result;
-                    if (offset < 0) {
-                        //Refresh
-                        if (ars.size() > 0) {
-                            adapter.setList(ars);
-                            adapter.notifyDataSetInvalidated();
-                        }
-                    } else {
-                        //Load More
-                        if (ars.size() > 0) {
-                            adapter.addAll(ars);
-                            adapter.notifyDataSetChanged();
-                        }
-                    }
-                    if (adapter.getCount() > 0) {
-                        listView.setCanPullToLoadMore(true);
-                    } else {
-                        listView.setCanPullToLoadMore(false);
+            if (result.ok) {
+                loadingView.onLoadSuccess();
+                ArrayList<AceModel> ars = (ArrayList<AceModel>) result.result;
+                if (offset < 0) {
+                    //Refresh
+                    if (ars.size() > 0) {
+                        adapter.setList(ars);
+                        adapter.notifyDataSetInvalidated();
                     }
                 } else {
-                    ToastUtil.toast(getString(R.string.load_failed));
-                    loadingView.onLoadFailed();
+                    //Load More
+                    if (ars.size() > 0) {
+                        adapter.addAll(ars);
+                        adapter.notifyDataSetChanged();
+                    }
                 }
-                listView.doneOperation();
+                if (adapter.getCount() > 0) {
+                    listView.setCanPullToLoadMore(true);
+                } else {
+                    listView.setCanPullToLoadMore(false);
+                }
+            } else {
+                ToastUtil.toast(getString(R.string.load_failed));
+                loadingView.onLoadFailed();
             }
+            listView.doneOperation();
         }
     }
 
