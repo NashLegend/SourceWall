@@ -81,12 +81,12 @@ public class LListFooter extends FrameLayout {
             } else {
                 release2Normal();
             }
-        } else if (currentState == LListView.State_Pull_Up_To_Load_More) {
-            pull2Normal();
         } else if (currentState == LListView.State_Loading_More) {
             if (getActualHeight() > Release_Height) {
                 loading2Loading();
             }
+        } else {
+            pull2Normal();
         }
         lastState = LListView.State_Normal;
     }

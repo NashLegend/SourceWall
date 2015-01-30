@@ -37,6 +37,7 @@ public class LListHeader extends FrameLayout {
         if (dist < 0 && !isVisible()) {
             return false;
         }
+
         if (currentState != LListView.State_Refreshing) {
             // 这时只有两种可能的状态State_Release_To_Refresh和State_Pull_To_Refresh
             // 或许可以做更多
@@ -49,7 +50,6 @@ public class LListHeader extends FrameLayout {
             } else {
                 currentState = LListView.State_Normal;
             }
-
         }
 
         //这段表示状态之间的转换，不涉及状态内动作
@@ -63,7 +63,7 @@ public class LListHeader extends FrameLayout {
                     release2Pull();
                 }
             } else if (currentState == LListView.State_Release_To_Refresh) {
-                //只有可能从State_Pull_To_Refresh变来
+                //可能从State_Pull_To_Refresh变来,极快的话也有可能是Normal，但是这在上面禁止了
                 pull2Release();
             }
         }
@@ -82,12 +82,13 @@ public class LListHeader extends FrameLayout {
             } else {
                 release2Normal();
             }
-        } else if (currentState == LListView.State_Pull_Down_To_Refresh) {
-            pull2Normal();
         } else if (currentState == LListView.State_Refreshing) {
             if (getHeight() > Release_Height) {
                 refreshing2Refreshing();
             }
+        } else {
+            System.out.println("pull2Normal");
+            pull2Normal();
         }
         lastState = currentState;
     }
@@ -233,10 +234,8 @@ public class LListHeader extends FrameLayout {
                 setVisibility(View.VISIBLE);
             }
             ViewGroup.LayoutParams params = getLayoutParams();
-            if (params != null) {
-                params.height = height;
-                setLayoutParams(params);
-            }
+            params.height = height;
+            setLayoutParams(params);
         }
     }
 }
