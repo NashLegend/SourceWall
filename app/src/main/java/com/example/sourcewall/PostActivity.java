@@ -224,15 +224,15 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         replyPost(comment);
     }
 
-    private void likeComment(UComment comment) {
+    private void likeComment(MediumListItemView mediumListItemView) {
         if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
         } else {
-            if (comment.isHasLiked()) {
+            if (mediumListItemView.getData().isHasLiked()) {
                 ToastUtil.toastSingleton("已经赞过了");
             } else {
                 LikeCommentTask likeCommentTask = new LikeCommentTask();
-                likeCommentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, comment);
+                likeCommentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediumListItemView);
             }
         }
     }
@@ -279,7 +279,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
                             copyComment(comment);
                             break;
                         case 2:
-                            likeComment(comment);
+                            likeComment((MediumListItemView) view);
                             break;
                         case 3:
                             deleteComment(comment);
@@ -312,13 +312,15 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         }
     }
 
-    class LikeCommentTask extends AsyncTask<UComment, Integer, ResultObject> {
+    class LikeCommentTask extends AsyncTask<MediumListItemView, Integer, ResultObject> {
 
         UComment comment;
+        MediumListItemView mediumListItemView;
 
         @Override
-        protected ResultObject doInBackground(UComment... params) {
-            comment = params[0];
+        protected ResultObject doInBackground(MediumListItemView... params) {
+            mediumListItemView = params[0];
+            comment = mediumListItemView.getData();
             return PostAPI.likeComment(comment.getID());
         }
 
@@ -327,7 +329,9 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
             if (resultObject.ok) {
                 comment.setHasLiked(true);
                 comment.setLikeNum(comment.getLikeNum() + 1);
-                adapter.notifyDataSetChanged();
+                if (mediumListItemView.getData() == comment) {
+                    mediumListItemView.plusOneLike();
+                }
             } else {
                 if (resultObject.code == ResultObject.ResultCode.CODE_ALREADY_LIKED) {
                     comment.setHasLiked(true);

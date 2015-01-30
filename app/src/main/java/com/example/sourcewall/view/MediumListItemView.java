@@ -56,6 +56,10 @@ public class MediumListItemView extends AceView<UComment> {
         super(context, attrs, defStyle);
     }
 
+    public void plusOneLike() {
+        likesView.setText(comment.getLikeNum() + "");
+    }
+
     @Override
     public void setData(UComment model) {
         comment = model;
