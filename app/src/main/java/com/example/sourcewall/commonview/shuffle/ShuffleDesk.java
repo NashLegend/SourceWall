@@ -15,12 +15,12 @@ import java.util.ArrayList;
 public class ShuffleDesk extends RelativeLayout {
     private ArrayList<MovableButton> selectedButtons = new ArrayList<>();
     private ArrayList<MovableButton> unselectedButtons = new ArrayList<>();
-    private int buttonHeightDip = 48;
+    public static int buttonHeightDip = 40;
     public static int buttonWidth = 0;
     public static int buttonHeight = 0;
     public static int Columns = 3;
     public static int vGapDip = 2;// x2
-    public static int hGapDip = 1;// x2
+    public static int hGapDip = 2;// x2
     public static int vGap = 0;
     public static int hGap = 0;
     public static int buttonCellWidth = 0;

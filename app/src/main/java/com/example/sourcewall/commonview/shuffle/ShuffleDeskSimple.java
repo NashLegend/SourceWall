@@ -13,7 +13,6 @@ import java.util.ArrayList;
 
 public class ShuffleDeskSimple extends RelativeLayout {
     private ArrayList<MovableButton> buttons = new ArrayList<>();
-    private int buttonHeightDip = 48;
     private ShuffleCardSimple senator;
     private LinearLayout senatorLayout;
 
@@ -38,7 +37,7 @@ public class ShuffleDeskSimple extends RelativeLayout {
         ShuffleDesk.hGap = dip2px(ShuffleDesk.hGapDip, getContext());
 
         ShuffleDesk.buttonCellWidth = DisplayUtil.getScreenWidth(getContext()) / ShuffleDesk.Columns;
-        ShuffleDesk.buttonHeight = dip2px(buttonHeightDip, getContext());
+        ShuffleDesk.buttonHeight = dip2px(ShuffleDesk.buttonHeightDip, getContext());
 
         ShuffleDesk.buttonWidth = ShuffleDesk.buttonCellWidth - ShuffleDesk.hGap * 2;
         ShuffleDesk.buttonCellHeight = ShuffleDesk.buttonHeight + ShuffleDesk.vGap * 2;
