@@ -261,19 +261,19 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
                         adapter.setList(ars);
                         adapter.notifyDataSetInvalidated();
                         listView.smoothScrollToPosition(0);
-                        if (currentPage > 0) {
-                            headerView.setVisibility(View.VISIBLE);
-                            headerView.getLayoutParams().height = 0;
-                        } else {
-                            headerView.getLayoutParams().height = 1;
-                            headerView.setVisibility(View.GONE);
-                        }
                     } else {
                         //没有数据，页码不变
                         ToastUtil.toast("No Data Loaded");
                     }
                 } else {
                     ToastUtil.toast("Load Error");
+                }
+                if (currentPage > 0) {
+                    headerView.setVisibility(View.VISIBLE);
+                    headerView.getLayoutParams().height = 0;
+                } else {
+                    headerView.getLayoutParams().height = 1;
+                    headerView.setVisibility(View.GONE);
                 }
                 if (adapter.getCount() > 0) {
                     listView.setCanPullToLoadMore(true);
