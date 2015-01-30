@@ -134,8 +134,8 @@ public class MainActivity extends BaseActivity {
             Bundle bundle = new Bundle();
             bundle.putSerializable(Consts.Extra_SubItem, subItem);
             fragment.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commitAllowingStateLoss();
             currentFragment = fragment;
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
         }
     }
 

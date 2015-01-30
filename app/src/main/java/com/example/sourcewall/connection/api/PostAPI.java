@@ -292,7 +292,7 @@ public class PostAPI extends APIBase {
                     JSONObject jo = articles.getJSONObject(i);
                     Post post = new Post();
                     post.setId(getJsonString(jo, "id"));
-                    post.setGroupName(jo.getJSONObject("group").getString("name"));
+                    post.setGroupName(getJsonString(jo.getJSONObject("group"), "name"));
                     post.setTitle(getJsonString(jo, "title"));
                     post.setUrl(getJsonString(jo, "url"));
                     post.setAuthor(jo.getJSONObject("author").getString("nickname"));
