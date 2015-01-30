@@ -532,6 +532,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
 
         @Override
         protected void onPostExecute(ResultObject o) {
+            listView.doneOperation();
             if (o.ok) {
                 loadingView.onLoadSuccess();
                 ArrayList<Post> ars = (ArrayList<Post>) o.result;
@@ -542,7 +543,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                     listView.smoothScrollToPositionFromTop(0, 0, 0);
                 } else {
                     //没有数据，页码不变
-                    ToastUtil.toast("No Data Loaded");
+                    ToastUtil.toast("没有加载到数据");
                 }
             } else {
                 ToastUtil.toast(getString(R.string.load_failed));
@@ -564,7 +565,6 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
             }
             headerView.findViewById(R.id.text_header_load_hint).setVisibility(View.VISIBLE);
             headerView.findViewById(R.id.progress_header_loading).setVisibility(View.GONE);
-            listView.doneOperation();
         }
     }
 }

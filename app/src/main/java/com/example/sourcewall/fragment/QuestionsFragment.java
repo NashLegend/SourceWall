@@ -258,7 +258,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
 
         @Override
         protected void onPostExecute(ResultObject o) {
-            loadingView.setVisibility(View.GONE);
+            listView.doneOperation();
             if (o.ok) {
                 loadingView.onLoadSuccess();
                 ArrayList<Question> ars = (ArrayList<Question>) o.result;
@@ -269,7 +269,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
                     listView.smoothScrollToPositionFromTop(0, 0, 0);
                 } else {
                     //没有数据，页码不变
-                    ToastUtil.toast("No Data Loaded");
+                    ToastUtil.toast("没有加载到数据");
                 }
             } else {
                 ToastUtil.toast(getString(R.string.load_failed));
@@ -291,7 +291,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
             }
             headerView.findViewById(R.id.text_header_load_hint).setVisibility(View.VISIBLE);
             headerView.findViewById(R.id.progress_header_loading).setVisibility(View.GONE);
-            listView.doneOperation();
+
         }
     }
 }
