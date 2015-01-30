@@ -11,6 +11,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
+import com.example.sourcewall.util.DisplayUtil;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -25,6 +27,8 @@ public class ShuffleCard extends RelativeLayout {
     ArrayList<MovableButton> list;
     ShuffleDeskSimple deskSimple;
     ScrollView scrollView;
+    int minScrollSpeed = 10;
+    int maxScrollSpeed = 30;
 
     public ShuffleCard(Context context) {
         super(context);
@@ -47,6 +51,8 @@ public class ShuffleCard extends RelativeLayout {
      * @param scrollView
      */
     public void setDeskSimple(ShuffleDeskSimple shuffleDeskSimple, LinearLayout layout, ScrollView scrollView) {
+        minScrollSpeed = DisplayUtil.dip2px(4, getContext());
+        maxScrollSpeed = DisplayUtil.dip2px(12, getContext());
         this.deskSimple = shuffleDeskSimple;
         this.scrollView = scrollView;
         parentLayout = layout;

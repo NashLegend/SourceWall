@@ -265,11 +265,21 @@ public class ShuffleCardSimple extends ShuffleCard {
                             scrollView.getLocationOnScreen(pos);
                             int top = pos[1];
                             int bottom = top + scrollView.getHeight();
+                            int span = 0;
                             if (rawY - ShuffleDesk.buttonHeight / 2 < top) {
-                                scrollView.scrollBy(0, -10);
+                                //速度小于0
+                                span = (int) (-minScrollSpeed + rawY - ShuffleDesk.buttonHeight / 2 - top);
+                                if (span < -maxScrollSpeed) {
+                                    span = -maxScrollSpeed;
+                                }
+                                scrollView.scrollBy(0, span);
                                 offset = 0;
                             } else if (rawY + ShuffleDesk.buttonHeight / 2 > bottom) {
-                                scrollView.scrollBy(0, 10);
+                                span = (int) (minScrollSpeed + rawY + ShuffleDesk.buttonHeight / 2 - bottom);
+                                if (span > maxScrollSpeed) {
+                                    span = maxScrollSpeed;
+                                }
+                                scrollView.scrollBy(0, span);
                                 offset = 0;
                             }
 
