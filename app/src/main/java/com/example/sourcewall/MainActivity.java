@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -17,8 +18,10 @@ import com.example.sourcewall.fragment.NavigationDrawerFragment;
 import com.example.sourcewall.fragment.PostsFragment;
 import com.example.sourcewall.fragment.QuestionsFragment;
 import com.example.sourcewall.model.SubItem;
+import com.example.sourcewall.util.Config;
 import com.example.sourcewall.util.Consts;
 import com.example.sourcewall.util.SharedUtil;
+import com.example.sourcewall.util.ToastUtil;
 
 
 public class MainActivity extends BaseActivity {
@@ -78,12 +81,25 @@ public class MainActivity extends BaseActivity {
         actionBar.setTitle(getTitle());
     }
 
+    boolean preparingToExit = false;
+
     @Override
     public void onBackPressed() {
         if (currentFragment != null && currentFragment.takeOverBackPressed()) {
             return;
         }
-        super.onBackPressed();
+        if (preparingToExit) {
+            super.onBackPressed();
+        } else {
+            preparingToExit = true;
+            ToastUtil.toastSingleton("再次点击返回退出程序");
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    preparingToExit = false;
+                }
+            }, Config.ExitTapsGap);
+        }
     }
 
     @Override

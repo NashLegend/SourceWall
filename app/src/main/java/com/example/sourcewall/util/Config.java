@@ -12,6 +12,8 @@ import com.example.sourcewall.R;
  */
 public class Config {
 
+    public final static int ExitTapsGap = 1200;
+
     public static boolean shouldLoadImage() {
         //略微有点耗时，最多可耗时3ms，最低0.3ms
         //可以监听网络状态变化，记录状态，而不是直接读ConnectivityManager和SharedPreference
@@ -44,7 +46,7 @@ public class Config {
     /**
      * 上传图片尺寸
      *
-     * @return
+     * @return 返回图片最小边的尺寸限制
      */
     public static int getUploadImageSizeRestrict() {
         return 720;
