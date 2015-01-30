@@ -8,6 +8,7 @@ public class Post extends AceModel {
     private String title = "";
     private String url = "";
     private String titleImageUrl = "";
+    private boolean authorExists = true;
     private String authorAvatarUrl = "";
     private String author = "";
     private String authorID = "";
@@ -163,4 +164,11 @@ public class Post extends AceModel {
         this.featured = featured;
     }
 
+    public boolean isAuthorExists() {
+        return authorExists;
+    }
+
+    public void setAuthorExists(boolean authorExists) {
+        this.authorExists = authorExists;
+    }
 }

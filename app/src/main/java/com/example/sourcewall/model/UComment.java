@@ -9,6 +9,7 @@ public class UComment extends AceModel {
     //    private CharSequence simpleHtml = "";
     private String date = "";
     private String author = "";
+    private boolean authorExists = true;
     private String authorAvatarUrl = "";
     private String authorTitle = "";
     private String floor = "";// 楼层
@@ -124,4 +125,11 @@ public class UComment extends AceModel {
         this.isContentComplex = isContentComplex;
     }
 
+    public boolean isAuthorExists() {
+        return authorExists;
+    }
+
+    public void setAuthorExists(boolean authorExists) {
+        this.authorExists = authorExists;
+    }
 }

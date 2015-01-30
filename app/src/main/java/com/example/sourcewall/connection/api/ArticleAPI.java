@@ -257,12 +257,19 @@ public class ArticleAPI extends APIBase {
                     comment.setID(getJsonString(jo, "id"));
                     comment.setLikeNum(jo.getInt("likings_count"));
                     comment.setHasLiked(jo.getBoolean("current_user_has_liked"));
-                    comment.setAuthor(getJsonString(getJsonObject(jo, "author"), "nickname"));
-                    comment.setAuthorID(getJsonString(getJsonObject(jo, "author"), "url")
-                            .replaceAll("\\D+", ""));
-                    comment.setAuthorAvatarUrl(jo.getJSONObject("author").getJSONObject("avatar")
-                            .getString("large").replaceAll("\\?\\S*$", ""));
-                    comment.setAuthorTitle(getJsonString(getJsonObject(jo, "author"), "title"));
+                    JSONObject authorObject = getJsonObject(jo, "author");
+                    boolean exists = getJsonBoolean(authorObject, "is_exists");
+                    comment.setAuthorExists(exists);
+                    if (exists) {
+                        comment.setAuthor(getJsonString(authorObject, "nickname"));
+                        comment.setAuthorTitle(getJsonString(authorObject, "title"));
+                        comment.setAuthorID(getJsonString(authorObject, "url")
+                                .replaceAll("\\D+", ""));
+                        comment.setAuthorAvatarUrl(getJsonObject(authorObject, "avatar")
+                                .getString("large").replaceAll("\\?\\S*$", ""));
+                    } else {
+                        comment.setAuthor("此用户不存在");
+                    }
                     comment.setDate(parseDate(getJsonString(jo, "date_created")));
                     comment.setFloor((offset + i + 1) + "楼");
                     comment.setContent(getJsonString(jo, "html"));

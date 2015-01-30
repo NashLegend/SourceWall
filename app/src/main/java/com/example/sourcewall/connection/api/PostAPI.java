@@ -295,11 +295,18 @@ public class PostAPI extends APIBase {
                     post.setGroupName(getJsonString(jo.getJSONObject("group"), "name"));
                     post.setTitle(getJsonString(jo, "title"));
                     post.setUrl(getJsonString(jo, "url"));
-                    post.setAuthor(jo.getJSONObject("author").getString("nickname"));
-                    post.setAuthorID(jo.getJSONObject("author").getString("url")
-                            .replaceAll("\\D+", ""));
-                    post.setAuthorAvatarUrl(jo.getJSONObject("author").getJSONObject("avatar")
-                            .getString("large").replaceAll("\\?\\S*$", ""));
+                    JSONObject authorObject = getJsonObject(jo, "author");
+                    boolean exists = getJsonBoolean(authorObject, "is_exists");
+                    post.setAuthorExists(exists);
+                    if (exists) {
+                        post.setAuthor(getJsonString(authorObject, "nickname"));
+                        post.setAuthorID(getJsonString(authorObject, "url")
+                                .replaceAll("\\D+", ""));
+                        post.setAuthorAvatarUrl(getJsonObject(authorObject, "avatar")
+                                .getString("large").replaceAll("\\?\\S*$", ""));
+                    } else {
+                        post.setAuthor("此用户不存在");
+                    }
                     post.setDate(parseDate(getJsonString(jo, "date_created")));
                     post.setReplyNum(getJsonInt(jo, "replies_count"));
                     post.setLikeNum(getJsonInt(jo, "recommends_count"));
@@ -339,7 +346,7 @@ public class PostAPI extends APIBase {
             Post detail = new Post();
             ResultObject response = HttpFetcher.get(url);
             resultObject.statusCode = response.statusCode;//http Client怎么把404返回成200了我擦。TODO
-            String html = HttpFetcher.get(url).toString();
+            String html = response.toString();
             Document doc = Jsoup.parse(html);
             if (doc.getElementsByTag("title").text().startsWith("404")) {
                 resultObject.statusCode = 404;
@@ -402,11 +409,18 @@ public class PostAPI extends APIBase {
                     UComment comment = new UComment();
                     comment.setID(getJsonString(jo, "id"));
                     comment.setHasLiked(jo.getBoolean("current_user_has_liked"));//始终是false，不知怎么搞了，猜不出
-                    comment.setAuthor(getJsonObject(jo, "author").getString("nickname"));
-                    comment.setAuthorID(getJsonObject(jo, "author").getString("url")
-                            .replaceAll("\\D+", ""));
-                    comment.setAuthorAvatarUrl(getJsonObject(jo, "author").getJSONObject("avatar")
-                            .getString("large").replaceAll("\\?\\S*$", ""));
+                    JSONObject authorObject = getJsonObject(jo, "author");
+                    boolean exists = getJsonBoolean(authorObject, "is_exists");
+                    comment.setAuthorExists(exists);
+                    if (exists) {
+                        comment.setAuthor(getJsonString(authorObject, "nickname"));
+                        comment.setAuthorID(getJsonString(authorObject, "url")
+                                .replaceAll("\\D+", ""));
+                        comment.setAuthorAvatarUrl(getJsonObject(authorObject, "avatar")
+                                .getString("large").replaceAll("\\?\\S*$", ""));
+                    } else {
+                        comment.setAuthor("此用户不存在");
+                    }
                     comment.setDate(parseDate(getJsonString(jo, "date_created")));
                     comment.setLikeNum(getJsonInt(jo, "likings_count"));
                     comment.setContent(getJsonString(jo, "html"));

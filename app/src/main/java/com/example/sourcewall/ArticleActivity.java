@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -60,7 +61,9 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         article = (Article) getIntent().getSerializableExtra(Consts.Extra_Article);
-        setTitle(article.getSubjectName() + " -- 科学人");
+        if (!TextUtils.isEmpty(article.getSubjectName())) {
+            setTitle(article.getSubjectName() + " -- 科学人");
+        }
         listView = (LListView) findViewById(R.id.list_detail);
         adapter = new ArticleDetailAdapter(this);
         listView.setAdapter(adapter);

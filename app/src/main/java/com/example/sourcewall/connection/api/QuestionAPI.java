@@ -271,12 +271,19 @@ public class QuestionAPI extends APIBase {
                 for (int i = 0; i < comments.length(); i++) {
                     JSONObject jo = comments.getJSONObject(i);
                     QuestionAnswer ans = new QuestionAnswer();
-                    ans.setAuthor(getJsonString(getJsonObject(jo, "author"), "nickname"));
-                    ans.setAuthorID(getJsonString(getJsonObject(jo, "author"), "url")
-                            .replaceAll("\\D+", ""));
-                    ans.setAuthorAvatarUrl(jo.getJSONObject("author").getJSONObject("avatar")
-                            .getString("large").replaceAll("\\?\\S*$", ""));
-                    ans.setAuthorTitle(getJsonString(getJsonObject(jo, "author"), "title"));
+                    JSONObject authorObject = getJsonObject(jo, "author");
+                    boolean exists = getJsonBoolean(authorObject, "is_exists");
+                    ans.setAuthorExists(exists);
+                    if (exists) {
+                        ans.setAuthor(getJsonString(authorObject, "nickname"));
+                        ans.setAuthorTitle(getJsonString(authorObject, "title"));
+                        ans.setAuthorID(getJsonString(authorObject, "url")
+                                .replaceAll("\\D+", ""));
+                        ans.setAuthorAvatarUrl(getJsonObject(authorObject, "avatar")
+                                .getString("large").replaceAll("\\?\\S*$", ""));
+                    } else {
+                        ans.setAuthor("此用户不存在");
+                    }
                     ans.setCommentNum(getJsonInt(jo, "replies_count"));
                     ans.setContent(getJsonString(jo, "html").replaceAll("<img .*?/>", prefix + "$0" + suffix).replaceAll("style=\"max-width: \\d+px\"", "style=\"max-width: " + maxImageWidth + "px\""));
                     ans.setDate_created(parseDate(getJsonString(jo, "date_created")));
@@ -393,11 +400,19 @@ public class QuestionAPI extends APIBase {
                 for (int i = 0; i < comments.length(); i++) {
                     JSONObject jsonObject = comments.getJSONObject(i);
                     UComment comment = new UComment();
-                    comment.setAuthor(jsonObject.getJSONObject("author").getString("nickname"));
-                    comment.setAuthorID(jsonObject.getJSONObject("author").getString("url")
-                            .replaceAll("\\D+", ""));
-                    comment.setAuthorAvatarUrl(jsonObject.getJSONObject("author")
-                            .getJSONObject("avatar").getString("large").replaceAll("\\?\\S*$", ""));
+
+                    JSONObject authorObject = getJsonObject(jsonObject, "author");
+                    boolean exists = getJsonBoolean(authorObject, "is_exists");
+                    comment.setAuthorExists(exists);
+                    if (exists) {
+                        comment.setAuthor(getJsonString(authorObject, "nickname"));
+                        comment.setAuthorID(getJsonString(authorObject, "url")
+                                .replaceAll("\\D+", ""));
+                        comment.setAuthorAvatarUrl(getJsonObject(authorObject, "avatar")
+                                .getString("large").replaceAll("\\?\\S*$", ""));
+                    } else {
+                        comment.setAuthor("此用户不存在");
+                    }
                     comment.setContent(getJsonString(jsonObject, "text"));
                     comment.setDate(parseDate(getJsonString(jsonObject, "date_created")));
                     comment.setID(getJsonString(jsonObject, "id"));

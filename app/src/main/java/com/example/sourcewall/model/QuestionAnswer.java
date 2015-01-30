@@ -8,6 +8,7 @@ public class QuestionAnswer extends AceModel {
     private String content = "";
     private String date_created = "";
     private String date_modified = "";
+    private boolean authorExists = true;
     private String author = "";
     private String authorAvatarUrl = "";
     private String authorID = "";
@@ -150,4 +151,11 @@ public class QuestionAnswer extends AceModel {
         this.isContentComplex = isContentComplex;
     }
 
+    public boolean isAuthorExists() {
+        return authorExists;
+    }
+
+    public void setAuthorExists(boolean authorExists) {
+        this.authorExists = authorExists;
+    }
 }

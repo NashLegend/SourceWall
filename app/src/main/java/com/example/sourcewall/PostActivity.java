@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -59,7 +60,9 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         post = (Post) getIntent().getSerializableExtra(Consts.Extra_Post);
-        setTitle(post.getGroupName() + " -- 小组");
+        if (!TextUtils.isEmpty(post.getGroupName())) {
+            setTitle(post.getGroupName() + " -- 小组");
+        }
         listView = (LListView) findViewById(R.id.list_detail);
         adapter = new PostDetailAdapter(this);
         listView.setAdapter(adapter);
