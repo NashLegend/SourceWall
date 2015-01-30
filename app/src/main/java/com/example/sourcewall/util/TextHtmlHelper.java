@@ -66,11 +66,12 @@ public class TextHtmlHelper {
     Html.ImageGetter emptyImageGetter = new Html.ImageGetter() {
         @Override
         public Drawable getDrawable(String source) {
-            Drawable drawable = context.getResources().getDrawable(R.drawable.default_text_image);
-            int width = drawable.getIntrinsicWidth();
-            int height = drawable.getIntrinsicHeight();
-            drawable.setBounds(0, 0, width, height);
-            return drawable;
+            return null;
+//            Drawable drawable = context.getResources().getDrawable(R.drawable.default_text_image);
+//            int width = drawable.getIntrinsicWidth();
+//            int height = drawable.getIntrinsicHeight();
+//            drawable.setBounds(0, 0, width, height);
+//            return drawable;
         }
     };
 

@@ -208,9 +208,11 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
                 textReply.setHint(R.string.hint_reply);
                 textReply.setText("");
                 hideInput(textReply);
-                UComment uComment = (UComment) result.result;
-                adapter.add(0, uComment);
-                adapter.notifyDataSetChanged();
+                if (task == null || task.getStatus() != AsyncTask.Status.RUNNING) {
+                    UComment uComment = (UComment) result.result;
+                    adapter.add(0, uComment);
+                    adapter.notifyDataSetChanged();
+                }
                 ToastUtil.toast("回复成功");
             } else {
                 ToastUtil.toast("回复失败");
