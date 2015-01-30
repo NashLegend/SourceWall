@@ -13,9 +13,8 @@ import android.text.style.URLSpan;
 import android.widget.TextView;
 
 import com.example.sourcewall.AppApplication;
+import com.example.sourcewall.R;
 import com.squareup.picasso.Picasso;
-
-import java.io.IOException;
 
 /**
  * Created by NashLegend on 2015/1/4 0004
@@ -26,7 +25,6 @@ public class TextHtmlHelper {
     private double maxWidth;
     private Context context;
     private HtmlLoaderTask htmlTask;
-    private String html;
 
     public TextHtmlHelper(Context context) {
         this.context = context;
@@ -35,40 +33,13 @@ public class TextHtmlHelper {
     public void load(TextView tv, String content) {
         cancelPotentialTask();
         textView = tv;
-        html = content;
         maxWidth = getMaxWidth();
-        Spanned spanned = correctLinkPaths(Html.fromHtml(html));
+        Spanned spanned = correctLinkPaths(Html.fromHtml(content));
         CharSequence charSequence = trimEnd(spanned);
         textView.setText(charSequence);
-        if (html.contains("<img")) {
+        if (content.contains("<img")) {
             htmlTask = new HtmlLoaderTask();
-            htmlTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, html);
-        }
-    }
-
-    /**
-     * 省去Html.fromHtml一步，因为已经在fetch数据的时候就已经转换出simpleHtml，在getView时更有效
-     *
-     * @param tv         操作的TextView
-     * @param content    html文本
-     * @param simpleHtml
-     */
-    public void load(TextView tv, String content, CharSequence simpleHtml) {
-        cancelPotentialTask();
-        textView = tv;
-        html = content;
-        maxWidth = getMaxWidth();
-        if (simpleHtml != null) {
-            CharSequence charSequence = trimEnd(simpleHtml);
-            textView.setText(charSequence);
-        } else {
-            Spanned spanned = correctLinkPaths(Html.fromHtml(html));
-            CharSequence charSequence = trimEnd(spanned);
-            textView.setText(charSequence);
-        }
-        if (html.contains("<img")) {
-            htmlTask = new HtmlLoaderTask();
-            htmlTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, html);
+            htmlTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, content);
         }
     }
 
@@ -115,10 +86,14 @@ public class TextHtmlHelper {
                         drawable.setBounds(0, 0, width, height);
                     }
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
             } catch (Exception e) {
                 e.printStackTrace();
+            }
+            if (drawable == null) {
+                drawable = context.getResources().getDrawable(R.drawable.broken_image);
+                int width = drawable.getIntrinsicWidth();
+                int height = drawable.getIntrinsicHeight();
+                drawable.setBounds(0, 0, width, height);
             }
             return drawable;
         }
