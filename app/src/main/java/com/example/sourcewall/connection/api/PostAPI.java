@@ -337,8 +337,13 @@ public class PostAPI extends APIBase {
         ResultObject resultObject = new ResultObject();
         try {
             Post detail = new Post();
+            ResultObject response = HttpFetcher.get(url);
+            resultObject.statusCode = response.statusCode;//http Client怎么把404返回成200了我擦。TODO
             String html = HttpFetcher.get(url).toString();
             Document doc = Jsoup.parse(html);
+            if (doc.getElementsByTag("title").text().startsWith("404")) {
+                resultObject.statusCode = 404;
+            }
             String postID = url.replaceAll("\\?\\S*$", "").replaceAll("\\D+", "");
             String groupID = doc.getElementsByClass("crumbs").get(0).getElementsByTag("a")
                     .attr("href").replaceAll("\\D+", "");
@@ -368,7 +373,6 @@ public class PostAPI extends APIBase {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return resultObject;
     }
 
@@ -416,7 +420,6 @@ public class PostAPI extends APIBase {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return resultObject;
     }
 
@@ -430,11 +433,15 @@ public class PostAPI extends APIBase {
     public static ResultObject getPostFirstPage(Post pPost) {
         ResultObject resultObject = new ResultObject();
         ArrayList<AceModel> aceModels = new ArrayList<>();
-        ResultObject articleResult = getPostDetailByIDFromMobileUrl(pPost.getId());
-        if (articleResult.ok) {
+        ResultObject postResult = getPostDetailByIDFromMobileUrl(pPost.getId());
+        resultObject.statusCode = postResult.statusCode;
+        resultObject.code = postResult.code;
+        if (postResult.ok) {
             ResultObject commentsResult = getPostCommentsFromJsonUrl(pPost.getId(), 0);
+            resultObject.statusCode = commentsResult.statusCode;
+            resultObject.code = commentsResult.code;
             if (commentsResult.ok) {
-                Post post = (Post) articleResult.result;
+                Post post = (Post) postResult.result;
                 pPost.setTitle(post.getTitle());
                 ArrayList<UComment> simpleComments = (ArrayList<UComment>) commentsResult.result;
                 aceModels.add(post);
@@ -443,6 +450,7 @@ public class PostAPI extends APIBase {
                 resultObject.result = aceModels;
             }
         }
+
         return resultObject;
     }
 

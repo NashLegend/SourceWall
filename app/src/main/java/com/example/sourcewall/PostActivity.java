@@ -169,37 +169,36 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         @Override
         protected void onPostExecute(ResultObject result) {
             loadingView.setVisibility(View.GONE);
-            if (!isCancelled()) {
-                if (result.ok) {
-                    ArrayList<AceModel> ars = (ArrayList<AceModel>) result.result;
-                    if (offset < 0) {
-                        //Refresh
-                        if (ars.size() > 0) {
-                            adapter.setList(ars);
-                            adapter.notifyDataSetInvalidated();
-                        } else {
-                            //no data loaded,不清除，保留旧数据
-                        }
-                    } else {
-                        //Load More
-                        if (ars.size() > 0) {
-                            adapter.addAll(ars);
-                            adapter.notifyDataSetChanged();
-                        } else {
-                            //no data loaded
-                        }
-                    }
-                    if (adapter.getCount() > 0) {
-                        //listView.setCanPullToLoadMore(ars.size() >= 20);
-                        listView.setCanPullToLoadMore(true);
-                    } else {
-                        listView.setCanPullToLoadMore(false);
+            if (result.ok) {
+                ArrayList<AceModel> ars = (ArrayList<AceModel>) result.result;
+                if (offset < 0) {
+                    //Refresh
+                    if (ars.size() > 0) {
+                        adapter.setList(ars);
+                        adapter.notifyDataSetInvalidated();
                     }
                 } else {
-                    // load error
+                    //Load More
+                    if (ars.size() > 0) {
+                        adapter.addAll(ars);
+                        adapter.notifyDataSetChanged();
+                    }
                 }
-                listView.doneOperation();
+                if (adapter.getCount() > 0) {
+                    //listView.setCanPullToLoadMore(ars.size() >= 20);
+                    listView.setCanPullToLoadMore(true);
+                } else {
+                    listView.setCanPullToLoadMore(false);
+                }
+            } else {
+                if (result.statusCode == 404) {
+                    ToastUtil.toastSingleton("页面不存在");
+                    finish();
+                } else {
+                    ToastUtil.toastSingleton("加载失败");
+                }
             }
+            listView.doneOperation();
         }
     }
 
