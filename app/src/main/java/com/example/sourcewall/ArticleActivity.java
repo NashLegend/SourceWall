@@ -60,6 +60,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         article = (Article) getIntent().getSerializableExtra(Consts.Extra_Article);
+        setTitle(article.getSubjectName() + " -- 科学人");
         listView = (LListView) findViewById(R.id.list_detail);
         adapter = new ArticleDetailAdapter(this);
         listView.setAdapter(adapter);

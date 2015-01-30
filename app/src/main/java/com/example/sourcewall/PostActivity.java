@@ -59,6 +59,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         post = (Post) getIntent().getSerializableExtra(Consts.Extra_Post);
+        setTitle(post.getGroupName() + " -- 小组");
         listView = (LListView) findViewById(R.id.list_detail);
         adapter = new PostDetailAdapter(this);
         listView.setAdapter(adapter);
