@@ -34,10 +34,10 @@ public class TextHtmlHelper {
         cancelPotentialTask();
         textView = tv;
         maxWidth = getMaxWidth();
-        Spanned spanned = correctLinkPaths(Html.fromHtml(content));
+        Spanned spanned = correctLinkPaths(Html.fromHtml(content, emptyImageGetter, null));
         CharSequence charSequence = trimEnd(spanned);
         textView.setText(charSequence);
-        if (content.contains("<img")) {
+        if (Config.shouldLoadImage() && content.contains("<img")) {
             htmlTask = new HtmlLoaderTask();
             htmlTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, content);
         }
@@ -63,6 +63,17 @@ public class TextHtmlHelper {
         }
     }
 
+    Html.ImageGetter emptyImageGetter = new Html.ImageGetter() {
+        @Override
+        public Drawable getDrawable(String source) {
+            Drawable drawable = context.getResources().getDrawable(R.drawable.default_text_image);
+            int width = drawable.getIntrinsicWidth();
+            int height = drawable.getIntrinsicHeight();
+            drawable.setBounds(0, 0, width, height);
+            return drawable;
+        }
+    };
+
     Html.ImageGetter imageGetter = new Html.ImageGetter() {
         @Override
         public Drawable getDrawable(String source) {
@@ -72,9 +83,7 @@ public class TextHtmlHelper {
             try {
                 if (source.startsWith("http")) {
                     Bitmap bitmap = null;
-                    if (Config.shouldLoadImage()) {
-                        bitmap = Picasso.with(context).load(source).resize((int) maxWidth, 0).setTargetSizeAsMax(true).get();
-                    }
+                    bitmap = Picasso.with(context).load(source).resize((int) maxWidth, 0).setTargetSizeAsMax(true).get();
                     if (bitmap != null) {
                         drawable = new BitmapDrawable(context.getResources(), bitmap);
                         int width = (int) (drawable.getIntrinsicWidth() * stretch);
