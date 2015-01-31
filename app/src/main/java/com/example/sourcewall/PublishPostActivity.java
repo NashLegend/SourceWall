@@ -271,7 +271,25 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         int size = (int) bodyEditText.getTextSize();
         int height = bodyEditText.getLineHeight();
         Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.default_text_image);
-        Bitmap bitmap = Bitmap.createBitmap(size * 10, height, Bitmap.Config.ARGB_8888);
+
+        //根据要绘制的文字计算bitmap的宽度
+        Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        textPaint.setColor(Color.BLUE);
+        textPaint.setTextSize(size);
+        String displayed = "图片链接...";
+        float textFrom = (float) (size * 1.2);
+        float textEndSpan = (float) (size * 0.3);
+        float[] widths = new float[displayed.length()];
+        textPaint.getTextWidths(displayed, 0, displayed.length(), widths);
+        float totalWidth = 0;
+        for (float width : widths) {
+            totalWidth += width;
+        }
+
+        //生成对应尺寸的bitmap
+        Bitmap bitmap = Bitmap.createBitmap((int) (totalWidth + textFrom + textEndSpan), height, Bitmap.Config.ARGB_8888);
+
+        //缩放sourceBitmap
         Matrix matrix = new Matrix();
         float scale = size / sourceBitmap.getWidth();
         matrix.setScale(scale, scale);
@@ -279,22 +297,23 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
 
         Canvas canvas = new Canvas(bitmap);
 
-        Paint paint1 = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint1.setStyle(Paint.Style.FILL);
-        paint1.setColor(Color.parseColor("#009699"));
-        canvas.drawRect(0f, 0f, size * 10, height, paint1);
+        //画背景
+        Paint bgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        bgPaint.setStyle(Paint.Style.FILL);
+        bgPaint.setColor(Color.parseColor("#009699"));
+        canvas.drawRect(0f, 0f, bitmap.getWidth(), bitmap.getHeight(), bgPaint);
 
+        //画图标
         Paint paint = new Paint();
         canvas.drawBitmap(sourceBitmap, matrix, paint);
 
-        Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        textPaint.setColor(Color.BLUE);
-        textPaint.setTextSize(size);
-        canvas.drawText("图片链接...", (float) (size * 1.2), -textPaint.getFontMetrics().ascent, textPaint);
+        //画文字
+        canvas.drawText(displayed, textFrom, -textPaint.getFontMetrics().ascent, textPaint);
 
         ImageSpan imageSpan = new ImageSpan(this, bitmap, ImageSpan.ALIGN_BOTTOM);
         spanned.setSpan(imageSpan, 0, imgTag.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        bodyEditText.getText().insert(bodyEditText.getSelectionStart(), spanned);
+        int start = bodyEditText.getSelectionStart();
+        bodyEditText.getText().insert(start, " ").insert(start + 1, spanned).insert(start + 1 + imgTag.length(), " ");
         resetImageButtons();
     }
 
@@ -334,6 +353,9 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
                 if (which == DialogInterface.BUTTON_POSITIVE) {
                     InputDialog d = (InputDialog) dialog;
                     String url = d.InputString;
+                    if (!url.startsWith("http")) {
+                        url = "http://" + url;
+                    }
                     String title = d.InputString2;
                     String result = "[" + title + "](" + url + ")";
 
@@ -341,43 +363,57 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
                     int size = (int) bodyEditText.getTextSize();
                     int height = bodyEditText.getLineHeight();
                     Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.link_gray);
-                    Bitmap bitmap = Bitmap.createBitmap(size * 10, height, Bitmap.Config.ARGB_8888);
+
+                    //计算bitmap宽度
+                    Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                    textPaint.setColor(Color.BLUE);
+                    textPaint.setTextSize(size);
+                    String displayed = "";
+                    if (TextUtils.isEmpty(title.trim())) {
+                        Uri uri = Uri.parse(url);
+                        displayed = uri.getHost();
+                        if (TextUtils.isEmpty(displayed)) {
+                            displayed = "网络地址";
+                        }
+                        displayed += "...";
+                    } else {
+                        displayed = title;
+                    }
+                    float textFrom = (float) (size * 1.2);
+                    float textEndSpan = (float) (size * 0.3);
+                    float[] widths = new float[displayed.length()];
+                    textPaint.getTextWidths(displayed, 0, displayed.length(), widths);
+                    float totalWidth = 0;
+                    for (float width : widths) {
+                        totalWidth += width;
+                    }
+
+                    Bitmap bitmap = Bitmap.createBitmap((int) (totalWidth + textFrom + textEndSpan), height, Bitmap.Config.ARGB_8888);
                     Matrix matrix = new Matrix();
                     float scale = size / sourceBitmap.getWidth();
                     matrix.setScale(scale, scale);
                     matrix.postTranslate((height - size) / 2, (height - size) / 2);
 
                     Canvas canvas = new Canvas(bitmap);
-                    Paint paint1 = new Paint(Paint.ANTI_ALIAS_FLAG);
-                    paint1.setStyle(Paint.Style.FILL);
-                    paint1.setColor(Color.parseColor("#009699"));
-                    canvas.drawRect(0f, 0f, size * 10, height, paint1);
 
+                    //画背景
+                    Paint bgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                    bgPaint.setStyle(Paint.Style.FILL);
+                    bgPaint.setColor(Color.parseColor("#009699"));
+                    canvas.drawRect(0f, 0f, bitmap.getWidth(), bitmap.getHeight(), bgPaint);
+
+                    //绘制图标
                     Paint paint = new Paint();
                     canvas.drawBitmap(sourceBitmap, matrix, paint);
 
-                    Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-                    textPaint.setColor(Color.BLUE);
-                    textPaint.setTextSize(size);
-
-                    String displayed = "";
-                    if (TextUtils.isEmpty(title.trim())) {
-                        Uri uri = Uri.parse(url);
-                        displayed = uri.getHost() + "...";
-                        if (TextUtils.isEmpty(displayed)) {
-                            displayed = "网络地址...";
-                        }
-                    } else {
-                        displayed = title;
-                    }
-
+                    //绘制文字
                     canvas.drawText(displayed, (float) (size * 1.2), -textPaint.getFontMetrics().ascent, textPaint);
 
                     ImageSpan imageSpan = new ImageSpan(PublishPostActivity.this, bitmap, ImageSpan.ALIGN_BOTTOM);
                     spanned.setSpan(imageSpan, 0, result.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                     int start = bodyEditText.getSelectionStart();
-                    bodyEditText.getText().insert(start, spanned);
+                    bodyEditText.getText().insert(start, " ").insert(start + 1, spanned).insert(start + 1 + result.length(), " ");
                 }
             }
         });
@@ -386,7 +422,6 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
     }
 
     private void publish() {
-        System.out.println(bodyEditText.getText().toString());
         if (TextUtils.isEmpty(titleEditText.getText().toString().trim())) {
             ToastUtil.toast(R.string.title_cannot_be_empty);
             return;

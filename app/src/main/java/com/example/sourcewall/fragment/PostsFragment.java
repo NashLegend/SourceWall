@@ -434,7 +434,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         if (!UserAPI.isLoggedIn()) {
             menu.findItem(R.id.action_more_sections).setVisible(false);
         } else {
-            moreSectionsImageView = (ImageView) ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.action_view_more_sections, null);
+            moreSectionsImageView = (ImageView) ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.action_view_more_section, null);
             MenuItemCompat.setActionView(menu.findItem(R.id.action_more_sections), moreSectionsImageView);
             moreSectionsImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
