@@ -6,13 +6,22 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ImageSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -160,7 +169,6 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
     }
 
     private void doneUploadingImage(String url) {
-        // tap to insert image
         tmpImagePath = url;
         setImageButtonsPrepared();
     }
@@ -169,7 +177,35 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
      * 插入图片
      */
     private void insertImagePath(String url) {
-        editText.getText().insert(editText.getSelectionStart(), "[image]" + url + "[/image]");
+        String imgTag = "[image]" + url + "[/image]";
+        SpannableString spanned = new SpannableString(imgTag);
+        int size = (int) editText.getTextSize();
+        int height = editText.getLineHeight();
+        Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.default_text_image);
+        Bitmap bitmap = Bitmap.createBitmap(size * 10, height, Bitmap.Config.ARGB_8888);
+        Matrix matrix = new Matrix();
+        float scale = size / sourceBitmap.getWidth();
+        matrix.setScale(scale, scale);
+        matrix.postTranslate((height - size) / 2, (height - size) / 2);
+
+        Canvas canvas = new Canvas(bitmap);
+
+        Paint paint1 = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint1.setStyle(Paint.Style.FILL);
+        paint1.setColor(Color.parseColor("#009699"));
+        canvas.drawRect(0f, 0f, size * 10, height, paint1);
+
+        Paint paint = new Paint();
+        canvas.drawBitmap(sourceBitmap, matrix, paint);
+
+        Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        textPaint.setColor(Color.BLUE);
+        textPaint.setTextSize(size);
+        canvas.drawText("图片链接...", (float) (size * 1.2), -textPaint.getFontMetrics().ascent, textPaint);
+
+        ImageSpan imageSpan = new ImageSpan(this, bitmap, ImageSpan.ALIGN_BOTTOM);
+        spanned.setSpan(imageSpan, 0, imgTag.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        editText.getText().insert(editText.getSelectionStart(), spanned);
         resetImageButtons();
     }
 
@@ -211,7 +247,47 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
                     String url = d.InputString;
                     String title = d.InputString2;
                     String result = "[url=" + url + "]" + title + "[/url]";
-                    editText.getText().insert(editText.getSelectionStart(), result);
+
+                    SpannableString spanned = new SpannableString(result);
+                    int size = (int) editText.getTextSize();
+                    int height = editText.getLineHeight();
+                    Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.link_gray);
+                    Bitmap bitmap = Bitmap.createBitmap(size * 10, height, Bitmap.Config.ARGB_8888);
+                    Matrix matrix = new Matrix();
+                    float scale = size / sourceBitmap.getWidth();
+                    matrix.setScale(scale, scale);
+                    matrix.postTranslate((height - size) / 2, (height - size) / 2);
+
+                    Canvas canvas = new Canvas(bitmap);
+                    Paint paint1 = new Paint(Paint.ANTI_ALIAS_FLAG);
+                    paint1.setStyle(Paint.Style.FILL);
+                    paint1.setColor(Color.parseColor("#009699"));
+                    canvas.drawRect(0f, 0f, size * 10, height, paint1);
+
+                    Paint paint = new Paint();
+                    canvas.drawBitmap(sourceBitmap, matrix, paint);
+
+                    Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                    textPaint.setColor(Color.BLUE);
+                    textPaint.setTextSize(size);
+
+                    String displayed = "";
+                    if (TextUtils.isEmpty(title.trim())) {
+                        Uri uri = Uri.parse(url);
+                        displayed = uri.getHost() + "...";
+                        if (TextUtils.isEmpty(displayed)) {
+                            displayed = "网络地址...";
+                        }
+                    } else {
+                        displayed = title;
+                    }
+
+                    canvas.drawText(displayed, (float) (size * 1.2), -textPaint.getFontMetrics().ascent, textPaint);
+
+                    ImageSpan imageSpan = new ImageSpan(ReplyActivity.this, bitmap, ImageSpan.ALIGN_BOTTOM);
+                    spanned.setSpan(imageSpan, 0, result.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                    editText.getText().insert(editText.getSelectionStart(), spanned);
                 }
             }
         });
