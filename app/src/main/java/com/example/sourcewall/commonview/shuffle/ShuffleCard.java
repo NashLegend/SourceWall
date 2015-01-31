@@ -102,6 +102,7 @@ public class ShuffleCard extends RelativeLayout {
     }
 
     public void shuffleButtons() {
+        removeAllViews();
         for (int i = 0; i < list.size(); i++) {
             MovableButton button = list.get(i);
             Point point = new Point();

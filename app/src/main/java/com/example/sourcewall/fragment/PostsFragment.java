@@ -25,6 +25,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.example.sourcewall.BaseActivity;
 import com.example.sourcewall.PostActivity;
@@ -68,7 +69,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     private LoadingView loadingView;
     private int currentPage = -1;//page从0开始，-1表示还没有数据
     private View headerView;
-    private ViewGroup moreGroupsLayout;
+    private ViewGroup moreSectionsLayout;
     private ShuffleDeskSimple deskSimple;
     private Button manageButton;
     private long currentDBVersion = -1;
@@ -132,24 +133,25 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         });
 
         ScrollView scrollView = (ScrollView) view.findViewById(R.id.plastic_scroller);
-        moreGroupsLayout = (ViewGroup) view.findViewById(R.id.layout_more_groups);
+        moreSectionsLayout = (ViewGroup) view.findViewById(R.id.layout_more_sections);
         deskSimple = new ShuffleDeskSimple(getActivity(), scrollView);
         scrollView.addView(deskSimple);
         deskSimple.setOnButtonClickListener(new ShuffleDeskSimple.OnButtonClickListener() {
             @Override
             public void onClick(MovableButton btn) {
                 if (btn instanceof GroupMovableButton) {
-                    onGroupButtonClicked((GroupMovableButton) btn);
+                    onSectionButtonClicked((GroupMovableButton) btn);
                 }
             }
         });
+        ((TextView) deskSimple.findViewById(R.id.tip_of_more_sections)).setText(R.string.tip_of_more_groups);
         manageButton = (Button) deskSimple.findViewById(R.id.button_manage_my_sections);
         manageButton.setText("管理所有小组");
         manageButton.setVisibility(View.INVISIBLE);
         manageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hideMoreGroups();
+                hideMoreSections();
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -160,22 +162,23 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                 }, 320);
             }
         });
-        moreGroupsLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        moreSectionsLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                if (moreGroupsLayout.getHeight() > 0) {
-                    moreGroupsLayout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                    moreGroupsLayout.setTranslationY(-moreGroupsLayout.getHeight());
-                    moreGroupsLayout.setVisibility(View.VISIBLE);
+                if (moreSectionsLayout.getHeight() > 0) {
+                    moreSectionsLayout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                    moreSectionsLayout.setTranslationY(-moreSectionsLayout.getHeight());
+                    moreSectionsLayout.setVisibility(View.VISIBLE);
                 }
             }
         });
+
         setTitle();
         loadOver();
         return view;
     }
 
-    private void onGroupButtonClicked(GroupMovableButton button) {
+    private void onSectionButtonClicked(GroupMovableButton button) {
         MyGroup myGroup = button.getSection();
         SubItem subItem = new SubItem(myGroup.getSection(), myGroup.getType(), myGroup.getName(), myGroup.getValue());
         Intent intent = new Intent();
@@ -183,7 +186,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         intent.putExtra(Consts.Extra_SubItem, subItem);
         intent.putExtra(Consts.Extra_Should_Invalidate_Menu, true);
         getActivity().sendBroadcast(intent);
-        hideMoreGroups();
+        hideMoreSections();
     }
 
     private void initView() {
@@ -220,15 +223,15 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         }
     }
 
-    private void showMoreGroups() {
-        isMoreGroupsButtonShowing = true;
+    private void showMoreSections() {
+        isMoreSectionsButtonShowing = true;
         if (animatorSet != null && animatorSet.isRunning()) {
             animatorSet.cancel();
         }
         animatorSet = new AnimatorSet();
-        ObjectAnimator layoutAnimator = ObjectAnimator.ofFloat(moreGroupsLayout, "translationY", moreGroupsLayout.getTranslationY(), 0);
+        ObjectAnimator layoutAnimator = ObjectAnimator.ofFloat(moreSectionsLayout, "translationY", moreSectionsLayout.getTranslationY(), 0);
         layoutAnimator.setInterpolator(new DecelerateInterpolator());
-        ObjectAnimator imageAnimator = ObjectAnimator.ofFloat(moreGroupImageView, "rotation", moreGroupImageView.getRotation(), 180);
+        ObjectAnimator imageAnimator = ObjectAnimator.ofFloat(moreSectionsImageView, "rotation", moreSectionsImageView.getRotation(), 180);
         imageAnimator.setInterpolator(new DecelerateInterpolator());
 
         ArrayList<Animator> animators = new ArrayList<>();
@@ -254,7 +257,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                             .setPositiveButton(R.string.confirm_to_load_my_groups, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    hideMoreGroups();
+                                    hideMoreSections();
                                     new Handler().postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
@@ -268,12 +271,12 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                             }).setNegativeButton(R.string.use_default_groups, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    hideMoreGroups();
+                                    hideMoreSections();
                                 }
                             }).setOnCancelListener(new DialogInterface.OnCancelListener() {
                                 @Override
                                 public void onCancel(DialogInterface dialog) {
-                                    hideMoreGroups();
+                                    hideMoreSections();
                                 }
                             }).create();
                     dialog.show();
@@ -301,16 +304,16 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
 
     private AnimatorSet animatorSet;
 
-    private void hideMoreGroups() {
-        isMoreGroupsButtonShowing = false;
-        moreGroupsLayout.setVisibility(View.VISIBLE);
+    private void hideMoreSections() {
+        isMoreSectionsButtonShowing = false;
+        moreSectionsLayout.setVisibility(View.VISIBLE);
         if (animatorSet != null && animatorSet.isRunning()) {
             animatorSet.cancel();
         }
         animatorSet = new AnimatorSet();
-        ObjectAnimator layoutAnimator = ObjectAnimator.ofFloat(moreGroupsLayout, "translationY", moreGroupsLayout.getTranslationY(), -moreGroupsLayout.getHeight());
+        ObjectAnimator layoutAnimator = ObjectAnimator.ofFloat(moreSectionsLayout, "translationY", moreSectionsLayout.getTranslationY(), -moreSectionsLayout.getHeight());
         layoutAnimator.setInterpolator(new DecelerateInterpolator());
-        ObjectAnimator imageAnimator = ObjectAnimator.ofFloat(moreGroupImageView, "rotation", moreGroupImageView.getRotation(), 360);
+        ObjectAnimator imageAnimator = ObjectAnimator.ofFloat(moreSectionsImageView, "rotation", moreSectionsImageView.getRotation(), 360);
         imageAnimator.setInterpolator(new DecelerateInterpolator());
 
         ArrayList<Animator> animators = new ArrayList<>();
@@ -321,7 +324,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                moreGroupImageView.setRotation(0);
+                moreSectionsImageView.setRotation(0);
                 if (deskSimple.getButtons() != null && deskSimple.getButtons().size() > 0) {
                     commitChange(deskSimple.getSortedButtons());
                 }
@@ -419,8 +422,8 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         return R.menu.menu_fragment_post;
     }
 
-    private ImageView moreGroupImageView;
-    private boolean isMoreGroupsButtonShowing;
+    private ImageView moreSectionsImageView;
+    private boolean isMoreSectionsButtonShowing;
 
     @Override
     public void takeOverMenuInflate(MenuInflater inflater, Menu menu) {
@@ -429,17 +432,17 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
             menu.findItem(R.id.action_write_post).setVisible(false);
         }
         if (!UserAPI.isLoggedIn()) {
-            menu.findItem(R.id.action_more_group).setVisible(false);
+            menu.findItem(R.id.action_more_sections).setVisible(false);
         } else {
-            moreGroupImageView = (ImageView) ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.action_view_more_group, null);
-            MenuItemCompat.setActionView(menu.findItem(R.id.action_more_group), moreGroupImageView);
-            moreGroupImageView.setOnClickListener(new View.OnClickListener() {
+            moreSectionsImageView = (ImageView) ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.action_view_more_sections, null);
+            MenuItemCompat.setActionView(menu.findItem(R.id.action_more_sections), moreSectionsImageView);
+            moreSectionsImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (isMoreGroupsButtonShowing) {
-                        hideMoreGroups();
+                    if (isMoreSectionsButtonShowing) {
+                        hideMoreSections();
                     } else {
-                        showMoreGroups();
+                        showMoreSections();
                     }
                 }
             });
@@ -459,8 +462,8 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
 
     @Override
     public boolean takeOverBackPressed() {
-        if (isMoreGroupsButtonShowing) {
-            hideMoreGroups();
+        if (isMoreSectionsButtonShowing) {
+            hideMoreSections();
             return true;
         }
         return false;
@@ -481,8 +484,8 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
             headerView.setVisibility(View.GONE);
             loadOver();
         }
-        if (isMoreGroupsButtonShowing) {
-            hideMoreGroups();
+        if (isMoreSectionsButtonShowing) {
+            hideMoreSections();
         }
         setTitle();
     }

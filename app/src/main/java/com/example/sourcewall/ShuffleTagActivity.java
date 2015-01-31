@@ -8,6 +8,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.widget.TextView;
 
 import com.example.sourcewall.commonview.shuffle.AskTagMovableButton;
 import com.example.sourcewall.commonview.shuffle.MovableButton;
@@ -33,6 +34,7 @@ public class ShuffleTagActivity extends SwipeActivity {
     LoaderFromNetTask netTask;
     Toolbar toolbar;
     ProgressDialog progressDialog;
+    final int defaultTagsNumber = 9;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +51,8 @@ public class ShuffleTagActivity extends SwipeActivity {
                 initView();
             }
         });
+        ((TextView) desk.findViewById(R.id.text_main_sections)).setText(R.string.selected_tags);
+        ((TextView) desk.findViewById(R.id.text_other_sections)).setText(R.string.more_unselected_tags);
         if (getIntent().getBooleanExtra(Consts.Extra_Should_Load_Before_Shuffle, false)) {
             netTask = new LoaderFromNetTask();
             netTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -68,6 +72,7 @@ public class ShuffleTagActivity extends SwipeActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_reload_my_tags) {
+            commitChanges();
             if (netTask != null && netTask.getStatus() == AsyncTask.Status.RUNNING) {
                 netTask.cancel(false);
             }
@@ -81,17 +86,28 @@ public class ShuffleTagActivity extends SwipeActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            commitAndFinish();
+            commitChanges();
+            finish();
         }
         return false;
     }
 
-    private void commitAndFinish() {
+    private void commitChanges() {
         if (desk.getSenator().getList() != null && desk.getSenator().getList().size() > 0) {
-            commitChange(desk.getButtons());
+            ArrayList<MovableButton> buttons = desk.getButtons();
+            ArrayList<AskTag> sections = new ArrayList<>();
+            for (int i = 0; i < buttons.size(); i++) {
+                AskTag askTag = (AskTag) buttons.get(i).getSection();
+                if (!askTag.getSelected()) {
+                    askTag.setOrder(1024 + askTag.getOrder());
+                }
+                sections.add(askTag);
+            }
+            if (sections.size() > 0) {
+                AskTagHelper.putAllMyTags(sections);
+            }
             setResult(RESULT_OK);
         }
-        finish();
     }
 
     @Override
@@ -132,20 +148,6 @@ public class ShuffleTagActivity extends SwipeActivity {
         }
         desk.setSelectedButtons(selectedButtons);
         desk.setUnselectedButtons(unselectedButtons);
-    }
-
-    public void commitChange(ArrayList<MovableButton> buttons) {
-        ArrayList<AskTag> sections = new ArrayList<>();
-        for (int i = 0; i < buttons.size(); i++) {
-            AskTag askTag = (AskTag) buttons.get(i).getSection();
-            if (!askTag.getSelected()) {
-                askTag.setOrder(1024 + askTag.getOrder());
-            }
-            sections.add(askTag);
-        }
-        if (sections.size() > 0) {
-            AskTagHelper.putAllMyTags(sections);
-        }
     }
 
     private void mergeMyGroups(ArrayList<AskTag> myTags) {
@@ -201,7 +203,6 @@ public class ShuffleTagActivity extends SwipeActivity {
             if (resultObject.ok) {
                 ArrayList<SubItem> subItems = (ArrayList<SubItem>) resultObject.result;
                 ArrayList<AskTag> myTags = new ArrayList<>();
-                int sel = 12;
                 for (int i = 0; i < subItems.size(); i++) {
                     SubItem item = subItems.get(i);
                     AskTag myTag = new AskTag();
@@ -209,7 +210,7 @@ public class ShuffleTagActivity extends SwipeActivity {
                     myTag.setValue(item.getValue());
                     myTag.setType(item.getType());
                     myTag.setSection(item.getSection());
-                    myTag.setSelected(i < sel);
+                    myTag.setSelected(i < defaultTagsNumber);
                     myTag.setOrder(i);
                     myTags.add(myTag);
                 }

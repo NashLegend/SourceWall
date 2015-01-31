@@ -15,4 +15,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/layout_more_sections"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:background="?attr/color_shuffle_desk_background"
+        android:visibility="invisible">
+
+        <ScrollView
+            android:id="@+id/plastic_scroller"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
 </RelativeLayout>

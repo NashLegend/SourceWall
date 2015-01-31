@@ -9,7 +9,7 @@
         android:title="@string/write_post"
         app:showAsAction="always" />
     <item
-        android:id="@+id/action_more_group"
+        android:id="@+id/action_more_sections"
         android:icon="@drawable/chevron_down"
         android:orderInCategory="100"
         android:title="@string/more_groups"

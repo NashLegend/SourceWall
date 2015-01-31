@@ -8,6 +8,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.widget.TextView;
 
 import com.example.sourcewall.commonview.shuffle.GroupMovableButton;
 import com.example.sourcewall.commonview.shuffle.MovableButton;
@@ -33,6 +34,7 @@ public class ShuffleGroupActivity extends SwipeActivity {
     LoaderFromNetTask netTask;
     Toolbar toolbar;
     ProgressDialog progressDialog;
+    final int defaultGroupsNumber = 12;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,8 @@ public class ShuffleGroupActivity extends SwipeActivity {
         toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         desk = (ShuffleDesk) findViewById(R.id.shuffle_desk);
+        ((TextView) desk.findViewById(R.id.text_main_sections)).setText(R.string.selected_groups);
+        ((TextView) desk.findViewById(R.id.text_other_sections)).setText(R.string.more_unselected_groups);
         desk.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
 
             @Override
@@ -69,6 +73,7 @@ public class ShuffleGroupActivity extends SwipeActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_reload_my_groups) {
+            commitChanges();
             if (netTask != null && netTask.getStatus() == AsyncTask.Status.RUNNING) {
                 netTask.cancel(false);
             }
@@ -82,17 +87,28 @@ public class ShuffleGroupActivity extends SwipeActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            commitAndFinish();
+            commitChanges();
+            finish();
         }
         return false;
     }
 
-    private void commitAndFinish() {
+    private void commitChanges() {
         if (desk.getSenator().getList() != null && desk.getSenator().getList().size() > 0) {
-            commitChange(desk.getButtons());
+            ArrayList<MovableButton> buttons = desk.getButtons();
+            ArrayList<MyGroup> sections = new ArrayList<>();
+            for (int i = 0; i < buttons.size(); i++) {
+                MyGroup myGroup = (MyGroup) buttons.get(i).getSection();
+                if (!myGroup.getSelected()) {
+                    myGroup.setOrder(1024 + myGroup.getOrder());
+                }
+                sections.add(myGroup);
+            }
+            if (sections.size() > 0) {
+                GroupHelper.putAllMyGroups(sections);
+            }
             setResult(RESULT_OK);
         }
-        finish();
     }
 
     @Override
@@ -135,19 +151,6 @@ public class ShuffleGroupActivity extends SwipeActivity {
         desk.setUnselectedButtons(unselectedButtons);
     }
 
-    public void commitChange(ArrayList<MovableButton> buttons) {
-        ArrayList<MyGroup> sections = new ArrayList<>();
-        for (int i = 0; i < buttons.size(); i++) {
-            MyGroup myGroup = (MyGroup) buttons.get(i).getSection();
-            if (!myGroup.getSelected()) {
-                myGroup.setOrder(1024 + myGroup.getOrder());
-            }
-            sections.add(myGroup);
-        }
-        if (sections.size() > 0) {
-            GroupHelper.putAllMyGroups(sections);
-        }
-    }
 
     private void mergeMyGroups(ArrayList<MyGroup> myGroups) {
         if (GroupHelper.getMyGroupsNumber() > 0) {
@@ -202,7 +205,6 @@ public class ShuffleGroupActivity extends SwipeActivity {
             if (resultObject.ok) {
                 ArrayList<SubItem> subItems = (ArrayList<SubItem>) resultObject.result;
                 ArrayList<MyGroup> myGroups = new ArrayList<>();
-                int sel = 12;
                 for (int i = 0; i < subItems.size(); i++) {
                     SubItem item = subItems.get(i);
                     MyGroup mygroup = new MyGroup();
@@ -210,7 +212,7 @@ public class ShuffleGroupActivity extends SwipeActivity {
                     mygroup.setValue(item.getValue());
                     mygroup.setType(item.getType());
                     mygroup.setSection(item.getSection());
-                    mygroup.setSelected(i < sel);
+                    mygroup.setSelected(i < defaultGroupsNumber);
                     mygroup.setOrder(i);
                     myGroups.add(mygroup);
                 }

@@ -18,16 +18,17 @@
             android:paddingBottom="4dp"
             android:paddingTop="4dp">
 
-        <View
+            <View
                 android:layout_width="4dp"
                 android:layout_height="24dp"
                 android:background="?attr/color_shuffle_desk_title" />
 
             <TextView
+                android:id="@+id/text_main_sections"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
-                android:text="@string/selected_section"
+                android:text="@string/selected_groups"
                 android:textColor="?attr/color_shuffle_desk_title"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -64,16 +65,17 @@
             android:paddingBottom="4dp"
             android:paddingTop="4dp">
 
-        <View
+            <View
                 android:layout_width="4dp"
                 android:layout_height="24dp"
                 android:background="?attr/color_shuffle_desk_title" />
 
             <TextView
+                android:id="@+id/text_other_sections"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
-                android:text="@string/more_unselected_sections"
+                android:text="@string/more_unselected_groups"
                 android:textColor="?attr/color_shuffle_desk_title"
                 android:textSize="18sp"
                 android:textStyle="bold" />

@@ -1,8 +1,16 @@
 package com.example.sourcewall.fragment;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.view.MenuItemCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -11,27 +19,40 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.example.sourcewall.BaseActivity;
 import com.example.sourcewall.PublishPostActivity;
 import com.example.sourcewall.QuestionActivity;
 import com.example.sourcewall.R;
+import com.example.sourcewall.ShuffleTagActivity;
 import com.example.sourcewall.adapters.QuestionAdapter;
 import com.example.sourcewall.commonview.LListView;
 import com.example.sourcewall.commonview.LoadingView;
+import com.example.sourcewall.commonview.shuffle.AskTagMovableButton;
+import com.example.sourcewall.commonview.shuffle.MovableButton;
+import com.example.sourcewall.commonview.shuffle.ShuffleDeskSimple;
 import com.example.sourcewall.connection.ResultObject;
 import com.example.sourcewall.connection.api.QuestionAPI;
 import com.example.sourcewall.connection.api.UserAPI;
+import com.example.sourcewall.db.AskTagHelper;
+import com.example.sourcewall.db.gen.AskTag;
 import com.example.sourcewall.model.Question;
 import com.example.sourcewall.model.SubItem;
 import com.example.sourcewall.util.Consts;
+import com.example.sourcewall.util.SharedUtil;
 import com.example.sourcewall.util.ToastUtil;
 import com.example.sourcewall.view.QuestionListItemView;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by NashLegend on 2014/9/18 0018
@@ -46,6 +67,10 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
     private LoadingView loadingView;
     private int currentPage = -1;//page从0开始，-1表示还没有数据
     private View headerView;
+    private ViewGroup morSectionsLayout;
+    private ShuffleDeskSimple deskSimple;
+    private Button manageButton;
+    private long currentDBVersion = -1;
     private final int Code_Publish_Question = 1055;
 
     @Override
@@ -105,9 +130,225 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
                 return false;
             }
         });
+
+        ScrollView scrollView = (ScrollView) view.findViewById(R.id.plastic_scroller);
+        morSectionsLayout = (ViewGroup) view.findViewById(R.id.layout_more_sections);
+        deskSimple = new ShuffleDeskSimple(getActivity(), scrollView);
+        scrollView.addView(deskSimple);
+        deskSimple.setOnButtonClickListener(new ShuffleDeskSimple.OnButtonClickListener() {
+            @Override
+            public void onClick(MovableButton btn) {
+                if (btn instanceof AskTagMovableButton) {
+                    onSectionButtonClicked((AskTagMovableButton) btn);
+                }
+            }
+        });
+        ((TextView) deskSimple.findViewById(R.id.tip_of_more_sections)).setText(R.string.tip_of_more_tags);
+        manageButton = (Button) deskSimple.findViewById(R.id.button_manage_my_sections);
+        manageButton.setText("管理所有标签");
+        manageButton.setVisibility(View.INVISIBLE);
+        manageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideMoreSections();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent intent = new Intent(getActivity(), ShuffleTagActivity.class);
+                        startActivityForResult(intent, Consts.Code_Start_Shuffle_Ask_Tags);
+                        getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
+                    }
+                }, 320);
+            }
+        });
+        morSectionsLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (morSectionsLayout.getHeight() > 0) {
+                    morSectionsLayout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                    morSectionsLayout.setTranslationY(-morSectionsLayout.getHeight());
+                    morSectionsLayout.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
         setTitle();
         loadOver();
         return view;
+    }
+
+    private void onSectionButtonClicked(AskTagMovableButton button) {
+        AskTag askTag = button.getSection();
+        SubItem subItem = new SubItem(askTag.getSection(), askTag.getType(), askTag.getName(), askTag.getValue());
+        Intent intent = new Intent();
+        intent.setAction(Consts.Action_Open_Content_Fragment);
+        intent.putExtra(Consts.Extra_SubItem, subItem);
+        intent.putExtra(Consts.Extra_Should_Invalidate_Menu, true);
+        getActivity().sendBroadcast(intent);
+        hideMoreSections();
+    }
+
+    private ImageView moreSectionsImageView;
+    private boolean isMoreSectionsButtonShowing;
+    private AnimatorSet animatorSet;
+
+    private void hideMoreSections() {
+        isMoreSectionsButtonShowing = false;
+        morSectionsLayout.setVisibility(View.VISIBLE);
+        if (animatorSet != null && animatorSet.isRunning()) {
+            animatorSet.cancel();
+        }
+        animatorSet = new AnimatorSet();
+        ObjectAnimator layoutAnimator = ObjectAnimator.ofFloat(morSectionsLayout, "translationY", morSectionsLayout.getTranslationY(), -morSectionsLayout.getHeight());
+        layoutAnimator.setInterpolator(new DecelerateInterpolator());
+        ObjectAnimator imageAnimator = ObjectAnimator.ofFloat(moreSectionsImageView, "rotation", moreSectionsImageView.getRotation(), 360);
+        imageAnimator.setInterpolator(new DecelerateInterpolator());
+
+        ArrayList<Animator> animators = new ArrayList<>();
+        animators.add(layoutAnimator);
+        animators.add(imageAnimator);
+
+        animatorSet.addListener(new Animator.AnimatorListener() {
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                moreSectionsImageView.setRotation(0);
+                if (deskSimple.getButtons() != null && deskSimple.getButtons().size() > 0) {
+                    commitChange(deskSimple.getSortedButtons());
+                }
+            }
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+
+        });
+
+        animatorSet.playTogether(animators);
+        animatorSet.setDuration(300);
+        animatorSet.start();
+    }
+
+
+    private void initView() {
+        deskSimple.InitDatas();
+        deskSimple.initView();
+    }
+
+    private List<AskTag> unselectedSections;
+
+    private void getButtons() {
+        unselectedSections = AskTagHelper.getUnselectedTags();
+        ArrayList<MovableButton> unselectedButtons = new ArrayList<>();
+        for (int i = 0; i < unselectedSections.size(); i++) {
+            AskTag section = unselectedSections.get(i);
+            AskTagMovableButton button = new AskTagMovableButton(getActivity());
+            button.setSection(section);
+            unselectedButtons.add(button);
+        }
+        deskSimple.setButtons(unselectedButtons);
+    }
+
+    private void showMoreSections() {
+        isMoreSectionsButtonShowing = true;
+        if (animatorSet != null && animatorSet.isRunning()) {
+            animatorSet.cancel();
+        }
+        animatorSet = new AnimatorSet();
+        ObjectAnimator layoutAnimator = ObjectAnimator.ofFloat(morSectionsLayout, "translationY", morSectionsLayout.getTranslationY(), 0);
+        layoutAnimator.setInterpolator(new DecelerateInterpolator());
+        ObjectAnimator imageAnimator = ObjectAnimator.ofFloat(moreSectionsImageView, "rotation", moreSectionsImageView.getRotation(), 180);
+        imageAnimator.setInterpolator(new DecelerateInterpolator());
+
+        ArrayList<Animator> animators = new ArrayList<>();
+        animators.add(layoutAnimator);
+        animators.add(imageAnimator);
+
+        animatorSet.addListener(new Animator.AnimatorListener() {
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if (AskTagHelper.getAskTagsNumber() > 0) {
+                    long lastDBVersion = SharedUtil.readLong(Consts.Key_Last_Ask_Tags_Version, 0);
+                    if (currentDBVersion != lastDBVersion) {
+                        getButtons();
+                        initView();
+                        currentDBVersion = SharedUtil.readLong(Consts.Key_Last_Ask_Tags_Version, 0);
+                    }
+                    manageButton.setVisibility(View.VISIBLE);
+                } else {
+                    manageButton.setVisibility(View.INVISIBLE);
+                    AlertDialog dialog = new AlertDialog.Builder(getActivity()).setTitle(R.string.hint)
+                            .setMessage(R.string.ok_to_load_tags)
+                            .setPositiveButton(R.string.confirm_to_load_my_tags, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    hideMoreSections();
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Intent intent = new Intent(getActivity(), ShuffleTagActivity.class);
+                                            intent.putExtra(Consts.Extra_Should_Load_Before_Shuffle, true);
+                                            startActivityForResult(intent, Consts.Code_Start_Shuffle_Ask_Tags);
+                                            getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
+                                        }
+                                    }, 320);
+                                }
+                            }).setNegativeButton(R.string.use_default_tags, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    hideMoreSections();
+                                }
+                            }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                @Override
+                                public void onCancel(DialogInterface dialog) {
+                                    hideMoreSections();
+                                }
+                            }).create();
+                    dialog.show();
+                }
+            }
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+            }
+
+        });
+
+        animatorSet.playTogether(animators);
+        animatorSet.setDuration(400);
+        animatorSet.start();
+    }
+
+    private void commitChange(ArrayList<MovableButton> buttons) {
+        List<AskTag> sections = new ArrayList<>();
+        for (int i = 0; i < buttons.size(); i++) {
+            AskTag AskTag = (AskTag) buttons.get(i).getSection();
+            if (!AskTag.getSelected()) {
+                AskTag.setOrder(1024 + AskTag.getOrder());
+            }
+            sections.add(AskTag);
+        }
+        AskTagHelper.putUnselectedTags(sections);
     }
 
     @Override
@@ -175,6 +416,22 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
     @Override
     public void takeOverMenuInflate(MenuInflater inflater, Menu menu) {
         inflater.inflate(getFragmentMenu(), menu);
+        if (!UserAPI.isLoggedIn()) {
+            menu.findItem(R.id.action_more_sections).setVisible(false);
+        } else {
+            moreSectionsImageView = (ImageView) ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.action_view_more_sections, null);
+            MenuItemCompat.setActionView(menu.findItem(R.id.action_more_sections), moreSectionsImageView);
+            moreSectionsImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (isMoreSectionsButtonShowing) {
+                        hideMoreSections();
+                    } else {
+                        showMoreSections();
+                    }
+                }
+            });
+        }
     }
 
     @Override
@@ -190,6 +447,10 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
 
     @Override
     public boolean takeOverBackPressed() {
+        if (isMoreSectionsButtonShowing) {
+            hideMoreSections();
+            return true;
+        }
         return false;
     }
 
@@ -207,6 +468,9 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
             headerView.getLayoutParams().height = 1;
             headerView.setVisibility(View.GONE);
             loadOver();
+        }
+        if (isMoreSectionsButtonShowing) {
+            hideMoreSections();
         }
         setTitle();
     }
