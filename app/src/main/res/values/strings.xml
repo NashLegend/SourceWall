@@ -136,5 +136,7 @@
     <string name="sample_support_number">9999</string>
     <string name="hint_input_your_tail">输入自定义尾巴，不输入则不添加尾巴~</string>
     <string name="load_failed">加载失败</string>
+    <string name="magage_all_tags">管理所有标签</string>
+    <string name="manage_all_groups">管理所有小组</string>
 
 </resources>
