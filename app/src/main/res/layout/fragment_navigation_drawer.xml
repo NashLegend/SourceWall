@@ -114,7 +114,7 @@
         <ImageView
             android:layout_width="@dimen/list_standard_comment_avatar_dimen"
             android:layout_height="@dimen/list_standard_comment_avatar_dimen"
-            android:src="@drawable/keyboard_holo_light_blue" />
+            android:src="@drawable/settings" />
 
         <TextView
             android:layout_width="wrap_content"
