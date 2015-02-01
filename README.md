@@ -1,7 +1,7 @@
 SourceWall——果壳网第三方客户端
 ==========
 
-##1.0版已发##
+##1.0版已发，下载地址: [SourceWall 1.0](https://raw.githubusercontent.com/NashLegend/SourceWall/master/app/release/SourceWall.apk)##
 
 当前功能：
 
