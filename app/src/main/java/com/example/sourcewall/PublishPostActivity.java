@@ -46,6 +46,8 @@ import org.apache.http.message.BasicNameValuePair;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -113,7 +115,6 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         tryRestoreReply();
     }
 
-
     private void tryRestoreReply() {
         String sketchTitle = "";
         String sketchContent = "";
@@ -122,7 +123,98 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
             sketchContent = SketchSharedUtil.readString(Consts.Key_Sketch_Publish_Post_Content + "_" + subItem.getValue(), "");
         }
         titleEditText.setText(sketchTitle);
-        bodyEditText.setText(sketchContent);
+        bodyEditText.setText(restore2Spanned(sketchContent));
+    }
+
+    public SpannableString restore2Spanned(String str) {
+        SpannableString spanned = new SpannableString(str);
+        String regImageAndLinkString = "(\\!\\[[^\\]]*?\\]\\((.*?)\\))|(\\[([^\\]]*?)\\]\\((.*?)\\))";
+        Matcher matcher = Pattern.compile(regImageAndLinkString).matcher(str);
+        while (matcher.find()) {
+            int start = matcher.start();
+            int end = matcher.end();
+            //matcher.groupCount()==5;所以最多可以matcher.group(5+1)
+            //matcher.group(0)表示匹配到的字符串;可能是图片链接字符串
+
+            //matcher.group(1)表示匹配到的图片链接字符串;
+            //matcher.group(2)表示匹配到的图片链接;
+
+            //matcher.group(3)表示匹配到的超链接字符串;
+            //matcher.group(4)表示匹配到的超链接标题字符串;
+            //matcher.group(5)表示匹配到的超链接地址字符串;
+            if (!TextUtils.isEmpty(matcher.group(1))) {
+                //String imageUrl = matcher.group(2);
+                Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.default_text_image);
+                ImageSpan imageSpan = getImageSpan("图片链接...", sourceBitmap);
+                spanned.setSpan(imageSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            } else {
+                String linkTitle = matcher.group(4);
+                String linkUrl = matcher.group(5);
+                if (!linkUrl.startsWith("http")) {
+                    linkUrl = "http://" + linkUrl;
+                }
+                Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.link_gray);
+                String displayed;
+                if (TextUtils.isEmpty(linkTitle.trim())) {
+                    Uri uri = Uri.parse(linkUrl);
+                    displayed = uri.getHost();
+                    if (TextUtils.isEmpty(displayed)) {
+                        displayed = "网络地址";
+                    }
+                    displayed += "...";
+                } else {
+                    displayed = linkTitle;
+                }
+                ImageSpan imageSpan = getImageSpan(displayed, sourceBitmap);
+                spanned.setSpan(imageSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        }
+        return spanned;
+    }
+
+    private ImageSpan getImageSpan(String displayed, Bitmap sourceBitmap) {
+
+        int size = (int) bodyEditText.getTextSize();
+        int height = bodyEditText.getLineHeight();
+
+        //根据要绘制的文字计算bitmap的宽度
+        Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        textPaint.setColor(Color.BLUE);
+        textPaint.setTextSize(size);
+        float textFrom = (float) (size * 1.2);
+        float textEndSpan = (float) (size * 0.3);
+        float[] widths = new float[displayed.length()];
+        textPaint.getTextWidths(displayed, 0, displayed.length(), widths);
+        float totalWidth = 0;
+        for (float width : widths) {
+            totalWidth += width;
+        }
+
+        //生成对应尺寸的bitmap
+        Bitmap bitmap = Bitmap.createBitmap((int) (totalWidth + textFrom + textEndSpan), height, Bitmap.Config.ARGB_8888);
+
+        //缩放sourceBitmap
+        Matrix matrix = new Matrix();
+        float scale = size / sourceBitmap.getWidth();
+        matrix.setScale(scale, scale);
+        matrix.postTranslate((height - size) / 2, (height - size) / 2);
+
+        Canvas canvas = new Canvas(bitmap);
+
+        //画背景
+        Paint bgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        bgPaint.setStyle(Paint.Style.FILL);
+        bgPaint.setColor(Color.parseColor("#009699"));
+        canvas.drawRect(0f, 0f, bitmap.getWidth(), bitmap.getHeight(), bgPaint);
+
+        //画图标
+        Paint paint = new Paint();
+        canvas.drawBitmap(sourceBitmap, matrix, paint);
+
+        //画文字
+        canvas.drawText(displayed, textFrom, -textPaint.getFontMetrics().ascent, textPaint);
+
+        return new ImageSpan(this, bitmap, ImageSpan.ALIGN_BOTTOM);
     }
 
     private void tryClearSketch() {
@@ -266,51 +358,10 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
      */
     private void insertImagePath(String url) {
         String imgTag = "![](" + url + ")";
-
         SpannableString spanned = new SpannableString(imgTag);
-        int size = (int) bodyEditText.getTextSize();
-        int height = bodyEditText.getLineHeight();
         Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.default_text_image);
-
-        //根据要绘制的文字计算bitmap的宽度
-        Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        textPaint.setColor(Color.BLUE);
-        textPaint.setTextSize(size);
         String displayed = "图片链接...";
-        float textFrom = (float) (size * 1.2);
-        float textEndSpan = (float) (size * 0.3);
-        float[] widths = new float[displayed.length()];
-        textPaint.getTextWidths(displayed, 0, displayed.length(), widths);
-        float totalWidth = 0;
-        for (float width : widths) {
-            totalWidth += width;
-        }
-
-        //生成对应尺寸的bitmap
-        Bitmap bitmap = Bitmap.createBitmap((int) (totalWidth + textFrom + textEndSpan), height, Bitmap.Config.ARGB_8888);
-
-        //缩放sourceBitmap
-        Matrix matrix = new Matrix();
-        float scale = size / sourceBitmap.getWidth();
-        matrix.setScale(scale, scale);
-        matrix.postTranslate((height - size) / 2, (height - size) / 2);
-
-        Canvas canvas = new Canvas(bitmap);
-
-        //画背景
-        Paint bgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        bgPaint.setStyle(Paint.Style.FILL);
-        bgPaint.setColor(Color.parseColor("#009699"));
-        canvas.drawRect(0f, 0f, bitmap.getWidth(), bitmap.getHeight(), bgPaint);
-
-        //画图标
-        Paint paint = new Paint();
-        canvas.drawBitmap(sourceBitmap, matrix, paint);
-
-        //画文字
-        canvas.drawText(displayed, textFrom, -textPaint.getFontMetrics().ascent, textPaint);
-
-        ImageSpan imageSpan = new ImageSpan(this, bitmap, ImageSpan.ALIGN_BOTTOM);
+        ImageSpan imageSpan = getImageSpan(displayed, sourceBitmap);
         spanned.setSpan(imageSpan, 0, imgTag.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         int start = bodyEditText.getSelectionStart();
         bodyEditText.getText().insert(start, " ").insert(start + 1, spanned).insert(start + 1 + imgTag.length(), " ");
@@ -360,15 +411,8 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
                     String result = "[" + title + "](" + url + ")";
 
                     SpannableString spanned = new SpannableString(result);
-                    int size = (int) bodyEditText.getTextSize();
-                    int height = bodyEditText.getLineHeight();
                     Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.link_gray);
-
-                    //计算bitmap宽度
-                    Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-                    textPaint.setColor(Color.BLUE);
-                    textPaint.setTextSize(size);
-                    String displayed = "";
+                    String displayed;
                     if (TextUtils.isEmpty(title.trim())) {
                         Uri uri = Uri.parse(url);
                         displayed = uri.getHost();
@@ -379,39 +423,8 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
                     } else {
                         displayed = title;
                     }
-                    float textFrom = (float) (size * 1.2);
-                    float textEndSpan = (float) (size * 0.3);
-                    float[] widths = new float[displayed.length()];
-                    textPaint.getTextWidths(displayed, 0, displayed.length(), widths);
-                    float totalWidth = 0;
-                    for (float width : widths) {
-                        totalWidth += width;
-                    }
-
-                    Bitmap bitmap = Bitmap.createBitmap((int) (totalWidth + textFrom + textEndSpan), height, Bitmap.Config.ARGB_8888);
-                    Matrix matrix = new Matrix();
-                    float scale = size / sourceBitmap.getWidth();
-                    matrix.setScale(scale, scale);
-                    matrix.postTranslate((height - size) / 2, (height - size) / 2);
-
-                    Canvas canvas = new Canvas(bitmap);
-
-                    //画背景
-                    Paint bgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-                    bgPaint.setStyle(Paint.Style.FILL);
-                    bgPaint.setColor(Color.parseColor("#009699"));
-                    canvas.drawRect(0f, 0f, bitmap.getWidth(), bitmap.getHeight(), bgPaint);
-
-                    //绘制图标
-                    Paint paint = new Paint();
-                    canvas.drawBitmap(sourceBitmap, matrix, paint);
-
-                    //绘制文字
-                    canvas.drawText(displayed, (float) (size * 1.2), -textPaint.getFontMetrics().ascent, textPaint);
-
-                    ImageSpan imageSpan = new ImageSpan(PublishPostActivity.this, bitmap, ImageSpan.ALIGN_BOTTOM);
+                    ImageSpan imageSpan = getImageSpan(displayed, sourceBitmap);
                     spanned.setSpan(imageSpan, 0, result.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
                     int start = bodyEditText.getSelectionStart();
                     bodyEditText.getText().insert(start, " ").insert(start + 1, spanned).insert(start + 1 + result.length(), " ");
                 }
