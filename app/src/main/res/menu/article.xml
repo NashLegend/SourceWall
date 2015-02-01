@@ -1,4 +1,4 @@
 <menu xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.sourcewall.ArticleActivity">
+    tools:context="net.nashlegend.sourcewall.ArticleActivity">
 
 </menu>

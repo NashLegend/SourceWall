@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/color_page_background"
-    tools:context="com.example.sourcewall.ReplyActivity">
+    tools:context="net.nashlegend.sourcewall.ReplyActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/action_bar"

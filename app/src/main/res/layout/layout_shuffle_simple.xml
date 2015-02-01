@@ -52,7 +52,7 @@
             android:textColor="?attr/drawable_dialog_button_text" />
     </LinearLayout>
 
-    <com.example.sourcewall.commonview.shuffle.ShuffleCardSimple
+    <net.nashlegend.sourcewall.commonview.shuffle.ShuffleCardSimple
         android:id="@+id/senator"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

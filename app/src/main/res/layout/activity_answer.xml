@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/color_webview_background"
-    tools:context="com.example.sourcewall.AnswerActivity">
+    tools:context="net.nashlegend.sourcewall.AnswerActivity">
 
-    <com.example.sourcewall.commonview.SScrollView
+    <net.nashlegend.sourcewall.commonview.SScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -26,7 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize" />
 
-            <com.example.sourcewall.commonview.WWebView
+            <net.nashlegend.sourcewall.commonview.WWebView
                 android:id="@+id/web_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -37,7 +37,7 @@
                 android:layout_height="64dp" />
         </LinearLayout>
 
-    </com.example.sourcewall.commonview.SScrollView>
+    </net.nashlegend.sourcewall.commonview.SScrollView>
 
 
     <TextView

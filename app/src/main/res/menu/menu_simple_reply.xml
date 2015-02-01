@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.sourcewall.SimpleReplyActivity">
+    tools:context="net.nashlegend.sourcewall.SimpleReplyActivity">
     <item
         android:id="@+id/action_cancel_simple_reply"
         android:orderInCategory="100"

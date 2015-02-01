@@ -138,5 +138,7 @@
     <string name="load_failed">加载失败</string>
     <string name="magage_all_tags">管理所有标签</string>
     <string name="manage_all_groups">管理所有小组</string>
+    <string name="has_supported">已经赞同过</string>
+    <string name="has_opposed">已经反对过</string>
 
 </resources>

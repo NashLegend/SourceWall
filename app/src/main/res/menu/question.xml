@@ -1,2 +1,2 @@
 <menu xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.sourcewall.QuestionActivity"></menu>
+    tools:context="net.nashlegend.sourcewall.QuestionActivity"></menu>

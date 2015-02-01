@@ -5,10 +5,10 @@ android {
     buildToolsVersion "21.1.2"
 
     defaultConfig {
-        applicationId "com.example.sourcewall"
+        applicationId "net.nashlegend.sourcewall"
         minSdkVersion 15
         targetSdkVersion 21
-        versionCode 1
+        versionCode 20150201
         versionName "1.0"
     }
     buildTypes {
