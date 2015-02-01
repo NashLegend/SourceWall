@@ -25,6 +25,8 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import net.nashlegend.sourcewall.LoginActivity;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.SettingActivity;
@@ -41,7 +43,6 @@ import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.SharedUtil;
 import net.nashlegend.sourcewall.util.ToastUtil;
 import net.nashlegend.sourcewall.view.SubItemView;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -168,6 +169,14 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
 
     public boolean isDrawerOpen() {
         return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mFragmentContainerView);
+    }
+
+    public void toggleDrawerOpen() {
+        if (isDrawerOpen()) {
+            mDrawerLayout.closeDrawer(mFragmentContainerView);
+        } else if (mDrawerLayout != null && !mDrawerLayout.isDrawerOpen(mFragmentContainerView)) {
+            mDrawerLayout.openDrawer(mFragmentContainerView);
+        }
     }
 
     /**
