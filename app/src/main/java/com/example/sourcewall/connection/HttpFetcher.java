@@ -6,7 +6,6 @@ import com.example.sourcewall.connection.api.UserAPI;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpEntityEnclosingRequest;
-import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.NoHttpResponseException;
@@ -19,7 +18,6 @@ import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnManagerParams;
 import org.apache.http.conn.params.ConnPerRouteBean;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.DefaultRedirectHandler;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.message.BasicNameValuePair;
@@ -149,12 +147,12 @@ public class HttpFetcher {
     public static DefaultHttpClient getDefaultHttpClient() {
         if (defaultHttpClient == null) {
             defaultHttpClient = new DefaultHttpClient();
-            defaultHttpClient.setHttpRequestRetryHandler(requestRetryHandler);
-            defaultHttpClient.setRedirectHandler(redirectHandler);
+
             ClientConnectionManager manager = defaultHttpClient.getConnectionManager();
             HttpParams params = defaultHttpClient.getParams();
             //多线程请求
             defaultHttpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(params, manager.getSchemeRegistry()), params);
+            defaultHttpClient.setHttpRequestRetryHandler(requestRetryHandler);
 
             ConnManagerParams.setMaxTotalConnections(params, MAX_TOTAL_CONNECTIONS);
             ConnManagerParams.setTimeout(params, TIMEOUT);//发起链接超时
@@ -212,40 +210,16 @@ public class HttpFetcher {
         return uploadHttpClient;
     }
 
-    private static DefaultRedirectHandler redirectHandler = new DefaultRedirectHandler() {
-
-        @Override
-        public boolean isRedirectRequested(HttpResponse response, HttpContext context) {
-            return false;
-        }
-    };
-
     /**
      * 重试处理
      */
     private static HttpRequestRetryHandler requestRetryHandler = new HttpRequestRetryHandler() {
+
         public boolean retryRequest(IOException exception, int executionCount, HttpContext context) {
-            if (executionCount >= MAX_EXECUTION_COUNT) {
-                System.out.println("Retry Failed executionCount");
-                return false;
-            }
-            System.out.println("Retry executionCount");
-            if (exception instanceof NoHttpResponseException) {
-                System.out.println("Retry NoHttpResponseException");
-                return true;
-            }
-            if (exception instanceof SSLHandshakeException) {
-                System.out.println("Retry Fail SSLHandshakeException");
-                return false;
-            }
-            HttpRequest request = (HttpRequest) context.getAttribute(ExecutionContext.HTTP_REQUEST);
-            boolean idempotent = (request instanceof HttpEntityEnclosingRequest);
-            if (!idempotent) {
-                System.out.println("Retry !idempotent");
-                return true;
-            }
-            System.out.println("Retry False");
-            return false;
+            return executionCount < MAX_EXECUTION_COUNT
+                    && !(exception instanceof SSLHandshakeException)
+                    && (exception instanceof NoHttpResponseException
+                    || !(context.getAttribute(ExecutionContext.HTTP_REQUEST) instanceof HttpEntityEnclosingRequest));
         }
     };
 
