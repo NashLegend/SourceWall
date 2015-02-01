@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.sourcewall">
+    package="net.nashlegend.sourcewall">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -32,7 +32,7 @@
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.sourcewall.BaseActivity" />
+                android:value="net.nashlegend.sourcewall.BaseActivity" />
         </activity>
         <activity
             android:name=".ShuffleGroupActivity"

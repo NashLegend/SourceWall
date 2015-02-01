@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="?attr/color_page_background"
-    tools:context="com.example.sourcewall.LoginActivity">
+    tools:context="net.nashlegend.sourcewall.LoginActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/action_bar"

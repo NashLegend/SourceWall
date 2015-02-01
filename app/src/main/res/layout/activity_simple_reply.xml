@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="?attr/color_page_background"
     android:orientation="vertical"
-    tools:context="com.example.sourcewall.SimpleReplyActivity">
+    tools:context="net.nashlegend.sourcewall.SimpleReplyActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/action_bar"
@@ -18,14 +18,14 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <com.example.sourcewall.commonview.LListView
+        <net.nashlegend.sourcewall.commonview.LListView
             android:id="@+id/list_detail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:footerDividersEnabled="false"
             android:headerDividersEnabled="false" />
 
-        <com.example.sourcewall.commonview.LoadingView
+        <net.nashlegend.sourcewall.commonview.LoadingView
             android:id="@+id/replies_progress_loading"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
