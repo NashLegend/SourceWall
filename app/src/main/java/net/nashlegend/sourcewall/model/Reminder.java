@@ -2,7 +2,8 @@ package net.nashlegend.sourcewall.model;
 
 /**
  * Created by NashLegend on 2015/2/2 0002
- * 私信，貌似不仅仅是私信
+ * 私信，貌似不仅仅是私信还有草稿，不知道还有多少
+ * 私信是message，草稿是draft，草稿在这里就算了吧，我这里也不支持html编辑
  */
 public class Reminder extends AceModel {
 
