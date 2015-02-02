@@ -14,6 +14,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnManagerParams;
 import org.apache.http.conn.params.ConnPerRouteBean;
@@ -34,6 +35,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.net.ssl.SSLHandshakeException;
@@ -105,6 +107,34 @@ public class HttpFetcher {
 
     public static ResultObject get(String url, List<NameValuePair> params) throws Exception {
         return get(url, params, true);
+    }
+
+    public static ResultObject put(String url, List<NameValuePair> params, boolean needToken) throws Exception {
+        ResultObject resultObject = new ResultObject();
+        HttpPut httpPut = new HttpPut(url);
+        String token = UserAPI.getToken();
+        if (params == null) {
+            params = new ArrayList<NameValuePair>();
+        }
+        if (needToken && !TextUtils.isEmpty(token)) {
+            params.add(new BasicNameValuePair("access_token", token));
+        }
+        httpPut.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+        HttpResponse response = getDefaultHttpClient().execute(httpPut);
+        int statusCode = response.getStatusLine().getStatusCode();
+        HttpEntity entity = response.getEntity();
+        String result = EntityUtils.toString(entity, HTTP.UTF_8);
+        resultObject.statusCode = statusCode;
+        resultObject.result = result;
+        return resultObject;
+    }
+
+    public static ResultObject put(String url) throws Exception {
+        return put(url, new ArrayList<NameValuePair>(), true);
+    }
+
+    public static ResultObject put(String url, List<NameValuePair> params) throws Exception {
+        return put(url, params, true);
     }
 
     public static ResultObject delete(String url) throws Exception {

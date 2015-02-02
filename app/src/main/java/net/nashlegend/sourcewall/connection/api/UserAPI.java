@@ -8,6 +8,7 @@ import net.nashlegend.sourcewall.db.AskTagHelper;
 import net.nashlegend.sourcewall.db.GroupHelper;
 import net.nashlegend.sourcewall.model.Basket;
 import net.nashlegend.sourcewall.model.Category;
+import net.nashlegend.sourcewall.model.Message;
 import net.nashlegend.sourcewall.model.UserInfo;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.SharedUtil;
@@ -105,6 +106,11 @@ public class UserAPI extends APIBase {
         return resultObject;
     }
 
+    /**
+     * 获取通知数量
+     *
+     * @return
+     */
     public static ResultObject getMessageNum() {
         ResultObject resultObject = new ResultObject();
         try {
@@ -129,6 +135,82 @@ public class UserAPI extends APIBase {
         } catch (JSONException e) {
             resultObject.code = ResultObject.ResultCode.CODE_JSON_ERROR;
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resultObject;
+    }
+
+    /**
+     * 获取通知详情列表
+     *
+     * @return ResultObject
+     */
+    public static ResultObject getMessageList() {
+        ResultObject resultObject = new ResultObject();
+        try {
+            String url = "http://www.guokr.com/apis/community/notice.json";
+            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            pairs.add(new BasicNameValuePair("_", System.currentTimeMillis() + ""));
+            String result = HttpFetcher.get(url, pairs).toString();
+            JSONArray messages = getUniversalJsonArray(result, resultObject);
+            if (messages != null) {
+                ArrayList<Message> messageList = new ArrayList<>();
+                for (int i = 0; i < messages.length(); i++) {
+                    JSONObject messageObject = messages.getJSONObject(i);
+                    Message message = new Message();
+                    message.setContent(getJsonString(messageObject, "content"));
+                    message.setUrl(getJsonString(messageObject, "url"));
+                    message.setUkey(getJsonString(messageObject, "ukey"));
+                    message.setDate_last_updated(getJsonLong(messageObject, "date_last_updated"));
+                    message.setId(getJsonString(messageObject, "id"));
+                    message.setIs_read(getJsonBoolean(messageObject, "is_read"));
+                    messageList.add(message);
+                }
+                resultObject.ok = true;
+                resultObject.result = messageList;
+            }
+        } catch (IOException e) {
+            resultObject.code = ResultObject.ResultCode.CODE_NETWORK_ERROR;
+            e.printStackTrace();
+        } catch (JSONException e) {
+            resultObject.code = ResultObject.ResultCode.CODE_JSON_ERROR;
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resultObject;
+    }
+
+    /**
+     * 忽略一条通知消息，返回的是剩余的通知详情列表
+     *
+     * @return ResultObject
+     */
+    private ResultObject ignoreOneMessage(String messageID) {
+        ResultObject resultObject = new ResultObject();
+        try {
+            String url = "http://www.guokr.com/apis/community/notice_ignore.json";
+            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            pairs.add(new BasicNameValuePair("nid", System.currentTimeMillis() + ""));
+            String result = HttpFetcher.put(url, pairs).toString();
+            JSONArray messages = getUniversalJsonArray(result, resultObject);
+            if (messages != null) {
+                ArrayList<Message> messageList = new ArrayList<>();
+                for (int i = 0; i < messages.length(); i++) {
+                    JSONObject messageObject = messages.getJSONObject(i);
+                    Message message = new Message();
+                    message.setContent(getJsonString(messageObject, "content"));
+                    message.setUrl(getJsonString(messageObject, "url"));
+                    message.setUkey(getJsonString(messageObject, "ukey"));
+                    message.setDate_last_updated(getJsonLong(messageObject, "date_last_updated"));
+                    message.setId(getJsonString(messageObject, "id"));
+                    message.setIs_read(getJsonBoolean(messageObject, "is_read"));
+                    messageList.add(message);
+                }
+                resultObject.ok = true;
+                resultObject.result = messageList;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

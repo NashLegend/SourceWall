@@ -209,6 +209,14 @@ public class APIBase {
         }
     }
 
+    public static long getJsonLong(JSONObject jsonObject, String key) throws JSONException {
+        if ((jsonObject.has(key)) && (!jsonObject.isNull(key))) {
+            return jsonObject.getLong(key);
+        } else {
+            return 0l;
+        }
+    }
+
     public static boolean getJsonBoolean(JSONObject jsonObject, String key) throws JSONException {
         return (jsonObject.has(key)) && (!jsonObject.isNull(key)) && jsonObject.getBoolean(key);
     }
