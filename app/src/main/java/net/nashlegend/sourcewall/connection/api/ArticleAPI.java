@@ -114,7 +114,7 @@ public class ArticleAPI extends APIBase {
                 resultObject.ok = false;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            handleRequestException(e, resultObject);
         }
 
         return resultObject;
@@ -178,7 +178,7 @@ public class ArticleAPI extends APIBase {
             resultObject.ok = true;
             resultObject.result = article;
         } catch (Exception e) {
-            e.printStackTrace();
+            handleRequestException(e, resultObject);
         }
 
         return resultObject;
@@ -280,7 +280,7 @@ public class ArticleAPI extends APIBase {
                 resultObject.result = list;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            handleRequestException(e, resultObject);
         }
 
         return resultObject;
@@ -346,7 +346,7 @@ public class ArticleAPI extends APIBase {
                 resultObject.ok = true;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -366,7 +366,7 @@ public class ArticleAPI extends APIBase {
             String result = HttpFetcher.delete(url, pairs).toString();
             resultObject.ok = getUniversalJsonSimpleBoolean(result, resultObject);
         } catch (Exception e) {
-            e.printStackTrace();
+            handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -393,7 +393,7 @@ public class ArticleAPI extends APIBase {
                 resultObject.result = replyID;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -420,7 +420,7 @@ public class ArticleAPI extends APIBase {
                 resultObject.result = replyID;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            handleRequestException(e, resultObject);
         }
         return resultObject;
     }

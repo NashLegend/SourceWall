@@ -44,7 +44,7 @@ public class PostAPI extends APIBase {
             String result = HttpFetcher.post(url, pairs).toString();
             resultObject.ok = getUniversalJsonSimpleBoolean(result, resultObject);
         } catch (Exception e) {
-            e.printStackTrace();
+            handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -64,7 +64,7 @@ public class PostAPI extends APIBase {
             String result = HttpFetcher.delete(url, pairs).toString();
             resultObject.ok = getUniversalJsonSimpleBoolean(result, resultObject);
         } catch (Exception e) {
-            e.printStackTrace();
+            handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -114,7 +114,7 @@ public class PostAPI extends APIBase {
             resultObject.ok = true;
             resultObject.result = subItems;
         } catch (Exception e) {
-            e.printStackTrace();
+            handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -161,7 +161,7 @@ public class PostAPI extends APIBase {
                 resultObject.result = list;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            handleRequestException(e, resultObject);
         }
 
         return resultObject;
@@ -262,7 +262,7 @@ public class PostAPI extends APIBase {
                 resultObject.result = list;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            handleRequestException(e, resultObject);
         }
 
         return resultObject;
@@ -319,7 +319,7 @@ public class PostAPI extends APIBase {
                 resultObject.result = list;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -378,7 +378,7 @@ public class PostAPI extends APIBase {
             resultObject.ok = true;
             resultObject.result = detail;
         } catch (Exception e) {
-            e.printStackTrace();
+            handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -432,7 +432,7 @@ public class PostAPI extends APIBase {
                 resultObject.result = list;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -550,7 +550,7 @@ public class PostAPI extends APIBase {
                 resultObject.ok = true;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -578,7 +578,7 @@ public class PostAPI extends APIBase {
                 resultObject.result = replyID;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -599,7 +599,7 @@ public class PostAPI extends APIBase {
             String result = HttpFetcher.delete(url, pairs).toString();
             resultObject.ok = getUniversalJsonSimpleBoolean(result, resultObject);
         } catch (Exception e) {
-            e.printStackTrace();
+            handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -621,7 +621,7 @@ public class PostAPI extends APIBase {
                 resultObject.ok = true;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -666,7 +666,7 @@ public class PostAPI extends APIBase {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -710,7 +710,7 @@ public class PostAPI extends APIBase {
                 resultObject.result = result.toString();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            handleRequestException(e, resultObject);
         }
         return resultObject;
     }

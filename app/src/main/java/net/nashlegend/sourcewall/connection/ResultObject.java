@@ -4,10 +4,11 @@ package net.nashlegend.sourcewall.connection;
  * Created by NashLegend on 2014/9/23 0023
  */
 public class ResultObject {
-    public ResultCode code = ResultCode.CODE_OK;
     public boolean ok = false;
+    public ResultCode code = ResultCode.CODE_OK;
     public int statusCode = 200;
     public String message = "";
+    public String error_message = "";
     public Object result;
 
     @Override

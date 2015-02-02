@@ -154,7 +154,7 @@ public class APIBase {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                handleRequestException(e, resultObject);
             }
         }
         return resultObject;
@@ -195,7 +195,7 @@ public class APIBase {
                     resultObject.result = result;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                handleRequestException(e, resultObject);
             }
         }
         return resultObject;
@@ -302,6 +302,13 @@ public class APIBase {
         return false;
     }
 
+    /**
+     * Bad Json指返回结果不为true的，而不是格式不对的
+     *
+     * @param object
+     * @param resultObject
+     * @throws JSONException
+     */
     public static void handleBadJson(JSONObject object, ResultObject resultObject) throws JSONException {
         int error_code = getJsonInt(object, "error_code");
         resultObject.message = getJsonString(object, "error");
@@ -327,6 +334,25 @@ public class APIBase {
         //string hasThanked = {"error_code": 242033, "request_uri": "/apis/ask/answer_thanking.json", "ok": false, "error": "You have already thanked the answer."}
         //String invalidToken = " {\"error_code\": 200004, \"request_uri\": \"/apis/community/rn_num.json?_=1422011885139&access_token=51096037c7aa15ccd08c12c3fba8f856ae65d672cda50f25cec883343f3597a6\", \"ok\": false, \"error\": \"Illegal access token.\"}\n";
         //String alreadyLiked = "{\"error_code\": 240004, \"request_uri\": \"/apis/group/post_reply_liking.json\", \"ok\": false, \"error\": \"You have already liked this reply!\"}";
+    }
+
+    /**
+     * 处理所有请求的错误信息
+     *
+     * @param e            要处理的错误信息
+     * @param resultObject ResultObject
+     */
+    public static void handleRequestException(Exception e, ResultObject resultObject) {
+        e.printStackTrace();
+
+        resultObject.error_message = e.getMessage();
+        if (e instanceof IOException) {
+            resultObject.code = ResultObject.ResultCode.CODE_NETWORK_ERROR;
+        } else if (e instanceof JSONException) {
+            resultObject.code = ResultObject.ResultCode.CODE_JSON_ERROR;
+        } else {
+            resultObject.code = ResultObject.ResultCode.CODE_UNKNOWN;
+        }
     }
 
     /**

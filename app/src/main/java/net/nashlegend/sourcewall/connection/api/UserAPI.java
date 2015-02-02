@@ -9,6 +9,9 @@ import net.nashlegend.sourcewall.db.GroupHelper;
 import net.nashlegend.sourcewall.model.Basket;
 import net.nashlegend.sourcewall.model.Category;
 import net.nashlegend.sourcewall.model.Message;
+import net.nashlegend.sourcewall.model.Notice;
+import net.nashlegend.sourcewall.model.Reminder;
+import net.nashlegend.sourcewall.model.ReminderNoticeNum;
 import net.nashlegend.sourcewall.model.UserInfo;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.SharedUtil;
@@ -16,10 +19,8 @@ import net.nashlegend.sourcewall.util.SharedUtil;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -71,9 +72,8 @@ public class UserAPI extends APIBase {
                 resultObject.ok = true;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            handleRequestException(e, resultObject);
         }
-
         return resultObject;
     }
 
@@ -98,7 +98,7 @@ public class UserAPI extends APIBase {
         String ukey = getUkey();
         //先判断有没有token，没有就是未登录，有的话检测一下是否过期
         if (!TextUtils.isEmpty(ukey) && ukey.length() == 6 && !TextUtils.isEmpty(token) && token.length() == 64) {
-            resultObject = getMessageNum();
+            resultObject = getNum();
         } else {
             clearMyInfo();
             resultObject.code = ResultObject.ResultCode.CODE_NO_TOKEN;
@@ -107,36 +107,64 @@ public class UserAPI extends APIBase {
     }
 
     /**
-     * 获取通知数量
+     * 获取通知和站内信数量
      *
      * @return
      */
-    public static ResultObject getMessageNum() {
+    public static ResultObject getNum() {
         ResultObject resultObject = new ResultObject();
         try {
             String url = "http://www.guokr.com/apis/community/rn_num.json";
             ArrayList<NameValuePair> pairs = new ArrayList<>();
             pairs.add(new BasicNameValuePair("_", System.currentTimeMillis() + ""));
             String result = HttpFetcher.get(url, pairs).toString();
-            JSONObject object = new JSONObject(result);
-            if (getJsonBoolean(object, "ok")) {
+            JSONObject object = getUniversalJsonObject(result, resultObject);
+            if (object != null) {
+                ReminderNoticeNum num = new ReminderNoticeNum();
+                num.setNotice_num(getJsonInt(object, "n"));//通知数量
+                num.setReminder_num(getJsonInt(object, "r"));//站内信数量
                 resultObject.ok = true;
-            } else {
-                if (getJsonInt(object, "error_code") == 200004) {
-                    resultObject.code = ResultObject.ResultCode.CODE_TOKEN_INVALID;
-                } else {
-                    resultObject.code = ResultObject.ResultCode.CODE_LOGIN_FAILED;
-                }
-                clearMyInfo();
+                resultObject.result = num;
             }
-        } catch (IOException e) {
-            resultObject.code = ResultObject.ResultCode.CODE_NETWORK_ERROR;
-            e.printStackTrace();
-        } catch (JSONException e) {
-            resultObject.code = ResultObject.ResultCode.CODE_JSON_ERROR;
-            e.printStackTrace();
         } catch (Exception e) {
-            e.printStackTrace();
+            handleRequestException(e, resultObject);
+        }
+        return resultObject;
+    }
+
+    /**
+     * 获取提醒列表
+     *
+     * @return ResultObject
+     */
+    public static ResultObject getReminderList(int offset) {
+        ResultObject resultObject = new ResultObject();
+        try {
+            String url = "http://www.guokr.com/apis/community/reminder.json";
+            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            pairs.add(new BasicNameValuePair("_", System.currentTimeMillis() + ""));
+            pairs.add(new BasicNameValuePair("limit", "20"));
+            pairs.add(new BasicNameValuePair("offset", offset + ""));
+            String result = HttpFetcher.get(url, pairs).toString();
+            JSONArray reminders = getUniversalJsonArray(result, resultObject);
+            if (reminders != null) {
+                ArrayList<Reminder> noticeList = new ArrayList<>();
+                for (int i = 0; i < reminders.length(); i++) {
+                    JSONObject reminderObject = reminders.getJSONObject(i);
+                    Reminder notice = new Reminder();
+                    notice.setContent(getJsonString(reminderObject, "content"));
+                    notice.setUrl(getJsonString(reminderObject, "url"));
+                    notice.setUkey(getJsonString(reminderObject, "ukey"));
+                    notice.setDateCreated(getJsonLong(reminderObject, "date_created"));
+                    notice.setId(getJsonString(reminderObject, "id"));
+                    notice.setGroup(getJsonString(reminderObject, "group"));
+                    noticeList.add(notice);
+                }
+                resultObject.ok = true;
+                resultObject.result = noticeList;
+            }
+        } catch (Exception e) {
+            handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -146,38 +174,34 @@ public class UserAPI extends APIBase {
      *
      * @return ResultObject
      */
-    public static ResultObject getMessageList() {
+    public static ResultObject getNoticeList(int offset) {
         ResultObject resultObject = new ResultObject();
         try {
             String url = "http://www.guokr.com/apis/community/notice.json";
             ArrayList<NameValuePair> pairs = new ArrayList<>();
             pairs.add(new BasicNameValuePair("_", System.currentTimeMillis() + ""));
+            pairs.add(new BasicNameValuePair("limit", "20"));
+            pairs.add(new BasicNameValuePair("offset", offset + ""));
             String result = HttpFetcher.get(url, pairs).toString();
-            JSONArray messages = getUniversalJsonArray(result, resultObject);
-            if (messages != null) {
-                ArrayList<Message> messageList = new ArrayList<>();
-                for (int i = 0; i < messages.length(); i++) {
-                    JSONObject messageObject = messages.getJSONObject(i);
-                    Message message = new Message();
-                    message.setContent(getJsonString(messageObject, "content"));
-                    message.setUrl(getJsonString(messageObject, "url"));
-                    message.setUkey(getJsonString(messageObject, "ukey"));
-                    message.setDate_last_updated(getJsonLong(messageObject, "date_last_updated"));
-                    message.setId(getJsonString(messageObject, "id"));
-                    message.setIs_read(getJsonBoolean(messageObject, "is_read"));
-                    messageList.add(message);
+            JSONArray notices = getUniversalJsonArray(result, resultObject);
+            if (notices != null) {
+                ArrayList<Notice> noticeList = new ArrayList<>();
+                for (int i = 0; i < notices.length(); i++) {
+                    JSONObject noticesObject = notices.getJSONObject(i);
+                    Notice notice = new Notice();
+                    notice.setContent(getJsonString(noticesObject, "content"));
+                    notice.setUrl(getJsonString(noticesObject, "url"));
+                    notice.setUkey(getJsonString(noticesObject, "ukey"));
+                    notice.setDate_last_updated(getJsonLong(noticesObject, "date_last_updated"));
+                    notice.setId(getJsonString(noticesObject, "id"));
+                    notice.setIs_read(getJsonBoolean(noticesObject, "is_read"));
+                    noticeList.add(notice);
                 }
                 resultObject.ok = true;
-                resultObject.result = messageList;
+                resultObject.result = noticeList;
             }
-        } catch (IOException e) {
-            resultObject.code = ResultObject.ResultCode.CODE_NETWORK_ERROR;
-            e.printStackTrace();
-        } catch (JSONException e) {
-            resultObject.code = ResultObject.ResultCode.CODE_JSON_ERROR;
-            e.printStackTrace();
         } catch (Exception e) {
-            e.printStackTrace();
+            handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -187,32 +211,101 @@ public class UserAPI extends APIBase {
      *
      * @return ResultObject
      */
-    private ResultObject ignoreOneMessage(String messageID) {
+    private ResultObject ignoreOneNotice(String noticeID) {
         ResultObject resultObject = new ResultObject();
         try {
             String url = "http://www.guokr.com/apis/community/notice_ignore.json";
             ArrayList<NameValuePair> pairs = new ArrayList<>();
             pairs.add(new BasicNameValuePair("nid", System.currentTimeMillis() + ""));
             String result = HttpFetcher.put(url, pairs).toString();
-            JSONArray messages = getUniversalJsonArray(result, resultObject);
-            if (messages != null) {
-                ArrayList<Message> messageList = new ArrayList<>();
-                for (int i = 0; i < messages.length(); i++) {
-                    JSONObject messageObject = messages.getJSONObject(i);
-                    Message message = new Message();
-                    message.setContent(getJsonString(messageObject, "content"));
-                    message.setUrl(getJsonString(messageObject, "url"));
-                    message.setUkey(getJsonString(messageObject, "ukey"));
-                    message.setDate_last_updated(getJsonLong(messageObject, "date_last_updated"));
-                    message.setId(getJsonString(messageObject, "id"));
-                    message.setIs_read(getJsonBoolean(messageObject, "is_read"));
-                    messageList.add(message);
+            JSONArray notices = getUniversalJsonArray(result, resultObject);
+            if (notices != null) {
+                ArrayList<Notice> noticeList = new ArrayList<>();
+                for (int i = 0; i < notices.length(); i++) {
+                    JSONObject noticeObject = notices.getJSONObject(i);
+                    Notice notice = new Notice();
+                    notice.setContent(getJsonString(noticeObject, "content"));
+                    notice.setUrl(getJsonString(noticeObject, "url"));
+                    notice.setUkey(getJsonString(noticeObject, "ukey"));
+                    notice.setDate_last_updated(getJsonLong(noticeObject, "date_last_updated"));
+                    notice.setId(getJsonString(noticeObject, "id"));
+                    notice.setIs_read(getJsonBoolean(noticeObject, "is_read"));
+                    noticeList.add(notice);
                 }
                 resultObject.ok = true;
-                resultObject.result = messageList;
+                resultObject.result = noticeList;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            handleRequestException(e, resultObject);
+        }
+        return resultObject;
+    }
+
+    /**
+     * 获取站内信详情列表，与某人的对话只显示最近一条。目前还不知道获取对话接口
+     *
+     * @return ResultObject
+     */
+    public static ResultObject getMessageList(int offset) {
+        ResultObject resultObject = new ResultObject();
+        try {
+            String url = "http://www.guokr.com/apis/community/user/message.json";
+            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            pairs.add(new BasicNameValuePair("limit", "20"));
+            pairs.add(new BasicNameValuePair("offset", offset + ""));
+            String result = HttpFetcher.get(url, pairs).toString();
+            JSONArray notices = getUniversalJsonArray(result, resultObject);
+            if (notices != null) {
+                ArrayList<Message> noticeList = new ArrayList<>();
+                for (int i = 0; i < notices.length(); i++) {
+                    JSONObject noticesObject = notices.getJSONObject(i);
+                    Message message = new Message();
+                    message.setContent(getJsonString(noticesObject, "content"));
+                    message.setDirection(getJsonString(noticesObject, "direction"));
+                    message.setUkey(getJsonString(noticesObject, "5p6t9t"));
+                    message.setAnother_ukey(getJsonString(noticesObject, "ukey_another"));
+                    message.setDateCreated(getJsonString(noticesObject, "date_created"));
+                    message.setId(getJsonString(noticesObject, "id"));
+                    message.setIs_read(getJsonBoolean(noticesObject, "is_read"));
+                    message.setTotal(getJsonInt(noticesObject, "total"));
+                    message.setUnread_count(getJsonInt(noticesObject, "unread_count"));
+                    noticeList.add(message);
+                }
+                resultObject.ok = true;
+                resultObject.result = noticeList;
+            }
+        } catch (Exception e) {
+            handleRequestException(e, resultObject);
+        }
+        return resultObject;
+    }
+
+    /**
+     * 根据id获取一条站内信
+     *
+     * @return ResultObject
+     */
+    public static ResultObject getOneMessage(String id) {
+        ResultObject resultObject = new ResultObject();
+        try {
+            String url = "http://www.guokr.com/apis/community/user/message/" + id + ".json";
+            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            String result = HttpFetcher.get(url, pairs).toString();
+            JSONObject noticesObject = getUniversalJsonObject(result, resultObject);
+            if (noticesObject != null) {
+                Message message = new Message();
+                message.setContent(getJsonString(noticesObject, "content"));
+                message.setDirection(getJsonString(noticesObject, "direction"));
+                message.setUkey(getJsonString(noticesObject, "5p6t9t"));
+                message.setAnother_ukey(getJsonString(noticesObject, "ukey_another"));
+                message.setDateCreated(getJsonString(noticesObject, "date_created"));
+                message.setId(getJsonString(noticesObject, "id"));
+                message.setIs_read(getJsonBoolean(noticesObject, "is_read"));
+                resultObject.ok = true;
+                resultObject.result = noticesObject;
+            }
+        } catch (Exception e) {
+            handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -238,7 +331,7 @@ public class UserAPI extends APIBase {
                 resultObject.ok = true;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -270,7 +363,7 @@ public class UserAPI extends APIBase {
                 resultObject.ok = true;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -312,7 +405,7 @@ public class UserAPI extends APIBase {
                 myBaskets = baskets;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -352,7 +445,7 @@ public class UserAPI extends APIBase {
 
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -382,7 +475,7 @@ public class UserAPI extends APIBase {
                 resultObject.result = categories;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            handleRequestException(e, resultObject);
         }
         return resultObject;
     }
