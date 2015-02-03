@@ -14,12 +14,12 @@ public class BaseActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        super.onCreate(savedInstanceState);
     }
 
     public void notifyNeedLog() {
-        ToastUtil.toastSingleton("需要登录");
+        ToastUtil.toastSingleton(getString(R.string.login_needed));
     }
 
     public void startLoginActivity() {

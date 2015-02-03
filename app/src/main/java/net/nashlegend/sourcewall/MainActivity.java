@@ -11,7 +11,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import net.nashlegend.sourcewall.fragment.ArticlesFragment;
 import net.nashlegend.sourcewall.fragment.ChannelsFragment;
@@ -60,19 +59,13 @@ public class MainActivity extends BaseActivity {
         registerReceiver(receiver, filter);
         Toolbar toolbar = (Toolbar) findViewById(net.nashlegend.sourcewall.R.id.action_bar);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mNavigationDrawerFragment.toggleDrawerOpen();
-            }
-        });
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(net.nashlegend.sourcewall.R.id.navigation_drawer);
 
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
                 net.nashlegend.sourcewall.R.id.navigation_drawer,
-                (DrawerLayout) findViewById(net.nashlegend.sourcewall.R.id.drawer_layout));
+                (DrawerLayout) findViewById(net.nashlegend.sourcewall.R.id.drawer_layout), toolbar);
     }
 
     @Override
