@@ -115,7 +115,7 @@ public class CrashReporter implements UncaughtExceptionHandler {
     private void writeCrashLog(String info) {
         FileOutputStream fos = null;
         String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-        File file = new File(mContext.getExternalFilesDir("log"), "CrashLog_" + date);
+        File file = new File(mContext.getExternalFilesDir("log"), "CrashLog_" + date + ".txt");
         try {
             if (file.exists()) {
                 file.delete();
