@@ -99,7 +99,7 @@ public class MainActivity extends BaseActivity {
             super.onBackPressed();
         } else {
             preparingToExit = true;
-            ToastUtil.toastSingleton("再次点击返回退出程序");
+            ToastUtil.toastSingleton(getString(R.string.click_again_to_exit));
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {

@@ -140,5 +140,6 @@
     <string name="manage_all_groups">管理所有小组</string>
     <string name="has_supported">已经赞同过</string>
     <string name="has_opposed">已经反对过</string>
+    <string name="click_again_to_exit">再次点击返回退出程序</string>
 
 </resources>
