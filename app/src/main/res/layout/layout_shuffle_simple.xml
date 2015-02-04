@@ -3,11 +3,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/SenatorLayout"
     android:layout_width="match_parent"
-    android:background="?attr/color_shuffle_desk_background"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/desk_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
@@ -48,8 +48,8 @@
             android:minWidth="20dp"
             android:paddingLeft="6dp"
             android:paddingRight="6dp"
-            android:textSize="16sp"
-            android:textColor="?attr/drawable_dialog_button_text" />
+            android:textColor="?attr/drawable_dialog_button_text"
+            android:textSize="16sp" />
     </LinearLayout>
 
     <net.nashlegend.sourcewall.commonview.shuffle.ShuffleCardSimple

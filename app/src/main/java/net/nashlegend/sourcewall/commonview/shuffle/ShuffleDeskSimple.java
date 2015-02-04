@@ -2,6 +2,7 @@ package net.nashlegend.sourcewall.commonview.shuffle;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -15,6 +16,8 @@ public class ShuffleDeskSimple extends RelativeLayout {
     private ArrayList<MovableButton> buttons = new ArrayList<>();
     private ShuffleCardSimple senator;
     private LinearLayout senatorLayout;
+    private ScrollView scrollView;
+    private View deskHeader;
 
     public void setOnButtonClickListener(OnButtonClickListener onButtonClickListener) {
         this.onButtonClickListener = onButtonClickListener;
@@ -26,13 +29,14 @@ public class ShuffleDeskSimple extends RelativeLayout {
         super(context);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_shuffle_simple, this);
+        this.scrollView = scrollView;
+        this.deskHeader = findViewById(R.id.desk_header);
         senatorLayout = (LinearLayout) findViewById(R.id.SenatorLayout);
         senator = (ShuffleCardSimple) findViewById(R.id.senator);
         senator.setDeskSimple(this, senatorLayout, scrollView);
     }
 
     public void InitDatas() {
-
         ShuffleDesk.vGap = dip2px(ShuffleDesk.vGapDip, getContext());
         ShuffleDesk.hGap = dip2px(ShuffleDesk.hGapDip, getContext());
 
@@ -42,8 +46,13 @@ public class ShuffleDeskSimple extends RelativeLayout {
         ShuffleDesk.buttonWidth = ShuffleDesk.buttonCellWidth - ShuffleDesk.hGap * 2;
         ShuffleDesk.buttonCellHeight = ShuffleDesk.buttonHeight + ShuffleDesk.vGap * 2;
 
-        ShuffleDesk.minSelectedZoneHeight = ShuffleDesk.buttonCellHeight * 3;
-        senator.setStandardMinHeight(ShuffleDesk.minSelectedZoneHeight);
+        int minHeight;
+        if (scrollView.getHeight() > 0) {
+            minHeight = scrollView.getHeight() - deskHeader.getHeight();
+        } else {
+            minHeight = ShuffleDesk.minSelectedZoneHeight = ShuffleDesk.buttonCellHeight * 5;
+        }
+        senator.setStandardMinHeight(minHeight);
 
         senator.setList(buttons);
     }
