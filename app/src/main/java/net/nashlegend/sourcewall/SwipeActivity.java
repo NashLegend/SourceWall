@@ -2,10 +2,12 @@ package net.nashlegend.sourcewall;
 
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.AttributeSet;
@@ -20,16 +22,19 @@ import android.widget.FrameLayout;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.SharedUtil;
 
+import java.util.ArrayList;
+
 public class SwipeActivity extends BaseActivity {
 
     private SwipeLayout swipeLayout;
+    private int layerColor = Color.parseColor("#88000000");
 
     @Override
     public void setTheme(int resid) {
-        if (SharedUtil.readBoolean(Consts.Key_Is_Night_Mode, false)){
-            resid= net.nashlegend.sourcewall.R.style.AppThemeNight;
-        }else {
-            resid= net.nashlegend.sourcewall.R.style.AppTheme;
+        if (SharedUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
+            resid = net.nashlegend.sourcewall.R.style.AppThemeNight;
+        } else {
+            resid = net.nashlegend.sourcewall.R.style.AppTheme;
         }
         super.setTheme(resid);
     }
@@ -73,6 +78,8 @@ public class SwipeActivity extends BaseActivity {
 
     class SwipeLayout extends FrameLayout {
 
+        private View backgroundLayer;
+
         public SwipeLayout(Context context) {
             super(context);
         }
@@ -89,6 +96,8 @@ public class SwipeActivity extends BaseActivity {
             mActivity = activity;
             screenWidth = getScreenWidth(activity);
             setClickable(true);
+            backgroundLayer = new View(activity);
+            backgroundLayer.setBackgroundColor(layerColor);
             final ViewGroup root = (ViewGroup) activity.getWindow().getDecorView();
             content = root.getChildAt(0);
             //在Android5.0上，content的高度不再是屏幕高度，而是变成了Activity高度，比屏幕高度低一些，
@@ -98,7 +107,9 @@ public class SwipeActivity extends BaseActivity {
             //所以我们要做的就是给content一个新的LayoutParams，Match_Parent那种，也就是下面的-1
             ViewGroup.LayoutParams params = content.getLayoutParams();
             ViewGroup.LayoutParams params2 = new ViewGroup.LayoutParams(-1, -1);
+            ViewGroup.LayoutParams params3 = new ViewGroup.LayoutParams(-1, -1);
             root.removeView(content);
+            this.addView(backgroundLayer, params3);
             this.addView(content, params2);
             root.addView(this, params);
             sideWidth = (int) (sideWidthInDP * activity.getResources().getDisplayMetrics().density);
@@ -146,9 +157,9 @@ public class SwipeActivity extends BaseActivity {
                         currentY = event.getY();
                         float dx = currentX - lastX;
                         if (content.getX() + dx < 0) {
-                            content.setX(0);
+                            setContentX(0);
                         } else {
-                            content.setX(content.getX() + dx);
+                            setContentX(content.getX() + dx);
                         }
                         lastX = currentX;
                         break;
@@ -176,7 +187,7 @@ public class SwipeActivity extends BaseActivity {
             return super.onTouchEvent(event);
         }
 
-        ObjectAnimator animator;
+        AnimatorSet animator;
 
         public void cancelPotentialAnimation() {
             if (animator != null) {
@@ -185,25 +196,52 @@ public class SwipeActivity extends BaseActivity {
             }
         }
 
+        private void setContentX(float x) {
+            content.setX(x);
+            if (backgroundLayer != null) {
+                backgroundLayer.setAlpha(1 - x / getWidth());
+            }
+        }
+
+
+        /**
+         * 弹回，不关闭，因为left是0，所以setX和setTranslationX效果是一样的
+         *
+         * @param withVel
+         */
         private void animateBack(boolean withVel) {
             cancelPotentialAnimation();
-            animator = ObjectAnimator.ofFloat(content, "x", content.getX(), 0);
+            animator = new AnimatorSet();
+            ObjectAnimator animatorX = ObjectAnimator.ofFloat(content, "x", content.getX(), 0);
+            ObjectAnimator animatorA = ObjectAnimator.ofFloat(backgroundLayer, "alpha", backgroundLayer.getAlpha(), 1);
+            ArrayList<Animator> animators = new ArrayList<>();
+            animators.add(animatorX);
+            animators.add(animatorA);
             if (withVel) {
                 animator.setDuration((long) (duration * content.getX() / screenWidth));
             } else {
                 animator.setDuration(duration);
             }
+            animator.playTogether(animators);
             animator.start();
         }
 
         private void animateFinish(boolean withVel) {
             cancelPotentialAnimation();
-            animator = ObjectAnimator.ofFloat(content, "x", content.getX(), screenWidth);
+            animator = new AnimatorSet();
+
+            ObjectAnimator animatorX = ObjectAnimator.ofFloat(content, "x", content.getX(), screenWidth);
+            ObjectAnimator animatorA = ObjectAnimator.ofFloat(backgroundLayer, "alpha", backgroundLayer.getAlpha(), 0);
+            ArrayList<Animator> animators = new ArrayList<>();
+            animators.add(animatorX);
+            animators.add(animatorA);
             if (withVel) {
                 animator.setDuration((long) (duration * (screenWidth - content.getX()) / screenWidth));
             } else {
                 animator.setDuration(duration);
             }
+            animator.playTogether(animators);
+
             animator.addListener(new AnimatorListener() {
 
                 @Override
