@@ -7,13 +7,14 @@ import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.DisplayUtil;
 import net.nashlegend.sourcewall.util.SharedUtil;
-import com.squareup.picasso.Picasso;
 
 /**
  * Created by NashLegend on 2014/9/18 0018
@@ -62,7 +63,7 @@ public class ArticleListItemView extends AceView<Article> {
         dateView.setText(article.getDate());
         replyView.setText(article.getCommentNum() + "");
         if (TextUtils.isEmpty(article.getImageUrl())) {
-            titleImage.setImageResource(R.drawable.ic_launcher);
+            titleImage.setImageBitmap(null);
         } else {
             if (Config.shouldLoadImage()) {
                 Picasso.with(getContext()).load(article.getImageUrl())
