@@ -355,52 +355,51 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
                     back2UnLogged();
                 }
             } else {
-                String avatarString = SharedUtil.readString(Consts.Key_User_Avatar, "");
-                if (!TextUtils.isEmpty(avatarString)) {
-                    if (Config.shouldLoadImage()) {
-                        Picasso.with(getActivity()).load(avatarString)
-                                .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
-                                .into(avatarView);
-                    } else {
-                        avatarView.setImageResource(R.drawable.default_avatar);
+                if (UserAPI.isLoggedIn()) {
+                    String avatarString = SharedUtil.readString(Consts.Key_User_Avatar, "");
+                    if (!TextUtils.isEmpty(avatarString)) {
+                        if (Config.shouldLoadImage()) {
+                            Picasso.with(getActivity()).load(avatarString)
+                                    .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
+                                    .into(avatarView);
+                        } else {
+                            avatarView.setImageResource(R.drawable.default_avatar);
+                        }
                     }
-                }
-
-                //重新加载小组数据库
-                long lastGroupDBVersion = SharedUtil.readLong(Consts.Key_Last_Post_Groups_Version, 0);
-                if (currentGroupDBVersion != lastGroupDBVersion) {
-                    ArrayList<SubItem> groupSubItems = adapter.getSubLists().get(1);
-                    groupSubItems.clear();
-                    if (GroupHelper.getMyGroupsNumber() > 0) {
-                        //如果已经加载了栏目
+                    //重新加载小组数据库
+                    long lastGroupDBVersion = SharedUtil.readLong(Consts.Key_Last_Post_Groups_Version, 0);
+                    if (currentGroupDBVersion != lastGroupDBVersion) {
+                        ArrayList<SubItem> groupSubItems = adapter.getSubLists().get(1);
+                        groupSubItems.clear();
                         groupSubItems.add(new SubItem(SubItem.Section_Post, SubItem.Type_Private_Channel, "我的小组", "user_group"));
-                        groupSubItems.add(new SubItem(SubItem.Section_Post, SubItem.Type_Collections, "小组热贴", "hot_posts"));
-                        groupSubItems.addAll(GroupHelper.getSelectedGroupSubItems());
-                    } else {
-                        groupSubItems.add(0, new SubItem(SubItem.Section_Post, SubItem.Type_Private_Channel, "我的小组", "user_group"));
-                        groupSubItems.addAll(ChannelHelper.getPosts());
+                        if (GroupHelper.getMyGroupsNumber() > 0) {
+                            //如果已经加载了栏目
+                            groupSubItems.add(new SubItem(SubItem.Section_Post, SubItem.Type_Collections, "小组热贴", "hot_posts"));
+                            groupSubItems.addAll(GroupHelper.getSelectedGroupSubItems());
+                        } else {
+                            groupSubItems.addAll(ChannelHelper.getPosts());
+                        }
                     }
-                }
-                currentGroupDBVersion = lastGroupDBVersion;
+                    currentGroupDBVersion = lastGroupDBVersion;
 
-                //重新加载标签数据库
-                long lastTagDBVersion = SharedUtil.readLong(Consts.Key_Last_Ask_Tags_Version, 0);
-                if (currentTagDBVersion != lastTagDBVersion) {
-                    ArrayList<SubItem> questionSubItems = adapter.getSubLists().get(2);
-                    if (AskTagHelper.getAskTagsNumber() > 0) {
-                        //如果已经加载了栏目
-                        questionSubItems.clear();
-                        questionSubItems.add(new SubItem(SubItem.Section_Question, SubItem.Type_Collections, "热门问答", "hottest"));
-                        questionSubItems.add(new SubItem(SubItem.Section_Question, SubItem.Type_Collections, "精彩回答", "highlight"));
-                        questionSubItems.addAll(AskTagHelper.getSelectedQuestionSubItems());
-                    } else {
-                        questionSubItems.clear();
-                        questionSubItems.addAll(ChannelHelper.getQuestions());
+                    //重新加载标签数据库
+                    long lastTagDBVersion = SharedUtil.readLong(Consts.Key_Last_Ask_Tags_Version, 0);
+                    if (currentTagDBVersion != lastTagDBVersion) {
+                        ArrayList<SubItem> questionSubItems = adapter.getSubLists().get(2);
+                        if (AskTagHelper.getAskTagsNumber() > 0) {
+                            //如果已经加载了栏目
+                            questionSubItems.clear();
+                            questionSubItems.add(new SubItem(SubItem.Section_Question, SubItem.Type_Collections, "热门问答", "hottest"));
+                            questionSubItems.add(new SubItem(SubItem.Section_Question, SubItem.Type_Collections, "精彩回答", "highlight"));
+                            questionSubItems.addAll(AskTagHelper.getSelectedQuestionSubItems());
+                        } else {
+                            questionSubItems.clear();
+                            questionSubItems.addAll(ChannelHelper.getQuestions());
+                        }
                     }
+                    currentTagDBVersion = lastTagDBVersion;
+                    adapter.notifyDataSetChanged();
                 }
-                currentTagDBVersion = lastTagDBVersion;
-
-                adapter.notifyDataSetChanged();
             }
         }
         loginState = UserAPI.isLoggedIn();
@@ -422,13 +421,12 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         ArrayList<SubItem> groupSubItems = adapter.getSubLists().get(1);
         if (UserAPI.isLoggedIn()) {
             groupSubItems.clear();
+            groupSubItems.add(new SubItem(SubItem.Section_Post, SubItem.Type_Private_Channel, "我的小组", "user_group"));
             if (GroupHelper.getMyGroupsNumber() > 0) {
                 //如果已经加载了栏目
-                groupSubItems.add(new SubItem(SubItem.Section_Post, SubItem.Type_Private_Channel, "我的小组", "user_group"));
                 groupSubItems.add(new SubItem(SubItem.Section_Post, SubItem.Type_Collections, "小组热贴", "hot_posts"));
                 groupSubItems.addAll(GroupHelper.getSelectedGroupSubItems());
             } else {
-                groupSubItems.add(0, new SubItem(SubItem.Section_Post, SubItem.Type_Private_Channel, "我的小组", "user_group"));
                 groupSubItems.addAll(ChannelHelper.getPosts());
             }
         } else {
