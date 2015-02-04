@@ -142,5 +142,6 @@
     <string name="has_opposed">已经反对过</string>
     <string name="click_again_to_exit">再次点击返回退出程序</string>
     <string name="login_needed">需要登录</string>
+    <string name="post_author">楼主</string>
 
 </resources>

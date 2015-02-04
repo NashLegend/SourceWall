@@ -3,11 +3,15 @@ package net.nashlegend.sourcewall.view;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import net.nashlegend.sourcewall.commonview.WWebView;
+import com.squareup.picasso.Picasso;
+
 import net.nashlegend.sourcewall.R;
+import net.nashlegend.sourcewall.commonview.WWebView;
 import net.nashlegend.sourcewall.model.Post;
+import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.SharedUtil;
 import net.nashlegend.sourcewall.util.StyleChecker;
@@ -21,6 +25,7 @@ public class PostView extends AceView<Post> {
     private WWebView contentView;
     private TextView authorView;
     private TextView dateView;
+    private ImageView avatarImage;
 
     public PostView(Context context) {
         super(context);
@@ -35,6 +40,7 @@ public class PostView extends AceView<Post> {
         contentView = (WWebView) findViewById(R.id.web_content);
         authorView = (TextView) findViewById(R.id.text_author);
         dateView = (TextView) findViewById(R.id.text_date);
+        avatarImage = (ImageView) findViewById(R.id.image_avatar);
     }
 
     public PostView(Context context, AttributeSet attrs) {
@@ -55,6 +61,13 @@ public class PostView extends AceView<Post> {
             String html = StyleChecker.getPostHtml(post.getContent());
             contentView.setBackgroundColor(0);
             contentView.loadDataWithBaseURL(Consts.Base_Url, html, "text/html", "charset=UTF-8", null);
+            if (Config.shouldLoadImage()) {
+                Picasso.with(getContext()).load(post.getAuthorAvatarUrl())
+                        .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
+                        .into(avatarImage);
+            } else {
+                avatarImage.setImageResource(R.drawable.default_avatar);
+            }
         }
     }
 
