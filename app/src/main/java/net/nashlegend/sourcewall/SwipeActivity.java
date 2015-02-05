@@ -10,6 +10,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
@@ -20,6 +21,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.DisplayUtil;
 import net.nashlegend.sourcewall.util.SharedUtil;
 
 import java.util.ArrayList;
@@ -28,6 +30,7 @@ public class SwipeActivity extends BaseActivity {
 
     private SwipeLayout swipeLayout;
     private int layerColor = Color.parseColor("#88000000");
+    protected boolean swipeAnyWhere = false;//是否可以在页面任意位置右滑关闭页面，如果是false则从左边滑才可以关闭
 
     @Override
     public void setTheme(int resid) {
@@ -47,6 +50,12 @@ public class SwipeActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         swipeLayout = new SwipeLayout(this);
+    }
+
+    @Override
+    protected void onResume() {
+        swipeAnyWhere = false;
+        super.onResume();
     }
 
     @Override
@@ -93,6 +102,8 @@ public class SwipeActivity extends BaseActivity {
         }
 
         public void replaceLayer(Activity activity) {
+            touchSlop = DisplayUtil.dip2px(touchSlopDP, activity);
+            sideWidth = (int) (sideWidthInDP * activity.getResources().getDisplayMetrics().density);
             mActivity = activity;
             screenWidth = getScreenWidth(activity);
             setClickable(true);
@@ -112,26 +123,15 @@ public class SwipeActivity extends BaseActivity {
             this.addView(backgroundLayer, params3);
             this.addView(content, params2);
             root.addView(this, params);
-            sideWidth = (int) (sideWidthInDP * activity.getResources().getDisplayMetrics().density);
         }
 
         boolean canSwipe = false;
         View content;
         Activity mActivity;
         int sideWidthInDP = 20;
-        int sideWidth = 40;
+        int sideWidth = 72;
         int screenWidth = 1080;
         VelocityTracker tracker;
-
-        @Override
-        public boolean onInterceptTouchEvent(MotionEvent ev) {
-            if (ev.getAction() == MotionEvent.ACTION_DOWN && ev.getX() < sideWidth) {
-                canSwipe = true;
-                tracker = VelocityTracker.obtain();
-                return true;
-            }
-            return super.onInterceptTouchEvent(ev);
-        }
 
         float downX;
         float downY;
@@ -139,8 +139,46 @@ public class SwipeActivity extends BaseActivity {
         float currentX;
         float currentY;
 
+
+        int touchSlopDP = 30;
+        int touchSlop = 60;
+
         @Override
-        public boolean onTouchEvent(MotionEvent event) {
+        public boolean onInterceptTouchEvent(MotionEvent ev) {
+            if (swipeAnyWhere) {
+                switch (ev.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        downX = ev.getX();
+                        downY = ev.getY();
+                        currentX = downX;
+                        currentY = downY;
+                        lastX = downX;
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        float dx = ev.getX() - downX;
+                        float dy = ev.getY() - downY;
+                        if ((dy == 0f || Math.abs(dx / dy) > 1) && (dx * dx + dy * dy > touchSlop * touchSlop)) {
+                            downX = ev.getX();
+                            downY = ev.getY();
+                            currentX = downX;
+                            currentY = downY;
+                            lastX = downX;
+                            canSwipe = true;
+                            tracker = VelocityTracker.obtain();
+                            return true;
+                        }
+                        break;
+                }
+            } else if (ev.getAction() == MotionEvent.ACTION_DOWN && ev.getX() < sideWidth) {
+                canSwipe = true;
+                tracker = VelocityTracker.obtain();
+                return true;
+            }
+            return super.onInterceptTouchEvent(ev);
+        }
+
+        @Override
+        public boolean onTouchEvent(@NonNull MotionEvent event) {
             if (canSwipe) {
                 tracker.addMovement(event);
                 int action = event.getAction();

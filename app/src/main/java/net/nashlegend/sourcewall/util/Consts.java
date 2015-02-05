@@ -36,10 +36,7 @@ public class Consts {
     public static final String Key_Image_Load_Mode = "sourcewall.key.image.load.mode";
     public static final String key_Use_Tail_Type = "sourcewall.key.use.tail.type";
     public static final String key_Custom_Tail = "sourcewall.key.custom.tail";
-
-    public static final int Type_Use_Default_Tail = 0;
-    public static final int Type_Use_Phone_Tail = 1;
-    public static final int Type_Use_Custom_Tail = 2;
+    public static final String key_Swipe_Any_Where = "sourcewall.key.swipe_any_where";//是否可以任意位置右滑关闭页面
 
     // 保存SharedPreferences的Key，用于保存草稿
     public static final String Key_Sketch_Article_Reply = "sourcewall.key.sketch.article.reply";
@@ -47,6 +44,11 @@ public class Consts {
     public static final String Key_Sketch_Question_Answer = "sourcewall.key.sketch.question.answer";
     public static final String Key_Sketch_Publish_Post_Title = "sourcewall.key.sketch.publish.post.title";
     public static final String Key_Sketch_Publish_Post_Content = "sourcewall.key.sketch.publish.post.content";
+
+    //小尾巴类型
+    public static final int Type_Use_Default_Tail = 0;
+    public static final int Type_Use_Phone_Tail = 1;
+    public static final int Type_Use_Custom_Tail = 2;
 
     // 保存startActivityForResult的RequestCode
     public static final int Code_Login = 1025;
