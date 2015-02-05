@@ -145,7 +145,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
         });
         ((TextView) deskSimple.findViewById(R.id.tip_of_more_sections)).setText(R.string.tip_of_more_tags);
         manageButton = (Button) deskSimple.findViewById(R.id.button_manage_my_sections);
-        manageButton.setText(getString(R.string.magage_all_tags));
+        manageButton.setText(R.string.magage_all_tags);
         manageButton.setVisibility(View.INVISIBLE);
         manageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -536,7 +536,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
                     ToastUtil.toast("没有加载到数据");
                 }
             } else {
-                ToastUtil.toast(getString(R.string.load_failed));
+                ToastUtil.toast(R.string.load_failed);
                 loadingView.onLoadFailed();
             }
             if (currentPage > 0) {

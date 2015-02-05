@@ -202,7 +202,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
                     }
                 }
             } else {
-                ToastUtil.toast(getString(R.string.load_failed));
+                ToastUtil.toast(R.string.load_failed);
                 loadingView.onLoadFailed();
             }
             if (adapter.getCount() > 0) {

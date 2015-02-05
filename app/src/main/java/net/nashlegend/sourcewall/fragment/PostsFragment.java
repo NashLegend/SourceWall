@@ -146,7 +146,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         });
         ((TextView) deskSimple.findViewById(R.id.tip_of_more_sections)).setText(R.string.tip_of_more_groups);
         manageButton = (Button) deskSimple.findViewById(R.id.button_manage_my_sections);
-        manageButton.setText(getString(R.string.manage_all_groups));
+        manageButton.setText(R.string.manage_all_groups);
         manageButton.setVisibility(View.INVISIBLE);
         manageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -549,7 +549,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                     ToastUtil.toast("没有加载到数据");
                 }
             } else {
-                ToastUtil.toast(getString(R.string.load_failed));
+                ToastUtil.toast(R.string.load_failed);
                 loadingView.onLoadFailed();
             }
             if (currentPage > 0) {
