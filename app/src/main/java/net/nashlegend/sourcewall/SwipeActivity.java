@@ -78,6 +78,7 @@ public class SwipeActivity extends BaseActivity {
     public void finish() {
         if (swipeFinished) {
             super.finish();
+            overridePendingTransition(0, 0);
         } else {
             swipeLayout.cancelPotentialAnimation();
             super.finish();
