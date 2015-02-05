@@ -14,6 +14,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
+
 import net.nashlegend.sourcewall.adapters.PostDetailAdapter;
 import net.nashlegend.sourcewall.commonview.LListView;
 import net.nashlegend.sourcewall.commonview.LoadingView;
@@ -29,8 +32,6 @@ import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.RegUtil;
 import net.nashlegend.sourcewall.util.ToastUtil;
 import net.nashlegend.sourcewall.view.MediumListItemView;
-import com.getbase.floatingactionbutton.FloatingActionButton;
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.ArrayList;
 
@@ -201,10 +202,10 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
                 }
             } else {
                 if (result.statusCode == 404) {
-                    ToastUtil.toastSingleton("页面不存在");
+                    ToastUtil.toastSingleton(R.string.page_404);
                     finish();
                 } else {
-                    ToastUtil.toast(getString(net.nashlegend.sourcewall.R.string.load_failed));
+                    ToastUtil.toastSingleton(getString(net.nashlegend.sourcewall.R.string.load_failed));
                     loadingView.onLoadFailed();
                 }
             }

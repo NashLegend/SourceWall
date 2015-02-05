@@ -216,7 +216,9 @@ public class QuestionAPI extends APIBase {
         ResultObject resultObject = new ResultObject();
         try {
             Question question = null;
-            String jString = HttpFetcher.get(url).toString();
+            ResultObject httpResult = HttpFetcher.get(url);
+            resultObject.statusCode = httpResult.statusCode;
+            String jString = httpResult.toString();
             JSONObject result = getUniversalJsonObject(jString, resultObject);
             if (result != null) {
                 question = new Question();
@@ -315,8 +317,10 @@ public class QuestionAPI extends APIBase {
         ResultObject resultObject = new ResultObject();
         ArrayList<AceModel> aceModels = new ArrayList<>();
         ResultObject articleResult = getQuestionDetailByID(qQuestion.getId());
+        resultObject.statusCode = articleResult.statusCode;
         if (articleResult.ok) {
             ResultObject commentsResult = getQuestionAnswers(qQuestion.getId(), 0);
+            resultObject.statusCode = commentsResult.statusCode;
             if (commentsResult.ok) {
                 Question question = (Question) articleResult.result;
                 qQuestion.setTitle(question.getTitle());

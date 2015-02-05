@@ -10,6 +10,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
+
 import net.nashlegend.sourcewall.adapters.QuestionDetailAdapter;
 import net.nashlegend.sourcewall.commonview.LListView;
 import net.nashlegend.sourcewall.commonview.LoadingView;
@@ -24,8 +27,6 @@ import net.nashlegend.sourcewall.util.AutoHideUtil;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.ToastUtil;
 import net.nashlegend.sourcewall.view.AnswerListItemView;
-import com.getbase.floatingactionbutton.FloatingActionButton;
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.ArrayList;
 
@@ -233,8 +234,13 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
                     listView.setCanPullToLoadMore(false);
                 }
             } else {
-                ToastUtil.toast(getString(net.nashlegend.sourcewall.R.string.load_failed));
-                loadingView.onLoadFailed();
+                if (result.statusCode == 404) {
+                    ToastUtil.toastSingleton(R.string.page_404);
+                    finish();
+                } else {
+                    ToastUtil.toastSingleton(getString(net.nashlegend.sourcewall.R.string.load_failed));
+                    loadingView.onLoadFailed();
+                }
             }
             listView.doneOperation();
         }
