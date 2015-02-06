@@ -18,9 +18,6 @@ public class AppApplication extends Application {
     private UncaughtExceptionHandler uncaughtExceptionHandler;
     private static DaoMaster daoMaster;
     private static DaoSession daoSession;
-    public static String cookieString = "";
-    public static String tokenString = "";
-    public static String ukeyString = "";
 
     //TODO Network Monitor
 

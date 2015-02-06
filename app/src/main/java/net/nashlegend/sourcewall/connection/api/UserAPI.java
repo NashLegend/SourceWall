@@ -1,7 +1,10 @@
 package net.nashlegend.sourcewall.connection.api;
 
 import android.text.TextUtils;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 
+import net.nashlegend.sourcewall.AppApplication;
 import net.nashlegend.sourcewall.connection.HttpFetcher;
 import net.nashlegend.sourcewall.connection.ResultObject;
 import net.nashlegend.sourcewall.db.AskTagHelper;
@@ -491,6 +494,12 @@ public class UserAPI extends APIBase {
         SharedUtil.remove(Consts.Key_User_Name);
         GroupHelper.clearAllMyGroups();
         AskTagHelper.clearAllMyTags();
+        CookieSyncManager.createInstance(AppApplication.getApplication());
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.removeAllCookie();
+        cookieManager.hasCookies();
+        cookieManager.removeSessionCookie();
+        CookieSyncManager.getInstance().sync();
         HttpFetcher.getDefaultHttpClient().getCookieStore().clear();
         HttpFetcher.getDefaultUploadHttpClient().getCookieStore().clear();
     }

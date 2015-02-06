@@ -3,12 +3,15 @@ package net.nashlegend.sourcewall;
 import android.net.http.SslError;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.HttpAuthHandler;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import net.nashlegend.sourcewall.connection.HttpFetcher;
 import net.nashlegend.sourcewall.util.Consts;
@@ -28,6 +31,14 @@ public class LoginActivity extends SwipeActivity {
         setContentView(net.nashlegend.sourcewall.R.layout.activity_login);
         Toolbar toolbar = (Toolbar) findViewById(net.nashlegend.sourcewall.R.id.action_bar);
         setSupportActionBar(toolbar);
+
+        CookieSyncManager.createInstance(AppApplication.getApplication());
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.removeAllCookie();
+        cookieManager.hasCookies();
+        cookieManager.removeSessionCookie();
+        CookieSyncManager.getInstance().sync();
+
         webView = (WebView) findViewById(net.nashlegend.sourcewall.R.id.web_login);
         webView.setWebViewClient(webViewClient);
         webView.getSettings().setJavaScriptEnabled(true);
@@ -35,8 +46,10 @@ public class LoginActivity extends SwipeActivity {
         webView.loadUrl(Consts.LOGIN_URL);
     }
 
-    private void parseRawCookie(String rawCookie) {
+    private boolean parseRawCookie(String rawCookie) {
         String[] rawCookieParams = rawCookie.split(";");
+        String tmpToken = "";
+        String tmpUkey = "";
         for (int i = 1; i < rawCookieParams.length; i++) {
             String rawCookieParamNameAndValue[] = rawCookieParams[i].trim().split("=");
             if (rawCookieParamNameAndValue.length != 2) {
@@ -50,13 +63,18 @@ public class LoginActivity extends SwipeActivity {
             HttpFetcher.getDefaultHttpClient().getCookieStore().addCookie(clientCookie);
             if (Consts.Cookie_Token_Key.equals(paramName)) {
                 SharedUtil.saveString(Consts.Key_Access_Token, paramValue);
-                AppApplication.tokenString = paramValue;
+                tmpToken = paramValue;
             } else if (Consts.Cookie_Ukey_Key.equals(paramName)) {
                 SharedUtil.saveString(Consts.Key_Ukey, paramValue);
-                AppApplication.ukeyString = paramValue;
+                tmpUkey = paramValue;
             }
         }
-        AppApplication.cookieString = rawCookie;
+
+        if (TextUtils.isEmpty(tmpUkey) || TextUtils.isEmpty(tmpToken)) {
+            Toast.makeText(this, "获取Token失败，\n\n  (ノ=Д=)ノ┻━┻ \n\n 请稍后重试登录……", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        return true;
     }
 
     WebViewClient webViewClient = new WebViewClient() {
