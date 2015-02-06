@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.commonview.TTextView;
 import net.nashlegend.sourcewall.model.UComment;
@@ -13,7 +15,6 @@ import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.SharedUtil;
 import net.nashlegend.sourcewall.util.TextHtmlHelper;
-import com.squareup.picasso.Picasso;
 
 /**
  * Created by NashLegend on 2014/9/18 0018.

@@ -5,8 +5,8 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.TextView;
 
-import net.nashlegend.sourcewall.commonview.WWebView;
 import net.nashlegend.sourcewall.R;
+import net.nashlegend.sourcewall.commonview.WWebView;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.SharedUtil;

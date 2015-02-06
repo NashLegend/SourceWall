@@ -338,7 +338,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
             File file = new File(path);
             if (file.exists()) {
                 ImageUploadTask task = new ImageUploadTask();
-                task.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR, path);
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
             } else {
                 ToastUtil.toast(net.nashlegend.sourcewall.R.string.file_not_exists);
             }
@@ -460,7 +460,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         PublishTask task = new PublishTask();
         String title = titleEditText.getText().toString();
         String body = bodyEditText.getText().toString();
-        task.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR, group_id, csrf, title, body, topic);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, group_id, csrf, title, body, topic);
     }
 
     @Override
@@ -485,11 +485,17 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
 
         @Override
         protected void onPreExecute() {
+            addToStackedTasks(this);
             progressDialog = new ProgressDialog(PublishPostActivity.this);
             progressDialog.setCancelable(false);
             progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.setMessage(getString(net.nashlegend.sourcewall.R.string.message_replying));
             progressDialog.show();
+        }
+
+        @Override
+        protected void onCancelled() {
+            removeFromStackedTasks(this);
         }
 
         @Override
@@ -509,6 +515,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
 
         @Override
         protected void onPostExecute(ResultObject resultObject) {
+            removeFromStackedTasks(this);
             progressDialog.dismiss();
             if (resultObject.ok) {
                 ToastUtil.toast(net.nashlegend.sourcewall.R.string.reply_ok);
@@ -541,7 +548,17 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         uploadingProgress.setVisibility(View.GONE);
     }
 
-    class PrepareTask extends android.os.AsyncTask<String, Integer, ResultObject> {
+    class PrepareTask extends AsyncTask<String, Integer, ResultObject> {
+
+        @Override
+        protected void onPreExecute() {
+            addToStackedTasks(this);
+        }
+
+        @Override
+        protected void onCancelled() {
+            removeFromStackedTasks(this);
+        }
 
         @Override
         protected ResultObject doInBackground(String... params) {
@@ -555,6 +572,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
 
         @Override
         protected void onPostExecute(ResultObject resultObject) {
+            removeFromStackedTasks(this);
             if (resultObject.ok) {
                 ToastUtil.toast(getString(net.nashlegend.sourcewall.R.string.get_csrf_ok));
                 PrepareData prepareData = (PrepareData) resultObject.result;
@@ -575,6 +593,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
 
         @Override
         protected void onPreExecute() {
+            addToStackedTasks(this);
             setImageButtonsUploading();
         }
 
@@ -586,6 +605,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
 
         @Override
         protected void onPostExecute(ResultObject resultObject) {
+            removeFromStackedTasks(this);
             if (resultObject.ok) {
                 // tap to insert image
                 doneUploadingImage((String) resultObject.result);
@@ -597,6 +617,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
 
         @Override
         protected void onCancelled() {
+            removeFromStackedTasks(this);
             resetImageButtons();
         }
     }

@@ -291,11 +291,17 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
 
         @Override
         protected void onPreExecute() {
+            addToStackedTasks(this);
             progressDialog = new ProgressDialog(ReplyActivity.this);
             progressDialog.setCancelable(false);
             progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.setMessage(getString(net.nashlegend.sourcewall.R.string.message_replying));
             progressDialog.show();
+        }
+
+        @Override
+        protected void onCancelled() {
+            removeFromStackedTasks(this);
         }
 
         @Override
@@ -307,6 +313,7 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
 
         @Override
         protected void onPostExecute(ResultObject resultObject) {
+            removeFromStackedTasks(this);
             progressDialog.dismiss();
             if (resultObject.ok) {
                 ToastUtil.toast(net.nashlegend.sourcewall.R.string.reply_ok);
@@ -480,6 +487,7 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
 
         @Override
         protected void onPreExecute() {
+            addToStackedTasks(this);
             setImageButtonsUploading();
         }
 
@@ -491,6 +499,7 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
 
         @Override
         protected void onPostExecute(ResultObject resultObject) {
+            removeFromStackedTasks(this);
             if (resultObject.ok) {
                 // tap to insert image
                 doneUploadingImage((String) resultObject.result);
@@ -505,6 +514,7 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
 
         @Override
         protected void onCancelled() {
+            removeFromStackedTasks(this);
             resetImageButtons();
         }
     }

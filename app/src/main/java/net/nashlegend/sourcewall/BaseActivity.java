@@ -13,7 +13,7 @@ import java.util.ArrayList;
 /**
  * Created by NashLegend on 2014/9/15 0015
  */
-public abstract class BaseActivity extends ActionBarActivity {
+public abstract class BaseActivity extends ActionBarActivity implements IStackedAsyncTaskInterface {
 
     private final ArrayList<AsyncTask> stackedTasks = new ArrayList<>();
 
@@ -23,23 +23,38 @@ public abstract class BaseActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
     }
 
-
+    /**
+     * 将AsyncTask添加到队列，在AsyncTask.onPreExecute中执行
+     *
+     * @param task 要添加的AsyncTask
+     */
+    @Override
     public void addToStackedTasks(AsyncTask task) {
         stackedTasks.add(task);
     }
 
+    /**
+     * 将AsyncTask从队列中删除，有可能从AsyncTask.onCancelled或者AsyncTask.onPostExecute里面调用
+     * 由于stopAllTasks会调用AsyncTask.cancel，所以最后会多执行一次，我擦
+     *
+     * @param task 要清除的AsyncTask
+     */
+    @Override
     public void removeFromStackedTasks(AsyncTask task) {
         stackedTasks.remove(task);
     }
 
+    @Override
     public void flushAllTasks() {
         stackedTasks.clear();
     }
 
+    @Override
     public void stopAllTasks() {
         for (int i = 0; i < stackedTasks.size(); i++) {
             AsyncTask task = stackedTasks.get(i);
             if (task != null && task.getStatus() == AsyncTask.Status.RUNNING) {
+                System.out.println("cancel");
                 task.cancel(true);
             }
         }
@@ -47,9 +62,9 @@ public abstract class BaseActivity extends ActionBarActivity {
     }
 
     @Override
-    public void finish() {
+    protected void onDestroy() {
         stopAllTasks();
-        super.finish();
+        super.onDestroy();
     }
 
     public void notifyNeedLog() {

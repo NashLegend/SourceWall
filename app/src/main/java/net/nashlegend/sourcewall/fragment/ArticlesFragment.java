@@ -170,7 +170,12 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
 
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
+            addToStackedTasks(this);
+        }
+
+        @Override
+        protected void onCancelled() {
+            removeFromStackedTasks(this);
         }
 
         @Override
@@ -185,6 +190,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
 
         @Override
         protected void onPostExecute(ResultObject o) {
+            removeFromStackedTasks(this);
             if (o.ok) {
                 loadingView.onLoadSuccess();
                 ArrayList<Article> ars = (ArrayList<Article>) o.result;

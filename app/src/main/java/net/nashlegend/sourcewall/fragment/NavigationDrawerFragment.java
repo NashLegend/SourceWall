@@ -8,7 +8,6 @@ import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -53,7 +52,7 @@ import java.util.ArrayList;
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
  * Created by NashLegend on 2014/9/15 0015.
  */
-public class NavigationDrawerFragment extends Fragment implements View.OnClickListener {
+public class NavigationDrawerFragment extends BaseFragment implements View.OnClickListener {
 
     /**
      * Remember the position of the selected item.
@@ -111,10 +110,8 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         setHasOptionsMenu(true);
     }
 
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateLayoutView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         layoutView = inflater.inflate(
                 R.layout.fragment_navigation_drawer, container, false);
 
@@ -166,6 +163,16 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
             }
         });
         return layoutView;
+    }
+
+    @Override
+    public void onCreateViewAgain(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+    }
+
+    @Override
+    public void setTitle() {
+
     }
 
     public boolean isDrawerOpen() {
@@ -482,6 +489,16 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     class TestLoginTask extends AsyncTask<Void, Integer, ResultObject> {
 
         @Override
+        protected void onPreExecute() {
+            addToStackedTasks(this);
+        }
+
+        @Override
+        protected void onCancelled() {
+            removeFromStackedTasks(this);
+        }
+
+        @Override
         protected ResultObject doInBackground(Void... params) {
             return UserAPI.testLogin();
         }
@@ -498,6 +515,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
          */
         @Override
         protected void onPostExecute(ResultObject resultObject) {
+            removeFromStackedTasks(this);
             boolean shouldMarkAsFailed = true;//是否视为登录失败
             if (resultObject.ok) {
                 shouldMarkAsFailed = false;
@@ -545,10 +563,16 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
 
         @Override
         protected void onPreExecute() {
+            addToStackedTasks(this);
             String nameString = SharedUtil.readString(Consts.Key_User_Name, "");
             if (TextUtils.isEmpty(nameString)) {
                 userName.setText(R.string.loading);
             }
+        }
+
+        @Override
+        protected void onCancelled() {
+            removeFromStackedTasks(this);
         }
 
         @Override
@@ -558,6 +582,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
 
         @Override
         protected void onPostExecute(ResultObject resultObject) {
+            removeFromStackedTasks(this);
             if (resultObject.ok) {
                 setupUserInfo((UserInfo) resultObject.result);
             } else {

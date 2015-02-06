@@ -190,11 +190,17 @@ public class ShuffleTagActivity extends SwipeActivity {
 
         @Override
         protected void onPreExecute() {
+            addToStackedTasks(this);
             progressDialog = new ProgressDialog(ShuffleTagActivity.this);
             progressDialog.setCancelable(false);
             progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.setMessage(getString(net.nashlegend.sourcewall.R.string.message_replying));
             progressDialog.show();
+        }
+
+        @Override
+        protected void onCancelled() {
+            removeFromStackedTasks(this);
         }
 
         @Override
@@ -224,6 +230,7 @@ public class ShuffleTagActivity extends SwipeActivity {
 
         @Override
         protected void onPostExecute(Boolean aBoolean) {
+            removeFromStackedTasks(this);
             progressDialog.dismiss();
             if (aBoolean) {
                 initView();

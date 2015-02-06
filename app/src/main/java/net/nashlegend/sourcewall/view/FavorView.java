@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import net.nashlegend.sourcewall.IStackedAsyncTaskInterface;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.FavorAdapter;
 import net.nashlegend.sourcewall.connection.ResultObject;
@@ -30,7 +31,7 @@ import java.util.ArrayList;
 /**
  * Created by NashLegend on 2014/12/2 0002
  */
-public class FavorView extends FrameLayout implements View.OnClickListener {
+public class FavorView extends FrameLayout implements View.OnClickListener, IStackedAsyncTaskInterface {
 
     ListView listView;
     ProgressBar progressBaskets;
@@ -136,12 +137,52 @@ public class FavorView extends FrameLayout implements View.OnClickListener {
         }
     }
 
+    private final ArrayList<AsyncTask> stackedTasks = new ArrayList<>();
+
+    @Override
+    public void addToStackedTasks(AsyncTask task) {
+        stackedTasks.add(task);
+    }
+
+    @Override
+    public void removeFromStackedTasks(AsyncTask task) {
+        stackedTasks.remove(task);
+    }
+
+    @Override
+    public void flushAllTasks() {
+        stackedTasks.clear();
+    }
+
+    @Override
+    public void stopAllTasks() {
+        for (int i = 0; i < stackedTasks.size(); i++) {
+            AsyncTask task = stackedTasks.get(i);
+            if (task != null && task.getStatus() == AsyncTask.Status.RUNNING) {
+                task.cancel(true);
+            }
+        }
+        stackedTasks.clear();
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        stopAllTasks();
+        super.onDetachedFromWindow();
+    }
+
     class LoadBasketTask extends AsyncTask<Void, Integer, ResultObject> {
 
         @Override
         protected void onPreExecute() {
+            addToStackedTasks(this);
             progressBaskets.setVisibility(VISIBLE);
             listView.setVisibility(INVISIBLE);
+        }
+
+        @Override
+        protected void onCancelled() {
+            removeFromStackedTasks(this);
         }
 
         @Override
@@ -151,6 +192,7 @@ public class FavorView extends FrameLayout implements View.OnClickListener {
 
         @Override
         protected void onPostExecute(ResultObject resultObject) {
+            removeFromStackedTasks(this);
             if (resultObject.ok) {
                 ArrayList<Basket> baskets = (ArrayList<Basket>) resultObject.result;
                 adapter.clear();
@@ -169,12 +211,23 @@ public class FavorView extends FrameLayout implements View.OnClickListener {
     class LoadCategoryTask extends AsyncTask<Void, Integer, ResultObject> {
 
         @Override
+        protected void onPreExecute() {
+            addToStackedTasks(this);
+        }
+
+        @Override
+        protected void onCancelled() {
+            removeFromStackedTasks(this);
+        }
+
+        @Override
         protected ResultObject doInBackground(Void... params) {
             return UserAPI.getCategoryList();
         }
 
         @Override
         protected void onPostExecute(ResultObject resultObject) {
+            removeFromStackedTasks(this);
             if (resultObject.ok) {
                 categories = (ArrayList<Category>) resultObject.result;
                 String[] items = new String[categories.size()];
@@ -193,6 +246,16 @@ public class FavorView extends FrameLayout implements View.OnClickListener {
     class CreateBasketTask extends AsyncTask<String, Integer, ResultObject> {
 
         @Override
+        protected void onPreExecute() {
+            addToStackedTasks(this);
+        }
+
+        @Override
+        protected void onCancelled() {
+            removeFromStackedTasks(this);
+        }
+
+        @Override
         protected ResultObject doInBackground(String... params) {
             String title = params[0];
             String introduction = params[1];
@@ -202,6 +265,7 @@ public class FavorView extends FrameLayout implements View.OnClickListener {
 
         @Override
         protected void onPostExecute(ResultObject resultObject) {
+            removeFromStackedTasks(this);
             if (resultObject.ok) {
                 ToastUtil.toast("创建成功");
                 Basket basket = (Basket) resultObject.result;

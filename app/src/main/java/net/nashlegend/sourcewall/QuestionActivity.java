@@ -197,7 +197,12 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
 
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
+            addToStackedTasks(this);
+        }
+
+        @Override
+        protected void onCancelled() {
+            removeFromStackedTasks(this);
         }
 
         @Override
@@ -212,6 +217,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
 
         @Override
         protected void onPostExecute(ResultObject result) {
+            removeFromStackedTasks(this);
             if (result.ok) {
                 loadingView.onLoadSuccess();
                 ArrayList<AceModel> ars = (ArrayList<AceModel>) result.result;
@@ -250,7 +256,12 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
 
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
+            addToStackedTasks(this);
+        }
+
+        @Override
+        protected void onCancelled() {
+            removeFromStackedTasks(this);
         }
 
         @Override
@@ -264,6 +275,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
 
         @Override
         protected void onPostExecute(ResultObject resultObject) {
+            removeFromStackedTasks(this);
             if (resultObject.ok) {
                 ToastUtil.toast(net.nashlegend.sourcewall.R.string.recommend_ok);
             } else {

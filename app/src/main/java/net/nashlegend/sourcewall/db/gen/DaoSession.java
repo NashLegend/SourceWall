@@ -13,7 +13,7 @@ import de.greenrobot.dao.internal.DaoConfig;
 
 /**
  * {@inheritDoc}
- * 
+ *
  * @see de.greenrobot.dao.AbstractDaoSession
  */
 public class DaoSession extends AbstractDaoSession {
@@ -40,7 +40,7 @@ public class DaoSession extends AbstractDaoSession {
         registerDao(MyGroup.class, myGroupDao);
         registerDao(AskTag.class, askTagDao);
     }
-    
+
     public void clear() {
         myGroupDaoConfig.getIdentityScope().clear();
         askTagDaoConfig.getIdentityScope().clear();

@@ -164,7 +164,12 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
 
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
+            addToStackedTasks(this);
+        }
+
+        @Override
+        protected void onCancelled() {
+            removeFromStackedTasks(this);
         }
 
         @Override
@@ -179,6 +184,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
 
         @Override
         protected void onPostExecute(ResultObject result) {
+            removeFromStackedTasks(this);
             if (result.ok) {
                 loadingView.onLoadSuccess();
                 ArrayList<AceModel> ars = (ArrayList<AceModel>) result.result;
@@ -306,6 +312,16 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         Post post;
 
         @Override
+        protected void onPreExecute() {
+            addToStackedTasks(this);
+        }
+
+        @Override
+        protected void onCancelled() {
+            removeFromStackedTasks(this);
+        }
+
+        @Override
         protected ResultObject doInBackground(Post... params) {
             post = params[0];
             return PostAPI.likePost(post.getId());
@@ -313,6 +329,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
 
         @Override
         protected void onPostExecute(ResultObject resultObject) {
+            removeFromStackedTasks(this);
             if (resultObject.ok) {
                 post.setLikeNum(post.getLikeNum() + 1);
                 adapter.notifyDataSetChanged();
@@ -329,6 +346,16 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         MediumListItemView mediumListItemView;
 
         @Override
+        protected void onPreExecute() {
+            addToStackedTasks(this);
+        }
+
+        @Override
+        protected void onCancelled() {
+            removeFromStackedTasks(this);
+        }
+
+        @Override
         protected ResultObject doInBackground(MediumListItemView... params) {
             mediumListItemView = params[0];
             comment = mediumListItemView.getData();
@@ -337,6 +364,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
 
         @Override
         protected void onPostExecute(ResultObject resultObject) {
+            removeFromStackedTasks(this);
             if (resultObject.ok) {
                 comment.setHasLiked(true);
                 comment.setLikeNum(comment.getLikeNum() + 1);
@@ -356,6 +384,16 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         UComment comment;
 
         @Override
+        protected void onPreExecute() {
+            addToStackedTasks(this);
+        }
+
+        @Override
+        protected void onCancelled() {
+            removeFromStackedTasks(this);
+        }
+
+        @Override
         protected ResultObject doInBackground(UComment... params) {
             comment = params[0];
             return PostAPI.deleteMyComment(comment.getID());
@@ -363,6 +401,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
 
         @Override
         protected void onPostExecute(ResultObject resultObject) {
+            removeFromStackedTasks(this);
             if (resultObject.ok) {
                 adapter.remove(comment);
                 adapter.notifyDataSetChanged();

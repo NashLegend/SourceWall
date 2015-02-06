@@ -12,9 +12,10 @@ import android.text.Spanned;
 import android.text.style.URLSpan;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import net.nashlegend.sourcewall.AppApplication;
 import net.nashlegend.sourcewall.R;
-import com.squareup.picasso.Picasso;
 
 /**
  * Created by NashLegend on 2015/1/4 0004

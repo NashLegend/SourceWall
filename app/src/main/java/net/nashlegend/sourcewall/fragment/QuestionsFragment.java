@@ -497,7 +497,12 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
 
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
+            addToStackedTasks(this);
+        }
+
+        @Override
+        protected void onCancelled() {
+            removeFromStackedTasks(this);
         }
 
         @Override
@@ -522,6 +527,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
 
         @Override
         protected void onPostExecute(ResultObject o) {
+            removeFromStackedTasks(this);
             listView.doneOperation();
             if (o.ok) {
                 loadingView.onLoadSuccess();

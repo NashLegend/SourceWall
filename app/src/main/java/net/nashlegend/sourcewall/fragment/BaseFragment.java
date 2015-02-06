@@ -8,12 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import net.nashlegend.sourcewall.IStackedAsyncTaskInterface;
+
 import java.util.ArrayList;
 
 /**
  * Created by NashLegend on 2014/9/18 0018
  */
-public abstract class BaseFragment extends Fragment {
+public abstract class BaseFragment extends Fragment implements IStackedAsyncTaskInterface {
     public View layoutView;
     private final ArrayList<AsyncTask> stackedTasks = new ArrayList<>();
 
@@ -37,19 +39,22 @@ public abstract class BaseFragment extends Fragment {
 
     abstract public void setTitle();
 
-
+    @Override
     public void addToStackedTasks(AsyncTask task) {
         stackedTasks.add(task);
     }
 
+    @Override
     public void removeFromStackedTasks(AsyncTask task) {
         stackedTasks.remove(task);
     }
 
+    @Override
     public void flushAllTasks() {
         stackedTasks.clear();
     }
 
+    @Override
     public void stopAllTasks() {
         for (int i = 0; i < stackedTasks.size(); i++) {
             AsyncTask task = stackedTasks.get(i);
@@ -61,10 +66,9 @@ public abstract class BaseFragment extends Fragment {
     }
 
     @Override
-    public void onDetach() {
-        //onDestroy后执行
+    public void onDestroy() {
         stopAllTasks();
-        super.onDetach();
+        super.onDestroy();
     }
 
 

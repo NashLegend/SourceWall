@@ -516,7 +516,12 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
 
         @Override
         protected void onPreExecute() {
+            addToStackedTasks(this);
+        }
 
+        @Override
+        protected void onCancelled() {
+            removeFromStackedTasks(this);
         }
 
         @Override
@@ -535,6 +540,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
 
         @Override
         protected void onPostExecute(ResultObject o) {
+            removeFromStackedTasks(this);
             listView.doneOperation();
             if (o.ok) {
                 loadingView.onLoadSuccess();
