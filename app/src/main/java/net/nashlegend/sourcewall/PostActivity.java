@@ -102,7 +102,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(net.nashlegend.sourcewall.R.menu.post, menu);
+        getMenuInflater().inflate(net.nashlegend.sourcewall.R.menu.menu_post, menu);
         return true;
     }
 

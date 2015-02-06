@@ -159,7 +159,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(net.nashlegend.sourcewall.R.menu.article, menu);
+        getMenuInflater().inflate(net.nashlegend.sourcewall.R.menu.menu_article, menu);
         return true;
     }
 

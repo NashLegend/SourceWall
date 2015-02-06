@@ -86,7 +86,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(net.nashlegend.sourcewall.R.menu.question, menu);
+        getMenuInflater().inflate(net.nashlegend.sourcewall.R.menu.menu_question, menu);
         return true;
     }
 

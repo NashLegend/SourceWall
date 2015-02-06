@@ -144,5 +144,6 @@
     <string name="login_needed">需要登录</string>
     <string name="post_author">楼主</string>
     <string name="page_404">页面不存在</string>
+    <string name="action_share">分享</string>
 
 </resources>
