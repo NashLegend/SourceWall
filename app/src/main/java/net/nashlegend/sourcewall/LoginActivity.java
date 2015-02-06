@@ -47,29 +47,30 @@ public class LoginActivity extends SwipeActivity {
     }
 
     private boolean parseRawCookie(String rawCookie) {
-        String[] rawCookieParams = rawCookie.split(";");
         String tmpToken = "";
         String tmpUkey = "";
-        for (int i = 1; i < rawCookieParams.length; i++) {
-            String rawCookieParamNameAndValue[] = rawCookieParams[i].trim().split("=");
-            if (rawCookieParamNameAndValue.length != 2) {
-                continue;
-            }
-            String paramName = rawCookieParamNameAndValue[0].trim();
-            String paramValue = rawCookieParamNameAndValue[1].trim();
-            BasicClientCookie clientCookie = new BasicClientCookie(paramName, paramValue);
-            clientCookie.setDomain("guokr.com");
-            clientCookie.setPath("/");
-            HttpFetcher.getDefaultHttpClient().getCookieStore().addCookie(clientCookie);
-            if (Consts.Cookie_Token_Key.equals(paramName)) {
-                SharedUtil.saveString(Consts.Key_Access_Token, paramValue);
-                tmpToken = paramValue;
-            } else if (Consts.Cookie_Ukey_Key.equals(paramName)) {
-                SharedUtil.saveString(Consts.Key_Ukey, paramValue);
-                tmpUkey = paramValue;
+        if (!TextUtils.isEmpty(rawCookie)) {
+            String[] rawCookieParams = rawCookie.split(";");
+            for (int i = 1; i < rawCookieParams.length; i++) {
+                String rawCookieParamNameAndValue[] = rawCookieParams[i].trim().split("=");
+                if (rawCookieParamNameAndValue.length != 2) {
+                    continue;
+                }
+                String paramName = rawCookieParamNameAndValue[0].trim();
+                String paramValue = rawCookieParamNameAndValue[1].trim();
+                BasicClientCookie clientCookie = new BasicClientCookie(paramName, paramValue);
+                clientCookie.setDomain("guokr.com");
+                clientCookie.setPath("/");
+                HttpFetcher.getDefaultHttpClient().getCookieStore().addCookie(clientCookie);
+                if (Consts.Cookie_Token_Key.equals(paramName)) {
+                    SharedUtil.saveString(Consts.Key_Access_Token, paramValue);
+                    tmpToken = paramValue;
+                } else if (Consts.Cookie_Ukey_Key.equals(paramName)) {
+                    SharedUtil.saveString(Consts.Key_Ukey, paramValue);
+                    tmpUkey = paramValue;
+                }
             }
         }
-
         if (TextUtils.isEmpty(tmpUkey) || TextUtils.isEmpty(tmpToken)) {
             Toast.makeText(this, "获取Token失败，\n\n  (ノ=Д=)ノ┻━┻ \n\n 请稍后重试登录……", Toast.LENGTH_LONG).show();
             return false;
