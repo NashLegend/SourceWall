@@ -169,16 +169,6 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
         int offset;
 
         @Override
-        protected void onPreExecute() {
-            addToStackedTasks(this);
-        }
-
-        @Override
-        protected void onCancelled() {
-            removeFromStackedTasks(this);
-        }
-
-        @Override
         protected ResultObject doInBackground(Integer... datas) {
             offset = datas[0];
             if (subItem.getType() == SubItem.Type_Collections) {
@@ -190,7 +180,6 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
 
         @Override
         protected void onPostExecute(ResultObject o) {
-            removeFromStackedTasks(this);
             if (o.ok) {
                 loadingView.onLoadSuccess();
                 ArrayList<Article> ars = (ArrayList<Article>) o.result;

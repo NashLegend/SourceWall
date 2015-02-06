@@ -489,16 +489,6 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
     class TestLoginTask extends AsyncTask<Void, Integer, ResultObject> {
 
         @Override
-        protected void onPreExecute() {
-            addToStackedTasks(this);
-        }
-
-        @Override
-        protected void onCancelled() {
-            removeFromStackedTasks(this);
-        }
-
-        @Override
         protected ResultObject doInBackground(Void... params) {
             return UserAPI.testLogin();
         }
@@ -515,7 +505,6 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
          */
         @Override
         protected void onPostExecute(ResultObject resultObject) {
-            removeFromStackedTasks(this);
             boolean shouldMarkAsFailed = true;//是否视为登录失败
             if (resultObject.ok) {
                 shouldMarkAsFailed = false;
@@ -563,16 +552,10 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
 
         @Override
         protected void onPreExecute() {
-            addToStackedTasks(this);
             String nameString = SharedUtil.readString(Consts.Key_User_Name, "");
             if (TextUtils.isEmpty(nameString)) {
                 userName.setText(R.string.loading);
             }
-        }
-
-        @Override
-        protected void onCancelled() {
-            removeFromStackedTasks(this);
         }
 
         @Override
@@ -582,7 +565,6 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
 
         @Override
         protected void onPostExecute(ResultObject resultObject) {
-            removeFromStackedTasks(this);
             if (resultObject.ok) {
                 setupUserInfo((UserInfo) resultObject.result);
             } else {

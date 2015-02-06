@@ -2,10 +2,11 @@ package net.nashlegend.sourcewall;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 
+import net.nashlegend.sourcewall.commonview.AAsyncTask;
+import net.nashlegend.sourcewall.commonview.IStackedAsyncTaskInterface;
 import net.nashlegend.sourcewall.util.ToastUtil;
 
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
  */
 public abstract class BaseActivity extends ActionBarActivity implements IStackedAsyncTaskInterface {
 
-    private final ArrayList<AsyncTask> stackedTasks = new ArrayList<>();
+    private final ArrayList<AAsyncTask> stackedTasks = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +30,7 @@ public abstract class BaseActivity extends ActionBarActivity implements IStacked
      * @param task 要添加的AsyncTask
      */
     @Override
-    public void addToStackedTasks(AsyncTask task) {
+    public void addToStackedTasks(AAsyncTask task) {
         stackedTasks.add(task);
     }
 
@@ -40,7 +41,7 @@ public abstract class BaseActivity extends ActionBarActivity implements IStacked
      * @param task 要清除的AsyncTask
      */
     @Override
-    public void removeFromStackedTasks(AsyncTask task) {
+    public void removeFromStackedTasks(AAsyncTask task) {
         stackedTasks.remove(task);
     }
 
@@ -52,8 +53,8 @@ public abstract class BaseActivity extends ActionBarActivity implements IStacked
     @Override
     public void stopAllTasks() {
         for (int i = 0; i < stackedTasks.size(); i++) {
-            AsyncTask task = stackedTasks.get(i);
-            if (task != null && task.getStatus() == AsyncTask.Status.RUNNING) {
+            AAsyncTask task = stackedTasks.get(i);
+            if (task != null && task.getStatus() == AAsyncTask.Status.RUNNING) {
                 System.out.println("cancel");
                 task.cancel(true);
             }

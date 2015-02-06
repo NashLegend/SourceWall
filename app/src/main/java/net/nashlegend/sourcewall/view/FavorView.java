@@ -13,9 +13,10 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import net.nashlegend.sourcewall.IStackedAsyncTaskInterface;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.FavorAdapter;
+import net.nashlegend.sourcewall.commonview.AAsyncTask;
+import net.nashlegend.sourcewall.commonview.IStackedAsyncTaskInterface;
 import net.nashlegend.sourcewall.connection.ResultObject;
 import net.nashlegend.sourcewall.connection.api.UserAPI;
 import net.nashlegend.sourcewall.model.AceModel;
@@ -137,15 +138,15 @@ public class FavorView extends FrameLayout implements View.OnClickListener, ISta
         }
     }
 
-    private final ArrayList<AsyncTask> stackedTasks = new ArrayList<>();
+    private final ArrayList<AAsyncTask> stackedTasks = new ArrayList<>();
 
     @Override
-    public void addToStackedTasks(AsyncTask task) {
+    public void addToStackedTasks(AAsyncTask task) {
         stackedTasks.add(task);
     }
 
     @Override
-    public void removeFromStackedTasks(AsyncTask task) {
+    public void removeFromStackedTasks(AAsyncTask task) {
         stackedTasks.remove(task);
     }
 
@@ -157,8 +158,8 @@ public class FavorView extends FrameLayout implements View.OnClickListener, ISta
     @Override
     public void stopAllTasks() {
         for (int i = 0; i < stackedTasks.size(); i++) {
-            AsyncTask task = stackedTasks.get(i);
-            if (task != null && task.getStatus() == AsyncTask.Status.RUNNING) {
+            AAsyncTask task = stackedTasks.get(i);
+            if (task != null && task.getStatus() == AAsyncTask.Status.RUNNING) {
                 task.cancel(true);
             }
         }
@@ -175,14 +176,8 @@ public class FavorView extends FrameLayout implements View.OnClickListener, ISta
 
         @Override
         protected void onPreExecute() {
-            addToStackedTasks(this);
             progressBaskets.setVisibility(VISIBLE);
             listView.setVisibility(INVISIBLE);
-        }
-
-        @Override
-        protected void onCancelled() {
-            removeFromStackedTasks(this);
         }
 
         @Override
@@ -192,7 +187,6 @@ public class FavorView extends FrameLayout implements View.OnClickListener, ISta
 
         @Override
         protected void onPostExecute(ResultObject resultObject) {
-            removeFromStackedTasks(this);
             if (resultObject.ok) {
                 ArrayList<Basket> baskets = (ArrayList<Basket>) resultObject.result;
                 adapter.clear();
@@ -211,23 +205,12 @@ public class FavorView extends FrameLayout implements View.OnClickListener, ISta
     class LoadCategoryTask extends AsyncTask<Void, Integer, ResultObject> {
 
         @Override
-        protected void onPreExecute() {
-            addToStackedTasks(this);
-        }
-
-        @Override
-        protected void onCancelled() {
-            removeFromStackedTasks(this);
-        }
-
-        @Override
         protected ResultObject doInBackground(Void... params) {
             return UserAPI.getCategoryList();
         }
 
         @Override
         protected void onPostExecute(ResultObject resultObject) {
-            removeFromStackedTasks(this);
             if (resultObject.ok) {
                 categories = (ArrayList<Category>) resultObject.result;
                 String[] items = new String[categories.size()];
@@ -246,16 +229,6 @@ public class FavorView extends FrameLayout implements View.OnClickListener, ISta
     class CreateBasketTask extends AsyncTask<String, Integer, ResultObject> {
 
         @Override
-        protected void onPreExecute() {
-            addToStackedTasks(this);
-        }
-
-        @Override
-        protected void onCancelled() {
-            removeFromStackedTasks(this);
-        }
-
-        @Override
         protected ResultObject doInBackground(String... params) {
             String title = params[0];
             String introduction = params[1];
@@ -265,7 +238,6 @@ public class FavorView extends FrameLayout implements View.OnClickListener, ISta
 
         @Override
         protected void onPostExecute(ResultObject resultObject) {
-            removeFromStackedTasks(this);
             if (resultObject.ok) {
                 ToastUtil.toast("创建成功");
                 Basket basket = (Basket) resultObject.result;

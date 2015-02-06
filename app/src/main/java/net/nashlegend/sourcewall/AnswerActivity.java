@@ -332,16 +332,6 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         boolean isSupport;
 
         @Override
-        protected void onPreExecute() {
-            addToStackedTasks(this);
-        }
-
-        @Override
-        protected void onCancelled() {
-            removeFromStackedTasks(this);
-        }
-
-        @Override
         protected void onCancelled(ResultObject resultObject) {
             super.onCancelled(resultObject);
         }
@@ -357,7 +347,6 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
 
         @Override
         protected void onPostExecute(ResultObject resultObject) {
-            removeFromStackedTasks(this);
             if (resultObject.ok) {
                 answer.setUpvoteNum(answer.getUpvoteNum() + 1);
                 supportText.setText(answer.getUpvoteNum() + "");
@@ -374,16 +363,6 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         boolean bury = true;
 
         @Override
-        protected void onPreExecute() {
-            addToStackedTasks(this);
-        }
-
-        @Override
-        protected void onCancelled() {
-            removeFromStackedTasks(this);
-        }
-
-        @Override
         protected ResultObject doInBackground(Boolean... params) {
             bury = !answer.isHasBuried();
             if (bury) {
@@ -396,7 +375,6 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
 
         @Override
         protected void onPostExecute(ResultObject resultObject) {
-            removeFromStackedTasks(this);
             if (resultObject.ok) {
                 if (bury) {
                     ToastUtil.toast("已标记为\"不是答案\"");
@@ -421,23 +399,12 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
     class ThankTask extends AsyncTask<String, Integer, ResultObject> {
 
         @Override
-        protected void onPreExecute() {
-            addToStackedTasks(this);
-        }
-
-        @Override
-        protected void onCancelled() {
-            removeFromStackedTasks(this);
-        }
-
-        @Override
         protected ResultObject doInBackground(String... params) {
             return QuestionAPI.thankAnswer(answer.getID());
         }
 
         @Override
         protected void onPostExecute(ResultObject resultObject) {
-            removeFromStackedTasks(this);
             if (resultObject.ok) {
                 ToastUtil.toast("感谢成功");
                 answer.setHasThanked(true);

@@ -196,16 +196,6 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         int offset;
 
         @Override
-        protected void onPreExecute() {
-            addToStackedTasks(this);
-        }
-
-        @Override
-        protected void onCancelled() {
-            removeFromStackedTasks(this);
-        }
-
-        @Override
         protected ResultObject doInBackground(Integer... params) {
             offset = params[0];
             if (offset < 0) {
@@ -217,7 +207,6 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
 
         @Override
         protected void onPostExecute(ResultObject result) {
-            removeFromStackedTasks(this);
             if (result.ok) {
                 loadingView.onLoadSuccess();
                 ArrayList<AceModel> ars = (ArrayList<AceModel>) result.result;
@@ -255,16 +244,6 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
     class RecommendTask extends AsyncTask<String, Integer, ResultObject> {
 
         @Override
-        protected void onPreExecute() {
-            addToStackedTasks(this);
-        }
-
-        @Override
-        protected void onCancelled() {
-            removeFromStackedTasks(this);
-        }
-
-        @Override
         protected ResultObject doInBackground(String... params) {
             String questionID = params[0];
             String title = params[1];
@@ -275,7 +254,6 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
 
         @Override
         protected void onPostExecute(ResultObject resultObject) {
-            removeFromStackedTasks(this);
             if (resultObject.ok) {
                 ToastUtil.toast(net.nashlegend.sourcewall.R.string.recommend_ok);
             } else {

@@ -1,6 +1,5 @@
 package net.nashlegend.sourcewall.fragment;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -8,7 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import net.nashlegend.sourcewall.IStackedAsyncTaskInterface;
+import net.nashlegend.sourcewall.commonview.AAsyncTask;
+import net.nashlegend.sourcewall.commonview.IStackedAsyncTaskInterface;
 
 import java.util.ArrayList;
 
@@ -17,7 +17,7 @@ import java.util.ArrayList;
  */
 public abstract class BaseFragment extends Fragment implements IStackedAsyncTaskInterface {
     public View layoutView;
-    private final ArrayList<AsyncTask> stackedTasks = new ArrayList<>();
+    private final ArrayList<AAsyncTask> stackedTasks = new ArrayList<>();
 
     @Nullable
     @Override
@@ -40,12 +40,12 @@ public abstract class BaseFragment extends Fragment implements IStackedAsyncTask
     abstract public void setTitle();
 
     @Override
-    public void addToStackedTasks(AsyncTask task) {
+    public void addToStackedTasks(AAsyncTask task) {
         stackedTasks.add(task);
     }
 
     @Override
-    public void removeFromStackedTasks(AsyncTask task) {
+    public void removeFromStackedTasks(AAsyncTask task) {
         stackedTasks.remove(task);
     }
 
@@ -57,8 +57,8 @@ public abstract class BaseFragment extends Fragment implements IStackedAsyncTask
     @Override
     public void stopAllTasks() {
         for (int i = 0; i < stackedTasks.size(); i++) {
-            AsyncTask task = stackedTasks.get(i);
-            if (task != null && task.getStatus() == AsyncTask.Status.RUNNING) {
+            AAsyncTask task = stackedTasks.get(i);
+            if (task != null && task.getStatus() == AAsyncTask.Status.RUNNING) {
                 task.cancel(true);
             }
         }

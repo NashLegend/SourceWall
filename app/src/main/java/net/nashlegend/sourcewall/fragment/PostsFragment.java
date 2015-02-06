@@ -515,16 +515,6 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         int loadedPage;
 
         @Override
-        protected void onPreExecute() {
-            addToStackedTasks(this);
-        }
-
-        @Override
-        protected void onCancelled() {
-            removeFromStackedTasks(this);
-        }
-
-        @Override
         protected ResultObject doInBackground(Integer... datas) {
             loadedPage = datas[0];
             //解析html的page是从1开始的，所以offset要+1
@@ -540,7 +530,6 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
 
         @Override
         protected void onPostExecute(ResultObject o) {
-            removeFromStackedTasks(this);
             listView.doneOperation();
             if (o.ok) {
                 loadingView.onLoadSuccess();

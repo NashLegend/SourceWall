@@ -180,17 +180,11 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
 
         @Override
         protected void onPreExecute() {
-            addToStackedTasks(this);
             progressDialog = new ProgressDialog(SimpleReplyActivity.this);
             progressDialog.setCancelable(false);
             progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.setMessage(getString(net.nashlegend.sourcewall.R.string.message_replying));
             progressDialog.show();
-        }
-
-        @Override
-        protected void onCancelled() {
-            removeFromStackedTasks(this);
         }
 
         @Override
@@ -207,7 +201,6 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
 
         @Override
         protected void onPostExecute(ResultObject result) {
-            removeFromStackedTasks(this);
             progressDialog.dismiss();
             if (result.ok) {
                 mMenu.findItem(net.nashlegend.sourcewall.R.id.action_cancel_simple_reply).setVisible(false);
@@ -230,16 +223,6 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
         int offset;
 
         @Override
-        protected void onPreExecute() {
-            addToStackedTasks(this);
-        }
-
-        @Override
-        protected void onCancelled() {
-            removeFromStackedTasks(this);
-        }
-
-        @Override
         protected ResultObject doInBackground(Integer... params) {
             offset = params[0];
             if (aceModel instanceof Question) {
@@ -254,7 +237,6 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
 
         @Override
         protected void onPostExecute(ResultObject result) {
-            removeFromStackedTasks(this);
             if (result.ok) {
                 loadingView.onLoadSuccess();
                 ArrayList<UComment> ars = (ArrayList<UComment>) result.result;

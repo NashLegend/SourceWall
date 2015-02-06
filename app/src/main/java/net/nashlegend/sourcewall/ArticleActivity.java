@@ -266,16 +266,6 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
     private class RecommendTask extends AsyncTask<String, Integer, ResultObject> {
 
         @Override
-        protected void onPreExecute() {
-            addToStackedTasks(this);
-        }
-
-        @Override
-        protected void onCancelled() {
-            removeFromStackedTasks(this);
-        }
-
-        @Override
         protected ResultObject doInBackground(String... params) {
             String articleID = params[0];
             String title = params[1];
@@ -286,7 +276,6 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
 
         @Override
         protected void onPostExecute(ResultObject resultObject) {
-            removeFromStackedTasks(this);
             if (resultObject.ok) {
                 ToastUtil.toast(net.nashlegend.sourcewall.R.string.recommend_ok);
             } else {
@@ -309,16 +298,6 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         int offset;
 
         @Override
-        protected void onPreExecute() {
-            addToStackedTasks(this);
-        }
-
-        @Override
-        protected void onCancelled() {
-            removeFromStackedTasks(this);
-        }
-
-        @Override
         protected ResultObject doInBackground(Integer... params) {
             offset = params[0];
             if (offset < 0) {
@@ -331,7 +310,6 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
 
         @Override
         protected void onPostExecute(ResultObject result) {
-            removeFromStackedTasks(this);
             if (result.ok) {
                 loadingView.onLoadSuccess();
                 ArrayList<AceModel> ars = (ArrayList<AceModel>) result.result;
@@ -372,16 +350,6 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         MediumListItemView mediumListItemView;
 
         @Override
-        protected void onPreExecute() {
-            addToStackedTasks(this);
-        }
-
-        @Override
-        protected void onCancelled() {
-            removeFromStackedTasks(this);
-        }
-
-        @Override
         protected ResultObject doInBackground(MediumListItemView... params) {
             mediumListItemView = params[0];
             comment = mediumListItemView.getData();
@@ -390,7 +358,6 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
 
         @Override
         protected void onPostExecute(ResultObject resultObject) {
-            removeFromStackedTasks(this);
             if (resultObject.ok) {
                 comment.setHasLiked(true);
                 comment.setLikeNum(comment.getLikeNum() + 1);
@@ -408,16 +375,6 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         UComment comment;
 
         @Override
-        protected void onPreExecute() {
-            addToStackedTasks(this);
-        }
-
-        @Override
-        protected void onCancelled() {
-            removeFromStackedTasks(this);
-        }
-
-        @Override
         protected ResultObject doInBackground(UComment... params) {
             comment = params[0];
             return ArticleAPI.deleteMyComment(comment.getID());
@@ -425,7 +382,6 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
 
         @Override
         protected void onPostExecute(ResultObject resultObject) {
-            removeFromStackedTasks(this);
             if (resultObject.ok) {
                 adapter.remove(comment);
                 adapter.notifyDataSetChanged();

@@ -1,6 +1,4 @@
-package net.nashlegend.sourcewall;
-
-import android.os.AsyncTask;
+package net.nashlegend.sourcewall.commonview;
 
 /**
  * Created by NashLegend on 2015/2/6 0006
@@ -14,7 +12,7 @@ public interface IStackedAsyncTaskInterface {
      *
      * @param task 要添加的AsyncTask
      */
-    public void addToStackedTasks(AsyncTask task);
+    public void addToStackedTasks(AAsyncTask task);
 
     /**
      * 将AsyncTask从队列中删除，但是不负责取消执行。
@@ -25,7 +23,7 @@ public interface IStackedAsyncTaskInterface {
      *
      * @param task 要清除的AsyncTask
      */
-    public void removeFromStackedTasks(AsyncTask task);
+    public void removeFromStackedTasks(AAsyncTask task);
 
     /**
      * 清空所有队列中的Task，但是不负责取消执行
