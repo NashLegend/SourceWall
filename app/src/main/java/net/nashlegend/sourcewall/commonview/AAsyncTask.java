@@ -626,7 +626,9 @@ public abstract class AAsyncTask<Params, Progress, Result> {
     }
 
     private void finish(Result result) {
-        stackedManager.removeFromStackedTasks(this);
+        if (stackedManager != null) {
+            stackedManager.removeFromStackedTasks(this);
+        }
         if (isCancelled()) {
             onCancelled(result);
         } else {
