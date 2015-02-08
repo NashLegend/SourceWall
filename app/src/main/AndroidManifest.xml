@@ -18,6 +18,7 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@style/BottomTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,42 +29,53 @@
         <activity
             android:name=".SettingActivity"
             android:label="@string/title_activity_setting"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="net.nashlegend.sourcewall.BaseActivity" />
+                android:value="net.nashlegend.sourcewall.SettingActivity" />
         </activity>
         <activity
             android:name=".ShuffleGroupActivity"
-            android:label="@string/shuffle_groups" />
+            android:label="@string/shuffle_groups"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ShuffleTagActivity"
-            android:label="@string/shuffle_tags" />
+            android:label="@string/shuffle_tags"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ArticleActivity"
-            android:label="@string/article" />
+            android:label="@string/article"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".PostActivity"
-            android:label="@string/post" />
+            android:label="@string/post"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".QuestionActivity"
-            android:label="@string/question" />
+            android:label="@string/question"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_login" />
+            android:label="@string/title_activity_login"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ReplyActivity"
             android:label="@string/title_activity_reply_article"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".AnswerActivity"
-            android:label="@string/title_activity_answer" />
+            android:label="@string/title_activity_answer"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".SimpleReplyActivity"
-            android:label="@string/title_activity_simple_reply" />
+            android:label="@string/title_activity_simple_reply"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".PublishPostActivity"
             android:label="@string/title_activity_publish_post"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
     </application>
 
