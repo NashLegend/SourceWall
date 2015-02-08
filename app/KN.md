@@ -1,6 +1,6 @@
 AnimatorSet在PlayTogether的时候，所包含Animator中的第一个如果是startDelay，那么这个delay将有可能不起作用，仅仅指第一个。
 selector等资源中不能使用?attr/xxx
-长按复制文字时，复制ActionBar不下推view，在Style里添加<item name="windowActionModeOverlay">true</item>
+长按复制文字时，复制ActionBar不下推view，在Style里添加<item name="windowActionModeOverlay">true</item>。Contextual Action Bar（CAB）
 如果MainActivity也使用BlankTheme，会出现蛋疼的问题，底部的Activity必须不能是透明的，但是这样的话StartActivity时的R.anim.slide_out_left和finish时的R.anim.slide_in_left就没法用了，原因不详……
 ImageView使用的bitmap不能超过4096x4096……
 
