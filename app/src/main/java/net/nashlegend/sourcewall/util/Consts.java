@@ -44,6 +44,7 @@ public class Consts {
     public static final String Key_Sketch_Question_Answer = "sourcewall.key.sketch.question.answer";
     public static final String Key_Sketch_Publish_Post_Title = "sourcewall.key.sketch.publish.post.title";
     public static final String Key_Sketch_Publish_Post_Content = "sourcewall.key.sketch.publish.post.content";
+    public static final String Key_User_Has_Learned_Add_Image = "sourcewall.key.user.has.learned.add.image";
 
     //小尾巴类型
     public static final int Type_Use_Default_Tail = 0;

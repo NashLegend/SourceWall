@@ -145,5 +145,8 @@
     <string name="post_author">楼主</string>
     <string name="page_404">页面不存在</string>
     <string name="action_share">分享</string>
+    <string name="tip_of_user_learn_add_image">上传完成后，请点击左下角的按钮将图片添加到编辑器~</string>
+    <string name="hint_click_to_add_image_to_editor">上传完成，点击左下角按钮添加到编辑器~</string>
+    <string name="uploading">上传中</string>
 
 </resources>

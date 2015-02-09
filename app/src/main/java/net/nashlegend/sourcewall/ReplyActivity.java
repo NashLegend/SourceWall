@@ -29,6 +29,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import net.nashlegend.sourcewall.commonview.AAsyncTask;
+import net.nashlegend.sourcewall.commonview.IStackedAsyncTaskInterface;
 import net.nashlegend.sourcewall.connection.ResultObject;
 import net.nashlegend.sourcewall.connection.api.APIBase;
 import net.nashlegend.sourcewall.dialogs.InputDialog;
@@ -40,6 +42,7 @@ import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.FileUtil;
 import net.nashlegend.sourcewall.util.RegUtil;
+import net.nashlegend.sourcewall.util.SharedUtil;
 import net.nashlegend.sourcewall.util.SketchSharedUtil;
 import net.nashlegend.sourcewall.util.ToastUtil;
 
@@ -160,7 +163,7 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
     public void uploadImage(String path) {
         if (FileUtil.isImage(path)) {
             if (new File(path).isFile()) {
-                ImageUploadTask task = new ImageUploadTask();
+                ImageUploadTask task = new ImageUploadTask(this);
                 task.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR, path);
             } else {
                 ToastUtil.toast(net.nashlegend.sourcewall.R.string.file_not_exists);
@@ -476,10 +479,25 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
         uploadingProgress.setVisibility(View.GONE);
     }
 
-    class ImageUploadTask extends AsyncTask<String, Integer, ResultObject> {
+    class ImageUploadTask extends AAsyncTask<String, Integer, ResultObject> {
+
+        ImageUploadTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
+            super(iStackedAsyncTaskInterface);
+        }
 
         @Override
         protected void onPreExecute() {
+            if (!SharedUtil.readBoolean(Consts.Key_User_Has_Learned_Add_Image, false)) {
+                new AlertDialog.Builder(ReplyActivity.this)
+                        .setTitle(R.string.hint)
+                        .setMessage(R.string.tip_of_user_learn_add_image)
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                SharedUtil.saveBoolean(Consts.Key_User_Has_Learned_Add_Image, true);
+                            }
+                        }).create().show();
+            }
             setImageButtonsUploading();
         }
 
@@ -493,6 +511,7 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
         protected void onPostExecute(ResultObject resultObject) {
             if (resultObject.ok) {
                 // tap to insert image
+                ToastUtil.toast(getString(R.string.hint_click_to_add_image_to_editor));
                 doneUploadingImage((String) resultObject.result);
                 if (tmpUploadFile != null && tmpUploadFile.exists()) {
                     tmpUploadFile.delete();

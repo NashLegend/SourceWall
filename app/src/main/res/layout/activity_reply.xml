@@ -57,7 +57,7 @@
             android:paddingTop="5dp"
             android:weightSum="3.5">
 
-        <RelativeLayout
+            <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
@@ -70,12 +70,24 @@
                     android:background="?attr/background_selectable_borderless"
                     android:src="@drawable/ic_image_browse_color_blue_36dp" />
 
-                <ProgressBar
+                <LinearLayout
                     android:id="@+id/prg_uploading_img"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:visibility="gone" />
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <ProgressBar
+                        android:layout_width="24dp"
+                        android:layout_height="24dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/uploading" />
+                </LinearLayout>
 
                 <ImageButton
                     android:id="@+id/btn_insert_img"
