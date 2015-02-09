@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "net.nashlegend.sourcewall"
-        minSdkVersion 15
+        minSdkVersion 14
         targetSdkVersion 21
         versionCode 20150203
         versionName "1.0"
