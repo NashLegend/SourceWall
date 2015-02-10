@@ -100,6 +100,7 @@
     <string name="more_unselected_groups">首页顶部小组们</string>
     <string name="more_unselected_tags">首页顶部标签们</string>
     <string name="more_groups">更多小组</string>
+    <string name="more_tags">更多标签</string>
     <string name="tip_of_more_groups">点击进入小组，长按排序</string>
     <string name="tip_of_more_tags">点击进入标签，长按排序</string>
     <string name="unselected_section_tip">点击移到上边</string>

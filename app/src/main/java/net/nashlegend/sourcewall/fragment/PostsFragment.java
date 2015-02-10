@@ -224,6 +224,12 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     }
 
     private void showMoreSections() {
+        if (!isAdded()) {
+            return;
+        }
+        getActivity().setTitle(R.string.more_groups);
+        getActivity().invalidateOptionsMenu();
+
         isMoreSectionsButtonShowing = true;
         if (animatorSet != null && animatorSet.isRunning()) {
             animatorSet.cancel();
@@ -242,44 +248,46 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                if (GroupHelper.getMyGroupsNumber() > 0) {
-                    long lastDBVersion = SharedUtil.readLong(Consts.Key_Last_Post_Groups_Version, 0);
-                    if (currentDBVersion != lastDBVersion) {
-                        getButtons();
-                        initView();
-                        currentDBVersion = SharedUtil.readLong(Consts.Key_Last_Post_Groups_Version, 0);
+                if (isAdded()) {
+                    if (GroupHelper.getMyGroupsNumber() > 0) {
+                        long lastDBVersion = SharedUtil.readLong(Consts.Key_Last_Post_Groups_Version, 0);
+                        if (currentDBVersion != lastDBVersion) {
+                            getButtons();
+                            initView();
+                            currentDBVersion = SharedUtil.readLong(Consts.Key_Last_Post_Groups_Version, 0);
+                        }
+                        manageButton.setVisibility(View.VISIBLE);
+                    } else {
+                        manageButton.setVisibility(View.INVISIBLE);
+                        AlertDialog dialog = new AlertDialog.Builder(getActivity()).setTitle(R.string.hint)
+                                .setMessage(R.string.ok_to_load_groups)
+                                .setPositiveButton(R.string.confirm_to_load_my_groups, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        hideMoreSections();
+                                        new Handler().postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Intent intent = new Intent(getActivity(), ShuffleGroupActivity.class);
+                                                intent.putExtra(Consts.Extra_Should_Load_Before_Shuffle, true);
+                                                startActivityForResult(intent, Consts.Code_Start_Shuffle_Groups);
+                                                getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
+                                            }
+                                        }, 320);
+                                    }
+                                }).setNegativeButton(R.string.use_default_groups, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        hideMoreSections();
+                                    }
+                                }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                    @Override
+                                    public void onCancel(DialogInterface dialog) {
+                                        hideMoreSections();
+                                    }
+                                }).create();
+                        dialog.show();
                     }
-                    manageButton.setVisibility(View.VISIBLE);
-                } else {
-                    manageButton.setVisibility(View.INVISIBLE);
-                    AlertDialog dialog = new AlertDialog.Builder(getActivity()).setTitle(R.string.hint)
-                            .setMessage(R.string.ok_to_load_groups)
-                            .setPositiveButton(R.string.confirm_to_load_my_groups, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    hideMoreSections();
-                                    new Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            Intent intent = new Intent(getActivity(), ShuffleGroupActivity.class);
-                                            intent.putExtra(Consts.Extra_Should_Load_Before_Shuffle, true);
-                                            startActivityForResult(intent, Consts.Code_Start_Shuffle_Groups);
-                                            getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
-                                        }
-                                    }, 320);
-                                }
-                            }).setNegativeButton(R.string.use_default_groups, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    hideMoreSections();
-                                }
-                            }).setOnCancelListener(new DialogInterface.OnCancelListener() {
-                                @Override
-                                public void onCancel(DialogInterface dialog) {
-                                    hideMoreSections();
-                                }
-                            }).create();
-                    dialog.show();
                 }
             }
 
@@ -305,6 +313,11 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     private AnimatorSet animatorSet;
 
     private void hideMoreSections() {
+        if (!isAdded()) {
+            return;
+        }
+        setTitle();
+        getActivity().invalidateOptionsMenu();
         isMoreSectionsButtonShowing = false;
         moreSectionsLayout.setVisibility(View.VISIBLE);
         if (animatorSet != null && animatorSet.isRunning()) {

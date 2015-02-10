@@ -193,6 +193,11 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
     private AnimatorSet animatorSet;
 
     private void hideMoreSections() {
+        if (!isAdded()) {
+            return;
+        }
+        setTitle();
+        getActivity().invalidateOptionsMenu();
         isMoreSectionsButtonShowing = false;
         morSectionsLayout.setVisibility(View.VISIBLE);
         if (animatorSet != null && animatorSet.isRunning()) {
@@ -261,6 +266,12 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
     }
 
     private void showMoreSections() {
+        if (!isAdded()) {
+            return;
+        }
+        getActivity().setTitle(R.string.more_tags);
+        getActivity().invalidateOptionsMenu();
+
         isMoreSectionsButtonShowing = true;
         if (animatorSet != null && animatorSet.isRunning()) {
             animatorSet.cancel();
@@ -279,44 +290,46 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                if (AskTagHelper.getAskTagsNumber() > 0) {
-                    long lastDBVersion = SharedUtil.readLong(Consts.Key_Last_Ask_Tags_Version, 0);
-                    if (currentDBVersion != lastDBVersion) {
-                        getButtons();
-                        initView();
-                        currentDBVersion = SharedUtil.readLong(Consts.Key_Last_Ask_Tags_Version, 0);
+                if (isAdded()) {
+                    if (AskTagHelper.getAskTagsNumber() > 0) {
+                        long lastDBVersion = SharedUtil.readLong(Consts.Key_Last_Ask_Tags_Version, 0);
+                        if (currentDBVersion != lastDBVersion) {
+                            getButtons();
+                            initView();
+                            currentDBVersion = SharedUtil.readLong(Consts.Key_Last_Ask_Tags_Version, 0);
+                        }
+                        manageButton.setVisibility(View.VISIBLE);
+                    } else {
+                        manageButton.setVisibility(View.INVISIBLE);
+                        AlertDialog dialog = new AlertDialog.Builder(getActivity()).setTitle(R.string.hint)
+                                .setMessage(R.string.ok_to_load_tags)
+                                .setPositiveButton(R.string.confirm_to_load_my_tags, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        hideMoreSections();
+                                        new Handler().postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Intent intent = new Intent(getActivity(), ShuffleTagActivity.class);
+                                                intent.putExtra(Consts.Extra_Should_Load_Before_Shuffle, true);
+                                                startActivityForResult(intent, Consts.Code_Start_Shuffle_Ask_Tags);
+                                                getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
+                                            }
+                                        }, 320);
+                                    }
+                                }).setNegativeButton(R.string.use_default_tags, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        hideMoreSections();
+                                    }
+                                }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                    @Override
+                                    public void onCancel(DialogInterface dialog) {
+                                        hideMoreSections();
+                                    }
+                                }).create();
+                        dialog.show();
                     }
-                    manageButton.setVisibility(View.VISIBLE);
-                } else {
-                    manageButton.setVisibility(View.INVISIBLE);
-                    AlertDialog dialog = new AlertDialog.Builder(getActivity()).setTitle(R.string.hint)
-                            .setMessage(R.string.ok_to_load_tags)
-                            .setPositiveButton(R.string.confirm_to_load_my_tags, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    hideMoreSections();
-                                    new Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            Intent intent = new Intent(getActivity(), ShuffleTagActivity.class);
-                                            intent.putExtra(Consts.Extra_Should_Load_Before_Shuffle, true);
-                                            startActivityForResult(intent, Consts.Code_Start_Shuffle_Ask_Tags);
-                                            getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
-                                        }
-                                    }, 320);
-                                }
-                            }).setNegativeButton(R.string.use_default_tags, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    hideMoreSections();
-                                }
-                            }).setOnCancelListener(new DialogInterface.OnCancelListener() {
-                                @Override
-                                public void onCancel(DialogInterface dialog) {
-                                    hideMoreSections();
-                                }
-                            }).create();
-                    dialog.show();
                 }
             }
 
