@@ -1,5 +1,7 @@
 package net.nashlegend.sourcewall;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.net.http.SslError;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -11,7 +13,6 @@ import android.webkit.HttpAuthHandler;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
 
 import net.nashlegend.sourcewall.connection.HttpFetcher;
 import net.nashlegend.sourcewall.util.Consts;
@@ -46,47 +47,75 @@ public class LoginActivity extends SwipeActivity {
         webView.loadUrl(Consts.LOGIN_URL);
     }
 
+    @Override
+    protected void onDestroy() {
+        webView.stopLoading();
+        super.onDestroy();
+    }
+
     private boolean parseRawCookie(String rawCookie) {
-        String tmpToken = "";
-        String tmpUkey = "";
-        if (!TextUtils.isEmpty(rawCookie)) {
-            String[] rawCookieParams = rawCookie.split(";");
-            for (int i = 1; i < rawCookieParams.length; i++) {
-                String rawCookieParamNameAndValue[] = rawCookieParams[i].trim().split("=");
-                if (rawCookieParamNameAndValue.length != 2) {
-                    continue;
-                }
-                String paramName = rawCookieParamNameAndValue[0].trim();
-                String paramValue = rawCookieParamNameAndValue[1].trim();
-                BasicClientCookie clientCookie = new BasicClientCookie(paramName, paramValue);
-                clientCookie.setDomain("guokr.com");
-                clientCookie.setPath("/");
-                HttpFetcher.getDefaultHttpClient().getCookieStore().addCookie(clientCookie);
-                if (Consts.Cookie_Token_Key.equals(paramName)) {
-                    SharedUtil.saveString(Consts.Key_Access_Token, paramValue);
-                    tmpToken = paramValue;
-                } else if (Consts.Cookie_Ukey_Key.equals(paramName)) {
-                    SharedUtil.saveString(Consts.Key_Ukey, paramValue);
-                    tmpUkey = paramValue;
+        try {
+            String tmpToken = "";
+            String tmpUkey = "";
+            if (!TextUtils.isEmpty(rawCookie)) {
+                String[] rawCookieParams = rawCookie.split(";");
+                for (String rawCookieParam : rawCookieParams) {
+                    String rawCookieParamNameAndValue[] = rawCookieParam.trim().split("=");
+                    if (rawCookieParamNameAndValue.length != 2) {
+                        continue;
+                    }
+                    String paramName = rawCookieParamNameAndValue[0].trim();
+                    String paramValue = rawCookieParamNameAndValue[1].trim();
+                    BasicClientCookie clientCookie = new BasicClientCookie(paramName, paramValue);
+                    clientCookie.setDomain("guokr.com");
+                    clientCookie.setPath("/");
+                    HttpFetcher.getDefaultHttpClient().getCookieStore().addCookie(clientCookie);
+                    if (Consts.Cookie_Token_Key.equals(paramName)) {
+                        SharedUtil.saveString(Consts.Key_Access_Token, paramValue);
+                        tmpToken = paramValue;
+                    } else if (Consts.Cookie_Ukey_Key.equals(paramName)) {
+                        SharedUtil.saveString(Consts.Key_Ukey, paramValue);
+                        tmpUkey = paramValue;
+                    }
                 }
             }
-        }
-        if (TextUtils.isEmpty(tmpUkey) || TextUtils.isEmpty(tmpToken)) {
-            Toast.makeText(this, "获取Token失败，\n\n  (ノ=Д=)ノ┻━┻ \n\n 请稍后重试登录……", Toast.LENGTH_LONG).show();
+            return !(TextUtils.isEmpty(tmpUkey) || TextUtils.isEmpty(tmpToken));
+        } catch (Exception e) {
             return false;
         }
-        return true;
     }
 
     WebViewClient webViewClient = new WebViewClient() {
         @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+        public boolean shouldOverrideUrlLoading(final WebView view, String url) {
             if (url.equals(Consts.SUCCESS_URL_1) || url.equals(Consts.SUCCESS_URL_2)) {
                 // login ok
-                SharedUtil.saveString(Consts.Key_Cookie, cookieStr);
-                parseRawCookie(cookieStr);
-                setResult(RESULT_OK);
-                finish();
+                if (parseRawCookie(cookieStr)) {
+                    SharedUtil.saveString(Consts.Key_Cookie, cookieStr);
+                    setResult(RESULT_OK);
+                    finish();
+                } else {
+                    new AlertDialog.Builder(LoginActivity.this).setTitle(R.string.hint).setMessage(R.string.user_handle_login_message)
+                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    String lazyLoad = "http://m.guokr.com/sso/mobile/?suppress_prompt=1&lazy=y&success=http%3A%2F%2Fm.guokr.com%2F";
+                                    view.loadUrl(lazyLoad);
+                                }
+                            }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            setResult(RESULT_CANCELED);
+                            finish();
+                        }
+                    }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialog) {
+                            setResult(RESULT_CANCELED);
+                            finish();
+                        }
+                    }).show();
+                }
             } else {
                 view.loadUrl(url);
             }
@@ -102,7 +131,14 @@ public class LoginActivity extends SwipeActivity {
                     webView.stopLoading();
                 }
             }
-            super.onPageFinished(view, url);
+            if (parseRawCookie(cookieStr)) {
+                webView.stopLoading();
+                SharedUtil.saveString(Consts.Key_Cookie, cookieStr);
+                setResult(RESULT_OK);
+                finish();
+            } else {
+                super.onPageFinished(view, url);
+            }
         }
 
         @Override

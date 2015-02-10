@@ -8,8 +8,8 @@ android {
         applicationId "net.nashlegend.sourcewall"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 20150203
-        versionName "1.0"
+        versionCode 20150210
+        versionName "1.1"
     }
     buildTypes {
         release {
