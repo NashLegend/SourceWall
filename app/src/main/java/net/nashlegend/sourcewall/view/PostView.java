@@ -1,6 +1,8 @@
 package net.nashlegend.sourcewall.view;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
@@ -41,6 +43,12 @@ public class PostView extends AceView<Post> {
         authorView = (TextView) findViewById(R.id.text_author);
         dateView = (TextView) findViewById(R.id.text_date);
         avatarImage = (ImageView) findViewById(R.id.image_avatar);
+
+        Resources.Theme theme = getContext().getTheme();
+        TypedArray typedArray = theme.obtainStyledAttributes(new int[]{R.attr.cardBackgroundColor});
+        int colorBack = typedArray.getColor(0, 0);
+        typedArray.recycle();
+        contentView.setBackgroundColor(colorBack);
     }
 
     public PostView(Context context, AttributeSet attrs) {
@@ -59,7 +67,6 @@ public class PostView extends AceView<Post> {
             authorView.setText(post.getAuthor());
             dateView.setText(post.getDate());
             String html = StyleChecker.getPostHtml(post.getContent());
-            contentView.setBackgroundColor(0);
             contentView.loadDataWithBaseURL(Consts.Base_Url, html, "text/html", "charset=UTF-8", null);
             if (Config.shouldLoadImage()) {
                 Picasso.with(getContext()).load(post.getAuthorAvatarUrl())

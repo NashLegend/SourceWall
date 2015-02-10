@@ -1,6 +1,8 @@
 package net.nashlegend.sourcewall.view;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.TextView;
@@ -56,6 +58,12 @@ public class ArticleView extends AceView<Article> {
         contentView = (WWebView) findViewById(R.id.web_content);
         authorView = (TextView) findViewById(R.id.text_author);
         dateView = (TextView) findViewById(R.id.text_date);
+
+        Resources.Theme theme = getContext().getTheme();
+        TypedArray typedArray = theme.obtainStyledAttributes(new int[]{R.attr.cardBackgroundColor});
+        int colorBack = typedArray.getColor(0, 0);
+        typedArray.recycle();
+        contentView.setBackgroundColor(colorBack);
     }
 
     @Override
@@ -66,7 +74,6 @@ public class ArticleView extends AceView<Article> {
             authorView.setText(article.getAuthor());
             dateView.setText(article.getDate());
             String html = StyleChecker.getArticleHtml(article.getContent());
-            contentView.setBackgroundColor(0);
             contentView.loadDataWithBaseURL(Consts.Base_Url, html, "text/html", "charset=UTF-8", null);
         }
     }
