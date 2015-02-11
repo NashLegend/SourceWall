@@ -427,18 +427,19 @@ public class ArticleAPI extends APIBase {
 
     /**
      * 根据一条评论的id获取评论内容，主要应用于消息通知
-     * 无法取得此评论的文章的id和标题，无法取得楼层
+     * 无法取得此评论的文章的id和标题，无法取得楼层。
+     * 所以在取得之前最好就先把文章id和文章标题取到，
      *
-     * @param id 评论id
+     * @param reply_id 评论id
      * @return resultObject resultObject.result是UComment
      */
-    public static ResultObject getSingleCommentByID(String id) {
+    public static ResultObject getSingleCommentByID(String reply_id, String article_id, String article_title) {
         ResultObject resultObject = new ResultObject();
         String url = "http://apis.guokr.com/minisite/article_reply.json";
         //url还有另一种形式，http://apis.guokr.com/minisite/article_reply/99999999.json;
         //这样后面就不必带reply_id参数了
         ArrayList<NameValuePair> pairs = new ArrayList<>();
-        pairs.add(new BasicNameValuePair("reply_id", id));
+        pairs.add(new BasicNameValuePair("reply_id", reply_id));
         try {
             String result = HttpFetcher.get(url, pairs).toString();
             JSONObject replyObject = getUniversalJsonObject(result, resultObject);
@@ -453,6 +454,8 @@ public class ArticleAPI extends APIBase {
             int likeNum = getJsonInt(replyObject, "likings_count");
             String content = getJsonString(replyObject, "html");
             UComment comment = new UComment();
+            comment.setHostID(article_id + "");
+            comment.setHostTitle(article_title + "");
             comment.setHasLiked(hasLiked);
             comment.setAuthor(author);
             comment.setAuthorTitle(authorTitle);
@@ -461,7 +464,7 @@ public class ArticleAPI extends APIBase {
             comment.setDate(date);
             comment.setLikeNum(likeNum);
             comment.setContent(content);
-            comment.setID(id);
+            comment.setID(reply_id);
             resultObject.ok = true;
             resultObject.result = comment;
         } catch (Exception e) {
