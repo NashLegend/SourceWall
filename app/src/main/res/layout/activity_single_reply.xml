@@ -101,7 +101,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/layout_opinion"
+                android:id="@+id/layout_like"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
@@ -114,7 +114,7 @@
                     android:src="@drawable/like" />
 
                 <TextView
-                    android:id="@+id/text_num_support"
+                    android:id="@+id/text_num_like"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/list_standard_item_text_icon_gap"

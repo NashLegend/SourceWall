@@ -33,15 +33,15 @@ import java.util.ArrayList;
 public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRefreshListener, View.OnClickListener, LoadingView.ReloadListener {
 
     private AceModel aceModel;
-    LoaderTask task;
-    LListView listView;
-    SimpleCommentAdapter adapter;
-    Toolbar toolbar;
-    EditText textReply;
-    ImageButton publishButton;
-    ProgressDialog progressDialog;
-    Menu mMenu;
-    LoadingView loadingView;
+    private LoaderTask task;
+    private LListView listView;
+    private SimpleCommentAdapter adapter;
+    private Toolbar toolbar;
+    private EditText textReply;
+    private ImageButton publishButton;
+    private ProgressDialog progressDialog;
+    private Menu mMenu;
+    private LoadingView loadingView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

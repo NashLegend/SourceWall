@@ -42,6 +42,7 @@ import net.nashlegend.sourcewall.util.StyleChecker;
 import net.nashlegend.sourcewall.util.ToastUtil;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SingleReplyActivity extends SwipeActivity implements View.OnClickListener, LoadingView.ReloadListener {
 
@@ -58,7 +59,7 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
     private TextView authorName;
     private TextView authorTitle;
     private TextView supportText;
-    private View supportView;
+    private View likeView;
     private AceModel host;
     private UComment data;
     private Uri redirectUri;
@@ -77,30 +78,30 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_reply);
         handler = new Handler();
-        rootView = findViewById(net.nashlegend.sourcewall.R.id.rootView);
-        toolbar = (Toolbar) findViewById(net.nashlegend.sourcewall.R.id.action_bar);
+        rootView = findViewById(R.id.rootView);
+        toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
-        authorLayout = findViewById(net.nashlegend.sourcewall.R.id.layout_author);
-        scrollView = (SScrollView) findViewById(net.nashlegend.sourcewall.R.id.scrollView);
-        headerHolder = findViewById(net.nashlegend.sourcewall.R.id.headerHolder);
-        footerHolder = findViewById(net.nashlegend.sourcewall.R.id.footerHolder);
-        webHolder = (LinearLayout) findViewById(net.nashlegend.sourcewall.R.id.web_holder);
-        webView = (WWebView) findViewById(net.nashlegend.sourcewall.R.id.web_content);
-        hostTitle = (TextView) findViewById(net.nashlegend.sourcewall.R.id.text_title);
-        avatar = (ImageView) findViewById(net.nashlegend.sourcewall.R.id.image_avatar);
-        authorName = (TextView) findViewById(net.nashlegend.sourcewall.R.id.text_author);
-        authorTitle = (TextView) findViewById(net.nashlegend.sourcewall.R.id.text_author_title);
-        supportView = findViewById(net.nashlegend.sourcewall.R.id.layout_opinion);
-        supportText = (TextView) findViewById(net.nashlegend.sourcewall.R.id.text_num_support);
-        floatingActionsMenu = (FloatingActionsMenu) findViewById(net.nashlegend.sourcewall.R.id.layout_operation);
+        authorLayout = findViewById(R.id.layout_author);
+        scrollView = (SScrollView) findViewById(R.id.scrollView);
+        headerHolder = findViewById(R.id.headerHolder);
+        footerHolder = findViewById(R.id.footerHolder);
+        webHolder = (LinearLayout) findViewById(R.id.web_holder);
+        webView = (WWebView) findViewById(R.id.web_content);
+        hostTitle = (TextView) findViewById(R.id.text_title);
+        avatar = (ImageView) findViewById(R.id.image_avatar);
+        authorName = (TextView) findViewById(R.id.text_author);
+        authorTitle = (TextView) findViewById(R.id.text_author_title);
+        likeView = findViewById(R.id.layout_like);
+        supportText = (TextView) findViewById(R.id.text_num_like);
+        floatingActionsMenu = (FloatingActionsMenu) findViewById(R.id.layout_operation);
         loadingView = (LoadingView) findViewById(R.id.answer_progress_loading);
 
-        replyButton = (FloatingActionButton) findViewById(net.nashlegend.sourcewall.R.id.button_reply);
-        deleteButton = (FloatingActionButton) findViewById(net.nashlegend.sourcewall.R.id.button_Delete);
-        thankButton = (FloatingActionButton) findViewById(net.nashlegend.sourcewall.R.id.button_like);
+        replyButton = (FloatingActionButton) findViewById(R.id.button_reply);
+        deleteButton = (FloatingActionButton) findViewById(R.id.button_Delete);
+        thankButton = (FloatingActionButton) findViewById(R.id.button_like);
 
         hostTitle.setOnClickListener(this);
-        supportView.setOnClickListener(this);
+        likeView.setOnClickListener(this);
         replyButton.setOnClickListener(this);
         deleteButton.setOnClickListener(this);
         thankButton.setOnClickListener(this);
@@ -109,12 +110,30 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
         //来自其他地方的跳转
         redirectUri = getIntent().getData();
         if (redirectUri != null) {
-            loadingView.setVisibility(View.VISIBLE);
-            loadDataByUri();
+            List<String> segments = redirectUri.getPathSegments();
+            String hostString = redirectUri.getHost();
+            if (("www.guokr.com".equals(hostString) || "m.guokr.com".equals(hostString)) && (segments != null && segments.size() == 3)) {
+                loadingView.setVisibility(View.VISIBLE);
+                String sect = segments.get(0);
+                switch (sect) {
+                    case "article":
+                        hostSection = SubItem.Section_Article;
+                        loadDataByUri();
+                        break;
+                    case "post":
+                        hostSection = SubItem.Section_Post;
+                        loadDataByUri();
+                        break;
+                    default:
+                        finish();
+                        break;
+                }
+            } else {
+                finish();
+            }
         } else {
             finish();
         }
-
     }
 
     LoaderTask loaderTask;
@@ -123,10 +142,8 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
         if (loaderTask != null && loaderTask.getStatus() == AsyncTask.Status.RUNNING) {
             loaderTask.cancel(true);
         }
-
         loaderTask = new LoaderTask();
         loaderTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, redirectUri);
-
     }
 
     private void initData() {
@@ -139,22 +156,22 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
         authorName.setText(data.getAuthor());
         authorTitle.setText(data.getAuthorTitle());
         if (data.getAuthorID().equals(UserAPI.getUserID())) {
-            deleteButton.setIcon(net.nashlegend.sourcewall.R.drawable.dustbin);
+            deleteButton.setIcon(R.drawable.dustbin);
         } else {
-            deleteButton.setIcon(net.nashlegend.sourcewall.R.drawable.dustbin_outline);
+            deleteButton.setIcon(R.drawable.dustbin_outline);
         }
         if (data.isHasLiked()) {
             //TODO
-            thankButton.setIcon(net.nashlegend.sourcewall.R.drawable.heart);
+            thankButton.setIcon(R.drawable.heart);
         } else {
-            thankButton.setIcon(net.nashlegend.sourcewall.R.drawable.heart_outline);
+            thankButton.setIcon(R.drawable.heart_outline);
         }
         if (Config.shouldLoadImage()) {
             Picasso.with(this).load(data.getAuthorAvatarUrl())
-                    .resizeDimen(net.nashlegend.sourcewall.R.dimen.list_standard_comment_avatar_dimen, net.nashlegend.sourcewall.R.dimen.list_standard_comment_avatar_dimen)
+                    .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
                     .into(avatar);
         } else {
-            avatar.setImageResource(net.nashlegend.sourcewall.R.drawable.default_avatar);
+            avatar.setImageResource(R.drawable.default_avatar);
         }
         rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -199,7 +216,7 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(net.nashlegend.sourcewall.R.menu.menu_answer, menu);
+        getMenuInflater().inflate(R.menu.menu_answer, menu);
         return true;
     }
 
@@ -288,7 +305,7 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case net.nashlegend.sourcewall.R.id.text_title:
+            case R.id.text_title:
                 Intent intent = new Intent();
                 if (host instanceof Article) {
                     intent.setClass(this, ArticleActivity.class);
@@ -300,16 +317,16 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_in_right, 0);
                 break;
-            case net.nashlegend.sourcewall.R.id.layout_opinion:
+            case R.id.layout_opinion:
                 likeThis();
                 break;
-            case net.nashlegend.sourcewall.R.id.button_reply:
+            case R.id.button_reply:
                 replyThis();
                 break;
-            case net.nashlegend.sourcewall.R.id.button_Bury:
+            case R.id.button_Bury:
                 deleteThis();
                 break;
-            case net.nashlegend.sourcewall.R.id.button_thank:
+            case R.id.button_thank:
                 likeThis();
                 break;
         }
@@ -322,7 +339,7 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
             intent.putExtra(Consts.Extra_Simple_Comment, data);
         }
         startActivity(intent);
-        overridePendingTransition(net.nashlegend.sourcewall.R.anim.slide_in_right, 0);
+        overridePendingTransition(R.anim.slide_in_right, 0);
     }
 
     private void likeThis() {
@@ -359,10 +376,10 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
             ResultObject resultObject = new ResultObject();
             switch (hostSection) {
                 case SubItem.Section_Article:
-                    resultObject = ArticleAPI.deleteMyComment(data.getID());
+                    resultObject = ArticleAPI.getSingleCommentFromRedirectUrl(redirectUri.toString());
                     break;
                 case SubItem.Section_Post:
-                    resultObject = PostAPI.deleteMyComment(data.getID());
+                    resultObject = PostAPI.getSingleCommentFromRedirectUrl(redirectUri.toString());
                     break;
             }
             return resultObject;

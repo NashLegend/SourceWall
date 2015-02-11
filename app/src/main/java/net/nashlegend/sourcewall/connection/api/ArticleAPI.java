@@ -434,7 +434,7 @@ public class ArticleAPI extends APIBase {
      * @param reply_id 评论id
      * @return resultObject resultObject.result是UComment
      */
-    public static ResultObject getSingleCommentFromRedirectUrl(String reply_id, String article_id, String article_title) {
+    public static ResultObject getSingleCommentFromRedirectUrl(String reply_id) {
         ResultObject resultObject = new ResultObject();
 
         return resultObject;
