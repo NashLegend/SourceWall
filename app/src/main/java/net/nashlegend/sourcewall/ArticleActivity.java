@@ -20,6 +20,7 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import net.nashlegend.sourcewall.adapters.ArticleDetailAdapter;
 import net.nashlegend.sourcewall.commonview.LListView;
 import net.nashlegend.sourcewall.commonview.LoadingView;
+import net.nashlegend.sourcewall.connection.HttpFetcher;
 import net.nashlegend.sourcewall.connection.ResultObject;
 import net.nashlegend.sourcewall.connection.api.ArticleAPI;
 import net.nashlegend.sourcewall.connection.api.UserAPI;
@@ -299,6 +300,13 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
 
         @Override
         protected ResultObject doInBackground(Integer... params) {
+
+            try {
+                System.out.println(HttpFetcher.get("http://www.guokr.com/article/reply/2903740/").toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             offset = params[0];
             if (offset < 0) {
                 //同时取了热门回帖，但是在这里没有显示 TODO

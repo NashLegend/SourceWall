@@ -426,24 +426,52 @@ public class ArticleAPI extends APIBase {
     }
 
     /**
-     * 根据一条评论的id获取评论内容，主要应用于消息通知
-     * 无法取得此评论的文章的id和标题，无法取得楼层。
-     * 所以在取得之前最好就先把文章id和文章标题取到，
-     * //http://www.guokr.com/article/reply/123456/
+     * 获取一条article的简介，也就是除了正文之外的一切，这里只需要两个，id和title
+     *
+     * @param article_id article_id
+     * @return ResultObject
+     */
+    private ResultObject getArticleSimpleByID(String article_id) {
+        ResultObject resultObject = new ResultObject();
+        String url = "http://apis.guokr.com/minisite/article.json";
+        ArrayList<NameValuePair> pairs = new ArrayList<>();
+        pairs.add(new BasicNameValuePair("article_id", article_id));
+        try {
+            Article article = new Article();
+            String result = HttpFetcher.get(url, pairs).toString();
+            JSONObject articleObject = getUniversalJsonObject(result, resultObject);
+            String id = parseDate(getJsonString(articleObject, "id"));
+            String title = getJsonString(articleObject, "title");
+            article.setId(id);
+            article.setTitle(title);
+            resultObject.ok = true;
+            resultObject.result = article;
+        } catch (Exception e) {
+            handleRequestException(e, resultObject);
+        }
+        return resultObject;
+    }
+
+    /**
+     * 根据一条评论的地址获取所有内容，蛋疼的需要跳转
+     * http://www.guokr.com/article/reply/123456/
+     * 一次跳转后可获得article_id，但是仍然无法获得title
+     * 还需要另一个接口获取article的摘要。getArticleSimpleByID(article_id)
+     * 多次跳转真让人想死啊。TODO
      *
      * @param reply_id 评论id
      * @return resultObject resultObject.result是UComment
      */
     public static ResultObject getSingleCommentFromRedirectUrl(String reply_id) {
         ResultObject resultObject = new ResultObject();
-
+        //todo
         return resultObject;
     }
 
     /**
      * 根据一条评论的id获取评论内容，主要应用于消息通知
      * 无法取得此评论的文章的id和标题，无法取得楼层。
-     * 所以在取得之前最好就先把文章id和文章标题取到，
+     * 太蛋疼了，只能不显示文章标题或者提前传入
      *
      * @param reply_id 评论id
      * @return resultObject resultObject.result是UComment
@@ -456,27 +484,36 @@ public class ArticleAPI extends APIBase {
         ArrayList<NameValuePair> pairs = new ArrayList<>();
         pairs.add(new BasicNameValuePair("reply_id", reply_id));
         try {
+            UComment comment = new UComment();
+
             String result = HttpFetcher.get(url, pairs).toString();
             JSONObject replyObject = getUniversalJsonObject(result, resultObject);
             boolean hasLiked = getJsonBoolean(replyObject, "current_user_has_liked");
-            JSONObject authorObject = getJsonObject(replyObject, "author");
-            String author = getJsonString(authorObject, "nickname");
-            String authorTitle = getJsonString(authorObject, "title");
-            boolean is_exists = getJsonBoolean(authorObject, "is_exists");
-            JSONObject avatarObject = getJsonObject(authorObject, "avatar");
-            String avatarUrl = getJsonString(avatarObject, "large").replaceAll("\\?\\S*$", "");
             String date = parseDate(getJsonString(replyObject, "date_created"));
             int likeNum = getJsonInt(replyObject, "likings_count");
             String content = getJsonString(replyObject, "html");
-            UComment comment = new UComment();
-            comment.setHostID(article_id + "");
-            comment.setHostTitle(article_title + "");
-            comment.setHasLiked(hasLiked);
-            comment.setAuthor(author);
-            comment.setAuthorTitle(authorTitle);
-            comment.setAuthorExists(is_exists);
-            comment.setAuthorAvatarUrl(avatarUrl);
+            JSONObject authorObject = getJsonObject(replyObject, "author");
+            boolean is_exists = getJsonBoolean(authorObject, "is_exists");
+
+            if (is_exists) {
+                String author = getJsonString(authorObject, "nickname");
+                String authorID = getJsonString(authorObject, "url").replaceAll("\\D+", "");
+                String authorTitle = getJsonString(authorObject, "title");
+                JSONObject avatarObject = getJsonObject(authorObject, "avatar");
+                String avatarUrl = getJsonString(avatarObject, "large").replaceAll("\\?\\S*$", "");
+
+                comment.setAuthor(author);
+                comment.setAuthorTitle(authorTitle);
+                comment.setAuthorID(authorID);
+                comment.setAuthorAvatarUrl(avatarUrl);
+            } else {
+                comment.setAuthor("此用户不存在");
+            }
+
+            comment.setHostID(article_id);
+            comment.setHostTitle(article_title);
             comment.setDate(date);
+            comment.setHasLiked(hasLiked);
             comment.setLikeNum(likeNum);
             comment.setContent(content);
             comment.setID(reply_id);

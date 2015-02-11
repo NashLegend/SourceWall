@@ -258,10 +258,27 @@ public class HttpFetcher {
         @Override
         public URI getLocationURI(HttpResponse response, HttpContext context) throws ProtocolException {
             URI defaultURI = super.getLocationURI(response, context);
-            System.out.println(defaultURI.toString());
             return defaultURI;
         }
     };
+
+    /**
+     * 目前来说 仅仅用于http://www.guokr.com/article/reply/2903740/这样的article，好像没法用啊擦
+     *
+     * @param defaultURI
+     * @param response
+     * @param context
+     * @return
+     */
+    private static URI getProperRedirectRequest(URI defaultURI, HttpResponse response, HttpContext context) {
+        String article_reply_reg = "^http://(www|m).guokr.com/article/\\d+/#reply\\d+$";//http://www.guokr.com/article/439939/#reply290374
+        if (defaultURI.toString().matches(article_reply_reg)) {
+            context.setAttribute("http.request", new HttpGet("http://apis.guokr.com/minisite/article_reply/2903740.json"));
+            URI tmpURI = URI.create("http://apis.guokr.com/minisite/article_reply/2903740.json");
+            return tmpURI;
+        }
+        return defaultURI;
+    }
 
     /**
      * 判断是否执行默认的跳转
