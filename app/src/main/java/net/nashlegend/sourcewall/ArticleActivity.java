@@ -179,7 +179,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
             notifyNeedLog();
         } else {
             if (mediumListItemView.getData().isHasLiked()) {
-                ToastUtil.toastSingleton("已经赞过了");
+                ToastUtil.toastSingleton(getString(R.string.has_liked_this));
             } else {
                 LikeCommentTask likeCommentTask = new LikeCommentTask();
                 likeCommentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediumListItemView);

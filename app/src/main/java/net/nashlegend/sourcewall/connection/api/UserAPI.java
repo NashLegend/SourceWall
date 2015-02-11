@@ -1,23 +1,33 @@
 package net.nashlegend.sourcewall.connection.api;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
 import net.nashlegend.sourcewall.AppApplication;
+import net.nashlegend.sourcewall.ArticleActivity;
+import net.nashlegend.sourcewall.PostActivity;
+import net.nashlegend.sourcewall.QuestionActivity;
+import net.nashlegend.sourcewall.SingleReplyActivity;
 import net.nashlegend.sourcewall.connection.HttpFetcher;
 import net.nashlegend.sourcewall.connection.ResultObject;
 import net.nashlegend.sourcewall.db.AskTagHelper;
 import net.nashlegend.sourcewall.db.GroupHelper;
+import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.Basket;
 import net.nashlegend.sourcewall.model.Category;
 import net.nashlegend.sourcewall.model.Message;
 import net.nashlegend.sourcewall.model.Notice;
+import net.nashlegend.sourcewall.model.Post;
+import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.model.Reminder;
 import net.nashlegend.sourcewall.model.ReminderNoticeNum;
 import net.nashlegend.sourcewall.model.UserInfo;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.SharedUtil;
+import net.nashlegend.sourcewall.util.UrlCheckUtil;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -25,6 +35,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by NashLegend on 2014/11/25 0025
@@ -481,6 +492,81 @@ public class UserAPI extends APIBase {
             handleRequestException(e, resultObject);
         }
         return resultObject;
+    }
+
+    public static String parseNoticeUrl(String url) {
+        if (!TextUtils.isEmpty(url)) {
+            Uri uri = Uri.parse(url);
+            String host = uri.getHost();
+            List<String> segments = uri.getPathSegments();
+            if ((host.equals("www.guokr.com") || host.equals("m.guokr.com")) && (segments != null && segments.size() > 1)) {
+                String section = segments.get(0);
+                String secondSegment = segments.get(1);
+                String thirdSegment = "";
+                if (segments.size() == 3) {
+                    thirdSegment = segments.get(2);
+                }
+                Intent intent = new Intent();
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                switch (section) {
+                    case "article":
+                        //http://www.guokr.com/article/reply/123456/
+                        //http://www.guokr.com/article/654321/
+                        if (segments.size() == 2) {
+                            intent.setClass(AppApplication.getApplication(), ArticleActivity.class);
+                            Article article = new Article();
+                            article.setId(secondSegment);
+                            intent.putExtra(Consts.Extra_Article, article);
+                            AppApplication.getApplication().startActivity(intent);
+                        } else if (segments.size() == 3) {
+                            //跳转
+                            intent.setClass(AppApplication.getApplication(), SingleReplyActivity.class);
+                            intent.putExtra(Consts.Extra_Redirect_Uri, url);
+                            AppApplication.getApplication().startActivity(intent);
+                        }
+                        break;
+                    case "post":
+                        //http://www.guokr.com/post/123456/
+                        //http://www.guokr.com/post/reply/654321/
+                        if (segments.size() == 2) {
+                            intent.setClass(AppApplication.getApplication(), PostActivity.class);
+                            Post post = new Post();
+                            post.setId(secondSegment);
+                            intent.putExtra(Consts.Extra_Post, post);
+                            AppApplication.getApplication().startActivity(intent);
+                        } else if (segments.size() == 3) {
+                            //跳转
+                            intent.setClass(AppApplication.getApplication(), SingleReplyActivity.class);
+                            intent.putExtra(Consts.Extra_Redirect_Uri, url);
+                            AppApplication.getApplication().startActivity(intent);
+                        }
+
+                        break;
+                    case "question":
+                        //http://www.guokr.com/answer/654321/redirect/
+                        //http://www.guokr.com/question/123456
+                        if (segments.size() == 2) {
+                            intent.setClass(AppApplication.getApplication(), QuestionActivity.class);
+                            Question question = new Question();
+                            question.setId(secondSegment);
+                            intent.putExtra(Consts.Extra_Question, question);
+                            AppApplication.getApplication().startActivity(intent);
+                        } else if (segments.size() == 3) {
+                            //跳转
+                            intent.setClass(AppApplication.getApplication(), SingleReplyActivity.class);
+                            intent.putExtra(Consts.Extra_Redirect_Uri, url);
+                            AppApplication.getApplication().startActivity(intent);
+                        }
+                        break;
+                    default:
+                        UrlCheckUtil.openWithBrowser(uri);
+                        break;
+                }
+            } else {
+                UrlCheckUtil.openWithBrowser(uri);
+            }
+        }
+        return "";
     }
 
     /**

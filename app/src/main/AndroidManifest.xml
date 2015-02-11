@@ -77,6 +77,9 @@
             android:label="@string/title_activity_publish_post"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".SingleReplyActivity"
+            android:label="@string/title_activity_single_reply"></activity>
     </application>
 
 </manifest>

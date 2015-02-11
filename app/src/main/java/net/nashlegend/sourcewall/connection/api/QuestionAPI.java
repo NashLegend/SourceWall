@@ -313,6 +313,18 @@ public class QuestionAPI extends APIBase {
      * @param id 评论id
      * @return resultObject resultObject.result是UComment
      */
+    public static ResultObject getSingleAnswerFromRedirectUrl(String id) {
+        ResultObject resultObject = new ResultObject();
+        //http://www.guokr.com/answer/654321/redirect/
+        return resultObject;
+    }
+
+    /**
+     * 根据一条评论的id获取评论内容，主要应用于消息通知
+     *
+     * @param id 评论id
+     * @return resultObject resultObject.result是UComment
+     */
     public static ResultObject getSingleAnswerByID(String id) {
         ResultObject resultObject = new ResultObject();
         String url = "http://apis.guokr.com/ask/answer.json";

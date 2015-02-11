@@ -145,7 +145,7 @@
         fab:fab_expandDirection="left">
 
         <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/button_thank"
+            android:id="@+id/button_like"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             fab:fab_colorNormal="?attr/colorPrimaryBright"
@@ -153,7 +153,7 @@
             fab:fab_icon="@drawable/heart" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/button_Bury"
+            android:id="@+id/button_Delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="10dp"

@@ -22,6 +22,7 @@ public class Consts {
     public static final String Extra_SubItem = "sourcewall.extra.subitem.id";
     public static final String Extra_Should_Invalidate_Menu = "sourcewall.extra.should.invalidate.menu";
     public static final String Extra_Should_Load_Before_Shuffle = "sourcewall.extra.should.load.before.shuffle";
+    public static final String Extra_Redirect_Uri = "sourcewall.extra.redirect.url";//通知的跳转链接
 
     // 保存SharedPreferences的Key
     public static final String Key_Cookie = "sourcewall.key.cookie";

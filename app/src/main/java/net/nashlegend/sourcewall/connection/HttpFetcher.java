@@ -9,6 +9,7 @@ import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.NoHttpResponseException;
+import org.apache.http.ProtocolException;
 import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
@@ -19,6 +20,7 @@ import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnManagerParams;
 import org.apache.http.conn.params.ConnPerRouteBean;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.DefaultRedirectHandler;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.message.BasicNameValuePair;
@@ -34,6 +36,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -183,6 +186,7 @@ public class HttpFetcher {
             //多线程请求
             defaultHttpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(params, manager.getSchemeRegistry()), params);
             defaultHttpClient.setHttpRequestRetryHandler(requestRetryHandler);
+            defaultHttpClient.setRedirectHandler(redirectHandler);
 
             ConnManagerParams.setMaxTotalConnections(params, MAX_TOTAL_CONNECTIONS);
             ConnManagerParams.setTimeout(params, TIMEOUT);//发起链接超时
@@ -241,6 +245,37 @@ public class HttpFetcher {
     }
 
     /**
+     * 链接跳转处理
+     */
+    private static DefaultRedirectHandler redirectHandler = new DefaultRedirectHandler() {
+
+        @Override
+        public boolean isRedirectRequested(HttpResponse response, HttpContext context) {
+            boolean defaultRedirectFlag = super.isRedirectRequested(response, context);
+            return defaultRedirectFlag && shouldRedirect(response, context);
+        }
+
+        @Override
+        public URI getLocationURI(HttpResponse response, HttpContext context) throws ProtocolException {
+            URI defaultURI = super.getLocationURI(response, context);
+            System.out.println(defaultURI.toString());
+            return defaultURI;
+        }
+    };
+
+    /**
+     * 判断是否执行默认的跳转
+     *
+     * @param response response
+     * @param context  context
+     * @return 是否跳转，默认应该是true
+     */
+    private static boolean shouldRedirect(HttpResponse response, HttpContext context) {
+
+        return true;
+    }
+
+    /**
      * 重试处理
      */
     private static HttpRequestRetryHandler requestRetryHandler = new HttpRequestRetryHandler() {
@@ -276,8 +311,6 @@ public class HttpFetcher {
             while ((len = inputStream.read(buff)) != -1) {
                 fileOutputStream.write(buff, 0, len);
             }
-        } catch (IOException e) {
-            errorCatch = true;
         } catch (Exception e) {
             errorCatch = true;
         } finally {
@@ -290,15 +323,12 @@ public class HttpFetcher {
                 }
                 if (fileOutputStream != null) {
                     fileOutputStream.close();
-                    if (!errorCatch) {
-                        return true;
-                    }
                 }
             } catch (IOException e) {
-
+                errorCatch = true;
             }
         }
-        return false;
+        return !errorCatch;
     }
 
 }

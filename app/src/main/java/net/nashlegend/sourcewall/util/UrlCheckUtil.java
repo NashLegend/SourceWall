@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.provider.Browser;
 
+import net.nashlegend.sourcewall.AnswerActivity;
 import net.nashlegend.sourcewall.AppApplication;
 import net.nashlegend.sourcewall.ArticleActivity;
 import net.nashlegend.sourcewall.PostActivity;
 import net.nashlegend.sourcewall.QuestionActivity;
+import net.nashlegend.sourcewall.SingleReplyActivity;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.Question;
@@ -38,33 +40,65 @@ public class UrlCheckUtil {
         List<String> segments = uri.getPathSegments();
         if ((host.equals("www.guokr.com") || host.equals("m.guokr.com")) && (segments != null && segments.size() == 2)) {
             String section = segments.get(0);
-            String id = segments.get(1);
+            String secondSegment = segments.get(1);
+            String thirdSegment = "";
+            if (segments.size() == 3) {
+                thirdSegment = segments.get(2);
+            }
             Intent intent = new Intent();
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             switch (section) {
                 case "article":
-                    intent.setClass(AppApplication.getApplication(), ArticleActivity.class);
-                    Article article = new Article();
-                    article.setId(id);
-                    intent.putExtra(Consts.Extra_Article, article);
-                    AppApplication.getApplication().startActivity(intent);
+                    //http://www.guokr.com/article/reply/123456/
+                    //http://www.guokr.com/article/654321/
+                    if (segments.size() == 2) {
+                        intent.setClass(AppApplication.getApplication(), ArticleActivity.class);
+                        Article article = new Article();
+                        article.setId(secondSegment);
+                        intent.putExtra(Consts.Extra_Article, article);
+                        AppApplication.getApplication().startActivity(intent);
+                    } else if (segments.size() == 3) {
+                        //跳转
+                        intent.setClass(AppApplication.getApplication(), SingleReplyActivity.class);
+                        intent.setData(uri);
+                        AppApplication.getApplication().startActivity(intent);
+                    }
                     break;
                 case "post":
-                    intent.setClass(AppApplication.getApplication(), PostActivity.class);
-                    Post post = new Post();
-                    post.setId(id);
-                    intent.putExtra(Consts.Extra_Post, post);
-                    AppApplication.getApplication().startActivity(intent);
+                    //http://www.guokr.com/post/123456/
+                    //http://www.guokr.com/post/reply/654321/
+                    if (segments.size() == 2) {
+                        intent.setClass(AppApplication.getApplication(), PostActivity.class);
+                        Post post = new Post();
+                        post.setId(secondSegment);
+                        intent.putExtra(Consts.Extra_Post, post);
+                        AppApplication.getApplication().startActivity(intent);
+                    } else if (segments.size() == 3) {
+                        //跳转
+                        intent.setClass(AppApplication.getApplication(), SingleReplyActivity.class);
+                        intent.setData(uri);
+                        AppApplication.getApplication().startActivity(intent);
+                    }
                     break;
                 case "question":
-                    intent.setClass(AppApplication.getApplication(), QuestionActivity.class);
-                    Question question = new Question();
-                    question.setId(id);
-                    intent.putExtra(Consts.Extra_Question, question);
-                    AppApplication.getApplication().startActivity(intent);
+                    //http://www.guokr.com/answer/654321/redirect/
+                    //http://www.guokr.com/question/123456
+                    if (segments.size() == 2) {
+                        intent.setClass(AppApplication.getApplication(), QuestionActivity.class);
+                        Question question = new Question();
+                        question.setId(secondSegment);
+                        intent.putExtra(Consts.Extra_Question, question);
+                        AppApplication.getApplication().startActivity(intent);
+                    } else if (segments.size() == 3) {
+                        //跳转
+                        //这个应该是跳转到AnswerActivity
+                        intent.setClass(AppApplication.getApplication(), AnswerActivity.class);
+                        intent.setData(uri);
+                        AppApplication.getApplication().startActivity(intent);
+                    }
                     break;
                 default:
-                    openWithBrowser(uri);
+                    UrlCheckUtil.openWithBrowser(uri);
                     break;
             }
         } else {

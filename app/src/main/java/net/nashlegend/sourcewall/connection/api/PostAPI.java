@@ -585,6 +585,20 @@ public class PostAPI extends APIBase {
 
     /**
      * 根据一条评论的id获取评论内容，主要应用于消息通知
+     * 无法取得此评论的文章的id和标题，无法取得楼层。
+     * 所以在取得之前最好就先把文章id和文章标题取到，
+     *
+     * @param reply_id 评论id
+     * @return resultObject resultObject.result是UComment
+     */
+    public static ResultObject getSingleCommentFromRedirectUrl(String reply_id, String article_id, String article_title) {
+        ResultObject resultObject = new ResultObject();
+        //http://www.guokr.com/post/reply/654321/
+        return resultObject;
+    }
+
+    /**
+     * 根据一条评论的id获取评论内容，主要应用于消息通知
      *
      * @param id 评论id
      * @return resultObject resultObject.result是UComment

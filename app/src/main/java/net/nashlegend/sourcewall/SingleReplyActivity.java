@@ -3,8 +3,6 @@ package net.nashlegend.sourcewall;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -30,10 +28,14 @@ import net.nashlegend.sourcewall.commonview.LoadingView;
 import net.nashlegend.sourcewall.commonview.SScrollView;
 import net.nashlegend.sourcewall.commonview.WWebView;
 import net.nashlegend.sourcewall.connection.ResultObject;
-import net.nashlegend.sourcewall.connection.api.QuestionAPI;
+import net.nashlegend.sourcewall.connection.api.ArticleAPI;
+import net.nashlegend.sourcewall.connection.api.PostAPI;
 import net.nashlegend.sourcewall.connection.api.UserAPI;
-import net.nashlegend.sourcewall.model.Question;
-import net.nashlegend.sourcewall.model.QuestionAnswer;
+import net.nashlegend.sourcewall.model.AceModel;
+import net.nashlegend.sourcewall.model.Article;
+import net.nashlegend.sourcewall.model.Post;
+import net.nashlegend.sourcewall.model.SubItem;
+import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.StyleChecker;
@@ -41,7 +43,7 @@ import net.nashlegend.sourcewall.util.ToastUtil;
 
 import java.util.ArrayList;
 
-public class AnswerActivity extends SwipeActivity implements View.OnClickListener, LoadingView.ReloadListener {
+public class SingleReplyActivity extends SwipeActivity implements View.OnClickListener, LoadingView.ReloadListener {
 
     private View rootView;
     private View authorLayout;
@@ -52,28 +54,28 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
     private LinearLayout webHolder;
     private WWebView webView;
     private ImageView avatar;
-    private TextView questionText;
+    private TextView hostTitle;
     private TextView authorName;
     private TextView authorTitle;
     private TextView supportText;
     private View supportView;
-    private Question question;
-    private QuestionAnswer answer;
+    private AceModel host;
+    private UComment data;
     private Uri redirectUri;
     private LoadingView loadingView;
     private FloatingActionsMenu floatingActionsMenu;
     private FloatingActionButton replyButton;
-    private FloatingActionButton notAnButton;
+    private FloatingActionButton deleteButton;
     private FloatingActionButton thankButton;
     private Handler handler;
     private int topBarHeight;
     private int headerHeight;
-    private boolean fromHost;//是否由host页面跳转而来
+    private int hostSection = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(net.nashlegend.sourcewall.R.layout.activity_answer);
+        setContentView(R.layout.activity_single_reply);
         handler = new Handler();
         rootView = findViewById(net.nashlegend.sourcewall.R.id.rootView);
         toolbar = (Toolbar) findViewById(net.nashlegend.sourcewall.R.id.action_bar);
@@ -84,7 +86,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         footerHolder = findViewById(net.nashlegend.sourcewall.R.id.footerHolder);
         webHolder = (LinearLayout) findViewById(net.nashlegend.sourcewall.R.id.web_holder);
         webView = (WWebView) findViewById(net.nashlegend.sourcewall.R.id.web_content);
-        questionText = (TextView) findViewById(net.nashlegend.sourcewall.R.id.text_title);
+        hostTitle = (TextView) findViewById(net.nashlegend.sourcewall.R.id.text_title);
         avatar = (ImageView) findViewById(net.nashlegend.sourcewall.R.id.image_avatar);
         authorName = (TextView) findViewById(net.nashlegend.sourcewall.R.id.text_author);
         authorTitle = (TextView) findViewById(net.nashlegend.sourcewall.R.id.text_author_title);
@@ -94,33 +96,25 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         loadingView = (LoadingView) findViewById(R.id.answer_progress_loading);
 
         replyButton = (FloatingActionButton) findViewById(net.nashlegend.sourcewall.R.id.button_reply);
-        notAnButton = (FloatingActionButton) findViewById(net.nashlegend.sourcewall.R.id.button_Bury);
-        thankButton = (FloatingActionButton) findViewById(net.nashlegend.sourcewall.R.id.button_thank);
+        deleteButton = (FloatingActionButton) findViewById(net.nashlegend.sourcewall.R.id.button_Delete);
+        thankButton = (FloatingActionButton) findViewById(net.nashlegend.sourcewall.R.id.button_like);
 
-        questionText.setOnClickListener(this);
+        hostTitle.setOnClickListener(this);
         supportView.setOnClickListener(this);
         replyButton.setOnClickListener(this);
-        notAnButton.setOnClickListener(this);
+        deleteButton.setOnClickListener(this);
         thankButton.setOnClickListener(this);
         loadingView.setReloadListener(this);
 
-        if (getIntent().hasExtra(Consts.Extra_Answer)) {
-            fromHost = true;
-            loadingView.setVisibility(View.GONE);
-            answer = (QuestionAnswer) getIntent().getSerializableExtra(Consts.Extra_Answer);
-            question = (Question) getIntent().getSerializableExtra(Consts.Extra_Question);
-            initData();
+        //来自其他地方的跳转
+        redirectUri = getIntent().getData();
+        if (redirectUri != null) {
+            loadingView.setVisibility(View.VISIBLE);
+            loadDataByUri();
         } else {
-            //来自其他地方的跳转
-            fromHost = false;
-            redirectUri = getIntent().getData();
-            if (redirectUri != null) {
-                loadingView.setVisibility(View.VISIBLE);
-                loadDataByUri();
-            } else {
-                finish();
-            }
+            finish();
         }
+
     }
 
     LoaderTask loaderTask;
@@ -136,22 +130,27 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
     }
 
     private void initData() {
-        questionText.setText(question.getTitle());
-        supportText.setText(answer.getUpvoteNum() + "");
-        authorName.setText(answer.getAuthor());
-        authorTitle.setText(answer.getAuthorTitle());
-        if (answer.isHasBuried()) {
-            notAnButton.setIcon(net.nashlegend.sourcewall.R.drawable.dustbin);
-        } else {
-            notAnButton.setIcon(net.nashlegend.sourcewall.R.drawable.dustbin_outline);
+        if (host instanceof Post) {
+            hostTitle.setText(((Post) host).getTitle());
+        } else if (host instanceof Article) {
+            hostTitle.setText(((Article) host).getTitle());
         }
-        if (answer.isHasThanked()) {
+        supportText.setText(data.getLikeNum() + "");
+        authorName.setText(data.getAuthor());
+        authorTitle.setText(data.getAuthorTitle());
+        if (data.getAuthorID().equals(UserAPI.getUserID())) {
+            deleteButton.setIcon(net.nashlegend.sourcewall.R.drawable.dustbin);
+        } else {
+            deleteButton.setIcon(net.nashlegend.sourcewall.R.drawable.dustbin_outline);
+        }
+        if (data.isHasLiked()) {
+            //TODO
             thankButton.setIcon(net.nashlegend.sourcewall.R.drawable.heart);
         } else {
             thankButton.setIcon(net.nashlegend.sourcewall.R.drawable.heart_outline);
         }
         if (Config.shouldLoadImage()) {
-            Picasso.with(this).load(answer.getAuthorAvatarUrl())
+            Picasso.with(this).load(data.getAuthorAvatarUrl())
                     .resizeDimen(net.nashlegend.sourcewall.R.dimen.list_standard_comment_avatar_dimen, net.nashlegend.sourcewall.R.dimen.list_standard_comment_avatar_dimen)
                     .into(avatar);
         } else {
@@ -162,11 +161,11 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
             public void onGlobalLayout() {
                 if (authorLayout.getHeight() > 0) {
                     rootView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                    topBarHeight = toolbar.getHeight() + questionText.getHeight();
+                    topBarHeight = toolbar.getHeight() + hostTitle.getHeight();
                     headerHeight = topBarHeight + authorLayout.getHeight();
                     ViewGroup.LayoutParams params = headerHolder.getLayoutParams();
                     params.height = headerHeight;
-                    scrollView.applyAutoHide(AnswerActivity.this, topBarHeight, autoHideListener);
+                    scrollView.applyAutoHide(SingleReplyActivity.this, topBarHeight, autoHideListener);
                     loadHtml();
                 }
             }
@@ -191,7 +190,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
     }
 
     private void loadHtml() {
-        String html = StyleChecker.getAnswerHtml(answer.getContent());
+        String html = StyleChecker.getAnswerHtml(data.getContent());
         webView.setBackgroundColor(0);
         webView.getSettings().setDefaultTextEncodingName("UTF-8");
         webView.loadDataWithBaseURL(Consts.Base_Url, html, "text/html", "charset=UTF-8", null);
@@ -226,7 +225,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
             } else {
                 backAnimatorSet = new AnimatorSet();
                 ObjectAnimator toolBarAnimator = ObjectAnimator.ofFloat(toolbar, "translationY", toolbar.getTranslationY(), 0f);
-                ObjectAnimator titleAnimator = ObjectAnimator.ofFloat(questionText, "translationY", questionText.getTranslationY(), 0f);
+                ObjectAnimator titleAnimator = ObjectAnimator.ofFloat(hostTitle, "translationY", hostTitle.getTranslationY(), 0f);
                 ObjectAnimator authorAnimator = ObjectAnimator.ofFloat(authorLayout, "translationY", authorLayout.getTranslationY(), 0f);
                 ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(floatingActionsMenu, "translationY", floatingActionsMenu.getTranslationY(), 0f);
                 ArrayList<Animator> animators = new ArrayList<>();
@@ -271,7 +270,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
             if (hideAnimatorSet == null || !hideAnimatorSet.isRunning()) {
                 hideAnimatorSet = new AnimatorSet();
                 ObjectAnimator toolBarAnimator = ObjectAnimator.ofFloat(toolbar, "translationY", toolbar.getTranslationY(), -toolbar.getBottom());
-                ObjectAnimator titleAnimator = ObjectAnimator.ofFloat(questionText, "translationY", questionText.getTranslationY(), -questionText.getBottom());
+                ObjectAnimator titleAnimator = ObjectAnimator.ofFloat(hostTitle, "translationY", hostTitle.getTranslationY(), -hostTitle.getBottom());
                 ObjectAnimator authorAnimator = ObjectAnimator.ofFloat(authorLayout, "translationY", authorLayout.getTranslationY(), -authorLayout.getTop());
                 ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(floatingActionsMenu, "translationY", floatingActionsMenu.getTranslationY(), floatingActionsMenu.getHeight());
                 ArrayList<Animator> animators = new ArrayList<>();
@@ -290,81 +289,61 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case net.nashlegend.sourcewall.R.id.text_title:
-                if (fromHost) {
-                    finish();
-                } else {
-                    Intent intent = new Intent();
-                    intent.setClass(this, QuestionActivity.class);
-                    intent.putExtra(Consts.Extra_Question, (question));
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.slide_in_right, 0);
+                Intent intent = new Intent();
+                if (host instanceof Article) {
+                    intent.setClass(this, ArticleActivity.class);
+                    intent.putExtra(Consts.Extra_Article, host);
+                } else if (host instanceof Post) {
+                    intent.setClass(this, PostActivity.class);
+                    intent.putExtra(Consts.Extra_Post, host);
                 }
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_right, 0);
                 break;
             case net.nashlegend.sourcewall.R.id.layout_opinion:
-                invokeOpinionDialog();
+                likeThis();
                 break;
             case net.nashlegend.sourcewall.R.id.button_reply:
-                replyAnswer();
+                replyThis();
                 break;
             case net.nashlegend.sourcewall.R.id.button_Bury:
-                buryAnswer();
+                deleteThis();
                 break;
             case net.nashlegend.sourcewall.R.id.button_thank:
-                thankAnswer();
+                likeThis();
                 break;
         }
     }
 
-    private void replyAnswer() {
-        Intent intent = new Intent(this, SimpleReplyActivity.class);
-        intent.putExtra(Consts.Extra_Ace_Model, answer);
+    private void replyThis() {
+        Intent intent = new Intent(this, ReplyActivity.class);
+        intent.putExtra(Consts.Extra_Ace_Model, host);
+        if (data != null) {
+            intent.putExtra(Consts.Extra_Simple_Comment, data);
+        }
         startActivity(intent);
         overridePendingTransition(net.nashlegend.sourcewall.R.anim.slide_in_right, 0);
     }
 
-    private void invokeOpinionDialog() {
+    private void likeThis() {
         if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
         } else {
-            String[] operations = {getString(net.nashlegend.sourcewall.R.string.action_support), getString(net.nashlegend.sourcewall.R.string.action_oppose)};
-            new AlertDialog.Builder(this).setTitle("").setItems(operations, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Boolean support = which == 0;
-                    if (answer.isHasUpVoted() && support) {
-                        ToastUtil.toastSingleton(getString(R.string.has_supported));
-                        return;
-                    }
-                    if (answer.isHasDownVoted() && !support) {
-                        ToastUtil.toastSingleton(getString(R.string.has_opposed));
-                        return;
-                    }
-                    OpinionTask task = new OpinionTask();
-                    task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, support);
-                }
-            }).create().show();
-        }
-    }
-
-    private void buryAnswer() {
-        if (!UserAPI.isLoggedIn()) {
-            notifyNeedLog();
-        } else {
-            BuryTask task = new BuryTask();
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }
-    }
-
-    private void thankAnswer() {
-        if (!UserAPI.isLoggedIn()) {
-            notifyNeedLog();
-        } else {
-            if (answer.isHasThanked()) {
-                ToastUtil.toastSingleton("已经感谢过");
+            if (data.isHasLiked()) {
+                ToastUtil.toastSingleton(getString(R.string.has_liked_this));
             } else {
-                ThankTask task = new ThankTask();
+                LikeTask task = new LikeTask();
                 task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
+        }
+    }
+
+    private void deleteThis() {
+        if (!UserAPI.isLoggedIn()) {
+            notifyNeedLog();
+        } else {
+            DeleteTask task = new DeleteTask();
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
@@ -377,17 +356,36 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
 
         @Override
         protected ResultObject doInBackground(Uri... params) {
-            return new ResultObject();
+            ResultObject resultObject = new ResultObject();
+            switch (hostSection) {
+                case SubItem.Section_Article:
+                    resultObject = ArticleAPI.deleteMyComment(data.getID());
+                    break;
+                case SubItem.Section_Post:
+                    resultObject = PostAPI.deleteMyComment(data.getID());
+                    break;
+            }
+            return resultObject;
         }
 
         @Override
         protected void onPostExecute(ResultObject resultObject) {
             if (resultObject.ok) {
                 loadingView.onLoadSuccess();
-                answer = (QuestionAnswer) resultObject.result;
-                question = new Question();
-                question.setTitle(answer.getQuestion());
-                question.setId(answer.getQuestionID());
+                data = (UComment) resultObject.result;
+                if (hostSection == SubItem.Section_Article) {
+                    Article article = new Article();
+                    article.setTitle(data.getHostTitle());
+                    article.setId(data.getHostID());
+                    host = article;
+                } else if (hostSection == SubItem.Section_Post) {
+                    Post post = new Post();
+                    post.setTitle(data.getHostTitle());
+                    post.setId(data.getHostID());
+                    host = post;
+                } else {
+                    ToastUtil.toast("Something Happened");
+                }
                 initData();
             } else {
                 loadingView.onLoadFailed();
@@ -395,7 +393,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         }
     }
 
-    class OpinionTask extends AsyncTask<Boolean, Integer, ResultObject> {
+    class LikeTask extends AsyncTask<Void, Integer, ResultObject> {
 
         boolean isSupport;
 
@@ -405,87 +403,55 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         }
 
         @Override
-        protected ResultObject doInBackground(Boolean... params) {
-            isSupport = params[0];
-            if (isSupport) {
-                return QuestionAPI.supportAnswer(answer.getID());
+        protected ResultObject doInBackground(Void... params) {
+            ResultObject resultObject = new ResultObject();
+            switch (hostSection) {
+                case SubItem.Section_Article:
+                    resultObject = ArticleAPI.likeComment(data.getID());
+                    break;
+                case SubItem.Section_Post:
+                    resultObject = PostAPI.likeComment(data.getID());
+                    break;
             }
-            return QuestionAPI.opposeAnswer(answer.getID());
+            return resultObject;
         }
 
         @Override
         protected void onPostExecute(ResultObject resultObject) {
             if (resultObject.ok) {
-                answer.setUpvoteNum(answer.getUpvoteNum() + 1);
-                supportText.setText(answer.getUpvoteNum() + "");
-                answer.setHasDownVoted(!isSupport);
-                answer.setHasUpVoted(isSupport);
-                ToastUtil.toast((isSupport ? "赞同" : "反对") + "成功");
+                data.setHasLiked(true);
+                data.setLikeNum(data.getLikeNum() + 1);
+                supportText.setText(data.getLikeNum() + "");
+                ToastUtil.toast("点赞成功");
             } else {
-                ToastUtil.toast((isSupport ? "赞同" : "反对") + "未遂");
+                ToastUtil.toast("点赞未遂");
             }
         }
     }
 
-    class BuryTask extends AsyncTask<Boolean, Integer, ResultObject> {
-        boolean bury = true;
-
+    class DeleteTask extends AsyncTask<Boolean, Integer, ResultObject> {
         @Override
         protected ResultObject doInBackground(Boolean... params) {
-            bury = !answer.isHasBuried();
-            if (bury) {
-                return QuestionAPI.buryAnswer(answer.getID());
-            } else {
-                return QuestionAPI.unBuryAnswer(answer.getID());
+            ResultObject resultObject = new ResultObject();
+            switch (hostSection) {
+                case SubItem.Section_Article:
+                    resultObject = ArticleAPI.deleteMyComment(data.getID());
+                    break;
+                case SubItem.Section_Post:
+                    resultObject = PostAPI.deleteMyComment(data.getID());
+                    break;
             }
-
+            return resultObject;
         }
 
         @Override
         protected void onPostExecute(ResultObject resultObject) {
             if (resultObject.ok) {
-                if (bury) {
-                    ToastUtil.toast("已标记为\"不是答案\"");
-                    answer.setHasBuried(true);
-                    notAnButton.setIcon(net.nashlegend.sourcewall.R.drawable.dustbin);
-                } else {
-                    ToastUtil.toastSingleton("取消\"不是答案\"标记");
-                    answer.setHasBuried(false);
-                    notAnButton.setIcon(net.nashlegend.sourcewall.R.drawable.dustbin_outline);
-                }
+                finish();
             } else {
-                if (bury && resultObject.code == ResultObject.ResultCode.CODE_ALREADY_BURIED) {
-                    ToastUtil.toastSingleton("已经标记过了");
-                } else {
-                    ToastUtil.toastSingleton("操作失败");
-                }
+                ToastUtil.toastSingleton("操作失败");
             }
 
-        }
-    }
-
-    class ThankTask extends AsyncTask<String, Integer, ResultObject> {
-
-        @Override
-        protected ResultObject doInBackground(String... params) {
-            return QuestionAPI.thankAnswer(answer.getID());
-        }
-
-        @Override
-        protected void onPostExecute(ResultObject resultObject) {
-            if (resultObject.ok) {
-                ToastUtil.toast("感谢成功");
-                answer.setHasThanked(true);
-                thankButton.setIcon(net.nashlegend.sourcewall.R.drawable.heart);
-            } else {
-                if (resultObject.code == ResultObject.ResultCode.CODE_ALREADY_THANKED) {
-                    ToastUtil.toast("已经感谢过了");
-                    answer.setHasThanked(true);
-                    thankButton.setIcon(net.nashlegend.sourcewall.R.drawable.heart);
-                } else {
-                    ToastUtil.toast("感谢未遂");
-                }
-            }
         }
     }
 }
