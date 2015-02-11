@@ -345,6 +345,7 @@ public class APIBase {
     public static void handleRequestException(Exception e, ResultObject resultObject) {
         e.printStackTrace();
 
+        resultObject.ok = false;
         resultObject.error_message = e.getMessage();
         if (e instanceof IOException) {
             resultObject.code = ResultObject.ResultCode.CODE_NETWORK_ERROR;

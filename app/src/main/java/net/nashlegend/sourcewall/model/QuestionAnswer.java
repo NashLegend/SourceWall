@@ -15,8 +15,10 @@ public class QuestionAnswer extends AceModel {
     private String authorTitle = "";
     private String ID = "";
     private String questionID = "";
+    private String question = "";
     private int commentNum = 0;
     private int upvoteNum = 0;
+    private int downvoteNum = 0;
     private boolean hasUpVoted = false;
     private boolean hasDownVoted = false;
     private boolean hasBuried = false;
@@ -157,5 +159,21 @@ public class QuestionAnswer extends AceModel {
 
     public void setAuthorExists(boolean authorExists) {
         this.authorExists = authorExists;
+    }
+
+    public int getDownvoteNum() {
+        return downvoteNum;
+    }
+
+    public void setDownvoteNum(int downvoteNum) {
+        this.downvoteNum = downvoteNum;
+    }
+
+    public String getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(String question) {
+        this.question = question;
     }
 }

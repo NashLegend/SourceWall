@@ -295,11 +295,83 @@ public class QuestionAPI extends APIBase {
                     ans.setID(getJsonString(jo, "id"));
                     ans.setQuestionID(getJsonString(jo, "question_id"));
                     ans.setUpvoteNum(getJsonInt(jo, "supportings_count"));
+                    ans.setDownvoteNum(getJsonInt(jo, "opposings_count"));
                     answers.add(ans);
                 }
                 resultObject.ok = true;
                 resultObject.result = answers;
             }
+        } catch (Exception e) {
+            handleRequestException(e, resultObject);
+        }
+        return resultObject;
+    }
+
+    /**
+     * 根据一条评论的id获取评论内容，主要应用于消息通知
+     *
+     * @param id 评论id
+     * @return resultObject resultObject.result是UComment
+     */
+    public static ResultObject getSingleAnswerByID(String id) {
+        ResultObject resultObject = new ResultObject();
+        String url = "http://apis.guokr.com/ask/answer.json";
+        //url还有另一种形式，http://apis.guokr.com/ask/answer/999999.json
+        //这样后面就不必带answer_id参数了
+        ArrayList<NameValuePair> pairs = new ArrayList<>();
+        pairs.add(new BasicNameValuePair("answer_id", id));
+        try {
+            String result = HttpFetcher.get(url, pairs).toString();
+            JSONObject answerObject = getUniversalJsonObject(result, resultObject);
+            JSONObject questionObject = getJsonObject(answerObject, "question");
+            String hostTitle = getJsonString(questionObject, "question");
+            String hostID = getJsonString(questionObject, "id");
+
+            boolean current_user_has_supported = getJsonBoolean(answerObject, "current_user_has_supported");
+            boolean current_user_has_buried = getJsonBoolean(answerObject, "current_user_has_buried");
+            boolean current_user_has_thanked = getJsonBoolean(answerObject, "current_user_has_thanked");
+            boolean current_user_has_opposed = getJsonBoolean(answerObject, "current_user_has_opposed");
+
+            JSONObject authorObject = getJsonObject(answerObject, "author");
+            String author = getJsonString(authorObject, "nickname");
+            String authorTitle = getJsonString(authorObject, "title");
+            String authorID = getJsonString(authorObject, "url").replaceAll("\\D+", "");
+            boolean is_exists = getJsonBoolean(authorObject, "is_exists");
+            JSONObject avatarObject = getJsonObject(authorObject, "avatar");
+            String avatarUrl = getJsonString(avatarObject, "large").replaceAll("\\?\\S*$", "");
+
+            String date_created = parseDate(getJsonString(answerObject, "date_created"));
+            String date_modified = parseDate(getJsonString(answerObject, "date_modified"));
+            int replies_count = getJsonInt(answerObject, "replies_count");
+            int supportings_count = getJsonInt(answerObject, "supportings_count");
+            int opposings_count = getJsonInt(answerObject, "opposings_count");
+            String content = getJsonString(answerObject, "html");
+
+            QuestionAnswer answer = new QuestionAnswer();
+            answer.setAuthorExists(is_exists);
+            if (is_exists) {
+                answer.setAuthor(author);
+                answer.setAuthorTitle(authorTitle);
+                answer.setAuthorID(authorID);
+                answer.setAuthorAvatarUrl(avatarUrl);
+            } else {
+                answer.setAuthor("此用户不存在");
+            }
+            answer.setCommentNum(replies_count);
+            answer.setContent(content.replaceAll("<img .*?/>", prefix + "$0" + suffix).replaceAll("style=\"max-width: \\d+px\"", "style=\"max-width: " + maxImageWidth + "px\""));
+            answer.setDate_created(date_created);
+            answer.setDate_modified(date_modified);
+            answer.setHasDownVoted(current_user_has_opposed);
+            answer.setHasBuried(current_user_has_buried);
+            answer.setHasUpVoted(current_user_has_supported);
+            answer.setHasThanked(current_user_has_thanked);
+            answer.setID(id);
+            answer.setQuestionID(hostID);
+            answer.setQuestion(hostTitle);
+            answer.setUpvoteNum(supportings_count);
+            answer.setDownvoteNum(opposings_count);
+            resultObject.ok = true;
+            resultObject.result = answer;
         } catch (Exception e) {
             handleRequestException(e, resultObject);
         }

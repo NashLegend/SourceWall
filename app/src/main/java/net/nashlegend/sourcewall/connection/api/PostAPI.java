@@ -584,6 +584,57 @@ public class PostAPI extends APIBase {
     }
 
     /**
+     * 根据一条评论的id获取评论内容，主要应用于消息通知
+     *
+     * @param id 评论id
+     * @return resultObject resultObject.result是UComment
+     */
+    public static ResultObject getSingleCommentByID(String id) {
+        ResultObject resultObject = new ResultObject();
+        String url = "http://www.guokr.com/apis/group/post_reply.json";
+        //url还有另一种形式，http://www.guokr.com/apis/group/post_reply/99999999.json
+        //这样后面就不必带reply_id参数了
+        ArrayList<NameValuePair> pairs = new ArrayList<>();
+        pairs.add(new BasicNameValuePair("reply_id", id));
+        try {
+            String result = HttpFetcher.get(url, pairs).toString();
+            JSONObject replyObject = getUniversalJsonObject(result, resultObject);
+            JSONObject postObject = getJsonObject(replyObject, "post");
+            String hostTitle = getJsonString(postObject, "title");
+            String hostID = getJsonString(postObject, "id");
+            boolean hasLiked = getJsonBoolean(replyObject, "current_user_has_liked");
+            String floor = getJsonString(replyObject, "level");
+            JSONObject authorObject = getJsonObject(replyObject, "author");
+            String author = getJsonString(authorObject, "nickname");
+            String authorTitle = getJsonString(authorObject, "title");
+            boolean is_exists = getJsonBoolean(authorObject, "is_exists");
+            JSONObject avatarObject = getJsonObject(authorObject, "avatar");
+            String avatarUrl = getJsonString(avatarObject, "large").replaceAll("\\?\\S*$", "");
+            String date = parseDate(getJsonString(replyObject, "date_created"));
+            int likeNum = getJsonInt(replyObject, "likings_count");
+            String content = getJsonString(replyObject, "html");
+            UComment comment = new UComment();
+            comment.setHostTitle(hostTitle);
+            comment.setHostID(hostID);
+            comment.setHasLiked(hasLiked);
+            comment.setFloor(floor + "楼");
+            comment.setAuthor(author);
+            comment.setAuthorTitle(authorTitle);
+            comment.setAuthorExists(is_exists);
+            comment.setAuthorAvatarUrl(avatarUrl);
+            comment.setDate(date);
+            comment.setLikeNum(likeNum);
+            comment.setContent(content);
+            comment.setID(id);
+            resultObject.ok = true;
+            resultObject.result = comment;
+        } catch (Exception e) {
+            handleRequestException(e, resultObject);
+        }
+        return resultObject;
+    }
+
+    /**
      * 删除我的评论
      *
      * @param id 评论id

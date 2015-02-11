@@ -6,7 +6,6 @@ package net.nashlegend.sourcewall.model;
 public class UComment extends AceModel {
 
     private String content = "";
-    //    private CharSequence simpleHtml = "";
     private String date = "";
     private String author = "";
     private boolean authorExists = true;
@@ -16,8 +15,8 @@ public class UComment extends AceModel {
     private String authorID = "";
     private String ID = "";
     private String hostID = "";
+    private String hostTitle = "";
     private int likeNum = 0;
-    private boolean isContentComplex = false;
 
     private boolean hasLiked = false;
 
@@ -28,14 +27,6 @@ public class UComment extends AceModel {
     public void setContent(String content) {
         this.content = content;
     }
-
-//    public CharSequence getSimpleHtml() {
-//        return simpleHtml;
-//    }
-//
-//    public void setSimpleHtml(CharSequence simpleHtml) {
-//        this.simpleHtml = simpleHtml;
-//    }
 
     public String getDate() {
         return date;
@@ -117,19 +108,19 @@ public class UComment extends AceModel {
         this.hasLiked = hasLiked;
     }
 
-    public boolean isContentComplex() {
-        return isContentComplex;
-    }
-
-    public void setContentComplex(boolean isContentComplex) {
-        this.isContentComplex = isContentComplex;
-    }
-
     public boolean isAuthorExists() {
         return authorExists;
     }
 
     public void setAuthorExists(boolean authorExists) {
         this.authorExists = authorExists;
+    }
+
+    public String getHostTitle() {
+        return hostTitle;
+    }
+
+    public void setHostTitle(String hostTitle) {
+        this.hostTitle = hostTitle;
     }
 }
