@@ -131,7 +131,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         }
 
         loaderTask = new LoaderTask();
-        loaderTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, redirectUri);
+        loaderTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     }
 
@@ -377,7 +377,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
 
         @Override
         protected ResultObject doInBackground(Uri... params) {
-            return new ResultObject();
+            return QuestionAPI.getSingleAnswerFromRedirectUrl(redirectUri.toString());
         }
 
         @Override

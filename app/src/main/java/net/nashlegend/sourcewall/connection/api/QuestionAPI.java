@@ -310,13 +310,12 @@ public class QuestionAPI extends APIBase {
     /**
      * 根据一条评论的id获取评论内容，主要应用于消息通知
      *
-     * @param id 评论id
+     * @param url 评论id
      * @return resultObject resultObject.result是UComment
      */
-    public static ResultObject getSingleAnswerFromRedirectUrl(String id) {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject getSingleAnswerFromRedirectUrl(String url) {
         //http://www.guokr.com/answer/654321/redirect/
-        return resultObject;
+        return getSingleAnswerByID(url.replaceAll("\\D+", ""));
     }
 
     /**

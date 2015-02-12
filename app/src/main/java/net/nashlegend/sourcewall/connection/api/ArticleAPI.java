@@ -16,6 +16,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ArticleAPI extends APIBase {
 
@@ -431,7 +433,7 @@ public class ArticleAPI extends APIBase {
      * @param article_id article_id
      * @return ResultObject
      */
-    private ResultObject getArticleSimpleByID(String article_id) {
+    private static ResultObject getArticleSimpleByID(String article_id) {
         ResultObject resultObject = new ResultObject();
         String url = "http://apis.guokr.com/minisite/article.json";
         ArrayList<NameValuePair> pairs = new ArrayList<>();
@@ -439,13 +441,17 @@ public class ArticleAPI extends APIBase {
         try {
             Article article = new Article();
             String result = HttpFetcher.get(url, pairs).toString();
-            JSONObject articleObject = getUniversalJsonObject(result, resultObject);
-            String id = parseDate(getJsonString(articleObject, "id"));
-            String title = getJsonString(articleObject, "title");
-            article.setId(id);
-            article.setTitle(title);
-            resultObject.ok = true;
-            resultObject.result = article;
+            JSONArray articlesArray = getUniversalJsonArray(result, resultObject);
+            if (articlesArray.length() == 1) {
+                JSONObject articleObject = articlesArray.getJSONObject(0);
+                String id = getJsonString(articleObject, "id");
+                String title = getJsonString(articleObject, "title");
+                article.setId(id);
+                article.setTitle(title);
+                resultObject.ok = true;
+                resultObject.result = article;
+            }
+
         } catch (Exception e) {
             handleRequestException(e, resultObject);
         }
@@ -459,12 +465,40 @@ public class ArticleAPI extends APIBase {
      * 还需要另一个接口获取article的摘要。getArticleSimpleByID(article_id)
      * 多次跳转真让人想死啊。TODO
      *
-     * @param reply_id 评论id
+     * @param reply_url 评论地址
      * @return resultObject resultObject.result是UComment
      */
-    public static ResultObject getSingleCommentFromRedirectUrl(String reply_id) {
+    public static ResultObject getSingleCommentFromRedirectUrl(String reply_url) {
         ResultObject resultObject = new ResultObject();
         //todo
+        String article_id;
+        String reply_id;
+        try {
+            reply_id = reply_url.replaceAll("\\D+", "");
+            ResultObject httpResult = HttpFetcher.get(reply_url);
+            String replyRedirectResult = httpResult.toString();
+            Document document = Jsoup.parse(replyRedirectResult);
+            Elements elements = document.getElementsByTag("a");
+            if (elements.size() == 1) {
+                String title = elements.get(0).text();//
+                String titleReg = "^/article/(\\d+)/#reply(\\d+)$";
+                if (title.matches(title)) {
+                    Pattern pattern = Pattern.compile(titleReg);
+                    Matcher matcher = pattern.matcher(title);
+                    if (matcher.find()) {
+                        article_id = matcher.group(1);
+                        ResultObject articleResult = getArticleSimpleByID(article_id);
+                        if (articleResult.ok) {
+                            Article article = (Article) articleResult.result;
+                            return getSingleCommentByID(reply_id, article.getId(), article.getTitle());
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return resultObject;
     }
 

@@ -590,10 +590,8 @@ public class PostAPI extends APIBase {
      * @return resultObject resultObject.result是UComment
      */
     public static ResultObject getSingleCommentFromRedirectUrl(String url) {
-        ResultObject resultObject = new ResultObject();
         //url sample：http://www.guokr.com/post/reply/654321/
-        String id = url.replaceAll("\\D+", "");
-        return getSingleCommentByID(id);
+        return getSingleCommentByID(url.replaceAll("\\D+", ""));
     }
 
     /**

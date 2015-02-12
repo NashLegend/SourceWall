@@ -6,6 +6,7 @@ import net.nashlegend.sourcewall.connection.api.UserAPI;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpEntityEnclosingRequest;
+import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.NoHttpResponseException;
@@ -16,11 +17,13 @@ import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnManagerParams;
 import org.apache.http.conn.params.ConnPerRouteBean;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.DefaultRedirectHandler;
+import org.apache.http.impl.client.RequestWrapper;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.message.BasicNameValuePair;
@@ -252,30 +255,31 @@ public class HttpFetcher {
         @Override
         public boolean isRedirectRequested(HttpResponse response, HttpContext context) {
             boolean defaultRedirectFlag = super.isRedirectRequested(response, context);
+
             return defaultRedirectFlag && shouldRedirect(response, context);
         }
 
         @Override
         public URI getLocationURI(HttpResponse response, HttpContext context) throws ProtocolException {
             URI defaultURI = super.getLocationURI(response, context);
+            System.out.println(defaultURI.toString());
             return defaultURI;
         }
     };
 
     /**
-     * 目前来说 仅仅用于http://www.guokr.com/article/reply/2903740/这样的article，好像没法用啊擦
+     * 接管302跳转
      *
-     * @param defaultURI
-     * @param response
-     * @param context
-     * @return
+     * @param defaultURI defaultURI
+     * @param response   response
+     * @param context    context
+     * @return URI
      */
     private static URI getProperRedirectRequest(URI defaultURI, HttpResponse response, HttpContext context) {
         String article_reply_reg = "^http://(www|m).guokr.com/article/\\d+/#reply\\d+$";//http://www.guokr.com/article/439939/#reply290374
         if (defaultURI.toString().matches(article_reply_reg)) {
             context.setAttribute("http.request", new HttpGet("http://apis.guokr.com/minisite/article_reply/2903740.json"));
-            URI tmpURI = URI.create("http://apis.guokr.com/minisite/article_reply/2903740.json");
-            return tmpURI;
+            return URI.create("http://apis.guokr.com/minisite/article_reply/2903740.json");
         }
         return defaultURI;
     }
@@ -288,7 +292,22 @@ public class HttpFetcher {
      * @return 是否跳转，默认应该是true
      */
     private static boolean shouldRedirect(HttpResponse response, HttpContext context) {
-
+        try {
+            RequestWrapper wrapper = (RequestWrapper) context.getAttribute("http.request");
+            HttpRequest request = wrapper.getOriginal();
+            if (request instanceof HttpRequestBase) {
+                String url = ((HttpRequestBase) request).getURI().toString();
+                String article_reply_reg = "^http://(www|m).guokr.com/article/reply/\\d+/$";//http://www.guokr.com/article/reply/2903740/
+                String publish_post_reg = "";
+                if (url.matches(article_reply_reg)) {
+                    return false;
+                } else if (url.matches(publish_post_reg)) {
+                    return true;//TODO
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return true;
     }
 
