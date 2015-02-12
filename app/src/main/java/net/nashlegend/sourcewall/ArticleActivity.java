@@ -299,9 +299,6 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
 
         @Override
         protected ResultObject doInBackground(Integer... params) {
-
-            ArticleAPI.getSingleCommentFromRedirectUrl("http://www.guokr.com/article/reply/2903740/");
-
             offset = params[0];
             if (offset < 0) {
                 //同时取了热门回帖，但是在这里没有显示 TODO

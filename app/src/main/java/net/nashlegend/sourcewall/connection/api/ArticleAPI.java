@@ -480,20 +480,16 @@ public class ArticleAPI extends APIBase {
             Document document = Jsoup.parse(replyRedirectResult);
             Elements elements = document.getElementsByTag("a");
             if (elements.size() == 1) {
-                String title = elements.get(0).text();//
-                String titleReg = "^/article/(\\d+)/#reply(\\d+)$";
-                if (title.matches(title)) {
-                    Pattern pattern = Pattern.compile(titleReg);
-                    Matcher matcher = pattern.matcher(title);
-                    if (matcher.find()) {
-                        article_id = matcher.group(1);
-                        ResultObject articleResult = getArticleSimpleByID(article_id);
-                        if (articleResult.ok) {
-                            Article article = (Article) articleResult.result;
-                            return getSingleCommentByID(reply_id, article.getId(), article.getTitle());
-                        }
+                Matcher matcher = Pattern.compile("^/article/(\\d+)/#reply(\\d+)$").matcher(elements.get(0).text());
+                if (matcher.find()) {
+                    article_id = matcher.group(1);
+                    ResultObject articleResult = getArticleSimpleByID(article_id);
+                    if (articleResult.ok) {
+                        Article article = (Article) articleResult.result;
+                        return getSingleCommentByID(reply_id, article.getId(), article.getTitle());
                     }
                 }
+
             }
         } catch (Exception e) {
             e.printStackTrace();
