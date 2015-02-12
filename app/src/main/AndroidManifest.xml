@@ -79,7 +79,10 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".SingleReplyActivity"
-            android:label="@string/title_activity_single_reply"></activity>
+            android:label="@string/title_activity_single_reply" />
+        <activity
+            android:name=".MessageCenterActivity"
+            android:label="@string/title_activity_message_center"></activity>
     </application>
 
 </manifest>

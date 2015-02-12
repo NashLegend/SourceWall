@@ -154,5 +154,8 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="has_liked_this">已经赞过了</string>
+    <string name="title_activity_message_center">消息中心</string>
+    <string name="no_notice">没有通知</string>
+    <string name="no_more_notice">没有更多的通知了</string>
 
 </resources>

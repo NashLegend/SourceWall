@@ -117,8 +117,9 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
     }
 
     @Override
-    public void takeOverMenuInflate(MenuInflater inflater, Menu menu) {
+    public boolean takeOverMenuInflate(MenuInflater inflater, Menu menu) {
         inflater.inflate(getFragmentMenu(), menu);
+        return true;
     }
 
     @Override

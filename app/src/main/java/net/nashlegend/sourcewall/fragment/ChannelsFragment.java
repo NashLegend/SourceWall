@@ -23,7 +23,7 @@ public abstract class ChannelsFragment extends BaseFragment {
      * @param inflater
      * @param menu
      */
-    abstract public void takeOverMenuInflate(MenuInflater inflater, Menu menu);
+    abstract public boolean takeOverMenuInflate(MenuInflater inflater, Menu menu);
 
     abstract public boolean takeOverOptionsItemSelect(MenuItem item);
 

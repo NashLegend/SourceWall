@@ -427,7 +427,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
     }
 
     @Override
-    public void takeOverMenuInflate(MenuInflater inflater, Menu menu) {
+    public boolean takeOverMenuInflate(MenuInflater inflater, Menu menu) {
         inflater.inflate(getFragmentMenu(), menu);
         if (!UserAPI.isLoggedIn()) {
             menu.findItem(R.id.action_more_sections).setVisible(false);
@@ -445,6 +445,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
                 }
             });
         }
+        return true;
     }
 
     @Override

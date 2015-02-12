@@ -439,7 +439,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     private boolean isMoreSectionsButtonShowing;
 
     @Override
-    public void takeOverMenuInflate(MenuInflater inflater, Menu menu) {
+    public boolean takeOverMenuInflate(MenuInflater inflater, Menu menu) {
         inflater.inflate(getFragmentMenu(), menu);
         if (subItem.getType() == SubItem.Type_Collections || subItem.getType() == SubItem.Type_Private_Channel) {
             menu.findItem(R.id.action_write_post).setVisible(false);
@@ -460,6 +460,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                 }
             });
         }
+        return true;
     }
 
     @Override
