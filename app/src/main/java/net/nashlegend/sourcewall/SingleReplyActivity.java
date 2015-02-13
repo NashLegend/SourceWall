@@ -325,7 +325,7 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
             case R.id.button_reply:
                 replyThis();
                 break;
-            case R.id.button_Bury:
+            case R.id.button_Delete:
                 deleteThis();
                 break;
             case R.id.button_thank:
@@ -392,6 +392,11 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
             if (resultObject.ok) {
                 loadingView.onLoadSuccess();
                 data = (UComment) resultObject.result;
+                if (UserAPI.getUserID().equals(data.getAuthorID())) {
+                    deleteButton.setVisibility(View.VISIBLE);
+                } else {
+                    deleteButton.setVisibility(View.GONE);
+                }
                 if (hostSection == SubItem.Section_Article) {
                     Article article = new Article();
                     article.setTitle(data.getHostTitle());

@@ -90,6 +90,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
     private boolean loginState = false;
     private String userKey = "";
     private boolean isFirstLoad = true;
+    ImageView noticeView;
 
     public NavigationDrawerFragment() {
 
@@ -132,6 +133,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
 
         avatarView = (ImageView) layoutView.findViewById(R.id.image_avatar);
         userName = (TextView) layoutView.findViewById(R.id.text_name);
+        noticeView = (ImageView) layoutView.findViewById(R.id.image_notice);
         settingView.setOnClickListener(this);
         userView.setOnClickListener(this);
         dayView.setOnClickListener(this);
@@ -429,7 +431,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
         if (loginState) {
             loadMessages();
         } else {
-            // TODO 清除信息标记
+            noticeView.setVisibility(View.GONE);
         }
     }
 
@@ -518,10 +520,12 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
             if (resultObject.ok) {
                 ReminderNoticeNum num = (ReminderNoticeNum) resultObject.result;
                 if (num.getNotice_num() > 0) {
-                    //TODO 有新信息
+                    noticeView.setVisibility(View.VISIBLE);
                 } else {
-                    // TODO 清除信息标记
+                    noticeView.setVisibility(View.GONE);
                 }
+            } else {
+                noticeView.setVisibility(View.GONE);
             }
         }
     }

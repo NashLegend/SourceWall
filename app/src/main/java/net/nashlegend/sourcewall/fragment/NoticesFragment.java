@@ -110,6 +110,9 @@ public class NoticesFragment extends BaseFragment implements LListView.OnRefresh
             if (resultObject.ok) {
                 loadingView.onLoadSuccess();
                 ArrayList<Notice> ars = (ArrayList<Notice>) resultObject.result;
+                if (ars.size() == 0) {
+                    ToastUtil.toast(R.string.no_notice);
+                }
                 adapter.setList(ars);
                 adapter.notifyDataSetInvalidated();
             } else {

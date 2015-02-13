@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?attr/color_webview_background"
+        android:paddingTop="10dp"
         android:paddingLeft="@dimen/list_standard_item_padding_horizontal"
         android:paddingRight="@dimen/list_standard_item_padding_horizontal">
 
@@ -131,7 +132,6 @@
             android:background="@android:color/darker_gray" />
     </LinearLayout>
 
-
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/layout_operation"
         android:layout_width="wrap_content"
@@ -145,14 +145,6 @@
         fab:fab_expandDirection="left">
 
         <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/button_like"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            fab:fab_colorNormal="?attr/colorPrimaryBright"
-            fab:fab_colorPressed="?attr/colorPrimaryDark"
-            fab:fab_icon="@drawable/heart" />
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/button_Delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -160,6 +152,14 @@
             fab:fab_colorNormal="?attr/colorPrimaryBright"
             fab:fab_colorPressed="?attr/colorPrimaryDark"
             fab:fab_icon="@drawable/dustbin" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/button_like"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_colorNormal="?attr/colorPrimaryBright"
+            fab:fab_colorPressed="?attr/colorPrimaryDark"
+            fab:fab_icon="@drawable/heart" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/button_reply"
