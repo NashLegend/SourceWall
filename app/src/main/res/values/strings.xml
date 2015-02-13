@@ -116,7 +116,7 @@
     <string name="mode_always_load">始终加载</string>
     <string name="mode_never_load">从不加载</string>
     <string name="mode_load_load_when_wifi">仅在wifi下加载图片</string>
-    <string name="ok_to_logout">确定退出登录？</string>
+    <string name="ok_to_logout">是否确定退出登录，退出将清除当前用户所有数据</string>
     <string name="ok_to_load_groups">尚未加载我关注的小组，是否开始加载？</string>
     <string name="ok_to_load_tags">尚未加载我关注的标签，是否开始加载？</string>
     <string name="use_default_groups">使用默认小组</string>
