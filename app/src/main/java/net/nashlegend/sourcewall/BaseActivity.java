@@ -55,7 +55,6 @@ public abstract class BaseActivity extends ActionBarActivity implements IStacked
         for (int i = 0; i < stackedTasks.size(); i++) {
             AAsyncTask task = stackedTasks.get(i);
             if (task != null && task.getStatus() == AAsyncTask.Status.RUNNING) {
-                System.out.println("cancel");
                 task.cancel(true);
             }
         }

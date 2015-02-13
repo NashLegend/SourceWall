@@ -262,7 +262,6 @@ public class HttpFetcher {
         @Override
         public URI getLocationURI(HttpResponse response, HttpContext context) throws ProtocolException {
             URI defaultURI = super.getLocationURI(response, context);
-            System.out.println(defaultURI.toString());
             return defaultURI;
         }
     };
