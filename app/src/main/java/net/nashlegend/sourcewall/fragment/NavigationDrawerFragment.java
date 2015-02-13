@@ -36,6 +36,7 @@ import net.nashlegend.sourcewall.connection.ResultObject;
 import net.nashlegend.sourcewall.connection.api.UserAPI;
 import net.nashlegend.sourcewall.db.AskTagHelper;
 import net.nashlegend.sourcewall.db.GroupHelper;
+import net.nashlegend.sourcewall.model.ReminderNoticeNum;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.model.UserInfo;
 import net.nashlegend.sourcewall.util.ChannelHelper;
@@ -425,6 +426,11 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
         }
         loginState = UserAPI.isLoggedIn();
         userKey = SharedUtil.readString(Consts.Key_Ukey, "");
+        if (loginState) {
+            loadMessages();
+        } else {
+            // TODO 清除信息标记
+        }
     }
 
     /**
@@ -487,6 +493,36 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Consts.Code_Login && resultCode == Activity.RESULT_OK) {
             loadUserInfo();
+        }
+    }
+
+    MessageTask messageTask;
+
+    private void loadMessages() {
+        if (messageTask != null && messageTask.getStatus() == AsyncTask.Status.RUNNING) {
+            messageTask.cancel(false);
+        }
+        messageTask = new MessageTask();
+        messageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    class MessageTask extends AsyncTask<Void, Integer, ResultObject> {
+
+        @Override
+        protected ResultObject doInBackground(Void... params) {
+            return UserAPI.getReminderAndNoticeNum();
+        }
+
+        @Override
+        protected void onPostExecute(ResultObject resultObject) {
+            if (resultObject.ok) {
+                ReminderNoticeNum num = (ReminderNoticeNum) resultObject.result;
+                if (num.getNotice_num() > 0) {
+                    //TODO 有新信息
+                } else {
+                    // TODO 清除信息标记
+                }
+            }
         }
     }
 

@@ -101,7 +101,7 @@ public class UserAPI extends APIBase {
         String ukey = getUkey();
         //先判断有没有token，没有就是未登录，有的话检测一下是否过期
         if (!TextUtils.isEmpty(ukey) && ukey.length() == 6 && !TextUtils.isEmpty(token) && token.length() == 64) {
-            resultObject = getNum();
+            resultObject = getReminderAndNoticeNum();
         } else {
             clearMyInfo();
             resultObject.code = ResultObject.ResultCode.CODE_NO_TOKEN;
@@ -112,9 +112,9 @@ public class UserAPI extends APIBase {
     /**
      * 获取通知和站内信数量
      *
-     * @return
+     * @return ResultObject.result是ReminderNoticeNum
      */
-    public static ResultObject getNum() {
+    public static ResultObject getReminderAndNoticeNum() {
         ResultObject resultObject = new ResultObject();
         try {
             String url = "http://www.guokr.com/apis/community/rn_num.json";
