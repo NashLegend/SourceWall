@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -376,14 +377,26 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
         @Override
         protected ResultObject doInBackground(Uri... params) {
             ResultObject resultObject = new ResultObject();
-            switch (hostSection) {
-                case SubItem.Section_Article:
-                    resultObject = ArticleAPI.getSingleCommentByNoticeID(notice_id);
-                    break;
-                case SubItem.Section_Post:
-                    resultObject = PostAPI.getSingleCommentByNoticeID(notice_id);
-                    break;
+            if (TextUtils.isEmpty(notice_id)) {
+                switch (hostSection) {
+                    case SubItem.Section_Article:
+                        resultObject = ArticleAPI.getSingleCommentFromRedirectUrl(redirectUri.toString());
+                        break;
+                    case SubItem.Section_Post:
+                        resultObject = PostAPI.getSingleCommentFromRedirectUrl(redirectUri.toString());
+                        break;
+                }
+            } else {
+                switch (hostSection) {
+                    case SubItem.Section_Article:
+                        resultObject = ArticleAPI.getSingleCommentByNoticeID(notice_id);
+                        break;
+                    case SubItem.Section_Post:
+                        resultObject = PostAPI.getSingleCommentByNoticeID(notice_id);
+                        break;
+                }
             }
+
             return resultObject;
         }
 

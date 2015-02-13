@@ -486,7 +486,7 @@ public class ArticleAPI extends APIBase {
             Document document = Jsoup.parse(replyRedirectResult);
             Elements elements = document.getElementsByTag("a");
             if (elements.size() == 1) {
-                Matcher matcher = Pattern.compile("^/article/(\\d+)/#reply(\\d+)$").matcher(elements.get(0).text());
+                Matcher matcher = Pattern.compile("^/article/(\\d+)/.*#reply(\\d+)$").matcher(elements.get(0).text());
                 if (matcher.find()) {
                     article_id = matcher.group(1);
                     reply_id = matcher.group(2);
@@ -525,7 +525,7 @@ public class ArticleAPI extends APIBase {
             Document document = Jsoup.parse(replyRedirectResult);
             Elements elements = document.getElementsByTag("a");
             if (elements.size() == 1) {
-                Matcher matcher = Pattern.compile("^/article/(\\d+)/#reply(\\d+)$").matcher(elements.get(0).text());
+                Matcher matcher = Pattern.compile("^/article/(\\d+)/.*#reply(\\d+)$").matcher(elements.get(0).text());
                 if (matcher.find()) {
                     article_id = matcher.group(1);
                     ResultObject articleResult = getArticleSimpleByID(article_id);

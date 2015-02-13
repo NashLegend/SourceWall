@@ -608,7 +608,7 @@ public class PostAPI extends APIBase {
             if (elements.size() == 1) {
                 ///post/662450/?page=2#6150472
                 ///post/662632/#6148664
-                Matcher matcher = Pattern.compile("^/post/(\\d+)/.?#(\\d+)$").matcher(elements.get(0).text());
+                Matcher matcher = Pattern.compile("^/post/(\\d+)/.*#(\\d+)$").matcher(elements.get(0).text());
                 if (matcher.find()) {
                     reply_id = matcher.group(2);
                     return getSingleCommentByID(reply_id);
@@ -827,7 +827,7 @@ public class PostAPI extends APIBase {
         try {
             Document doc = Jsoup.parse(res);
             String href = doc.getElementsByTag("a").attr("href");
-            return href.matches("/post/\\d+/");
+            return href.matches("/post/\\d+[/]?");
         } catch (Exception e) {
             return false;
         }

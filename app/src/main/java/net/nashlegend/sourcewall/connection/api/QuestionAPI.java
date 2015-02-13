@@ -844,7 +844,7 @@ public class QuestionAPI extends APIBase {
         try {
             Document doc = Jsoup.parse(res);
             String href = doc.getElementsByTag("a").attr("href");
-            return href.matches("/question/\\d+/");
+            return href.matches("/question/\\d+[/]?");
         } catch (Exception e) {
             return false;
         }

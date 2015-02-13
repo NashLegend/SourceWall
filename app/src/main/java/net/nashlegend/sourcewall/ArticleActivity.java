@@ -199,7 +199,6 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
     }
 
     private void copyComment(UComment comment) {
-        //do nothing
         ClipboardManager manager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
         manager.setPrimaryClip(ClipData.newPlainText(null, RegUtil.html2PlainText(comment.getContent())));
     }

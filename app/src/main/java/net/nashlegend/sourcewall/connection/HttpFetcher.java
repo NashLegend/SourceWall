@@ -275,7 +275,7 @@ public class HttpFetcher {
      * @return URI
      */
     private static URI getProperRedirectRequest(URI defaultURI, HttpResponse response, HttpContext context) {
-        String article_reply_reg = "^http://(www|m).guokr.com/article/\\d+/#reply\\d+$";//http://www.guokr.com/article/439939/#reply290374
+        String article_reply_reg = "^http://(www|m).guokr.com/article/\\d+/.+reply\\d+$";//http://www.guokr.com/article/439939/#reply290374
         if (defaultURI.toString().matches(article_reply_reg)) {
             context.setAttribute("http.request", new HttpGet("http://apis.guokr.com/minisite/article_reply/2903740.json"));
             return URI.create("http://apis.guokr.com/minisite/article_reply/2903740.json");
@@ -296,9 +296,9 @@ public class HttpFetcher {
             HttpRequest request = wrapper.getOriginal();
             if (request instanceof HttpRequestBase) {
                 String url = ((HttpRequestBase) request).getURI().toString();
-                String article_reply_reg = "^http://(www|m).guokr.com/article/reply/\\d+/$";//http://www.guokr.com/article/reply/2903740/
-                String post_reply_reg = "^http://(www|m).guokr.com/post/reply/\\d+/$";//http://www.guokr.com/post/reply/6148664/
-                String question_answer_reg = "^http://(www|m).guokr.com/answer/\\d+/redirect/$";//http://www.guokr.com/answer/778164/redirect/
+                String article_reply_reg = "^http://(www|m).guokr.com/article/reply/\\d+[/]?$";//http://www.guokr.com/article/reply/2903740/
+                String post_reply_reg = "^http://(www|m).guokr.com/post/reply/\\d+[/]?$";//http://www.guokr.com/post/reply/6148664/
+                String question_answer_reg = "^http://(www|m).guokr.com/answer/\\d+/redirect[/]?$";//http://www.guokr.com/answer/778164/redirect/
                 //问题貌似有点独立，第一次请求会要走一遍sso，所以就不在这里搞了
                 String publish_post_reg = "";//TODO，发贴302
                 if (url.matches(article_reply_reg)) {
