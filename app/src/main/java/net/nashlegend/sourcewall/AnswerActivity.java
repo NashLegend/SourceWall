@@ -60,6 +60,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
     private Question question;
     private QuestionAnswer answer;
     private Uri redirectUri;
+    private String notice_id;
     private LoadingView loadingView;
     private FloatingActionsMenu floatingActionsMenu;
     private FloatingActionButton replyButton;
@@ -114,6 +115,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
             //来自其他地方的跳转
             fromHost = false;
             redirectUri = getIntent().getData();
+            notice_id = getIntent().getStringExtra(Consts.Extra_Notice_Id);
             if (redirectUri != null) {
                 loadingView.setVisibility(View.VISIBLE);
                 loadDataByUri();
@@ -377,6 +379,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
 
         @Override
         protected ResultObject doInBackground(Uri... params) {
+            UserAPI.ignoreOneNotice(notice_id);
             return QuestionAPI.getSingleAnswerFromRedirectUrl(redirectUri.toString());
         }
 

@@ -150,7 +150,7 @@
     <string name="hint_click_to_add_image_to_editor">上传完成，点击左下角按钮添加到编辑器~</string>
     <string name="uploading">上传中</string>
     <string name="user_handle_login_message">获取Token失败\n\n  (ノ=Д=)ノ┻━┻ \n\n 很有可能已经取得登录所需信息，请点击确定按钮继续，如果页面出现了错误信息或者本提示出现两次以上，请点击取消按钮或返回键退出登录页，然后再重试~</string>
-    <string name="title_activity_single_reply">SingleReplyActivity</string>
+    <string name="title_activity_single_reply">回复</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="has_liked_this">已经赞过了</string>

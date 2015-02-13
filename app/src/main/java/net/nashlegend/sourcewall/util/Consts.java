@@ -23,6 +23,7 @@ public class Consts {
     public static final String Extra_Should_Invalidate_Menu = "sourcewall.extra.should.invalidate.menu";
     public static final String Extra_Should_Load_Before_Shuffle = "sourcewall.extra.should.load.before.shuffle";
     public static final String Extra_Redirect_Uri = "sourcewall.extra.redirect.url";//通知的跳转链接
+    public static final String Extra_Notice_Id = "sourcewall.extra.notice.id";//通知id
 
     // 保存SharedPreferences的Key
     public static final String Key_Cookie = "sourcewall.key.cookie";
@@ -60,6 +61,7 @@ public class Consts {
     public static final int Code_Start_Shuffle_Ask_Tags = 1029;
     public static final int Code_Invoke_Image_Selector = 1030;
     public static final int Code_Invoke_Camera = 1031;
+    public static final int Code_Message_Center = 1032;
 
     // 登录页保存Cookie
     public static final String LOGIN_URL = "https://account.guokr.com/sign_in/?display=mobile";

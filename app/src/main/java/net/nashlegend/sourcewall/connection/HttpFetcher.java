@@ -298,11 +298,14 @@ public class HttpFetcher {
             if (request instanceof HttpRequestBase) {
                 String url = ((HttpRequestBase) request).getURI().toString();
                 String article_reply_reg = "^http://(www|m).guokr.com/article/reply/\\d+/$";//http://www.guokr.com/article/reply/2903740/
-                String publish_post_reg = "";
+                String post_reply_reg = "^http://(www|m).guokr.com/post/reply/\\d+/$";//http://www.guokr.com/post/reply/6148664/
+                String question_answer_reg = "^http://(www|m).guokr.com/answer/\\d+/redirect/$";//http://www.guokr.com/answer/778164/redirect/
+                //问题貌似有点独立，第一次请求会要走一遍sso，所以就不在这里搞了
+                String publish_post_reg = "";//TODO，发贴302
                 if (url.matches(article_reply_reg)) {
                     return false;
-                } else if (url.matches(publish_post_reg)) {
-                    return true;//TODO
+                } else if (url.matches(post_reply_reg)) {
+                    return false;
                 }
             }
         } catch (Exception e) {

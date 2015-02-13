@@ -63,6 +63,7 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
     private AceModel host;
     private UComment data;
     private Uri redirectUri;
+    private String notice_id;
     private LoadingView loadingView;
     private FloatingActionsMenu floatingActionsMenu;
     private FloatingActionButton replyButton;
@@ -109,6 +110,7 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
 
         //来自其他地方的跳转
         redirectUri = getIntent().getData();
+        notice_id = getIntent().getStringExtra(Consts.Extra_Notice_Id);
         if (redirectUri != null) {
             List<String> segments = redirectUri.getPathSegments();
             String hostString = redirectUri.getHost();
@@ -376,10 +378,10 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
             ResultObject resultObject = new ResultObject();
             switch (hostSection) {
                 case SubItem.Section_Article:
-                    resultObject = ArticleAPI.getSingleCommentFromRedirectUrl(redirectUri.toString());
+                    resultObject = ArticleAPI.getSingleCommentByNoticeID(notice_id);
                     break;
                 case SubItem.Section_Post:
-                    resultObject = PostAPI.getSingleCommentFromRedirectUrl(redirectUri.toString());
+                    resultObject = PostAPI.getSingleCommentByNoticeID(notice_id);
                     break;
             }
             return resultObject;

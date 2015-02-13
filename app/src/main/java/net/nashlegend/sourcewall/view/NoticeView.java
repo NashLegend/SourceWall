@@ -13,8 +13,6 @@ import net.nashlegend.sourcewall.adapters.NoticeAdapter;
 import net.nashlegend.sourcewall.connection.ResultObject;
 import net.nashlegend.sourcewall.connection.api.UserAPI;
 import net.nashlegend.sourcewall.model.Notice;
-import net.nashlegend.sourcewall.util.Consts;
-import net.nashlegend.sourcewall.util.SharedUtil;
 
 /**
  * Created by NashLegend on 2015/2/12 0012
@@ -42,12 +40,6 @@ public class NoticeView extends AceView<Notice> implements View.OnClickListener 
     }
 
     private void initViews() {
-        if (SharedUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
-            setBackgroundColor(getContext().getResources().getColor(R.color.page_background_night));
-        } else {
-            setBackgroundColor(getContext().getResources().getColor(R.color.page_background));
-        }
-
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_notice_view, this);
         noticeText = (TextView) findViewById(R.id.text_notice);

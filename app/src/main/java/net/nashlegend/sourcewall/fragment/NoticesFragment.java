@@ -46,18 +46,23 @@ public class NoticesFragment extends BaseFragment implements LListView.OnRefresh
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 if (view instanceof NoticeView) {
                     //这里要做两个请求，但是可以直接请求notice地址，让系统主动删除请求 TODO
-                    UrlCheckUtil.redirectRequest(((NoticeView) view).getData().getUrl());
-                    ignoreNotice(((NoticeView) view).getData());
+                    Notice notice = ((NoticeView) view).getData();
+                    UrlCheckUtil.redirectRequest(notice.getUrl(), notice.getId());
                 }
             }
         });
-        loadData();
         return view;
     }
 
     @Override
     public void onCreateViewAgain(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // do nothing
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadData();
     }
 
     private void loadData() {
@@ -93,11 +98,6 @@ public class NoticesFragment extends BaseFragment implements LListView.OnRefresh
         loadData();
     }
 
-    private void ignoreNotice(Notice data) {
-        IgnoreTask ignoreTask = new IgnoreTask();
-        ignoreTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, data);
-    }
-
     class LoaderTask extends AsyncTask<Integer, Integer, ResultObject> {
 
         @Override
@@ -110,38 +110,14 @@ public class NoticesFragment extends BaseFragment implements LListView.OnRefresh
             if (resultObject.ok) {
                 loadingView.onLoadSuccess();
                 ArrayList<Notice> ars = (ArrayList<Notice>) resultObject.result;
-                if (ars.size() > 0) {
-                    adapter.setList(ars);
-                    adapter.notifyDataSetInvalidated();
-                } else {
-                    ToastUtil.toast(R.string.no_notice);
-                }
+                adapter.setList(ars);
+                adapter.notifyDataSetInvalidated();
             } else {
                 loadingView.onLoadFailed();
                 ToastUtil.toast(R.string.load_failed);
             }
             listView.setCanPullToRefresh(true);
             listView.doneOperation();
-        }
-    }
-
-    class IgnoreTask extends AsyncTask<Notice, Integer, ResultObject> {
-
-        Notice notice;
-
-        @Override
-        protected ResultObject doInBackground(Notice... params) {
-            notice = params[0];
-            return UserAPI.ignoreOneNotice(notice.getId());
-        }
-
-        @Override
-        protected void onPostExecute(ResultObject resultObject) {
-            if (resultObject.ok) {
-                if (adapter.getList().remove(notice)) {
-                    adapter.notifyDataSetChanged();
-                }
-            }
         }
     }
 }

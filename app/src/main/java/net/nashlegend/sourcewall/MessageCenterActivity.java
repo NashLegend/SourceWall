@@ -1,14 +1,13 @@
 package net.nashlegend.sourcewall;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import net.nashlegend.sourcewall.fragment.NoticesFragment;
 
-public class MessageCenterActivity extends ActionBarActivity {
+public class MessageCenterActivity extends SwipeActivity {
 
     NoticesFragment noticesFragment;
 
@@ -22,7 +21,6 @@ public class MessageCenterActivity extends ActionBarActivity {
         getSupportFragmentManager().beginTransaction().add(R.id.message_container, noticesFragment).commit();
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_message_center, menu);
@@ -31,16 +29,6 @@ public class MessageCenterActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 }

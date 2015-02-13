@@ -212,17 +212,19 @@ public class UserAPI extends APIBase {
     /**
      * 忽略一条通知消息，返回的是剩余的通知详情列表
      *
-     * @return ResultObject
+     * @return ResultObject resultObject.result是剩余的NoticeList
      */
     public static ResultObject ignoreOneNotice(String noticeID) {
         ResultObject resultObject = new ResultObject();
         try {
             String url = "http://www.guokr.com/apis/community/notice_ignore.json";
             ArrayList<NameValuePair> pairs = new ArrayList<>();
-            pairs.add(new BasicNameValuePair("nid", System.currentTimeMillis() + ""));
+            pairs.add(new BasicNameValuePair("nid", noticeID));
+            pairs.add(new BasicNameValuePair("_", System.currentTimeMillis() + ""));
             String result = HttpFetcher.put(url, pairs).toString();
-            JSONArray notices = getUniversalJsonArray(result, resultObject);
-            if (notices != null) {
+            JSONObject nObject = getUniversalJsonObject(result, resultObject);
+            if (nObject != null) {
+                JSONArray notices = getJsonArray(nObject, "list");
                 ArrayList<Notice> noticeList = new ArrayList<>();
                 for (int i = 0; i < notices.length(); i++) {
                     JSONObject noticeObject = notices.getJSONObject(i);

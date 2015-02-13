@@ -36,9 +36,27 @@ public class UrlCheckUtil {
      * @param uri 要检查的链接
      */
     public static void redirectRequest(Uri uri) {
+        redirectRequest(uri, null);
+    }
+
+    /**
+     * 是否拦截打开的链接
+     *
+     * @param url 要检查的链接
+     */
+    public static void redirectRequest(String url, String notice_id) {
+        redirectRequest(Uri.parse(url), notice_id);
+    }
+
+    /**
+     * 是否拦截打开的链接
+     *
+     * @param uri 要检查的链接
+     */
+    public static void redirectRequest(Uri uri, String notice_id) {
         String host = uri.getHost();
         List<String> segments = uri.getPathSegments();
-        if ((host.equals("www.guokr.com") || host.equals("m.guokr.com")) && (segments != null && segments.size() == 2)) {
+        if ((host.equals("www.guokr.com") || host.equals("m.guokr.com")) && (segments != null && segments.size() >= 2)) {
             String section = segments.get(0);
             String secondSegment = segments.get(1);
             String thirdSegment = "";
@@ -47,6 +65,7 @@ public class UrlCheckUtil {
             }
             Intent intent = new Intent();
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra(Consts.Extra_Notice_Id, notice_id);
             switch (section) {
                 case "article":
                     //http://www.guokr.com/article/reply/123456/
@@ -81,7 +100,6 @@ public class UrlCheckUtil {
                     }
                     break;
                 case "question":
-                    //http://www.guokr.com/answer/654321/redirect/
                     //http://www.guokr.com/question/123456
                     if (segments.size() == 2) {
                         intent.setClass(AppApplication.getApplication(), QuestionActivity.class);
@@ -89,7 +107,10 @@ public class UrlCheckUtil {
                         question.setId(secondSegment);
                         intent.putExtra(Consts.Extra_Question, question);
                         AppApplication.getApplication().startActivity(intent);
-                    } else if (segments.size() == 3) {
+                    }
+                case "answer":
+                    //http://www.guokr.com/answer/654321/redirect/
+                    if (segments.size() == 3) {
                         //跳转
                         //这个应该是跳转到AnswerActivity
                         intent.setClass(AppApplication.getApplication(), AnswerActivity.class);

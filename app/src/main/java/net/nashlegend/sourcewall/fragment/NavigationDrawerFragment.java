@@ -28,6 +28,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import net.nashlegend.sourcewall.LoginActivity;
+import net.nashlegend.sourcewall.MessageCenterActivity;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.SettingActivity;
 import net.nashlegend.sourcewall.adapters.ChannelsAdapter;
@@ -305,6 +306,9 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
             if (TextUtils.isEmpty(nameString)) {
                 loadUserInfo();
             }
+            Intent intent = new Intent(getActivity(), MessageCenterActivity.class);
+            startActivityForResult(intent, Consts.Code_Message_Center);
+            getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
         }
     }
 

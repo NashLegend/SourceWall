@@ -40,4 +40,25 @@ public class NoticeAdapter extends AceAdapter<Notice> {
         ((NoticeView) convertView).setData(list.get(position));
         return convertView;
     }
+
+    public boolean removeItemByID(String id) {
+        if (list.size() > 0) {
+            if (id != null) {
+                for (int i = list.size() - 1; i >= 0; i--) {
+                    if (id.equals(list.get(i).getId())) {
+                        list.remove(i);
+                        return true;
+                    }
+                }
+            } else {
+                for (int i = list.size() - 1; i >= 0; i--) {
+                    if (list.get(i).getId() == null) {
+                        list.remove(i);
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
 }

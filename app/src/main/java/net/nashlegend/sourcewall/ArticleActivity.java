@@ -43,6 +43,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
     private Article article;
     private LoaderTask task;
     private LoadingView loadingView;
+    private String notice_id;
 
     public ArticleActivity() {
         onItemClickListener = new AdapterView.OnItemClickListener() {
@@ -62,6 +63,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         Toolbar toolbar = (Toolbar) findViewById(net.nashlegend.sourcewall.R.id.action_bar);
         setSupportActionBar(toolbar);
         article = (Article) getIntent().getSerializableExtra(Consts.Extra_Article);
+        notice_id = getIntent().getStringExtra(Consts.Extra_Notice_Id);
         if (!TextUtils.isEmpty(article.getSubjectName())) {
             setTitle(article.getSubjectName() + " -- 科学人");
         }
@@ -299,6 +301,10 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
 
         @Override
         protected ResultObject doInBackground(Integer... params) {
+            if (!TextUtils.isEmpty(notice_id)) {
+                UserAPI.ignoreOneNotice(notice_id);
+                notice_id = null;
+            }
             offset = params[0];
             if (offset < 0) {
                 //同时取了热门回帖，但是在这里没有显示 TODO

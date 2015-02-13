@@ -1,5 +1,7 @@
 package net.nashlegend.sourcewall.connection.api;
 
+import android.text.TextUtils;
+
 import net.nashlegend.sourcewall.connection.HttpFetcher;
 import net.nashlegend.sourcewall.connection.ResultObject;
 import net.nashlegend.sourcewall.model.AceModel;
@@ -459,11 +461,54 @@ public class ArticleAPI extends APIBase {
     }
 
     /**
+     * 根据一条通知的id获取所有内容，蛋疼的需要跳转。
+     * 先是：http://www.guokr.com/user/notice/8738252/
+     * 跳到：http://www.guokr.com/article/reply/123456/
+     * 这就走到了类似getSingleCommentFromRedirectUrl这一步
+     * 两次跳转后可获得article_id，但是仍然无法获得title
+     * 还需要另一个接口获取article的摘要。getArticleSimpleByID(article_id)
+     *
+     * @param notice_id 通知id
+     * @return resultObject resultObject.result是UComment
+     */
+    public static ResultObject getSingleCommentByNoticeID(String notice_id) {
+        ResultObject resultObject = new ResultObject();
+        //todo
+        String article_id;
+        String reply_id;
+        if (TextUtils.isEmpty(notice_id)) {
+            return resultObject;
+        }
+        String notice_url = "http://www.guokr.com/user/notice/" + notice_id + "/";
+        try {
+            ResultObject httpResult = HttpFetcher.get(notice_url);
+            String replyRedirectResult = httpResult.toString();
+            Document document = Jsoup.parse(replyRedirectResult);
+            Elements elements = document.getElementsByTag("a");
+            if (elements.size() == 1) {
+                Matcher matcher = Pattern.compile("^/article/(\\d+)/#reply(\\d+)$").matcher(elements.get(0).text());
+                if (matcher.find()) {
+                    article_id = matcher.group(1);
+                    reply_id = matcher.group(2);
+                    ResultObject articleResult = getArticleSimpleByID(article_id);
+                    if (articleResult.ok) {
+                        Article article = (Article) articleResult.result;
+                        return getSingleCommentByID(reply_id, article.getId(), article.getTitle());
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resultObject;
+    }
+
+    /**
      * 根据一条评论的地址获取所有内容，蛋疼的需要跳转
      * http://www.guokr.com/article/reply/123456/
      * 一次跳转后可获得article_id，但是仍然无法获得title
      * 还需要另一个接口获取article的摘要。getArticleSimpleByID(article_id)
-     * 多次跳转真让人想死啊。TODO
+     * 多次跳转真让人想死啊。
      *
      * @param reply_url 评论地址
      * @return resultObject resultObject.result是UComment

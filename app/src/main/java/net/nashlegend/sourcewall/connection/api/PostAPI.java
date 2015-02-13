@@ -22,6 +22,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class PostAPI extends APIBase {
 
@@ -579,6 +581,41 @@ public class PostAPI extends APIBase {
             }
         } catch (Exception e) {
             handleRequestException(e, resultObject);
+        }
+        return resultObject;
+    }
+
+    /**
+     * 根据一条通知的id获取所有内容
+     * 先是：http://www.guokr.com/user/notice/8738252/
+     * 跳到：http://www.guokr.com/post/reply/654321/
+     *
+     * @param notice_id 通知id
+     * @return resultObject resultObject.result是UComment
+     */
+    public static ResultObject getSingleCommentByNoticeID(String notice_id) {
+        ResultObject resultObject = new ResultObject();
+        String reply_id;
+        if (TextUtils.isEmpty(notice_id)) {
+            return resultObject;
+        }
+        String notice_url = "http://www.guokr.com/user/notice/" + notice_id + "/";
+        try {
+            ResultObject httpResult = HttpFetcher.get(notice_url);
+            String replyRedirectResult = httpResult.toString();
+            Document document = Jsoup.parse(replyRedirectResult);
+            Elements elements = document.getElementsByTag("a");
+            if (elements.size() == 1) {
+                ///post/662450/?page=2#6150472
+                ///post/662632/#6148664
+                Matcher matcher = Pattern.compile("^/post/(\\d+)/.?#(\\d+)$").matcher(elements.get(0).text());
+                if (matcher.find()) {
+                    reply_id = matcher.group(2);
+                    return getSingleCommentByID(reply_id);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return resultObject;
     }

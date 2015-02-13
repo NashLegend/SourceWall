@@ -42,6 +42,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
     private LoaderTask task;
     private LoadingView loadingView;
     private AdapterView.OnItemClickListener onItemClickListener;
+    private String notice_id;
 
     public PostActivity() {
         onItemClickListener = new AdapterView.OnItemClickListener() {
@@ -61,6 +62,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         Toolbar toolbar = (Toolbar) findViewById(net.nashlegend.sourcewall.R.id.action_bar);
         setSupportActionBar(toolbar);
         post = (Post) getIntent().getSerializableExtra(Consts.Extra_Post);
+        notice_id = getIntent().getStringExtra(Consts.Extra_Notice_Id);
         if (!TextUtils.isEmpty(post.getGroupName())) {
             setTitle(post.getGroupName() + " -- 小组");
         }
@@ -164,6 +166,10 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
 
         @Override
         protected ResultObject doInBackground(Integer... params) {
+            if (!TextUtils.isEmpty(notice_id)) {
+                UserAPI.ignoreOneNotice(notice_id);
+                notice_id = null;
+            }
             offset = params[0];
             if (offset < 0) {
                 return PostAPI.getPostFirstPage(post);

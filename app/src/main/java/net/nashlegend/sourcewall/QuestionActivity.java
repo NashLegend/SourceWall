@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,6 +39,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
     private Question question;
     private LoaderTask task;
     private LoadingView loadingView;
+    private String notice_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         Toolbar toolbar = (Toolbar) findViewById(net.nashlegend.sourcewall.R.id.action_bar);
         setSupportActionBar(toolbar);
         question = (Question) getIntent().getSerializableExtra(Consts.Extra_Question);
+        notice_id = getIntent().getStringExtra(Consts.Extra_Notice_Id);
         listView = (LListView) findViewById(net.nashlegend.sourcewall.R.id.list_detail);
         adapter = new QuestionDetailAdapter(this);
         listView.setAdapter(adapter);
@@ -197,6 +200,10 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
 
         @Override
         protected ResultObject doInBackground(Integer... params) {
+            if (!TextUtils.isEmpty(notice_id)) {
+                UserAPI.ignoreOneNotice(notice_id);
+                notice_id = null;
+            }
             offset = params[0];
             if (offset < 0) {
                 return QuestionAPI.getQuestionFirstPage(question);
