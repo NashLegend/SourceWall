@@ -33,20 +33,21 @@ public class SettingActivity extends SwipeActivity implements View.OnClickListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(net.nashlegend.sourcewall.R.layout.activity_setting);
-        Toolbar toolbar = (Toolbar) findViewById(net.nashlegend.sourcewall.R.id.action_bar);
+        setContentView(R.layout.activity_setting);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
-        View imageModeView = findViewById(net.nashlegend.sourcewall.R.id.layout_image_mode);
-        View customTailView = findViewById(net.nashlegend.sourcewall.R.id.layout_custom_tail);
-        View logInOutView = findViewById(net.nashlegend.sourcewall.R.id.layout_log_in_out);
-        imageText = (TextView) findViewById(net.nashlegend.sourcewall.R.id.text_image_mode);
-        logText = (TextView) findViewById(net.nashlegend.sourcewall.R.id.text_log_in_out);
-        tailsView = findViewById(net.nashlegend.sourcewall.R.id.layout_tails);
-        tailText = (EditText) findViewById(net.nashlegend.sourcewall.R.id.text_tail);
-        tailArrow = (ImageView) findViewById(net.nashlegend.sourcewall.R.id.image_tail_arrow);
-        buttonDefault = (RadioButton) findViewById(net.nashlegend.sourcewall.R.id.button_use_default);
-        buttonPhone = (RadioButton) findViewById(net.nashlegend.sourcewall.R.id.button_use_phone);
-        buttonCustom = (RadioButton) findViewById(net.nashlegend.sourcewall.R.id.button_use_custom);
+        View imageModeView = findViewById(R.id.layout_image_mode);
+        View customTailView = findViewById(R.id.layout_custom_tail);
+        View logInOutView = findViewById(R.id.layout_log_in_out);
+        View aboutView = findViewById(R.id.layout_about_app);
+        imageText = (TextView) findViewById(R.id.text_image_mode);
+        logText = (TextView) findViewById(R.id.text_log_in_out);
+        tailsView = findViewById(R.id.layout_tails);
+        tailText = (EditText) findViewById(R.id.text_tail);
+        tailArrow = (ImageView) findViewById(R.id.image_tail_arrow);
+        buttonDefault = (RadioButton) findViewById(R.id.button_use_default);
+        buttonPhone = (RadioButton) findViewById(R.id.button_use_phone);
+        buttonCustom = (RadioButton) findViewById(R.id.button_use_custom);
         buttonDefault.setOnCheckedChangeListener(this);
         buttonPhone.setOnCheckedChangeListener(this);
         buttonCustom.setOnCheckedChangeListener(this);
@@ -54,6 +55,7 @@ public class SettingActivity extends SwipeActivity implements View.OnClickListen
         imageModeView.setOnClickListener(this);
         customTailView.setOnClickListener(this);
         logInOutView.setOnClickListener(this);
+        aboutView.setOnClickListener(this);
         tailsView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -111,37 +113,40 @@ public class SettingActivity extends SwipeActivity implements View.OnClickListen
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case net.nashlegend.sourcewall.R.id.layout_image_mode:
+            case R.id.layout_image_mode:
                 popupImageMode();
                 break;
-            case net.nashlegend.sourcewall.R.id.layout_custom_tail:
+            case R.id.layout_custom_tail:
                 toggleCustomTailLayout();
                 break;
-            case net.nashlegend.sourcewall.R.id.layout_log_in_out:
+            case R.id.layout_log_in_out:
                 toggleLoginState();
+                break;
+            case R.id.layout_about_app:
+                showAboutApp();
                 break;
         }
     }
 
     private void popupImageMode() {
-        String[] ways = {getString(net.nashlegend.sourcewall.R.string.mode_always_load),
-                getString(net.nashlegend.sourcewall.R.string.mode_never_load),
-                getString(net.nashlegend.sourcewall.R.string.mode_load_load_when_wifi)};
-        new AlertDialog.Builder(this).setTitle(net.nashlegend.sourcewall.R.string.way_to_load_image).setItems(ways, new DialogInterface.OnClickListener() {
+        String[] ways = {getString(R.string.mode_always_load),
+                getString(R.string.mode_never_load),
+                getString(R.string.mode_load_load_when_wifi)};
+        new AlertDialog.Builder(this).setTitle(R.string.way_to_load_image).setItems(ways, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case 0:
                         SharedUtil.saveInt(Consts.Key_Image_Load_Mode, Consts.MODE_ALWAYS_LOAD);
-                        imageText.setText(net.nashlegend.sourcewall.R.string.mode_always_load);
+                        imageText.setText(R.string.mode_always_load);
                         break;
                     case 1:
                         SharedUtil.saveInt(Consts.Key_Image_Load_Mode, Consts.MODE_NEVER_LOAD);
-                        imageText.setText(net.nashlegend.sourcewall.R.string.mode_never_load);
+                        imageText.setText(R.string.mode_never_load);
                         break;
                     case 2:
                         SharedUtil.saveInt(Consts.Key_Image_Load_Mode, Consts.MODE_LOAD_WHEN_WIFI);
-                        imageText.setText(net.nashlegend.sourcewall.R.string.mode_load_load_when_wifi);
+                        imageText.setText(R.string.mode_load_load_when_wifi);
                         break;
                 }
             }
@@ -163,33 +168,41 @@ public class SettingActivity extends SwipeActivity implements View.OnClickListen
     private void toggleLoginState() {
         if (UserAPI.isLoggedIn()) {
             AlertDialog dialog = new AlertDialog.Builder(this)
-                    .setTitle(net.nashlegend.sourcewall.R.string.hint).setMessage(net.nashlegend.sourcewall.R.string.ok_to_logout)
-                    .setPositiveButton(net.nashlegend.sourcewall.R.string.log_out, new DialogInterface.OnClickListener() {
+                    .setTitle(R.string.hint).setMessage(R.string.ok_to_logout)
+                    .setPositiveButton(R.string.log_out, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             UserAPI.clearMyInfo();
-                            logText.setText(net.nashlegend.sourcewall.R.string.log_in);
+                            logText.setText(R.string.log_in);
                         }
-                    }).setNegativeButton(net.nashlegend.sourcewall.R.string.cancel, null).create();
+                    }).setNegativeButton(R.string.cancel, null).create();
             dialog.show();
         } else {
             startActivity(new Intent(this, LoginActivity.class));
         }
     }
 
+    private void showAboutApp() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.about_app)
+                .setMessage(R.string.introduction_about_app)
+                .create().show();
+    }
+
+
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (isChecked) {
             switch (buttonView.getId()) {
-                case net.nashlegend.sourcewall.R.id.button_use_default:
+                case R.id.button_use_default:
                     tailText.setText(Config.getDefaultPlainTail());
                     tailText.setEnabled(false);
                     break;
-                case net.nashlegend.sourcewall.R.id.button_use_phone:
+                case R.id.button_use_phone:
                     tailText.setText(Config.getPhonePlainTail());
                     tailText.setEnabled(false);
                     break;
-                case net.nashlegend.sourcewall.R.id.button_use_custom:
+                case R.id.button_use_custom:
                     tailText.setEnabled(true);
                     break;
             }
