@@ -4,7 +4,10 @@
 
     <!--主题色-->
     <attr name="colorPrimaryBright" format="color" />
+    <!--内容中含有CardView的使用color_page_background-->
     <attr name="color_page_background" format="color" />
+    <!--内容中没有CardView的使用color_clear_page_background-->
+    <attr name="color_clear_page_background" format="color" />
     <attr name="color_webview_background" format="color" />
 
     <attr name="background_selectable_borderless" format="reference" />

@@ -15,6 +15,7 @@
     <color name="light_gray_night">#222222</color>
 
     <color name="page_background">#eeeeee</color>
+    <color name="page_clear_background">#ffffff</color>
     <color name="page_background_night">#424242</color>
 
     <color name="webview_background">#ffffff</color>

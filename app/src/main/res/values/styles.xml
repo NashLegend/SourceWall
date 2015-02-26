@@ -37,6 +37,7 @@
         <item name="colorAccent">@color/color_accent</item>
         <item name="android:colorBackground">@color/page_background</item>
         <item name="color_page_background">@color/page_background</item>
+        <item name="color_clear_page_background">@color/page_clear_background</item>
         <item name="color_webview_background">@color/webview_background</item>
         <item name="cardBackgroundColor">@color/card_background</item>
 
@@ -179,6 +180,7 @@
         <item name="colorAccent">@color/color_accent_night</item>
         <item name="android:colorBackground">@color/page_background_night</item>
         <item name="color_page_background">@color/page_background_night</item>
+        <item name="color_clear_page_background">@color/page_background_night</item>
         <item name="color_webview_background">@color/webview_background_night</item>
         <item name="cardBackgroundColor">@color/card_background_night</item>
 

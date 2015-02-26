@@ -328,6 +328,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
                 break;
             case R.id.view_setting:
                 startActivity(new Intent(getActivity(), SettingActivity.class));
+                getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
                 break;
             case R.id.view_switch_to_day:
             case R.id.view_switch_to_night:

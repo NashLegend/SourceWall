@@ -2,12 +2,13 @@ package net.nashlegend.sourcewall;
 
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
-import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -23,8 +24,6 @@ import android.widget.FrameLayout;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.DisplayUtil;
 import net.nashlegend.sourcewall.util.SharedUtil;
-
-import java.util.ArrayList;
 
 public class SwipeActivity extends BaseActivity {
 
@@ -88,7 +87,8 @@ public class SwipeActivity extends BaseActivity {
 
     class SwipeLayout extends FrameLayout {
 
-        private View backgroundLayer;
+        //private View backgroundLayer;用来设置滑动时的背景色
+        private Drawable leftShadow;
 
         public SwipeLayout(Context context) {
             super(context);
@@ -103,13 +103,14 @@ public class SwipeActivity extends BaseActivity {
         }
 
         public void replaceLayer(Activity activity) {
+            leftShadow = activity.getResources().getDrawable(R.drawable.left_shadow);
             touchSlop = DisplayUtil.dip2px(touchSlopDP, activity);
             sideWidth = (int) (sideWidthInDP * activity.getResources().getDisplayMetrics().density);
             mActivity = activity;
             screenWidth = getScreenWidth(activity);
             setClickable(true);
-            backgroundLayer = new View(activity);
-            backgroundLayer.setBackgroundColor(layerColor);
+//            backgroundLayer = new View(activity);
+//            backgroundLayer.setBackgroundColor(layerColor);
             final ViewGroup root = (ViewGroup) activity.getWindow().getDecorView();
             content = root.getChildAt(0);
             //在Android5.0上，content的高度不再是屏幕高度，而是变成了Activity高度，比屏幕高度低一些，
@@ -121,9 +122,20 @@ public class SwipeActivity extends BaseActivity {
             ViewGroup.LayoutParams params2 = new ViewGroup.LayoutParams(-1, -1);
             ViewGroup.LayoutParams params3 = new ViewGroup.LayoutParams(-1, -1);
             root.removeView(content);
-            this.addView(backgroundLayer, params3);
+//            this.addView(backgroundLayer, params3);
             this.addView(content, params2);
             root.addView(this, params);
+        }
+
+        @Override
+        protected boolean drawChild(@NonNull Canvas canvas, @NonNull View child, long drawingTime) {
+            boolean result = super.drawChild(canvas, child, drawingTime);
+            final int shadowWidth = leftShadow.getIntrinsicWidth();
+            int left = (int) (getContentX()) - shadowWidth;
+            leftShadow.setBounds(left, child.getTop(),
+                    left + shadowWidth, child.getBottom());
+            leftShadow.draw(canvas);
+            return result;
         }
 
         boolean canSwipe = false;
@@ -195,10 +207,10 @@ public class SwipeActivity extends BaseActivity {
                         currentX = event.getX();
                         currentY = event.getY();
                         float dx = currentX - lastX;
-                        if (content.getX() + dx < 0) {
+                        if (getContentX() + dx < 0) {
                             setContentX(0);
                         } else {
-                            setContentX(content.getX() + dx);
+                            setContentX(getContentX() + dx);
                         }
                         lastX = currentX;
                         break;
@@ -211,7 +223,7 @@ public class SwipeActivity extends BaseActivity {
                         if (Math.abs(tracker.getXVelocity()) > mv) {
                             animateFromVelocity(tracker.getXVelocity());
                         } else {
-                            if (content.getX() > screenWidth / 2) {
+                            if (getContentX() > screenWidth / 2) {
                                 animateFinish(false);
                             } else {
                                 animateBack(false);
@@ -226,7 +238,7 @@ public class SwipeActivity extends BaseActivity {
             return super.onTouchEvent(event);
         }
 
-        AnimatorSet animator;
+        ObjectAnimator animator;
 
         public void cancelPotentialAnimation() {
             if (animator != null) {
@@ -235,11 +247,17 @@ public class SwipeActivity extends BaseActivity {
             }
         }
 
-        private void setContentX(float x) {
-            content.setX(x);
-            if (backgroundLayer != null) {
-                backgroundLayer.setAlpha(1 - x / getWidth());
-            }
+        public void setContentX(float x) {
+            int ix = (int) x;
+            content.setX(ix);
+            invalidate();
+//            if (backgroundLayer != null) {
+//                backgroundLayer.setAlpha(1 - x / getWidth());
+//            }
+        }
+
+        public float getContentX() {
+            return content.getX();
         }
 
 
@@ -250,37 +268,23 @@ public class SwipeActivity extends BaseActivity {
          */
         private void animateBack(boolean withVel) {
             cancelPotentialAnimation();
-            animator = new AnimatorSet();
-            ObjectAnimator animatorX = ObjectAnimator.ofFloat(content, "x", content.getX(), 0);
-            ObjectAnimator animatorA = ObjectAnimator.ofFloat(backgroundLayer, "alpha", backgroundLayer.getAlpha(), 1);
-            ArrayList<Animator> animators = new ArrayList<>();
-            animators.add(animatorX);
-            animators.add(animatorA);
+            animator = ObjectAnimator.ofFloat(this, "contentX", getContentX(), 0);
             if (withVel) {
-                animator.setDuration((long) (duration * content.getX() / screenWidth));
+                animator.setDuration((long) (duration * getContentX() / screenWidth));
             } else {
                 animator.setDuration(duration);
             }
-            animator.playTogether(animators);
             animator.start();
         }
 
         private void animateFinish(boolean withVel) {
             cancelPotentialAnimation();
-            animator = new AnimatorSet();
-
-            ObjectAnimator animatorX = ObjectAnimator.ofFloat(content, "x", content.getX(), screenWidth);
-            ObjectAnimator animatorA = ObjectAnimator.ofFloat(backgroundLayer, "alpha", backgroundLayer.getAlpha(), 0);
-            ArrayList<Animator> animators = new ArrayList<>();
-            animators.add(animatorX);
-            animators.add(animatorA);
+            animator = ObjectAnimator.ofFloat(this, "contentX", getContentX(), screenWidth);
             if (withVel) {
-                animator.setDuration((long) (duration * (screenWidth - content.getX()) / screenWidth));
+                animator.setDuration((long) (duration * (screenWidth - getContentX()) / screenWidth));
             } else {
                 animator.setDuration(duration);
             }
-            animator.playTogether(animators);
-
             animator.addListener(new AnimatorListener() {
 
                 @Override
@@ -313,15 +317,15 @@ public class SwipeActivity extends BaseActivity {
 
         private void animateFromVelocity(float v) {
             if (v > 0) {
-                if (content.getX() < screenWidth / 2
-                        && v * duration / 1000 + content.getX() < screenWidth) {
+                if (getContentX() < screenWidth / 2
+                        && v * duration / 1000 + getContentX() < screenWidth) {
                     animateBack(false);
                 } else {
                     animateFinish(true);
                 }
             } else {
-                if (content.getX() > screenWidth / 2
-                        && v * duration / 1000 + content.getX() > screenWidth / 2) {
+                if (getContentX() > screenWidth / 2
+                        && v * duration / 1000 + getContentX() > screenWidth / 2) {
                     animateFinish(false);
                 } else {
                     animateBack(true);
