@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"
-            android:src="@drawable/ic_lightbulb_grey_18dp"
+            android:src="@drawable/lightbulb"
             android:visibility="gone" />
 
     </LinearLayout>
@@ -90,7 +90,7 @@
     <LinearLayout
         android:id="@+id/view_switch_to_night"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="42dp"
         android:layout_weight="0"
         android:background="?attr/drawable_drawer_button_background"
         android:clickable="true"
@@ -99,8 +99,8 @@
         android:padding="5dp">
 
         <ImageView
-            android:layout_width="@dimen/list_standard_comment_avatar_dimen"
-            android:layout_height="@dimen/list_standard_comment_avatar_dimen"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:src="@drawable/night_mode" />
 
         <TextView
@@ -114,7 +114,7 @@
     <LinearLayout
         android:id="@+id/view_setting"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="42dp"
         android:layout_weight="0"
         android:background="?attr/drawable_drawer_button_background"
         android:clickable="true"
@@ -123,8 +123,8 @@
         android:padding="5dp">
 
         <ImageView
-            android:layout_width="@dimen/list_standard_comment_avatar_dimen"
-            android:layout_height="@dimen/list_standard_comment_avatar_dimen"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:src="@drawable/settings" />
 
         <TextView

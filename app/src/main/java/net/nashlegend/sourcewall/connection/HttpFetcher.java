@@ -18,6 +18,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnManagerParams;
 import org.apache.http.conn.params.ConnPerRouteBean;
@@ -43,6 +44,8 @@ import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.net.ssl.SSLHandshakeException;
 
@@ -57,9 +60,28 @@ public class HttpFetcher {
     private final static int MAX_ROUTE_CONNECTIONS = 400;
     private final static int MAX_TOTAL_CONNECTIONS = 800;
     private final static int TIMEOUT = 3000;
-    private final static int CONNECTION_TIMEOUT = 10000;
-    private final static int SO_TIMEOUT = 30000;
-    private final static int UPLOAD_SO_TIMEOUT = 180000;//180秒的上传时间
+    private final static int CONNECTION_TIMEOUT = 30000;//网络状况差的时候这个时间可能很长
+    private final static int SO_TIMEOUT = 60000;
+    private final static int UPLOAD_SO_TIMEOUT = 300000;//300秒的上传时间
+
+    private final static ConcurrentHashMap<String, HttpUriRequest> requestHashMap = new ConcurrentHashMap<>();
+
+    public static boolean abortRequestByTag(String tag) {
+        requestHashMap.get(tag);
+        return true;
+    }
+
+    private static String mapHttpUriRequest(HttpUriRequest request) {
+        String key = UUID.randomUUID().toString();
+        requestHashMap.put(key, request);
+        return key;
+    }
+
+    private static void deleteHttpUriRequest(String tag) {
+        if (requestHashMap.containsKey(tag)) {
+            requestHashMap.remove(tag);
+        }
+    }
 
     public static ResultObject post(String url, List<NameValuePair> params) throws Exception {
         return post(url, params, true);

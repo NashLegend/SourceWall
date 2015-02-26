@@ -22,5 +22,5 @@
         android:layout_height="@dimen/basket_item_height"
         android:layout_weight="0"
         android:background="@android:color/transparent"
-        android:src="@drawable/ic_plus_holo_light_blue" />
+        android:src="@drawable/plus" />
 </LinearLayout>

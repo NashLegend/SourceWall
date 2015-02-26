@@ -52,13 +52,13 @@ public class FavorItemView extends AceView<Basket> implements View.OnClickListen
         textView.setText(basket.getName());
         if (basket.isHasFavored()) {
             button.setEnabled(false);
-            button.setImageResource(R.drawable.ic_check_holo_light_blue);
+            button.setImageResource(R.drawable.check_36dp);
         } else {
             if (basket.isFavoring()) {
                 button.setEnabled(false);
             } else {
                 button.setEnabled(true);
-                button.setImageResource(R.drawable.ic_plus_holo_light_blue);
+                button.setImageResource(R.drawable.plus);
             }
         }
     }
@@ -96,7 +96,7 @@ public class FavorItemView extends AceView<Basket> implements View.OnClickListen
             basket.setFavoring(false);
             if (resultObject.ok) {
                 basket.setHasFavored(true);
-                button.setImageResource(R.drawable.ic_check_holo_light_blue);
+                button.setImageResource(R.drawable.check_36dp);
             } else {
                 button.setEnabled(true);
             }

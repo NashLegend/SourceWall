@@ -3,13 +3,13 @@
     <!--日间模式-->
     <color name="text_color_primary">#ffffff</color>
     <color name="text_color_primary_night">#000000</color>
-    <color name="color_primary">#33b5e5</color>
+    <color name="color_primary">#0288d1</color>
     <color name="color_primary_night">#363636</color>
-    <color name="color_primary_dark">#0099cc</color>
+    <color name="color_primary_dark">#0277bd</color>
     <color name="color_primary_dark_night">#424242</color>
-    <color name="color_primary_bright">#00ddff</color>
+    <color name="color_primary_bright">#02aade</color>
     <color name="color_primary_bright_night">#616161</color>
-    <color name="color_accent">#33b5e5</color>
+    <color name="color_accent">#0288d1</color>
     <color name="color_accent_night">#bdbdbd</color>
     <color name="light_gray">#dddddd</color>
     <color name="light_gray_night">#222222</color>
