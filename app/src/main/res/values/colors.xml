@@ -92,7 +92,7 @@
     <color name="drawer_button_background_night">#424242</color>
     <color name="drawer_button_background_pressed">#33b5e5</color>
     <color name="drawer_button_background_pressed_night">#757575</color>
-    <color name="drawer_button_text">#000000</color>
+    <color name="drawer_button_text">#424242</color>
     <color name="drawer_button_text_night">#e0e0e0</color>
     <color name="drawer_button_text_pressed">#000000</color>
     <color name="drawer_button_text_pressed_night">#acacac</color>
