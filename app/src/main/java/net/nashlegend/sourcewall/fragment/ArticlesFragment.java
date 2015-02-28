@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 
 import net.nashlegend.sourcewall.AppApplication;
 import net.nashlegend.sourcewall.ArticleActivity;
+import net.nashlegend.sourcewall.MainActivity;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.ArticleAdapter;
 import net.nashlegend.sourcewall.commonview.LListView;
@@ -80,8 +81,10 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
     public void setTitle() {
         if (subItem.getType() == SubItem.Type_Collections) {
             getActivity().setTitle("科学人");
+            ((MainActivity) getActivity()).getSupportActionBar().setTitle("科学人");
         } else {
             getActivity().setTitle(this.subItem.getName() + " -- 科学人");
+            ((MainActivity) getActivity()).getSupportActionBar().setTitle(this.subItem.getName() + " -- 科学人");
         }
     }
 

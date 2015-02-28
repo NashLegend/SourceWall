@@ -27,6 +27,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import net.nashlegend.sourcewall.BaseActivity;
+import net.nashlegend.sourcewall.MainActivity;
 import net.nashlegend.sourcewall.PublishPostActivity;
 import net.nashlegend.sourcewall.QuestionActivity;
 import net.nashlegend.sourcewall.R;
@@ -183,7 +184,6 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
         Intent intent = new Intent();
         intent.setAction(Consts.Action_Open_Content_Fragment);
         intent.putExtra(Consts.Extra_SubItem, subItem);
-        intent.putExtra(Consts.Extra_Should_Invalidate_Menu, true);
         getActivity().sendBroadcast(intent);
         hideMoreSections();
     }
@@ -197,7 +197,6 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
             return;
         }
         setTitle();
-        getActivity().invalidateOptionsMenu();
         isMoreSectionsButtonShowing = false;
         morSectionsLayout.setVisibility(View.VISIBLE);
         if (animatorSet != null && animatorSet.isRunning()) {
@@ -270,8 +269,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
             return;
         }
         getActivity().setTitle(R.string.more_tags);
-        getActivity().invalidateOptionsMenu();
-
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle(R.string.more_tags);
         isMoreSectionsButtonShowing = true;
         if (animatorSet != null && animatorSet.isRunning()) {
             animatorSet.cancel();
@@ -373,6 +371,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
     @Override
     public void setTitle() {
         getActivity().setTitle(this.subItem.getName() + " -- 问答");
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle(this.subItem.getName() + " -- 问答");
     }
 
     private void loadOver() {

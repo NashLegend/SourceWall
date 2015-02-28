@@ -28,6 +28,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import net.nashlegend.sourcewall.BaseActivity;
+import net.nashlegend.sourcewall.MainActivity;
 import net.nashlegend.sourcewall.PostActivity;
 import net.nashlegend.sourcewall.PublishPostActivity;
 import net.nashlegend.sourcewall.R;
@@ -184,7 +185,6 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         Intent intent = new Intent();
         intent.setAction(Consts.Action_Open_Content_Fragment);
         intent.putExtra(Consts.Extra_SubItem, subItem);
-        intent.putExtra(Consts.Extra_Should_Invalidate_Menu, true);
         getActivity().sendBroadcast(intent);
         hideMoreSections();
     }
@@ -218,8 +218,10 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     public void setTitle() {
         if (subItem.getType() == SubItem.Type_Collections) {
             getActivity().setTitle("小组热贴");
+            ((MainActivity) getActivity()).getSupportActionBar().setTitle("小组热贴");
         } else {
             getActivity().setTitle(this.subItem.getName() + " -- 小组");
+            ((MainActivity) getActivity()).getSupportActionBar().setTitle(this.subItem.getName() + " -- 小组");
         }
     }
 
@@ -228,8 +230,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
             return;
         }
         getActivity().setTitle(R.string.more_groups);
-        getActivity().invalidateOptionsMenu();
-
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle(R.string.more_groups);
         isMoreSectionsButtonShowing = true;
         if (animatorSet != null && animatorSet.isRunning()) {
             animatorSet.cancel();
@@ -317,7 +318,6 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
             return;
         }
         setTitle();
-        getActivity().invalidateOptionsMenu();
         isMoreSectionsButtonShowing = false;
         moreSectionsLayout.setVisibility(View.VISIBLE);
         if (animatorSet != null && animatorSet.isRunning()) {
