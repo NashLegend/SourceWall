@@ -459,6 +459,9 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                     }
                 }
             });
+            if (isMoreSectionsButtonShowing) {
+                moreSectionsImageView.setRotation(180);
+            }
         }
         return true;
     }

@@ -443,6 +443,9 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
                     }
                 }
             });
+            if (isMoreSectionsButtonShowing) {
+                moreSectionsImageView.setRotation(180);
+            }
         }
         return true;
     }

@@ -146,8 +146,13 @@ public class ArticleAPI extends APIBase {
         try {
             Article article = new Article();
             String aid = url.replaceAll("\\?\\S*$", "").replaceAll("\\D+", "");
-            String html = HttpFetcher.get(url).toString();
+            ResultObject response = HttpFetcher.get(url);
+            resultObject.statusCode = response.statusCode;//http Client把404返回成200。TODO
+            String html = response.toString();
             Document doc = Jsoup.parse(html);
+            if (doc.getElementsByTag("title").text().startsWith("404")) {
+                resultObject.statusCode = 404;
+            }
             //replaceAll("line-height: normal;","");只是简单的处理，以防止Article样式不正确，字体过于紧凑
             //可能还有其他样式没有被我发现，所以加一个 TODO
             String articleContent = doc.getElementById("articleContent").outerHtml().replaceAll("line-height: normal;", "");
@@ -304,8 +309,12 @@ public class ArticleAPI extends APIBase {
         ResultObject resultObject = new ResultObject();
         ArrayList<AceModel> aceModels = new ArrayList<>();
         ResultObject articleResult = ArticleAPI.getArticleDetailByID(article.getId());
+        resultObject.statusCode = articleResult.statusCode;
+        resultObject.code = articleResult.code;
         if (articleResult.ok) {
             ResultObject commentsResult = ArticleAPI.getArticleComments(article.getId(), 0);
+            resultObject.statusCode = commentsResult.statusCode;
+            resultObject.code = commentsResult.code;
             if (commentsResult.ok) {
                 Article detailArticle = (Article) articleResult.result;
                 article.setTitle(detailArticle.getTitle());

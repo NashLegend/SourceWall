@@ -295,7 +295,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         loadData(adapter.getCount() - 1);
     }
 
-    class LoaderTask extends AsyncTask<Integer, Integer, ResultObject> {
+    class LoaderTask extends AsyncTask<Integer, ResultObject, ResultObject> {
         int offset;
 
         @Override
@@ -307,10 +307,26 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
             offset = params[0];
             if (offset < 0) {
                 //同时取了热门回帖，但是在这里没有显示 TODO
-                return ArticleAPI.getArticleFirstPage(article);
+                ResultObject articleResult = ArticleAPI.getArticleDetailByID(article.getId());
+                if (articleResult.ok) {
+                    publishProgress(articleResult);
+                    return ArticleAPI.getArticleComments(article.getId(), 0);
+                } else {
+                    return articleResult;
+                }
             } else {
                 return ArticleAPI.getArticleComments(article.getId(), offset);
             }
+        }
+
+        @Override
+        protected void onProgressUpdate(ResultObject... values) {
+            //在这里取到正文，正文的结果一定是正确的
+            loadingView.onLoadSuccess();
+            ResultObject result = values[0];
+            article = (Article) result.result;
+            adapter.add(0, article);
+            adapter.notifyDataSetChanged();
         }
 
         @Override
@@ -318,18 +334,9 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
             if (result.ok) {
                 loadingView.onLoadSuccess();
                 ArrayList<AceModel> ars = (ArrayList<AceModel>) result.result;
-                if (offset < 0) {
-                    //Refresh
-                    if (ars.size() > 0) {
-                        adapter.setList(ars);
-                        adapter.notifyDataSetInvalidated();
-                    }//否则就是页面不存在，这种情况在ok的情况下不存在
-                } else {
-                    //Load More
-                    if (ars.size() > 0) {
-                        adapter.addAll(ars);
-                        adapter.notifyDataSetChanged();
-                    }
+                if (ars.size() > 0) {
+                    adapter.addAll(ars);
+                    adapter.notifyDataSetChanged();
                 }
                 if (adapter.getCount() > 0) {
                     listView.setCanPullToLoadMore(true);

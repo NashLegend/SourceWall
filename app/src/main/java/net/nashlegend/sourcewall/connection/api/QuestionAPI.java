@@ -402,13 +402,13 @@ public class QuestionAPI extends APIBase {
     public static ResultObject getQuestionFirstPage(Question qQuestion) {
         ResultObject resultObject = new ResultObject();
         ArrayList<AceModel> aceModels = new ArrayList<>();
-        ResultObject articleResult = getQuestionDetailByID(qQuestion.getId());
-        resultObject.statusCode = articleResult.statusCode;
-        if (articleResult.ok) {
+        ResultObject questionResult = getQuestionDetailByID(qQuestion.getId());
+        resultObject.statusCode = questionResult.statusCode;
+        if (questionResult.ok) {
             ResultObject commentsResult = getQuestionAnswers(qQuestion.getId(), 0);
             resultObject.statusCode = commentsResult.statusCode;
             if (commentsResult.ok) {
-                Question question = (Question) articleResult.result;
+                Question question = (Question) questionResult.result;
                 qQuestion.setTitle(question.getTitle());
                 ArrayList<UComment> simpleComments = (ArrayList<UComment>) commentsResult.result;
                 aceModels.add(question);

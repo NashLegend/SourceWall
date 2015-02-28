@@ -466,7 +466,6 @@ public class PostAPI extends APIBase {
                 resultObject.result = aceModels;
             }
         }
-
         return resultObject;
     }
 
