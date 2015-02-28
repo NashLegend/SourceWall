@@ -7,9 +7,10 @@ import java.io.Serializable;
  */
 public class SubItem extends AceModel implements Serializable {
 
-    public static final int Type_Collections = 0;
-    public static final int Type_Single_Channel = 1;
-    public static final int Type_Private_Channel = 2;
+    public static final int Type_Collections = 0;//集合，如科学人、热贴、精彩问答、热门问答
+    public static final int Type_Single_Channel = 1;//单项
+    public static final int Type_Private_Channel = 2;//私人频道，我的小组
+    public static final int Type_Subject_Channel = 3;//科学人学科频道
 
     public static final int Section_Article = 0;
     public static final int Section_Post = 1;

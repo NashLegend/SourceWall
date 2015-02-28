@@ -177,8 +177,12 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
             offset = datas[0];
             if (subItem.getType() == SubItem.Type_Collections) {
                 return ArticleAPI.getArticleListIndexPage(offset);
-            } else {
+            } else if (subItem.getType() == SubItem.Type_Single_Channel) {
                 return ArticleAPI.getArticleListByChannel(subItem.getValue(), offset);
+            } else if (subItem.getType() == SubItem.Type_Subject_Channel) {
+                return ArticleAPI.getArticleListBySubject(subItem.getValue(), offset);
+            } else {
+                return new ResultObject();
             }
         }
 
