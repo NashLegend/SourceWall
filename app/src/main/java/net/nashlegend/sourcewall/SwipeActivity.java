@@ -41,6 +41,10 @@ public class SwipeActivity extends BaseActivity {
         super.setTheme(resid);
     }
 
+    public void directlySetTheme(int resid) {
+        super.setTheme(resid);
+    }
+
     public SwipeActivity() {
 
     }

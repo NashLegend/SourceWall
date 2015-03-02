@@ -21,11 +21,15 @@ import net.nashlegend.sourcewall.util.SharedUtil;
 
 import org.apache.http.impl.cookie.BasicClientCookie;
 
-
 public class LoginActivity extends SwipeActivity {
 
     private WebView webView;
     private String cookieStr;
+
+    @Override
+    public void setTheme(int resid) {
+        directlySetTheme(R.style.AppTheme);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
