@@ -57,6 +57,7 @@ public class UrlCheckUtil {
      */
     public static void redirectRequest(Uri uri, String notice_id) {
         String host = uri.getHost();
+        String url = uri.toString();
         List<String> segments = uri.getPathSegments();
         if ((host.equals("www.guokr.com") || host.equals("m.guokr.com")) && (segments != null && segments.size() >= 2)) {
             String section = segments.get(0);
@@ -71,7 +72,6 @@ public class UrlCheckUtil {
             switch (section) {
                 case "article":
                     if (segments.size() == 2) {
-                        String url = uri.toString();
                         if (url.matches("^http://(www|m).guokr.com/article/\\d+[/]?$")) {
                             //http://www.guokr.com/article/123456/
                             intent.setClass(AppApplication.getApplication(), ArticleActivity.class);
@@ -84,24 +84,24 @@ public class UrlCheckUtil {
                             Matcher matcher = Pattern.compile("^http://(www|m).guokr.com/article/(\\d+)/.*reply(\\d+)$").matcher(url);
                             if (matcher.find()) {
                                 String reply_id = matcher.group(3);
-                                //http://www.guokr.com/article/reply/123456/
+                                //http://www.guokr.com/article/reply/2907293/
                                 Uri replyUri = Uri.parse("http://www.guokr.com/article/reply/" + reply_id + "/");
                                 intent.setClass(AppApplication.getApplication(), SingleReplyActivity.class);
                                 intent.setData(replyUri);
                                 AppApplication.getApplication().startActivity(intent);
                             }
                         }
-
                     } else if (segments.size() == 3) {
-                        //跳转.http://www.guokr.com/article/reply/
-                        intent.setClass(AppApplication.getApplication(), SingleReplyActivity.class);
-                        intent.setData(uri);
-                        AppApplication.getApplication().startActivity(intent);
+                        //跳转.http://www.guokr.com/article/reply/123456
+                        if (url.matches("^http://(www|m).guokr.com/article/reply/\\d+[/]?$")) {
+                            intent.setClass(AppApplication.getApplication(), SingleReplyActivity.class);
+                            intent.setData(uri);
+                            AppApplication.getApplication().startActivity(intent);
+                        }
                     }
                     break;
                 case "post":
                     if (segments.size() == 2) {
-                        String url = uri.toString();
                         if (url.matches("^http://(www|m).guokr.com/post/\\d+[/]?$")) {
                             //http://www.guokr.com/post/123456/
                             intent.setClass(AppApplication.getApplication(), PostActivity.class);
@@ -122,14 +122,15 @@ public class UrlCheckUtil {
                         }
                     } else if (segments.size() == 3) {
                         //跳转
-                        intent.setClass(AppApplication.getApplication(), SingleReplyActivity.class);
-                        intent.setData(uri);
-                        AppApplication.getApplication().startActivity(intent);
+                        if (url.matches("^http://(www|m).guokr.com/post/reply/\\d+[/]?$")) {
+                            intent.setClass(AppApplication.getApplication(), SingleReplyActivity.class);
+                            intent.setData(uri);
+                            AppApplication.getApplication().startActivity(intent);
+                        }
                     }
                     break;
                 case "question":
                     if (segments.size() == 2) {
-                        String url = uri.toString();
                         if (url.matches("^http://(www|m).guokr.com/question/\\d+[/]?$")) {
                             //http://www.guokr.com/question/123456
                             intent.setClass(AppApplication.getApplication(), QuestionActivity.class);
@@ -154,9 +155,11 @@ public class UrlCheckUtil {
                     if (segments.size() == 3) {
                         //跳转
                         //这个应该是跳转到AnswerActivity
-                        intent.setClass(AppApplication.getApplication(), AnswerActivity.class);
-                        intent.setData(uri);
-                        AppApplication.getApplication().startActivity(intent);
+                        if (url.matches("^http://(www|m).guokr.com/answer/\\d+/redirect[/]?$")) {
+                            intent.setClass(AppApplication.getApplication(), AnswerActivity.class);
+                            intent.setData(uri);
+                            AppApplication.getApplication().startActivity(intent);
+                        }
                     }
                     break;
                 default:

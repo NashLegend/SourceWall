@@ -277,14 +277,12 @@ public class HttpFetcher {
         @Override
         public boolean isRedirectRequested(HttpResponse response, HttpContext context) {
             boolean defaultRedirectFlag = super.isRedirectRequested(response, context);
-
             return defaultRedirectFlag && shouldRedirect(response, context);
         }
 
         @Override
         public URI getLocationURI(HttpResponse response, HttpContext context) throws ProtocolException {
-            URI defaultURI = super.getLocationURI(response, context);
-            return defaultURI;
+            return super.getLocationURI(response, context);
         }
     };
 
@@ -312,27 +310,25 @@ public class HttpFetcher {
      * @param context  context
      * @return 是否跳转，默认应该是true
      */
-    private static boolean shouldRedirect(HttpResponse response, HttpContext context) {
+    synchronized private static boolean shouldRedirect(HttpResponse response, HttpContext context) {
+        boolean flag = false;
         try {
             RequestWrapper wrapper = (RequestWrapper) context.getAttribute("http.request");
             HttpRequest request = wrapper.getOriginal();
             if (request instanceof HttpRequestBase) {
                 String url = ((HttpRequestBase) request).getURI().toString();
-                String article_reply_reg = "^http://(www|m).guokr.com/article/reply/\\d+[/]?$";//http://www.guokr.com/article/reply/2903740/
-                String post_reply_reg = "^http://(www|m).guokr.com/post/reply/\\d+[/]?$";//http://www.guokr.com/post/reply/6148664/
-                String question_answer_reg = "^http://(www|m).guokr.com/answer/\\d+/redirect[/]?$";//http://www.guokr.com/answer/778164/redirect/
+                String article_reply_reg = "^http://(www|m).guokr.com/article/reply/\\d+/$";//http://www.guokr.com/article/reply/2903740/
+                String post_reply_reg = "^http://(www|m).guokr.com/post/reply/\\d+/$";//http://www.guokr.com/post/reply/6148664/
+                String question_answer_reg = "^http://(www|m).guokr.com/answer/\\d+/redirect/$";//http://www.guokr.com/answer/778164/redirect/
                 //问题貌似有点独立，第一次请求会要走一遍sso，所以就不在这里搞了
                 String publish_post_reg = "";//TODO，发贴302
-                if (url.matches(article_reply_reg)) {
-                    return false;
-                } else if (url.matches(post_reply_reg)) {
-                    return false;
-                }
+                flag = !url.matches(article_reply_reg) && !url.matches(post_reply_reg);
             }
         } catch (Exception e) {
             e.printStackTrace();
+            flag = true;
         }
-        return true;
+        return flag;
     }
 
     /**
