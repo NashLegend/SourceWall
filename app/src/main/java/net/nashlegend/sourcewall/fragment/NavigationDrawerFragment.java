@@ -308,10 +308,11 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
             String nameString = SharedUtil.readString(Consts.Key_User_Name, "");
             if (TextUtils.isEmpty(nameString)) {
                 loadUserInfo();
+            } else {
+                Intent intent = new Intent(getActivity(), MessageCenterActivity.class);
+                startActivityForResult(intent, Consts.Code_Message_Center);
+                getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
             }
-            Intent intent = new Intent(getActivity(), MessageCenterActivity.class);
-            startActivityForResult(intent, Consts.Code_Message_Center);
-            getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
         }
     }
 
@@ -343,6 +344,10 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
     @Override
     public void onResume() {
         super.onResume();
+        recheckData();
+    }
+
+    private void recheckData() {
         if (isFirstLoad) {
             if (UserAPI.isLoggedIn()) {
                 String nameString = SharedUtil.readString(Consts.Key_User_Name, "");

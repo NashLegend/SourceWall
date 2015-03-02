@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.net.http.SslError;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -91,30 +92,38 @@ public class LoginActivity extends SwipeActivity {
             if (url.equals(Consts.SUCCESS_URL_1) || url.equals(Consts.SUCCESS_URL_2)) {
                 // login ok
                 if (parseRawCookie(cookieStr)) {
+                    webView.stopLoading();
                     SharedUtil.saveString(Consts.Key_Cookie, cookieStr);
                     setResult(RESULT_OK);
-                    finish();
+                    delayFinish();
                 } else {
-                    new AlertDialog.Builder(LoginActivity.this).setTitle(R.string.hint).setMessage(R.string.user_handle_login_message)
-                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    String lazyLoad = "http://m.guokr.com/sso/mobile/?suppress_prompt=1&lazy=y&success=http%3A%2F%2Fm.guokr.com%2F";
-                                    view.loadUrl(lazyLoad);
-                                }
-                            }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                    builder.setTitle(R.string.hint);
+                    builder.setMessage(R.string.user_handle_login_message);
+                    builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            setResult(RESULT_CANCELED);
-                            finish();
+                            String lazyLoad = "http://m.guokr.com/sso/mobile/?suppress_prompt=1&lazy=y&success=http%3A%2F%2Fm.guokr.com%2F";
+                            view.loadUrl(lazyLoad);
                         }
-                    }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    });
+                    builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                            setResult(RESULT_CANCELED);
+                            delayFinish();
+                        }
+                    });
+                    builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
                         @Override
                         public void onCancel(DialogInterface dialog) {
+                            dialog.cancel();
                             setResult(RESULT_CANCELED);
-                            finish();
+                            delayFinish();
                         }
-                    }).show();
+                    });
+                    builder.show();
                 }
             } else {
                 view.loadUrl(url);
@@ -135,7 +144,7 @@ public class LoginActivity extends SwipeActivity {
                 webView.stopLoading();
                 SharedUtil.saveString(Consts.Key_Cookie, cookieStr);
                 setResult(RESULT_OK);
-                finish();
+                delayFinish();
             } else {
                 super.onPageFinished(view, url);
             }
@@ -161,6 +170,17 @@ public class LoginActivity extends SwipeActivity {
             super.onReceivedHttpAuthRequest(view, handler, host, realm);
         }
     };
+
+    private void delayFinish() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!isFinishing()) {
+                    finish();
+                }
+            }
+        }, 300);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
