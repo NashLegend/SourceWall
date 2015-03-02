@@ -55,7 +55,7 @@ public class Config {
     /**
      * 返回尾巴，html格式
      *
-     * @return html格式的尾巴，评论、发贴、回答时都带，但是评论答案和评论问题不带
+     * @return html格式的尾巴，发贴时带，但是评论答案和评论问题不带
      */
     public static String getComplexReplyTail() {
         String tail = "";
@@ -67,10 +67,7 @@ public class Config {
                 tail = getPhoneComplexTail();
                 break;
             case Consts.Type_Use_Custom_Tail:
-                tail = SharedUtil.readString(Consts.key_Custom_Tail, "");
-                if (!tail.trim().equals("")) {
-                    tail = "<p></p><p>" + tail + "</p>";
-                }
+                tail = getParametricCustomComplexTail();
                 break;
         }
         return tail;
@@ -97,6 +94,21 @@ public class Config {
     }
 
     /**
+     * 返回自定义参数{}尾巴
+     *
+     * @return 参数化的尾巴
+     */
+    public static String getParametricCustomComplexTail() {
+        //bit##参数##
+        String tail = SharedUtil.readString(Consts.key_Custom_Tail, "");
+        if (!tail.trim().equals("")) {
+            String reg = "##([^#]+)##";
+            tail = tail.replaceAll(reg, "<a href=\"https://github.com/NashLegend/SourceWall/blob/master/README.md\" target=\"_blank\">$1</a>");
+        }
+        return "<p></p><p>" + tail + "</p>";
+    }
+
+    /**
      * 返回尾巴，UBB格式
      *
      * @return html格式的尾巴，评论、发贴、回答时都带，但是评论答案和评论问题不带
@@ -111,10 +123,7 @@ public class Config {
                 tail = getPhoneSimpleTail();
                 break;
             case Consts.Type_Use_Custom_Tail:
-                tail = SharedUtil.readString(Consts.key_Custom_Tail, "");
-                if (!tail.trim().equals("")) {
-                    tail = "\n\n[blockquote]" + tail + "[/blockquote]";
-                }
+                tail = getParametricCustomSimpleTail();
                 break;
         }
         return tail;
@@ -139,6 +148,20 @@ public class Config {
      */
     private static String getDefaultSimpleTail() {
         return "\n\n[blockquote]来自 [url=https://github.com/NashLegend/SourceWall/blob/master/README.md]SourceWall[/url][/blockquote]";
+    }
+
+    /**
+     * 返回自定义参数{}尾巴
+     *
+     * @return 参数化的尾巴
+     */
+    public static String getParametricCustomSimpleTail() {
+        String tail = SharedUtil.readString(Consts.key_Custom_Tail, "");
+        if (!tail.trim().equals("")) {
+            String reg = "##([^#]+)##";
+            tail = tail.replaceAll(reg, "[url=https://github.com/NashLegend/SourceWall/blob/master/README.md]$1[/url]");
+        }
+        return "\n\n[blockquote]" + tail + "[/blockquote]";
     }
 
     public static String getDefaultPlainTail() {
