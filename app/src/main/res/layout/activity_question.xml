@@ -16,7 +16,8 @@
             android:layout_height="match_parent"
             android:divider="@null"
             android:footerDividersEnabled="false"
-            android:headerDividersEnabled="false" />
+            android:headerDividersEnabled="false"
+            android:overScrollMode="never" />
 
         <net.nashlegend.sourcewall.commonview.LoadingView
             android:id="@+id/question_progress_loading"
