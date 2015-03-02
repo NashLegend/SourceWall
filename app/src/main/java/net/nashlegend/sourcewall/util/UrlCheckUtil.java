@@ -72,15 +72,9 @@ public class UrlCheckUtil {
             switch (section) {
                 case "article":
                     if (segments.size() == 2) {
-                        if (url.matches("^http://(www|m).guokr.com/article/\\d+[/]?$")) {
-                            //http://www.guokr.com/article/123456/
-                            intent.setClass(AppApplication.getApplication(), ArticleActivity.class);
-                            Article article = new Article();
-                            article.setId(secondSegment);
-                            intent.putExtra(Consts.Extra_Article, article);
-                            AppApplication.getApplication().startActivity(intent);
-                        } else if (url.matches("^http://(www|m).guokr.com/article/(\\d+)/.*reply(\\d+)$")) {
+                        if (url.matches("^http://(www|m).guokr.com/article/(\\d+)/.*reply(\\d+)$")) {
                             //http://www.guokr.com/article/439937/#reply2903572
+                            //http://www.guokr.com/article/439937/?page=2#reply2904015
                             Matcher matcher = Pattern.compile("^http://(www|m).guokr.com/article/(\\d+)/.*reply(\\d+)$").matcher(url);
                             if (matcher.find()) {
                                 String reply_id = matcher.group(3);
@@ -90,6 +84,14 @@ public class UrlCheckUtil {
                                 intent.setData(replyUri);
                                 AppApplication.getApplication().startActivity(intent);
                             }
+                        } else if (url.matches("^http://(www|m).guokr.com/article/\\d+.*")) {
+                            //url.matches("^http://(www|m).guokr.com/article/\\d+[/]?$",http://www.guokr.com/article/123456/
+                            //url.matches("^http://(www|m).guokr.com/article/\\d+.*"),http://www.guokr.com/article/438683/#comments
+                            intent.setClass(AppApplication.getApplication(), ArticleActivity.class);
+                            Article article = new Article();
+                            article.setId(secondSegment);
+                            intent.putExtra(Consts.Extra_Article, article);
+                            AppApplication.getApplication().startActivity(intent);
                         }
                     } else if (segments.size() == 3) {
                         //跳转.http://www.guokr.com/article/reply/123456
@@ -102,14 +104,7 @@ public class UrlCheckUtil {
                     break;
                 case "post":
                     if (segments.size() == 2) {
-                        if (url.matches("^http://(www|m).guokr.com/post/\\d+[/]?$")) {
-                            //http://www.guokr.com/post/123456/
-                            intent.setClass(AppApplication.getApplication(), PostActivity.class);
-                            Post post = new Post();
-                            post.setId(secondSegment);
-                            intent.putExtra(Consts.Extra_Post, post);
-                            AppApplication.getApplication().startActivity(intent);
-                        } else if (url.matches("^http://(www|m).guokr.com/post/(\\d+)/.*#(\\d+)$")) {
+                        if (url.matches("^http://(www|m).guokr.com/post/(\\d+)/.*#(\\d+)$")) {
                             //http://www.guokr.com/post/662632/#6155334
                             Matcher matcher = Pattern.compile("^http://(www|m).guokr.com/post/(\\d+)/.*#(\\d+)$").matcher(url);
                             if (matcher.find()) {
@@ -119,6 +114,13 @@ public class UrlCheckUtil {
                                 intent.setData(replyUri);
                                 AppApplication.getApplication().startActivity(intent);
                             }
+                        } else if (url.matches("^http://(www|m).guokr.com/post/\\d+.*")) {
+                            //http://www.guokr.com/post/123456/
+                            intent.setClass(AppApplication.getApplication(), PostActivity.class);
+                            Post post = new Post();
+                            post.setId(secondSegment);
+                            intent.putExtra(Consts.Extra_Post, post);
+                            AppApplication.getApplication().startActivity(intent);
                         }
                     } else if (segments.size() == 3) {
                         //跳转
@@ -131,14 +133,7 @@ public class UrlCheckUtil {
                     break;
                 case "question":
                     if (segments.size() == 2) {
-                        if (url.matches("^http://(www|m).guokr.com/question/\\d+[/]?$")) {
-                            //http://www.guokr.com/question/123456
-                            intent.setClass(AppApplication.getApplication(), QuestionActivity.class);
-                            Question question = new Question();
-                            question.setId(secondSegment);
-                            intent.putExtra(Consts.Extra_Question, question);
-                            AppApplication.getApplication().startActivity(intent);
-                        } else if (url.matches("^http://(www|m).guokr.com/question/(\\d+)/.*answer(\\d+)$")) {
+                        if (url.matches("^http://(www|m).guokr.com/question/(\\d+)/.*answer(\\d+)$")) {
                             //http://www.guokr.com/question/123456/#answer654321
                             Matcher matcher = Pattern.compile("^http://(www|m).guokr.com/question/(\\d+)/.*answer(\\d+)$").matcher(url);
                             if (matcher.find()) {
@@ -148,6 +143,13 @@ public class UrlCheckUtil {
                                 intent.setData(answerUri);
                                 AppApplication.getApplication().startActivity(intent);
                             }
+                        } else if (url.matches("^http://(www|m).guokr.com/question/\\d+.*$")) {
+                            //http://www.guokr.com/question/123456
+                            intent.setClass(AppApplication.getApplication(), QuestionActivity.class);
+                            Question question = new Question();
+                            question.setId(secondSegment);
+                            intent.putExtra(Consts.Extra_Question, question);
+                            AppApplication.getApplication().startActivity(intent);
                         }
                     }
                 case "answer":
