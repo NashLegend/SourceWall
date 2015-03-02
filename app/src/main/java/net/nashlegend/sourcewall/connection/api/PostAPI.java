@@ -94,7 +94,7 @@ public class PostAPI extends APIBase {
                 String groupName = element.getElementsByTag("b").text();
                 SubItem subItem = new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, groupName, groupID);
                 subItems.add(subItem);
-                //String groupIcon = element.getElementsByTag("img").get(0).attr("src").replaceAll("\\?\\S*$", "");
+                //String groupIcon = element.getElementsByTag("img").get(0).attr("src").replaceAll("\\?.*$", "");
                 //String groupMembers = element.getElementsByClass("group-member").get(0).text();
             }
             if (numPages > 1) {
@@ -150,7 +150,7 @@ public class PostAPI extends APIBase {
                     int postComm = Integer.valueOf(children.get(1).text().replaceAll("\\D*", ""));
                     item.setTitle(postTitle);
                     item.setUrl(postUrl);
-                    item.setId(postUrl.replaceAll("\\?\\S*$", "").replaceAll("\\D+", ""));
+                    item.setId(postUrl.replaceAll("\\?.*$", "").replaceAll("\\D+", ""));
                     item.setTitleImageUrl(postImageUrl);
                     item.setAuthor(postAuthor);
                     item.setGroupName(postGroup);
@@ -251,7 +251,7 @@ public class PostAPI extends APIBase {
                             .get(0).text().replaceAll(" 回应$", ""));
                     item.setTitle(postTitle);
                     item.setUrl(postUrl);
-                    item.setId(postUrl.replaceAll("\\?\\S*$", "").replaceAll("\\D+", ""));
+                    item.setId(postUrl.replaceAll("\\?.*$", "").replaceAll("\\D+", ""));
                     item.setTitleImageUrl(postImageUrl);
                     item.setAuthor(postAuthor);
                     item.setGroupName(postGroup);
@@ -305,7 +305,7 @@ public class PostAPI extends APIBase {
                         post.setAuthorID(getJsonString(authorObject, "url")
                                 .replaceAll("\\D+", ""));
                         post.setAuthorAvatarUrl(getJsonObject(authorObject, "avatar")
-                                .getString("large").replaceAll("\\?\\S*$", ""));
+                                .getString("large").replaceAll("\\?.*$", ""));
                     } else {
                         post.setAuthor("此用户不存在");
                     }
@@ -347,19 +347,19 @@ public class PostAPI extends APIBase {
         try {
             Post detail = new Post();
             ResultObject response = HttpFetcher.get(url);
-            resultObject.statusCode = response.statusCode;//http Client怎么把404返回成200了我擦。TODO
+            resultObject.statusCode = response.statusCode;
+            if (resultObject.statusCode == 404) {
+                return resultObject;
+            }
             String html = response.toString();
             Document doc = Jsoup.parse(html);
-            if (doc.getElementsByTag("title").text().startsWith("404")) {
-                resultObject.statusCode = 404;
-            }
-            String postID = url.replaceAll("\\?\\S*$", "").replaceAll("\\D+", "");
+            String postID = url.replaceAll("\\?.*$", "").replaceAll("\\D+", "");
             String groupID = doc.getElementsByClass("crumbs").get(0).getElementsByTag("a")
                     .attr("href").replaceAll("\\D+", "");
             String groupName = doc.getElementsByClass("crumbs").get(0).getElementsByTag("a").text();
             Element mainElement = doc.getElementById("contentMain");
             String authorAvatarUrl = mainElement.getElementsByClass("author-avatar").get(0)
-                    .getElementsByTag("img").attr("src").replaceAll("\\?\\S*$", "");
+                    .getElementsByTag("img").attr("src").replaceAll("\\?.*$", "");
             String title = mainElement.getElementsByClass("title").text();
             String author = mainElement.select(".author").select(".gfl").text();
             String authorID = mainElement.select(".author").select(".gfl").attr("href")
@@ -419,7 +419,7 @@ public class PostAPI extends APIBase {
                         comment.setAuthorID(getJsonString(authorObject, "url")
                                 .replaceAll("\\D+", ""));
                         comment.setAuthorAvatarUrl(getJsonObject(authorObject, "avatar")
-                                .getString("large").replaceAll("\\?\\S*$", ""));
+                                .getString("large").replaceAll("\\?.*$", ""));
                     } else {
                         comment.setAuthor("此用户不存在");
                     }
@@ -483,7 +483,7 @@ public class PostAPI extends APIBase {
         try {
             String html = HttpFetcher.get(url).toString();
             Document doc = Jsoup.parse(html);
-            String postID = url.replaceAll("\\?\\S*$", "").replaceAll("\\D+", "");
+            String postID = url.replaceAll("\\?.*$", "").replaceAll("\\D+", "");
             Elements elements = doc.getElementsByClass("group-comments");
             if (elements.size() == 1) {
                 return extractPostComments(elements.get(0), postID);
@@ -510,7 +510,7 @@ public class PostAPI extends APIBase {
             Element liElement = commentList.get(i);
             String commentID = liElement.id();
             String commentAuthorAvatarUrl = liElement.getElementsByClass("cmt-author-img")
-                    .get(0).getElementsByTag("img").attr("src").replaceAll("\\?\\S*$", "");
+                    .get(0).getElementsByTag("img").attr("src").replaceAll("\\?.*$", "");
             String commentAuthor = liElement.getElementsByClass("cmt-author").text();
             String commentAuthorID = liElement.getElementsByClass("cmt-author-img")
                     .attr("href").replaceAll("\\D+", "");
@@ -664,7 +664,7 @@ public class PostAPI extends APIBase {
                 String authorID = getJsonString(authorObject, "url").replaceAll("\\D+", "");
                 String authorTitle = getJsonString(authorObject, "title");
                 JSONObject avatarObject = getJsonObject(authorObject, "avatar");
-                String avatarUrl = getJsonString(avatarObject, "large").replaceAll("\\?\\S*$", "");
+                String avatarUrl = getJsonString(avatarObject, "large").replaceAll("\\?.*$", "");
 
                 comment.setAuthor(author);
                 comment.setAuthorTitle(authorTitle);

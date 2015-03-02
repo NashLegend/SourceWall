@@ -102,7 +102,7 @@ public class ArticleAPI extends APIBase {
                     article.setAuthorID(getJsonString(getJsonObject(jo, "author"), "url")
                             .replaceAll("\\D+", ""));
                     article.setAuthorAvatarUrl(jo.getJSONObject("author").getJSONObject("avatar")
-                            .getString("large").replaceAll("\\?\\S*$", ""));
+                            .getString("large").replaceAll("\\?.*$", ""));
                     article.setDate(parseDate(getJsonString(jo, "date_published")));
                     article.setSubjectName(getJsonString(getJsonObject(jo, "subject"), "name"));
                     article.setSubjectKey(getJsonString(getJsonObject(jo, "subject"), "key"));
@@ -145,14 +145,14 @@ public class ArticleAPI extends APIBase {
         ResultObject resultObject = new ResultObject();
         try {
             Article article = new Article();
-            String aid = url.replaceAll("\\?\\S*$", "").replaceAll("\\D+", "");
+            String aid = url.replaceAll("\\?.*$", "").replaceAll("\\D+", "");
             ResultObject response = HttpFetcher.get(url);
-            resultObject.statusCode = response.statusCode;//http Client把404返回成200。TODO
+            resultObject.statusCode = response.statusCode;
+            if (resultObject.statusCode == 404) {
+                return resultObject;
+            }
             String html = response.toString();
             Document doc = Jsoup.parse(html);
-            if (doc.getElementsByTag("title").text().startsWith("404")) {
-                resultObject.statusCode = 404;
-            }
             //replaceAll("line-height: normal;","");只是简单的处理，以防止Article样式不正确，字体过于紧凑
             //可能还有其他样式没有被我发现，所以加一个 TODO
             String articleContent = doc.getElementById("articleContent").outerHtml().replaceAll("line-height: normal;", "");
@@ -214,7 +214,7 @@ public class ArticleAPI extends APIBase {
                 String authorID = tmp.getElementsByTag("a").get(0).attr("href")
                         .replaceAll("\\D+", "");
                 String authorAvatarUrl = tmp.getElementsByTag("img").get(0).attr("src")
-                        .replaceAll("\\?\\S*$", "");
+                        .replaceAll("\\?.*$", "");
                 String author = tmp.getElementsByTag("a").get(0).attr("title");
                 String likeNum = element.getElementsByClass("cmt-do-num").get(0).text();
                 String date = element.getElementsByClass("cmt-info").get(0).text();
@@ -275,7 +275,7 @@ public class ArticleAPI extends APIBase {
                         comment.setAuthorID(getJsonString(authorObject, "url")
                                 .replaceAll("\\D+", ""));
                         comment.setAuthorAvatarUrl(getJsonObject(authorObject, "avatar")
-                                .getString("large").replaceAll("\\?\\S*$", ""));
+                                .getString("large").replaceAll("\\?.*$", ""));
                     } else {
                         comment.setAuthor("此用户不存在");
                     }
@@ -584,8 +584,7 @@ public class ArticleAPI extends APIBase {
                 String authorID = getJsonString(authorObject, "url").replaceAll("\\D+", "");
                 String authorTitle = getJsonString(authorObject, "title");
                 JSONObject avatarObject = getJsonObject(authorObject, "avatar");
-                String avatarUrl = getJsonString(avatarObject, "large").replaceAll("\\?\\S*$", "");
-
+                String avatarUrl = getJsonString(avatarObject, "large").replaceAll("\\?.*$", "");
                 comment.setAuthor(author);
                 comment.setAuthorTitle(authorTitle);
                 comment.setAuthorID(authorID);

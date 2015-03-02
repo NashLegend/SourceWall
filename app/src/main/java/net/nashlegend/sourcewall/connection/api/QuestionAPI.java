@@ -112,7 +112,7 @@ public class QuestionAPI extends APIBase {
                     question.setAuthorID(jsonObject.getJSONObject("author").getString("url")
                             .replaceAll("\\D+", ""));
                     question.setAuthorAvatarUrl(jsonObject.getJSONObject("author")
-                            .getJSONObject("avatar").getString("large").replaceAll("\\?\\S*$", ""));
+                            .getJSONObject("avatar").getString("large").replaceAll("\\?.*$", ""));
                     question.setSummary(getJsonString(jsonObject, "summary"));
                     question.setDate(parseDate(getJsonString(jsonObject, "date_created")));
                     question.setFollowNum(getJsonInt(jsonObject, "followers_count"));
@@ -218,6 +218,9 @@ public class QuestionAPI extends APIBase {
             Question question = null;
             ResultObject httpResult = HttpFetcher.get(url);
             resultObject.statusCode = httpResult.statusCode;
+            if (resultObject.statusCode == 404) {
+                return resultObject;
+            }
             String jString = httpResult.toString();
             JSONObject result = getUniversalJsonObject(jString, resultObject);
             if (result != null) {
@@ -229,7 +232,7 @@ public class QuestionAPI extends APIBase {
                 question.setAuthorID(result.getJSONObject("author").getString("url")
                         .replaceAll("\\D+", ""));
                 question.setAuthorAvatarUrl(result.getJSONObject("author").getJSONObject("avatar")
-                        .getString("large").replaceAll("\\?\\S*$", ""));
+                        .getString("large").replaceAll("\\?.*$", ""));
                 question.setContent(getJsonString(result, "annotation_html").replaceAll("<img .*?/>", prefix + "$0" + suffix).replaceAll("style=\"max-width: \\d+px\"", "style=\"max-width: " + maxImageWidth + "px\""));
                 question.setDate(parseDate(getJsonString(result, "date_created")));
                 question.setFollowNum(getJsonInt(result, "followers_count"));
@@ -280,7 +283,7 @@ public class QuestionAPI extends APIBase {
                         ans.setAuthorID(getJsonString(authorObject, "url")
                                 .replaceAll("\\D+", ""));
                         ans.setAuthorAvatarUrl(getJsonObject(authorObject, "avatar")
-                                .getString("large").replaceAll("\\?\\S*$", ""));
+                                .getString("large").replaceAll("\\?.*$", ""));
                     } else {
                         ans.setAuthor("此用户不存在");
                     }
@@ -351,7 +354,7 @@ public class QuestionAPI extends APIBase {
                 String authorID = getJsonString(authorObject, "url").replaceAll("\\D+", "");
                 boolean is_exists = getJsonBoolean(authorObject, "is_exists");
                 JSONObject avatarObject = getJsonObject(authorObject, "avatar");
-                String avatarUrl = getJsonString(avatarObject, "large").replaceAll("\\?\\S*$", "");
+                String avatarUrl = getJsonString(avatarObject, "large").replaceAll("\\?.*$", "");
 
                 String date_created = parseDate(getJsonString(answerObject, "date_created"));
                 String date_modified = parseDate(getJsonString(answerObject, "date_modified"));
@@ -448,7 +451,7 @@ public class QuestionAPI extends APIBase {
                     comment.setAuthorID(jsonObject.getJSONObject("author").getString("url")
                             .replaceAll("\\D+", ""));
                     comment.setAuthorAvatarUrl(jsonObject.getJSONObject("author")
-                            .getJSONObject("avatar").getString("large").replaceAll("\\?\\S*$", ""));
+                            .getJSONObject("avatar").getString("large").replaceAll("\\?.*$", ""));
                     comment.setContent(getJsonString(jsonObject, "text"));
                     comment.setDate(parseDate(getJsonString(jsonObject, "date_created")));
                     comment.setID(getJsonString(jsonObject, "id"));
@@ -497,7 +500,7 @@ public class QuestionAPI extends APIBase {
                         comment.setAuthorID(getJsonString(authorObject, "url")
                                 .replaceAll("\\D+", ""));
                         comment.setAuthorAvatarUrl(getJsonObject(authorObject, "avatar")
-                                .getString("large").replaceAll("\\?\\S*$", ""));
+                                .getString("large").replaceAll("\\?.*$", ""));
                     } else {
                         comment.setAuthor("此用户不存在");
                     }
@@ -693,7 +696,7 @@ public class QuestionAPI extends APIBase {
                 uComment.setAuthorID(jsonObject.getJSONObject("author").getString("url")
                         .replaceAll("\\D+", ""));
                 uComment.setAuthorAvatarUrl(jsonObject.getJSONObject("author")
-                        .getJSONObject("avatar").getString("large").replaceAll("\\?\\S*$", ""));
+                        .getJSONObject("avatar").getString("large").replaceAll("\\?.*$", ""));
                 uComment.setContent(getJsonString(jsonObject, "text"));
                 uComment.setDate(parseDate(getJsonString(jsonObject, "date_created")));
                 uComment.setID(getJsonString(jsonObject, "id"));
@@ -749,7 +752,7 @@ public class QuestionAPI extends APIBase {
                 uComment.setAuthorID(jsonObject.getJSONObject("author").getString("url")
                         .replaceAll("\\D+", ""));
                 uComment.setAuthorAvatarUrl(jsonObject.getJSONObject("author")
-                        .getJSONObject("avatar").getString("large").replaceAll("\\?\\S*$", ""));
+                        .getJSONObject("avatar").getString("large").replaceAll("\\?.*$", ""));
                 uComment.setContent(getJsonString(jsonObject, "text"));
                 uComment.setDate(parseDate(getJsonString(jsonObject, "date_created")));
                 uComment.setID(getJsonString(jsonObject, "id"));

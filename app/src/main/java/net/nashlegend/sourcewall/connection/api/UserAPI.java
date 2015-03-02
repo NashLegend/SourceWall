@@ -70,7 +70,7 @@ public class UserAPI extends APIBase {
                 info.setUrl(getJsonString(subObject, "url"));
                 info.setId(info.getUrl().replaceAll("^\\D+(\\d+)\\D*", "$1"));
                 info.setAvatar(subObject.getJSONObject("avatar")
-                        .getString("large").replaceAll("\\?\\S*$", ""));
+                        .getString("large").replaceAll("\\?.*$", ""));
                 resultObject.result = info;
                 resultObject.ok = true;
             }
