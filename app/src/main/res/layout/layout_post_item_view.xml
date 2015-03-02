@@ -46,6 +46,15 @@
                 android:textColor="?attr/color_author_color"
                 android:textSize="@dimen/text_author_view_font_size_dimen" />
 
+            <TextView
+                android:id="@+id/text_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="@string/sample_date"
+                android:textColor="?attr/color_author_color"
+                android:textSize="@dimen/text_author_view_font_size_dimen" />
+
             <View
                 android:layout_width="0dp"
                 android:layout_height="10dp"

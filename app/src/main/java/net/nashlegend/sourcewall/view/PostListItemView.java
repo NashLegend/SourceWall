@@ -17,6 +17,7 @@ public class PostListItemView extends AceView<Post> {
     private Post mPost;
     private TextView titleView;
     private TextView authorView;
+    private TextView dateView;
     private TextView replyView;
     private TextView likesView;
     private TextView groupView;
@@ -27,6 +28,7 @@ public class PostListItemView extends AceView<Post> {
         inflater.inflate(R.layout.layout_post_item_view, this);
         titleView = (TextView) findViewById(R.id.text_title);
         authorView = (TextView) findViewById(R.id.text_author);
+        dateView = (TextView) findViewById(R.id.text_date);
         replyView = (TextView) findViewById(R.id.text_replies_num);
         likesView = (TextView) findViewById(R.id.text_like_num);
         groupView = (TextView) findViewById(R.id.text_group);
@@ -45,6 +47,7 @@ public class PostListItemView extends AceView<Post> {
         mPost = model;
         titleView.setText(mPost.getTitle());
         authorView.setText(mPost.getAuthor());
+        dateView.setText(mPost.getDate());
         replyView.setText(mPost.getReplyNum() + "");
         likesView.setText(mPost.getLikeNum() + "");
         if (TextUtils.isEmpty(mPost.getAuthor())) {
@@ -52,6 +55,13 @@ public class PostListItemView extends AceView<Post> {
         } else {
             authorView.setVisibility(VISIBLE);
         }
+
+        if (TextUtils.isEmpty(mPost.getDate())) {
+            dateView.setVisibility(GONE);
+        } else {
+            dateView.setVisibility(VISIBLE);
+        }
+
         if (mPost.isFeatured()) {
             groupView.setText("");
         } else {
