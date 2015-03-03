@@ -16,19 +16,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/action_bar"
-        android:orientation="vertical"
-        android:paddingTop="@dimen/abc_action_bar_subtitle_bottom_margin_material">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/text_reply_host"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/abc_action_bar_subtitle_bottom_margin_material"
             android:background="?attr/color_reply_quote_background"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:paddingBottom="@dimen/abc_action_bar_subtitle_bottom_margin_material"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/abc_action_bar_subtitle_bottom_margin_material"
             android:text="@string/sample_title"
             android:textColor="?attr/color_reply_quote_text"
+            android:textSize="16sp"
             android:visibility="gone" />
 
         <EditText
@@ -41,6 +44,7 @@
             android:hint="@string/hint_reply"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="8dp"
             android:textColor="?attr/color_reply_input_text"
             android:textColorHint="?attr/color_reply_hint" />
 
