@@ -202,7 +202,7 @@ public class HttpFetcher {
     /**
      * @return 返回一个线程安全的HttpClient。
      */
-    public static DefaultHttpClient getDefaultHttpClient() {
+    synchronized public static DefaultHttpClient getDefaultHttpClient() {
         if (defaultHttpClient == null) {
             defaultHttpClient = new DefaultHttpClient();
 
@@ -239,7 +239,7 @@ public class HttpFetcher {
     /**
      * @return 返回一个线程安全的上传用HttpClient。
      */
-    public static DefaultHttpClient getDefaultUploadHttpClient() {
+    synchronized public static DefaultHttpClient getDefaultUploadHttpClient() {
         if (uploadHttpClient == null) {
             uploadHttpClient = new DefaultHttpClient();
             ClientConnectionManager manager = uploadHttpClient.getConnectionManager();
