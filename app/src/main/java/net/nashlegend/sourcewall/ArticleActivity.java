@@ -19,6 +19,8 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import net.nashlegend.sourcewall.adapters.ArticleDetailAdapter;
+import net.nashlegend.sourcewall.commonview.AAsyncTask;
+import net.nashlegend.sourcewall.commonview.IStackedAsyncTaskInterface;
 import net.nashlegend.sourcewall.commonview.LListView;
 import net.nashlegend.sourcewall.commonview.LoadingView;
 import net.nashlegend.sourcewall.connection.ResultObject;
@@ -115,12 +117,12 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
      */
     private void loadData(int offset) {
         cancelPotentialTask();
-        task = new LoaderTask();
+        task = new LoaderTask(this);
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, offset);
     }
 
     private void cancelPotentialTask() {
-        if (task != null && task.getStatus() == AsyncTask.Status.RUNNING) {
+        if (task != null && task.getStatus() == AAsyncTask.Status.RUNNING) {
             task.cancel(true);
             listView.doneOperation();
         }
@@ -314,8 +316,12 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         loadData(adapter.getCount() - 1);
     }
 
-    class LoaderTask extends AsyncTask<Integer, ResultObject, ResultObject> {
+    class LoaderTask extends AAsyncTask<Integer, ResultObject, ResultObject> {
         int offset;
+
+        LoaderTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
+            super(iStackedAsyncTaskInterface);
+        }
 
         @Override
         protected ResultObject doInBackground(Integer... params) {

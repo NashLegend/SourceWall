@@ -34,6 +34,8 @@ import net.nashlegend.sourcewall.PublishPostActivity;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.ShuffleGroupActivity;
 import net.nashlegend.sourcewall.adapters.PostAdapter;
+import net.nashlegend.sourcewall.commonview.AAsyncTask;
+import net.nashlegend.sourcewall.commonview.IStackedAsyncTaskInterface;
 import net.nashlegend.sourcewall.commonview.LListView;
 import net.nashlegend.sourcewall.commonview.LoadingView;
 import net.nashlegend.sourcewall.commonview.shuffle.GroupMovableButton;
@@ -387,7 +389,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
             offset = 0;
         }
         cancelPotentialTask();
-        task = new LoaderTask();
+        task = new LoaderTask(this);
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, offset);
     }
 
@@ -513,7 +515,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     }
 
     private void cancelPotentialTask() {
-        if (task != null && task.getStatus() == AsyncTask.Status.RUNNING) {
+        if (task != null && task.getStatus() == AAsyncTask.Status.RUNNING) {
             task.cancel(true);
             listView.doneOperation();
         }
@@ -527,7 +529,11 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     /**
      * 这几个Task都长得很像，可以封装起来
      */
-    class LoaderTask extends AsyncTask<Integer, Integer, ResultObject> {
+    class LoaderTask extends AAsyncTask<Integer, Integer, ResultObject> {
+
+        LoaderTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
+            super(iStackedAsyncTaskInterface);
+        }
 
         int loadedPage;
 

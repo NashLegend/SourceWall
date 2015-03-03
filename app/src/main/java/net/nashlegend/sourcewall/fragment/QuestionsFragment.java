@@ -33,6 +33,8 @@ import net.nashlegend.sourcewall.QuestionActivity;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.ShuffleTagActivity;
 import net.nashlegend.sourcewall.adapters.QuestionAdapter;
+import net.nashlegend.sourcewall.commonview.AAsyncTask;
+import net.nashlegend.sourcewall.commonview.IStackedAsyncTaskInterface;
 import net.nashlegend.sourcewall.commonview.LListView;
 import net.nashlegend.sourcewall.commonview.LoadingView;
 import net.nashlegend.sourcewall.commonview.shuffle.AskTagMovableButton;
@@ -384,7 +386,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
             offset = 0;
         }
         cancelPotentialTask();
-        task = new LoaderTask();
+        task = new LoaderTask(this);
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, offset);
     }
 
@@ -497,7 +499,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
     }
 
     private void cancelPotentialTask() {
-        if (task != null && task.getStatus() == AsyncTask.Status.RUNNING) {
+        if (task != null && task.getStatus() == AAsyncTask.Status.RUNNING) {
             task.cancel(true);
         }
     }
@@ -507,9 +509,13 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
         loadData(0);
     }
 
-    class LoaderTask extends AsyncTask<Integer, Integer, ResultObject> {
+    class LoaderTask extends AAsyncTask<Integer, Integer, ResultObject> {
 
         int loadedPage;
+
+        LoaderTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
+            super(iStackedAsyncTaskInterface);
+        }
 
         @Override
         protected ResultObject doInBackground(Integer... datas) {

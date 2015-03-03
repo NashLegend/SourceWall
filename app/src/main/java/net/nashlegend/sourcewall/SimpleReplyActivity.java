@@ -15,6 +15,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import net.nashlegend.sourcewall.adapters.SimpleCommentAdapter;
+import net.nashlegend.sourcewall.commonview.AAsyncTask;
+import net.nashlegend.sourcewall.commonview.IStackedAsyncTaskInterface;
 import net.nashlegend.sourcewall.commonview.LListView;
 import net.nashlegend.sourcewall.commonview.LoadingView;
 import net.nashlegend.sourcewall.connection.ResultObject;
@@ -95,12 +97,12 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
             offset = 0;
         }
         cancelPotentialTask();
-        task = new LoaderTask();
+        task = new LoaderTask(this);
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, offset);
     }
 
     private void cancelPotentialTask() {
-        if (task != null && task.getStatus() == AsyncTask.Status.RUNNING) {
+        if (task != null && task.getStatus() == AAsyncTask.Status.RUNNING) {
             task.cancel(true);
             listView.doneOperation();
         }
@@ -227,7 +229,7 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
                 textReply.setHint(net.nashlegend.sourcewall.R.string.hint_reply);
                 textReply.setText("");
                 hideInput(textReply);
-                if (task == null || task.getStatus() != AsyncTask.Status.RUNNING) {
+                if (task == null || task.getStatus() != AAsyncTask.Status.RUNNING) {
                     UComment uComment = (UComment) result.result;
                     adapter.add(0, uComment);
                     adapter.notifyDataSetChanged();
@@ -239,8 +241,12 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
         }
     }
 
-    class LoaderTask extends AsyncTask<Integer, Integer, ResultObject> {
+    class LoaderTask extends AAsyncTask<Integer, Integer, ResultObject> {
         int offset;
+
+        LoaderTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
+            super(iStackedAsyncTaskInterface);
+        }
 
         @Override
         protected ResultObject doInBackground(Integer... params) {

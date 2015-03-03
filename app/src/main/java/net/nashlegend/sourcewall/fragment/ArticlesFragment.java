@@ -16,6 +16,8 @@ import net.nashlegend.sourcewall.ArticleActivity;
 import net.nashlegend.sourcewall.MainActivity;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.ArticleAdapter;
+import net.nashlegend.sourcewall.commonview.AAsyncTask;
+import net.nashlegend.sourcewall.commonview.IStackedAsyncTaskInterface;
 import net.nashlegend.sourcewall.commonview.LListView;
 import net.nashlegend.sourcewall.commonview.LoadingView;
 import net.nashlegend.sourcewall.connection.ResultObject;
@@ -95,7 +97,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
 
     private void loadData(int offset) {
         cancelPotentialTask();
-        task = new LoaderTask();
+        task = new LoaderTask(this);
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, offset);
     }
 
@@ -157,7 +159,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
     }
 
     private void cancelPotentialTask() {
-        if (task != null && task.getStatus() == AsyncTask.Status.RUNNING) {
+        if (task != null && task.getStatus() == AAsyncTask.Status.RUNNING) {
             task.cancel(true);
             listView.doneOperation();
         }
@@ -168,9 +170,13 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
         loadData(0);
     }
 
-    class LoaderTask extends AsyncTask<Integer, Integer, ResultObject> {
+    class LoaderTask extends AAsyncTask<Integer, Integer, ResultObject> {
 
         int offset;
+
+        LoaderTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
+            super(iStackedAsyncTaskInterface);
+        }
 
         @Override
         protected ResultObject doInBackground(Integer... datas) {
