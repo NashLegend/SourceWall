@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -44,6 +45,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
     private LoaderTask task;
     private LoadingView loadingView;
     private String notice_id;
+    private AdapterView.OnItemClickListener onItemClickListener;
 
     public ArticleActivity() {
         onItemClickListener = new AdapterView.OnItemClickListener() {
@@ -62,6 +64,25 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         loadingView.setReloadListener(this);
         Toolbar toolbar = (Toolbar) findViewById(net.nashlegend.sourcewall.R.id.action_bar);
         setSupportActionBar(toolbar);
+        toolbar.setOnClickListener(new View.OnClickListener() {
+
+            boolean preparingToScrollToHead = false;
+
+            @Override
+            public void onClick(View v) {
+                if (preparingToScrollToHead) {
+                    listView.setSelection(0);
+                } else {
+                    preparingToScrollToHead = true;
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            preparingToScrollToHead = false;
+                        }
+                    }, 200);
+                }
+            }
+        });
         article = (Article) getIntent().getSerializableExtra(Consts.Extra_Article);
         notice_id = getIntent().getStringExtra(Consts.Extra_Notice_Id);
         if (!TextUtils.isEmpty(article.getSubjectName())) {
@@ -241,8 +262,6 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
             }).create().show();
         }
     }
-
-    private AdapterView.OnItemClickListener onItemClickListener;
 
     @Override
     public void onClick(View v) {

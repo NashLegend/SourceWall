@@ -541,7 +541,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
                     currentPage = loadedPage;
                     adapter.setList(ars);
                     adapter.notifyDataSetInvalidated();
-                    listView.smoothScrollToPositionFromTop(0, 0, 0);
+                    listView.setSelection(0);
                 } else {
                     //没有数据，页码不变
                     ToastUtil.toast("没有加载到数据");

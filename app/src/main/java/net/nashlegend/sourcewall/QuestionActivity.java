@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -49,6 +50,25 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         loadingView.setReloadListener(this);
         Toolbar toolbar = (Toolbar) findViewById(net.nashlegend.sourcewall.R.id.action_bar);
         setSupportActionBar(toolbar);
+        toolbar.setOnClickListener(new View.OnClickListener() {
+
+            boolean preparingToScrollToHead = false;
+
+            @Override
+            public void onClick(View v) {
+                if (preparingToScrollToHead) {
+                    listView.setSelection(0);
+                } else {
+                    preparingToScrollToHead = true;
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            preparingToScrollToHead = false;
+                        }
+                    }, 200);
+                }
+            }
+        });
         question = (Question) getIntent().getSerializableExtra(Consts.Extra_Question);
         notice_id = getIntent().getStringExtra(Consts.Extra_Notice_Id);
         listView = (LListView) findViewById(net.nashlegend.sourcewall.R.id.list_detail);
