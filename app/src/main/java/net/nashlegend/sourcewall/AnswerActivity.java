@@ -6,6 +6,8 @@ import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,7 +21,6 @@ import android.view.ViewTreeObserver;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -48,8 +49,6 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
     private Toolbar toolbar;
     private SScrollView scrollView;
     private View headerHolder;
-    private View footerHolder;
-    private LinearLayout webHolder;
     private WWebView webView;
     private ImageView avatar;
     private TextView questionText;
@@ -82,8 +81,6 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         authorLayout = findViewById(R.id.layout_author);
         scrollView = (SScrollView) findViewById(R.id.scrollView);
         headerHolder = findViewById(R.id.headerHolder);
-        footerHolder = findViewById(R.id.footerHolder);
-        webHolder = (LinearLayout) findViewById(R.id.web_holder);
         webView = (WWebView) findViewById(R.id.web_content);
         questionText = (TextView) findViewById(R.id.text_title);
         avatar = (ImageView) findViewById(R.id.image_avatar);
@@ -195,7 +192,12 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
 
     private void loadHtml() {
         String html = StyleChecker.getAnswerHtml(answer.getContent());
-        webView.setBackgroundColor(0);
+        Resources.Theme theme = getTheme();
+        TypedArray typedArray = theme.obtainStyledAttributes(new int[]{R.attr.color_webview_background});
+        int colorBack = typedArray.getColor(0, 0);
+        typedArray.recycle();
+        webView.setBackgroundColor(colorBack);
+
         webView.getSettings().setDefaultTextEncodingName("UTF-8");
         webView.loadDataWithBaseURL(Consts.Base_Url, html, "text/html", "charset=UTF-8", null);
     }

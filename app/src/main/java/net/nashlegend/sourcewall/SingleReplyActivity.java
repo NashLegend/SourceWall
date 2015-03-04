@@ -4,6 +4,8 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -206,7 +208,11 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
 
     private void loadHtml() {
         String html = StyleChecker.getAnswerHtml(data.getContent());
-        webView.setBackgroundColor(0);
+        Resources.Theme theme = getTheme();
+        TypedArray typedArray = theme.obtainStyledAttributes(new int[]{R.attr.color_webview_background});
+        int colorBack = typedArray.getColor(0, 0);
+        typedArray.recycle();
+        webView.setBackgroundColor(colorBack);
         webView.getSettings().setDefaultTextEncodingName("UTF-8");
         webView.loadDataWithBaseURL(Consts.Base_Url, html, "text/html", "charset=UTF-8", null);
     }
