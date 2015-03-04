@@ -228,7 +228,7 @@ public class ShuffleTagActivity extends SwipeActivity {
             if (aBoolean) {
                 initView();
             } else {
-                ToastUtil.toast("Failed");
+                ToastUtil.toast("加载标签失败");
             }
         }
     }

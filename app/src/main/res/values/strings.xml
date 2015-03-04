@@ -160,5 +160,6 @@
     <string name="title_activity_message_center">消息中心</string>
     <string name="no_notice">没有通知</string>
     <string name="no_more_notice">没有更多的通知了</string>
+    <string name="upload_failed">上传失败</string>
 
 </resources>

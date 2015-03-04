@@ -613,7 +613,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
                 }
             } else {
                 resetImageButtons();
-                ToastUtil.toast("Upload Failed");
+                ToastUtil.toast(R.string.upload_failed);
             }
         }
 

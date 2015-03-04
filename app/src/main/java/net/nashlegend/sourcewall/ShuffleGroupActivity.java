@@ -230,7 +230,7 @@ public class ShuffleGroupActivity extends SwipeActivity {
             if (aBoolean) {
                 initView();
             } else {
-                ToastUtil.toast("Failed");
+                ToastUtil.toast("加载我的小组失败");
             }
         }
     }

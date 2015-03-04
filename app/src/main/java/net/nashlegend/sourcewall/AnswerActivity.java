@@ -100,7 +100,6 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         replyButton.setOnClickListener(this);
         notAnButton.setOnClickListener(this);
         thankButton.setOnClickListener(this);
-        webView.setOnClickListener(this);
         loadingView.setReloadListener(this);
 
         if (getIntent().hasExtra(Consts.Extra_Answer)) {
@@ -226,9 +225,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
             if (backFooterAnimatorSet != null && backFooterAnimatorSet.isRunning()) {
                 backFooterAnimatorSet.cancel();
             }
-            if (backAnimatorSet != null && backAnimatorSet.isRunning()) {
-
-            } else {
+            if (backAnimatorSet == null || !backAnimatorSet.isRunning()) {
                 backAnimatorSet = new AnimatorSet();
                 ObjectAnimator toolBarAnimator = ObjectAnimator.ofFloat(toolbar, "translationY", toolbar.getTranslationY(), 0f);
                 ObjectAnimator titleAnimator = ObjectAnimator.ofFloat(questionText, "translationY", questionText.getTranslationY(), 0f);
@@ -316,9 +313,6 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
                 break;
             case R.id.button_thank:
                 thankAnswer();
-                break;
-            case R.id.web_content:
-                ToastUtil.toast("Haha");
                 break;
         }
     }

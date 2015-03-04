@@ -518,7 +518,7 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
                 }
             } else {
                 resetImageButtons();
-                ToastUtil.toast("Upload Failed");
+                ToastUtil.toast(R.string.upload_failed);
             }
         }
 
