@@ -210,6 +210,24 @@ public class UserAPI extends APIBase {
     }
 
     /**
+     * 忽略所有消息，相当于ignoreOneNotice("")
+     *
+     * @return ResultObject，仅仅有ok，result是空
+     */
+    public static ResultObject ignoreAllNotice() {
+        ResultObject resultObject = new ResultObject();
+        try {
+            String url = "http://www.guokr.com/apis/community/notice_ignore.json";
+            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            String result = HttpFetcher.put(url, pairs).toString();
+            resultObject.ok = getUniversalJsonSimpleBoolean(result, resultObject);
+        } catch (Exception e) {
+            handleRequestException(e, resultObject);
+        }
+        return resultObject;
+    }
+
+    /**
      * 忽略一条通知消息，返回的是剩余的通知详情列表
      *
      * @return ResultObject resultObject.result是剩余的NoticeList

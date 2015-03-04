@@ -1,8 +1,12 @@
 package net.nashlegend.sourcewall.fragment;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -14,6 +18,7 @@ import net.nashlegend.sourcewall.commonview.LoadingView;
 import net.nashlegend.sourcewall.connection.ResultObject;
 import net.nashlegend.sourcewall.connection.api.UserAPI;
 import net.nashlegend.sourcewall.model.Notice;
+import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.util.ToastUtil;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;
 import net.nashlegend.sourcewall.view.NoticeView;
@@ -23,12 +28,14 @@ import java.util.ArrayList;
 /**
  * Created by NashLegend on 2015/2/12 0012
  */
-public class NoticesFragment extends BaseFragment implements LListView.OnRefreshListener, LoadingView.ReloadListener {
+public class NoticesFragment extends ChannelsFragment implements LListView.OnRefreshListener, LoadingView.ReloadListener {
 
     private NoticeAdapter adapter;
     private LListView listView;
     private LoadingView loadingView;
     private LoaderTask task;
+    private IgnoreTask ignoreTask;
+    private ProgressDialog progressDialog;
 
     @Override
     public View onCreateLayoutView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -98,6 +105,50 @@ public class NoticesFragment extends BaseFragment implements LListView.OnRefresh
         loadData();
     }
 
+    @Override
+    public int getFragmentMenu() {
+        return R.menu.menu_notice_center;
+    }
+
+    @Override
+    public boolean takeOverMenuInflate(MenuInflater inflater, Menu menu) {
+        inflater.inflate(getFragmentMenu(), menu);
+        return true;
+    }
+
+    @Override
+    public boolean takeOverOptionsItemSelect(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_ignore_all:
+                if (adapter.getCount() > 0) {
+                    cancelPotentialTask();
+                    if (ignoreTask != null && ignoreTask.getStatus() == AsyncTask.Status.RUNNING) {
+                        ignoreTask.cancel(true);
+                    }
+                    ignoreTask = new IgnoreTask();
+                    ignoreTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                }
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean takeOverBackPressed() {
+        return false;
+    }
+
+    @Override
+    public void resetData(SubItem subItem) {
+
+    }
+
+    @Override
+    public void triggerRefresh() {
+
+    }
+
     class LoaderTask extends AsyncTask<Integer, Integer, ResultObject> {
 
         @Override
@@ -121,6 +172,36 @@ public class NoticesFragment extends BaseFragment implements LListView.OnRefresh
             }
             listView.setCanPullToRefresh(true);
             listView.doneOperation();
+        }
+    }
+
+    class IgnoreTask extends AsyncTask<String, Integer, ResultObject> {
+
+        @Override
+        protected void onPreExecute() {
+            progressDialog = new ProgressDialog(getActivity());
+            progressDialog.setCancelable(false);
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.setMessage(getString(R.string.message_replying));
+            progressDialog.show();
+        }
+
+        @Override
+        protected ResultObject doInBackground(String... params) {
+            return UserAPI.ignoreAllNotice();
+        }
+
+        @Override
+        protected void onPostExecute(ResultObject resultObject) {
+            if (progressDialog.isShowing()) {
+                progressDialog.cancel();
+            }
+            if (isAdded() && resultObject.ok) {
+                listView.setCanPullToRefresh(true);
+                listView.doneOperation();
+                adapter.clear();
+                adapter.notifyDataSetInvalidated();
+            }
         }
     }
 }

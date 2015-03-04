@@ -118,10 +118,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (currentFragment != null && currentFragment.takeOverOptionsItemSelect(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        return currentFragment != null && currentFragment.takeOverOptionsItemSelect(item) || super.onOptionsItemSelected(item);
     }
 
     private ChannelsFragment currentFragment;

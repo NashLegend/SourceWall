@@ -24,11 +24,14 @@ public class MessageCenterActivity extends SwipeActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_message_center, menu);
+        if (noticesFragment == null || !noticesFragment.takeOverMenuInflate(getMenuInflater(), menu)) {
+            getMenuInflater().inflate(R.menu.menu_message_center, menu);
+        }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
+        return noticesFragment != null && noticesFragment.takeOverOptionsItemSelect(item) || super.onOptionsItemSelected(item);
     }
 }
