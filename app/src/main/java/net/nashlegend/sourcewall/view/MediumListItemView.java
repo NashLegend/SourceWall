@@ -63,6 +63,9 @@ public class MediumListItemView extends AceView<UComment> {
 
     @Override
     public void setData(UComment model) {
+        if (comment != null && comment.getID() != null && comment.getID().equals(model.getID())) {
+            return;
+        }
         comment = model;
         authorView.setText(comment.getAuthor());
         dateView.setText(comment.getDate());
