@@ -1,5 +1,6 @@
 package net.nashlegend.sourcewall.connection.api;
 
+import android.net.Uri;
 import android.text.TextUtils;
 
 import net.nashlegend.sourcewall.connection.HttpFetcher;
@@ -22,9 +23,13 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * 单个回复地址。http://www.guokr.com/post/666281/reply/6224695/
+ */
 public class PostAPI extends APIBase {
 
     public PostAPI() {
@@ -626,8 +631,16 @@ public class PostAPI extends APIBase {
      * @return resultObject resultObject.result是UComment
      */
     public static ResultObject getSingleCommentFromRedirectUrl(String url) {
-        //url sample：http://www.guokr.com/post/reply/654321/
-        return getSingleCommentByID(url.replaceAll("\\D+", ""));
+        //url sample：http://www.guokr.com/post/reply/6224695/
+        //uri http://www.guokr.com/post/666281/reply/6224695/
+        //TODO
+        Uri uri = Uri.parse(url);
+        List<String> segments = uri.getPathSegments();
+        String id = "-1";
+        if (segments.size() > 0) {
+            id = segments.get(segments.size() - 1);
+        }
+        return getSingleCommentByID(id);
     }
 
     /**

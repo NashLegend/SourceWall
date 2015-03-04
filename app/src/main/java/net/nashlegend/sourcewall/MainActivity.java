@@ -42,9 +42,9 @@ public class MainActivity extends BaseActivity {
     @Override
     public void setTheme(int resId) {
         if (SharedUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
-            resId = net.nashlegend.sourcewall.R.style.BottomThemeNight;
+            resId = R.style.BottomThemeNight;
         } else {
-            resId = net.nashlegend.sourcewall.R.style.BottomTheme;
+            resId = R.style.BottomTheme;
         }
         super.setTheme(resId);
     }
@@ -52,20 +52,20 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(net.nashlegend.sourcewall.R.layout.activity_main);
+        setContentView(R.layout.activity_main);
         receiver = new Receiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction(Consts.Action_Open_Content_Fragment);
         registerReceiver(receiver, filter);
-        Toolbar toolbar = (Toolbar) findViewById(net.nashlegend.sourcewall.R.id.action_bar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getSupportFragmentManager().findFragmentById(net.nashlegend.sourcewall.R.id.navigation_drawer);
+                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
-                net.nashlegend.sourcewall.R.id.navigation_drawer,
-                (DrawerLayout) findViewById(net.nashlegend.sourcewall.R.id.drawer_layout), toolbar);
+                R.id.navigation_drawer,
+                (DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
     }
 
     @Override
@@ -108,7 +108,7 @@ public class MainActivity extends BaseActivity {
             if (currentFragment != null) {
                 currentFragment.takeOverMenuInflate(getMenuInflater(), menu);
             } else {
-                getMenuInflater().inflate(net.nashlegend.sourcewall.R.menu.main, menu);
+                getMenuInflater().inflate(R.menu.main, menu);
             }
             restoreActionBar();
             return true;
@@ -121,7 +121,6 @@ public class MainActivity extends BaseActivity {
         if (currentFragment != null && currentFragment.takeOverOptionsItemSelect(item)) {
             return true;
         }
-        int id = item.getItemId();
         return super.onOptionsItemSelected(item);
     }
 
@@ -134,7 +133,7 @@ public class MainActivity extends BaseActivity {
             Bundle bundle = new Bundle();
             bundle.putSerializable(Consts.Extra_SubItem, subItem);
             fragment.setArguments(bundle);
-            getSupportFragmentManager().beginTransaction().replace(net.nashlegend.sourcewall.R.id.container, fragment).commitAllowingStateLoss();
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commitAllowingStateLoss();
             currentFragment = fragment;
         }
     }

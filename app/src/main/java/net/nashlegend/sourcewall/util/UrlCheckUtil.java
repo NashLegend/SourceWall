@@ -129,6 +129,14 @@ public class UrlCheckUtil {
                             intent.setData(uri);
                             AppApplication.getApplication().startActivity(intent);
                         }
+                    } else if (segments.size() == 4) {
+                        //跳转
+                        //http://www.guokr.com/post/666281/reply/6224695/
+                        if (url.matches("^http://(www|m).guokr.com/post/\\d+/reply/\\d+/?$")) {
+                            intent.setClass(AppApplication.getApplication(), SingleReplyActivity.class);
+                            intent.setData(uri);
+                            AppApplication.getApplication().startActivity(intent);
+                        }
                     }
                     break;
                 case "question":
@@ -158,6 +166,13 @@ public class UrlCheckUtil {
                         //跳转
                         //这个应该是跳转到AnswerActivity
                         if (url.matches("^http://(www|m).guokr.com/answer/\\d+/redirect[/]?$")) {
+                            intent.setClass(AppApplication.getApplication(), AnswerActivity.class);
+                            intent.setData(uri);
+                            AppApplication.getApplication().startActivity(intent);
+                        }
+                    } else if (segments.size() == 2) {
+                        //http://www.guokr.com/answer/654321/
+                        if (url.matches("^http://(www|m).guokr.com/answer/\\d+[/]?$")) {
                             intent.setClass(AppApplication.getApplication(), AnswerActivity.class);
                             intent.setData(uri);
                             AppApplication.getApplication().startActivity(intent);

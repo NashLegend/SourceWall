@@ -77,34 +77,34 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(net.nashlegend.sourcewall.R.layout.activity_publish_post);
-        Toolbar toolbar = (Toolbar) findViewById(net.nashlegend.sourcewall.R.id.action_bar);
+        setContentView(R.layout.activity_publish_post);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
-        titleEditText = (EditText) findViewById(net.nashlegend.sourcewall.R.id.text_post_title);
-        tagEditText = (EditText) findViewById(net.nashlegend.sourcewall.R.id.text_question_tag);
-        bodyEditText = (EditText) findViewById(net.nashlegend.sourcewall.R.id.text_post_body);
-        spinner = (Spinner) findViewById(net.nashlegend.sourcewall.R.id.spinner_post_topic);
-        ImageButton publishButton = (ImageButton) findViewById(net.nashlegend.sourcewall.R.id.btn_publish);
-        imgButton = (ImageButton) findViewById(net.nashlegend.sourcewall.R.id.btn_add_img);
-        insertButton = (ImageButton) findViewById(net.nashlegend.sourcewall.R.id.btn_insert_img);
-        ImageButton linkButton = (ImageButton) findViewById(net.nashlegend.sourcewall.R.id.btn_link);
-        uploadingProgress = findViewById(net.nashlegend.sourcewall.R.id.prg_uploading_img);
+        titleEditText = (EditText) findViewById(R.id.text_post_title);
+        tagEditText = (EditText) findViewById(R.id.text_question_tag);
+        bodyEditText = (EditText) findViewById(R.id.text_post_body);
+        spinner = (Spinner) findViewById(R.id.spinner_post_topic);
+        ImageButton publishButton = (ImageButton) findViewById(R.id.btn_publish);
+        imgButton = (ImageButton) findViewById(R.id.btn_add_img);
+        insertButton = (ImageButton) findViewById(R.id.btn_insert_img);
+        ImageButton linkButton = (ImageButton) findViewById(R.id.btn_link);
+        uploadingProgress = findViewById(R.id.prg_uploading_img);
         subItem = (SubItem) getIntent().getSerializableExtra(Consts.Extra_SubItem);
         if (subItem != null) {
             if (subItem.getSection() == SubItem.Section_Post) {
                 String group_name = subItem.getName();
                 group_id = subItem.getValue();
-                setTitle(group_name + " -- " + getString(net.nashlegend.sourcewall.R.string.title_activity_publish_post));
+                setTitle(group_name + " -- " + getString(R.string.title_activity_publish_post));
                 spinner.setVisibility(View.VISIBLE);
                 tagEditText.setVisibility(View.GONE);
-                titleEditText.setHint(net.nashlegend.sourcewall.R.string.hint_input_post_title);
-                bodyEditText.setHint(net.nashlegend.sourcewall.R.string.hint_input_post_content);
+                titleEditText.setHint(R.string.hint_input_post_title);
+                bodyEditText.setHint(R.string.hint_input_post_content);
             } else {
-                setTitle(net.nashlegend.sourcewall.R.string.title_activity_publish_question);
+                setTitle(R.string.title_activity_publish_question);
                 spinner.setVisibility(View.GONE);
                 tagEditText.setVisibility(View.VISIBLE);
-                titleEditText.setHint(net.nashlegend.sourcewall.R.string.hint_input_question);
-                bodyEditText.setHint(net.nashlegend.sourcewall.R.string.hint_input_question_desc);
+                titleEditText.setHint(R.string.hint_input_question);
+                bodyEditText.setHint(R.string.hint_input_question_desc);
             }
         } else {
             ToastUtil.toast("No Data Received");
@@ -147,7 +147,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
             //matcher.group(5)表示匹配到的超链接地址字符串;
             if (!TextUtils.isEmpty(matcher.group(1))) {
                 //String imageUrl = matcher.group(2);
-                Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), net.nashlegend.sourcewall.R.drawable.default_text_image);
+                Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.default_text_image);
                 ImageSpan imageSpan = getImageSpan("图片链接...", sourceBitmap);
                 spanned.setSpan(imageSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             } else {
@@ -156,7 +156,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
                 if (!linkUrl.startsWith("http")) {
                     linkUrl = "http://" + linkUrl;
                 }
-                Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), net.nashlegend.sourcewall.R.drawable.link_gray);
+                Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.link_gray);
                 String displayed;
                 if (TextUtils.isEmpty(linkTitle.trim())) {
                     Uri uri = Uri.parse(linkUrl);
@@ -264,7 +264,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
             for (int i = 0; i < topics.size(); i++) {
                 items[i] = topics.get(i).getName();
             }
-            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, net.nashlegend.sourcewall.R.layout.simple_spinner_item, items);
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.simple_spinner_item, items);
             spinner.setAdapter(arrayAdapter);
         }
 
@@ -277,10 +277,10 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
     }
 
     private void invokeImageDialog() {
-        String[] ways = {getString(net.nashlegend.sourcewall.R.string.add_image_from_disk),
-                getString(net.nashlegend.sourcewall.R.string.add_image_from_camera),
-                getString(net.nashlegend.sourcewall.R.string.add_image_from_link)};
-        new AlertDialog.Builder(this).setTitle(net.nashlegend.sourcewall.R.string.way_to_add_image).setItems(ways, new DialogInterface.OnClickListener() {
+        String[] ways = {getString(R.string.add_image_from_disk),
+                getString(R.string.add_image_from_camera),
+                getString(R.string.add_image_from_link)};
+        new AlertDialog.Builder(this).setTitle(R.string.way_to_add_image).setItems(ways, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
@@ -316,7 +316,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
 
     private void invokeImageUrlDialog() {
         InputDialog.Builder builder = new InputDialog.Builder(this);
-        builder.setTitle(net.nashlegend.sourcewall.R.string.input_image_url);
+        builder.setTitle(R.string.input_image_url);
         builder.setCancelable(true);
         builder.setCanceledOnTouchOutside(false);
         builder.setSingleLine();
@@ -343,10 +343,10 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
                 ImageUploadTask task = new ImageUploadTask(this);
                 task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
             } else {
-                ToastUtil.toast(net.nashlegend.sourcewall.R.string.file_not_exists);
+                ToastUtil.toast(R.string.file_not_exists);
             }
         } else {
-            ToastUtil.toast(net.nashlegend.sourcewall.R.string.file_not_image);
+            ToastUtil.toast(R.string.file_not_image);
         }
     }
 
@@ -362,7 +362,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
     private void insertImagePath(String url) {
         String imgTag = "![](" + url + ")";
         SpannableString spanned = new SpannableString(imgTag);
-        Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), net.nashlegend.sourcewall.R.drawable.default_text_image);
+        Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.default_text_image);
         String displayed = "图片链接...";
         ImageSpan imageSpan = getImageSpan(displayed, sourceBitmap);
         spanned.setSpan(imageSpan, 0, imgTag.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -395,7 +395,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
      */
     private void insertLink() {
         InputDialog.Builder builder = new InputDialog.Builder(this);
-        builder.setTitle(net.nashlegend.sourcewall.R.string.input_link_url);
+        builder.setTitle(R.string.input_link_url);
         builder.setCancelable(true);
         builder.setCanceledOnTouchOutside(false);
         builder.setTwoLine();
@@ -414,7 +414,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
                     String result = "[" + title + "](" + url + ")";
 
                     SpannableString spanned = new SpannableString(result);
-                    Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), net.nashlegend.sourcewall.R.drawable.link_gray);
+                    Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.link_gray);
                     String displayed;
                     if (TextUtils.isEmpty(title.trim())) {
                         Uri uri = Uri.parse(url);
@@ -439,12 +439,12 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
 
     private void publish() {
         if (TextUtils.isEmpty(titleEditText.getText().toString().trim())) {
-            ToastUtil.toast(net.nashlegend.sourcewall.R.string.title_cannot_be_empty);
+            ToastUtil.toast(R.string.title_cannot_be_empty);
             return;
         }
 
         if (TextUtils.isEmpty(bodyEditText.getText().toString().trim()) && isPost()) {
-            ToastUtil.toast(net.nashlegend.sourcewall.R.string.content_cannot_be_empty);
+            ToastUtil.toast(R.string.content_cannot_be_empty);
             return;
         }
 
@@ -469,16 +469,16 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case net.nashlegend.sourcewall.R.id.btn_publish:
+            case R.id.btn_publish:
                 publish();
                 break;
-            case net.nashlegend.sourcewall.R.id.btn_add_img:
+            case R.id.btn_add_img:
                 invokeImageDialog();
                 break;
-            case net.nashlegend.sourcewall.R.id.btn_insert_img:
+            case R.id.btn_insert_img:
                 insertImagePath(tmpImagePath);
                 break;
-            case net.nashlegend.sourcewall.R.id.btn_link:
+            case R.id.btn_link:
                 insertLink();
                 break;
         }
@@ -491,7 +491,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
             progressDialog = new ProgressDialog(PublishPostActivity.this);
             progressDialog.setCancelable(false);
             progressDialog.setCanceledOnTouchOutside(false);
-            progressDialog.setMessage(getString(net.nashlegend.sourcewall.R.string.message_replying));
+            progressDialog.setMessage(getString(R.string.message_replying));
             progressDialog.show();
         }
 
@@ -514,13 +514,13 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         protected void onPostExecute(ResultObject resultObject) {
             progressDialog.dismiss();
             if (resultObject.ok) {
-                ToastUtil.toast(net.nashlegend.sourcewall.R.string.reply_ok);
+                ToastUtil.toast(R.string.reply_ok);
                 setResult(RESULT_OK);
                 replyOK = true;
                 tryClearSketch();
                 finish();
             } else {
-                ToastUtil.toast(net.nashlegend.sourcewall.R.string.reply_failed);
+                ToastUtil.toast(R.string.reply_failed);
             }
         }
     }
@@ -559,16 +559,16 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         @Override
         protected void onPostExecute(ResultObject resultObject) {
             if (resultObject.ok) {
-                ToastUtil.toast(getString(net.nashlegend.sourcewall.R.string.get_csrf_ok));
+                ToastUtil.toast(getString(R.string.get_csrf_ok));
                 PrepareData prepareData = (PrepareData) resultObject.result;
                 onReceivePreparedData(prepareData);
             } else {
                 if (resultObject.statusCode == 403) {
-                    new AlertDialog.Builder(PublishPostActivity.this).setTitle(net.nashlegend.sourcewall.R.string.hint)
-                            .setMessage(getString(net.nashlegend.sourcewall.R.string.have_not_join_this_group)).setPositiveButton(net.nashlegend.sourcewall.R.string.ok, null).create().show();
+                    new AlertDialog.Builder(PublishPostActivity.this).setTitle(R.string.hint)
+                            .setMessage(getString(R.string.have_not_join_this_group)).setPositiveButton(R.string.ok, null).create().show();
                 } else {
-                    new AlertDialog.Builder(PublishPostActivity.this).setTitle(getString(net.nashlegend.sourcewall.R.string.get_csrf_failed))
-                            .setMessage(getString(net.nashlegend.sourcewall.R.string.hint_reload_csrf)).setPositiveButton(net.nashlegend.sourcewall.R.string.ok, null).create().show();
+                    new AlertDialog.Builder(PublishPostActivity.this).setTitle(getString(R.string.get_csrf_failed))
+                            .setMessage(getString(R.string.hint_reload_csrf)).setPositiveButton(R.string.ok, null).create().show();
                 }
             }
         }
@@ -632,15 +632,11 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
                     String path = FileUtil.getActualPath(this, uri);
                     if (!TextUtils.isEmpty(path)) {
                         uploadImage(path);
-                    } else {
-                        //么有图
                     }
                     break;
                 case Consts.Code_Invoke_Camera:
                     if (tmpUploadFile != null) {
                         uploadImage(tmpUploadFile.getAbsolutePath());
-                    } else {
-                        //么有图
                     }
                     break;
                 default:
@@ -653,7 +649,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(net.nashlegend.sourcewall.R.menu.menu_publish_post, menu);
+        getMenuInflater().inflate(R.menu.menu_publish_post, menu);
         return true;
     }
 
@@ -665,7 +661,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == net.nashlegend.sourcewall.R.id.action_reload_csrf) {
+        if (id == R.id.action_reload_csrf) {
             prepare();
             return true;
         }

@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.net.http.SslError;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -34,8 +35,8 @@ public class LoginActivity extends SwipeActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(net.nashlegend.sourcewall.R.layout.activity_login);
-        Toolbar toolbar = (Toolbar) findViewById(net.nashlegend.sourcewall.R.id.action_bar);
+        setContentView(R.layout.activity_login);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
 
         CookieSyncManager.createInstance(AppApplication.getApplication());
@@ -45,7 +46,7 @@ public class LoginActivity extends SwipeActivity {
         cookieManager.removeSessionCookie();
         CookieSyncManager.getInstance().sync();
 
-        webView = (WebView) findViewById(net.nashlegend.sourcewall.R.id.web_login);
+        webView = (WebView) findViewById(R.id.web_login);
         webView.setWebViewClient(webViewClient);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
@@ -155,7 +156,7 @@ public class LoginActivity extends SwipeActivity {
         }
 
         @Override
-        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+        public void onReceivedSslError(WebView view, @NonNull SslErrorHandler handler, SslError error) {
             super.onReceivedSslError(view, handler, error);
         }
 
@@ -170,7 +171,7 @@ public class LoginActivity extends SwipeActivity {
         }
 
         @Override
-        public void onReceivedHttpAuthRequest(WebView view, HttpAuthHandler handler, String host, String realm) {
+        public void onReceivedHttpAuthRequest(WebView view, @NonNull HttpAuthHandler handler, String host, String realm) {
             super.onReceivedHttpAuthRequest(view, handler, host, realm);
         }
     };

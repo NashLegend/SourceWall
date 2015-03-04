@@ -18,7 +18,6 @@ import android.view.ViewTreeObserver;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -52,8 +51,6 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
     private Toolbar toolbar;
     private SScrollView scrollView;
     private View headerHolder;
-    private View footerHolder;
-    private LinearLayout webHolder;
     private WWebView webView;
     private ImageView avatar;
     private TextView hostTitle;
@@ -86,8 +83,6 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
         authorLayout = findViewById(R.id.layout_author);
         scrollView = (SScrollView) findViewById(R.id.scrollView);
         headerHolder = findViewById(R.id.headerHolder);
-        footerHolder = findViewById(R.id.footerHolder);
-        webHolder = (LinearLayout) findViewById(R.id.web_holder);
         webView = (WWebView) findViewById(R.id.web_content);
         hostTitle = (TextView) findViewById(R.id.text_title);
         avatar = (ImageView) findViewById(R.id.image_avatar);
@@ -115,7 +110,7 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
         if (redirectUri != null) {
             List<String> segments = redirectUri.getPathSegments();
             String hostString = redirectUri.getHost();
-            if (("www.guokr.com".equals(hostString) || "m.guokr.com".equals(hostString)) && (segments != null && segments.size() == 3)) {
+            if (("www.guokr.com".equals(hostString) || "m.guokr.com".equals(hostString)) && (segments != null && segments.size() >= 3)) {
                 loadingView.setVisibility(View.VISIBLE);
                 String sect = segments.get(0);
                 switch (sect) {
@@ -225,7 +220,6 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
         return super.onOptionsItemSelected(item);
     }
 
@@ -240,9 +234,7 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
             if (backFooterAnimatorSet != null && backFooterAnimatorSet.isRunning()) {
                 backFooterAnimatorSet.cancel();
             }
-            if (backAnimatorSet != null && backAnimatorSet.isRunning()) {
-
-            } else {
+            if (backAnimatorSet == null || !backAnimatorSet.isRunning()) {
                 backAnimatorSet = new AnimatorSet();
                 ObjectAnimator toolBarAnimator = ObjectAnimator.ofFloat(toolbar, "translationY", toolbar.getTranslationY(), 0f);
                 ObjectAnimator titleAnimator = ObjectAnimator.ofFloat(hostTitle, "translationY", hostTitle.getTranslationY(), 0f);
@@ -431,8 +423,6 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
     }
 
     class LikeTask extends AsyncTask<Void, Integer, ResultObject> {
-
-        boolean isSupport;
 
         @Override
         protected void onCancelled(ResultObject resultObject) {

@@ -3,13 +3,10 @@ package net.nashlegend.sourcewall;
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.ObjectAnimator;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
@@ -28,15 +25,14 @@ import net.nashlegend.sourcewall.util.SharedUtil;
 public class SwipeActivity extends BaseActivity {
 
     private SwipeLayout swipeLayout;
-    private int layerColor = Color.parseColor("#88000000");
     protected boolean swipeAnyWhere = false;//是否可以在页面任意位置右滑关闭页面，如果是false则从左边滑才可以关闭
 
     @Override
     public void setTheme(int resid) {
         if (SharedUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
-            resid = net.nashlegend.sourcewall.R.style.AppThemeNight;
+            resid = R.style.AppThemeNight;
         } else {
-            resid = net.nashlegend.sourcewall.R.style.AppTheme;
+            resid = R.style.AppTheme;
         }
         super.setTheme(resid);
     }
@@ -85,7 +81,7 @@ public class SwipeActivity extends BaseActivity {
         } else {
             swipeLayout.cancelPotentialAnimation();
             super.finish();
-            overridePendingTransition(0, net.nashlegend.sourcewall.R.anim.slide_out_right);
+            overridePendingTransition(0, R.anim.slide_out_right);
         }
     }
 
@@ -114,7 +110,7 @@ public class SwipeActivity extends BaseActivity {
             screenWidth = getScreenWidth(activity);
             setClickable(true);
 //            backgroundLayer = new View(activity);
-//            backgroundLayer.setBackgroundColor(layerColor);
+//            backgroundLayer.setBackgroundColor(Color.parseColor("#88000000"));
             final ViewGroup root = (ViewGroup) activity.getWindow().getDecorView();
             content = root.getChildAt(0);
             //在Android5.0上，content的高度不再是屏幕高度，而是变成了Activity高度，比屏幕高度低一些，
@@ -124,7 +120,7 @@ public class SwipeActivity extends BaseActivity {
             //所以我们要做的就是给content一个新的LayoutParams，Match_Parent那种，也就是下面的-1
             ViewGroup.LayoutParams params = content.getLayoutParams();
             ViewGroup.LayoutParams params2 = new ViewGroup.LayoutParams(-1, -1);
-            ViewGroup.LayoutParams params3 = new ViewGroup.LayoutParams(-1, -1);
+//            ViewGroup.LayoutParams params3 = new ViewGroup.LayoutParams(-1, -1);
             root.removeView(content);
 //            this.addView(backgroundLayer, params3);
             this.addView(content, params2);
@@ -268,7 +264,7 @@ public class SwipeActivity extends BaseActivity {
         /**
          * 弹回，不关闭，因为left是0，所以setX和setTranslationX效果是一样的
          *
-         * @param withVel
+         * @param withVel 使用计算出来的时间
          */
         private void animateBack(boolean withVel) {
             cancelPotentialAnimation();
@@ -336,11 +332,6 @@ public class SwipeActivity extends BaseActivity {
                 }
             }
 
-        }
-
-        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-        public SwipeLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-            super(context, attrs, defStyleAttr, defStyleRes);
         }
     }
 

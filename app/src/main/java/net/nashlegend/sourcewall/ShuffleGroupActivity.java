@@ -39,12 +39,12 @@ public class ShuffleGroupActivity extends SwipeActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(net.nashlegend.sourcewall.R.layout.activity_shuffle);
-        toolbar = (Toolbar) findViewById(net.nashlegend.sourcewall.R.id.action_bar);
+        setContentView(R.layout.activity_shuffle);
+        toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
-        desk = (ShuffleDesk) findViewById(net.nashlegend.sourcewall.R.id.shuffle_desk);
-        ((TextView) desk.findViewById(net.nashlegend.sourcewall.R.id.text_main_sections)).setText(net.nashlegend.sourcewall.R.string.selected_groups);
-        ((TextView) desk.findViewById(net.nashlegend.sourcewall.R.id.text_other_sections)).setText(net.nashlegend.sourcewall.R.string.more_unselected_groups);
+        desk = (ShuffleDesk) findViewById(R.id.shuffle_desk);
+        ((TextView) desk.findViewById(R.id.text_main_sections)).setText(R.string.selected_groups);
+        ((TextView) desk.findViewById(R.id.text_other_sections)).setText(R.string.more_unselected_groups);
         desk.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
 
             @Override
@@ -65,14 +65,14 @@ public class ShuffleGroupActivity extends SwipeActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(net.nashlegend.sourcewall.R.menu.shuffle_groups, menu);
+        getMenuInflater().inflate(R.menu.shuffle_groups, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == net.nashlegend.sourcewall.R.id.action_reload_my_groups) {
+        if (id == R.id.action_reload_my_groups) {
             commitChanges();
             if (netTask != null && netTask.getStatus() == AsyncTask.Status.RUNNING) {
                 netTask.cancel(false);
@@ -195,7 +195,7 @@ public class ShuffleGroupActivity extends SwipeActivity {
             progressDialog = new ProgressDialog(ShuffleGroupActivity.this);
             progressDialog.setCancelable(false);
             progressDialog.setCanceledOnTouchOutside(false);
-            progressDialog.setMessage(getString(net.nashlegend.sourcewall.R.string.message_replying));
+            progressDialog.setMessage(getString(R.string.message_replying));
             progressDialog.show();
         }
 

@@ -59,10 +59,10 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(net.nashlegend.sourcewall.R.layout.activity_post);
-        loadingView = (LoadingView) findViewById(net.nashlegend.sourcewall.R.id.post_progress_loading);
+        setContentView(R.layout.activity_post);
+        loadingView = (LoadingView) findViewById(R.id.post_progress_loading);
         loadingView.setReloadListener(this);
-        Toolbar toolbar = (Toolbar) findViewById(net.nashlegend.sourcewall.R.id.action_bar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         toolbar.setOnClickListener(new View.OnClickListener() {
 
@@ -88,7 +88,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         if (!TextUtils.isEmpty(post.getGroupName())) {
             setTitle(post.getGroupName() + " -- 小组");
         }
-        listView = (LListView) findViewById(net.nashlegend.sourcewall.R.id.list_detail);
+        listView = (LListView) findViewById(R.id.list_detail);
         adapter = new PostDetailAdapter(this);
         listView.setAdapter(adapter);
 
@@ -96,16 +96,16 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         listView.setCanPullToLoadMore(false);
         listView.setOnRefreshListener(this);
 
-        FloatingActionsMenu floatingActionsMenu = (FloatingActionsMenu) findViewById(net.nashlegend.sourcewall.R.id.layout_operation);
-        FloatingActionButton replyButton = (FloatingActionButton) findViewById(net.nashlegend.sourcewall.R.id.button_reply);
-        FloatingActionButton recomButton = (FloatingActionButton) findViewById(net.nashlegend.sourcewall.R.id.button_recommend);
-        FloatingActionButton favorButton = (FloatingActionButton) findViewById(net.nashlegend.sourcewall.R.id.button_favor);
+        FloatingActionsMenu floatingActionsMenu = (FloatingActionsMenu) findViewById(R.id.layout_operation);
+        FloatingActionButton replyButton = (FloatingActionButton) findViewById(R.id.button_reply);
+        FloatingActionButton recomButton = (FloatingActionButton) findViewById(R.id.button_recommend);
+        FloatingActionButton favorButton = (FloatingActionButton) findViewById(R.id.button_favor);
 
         replyButton.setOnClickListener(this);
         recomButton.setOnClickListener(this);
         favorButton.setOnClickListener(this);
 
-        AutoHideUtil.applyListViewAutoHide(this, listView, toolbar, floatingActionsMenu, (int) getResources().getDimension(net.nashlegend.sourcewall.R.dimen.abc_action_bar_default_height_material));
+        AutoHideUtil.applyListViewAutoHide(this, listView, toolbar, floatingActionsMenu, (int) getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
 
         loadData(-1);
     }
@@ -126,7 +126,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(net.nashlegend.sourcewall.R.menu.menu_post, menu);
+        getMenuInflater().inflate(R.menu.menu_post, menu);
         return true;
     }
 
@@ -159,20 +159,20 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
         } else {
-            new FavorDialog.Builder(this).setTitle(net.nashlegend.sourcewall.R.string.action_favor).create(post).show();
+            new FavorDialog.Builder(this).setTitle(R.string.action_favor).create(post).show();
         }
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case net.nashlegend.sourcewall.R.id.button_reply:
+            case R.id.button_reply:
                 replyPost();
                 break;
-            case net.nashlegend.sourcewall.R.id.button_recommend:
+            case R.id.button_recommend:
                 likePost();
                 break;
-            case net.nashlegend.sourcewall.R.id.button_favor:
+            case R.id.button_favor:
                 favor();
                 break;
         }
@@ -239,7 +239,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
                     ToastUtil.toastSingleton(R.string.page_404);
                     finish();
                 } else {
-                    ToastUtil.toastSingleton(getString(net.nashlegend.sourcewall.R.string.load_failed));
+                    ToastUtil.toastSingleton(getString(R.string.load_failed));
                     loadingView.onLoadFailed();
                 }
             }
@@ -261,7 +261,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
                 intent.putExtra(Consts.Extra_Simple_Comment, comment);
             }
             startActivity(intent);
-            overridePendingTransition(net.nashlegend.sourcewall.R.anim.slide_in_right, 0);
+            overridePendingTransition(R.anim.slide_in_right, 0);
         }
     }
 
@@ -301,13 +301,13 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         if (view instanceof MediumListItemView) {
             final UComment comment = ((MediumListItemView) view).getData();
             ArrayList<String> ops = new ArrayList<>();
-            ops.add(getString(net.nashlegend.sourcewall.R.string.action_reply));
-            ops.add(getString(net.nashlegend.sourcewall.R.string.action_copy));
+            ops.add(getString(R.string.action_reply));
+            ops.add(getString(R.string.action_copy));
             if (!comment.isHasLiked()) {
-                ops.add(getString(net.nashlegend.sourcewall.R.string.action_like));
+                ops.add(getString(R.string.action_like));
             }
             if (comment.getAuthorID().equals(UserAPI.getUserID())) {
-                ops.add(getString(net.nashlegend.sourcewall.R.string.action_delete));
+                ops.add(getString(R.string.action_delete));
             }
             String[] operations = new String[ops.size()];
             for (int i = 0; i < ops.size(); i++) {
@@ -351,8 +351,6 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
                 post.setLikeNum(post.getLikeNum() + 1);
                 adapter.notifyDataSetChanged();
                 ToastUtil.toastSingleton("已赞");
-            } else {
-                //do nothing
             }
         }
     }
@@ -401,7 +399,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
                 adapter.remove(comment);
                 adapter.notifyDataSetChanged();
             } else {
-                ToastUtil.toastSingleton(getString(net.nashlegend.sourcewall.R.string.delete_failed));
+                ToastUtil.toastSingleton(getString(R.string.delete_failed));
             }
         }
     }

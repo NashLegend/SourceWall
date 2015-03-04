@@ -39,10 +39,10 @@ public class ShuffleTagActivity extends SwipeActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(net.nashlegend.sourcewall.R.layout.activity_shuffle);
-        toolbar = (Toolbar) findViewById(net.nashlegend.sourcewall.R.id.action_bar);
+        setContentView(R.layout.activity_shuffle);
+        toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
-        desk = (ShuffleDesk) findViewById(net.nashlegend.sourcewall.R.id.shuffle_desk);
+        desk = (ShuffleDesk) findViewById(R.id.shuffle_desk);
         desk.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
 
             @Override
@@ -51,8 +51,8 @@ public class ShuffleTagActivity extends SwipeActivity {
                 initView();
             }
         });
-        ((TextView) desk.findViewById(net.nashlegend.sourcewall.R.id.text_main_sections)).setText(net.nashlegend.sourcewall.R.string.selected_tags);
-        ((TextView) desk.findViewById(net.nashlegend.sourcewall.R.id.text_other_sections)).setText(net.nashlegend.sourcewall.R.string.more_unselected_tags);
+        ((TextView) desk.findViewById(R.id.text_main_sections)).setText(R.string.selected_tags);
+        ((TextView) desk.findViewById(R.id.text_other_sections)).setText(R.string.more_unselected_tags);
         if (getIntent().getBooleanExtra(Consts.Extra_Should_Load_Before_Shuffle, false)) {
             netTask = new LoaderFromNetTask();
             netTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -64,14 +64,14 @@ public class ShuffleTagActivity extends SwipeActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(net.nashlegend.sourcewall.R.menu.shuffle_tag, menu);
+        getMenuInflater().inflate(R.menu.shuffle_tag, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == net.nashlegend.sourcewall.R.id.action_reload_my_tags) {
+        if (id == R.id.action_reload_my_tags) {
             commitChanges();
             if (netTask != null && netTask.getStatus() == AsyncTask.Status.RUNNING) {
                 netTask.cancel(false);
@@ -193,7 +193,7 @@ public class ShuffleTagActivity extends SwipeActivity {
             progressDialog = new ProgressDialog(ShuffleTagActivity.this);
             progressDialog.setCancelable(false);
             progressDialog.setCanceledOnTouchOutside(false);
-            progressDialog.setMessage(getString(net.nashlegend.sourcewall.R.string.message_replying));
+            progressDialog.setMessage(getString(R.string.message_replying));
             progressDialog.show();
         }
 

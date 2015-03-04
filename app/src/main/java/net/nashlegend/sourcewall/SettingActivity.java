@@ -73,21 +73,21 @@ public class SettingActivity extends SwipeActivity implements View.OnClickListen
     protected void onResume() {
         super.onResume();
         if (UserAPI.isLoggedIn()) {
-            logText.setText(net.nashlegend.sourcewall.R.string.log_out);
+            logText.setText(R.string.log_out);
         } else {
-            logText.setText(net.nashlegend.sourcewall.R.string.log_in);
+            logText.setText(R.string.log_in);
         }
 
         int mode = Config.getImageLoadMode();
         switch (mode) {
             case Consts.MODE_ALWAYS_LOAD:
-                imageText.setText(net.nashlegend.sourcewall.R.string.mode_always_load);
+                imageText.setText(R.string.mode_always_load);
                 break;
             case Consts.MODE_NEVER_LOAD:
-                imageText.setText(net.nashlegend.sourcewall.R.string.mode_never_load);
+                imageText.setText(R.string.mode_never_load);
                 break;
             case Consts.MODE_LOAD_WHEN_WIFI:
-                imageText.setText(net.nashlegend.sourcewall.R.string.mode_load_load_when_wifi);
+                imageText.setText(R.string.mode_load_load_when_wifi);
                 break;
         }
 

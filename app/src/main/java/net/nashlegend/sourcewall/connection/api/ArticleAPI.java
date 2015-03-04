@@ -21,6 +21,9 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * 暂无单个回复地址
+ */
 public class ArticleAPI extends APIBase {
 
     public ArticleAPI() {

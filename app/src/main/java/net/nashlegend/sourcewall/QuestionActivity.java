@@ -47,10 +47,10 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(net.nashlegend.sourcewall.R.layout.activity_question);
-        loadingView = (LoadingView) findViewById(net.nashlegend.sourcewall.R.id.question_progress_loading);
+        setContentView(R.layout.activity_question);
+        loadingView = (LoadingView) findViewById(R.id.question_progress_loading);
         loadingView.setReloadListener(this);
-        Toolbar toolbar = (Toolbar) findViewById(net.nashlegend.sourcewall.R.id.action_bar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         toolbar.setOnClickListener(new View.OnClickListener() {
 
@@ -73,7 +73,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         });
         question = (Question) getIntent().getSerializableExtra(Consts.Extra_Question);
         notice_id = getIntent().getStringExtra(Consts.Extra_Notice_Id);
-        listView = (LListView) findViewById(net.nashlegend.sourcewall.R.id.list_detail);
+        listView = (LListView) findViewById(R.id.list_detail);
         adapter = new QuestionDetailAdapter(this);
         listView.setAdapter(adapter);
 
@@ -81,16 +81,16 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         listView.setOnRefreshListener(this);
         listView.setOnItemClickListener(onItemClickListener);
 
-        FloatingActionsMenu floatingActionsMenu = (FloatingActionsMenu) findViewById(net.nashlegend.sourcewall.R.id.layout_operation);
-        FloatingActionButton replyButton = (FloatingActionButton) findViewById(net.nashlegend.sourcewall.R.id.button_reply);
-        FloatingActionButton recomButton = (FloatingActionButton) findViewById(net.nashlegend.sourcewall.R.id.button_recommend);
-        FloatingActionButton favorButton = (FloatingActionButton) findViewById(net.nashlegend.sourcewall.R.id.button_favor);
+        FloatingActionsMenu floatingActionsMenu = (FloatingActionsMenu) findViewById(R.id.layout_operation);
+        FloatingActionButton replyButton = (FloatingActionButton) findViewById(R.id.button_reply);
+        FloatingActionButton recomButton = (FloatingActionButton) findViewById(R.id.button_recommend);
+        FloatingActionButton favorButton = (FloatingActionButton) findViewById(R.id.button_favor);
 
         replyButton.setOnClickListener(this);
         recomButton.setOnClickListener(this);
         favorButton.setOnClickListener(this);
 
-        AutoHideUtil.applyListViewAutoHide(this, listView, toolbar, floatingActionsMenu, (int) getResources().getDimension(net.nashlegend.sourcewall.R.dimen.abc_action_bar_default_height_material));
+        AutoHideUtil.applyListViewAutoHide(this, listView, toolbar, floatingActionsMenu, (int) getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
 
         loadData(-1);
     }
@@ -111,7 +111,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(net.nashlegend.sourcewall.R.menu.menu_question, menu);
+        getMenuInflater().inflate(R.menu.menu_question, menu);
         return true;
     }
 
@@ -137,30 +137,30 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
     AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            onReplyItemClick(view, position, id);
+            onReplyItemClick(view);
         }
     };
 
-    private void onReplyItemClick(final View view, int position, long id) {
+    private void onReplyItemClick(final View view) {
         if (view instanceof AnswerListItemView) {
             Intent intent = new Intent(this, AnswerActivity.class);
             intent.putExtra(Consts.Extra_Answer, ((AnswerListItemView) view).getData());
             intent.putExtra(Consts.Extra_Question, question);
             startActivity(intent);
-            overridePendingTransition(net.nashlegend.sourcewall.R.anim.slide_in_right, 0);
+            overridePendingTransition(R.anim.slide_in_right, 0);
         }
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case net.nashlegend.sourcewall.R.id.button_reply:
+            case R.id.button_reply:
                 answerQuestion();
                 break;
-            case net.nashlegend.sourcewall.R.id.button_recommend:
+            case R.id.button_recommend:
                 recommend();
                 break;
-            case net.nashlegend.sourcewall.R.id.button_favor:
+            case R.id.button_favor:
                 favor();
                 break;
         }
@@ -170,7 +170,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
         } else {
-            new FavorDialog.Builder(this).setTitle(net.nashlegend.sourcewall.R.string.action_favor).create(question).show();
+            new FavorDialog.Builder(this).setTitle(R.string.action_favor).create(question).show();
         }
     }
 
@@ -179,7 +179,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
             notifyNeedLog();
         } else {
             InputDialog.Builder builder = new InputDialog.Builder(this);
-            builder.setTitle(net.nashlegend.sourcewall.R.string.recommend_article);
+            builder.setTitle(R.string.recommend_article);
             builder.setCancelable(true);
             builder.setCanceledOnTouchOutside(false);
             builder.setOnClickListener(new DialogInterface.OnClickListener() {
@@ -191,8 +191,6 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
                         String text = d.InputString;
                         RecommendTask recommendTask = new RecommendTask();
                         recommendTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, question.getId(), question.getTitle(), question.getSummary(), text);
-                    } else {
-                        // cancel recommend
                     }
                 }
             });
@@ -208,7 +206,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
             Intent intent = new Intent(this, ReplyActivity.class);
             intent.putExtra(Consts.Extra_Ace_Model, question);
             startActivity(intent);
-            overridePendingTransition(net.nashlegend.sourcewall.R.anim.slide_in_right, 0);
+            overridePendingTransition(R.anim.slide_in_right, 0);
         }
     }
 
@@ -273,7 +271,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
                     ToastUtil.toastSingleton(R.string.page_404);
                     finish();
                 } else {
-                    ToastUtil.toastSingleton(getString(net.nashlegend.sourcewall.R.string.load_failed));
+                    ToastUtil.toastSingleton(getString(R.string.load_failed));
                     loadingView.onLoadFailed();
                 }
             }
@@ -295,9 +293,9 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         @Override
         protected void onPostExecute(ResultObject resultObject) {
             if (resultObject.ok) {
-                ToastUtil.toast(net.nashlegend.sourcewall.R.string.recommend_ok);
+                ToastUtil.toast(R.string.recommend_ok);
             } else {
-                ToastUtil.toast(net.nashlegend.sourcewall.R.string.recommend_failed);
+                ToastUtil.toast(R.string.recommend_failed);
             }
         }
     }

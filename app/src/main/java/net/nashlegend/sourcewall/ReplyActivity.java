@@ -69,13 +69,13 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(net.nashlegend.sourcewall.R.layout.activity_reply);
-        Toolbar toolbar = (Toolbar) findViewById(net.nashlegend.sourcewall.R.id.action_bar);
+        setContentView(R.layout.activity_reply);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         aceModel = (AceModel) getIntent().getSerializableExtra(Consts.Extra_Ace_Model);
         comment = (UComment) getIntent().getSerializableExtra(Consts.Extra_Simple_Comment);
-        editText = (EditText) findViewById(net.nashlegend.sourcewall.R.id.text_reply);
-        hostText = (TextView) findViewById(net.nashlegend.sourcewall.R.id.text_reply_host);
+        editText = (EditText) findViewById(R.id.text_reply);
+        hostText = (TextView) findViewById(R.id.text_reply_host);
         if (comment != null) {
             hostText.setVisibility(View.VISIBLE);
             String cont = RegUtil.html2PlainTextWithoutBlockQuote(comment.getContent());
@@ -86,13 +86,13 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
         }
         if (aceModel instanceof Question) {
             setTitle("回答问题");
-            editText.setHint(net.nashlegend.sourcewall.R.string.hint_answer);
+            editText.setHint(R.string.hint_answer);
         }
-        ImageButton publishButton = (ImageButton) findViewById(net.nashlegend.sourcewall.R.id.btn_publish);
-        imgButton = (ImageButton) findViewById(net.nashlegend.sourcewall.R.id.btn_add_img);
-        insertButton = (ImageButton) findViewById(net.nashlegend.sourcewall.R.id.btn_insert_img);
-        ImageButton linkButton = (ImageButton) findViewById(net.nashlegend.sourcewall.R.id.btn_link);
-        uploadingProgress = findViewById(net.nashlegend.sourcewall.R.id.prg_uploading_img);
+        ImageButton publishButton = (ImageButton) findViewById(R.id.btn_publish);
+        imgButton = (ImageButton) findViewById(R.id.btn_add_img);
+        insertButton = (ImageButton) findViewById(R.id.btn_insert_img);
+        ImageButton linkButton = (ImageButton) findViewById(R.id.btn_link);
+        uploadingProgress = findViewById(R.id.prg_uploading_img);
         publishButton.setOnClickListener(this);
         imgButton.setOnClickListener(this);
         insertButton.setOnClickListener(this);
@@ -101,10 +101,10 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
     }
 
     private void invokeImageDialog() {
-        String[] ways = {getString(net.nashlegend.sourcewall.R.string.add_image_from_disk),
-                getString(net.nashlegend.sourcewall.R.string.add_image_from_camera),
-                getString(net.nashlegend.sourcewall.R.string.add_image_from_link)};
-        new AlertDialog.Builder(this).setTitle(net.nashlegend.sourcewall.R.string.way_to_add_image).setItems(ways, new DialogInterface.OnClickListener() {
+        String[] ways = {getString(R.string.add_image_from_disk),
+                getString(R.string.add_image_from_camera),
+                getString(R.string.add_image_from_link)};
+        new AlertDialog.Builder(this).setTitle(R.string.way_to_add_image).setItems(ways, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
@@ -140,7 +140,7 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
 
     private void invokeImageUrlDialog() {
         InputDialog.Builder builder = new InputDialog.Builder(this);
-        builder.setTitle(net.nashlegend.sourcewall.R.string.input_image_url);
+        builder.setTitle(R.string.input_image_url);
         builder.setCancelable(true);
         builder.setCanceledOnTouchOutside(false);
         builder.setSingleLine();
@@ -166,10 +166,10 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
                 ImageUploadTask task = new ImageUploadTask(this);
                 task.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR, path);
             } else {
-                ToastUtil.toast(net.nashlegend.sourcewall.R.string.file_not_exists);
+                ToastUtil.toast(R.string.file_not_exists);
             }
         } else {
-            ToastUtil.toast(net.nashlegend.sourcewall.R.string.file_not_image);
+            ToastUtil.toast(R.string.file_not_image);
         }
     }
 
@@ -184,7 +184,7 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
     private void insertImagePath(String url) {
         String imgTag = "[image]" + url + "[/image]";
         SpannableString spanned = new SpannableString(imgTag);
-        Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), net.nashlegend.sourcewall.R.drawable.default_text_image);
+        Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.default_text_image);
         String displayed = "图片链接...";
         ImageSpan imageSpan = getImageSpan(displayed, sourceBitmap);
         spanned.setSpan(imageSpan, 0, imgTag.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -217,7 +217,7 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
      */
     private void insertLink() {
         InputDialog.Builder builder = new InputDialog.Builder(this);
-        builder.setTitle(net.nashlegend.sourcewall.R.string.input_link_url);
+        builder.setTitle(R.string.input_link_url);
         builder.setCancelable(true);
         builder.setCanceledOnTouchOutside(false);
         builder.setTwoLine();
@@ -235,7 +235,7 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
                     String title = d.InputString2;
                     String result = "[url=" + url + "]" + title + "[/url]";
                     SpannableString spanned = new SpannableString(result);
-                    Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), net.nashlegend.sourcewall.R.drawable.link_gray);
+                    Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.link_gray);
                     String displayed;
                     if (TextUtils.isEmpty(title.trim())) {
                         Uri uri = Uri.parse(url);
@@ -271,20 +271,20 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case net.nashlegend.sourcewall.R.id.btn_publish:
+            case R.id.btn_publish:
                 if (!TextUtils.isEmpty(editText.getText().toString().trim())) {
                     publishReply(editText.getText().toString());
                 } else {
-                    ToastUtil.toast(net.nashlegend.sourcewall.R.string.content_cannot_be_empty);
+                    ToastUtil.toast(R.string.content_cannot_be_empty);
                 }
                 break;
-            case net.nashlegend.sourcewall.R.id.btn_add_img:
+            case R.id.btn_add_img:
                 invokeImageDialog();
                 break;
-            case net.nashlegend.sourcewall.R.id.btn_insert_img:
+            case R.id.btn_insert_img:
                 insertImagePath(tmpImagePath);
                 break;
-            case net.nashlegend.sourcewall.R.id.btn_link:
+            case R.id.btn_link:
                 insertLink();
                 break;
         }
@@ -297,7 +297,7 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
             progressDialog = new ProgressDialog(ReplyActivity.this);
             progressDialog.setCancelable(false);
             progressDialog.setCanceledOnTouchOutside(false);
-            progressDialog.setMessage(getString(net.nashlegend.sourcewall.R.string.message_replying));
+            progressDialog.setMessage(getString(R.string.message_replying));
             progressDialog.show();
         }
 
@@ -312,13 +312,13 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
         protected void onPostExecute(ResultObject resultObject) {
             progressDialog.dismiss();
             if (resultObject.ok) {
-                ToastUtil.toast(net.nashlegend.sourcewall.R.string.reply_ok);
+                ToastUtil.toast(R.string.reply_ok);
                 setResult(RESULT_OK);
                 replyOK = true;
                 tryClearSketch();
                 finish();
             } else {
-                ToastUtil.toast(net.nashlegend.sourcewall.R.string.reply_failed);
+                ToastUtil.toast(R.string.reply_failed);
             }
         }
     }
@@ -356,7 +356,7 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
             //4和5与PublishPostActivity的顺序相反
             if (!TextUtils.isEmpty(matcher.group(1))) {
                 //String imageUrl = matcher.group(2);
-                Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), net.nashlegend.sourcewall.R.drawable.default_text_image);
+                Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.default_text_image);
                 ImageSpan imageSpan = getImageSpan("图片链接...", sourceBitmap);
                 spanned.setSpan(imageSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             } else {
@@ -365,7 +365,7 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
                 if (!linkUrl.startsWith("http")) {
                     linkUrl = "http://" + linkUrl;
                 }
-                Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), net.nashlegend.sourcewall.R.drawable.link_gray);
+                Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.link_gray);
                 String displayed;
                 if (TextUtils.isEmpty(linkTitle.trim())) {
                     Uri uri = Uri.parse(linkUrl);
@@ -537,15 +537,11 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
                     String path = FileUtil.getActualPath(this, uri);
                     if (!TextUtils.isEmpty(path)) {
                         uploadImage(path);
-                    } else {
-                        //么有图
                     }
                     break;
                 case Consts.Code_Invoke_Camera:
                     if (tmpUploadFile != null) {
                         uploadImage(tmpUploadFile.getAbsolutePath());
-                    } else {
-                        //么有图
                     }
                     break;
                 default:
@@ -558,13 +554,12 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(net.nashlegend.sourcewall.R.menu.menu_reply_article, menu);
+        getMenuInflater().inflate(R.menu.menu_reply_article, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
         return super.onOptionsItemSelected(item);
     }
 

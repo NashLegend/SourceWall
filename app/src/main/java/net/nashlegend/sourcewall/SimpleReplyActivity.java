@@ -49,10 +49,10 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(net.nashlegend.sourcewall.R.layout.activity_simple_reply);
-        loadingView = (LoadingView) findViewById(net.nashlegend.sourcewall.R.id.replies_progress_loading);
+        setContentView(R.layout.activity_simple_reply);
+        loadingView = (LoadingView) findViewById(R.id.replies_progress_loading);
         loadingView.setReloadListener(this);
-        toolbar = (Toolbar) findViewById(net.nashlegend.sourcewall.R.id.action_bar);
+        toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         toolbar.setOnClickListener(new View.OnClickListener() {
 
@@ -73,10 +73,10 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
                 }
             }
         });
-        textReply = (EditText) findViewById(net.nashlegend.sourcewall.R.id.text_simple_reply);
-        publishButton = (ImageButton) findViewById(net.nashlegend.sourcewall.R.id.btn_publish);
+        textReply = (EditText) findViewById(R.id.text_simple_reply);
+        publishButton = (ImageButton) findViewById(R.id.btn_publish);
         aceModel = (AceModel) getIntent().getSerializableExtra(Consts.Extra_Ace_Model);
-        listView = (LListView) findViewById(net.nashlegend.sourcewall.R.id.list_detail);
+        listView = (LListView) findViewById(R.id.list_detail);
         adapter = new SimpleCommentAdapter(this);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(onItemClickListener);
@@ -90,7 +90,7 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
     /**
      * offset=0是指刷新
      *
-     * @param offset
+     * @param offset 从第几个开始加载
      */
     private void loadData(int offset) {
         if (offset < 0) {
@@ -111,17 +111,17 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         mMenu = menu;
-        getMenuInflater().inflate(net.nashlegend.sourcewall.R.menu.menu_simple_reply, menu);
-        mMenu.findItem(net.nashlegend.sourcewall.R.id.action_cancel_simple_reply).setVisible(false);
+        getMenuInflater().inflate(R.menu.menu_simple_reply, menu);
+        mMenu.findItem(R.id.action_cancel_simple_reply).setVisible(false);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == net.nashlegend.sourcewall.R.id.action_cancel_simple_reply) {
-            mMenu.findItem(net.nashlegend.sourcewall.R.id.action_cancel_simple_reply).setVisible(false);
-            textReply.setHint(net.nashlegend.sourcewall.R.string.hint_reply);
+        if (id == R.id.action_cancel_simple_reply) {
+            mMenu.findItem(R.id.action_cancel_simple_reply).setVisible(false);
+            textReply.setHint(R.string.hint_reply);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -130,24 +130,24 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
     AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            onReplyItemClick(view, position, id);
+            onReplyItemClick(view);
         }
     };
 
-    private void onReplyItemClick(final View view, int position, long id) {
+    private void onReplyItemClick(final View view) {
         if (view instanceof SimpleCommentItemView) {
             textReply.setHint("回复@" + ((SimpleCommentItemView) view).getData().getAuthor() + "：");
-            mMenu.findItem(net.nashlegend.sourcewall.R.id.action_cancel_simple_reply).setVisible(true);
+            mMenu.findItem(R.id.action_cancel_simple_reply).setVisible(true);
         }
     }
 
     /**
      * 是回复/问题，还是回复里面的评论
      *
-     * @return
+     * @return boolean
      */
     private boolean isCommentOnHost() {
-        return !mMenu.findItem(net.nashlegend.sourcewall.R.id.action_cancel_simple_reply).isVisible();
+        return !mMenu.findItem(R.id.action_cancel_simple_reply).isVisible();
     }
 
     @Override
@@ -162,7 +162,7 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == net.nashlegend.sourcewall.R.id.btn_publish) {
+        if (v.getId() == R.id.btn_publish) {
             if (!UserAPI.isLoggedIn()) {
                 notifyNeedLog();
                 return;
@@ -205,7 +205,7 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
             progressDialog = new ProgressDialog(SimpleReplyActivity.this);
             progressDialog.setCancelable(false);
             progressDialog.setCanceledOnTouchOutside(false);
-            progressDialog.setMessage(getString(net.nashlegend.sourcewall.R.string.message_replying));
+            progressDialog.setMessage(getString(R.string.message_replying));
             progressDialog.show();
         }
 
@@ -225,8 +225,8 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
         protected void onPostExecute(ResultObject result) {
             progressDialog.dismiss();
             if (result.ok) {
-                mMenu.findItem(net.nashlegend.sourcewall.R.id.action_cancel_simple_reply).setVisible(false);
-                textReply.setHint(net.nashlegend.sourcewall.R.string.hint_reply);
+                mMenu.findItem(R.id.action_cancel_simple_reply).setVisible(false);
+                textReply.setHint(R.string.hint_reply);
                 textReply.setText("");
                 hideInput(textReply);
                 if (task == null || task.getStatus() != AAsyncTask.Status.RUNNING) {
@@ -286,7 +286,7 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
                 }
                 listView.setCanPullToRefresh(true);
             } else {
-                ToastUtil.toast(getString(net.nashlegend.sourcewall.R.string.load_failed));
+                ToastUtil.toast(getString(R.string.load_failed));
                 loadingView.onLoadFailed();
             }
             listView.doneOperation();

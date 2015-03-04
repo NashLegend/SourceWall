@@ -74,35 +74,36 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(net.nashlegend.sourcewall.R.layout.activity_answer);
+        setContentView(R.layout.activity_answer);
         handler = new Handler();
-        rootView = findViewById(net.nashlegend.sourcewall.R.id.rootView);
-        toolbar = (Toolbar) findViewById(net.nashlegend.sourcewall.R.id.action_bar);
+        rootView = findViewById(R.id.rootView);
+        toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
-        authorLayout = findViewById(net.nashlegend.sourcewall.R.id.layout_author);
-        scrollView = (SScrollView) findViewById(net.nashlegend.sourcewall.R.id.scrollView);
-        headerHolder = findViewById(net.nashlegend.sourcewall.R.id.headerHolder);
-        footerHolder = findViewById(net.nashlegend.sourcewall.R.id.footerHolder);
-        webHolder = (LinearLayout) findViewById(net.nashlegend.sourcewall.R.id.web_holder);
-        webView = (WWebView) findViewById(net.nashlegend.sourcewall.R.id.web_content);
-        questionText = (TextView) findViewById(net.nashlegend.sourcewall.R.id.text_title);
-        avatar = (ImageView) findViewById(net.nashlegend.sourcewall.R.id.image_avatar);
-        authorName = (TextView) findViewById(net.nashlegend.sourcewall.R.id.text_author);
-        authorTitle = (TextView) findViewById(net.nashlegend.sourcewall.R.id.text_author_title);
-        supportView = findViewById(net.nashlegend.sourcewall.R.id.layout_opinion);
-        supportText = (TextView) findViewById(net.nashlegend.sourcewall.R.id.text_num_support);
-        floatingActionsMenu = (FloatingActionsMenu) findViewById(net.nashlegend.sourcewall.R.id.layout_operation);
+        authorLayout = findViewById(R.id.layout_author);
+        scrollView = (SScrollView) findViewById(R.id.scrollView);
+        headerHolder = findViewById(R.id.headerHolder);
+        footerHolder = findViewById(R.id.footerHolder);
+        webHolder = (LinearLayout) findViewById(R.id.web_holder);
+        webView = (WWebView) findViewById(R.id.web_content);
+        questionText = (TextView) findViewById(R.id.text_title);
+        avatar = (ImageView) findViewById(R.id.image_avatar);
+        authorName = (TextView) findViewById(R.id.text_author);
+        authorTitle = (TextView) findViewById(R.id.text_author_title);
+        supportView = findViewById(R.id.layout_opinion);
+        supportText = (TextView) findViewById(R.id.text_num_support);
+        floatingActionsMenu = (FloatingActionsMenu) findViewById(R.id.layout_operation);
         loadingView = (LoadingView) findViewById(R.id.answer_progress_loading);
 
-        replyButton = (FloatingActionButton) findViewById(net.nashlegend.sourcewall.R.id.button_reply);
-        notAnButton = (FloatingActionButton) findViewById(net.nashlegend.sourcewall.R.id.button_Bury);
-        thankButton = (FloatingActionButton) findViewById(net.nashlegend.sourcewall.R.id.button_thank);
+        replyButton = (FloatingActionButton) findViewById(R.id.button_reply);
+        notAnButton = (FloatingActionButton) findViewById(R.id.button_Bury);
+        thankButton = (FloatingActionButton) findViewById(R.id.button_thank);
 
         questionText.setOnClickListener(this);
         supportView.setOnClickListener(this);
         replyButton.setOnClickListener(this);
         notAnButton.setOnClickListener(this);
         thankButton.setOnClickListener(this);
+        webView.setOnClickListener(this);
         loadingView.setReloadListener(this);
 
         if (getIntent().hasExtra(Consts.Extra_Answer)) {
@@ -143,21 +144,21 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         authorName.setText(answer.getAuthor());
         authorTitle.setText(answer.getAuthorTitle());
         if (answer.isHasBuried()) {
-            notAnButton.setIcon(net.nashlegend.sourcewall.R.drawable.dustbin);
+            notAnButton.setIcon(R.drawable.dustbin);
         } else {
-            notAnButton.setIcon(net.nashlegend.sourcewall.R.drawable.dustbin_outline);
+            notAnButton.setIcon(R.drawable.dustbin_outline);
         }
         if (answer.isHasThanked()) {
-            thankButton.setIcon(net.nashlegend.sourcewall.R.drawable.heart);
+            thankButton.setIcon(R.drawable.heart);
         } else {
-            thankButton.setIcon(net.nashlegend.sourcewall.R.drawable.heart_outline);
+            thankButton.setIcon(R.drawable.heart_outline);
         }
         if (Config.shouldLoadImage()) {
             Picasso.with(this).load(answer.getAuthorAvatarUrl())
-                    .resizeDimen(net.nashlegend.sourcewall.R.dimen.list_standard_comment_avatar_dimen, net.nashlegend.sourcewall.R.dimen.list_standard_comment_avatar_dimen)
+                    .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
                     .into(avatar);
         } else {
-            avatar.setImageResource(net.nashlegend.sourcewall.R.drawable.default_avatar);
+            avatar.setImageResource(R.drawable.default_avatar);
         }
         rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -202,7 +203,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(net.nashlegend.sourcewall.R.menu.menu_answer, menu);
+        getMenuInflater().inflate(R.menu.menu_answer, menu);
         return true;
     }
 
@@ -291,7 +292,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case net.nashlegend.sourcewall.R.id.text_title:
+            case R.id.text_title:
                 if (fromHost) {
                     finish();
                 } else {
@@ -302,17 +303,20 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
                     overridePendingTransition(R.anim.slide_in_right, 0);
                 }
                 break;
-            case net.nashlegend.sourcewall.R.id.layout_opinion:
+            case R.id.layout_opinion:
                 invokeOpinionDialog();
                 break;
-            case net.nashlegend.sourcewall.R.id.button_reply:
+            case R.id.button_reply:
                 replyAnswer();
                 break;
-            case net.nashlegend.sourcewall.R.id.button_Bury:
+            case R.id.button_Bury:
                 buryAnswer();
                 break;
-            case net.nashlegend.sourcewall.R.id.button_thank:
+            case R.id.button_thank:
                 thankAnswer();
+                break;
+            case R.id.web_content:
+                ToastUtil.toast("Haha");
                 break;
         }
     }
@@ -321,14 +325,14 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         Intent intent = new Intent(this, SimpleReplyActivity.class);
         intent.putExtra(Consts.Extra_Ace_Model, answer);
         startActivity(intent);
-        overridePendingTransition(net.nashlegend.sourcewall.R.anim.slide_in_right, 0);
+        overridePendingTransition(R.anim.slide_in_right, 0);
     }
 
     private void invokeOpinionDialog() {
         if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
         } else {
-            String[] operations = {getString(net.nashlegend.sourcewall.R.string.action_support), getString(net.nashlegend.sourcewall.R.string.action_oppose)};
+            String[] operations = {getString(R.string.action_support), getString(R.string.action_oppose)};
             new AlertDialog.Builder(this).setTitle("").setItems(operations, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -450,11 +454,11 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
                 if (bury) {
                     ToastUtil.toast("已标记为\"不是答案\"");
                     answer.setHasBuried(true);
-                    notAnButton.setIcon(net.nashlegend.sourcewall.R.drawable.dustbin);
+                    notAnButton.setIcon(R.drawable.dustbin);
                 } else {
                     ToastUtil.toastSingleton("取消\"不是答案\"标记");
                     answer.setHasBuried(false);
-                    notAnButton.setIcon(net.nashlegend.sourcewall.R.drawable.dustbin_outline);
+                    notAnButton.setIcon(R.drawable.dustbin_outline);
                 }
             } else {
                 if (bury && resultObject.code == ResultObject.ResultCode.CODE_ALREADY_BURIED) {
@@ -479,12 +483,12 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
             if (resultObject.ok) {
                 ToastUtil.toast("感谢成功");
                 answer.setHasThanked(true);
-                thankButton.setIcon(net.nashlegend.sourcewall.R.drawable.heart);
+                thankButton.setIcon(R.drawable.heart);
             } else {
                 if (resultObject.code == ResultObject.ResultCode.CODE_ALREADY_THANKED) {
                     ToastUtil.toast("已经感谢过了");
                     answer.setHasThanked(true);
-                    thankButton.setIcon(net.nashlegend.sourcewall.R.drawable.heart);
+                    thankButton.setIcon(R.drawable.heart);
                 } else {
                     ToastUtil.toast("感谢未遂");
                 }

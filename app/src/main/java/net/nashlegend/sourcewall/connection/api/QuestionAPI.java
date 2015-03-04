@@ -24,6 +24,9 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 
+/**
+ * 单个答案地址。http://www.guokr.com/answer/782227/
+ */
 public class QuestionAPI extends APIBase {
     private static int maxImageWidth = 240;
     private static String prefix = "<div class=\"ZoomBox\"><div class=\"content-zoom ZoomIn\">";
@@ -94,7 +97,7 @@ public class QuestionAPI extends APIBase {
     public static ResultObject getQuestionsByTagFromJsonUrl(String tag, int offset) {
         ResultObject resultObject = new ResultObject();
         try {
-            ArrayList<Question> questions = new ArrayList<Question>();
+            ArrayList<Question> questions = new ArrayList<>();
             String url = "http://apis.guokr.com/ask/question.json";
             ArrayList<NameValuePair> pairs = new ArrayList<>();
             pairs.add(new BasicNameValuePair("retrieve_type", "by_tag"));
@@ -215,7 +218,7 @@ public class QuestionAPI extends APIBase {
     public static ResultObject getQuestionDetailFromJsonUrl(String url) {
         ResultObject resultObject = new ResultObject();
         try {
-            Question question = null;
+            Question question;
             ResultObject httpResult = HttpFetcher.get(url);
             resultObject.statusCode = httpResult.statusCode;
             if (resultObject.statusCode == 404) {
@@ -261,7 +264,7 @@ public class QuestionAPI extends APIBase {
     public static ResultObject getQuestionAnswers(String id, int offset) {
         ResultObject resultObject = new ResultObject();
         try {
-            ArrayList<QuestionAnswer> answers = new ArrayList<QuestionAnswer>();
+            ArrayList<QuestionAnswer> answers = new ArrayList<>();
             String url = "http://apis.guokr.com/ask/answer.json";
             ArrayList<NameValuePair> pairs = new ArrayList<>();
             pairs.add(new BasicNameValuePair("retrieve_type", "by_question"));
@@ -318,6 +321,7 @@ public class QuestionAPI extends APIBase {
      */
     public static ResultObject getSingleAnswerFromRedirectUrl(String url) {
         //http://www.guokr.com/answer/654321/redirect/
+        //http://www.guokr.com/answer/654321/
         return getSingleAnswerByID(url.replaceAll("\\D+", ""));
     }
 
@@ -434,7 +438,7 @@ public class QuestionAPI extends APIBase {
     public static ResultObject getQuestionComments(String id, int offset) {
         ResultObject resultObject = new ResultObject();
         try {
-            ArrayList<UComment> list = new ArrayList<UComment>();
+            ArrayList<UComment> list = new ArrayList<>();
             String url = "http://www.guokr.com/apis/ask/question_reply.json";
             ArrayList<NameValuePair> pairs = new ArrayList<>();
             pairs.add(new BasicNameValuePair("retrieve_type", "by_question"));
