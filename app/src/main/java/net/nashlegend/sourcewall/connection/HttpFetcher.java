@@ -59,7 +59,7 @@ public class HttpFetcher {
     private static final int MAX_EXECUTION_COUNT = 2;
     private final static int MAX_ROUTE_CONNECTIONS = 400;
     private final static int MAX_TOTAL_CONNECTIONS = 800;
-    private final static int TIMEOUT = 3000;
+    private final static int TIMEOUT = 15000;
     private final static int CONNECTION_TIMEOUT = 30000;//网络状况差的时候这个时间可能很长
     private final static int SO_TIMEOUT = 60000;
     private final static int UPLOAD_SO_TIMEOUT = 300000;//300秒的上传时间
@@ -318,11 +318,12 @@ public class HttpFetcher {
             if (request instanceof HttpRequestBase) {
                 String url = ((HttpRequestBase) request).getURI().toString();
                 String article_reply_reg = "^http://(www|m).guokr.com/article/reply/\\d+/$";//http://www.guokr.com/article/reply/2903740/
-                String post_reply_reg = "^http://(www|m).guokr.com/post/reply/\\d+/$";//http://www.guokr.com/post/reply/6148664/
+                String post_reply_reg = "^http://(www|m).guokr.com/post/reply/\\d+/$";//http://www.guokr.com/post/reply/6148664/，只有通知才会跳到这
                 String question_answer_reg = "^http://(www|m).guokr.com/answer/\\d+/redirect/$";//http://www.guokr.com/answer/778164/redirect/
                 //问题貌似有点独立，第一次请求会要走一遍sso，所以就不在这里搞了
-                String publish_post_reg = "";//TODO，发贴302
-                flag = !url.matches(article_reply_reg) && !url.matches(post_reply_reg);
+//                String publish_post_reg = "http://www.guokr.com/post/\\d+/";//
+                String publish_post_reg = "http://www.guokr.com/group/\\d+/post/edit/";
+                flag = !url.matches(article_reply_reg) && !url.matches(post_reply_reg) && !url.matches(publish_post_reg);
             }
         } catch (Exception e) {
             e.printStackTrace();

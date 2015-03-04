@@ -1,6 +1,7 @@
 package net.nashlegend.sourcewall;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -191,9 +192,14 @@ public class ShuffleTagActivity extends SwipeActivity {
         @Override
         protected void onPreExecute() {
             progressDialog = new ProgressDialog(ShuffleTagActivity.this);
-            progressDialog.setCancelable(false);
             progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.setMessage(getString(R.string.message_replying));
+            progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    LoaderFromNetTask.this.cancel(true);
+                }
+            });
             progressDialog.show();
         }
 

@@ -489,9 +489,14 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         @Override
         protected void onPreExecute() {
             progressDialog = new ProgressDialog(PublishPostActivity.this);
-            progressDialog.setCancelable(false);
             progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.setMessage(getString(R.string.message_replying));
+            progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    PublishTask.this.cancel(true);
+                }
+            });
             progressDialog.show();
         }
 

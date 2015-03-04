@@ -823,11 +823,22 @@ public class PostAPI extends APIBase {
             pairs.add(new BasicNameValuePair("share_opts", "activity"));
 
             ResultObject result = HttpFetcher.post(url, pairs, false);
-            //本来是302，自动跳转就成了200，我日，这会消耗流量的，以后再说，TODO
-            //if (result.statusCode == 302 && testPublishResult(result.toString())) {
-            if (result.statusCode == 200) {
-                resultObject.ok = true;
-                resultObject.result = result.toString();
+            if (result.statusCode == 302) {
+                try {
+                    String replyRedirectResult = result.toString();
+                    Document document = Jsoup.parse(replyRedirectResult);
+                    Elements elements = document.getElementsByTag("a");
+                    if (elements.size() == 1) {
+                        Matcher matcher = Pattern.compile("^/post/(\\d+)/$").matcher(elements.get(0).text());
+                        if (matcher.find()) {
+                            String post_id = matcher.group(1);
+                            resultObject.ok = true;
+                            resultObject.result = post_id;
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         } catch (Exception e) {
             handleRequestException(e, resultObject);

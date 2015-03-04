@@ -1,6 +1,7 @@
 package net.nashlegend.sourcewall;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -203,9 +204,14 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
         @Override
         protected void onPreExecute() {
             progressDialog = new ProgressDialog(SimpleReplyActivity.this);
-            progressDialog.setCancelable(false);
             progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.setMessage(getString(R.string.message_replying));
+            progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    ReplyTask.this.cancel(true);
+                }
+            });
             progressDialog.show();
         }
 

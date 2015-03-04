@@ -1,6 +1,7 @@
 package net.nashlegend.sourcewall.fragment;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -180,9 +181,14 @@ public class NoticesFragment extends ChannelsFragment implements LListView.OnRef
         @Override
         protected void onPreExecute() {
             progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setCancelable(false);
             progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.setMessage(getString(R.string.message_replying));
+            progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    IgnoreTask.this.cancel(true);
+                }
+            });
             progressDialog.show();
         }
 
