@@ -17,9 +17,9 @@ SourceWall是一款开源的果壳网第三方应用，目的是为了让壳友�
 - 除主页外，所有页面都可以从左侧向右滑动关闭。
 
 
-###SourceWall 1.3.1版，下载地址: [SourceWall 1.3.1](https://raw.githubusercontent.com/NashLegend/SourceWall/master/app/release/SourceWall.apk)###
+###SourceWall 1.3.2版，下载地址: [SourceWall 1.3.2](https://raw.githubusercontent.com/NashLegend/SourceWall/master/app/release/SourceWall.apk)###
 
 ###或者手机扫码下载：###
 
-![SourceWall 1.3.1](http://i.imgur.com/j7XlnME.png)
+![SourceWall 1.3.2](http://i.imgur.com/j7XlnME.png)
 
