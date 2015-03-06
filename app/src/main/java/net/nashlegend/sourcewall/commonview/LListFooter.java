@@ -235,9 +235,10 @@ public class LListFooter extends FrameLayout {
         }
         if (height < 1) {
             setVisibility(View.GONE);
+            tvHint.setVisibility(GONE);
             ViewGroup.LayoutParams params = getLayoutParams();
             if (params != null) {
-                params.height = 1;
+                params.height = 0;
                 setLayoutParams(params);
             }
             setPadding(0, 0, 0, 0);
@@ -249,6 +250,7 @@ public class LListFooter extends FrameLayout {
             }
             if (getVisibility() != View.VISIBLE) {
                 setVisibility(View.VISIBLE);
+                tvHint.setVisibility(VISIBLE);
                 setTopPadding();
             }
         }
