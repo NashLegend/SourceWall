@@ -14,6 +14,8 @@ import android.widget.AdapterView;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.NoticeAdapter;
+import net.nashlegend.sourcewall.commonview.AAsyncTask;
+import net.nashlegend.sourcewall.commonview.IStackedAsyncTaskInterface;
 import net.nashlegend.sourcewall.commonview.LListView;
 import net.nashlegend.sourcewall.commonview.LoadingView;
 import net.nashlegend.sourcewall.connection.ResultObject;
@@ -74,12 +76,12 @@ public class NoticesFragment extends ChannelsFragment implements LListView.OnRef
 
     private void loadData() {
         cancelPotentialTask();
-        task = new LoaderTask();
+        task = new LoaderTask(this);
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void cancelPotentialTask() {
-        if (task != null && task.getStatus() == AsyncTask.Status.RUNNING) {
+        if (task != null && task.getStatus() == AAsyncTask.Status.RUNNING) {
             task.cancel(true);
         }
         listView.doneOperation();
@@ -149,7 +151,11 @@ public class NoticesFragment extends ChannelsFragment implements LListView.OnRef
 
     }
 
-    class LoaderTask extends AsyncTask<Integer, Integer, ResultObject> {
+    class LoaderTask extends AAsyncTask<Integer, Integer, ResultObject> {
+
+        LoaderTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
+            super(iStackedAsyncTaskInterface);
+        }
 
         @Override
         protected ResultObject doInBackground(Integer... params) {

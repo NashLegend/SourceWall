@@ -479,6 +479,20 @@ public abstract class AAsyncTask<Params, Progress, Result> {
     }
 
     /**
+     * 立即终止后台任务，如有需要，请继承abortBackgroundTask(),在abortBackgroundTask()里提供终止的操作
+     *
+     * @return boolean
+     */
+    public final boolean cancelImmediately() {
+        abortBackgroundTask();
+        return cancel(true);
+    }
+
+    public void abortBackgroundTask() {
+
+    }
+
+    /**
      * Waits if necessary for the computation to complete, and then
      * retrieves its result.
      *
