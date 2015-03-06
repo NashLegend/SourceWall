@@ -20,7 +20,6 @@ import net.nashlegend.sourcewall.db.GroupHelper;
 import net.nashlegend.sourcewall.db.gen.MyGroup;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.util.Consts;
-import net.nashlegend.sourcewall.util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -236,7 +235,7 @@ public class ShuffleGroupActivity extends SwipeActivity {
             if (aBoolean) {
                 initView();
             } else {
-                ToastUtil.toast("加载我的小组失败");
+                toast("加载我的小组失败");
             }
         }
     }

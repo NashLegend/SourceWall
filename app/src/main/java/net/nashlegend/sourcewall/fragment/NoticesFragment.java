@@ -20,7 +20,6 @@ import net.nashlegend.sourcewall.connection.ResultObject;
 import net.nashlegend.sourcewall.connection.api.UserAPI;
 import net.nashlegend.sourcewall.model.Notice;
 import net.nashlegend.sourcewall.model.SubItem;
-import net.nashlegend.sourcewall.util.ToastUtil;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;
 import net.nashlegend.sourcewall.view.NoticeView;
 
@@ -163,13 +162,13 @@ public class NoticesFragment extends ChannelsFragment implements LListView.OnRef
                 loadingView.onLoadSuccess();
                 ArrayList<Notice> ars = (ArrayList<Notice>) resultObject.result;
                 if (ars.size() == 0) {
-                    ToastUtil.toast(R.string.no_notice);
+                    toast(R.string.no_notice);
                 }
                 adapter.setList(ars);
                 adapter.notifyDataSetInvalidated();
             } else {
                 loadingView.onLoadFailed();
-                ToastUtil.toast(R.string.load_failed);
+                toast(R.string.load_failed);
             }
             listView.setCanPullToRefresh(true);
             listView.doneOperation();

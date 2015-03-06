@@ -65,7 +65,7 @@ public class AskTagHelper {
             AppApplication.getDaoSession().getDatabase().setTransactionSuccessful();
             SharedUtil.saveLong(Consts.Key_Last_Ask_Tags_Version, System.currentTimeMillis());
         } catch (Exception e) {
-//            System.out.println("putAllMyTags Failed");
+            e.printStackTrace();
         } finally {
             AppApplication.getDaoSession().getDatabase().endTransaction();
         }
@@ -74,7 +74,7 @@ public class AskTagHelper {
     /**
      * 调整未选中项的顺序，Key_Last_Ask_Tags_Version
      *
-     * @param myTags
+     * @param myTags tag
      */
     public static void putUnselectedTags(List<AskTag> myTags) {
         AppApplication.getDaoSession().getDatabase().beginTransaction();
@@ -89,7 +89,7 @@ public class AskTagHelper {
             tagDao.insertInTx(tags);
             AppApplication.getDaoSession().getDatabase().setTransactionSuccessful();
         } catch (Exception e) {
-//            System.out.println("putUnselectedTags Failed");
+            e.printStackTrace();
         } finally {
             AppApplication.getDaoSession().getDatabase().endTransaction();
         }

@@ -44,7 +44,6 @@ import net.nashlegend.sourcewall.util.FileUtil;
 import net.nashlegend.sourcewall.util.RegUtil;
 import net.nashlegend.sourcewall.util.SharedUtil;
 import net.nashlegend.sourcewall.util.SketchSharedUtil;
-import net.nashlegend.sourcewall.util.ToastUtil;
 
 import java.io.File;
 import java.util.regex.Matcher;
@@ -166,10 +165,10 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
                 ImageUploadTask task = new ImageUploadTask(this);
                 task.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR, path);
             } else {
-                ToastUtil.toast(R.string.file_not_exists);
+                toast(R.string.file_not_exists);
             }
         } else {
-            ToastUtil.toast(R.string.file_not_image);
+            toast(R.string.file_not_image);
         }
     }
 
@@ -275,7 +274,7 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
                 if (!TextUtils.isEmpty(editText.getText().toString().trim())) {
                     publishReply(editText.getText().toString());
                 } else {
-                    ToastUtil.toast(R.string.content_cannot_be_empty);
+                    toast(R.string.content_cannot_be_empty);
                 }
                 break;
             case R.id.btn_add_img:
@@ -317,13 +316,13 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
         protected void onPostExecute(ResultObject resultObject) {
             progressDialog.dismiss();
             if (resultObject.ok) {
-                ToastUtil.toast(R.string.reply_ok);
+                toast(R.string.reply_ok);
                 setResult(RESULT_OK);
                 replyOK = true;
                 tryClearSketch();
                 finish();
             } else {
-                ToastUtil.toast(R.string.reply_failed);
+                toast(R.string.reply_failed);
             }
         }
     }
@@ -516,14 +515,14 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
         protected void onPostExecute(ResultObject resultObject) {
             if (resultObject.ok) {
                 // tap to insert image
-                ToastUtil.toast(getString(R.string.hint_click_to_add_image_to_editor));
+                toast(getString(R.string.hint_click_to_add_image_to_editor));
                 doneUploadingImage((String) resultObject.result);
                 if (tmpUploadFile != null && tmpUploadFile.exists()) {
                     tmpUploadFile.delete();
                 }
             } else {
                 resetImageButtons();
-                ToastUtil.toast(R.string.upload_failed);
+                toast(R.string.upload_failed);
             }
         }
 

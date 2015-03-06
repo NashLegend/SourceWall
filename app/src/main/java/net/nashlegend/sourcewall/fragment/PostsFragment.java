@@ -50,7 +50,6 @@ import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.SharedUtil;
-import net.nashlegend.sourcewall.util.ToastUtil;
 import net.nashlegend.sourcewall.view.PostListItemView;
 
 import java.util.ArrayList;
@@ -567,10 +566,10 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                     listView.setSelection(0);
                 } else {
                     //没有数据，页码不变
-                    ToastUtil.toast("没有加载到数据");
+                    toast("没有加载到数据");
                 }
             } else {
-                ToastUtil.toast(R.string.load_failed);
+                toast(R.string.load_failed);
                 loadingView.onLoadFailed();
             }
             if (currentPage > 0) {

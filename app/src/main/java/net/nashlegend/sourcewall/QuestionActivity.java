@@ -29,7 +29,6 @@ import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.util.AutoHideUtil;
 import net.nashlegend.sourcewall.util.Consts;
-import net.nashlegend.sourcewall.util.ToastUtil;
 import net.nashlegend.sourcewall.view.AnswerListItemView;
 
 import java.util.ArrayList;
@@ -268,10 +267,10 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
                 }
             } else {
                 if (result.statusCode == 404) {
-                    ToastUtil.toastSingleton(R.string.page_404);
+                    toastSingleton(R.string.page_404);
                     finish();
                 } else {
-                    ToastUtil.toastSingleton(getString(R.string.load_failed));
+                    toastSingleton(getString(R.string.load_failed));
                     loadingView.onLoadFailed();
                 }
             }
@@ -293,9 +292,9 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         @Override
         protected void onPostExecute(ResultObject resultObject) {
             if (resultObject.ok) {
-                ToastUtil.toast(R.string.recommend_ok);
+                toast(R.string.recommend_ok);
             } else {
-                ToastUtil.toast(R.string.recommend_failed);
+                toast(R.string.recommend_failed);
             }
         }
     }

@@ -17,11 +17,24 @@ import java.util.ArrayList;
 public abstract class BaseActivity extends ActionBarActivity implements IStackedAsyncTaskInterface {
 
     private final ArrayList<AAsyncTask> stackedTasks = new ArrayList<>();
+    private boolean isActive = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isActive = true;
+    }
+
+    @Override
+    protected void onPause() {
+        isActive = false;
+        super.onPause();
     }
 
     /**
@@ -52,6 +65,7 @@ public abstract class BaseActivity extends ActionBarActivity implements IStacked
 
     @Override
     public void stopAllTasks() {
+        isActive = false;
         for (int i = 0; i < stackedTasks.size(); i++) {
             AAsyncTask task = stackedTasks.get(i);
             if (task != null && task.getStatus() == AAsyncTask.Status.RUNNING) {
@@ -68,12 +82,39 @@ public abstract class BaseActivity extends ActionBarActivity implements IStacked
     }
 
     public void notifyNeedLog() {
-        ToastUtil.toastSingleton(getString(R.string.login_needed));
+        toastSingleton(getString(R.string.login_needed));
     }
 
     public void startLoginActivity() {
         startActivity(new Intent(this, LoginActivity.class));
     }
 
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void toast(int msgID) {
+        if (isActive()) {
+            ToastUtil.toast(msgID);
+        }
+    }
+
+    public void toast(String msg) {
+        if (isActive()) {
+            ToastUtil.toast(msg);
+        }
+    }
+
+    public void toastSingleton(int msgID) {
+        if (isActive()) {
+            ToastUtil.toastSingleton(msgID);
+        }
+    }
+
+    public void toastSingleton(String msg) {
+        if (isActive()) {
+            ToastUtil.toastSingleton(msg);
+        }
+    }
 
 }

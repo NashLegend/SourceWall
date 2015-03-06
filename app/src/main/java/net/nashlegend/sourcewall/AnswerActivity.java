@@ -38,7 +38,6 @@ import net.nashlegend.sourcewall.model.QuestionAnswer;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.StyleChecker;
-import net.nashlegend.sourcewall.util.ToastUtil;
 
 import java.util.ArrayList;
 
@@ -334,11 +333,11 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
                 public void onClick(DialogInterface dialog, int which) {
                     Boolean support = which == 0;
                     if (answer.isHasUpVoted() && support) {
-                        ToastUtil.toastSingleton(getString(R.string.has_supported));
+                        toastSingleton(R.string.has_supported);
                         return;
                     }
                     if (answer.isHasDownVoted() && !support) {
-                        ToastUtil.toastSingleton(getString(R.string.has_opposed));
+                        toastSingleton(R.string.has_opposed);
                         return;
                     }
                     OpinionTask task = new OpinionTask();
@@ -362,7 +361,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
             notifyNeedLog();
         } else {
             if (answer.isHasThanked()) {
-                ToastUtil.toastSingleton("已经感谢过");
+                toastSingleton("已经感谢过");
             } else {
                 ThankTask task = new ThankTask();
                 task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -423,9 +422,9 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
                 supportText.setText(answer.getUpvoteNum() + "");
                 answer.setHasDownVoted(!isSupport);
                 answer.setHasUpVoted(isSupport);
-                ToastUtil.toast((isSupport ? "赞同" : "反对") + "成功");
+                toast((isSupport ? "赞同" : "反对") + "成功");
             } else {
-                ToastUtil.toast((isSupport ? "赞同" : "反对") + "未遂");
+                toast((isSupport ? "赞同" : "反对") + "未遂");
             }
         }
     }
@@ -448,19 +447,19 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         protected void onPostExecute(ResultObject resultObject) {
             if (resultObject.ok) {
                 if (bury) {
-                    ToastUtil.toast("已标记为\"不是答案\"");
+                    toast("已标记为\"不是答案\"");
                     answer.setHasBuried(true);
                     notAnButton.setIcon(R.drawable.dustbin);
                 } else {
-                    ToastUtil.toastSingleton("取消\"不是答案\"标记");
+                    toastSingleton("取消\"不是答案\"标记");
                     answer.setHasBuried(false);
                     notAnButton.setIcon(R.drawable.dustbin_outline);
                 }
             } else {
                 if (bury && resultObject.code == ResultObject.ResultCode.CODE_ALREADY_BURIED) {
-                    ToastUtil.toastSingleton("已经标记过了");
+                    toastSingleton("已经标记过了");
                 } else {
-                    ToastUtil.toastSingleton("操作失败");
+                    toastSingleton("操作失败");
                 }
             }
 
@@ -477,16 +476,16 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         @Override
         protected void onPostExecute(ResultObject resultObject) {
             if (resultObject.ok) {
-                ToastUtil.toast("感谢成功");
+                toast("感谢成功");
                 answer.setHasThanked(true);
                 thankButton.setIcon(R.drawable.heart);
             } else {
                 if (resultObject.code == ResultObject.ResultCode.CODE_ALREADY_THANKED) {
-                    ToastUtil.toast("已经感谢过了");
+                    toast("已经感谢过了");
                     answer.setHasThanked(true);
                     thankButton.setIcon(R.drawable.heart);
                 } else {
-                    ToastUtil.toast("感谢未遂");
+                    toast("感谢未遂");
                 }
             }
         }

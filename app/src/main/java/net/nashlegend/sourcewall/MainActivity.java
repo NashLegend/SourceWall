@@ -21,7 +21,6 @@ import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.SharedUtil;
-import net.nashlegend.sourcewall.util.ToastUtil;
 
 
 public class MainActivity extends BaseActivity {
@@ -92,7 +91,7 @@ public class MainActivity extends BaseActivity {
             super.onBackPressed();
         } else {
             preparingToExit = true;
-            ToastUtil.toastSingleton(getString(R.string.click_again_to_exit));
+            toastSingleton(R.string.click_again_to_exit);
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {

@@ -28,7 +28,6 @@ import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.model.QuestionAnswer;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.util.Consts;
-import net.nashlegend.sourcewall.util.ToastUtil;
 import net.nashlegend.sourcewall.view.SimpleCommentItemView;
 
 import java.util.ArrayList;
@@ -240,9 +239,9 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
                     adapter.add(0, uComment);
                     adapter.notifyDataSetChanged();
                 }
-                ToastUtil.toast("回复成功");
+                toast("回复成功");
             } else {
-                ToastUtil.toast("回复失败");
+                toast("回复失败");
             }
         }
     }
@@ -292,7 +291,7 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
                 }
                 listView.setCanPullToRefresh(true);
             } else {
-                ToastUtil.toast(getString(R.string.load_failed));
+                toast(R.string.load_failed);
                 loadingView.onLoadFailed();
             }
             listView.doneOperation();

@@ -49,7 +49,6 @@ import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.SharedUtil;
-import net.nashlegend.sourcewall.util.ToastUtil;
 import net.nashlegend.sourcewall.view.QuestionListItemView;
 
 import java.io.UnsupportedEncodingException;
@@ -454,12 +453,6 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
 
     @Override
     public boolean takeOverOptionsItemSelect(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-//            case R.id.action_write_ask:
-//                writeAsk();
-//                break;
-        }
         return true;
     }
 
@@ -553,10 +546,10 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
                     listView.setSelection(0);
                 } else {
                     //没有数据，页码不变
-                    ToastUtil.toast("没有加载到数据");
+                    toast("没有加载到数据");
                 }
             } else {
-                ToastUtil.toast(R.string.load_failed);
+                toast(R.string.load_failed);
                 loadingView.onLoadFailed();
             }
             if (currentPage > 0) {

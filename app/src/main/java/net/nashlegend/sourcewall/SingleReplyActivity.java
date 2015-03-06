@@ -41,7 +41,6 @@ import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.StyleChecker;
-import net.nashlegend.sourcewall.util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -348,7 +347,7 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
             notifyNeedLog();
         } else {
             if (data.isHasLiked()) {
-                ToastUtil.toastSingleton(getString(R.string.has_liked_this));
+                toastSingleton(R.string.has_liked_this);
             } else {
                 LikeTask task = new LikeTask();
                 task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -419,7 +418,7 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
                     post.setId(data.getHostID());
                     host = post;
                 } else {
-                    ToastUtil.toast("Something Happened");
+                    toast("Something Happened");
                 }
                 initData();
             } else {
@@ -455,9 +454,9 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
                 data.setHasLiked(true);
                 data.setLikeNum(data.getLikeNum() + 1);
                 supportText.setText(data.getLikeNum() + "");
-                ToastUtil.toast("点赞成功");
+                toast("点赞成功");
             } else {
-                ToastUtil.toast("点赞未遂");
+                toast("点赞未遂");
             }
         }
     }
@@ -482,7 +481,7 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
             if (resultObject.ok) {
                 finish();
             } else {
-                ToastUtil.toastSingleton("操作失败");
+                toastSingleton("操作失败");
             }
 
         }

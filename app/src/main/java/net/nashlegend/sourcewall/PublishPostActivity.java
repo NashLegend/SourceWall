@@ -43,7 +43,6 @@ import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.FileUtil;
 import net.nashlegend.sourcewall.util.SharedUtil;
 import net.nashlegend.sourcewall.util.SketchSharedUtil;
-import net.nashlegend.sourcewall.util.ToastUtil;
 
 import org.apache.http.message.BasicNameValuePair;
 
@@ -107,7 +106,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
                 bodyEditText.setHint(R.string.hint_input_question_desc);
             }
         } else {
-            ToastUtil.toast("No Data Received");
+            toast("No Data Received");
             finish();
         }
         publishButton.setOnClickListener(this);
@@ -343,10 +342,10 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
                 ImageUploadTask task = new ImageUploadTask(this);
                 task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
             } else {
-                ToastUtil.toast(R.string.file_not_exists);
+                toast(R.string.file_not_exists);
             }
         } else {
-            ToastUtil.toast(R.string.file_not_image);
+            toast(R.string.file_not_image);
         }
     }
 
@@ -439,17 +438,17 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
 
     private void publish() {
         if (TextUtils.isEmpty(titleEditText.getText().toString().trim())) {
-            ToastUtil.toast(R.string.title_cannot_be_empty);
+            toast(R.string.title_cannot_be_empty);
             return;
         }
 
         if (TextUtils.isEmpty(bodyEditText.getText().toString().trim()) && isPost()) {
-            ToastUtil.toast(R.string.content_cannot_be_empty);
+            toast(R.string.content_cannot_be_empty);
             return;
         }
 
         if (TextUtils.isEmpty(csrf)) {
-            ToastUtil.toast("No csrf_token");
+            toast("No csrf_token");
             return;
         }
 
@@ -519,13 +518,13 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         protected void onPostExecute(ResultObject resultObject) {
             progressDialog.dismiss();
             if (resultObject.ok) {
-                ToastUtil.toast(R.string.reply_ok);
+                toast(R.string.reply_ok);
                 setResult(RESULT_OK);
                 replyOK = true;
                 tryClearSketch();
                 finish();
             } else {
-                ToastUtil.toast(R.string.reply_failed);
+                toast(R.string.reply_failed);
             }
         }
     }
@@ -564,7 +563,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         @Override
         protected void onPostExecute(ResultObject resultObject) {
             if (resultObject.ok) {
-                ToastUtil.toast(getString(R.string.get_csrf_ok));
+                toast(getString(R.string.get_csrf_ok));
                 PrepareData prepareData = (PrepareData) resultObject.result;
                 onReceivePreparedData(prepareData);
             } else {
@@ -611,14 +610,14 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         protected void onPostExecute(ResultObject resultObject) {
             if (resultObject.ok) {
                 // tap to insert image
-                ToastUtil.toast(getString(R.string.hint_click_to_add_image_to_editor));
+                toast(R.string.hint_click_to_add_image_to_editor);
                 doneUploadingImage((String) resultObject.result);
                 if (tmpUploadFile != null && tmpUploadFile.exists()) {
                     tmpUploadFile.delete();
                 }
             } else {
                 resetImageButtons();
-                ToastUtil.toast(R.string.upload_failed);
+                toast(R.string.upload_failed);
             }
         }
 

@@ -20,7 +20,6 @@ import net.nashlegend.sourcewall.db.AskTagHelper;
 import net.nashlegend.sourcewall.db.gen.AskTag;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.util.Consts;
-import net.nashlegend.sourcewall.util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -234,7 +233,7 @@ public class ShuffleTagActivity extends SwipeActivity {
             if (aBoolean) {
                 initView();
             } else {
-                ToastUtil.toast("加载标签失败");
+                toast("加载标签失败");
             }
         }
     }

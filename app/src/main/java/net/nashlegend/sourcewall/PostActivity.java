@@ -33,7 +33,6 @@ import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.util.AutoHideUtil;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.RegUtil;
-import net.nashlegend.sourcewall.util.ToastUtil;
 import net.nashlegend.sourcewall.view.MediumListItemView;
 
 import java.util.ArrayList;
@@ -236,10 +235,10 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
                 }
             } else {
                 if (result.statusCode == 404) {
-                    ToastUtil.toastSingleton(R.string.page_404);
+                    toastSingleton(R.string.page_404);
                     finish();
                 } else {
-                    ToastUtil.toastSingleton(getString(R.string.load_failed));
+                    toastSingleton(getString(R.string.load_failed));
                     loadingView.onLoadFailed();
                 }
             }
@@ -274,7 +273,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
             notifyNeedLog();
         } else {
             if (mediumListItemView.getData().isHasLiked()) {
-                ToastUtil.toastSingleton("已经赞过了");
+                toastSingleton("已经赞过了");
             } else {
                 LikeCommentTask likeCommentTask = new LikeCommentTask();
                 likeCommentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediumListItemView);
@@ -350,7 +349,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
             if (resultObject.ok) {
                 post.setLikeNum(post.getLikeNum() + 1);
                 adapter.notifyDataSetChanged();
-                ToastUtil.toastSingleton("已赞");
+                toastSingleton("已赞");
             }
         }
     }
@@ -399,7 +398,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
                 adapter.remove(comment);
                 adapter.notifyDataSetChanged();
             } else {
-                ToastUtil.toastSingleton(getString(R.string.delete_failed));
+                toastSingleton(getString(R.string.delete_failed));
             }
         }
     }

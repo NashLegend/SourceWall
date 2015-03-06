@@ -43,7 +43,6 @@ import net.nashlegend.sourcewall.util.ChannelHelper;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.SharedUtil;
-import net.nashlegend.sourcewall.util.ToastUtil;
 import net.nashlegend.sourcewall.view.SubItemView;
 
 import java.util.ArrayList;
@@ -582,7 +581,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
                         errorID = R.string.have_not_login;
                         break;
                 }
-                ToastUtil.toast(errorID);
+                toast(errorID);
             }
 
             if (!shouldMarkAsFailed) {

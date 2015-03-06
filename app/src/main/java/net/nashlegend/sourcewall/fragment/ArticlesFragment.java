@@ -25,7 +25,6 @@ import net.nashlegend.sourcewall.connection.api.ArticleAPI;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.util.Consts;
-import net.nashlegend.sourcewall.util.ToastUtil;
 import net.nashlegend.sourcewall.view.ArticleListItemView;
 
 import java.util.ArrayList;
@@ -214,7 +213,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
                     }
                 }
             } else {
-                ToastUtil.toast(R.string.load_failed);
+                toast(R.string.load_failed);
                 loadingView.onLoadFailed();
             }
             if (adapter.getCount() > 0) {

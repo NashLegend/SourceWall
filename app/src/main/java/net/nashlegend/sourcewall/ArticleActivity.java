@@ -34,7 +34,6 @@ import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.util.AutoHideUtil;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.RegUtil;
-import net.nashlegend.sourcewall.util.ToastUtil;
 import net.nashlegend.sourcewall.view.MediumListItemView;
 
 import java.util.ArrayList;
@@ -204,7 +203,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
             notifyNeedLog();
         } else {
             if (mediumListItemView.getData().isHasLiked()) {
-                ToastUtil.toastSingleton(getString(R.string.has_liked_this));
+                toastSingleton(getString(R.string.has_liked_this));
             } else {
                 LikeCommentTask likeCommentTask = new LikeCommentTask();
                 likeCommentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediumListItemView);
@@ -299,9 +298,9 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         @Override
         protected void onPostExecute(ResultObject resultObject) {
             if (resultObject.ok) {
-                ToastUtil.toast(R.string.recommend_ok);
+                toast(R.string.recommend_ok);
             } else {
-                ToastUtil.toast(R.string.recommend_failed);
+                toast(R.string.recommend_failed);
             }
         }
     }
@@ -370,10 +369,10 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
                 }
             } else {
                 if (result.statusCode == 404) {
-                    ToastUtil.toastSingleton(R.string.page_404);
+                    toastSingleton(R.string.page_404);
                     finish();
                 } else {
-                    ToastUtil.toastSingleton(getString(R.string.load_failed));
+                    toastSingleton(getString(R.string.load_failed));
                     loadingView.onLoadFailed();
                 }
             }
@@ -423,7 +422,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
                 adapter.remove(comment);
                 adapter.notifyDataSetChanged();
             } else {
-                ToastUtil.toastSingleton("删除失败~");
+                toastSingleton("删除失败~");
             }
         }
     }

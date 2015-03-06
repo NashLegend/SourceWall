@@ -65,7 +65,7 @@ public class GroupHelper {
             AppApplication.getDaoSession().getDatabase().setTransactionSuccessful();
             SharedUtil.saveLong(Consts.Key_Last_Post_Groups_Version, System.currentTimeMillis());
         } catch (Exception e) {
-//            System.out.println("putAllMyGroups Failed");
+            e.printStackTrace();
         } finally {
             AppApplication.getDaoSession().getDatabase().endTransaction();
         }
@@ -89,7 +89,7 @@ public class GroupHelper {
             myGroupDao.insertInTx(groups);
             AppApplication.getDaoSession().getDatabase().setTransactionSuccessful();
         } catch (Exception e) {
-//            System.out.println("putUnselectedGroups Failed");
+            e.printStackTrace();
         } finally {
             AppApplication.getDaoSession().getDatabase().endTransaction();
         }

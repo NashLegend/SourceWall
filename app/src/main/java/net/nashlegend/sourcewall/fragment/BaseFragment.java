@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import net.nashlegend.sourcewall.commonview.AAsyncTask;
 import net.nashlegend.sourcewall.commonview.IStackedAsyncTaskInterface;
+import net.nashlegend.sourcewall.util.ToastUtil;
 
 import java.util.ArrayList;
 
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 public abstract class BaseFragment extends Fragment implements IStackedAsyncTaskInterface {
     public View layoutView;
     private final ArrayList<AAsyncTask> stackedTasks = new ArrayList<>();
+    private boolean isActive = false;
 
     @Nullable
     @Override
@@ -65,11 +67,50 @@ public abstract class BaseFragment extends Fragment implements IStackedAsyncTask
         stackedTasks.clear();
     }
 
+    public boolean isActive() {
+        return isActive;
+    }
+
     @Override
     public void onDestroy() {
         stopAllTasks();
         super.onDestroy();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        isActive = true;
+    }
+
+    @Override
+    public void onPause() {
+        isActive = false;
+        super.onPause();
+    }
+
+    public void toast(int msgID) {
+        if (isActive()) {
+            ToastUtil.toast(msgID);
+        }
+    }
+
+    public void toast(String msg) {
+        if (isActive()) {
+            ToastUtil.toast(msg);
+        }
+    }
+
+    public void toastSingleton(int msgID) {
+        if (isActive()) {
+            ToastUtil.toastSingleton(msgID);
+        }
+    }
+
+    public void toastSingleton(String msg) {
+        if (isActive()) {
+            ToastUtil.toastSingleton(msg);
+        }
+    }
 
 }
