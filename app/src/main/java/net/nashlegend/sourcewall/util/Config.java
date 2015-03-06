@@ -13,6 +13,7 @@ import net.nashlegend.sourcewall.R;
 public class Config {
 
     public final static int ExitTapsGap = 1200;
+    public final static String defaultDisplayName = "果壳的壳";
 
     public static boolean shouldLoadImage() {
         //略微有点耗时，最多可耗时3ms，最低0.3ms
@@ -79,7 +80,7 @@ public class Config {
      * @return 默认尾巴
      */
     private static String getDefaultComplexTail() {
-        return "<p></p><p>来自 <a href=\"https://github.com/NashLegend/SourceWall/blob/master/README.md\" target=\"_blank\">SourceWall</a></p>";
+        return "<p></p><p>来自 <a href=\"https://github.com/NashLegend/SourceWall/blob/master/README.md\" target=\"_blank\">" + defaultDisplayName + "</a></p>";
     }
 
     /**
@@ -147,7 +148,7 @@ public class Config {
      * @return 默认尾巴
      */
     private static String getDefaultSimpleTail() {
-        return "\n\n[blockquote]来自 [url=https://github.com/NashLegend/SourceWall/blob/master/README.md]SourceWall[/url][/blockquote]";
+        return "\n\n[blockquote]来自 [url=https://github.com/NashLegend/SourceWall/blob/master/README.md]" + defaultDisplayName + "[/url][/blockquote]";
     }
 
     /**
@@ -165,7 +166,7 @@ public class Config {
     }
 
     public static String getDefaultPlainTail() {
-        return "来自 SourceWall";
+        return "来自 " + defaultDisplayName;
     }
 
     public static String getPhonePlainTail() {

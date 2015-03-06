@@ -269,22 +269,22 @@ public class SwipeActivity extends BaseActivity {
         private void animateBack(boolean withVel) {
             cancelPotentialAnimation();
             animator = ObjectAnimator.ofFloat(this, "contentX", getContentX(), 0);
-            if (withVel) {
-                animator.setDuration((long) (duration * getContentX() / screenWidth));
-            } else {
-                animator.setDuration(duration);
+            int tmpDuration = withVel ? ((int) (duration * getContentX() / screenWidth)) : duration;
+            if (tmpDuration < 100) {
+                tmpDuration = 100;
             }
+            animator.setDuration(tmpDuration);
             animator.start();
         }
 
         private void animateFinish(boolean withVel) {
             cancelPotentialAnimation();
             animator = ObjectAnimator.ofFloat(this, "contentX", getContentX(), screenWidth);
-            if (withVel) {
-                animator.setDuration((long) (duration * (screenWidth - getContentX()) / screenWidth));
-            } else {
-                animator.setDuration(duration);
+            int tmpDuration = withVel ? ((int) (duration * (screenWidth - getContentX()) / screenWidth)) : duration;
+            if (tmpDuration < 100) {
+                tmpDuration = 100;
             }
+            animator.setDuration(tmpDuration);
             animator.addListener(new AnimatorListener() {
 
                 @Override
@@ -313,7 +313,7 @@ public class SwipeActivity extends BaseActivity {
             animator.start();
         }
 
-        private int duration = 200;
+        private final int duration = 200;
 
         private void animateFromVelocity(float v) {
             if (v > 0) {

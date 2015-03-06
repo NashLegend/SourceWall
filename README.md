@@ -1,6 +1,4 @@
-SourceWall客户端
-==========
-
+SourceWall客户端，中文就叫它“果壳的壳”吧，毕竟SourceWall不是所有人都能理解……
 
 SourceWall是一款开源的果壳网第三方应用，目的是为了让壳友更方便的使用手机刷果壳。现提供果壳网三大版块（科学人、小组、问答）的全面功能以及果壳网通知。
 
@@ -17,9 +15,9 @@ SourceWall是一款开源的果壳网第三方应用，目的是为了让壳友�
 - 除主页外，所有页面都可以从左侧向右滑动关闭。
 
 
-###SourceWall 1.3.2版，下载地址: [SourceWall 1.3.2](https://raw.githubusercontent.com/NashLegend/SourceWall/master/app/release/SourceWall.apk)###
+###应用下载地址: [](https://raw.githubusercontent.com/NashLegend/SourceWall/master/app/release/SourceWall.apk)###
 
 ###或者手机扫码下载：###
 
-![SourceWall 1.3.2](http://i.imgur.com/j7XlnME.png)
+![](http://i.imgur.com/j7XlnME.png)
 
