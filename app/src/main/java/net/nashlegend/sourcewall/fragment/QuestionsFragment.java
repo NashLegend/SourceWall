@@ -474,8 +474,11 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
 
     @Override
     public void resetData(SubItem subItem) {
+        loadingView.onLoadSuccess();
         if (subItem.equals(this.subItem)) {
-            triggerRefresh();
+            if (adapter == null || adapter.getCount() == 0) {
+                triggerRefresh();
+            }
         } else {
             currentPage = -1;
             this.subItem = subItem;
@@ -573,6 +576,27 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
             headerView.findViewById(R.id.text_header_load_hint).setVisibility(View.VISIBLE);
             headerView.findViewById(R.id.progress_header_loading).setVisibility(View.GONE);
 
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            listView.doneOperation();
+            loadingView.onLoadSuccess();
+            if (currentPage > 0) {
+                headerView.setVisibility(View.VISIBLE);
+                headerView.getLayoutParams().height = 0;
+            } else {
+                headerView.getLayoutParams().height = 1;
+                headerView.setVisibility(View.GONE);
+            }
+            if (adapter.getCount() > 0) {
+                listView.setCanPullToLoadMore(true);
+                listView.setCanPullToRefresh(true);
+            } else {
+                listView.setCanPullToLoadMore(false);
+                listView.setCanPullToRefresh(true);
+            }
         }
     }
 }

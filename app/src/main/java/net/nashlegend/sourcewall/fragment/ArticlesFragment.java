@@ -140,8 +140,11 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
 
     @Override
     public void resetData(SubItem subItem) {
+        loadingView.onLoadSuccess();
         if (subItem.equals(this.subItem)) {
-            triggerRefresh();
+            if (adapter == null || adapter.getCount() == 0) {
+                triggerRefresh();
+            }
         } else {
             this.subItem = subItem;
             adapter.clear();
@@ -214,6 +217,20 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
                 ToastUtil.toast(R.string.load_failed);
                 loadingView.onLoadFailed();
             }
+            if (adapter.getCount() > 0) {
+                listView.setCanPullToLoadMore(true);
+                listView.setCanPullToRefresh(true);
+            } else {
+                listView.setCanPullToLoadMore(false);
+                listView.setCanPullToRefresh(true);
+            }
+            listView.doneOperation();
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            loadingView.onLoadSuccess();
             if (adapter.getCount() > 0) {
                 listView.setCanPullToLoadMore(true);
                 listView.setCanPullToRefresh(true);

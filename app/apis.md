@@ -230,6 +230,34 @@ Http Code:
 
 
 ---------------------------------------------------------------
+关注问题
+===============
+关注：POST:http://www.guokr.com/apis/ask/question_follower.json
+
+Content-Type: application/x-www-form-urlencoded
+
+X-Requested-With: XMLHttpRequest
+
+Params:`question_id=493504&retrieve_type=by_question&access_token={token}`
+
+Http Code:
+> 200 ok
+
+---------------------------------------------------------------
+取消关注问题
+===============
+DELETE:http://www.guokr.com/apis/ask/question_follower.json
+
+Content-Type: application/x-www-form-urlencoded
+
+X-Requested-With: XMLHttpRequest
+
+Params:`question_id=493504&retrieve_type=by_question&access_token={token}`
+
+Http Code:
+> 201 ok
+
+-------------------------------------------------------------
 回答问题
 ===============
 POST:http://apis.guokr.com/ask/answer.json
