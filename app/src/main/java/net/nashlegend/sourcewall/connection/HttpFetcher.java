@@ -91,6 +91,9 @@ public class HttpFetcher {
         ResultObject resultObject = new ResultObject();
         HttpPost httpPost = new HttpPost(url);
         String token = UserAPI.getToken();
+        if (params == null) {
+            params = new ArrayList<>();
+        }
         if (needToken && !TextUtils.isEmpty(token)) {
             params.add(new BasicNameValuePair("access_token", token));
         }
@@ -119,6 +122,9 @@ public class HttpFetcher {
     public static ResultObject get(String url, List<NameValuePair> params, boolean needToken) throws Exception {
         StringBuilder paramString = new StringBuilder("");
         String token = UserAPI.getToken();
+        if (params == null) {
+            params = new ArrayList<>();
+        }
         if (needToken && !TextUtils.isEmpty(token)) {
             params.add(new BasicNameValuePair("access_token", token));
         }
@@ -142,7 +148,7 @@ public class HttpFetcher {
         HttpPut httpPut = new HttpPut(url);
         String token = UserAPI.getToken();
         if (params == null) {
-            params = new ArrayList<NameValuePair>();
+            params = new ArrayList<>();
         }
         if (needToken && !TextUtils.isEmpty(token)) {
             params.add(new BasicNameValuePair("access_token", token));
@@ -185,6 +191,9 @@ public class HttpFetcher {
     public static ResultObject delete(String url, List<NameValuePair> params, boolean needToken) throws Exception {
         StringBuilder paramString = new StringBuilder("");
         String token = UserAPI.getToken();
+        if (params == null) {
+            params = new ArrayList<>();
+        }
         if (needToken && !TextUtils.isEmpty(token)) {
             params.add(new BasicNameValuePair("access_token", token));
         }

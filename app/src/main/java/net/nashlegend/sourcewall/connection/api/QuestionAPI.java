@@ -219,7 +219,7 @@ public class QuestionAPI extends APIBase {
         ResultObject resultObject = new ResultObject();
         try {
             Question question;
-            ResultObject httpResult = HttpFetcher.get(url);
+            ResultObject httpResult = HttpFetcher.get(url, null);
             resultObject.statusCode = httpResult.statusCode;
             if (resultObject.statusCode == 404) {
                 return resultObject;
@@ -228,7 +228,7 @@ public class QuestionAPI extends APIBase {
             JSONObject result = getUniversalJsonObject(jString, resultObject);
             if (result != null) {
                 question = new Question();
-                question.setAnswerable(getJsonBoolean(result, "is_answerable"));
+                question.setAnswerable(getJsonBoolean(result, "is_answerable"));//难道意味着已经回答了
                 question.setAnswerNum(getJsonInt(result, "answers_count"));
                 question.setCommentNum(getJsonInt(result, "replies_count"));
                 question.setAuthor(result.getJSONObject("author").getString("nickname"));
@@ -676,6 +676,53 @@ public class QuestionAPI extends APIBase {
         String url = "http://www.guokr.com/question/" + questionID + "/";
         return UserAPI.recommendLink(url, title, summary, comment);
     }
+
+    /**
+     * 关注问题
+     *
+     * @param questionID 问题id
+     * @return ResultObject
+     */
+    public static ResultObject followQuestion(String questionID) {
+        ResultObject resultObject = new ResultObject();
+        String url = "http://www.guokr.com/apis/ask/question_follower.json";
+        ArrayList<NameValuePair> pairs = new ArrayList<>();
+        pairs.add(new BasicNameValuePair("question_id", questionID));
+        pairs.add(new BasicNameValuePair("retrieve_type", "by_question"));
+        try {
+            String result = HttpFetcher.post(url, pairs).toString();
+            if (getUniversalJsonSimpleBoolean(result, resultObject)) {
+                resultObject.ok = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resultObject;
+    }
+
+    /**
+     * 取消关注问题
+     *
+     * @param questionID 问题id
+     * @return ResultObject
+     */
+    public static ResultObject unfollowQuestion(String questionID) {
+        ResultObject resultObject = new ResultObject();
+        String url = "http://www.guokr.com/apis/ask/question_follower.json";
+        ArrayList<NameValuePair> pairs = new ArrayList<>();
+        pairs.add(new BasicNameValuePair("question_id", questionID));
+        pairs.add(new BasicNameValuePair("retrieve_type", "by_question"));
+        try {
+            String result = HttpFetcher.delete(url, pairs).toString();
+            if (getUniversalJsonSimpleBoolean(result, resultObject)) {
+                resultObject.ok = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resultObject;
+    }
+
 
     /**
      * 评论问题
