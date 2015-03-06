@@ -49,7 +49,7 @@ public class SimpleCommentItemView extends AceView<UComment> {
         contentView.setText(comment.getContent());
         if (Config.shouldLoadImage()) {
             Picasso.with(getContext()).load(comment.getAuthorAvatarUrl())
-                    .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
+                    .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen).placeholder(R.drawable.default_avatar)
                     .into(avatarImage);
         } else {
             avatarImage.setImageResource(R.drawable.default_avatar);

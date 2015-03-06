@@ -151,7 +151,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         }
         if (Config.shouldLoadImage()) {
             Picasso.with(this).load(answer.getAuthorAvatarUrl())
-                    .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
+                    .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen).placeholder(R.drawable.default_avatar)
                     .into(avatar);
         } else {
             avatar.setImageResource(R.drawable.default_avatar);

@@ -358,7 +358,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
                 if (!TextUtils.isEmpty(avatarString)) {
                     if (Config.shouldLoadImage()) {
                         Picasso.with(getActivity()).load(avatarString)
-                                .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
+                                .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen).placeholder(R.drawable.default_avatar)
                                 .into(avatarView);
                     } else {
                         avatarView.setImageResource(R.drawable.default_avatar);
