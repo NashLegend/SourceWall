@@ -47,6 +47,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
     private LoadingView loadingView;
     private String notice_id;
     private AdapterView.OnItemClickListener onItemClickListener;
+    private FloatingActionsMenu floatingActionsMenu;
 
     public ArticleActivity() {
         onItemClickListener = new AdapterView.OnItemClickListener() {
@@ -97,7 +98,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         listView.setCanPullToLoadMore(false);
         listView.setOnRefreshListener(this);
 
-        FloatingActionsMenu floatingActionsMenu = (FloatingActionsMenu) findViewById(R.id.layout_operation);
+        floatingActionsMenu = (FloatingActionsMenu) findViewById(R.id.layout_operation);
         FloatingActionButton replyButton = (FloatingActionButton) findViewById(R.id.button_reply);
         FloatingActionButton recomButton = (FloatingActionButton) findViewById(R.id.button_recommend);
         FloatingActionButton favorButton = (FloatingActionButton) findViewById(R.id.button_favor);
@@ -107,7 +108,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         favorButton.setOnClickListener(this);
 
         AutoHideUtil.applyListViewAutoHide(this, listView, toolbar, floatingActionsMenu, (int) getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
-
+        floatingActionsMenu.setVisibility(View.GONE);
         loadData(-1);
     }
 
@@ -346,6 +347,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         @Override
         protected void onProgressUpdate(ResultObject... values) {
             //在这里取到正文，正文的结果一定是正确的
+            floatingActionsMenu.setVisibility(View.VISIBLE);
             loadingView.onLoadSuccess();
             ResultObject result = values[0];
             article = (Article) result.result;

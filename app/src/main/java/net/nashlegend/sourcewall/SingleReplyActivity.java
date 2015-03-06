@@ -372,6 +372,11 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
     class LoaderTask extends AsyncTask<Uri, Integer, ResultObject> {
 
         @Override
+        protected void onPreExecute() {
+            floatingActionsMenu.setVisibility(View.GONE);
+        }
+
+        @Override
         protected ResultObject doInBackground(Uri... params) {
             ResultObject resultObject = new ResultObject();
             if (TextUtils.isEmpty(notice_id)) {
@@ -400,6 +405,7 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
         @Override
         protected void onPostExecute(ResultObject resultObject) {
             if (resultObject.ok) {
+                floatingActionsMenu.setVisibility(View.VISIBLE);
                 loadingView.onLoadSuccess();
                 data = (UComment) resultObject.result;
                 if (UserAPI.getUserID().equals(data.getAuthorID())) {

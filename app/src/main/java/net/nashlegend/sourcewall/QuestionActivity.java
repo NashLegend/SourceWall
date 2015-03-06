@@ -42,6 +42,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
     private LoaderTask task;
     private LoadingView loadingView;
     private String notice_id;
+    private FloatingActionsMenu floatingActionsMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +81,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         listView.setOnRefreshListener(this);
         listView.setOnItemClickListener(onItemClickListener);
 
-        FloatingActionsMenu floatingActionsMenu = (FloatingActionsMenu) findViewById(R.id.layout_operation);
+        floatingActionsMenu = (FloatingActionsMenu) findViewById(R.id.layout_operation);
         FloatingActionButton replyButton = (FloatingActionButton) findViewById(R.id.button_reply);
         FloatingActionButton recomButton = (FloatingActionButton) findViewById(R.id.button_recommend);
         FloatingActionButton favorButton = (FloatingActionButton) findViewById(R.id.button_favor);
@@ -90,7 +91,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         favorButton.setOnClickListener(this);
 
         AutoHideUtil.applyListViewAutoHide(this, listView, toolbar, floatingActionsMenu, (int) getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
-
+        floatingActionsMenu.setVisibility(View.GONE);
         loadData(-1);
     }
 
@@ -244,6 +245,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         @Override
         protected void onProgressUpdate(ResultObject... values) {
             //在这里取到正文，正文的结果一定是正确的
+            floatingActionsMenu.setVisibility(View.VISIBLE);
             loadingView.onLoadSuccess();
             ResultObject resultObject = values[0];
             question = (Question) resultObject.result;
