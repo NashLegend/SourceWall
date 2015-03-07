@@ -1,4 +1,4 @@
-package net.nashlegend.sourcewall.connection.api;
+package net.nashlegend.sourcewall.request.api;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -7,12 +7,12 @@ import android.os.Environment;
 import android.text.TextUtils;
 
 import net.nashlegend.sourcewall.AppApplication;
-import net.nashlegend.sourcewall.connection.HttpFetcher;
-import net.nashlegend.sourcewall.connection.ResultObject;
 import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.Question;
+import net.nashlegend.sourcewall.request.HttpFetcher;
+import net.nashlegend.sourcewall.request.ResultObject;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.FileUtil;
 

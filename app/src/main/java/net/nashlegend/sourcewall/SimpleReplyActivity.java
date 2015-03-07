@@ -20,13 +20,13 @@ import net.nashlegend.sourcewall.commonview.AAsyncTask;
 import net.nashlegend.sourcewall.commonview.IStackedAsyncTaskInterface;
 import net.nashlegend.sourcewall.commonview.LListView;
 import net.nashlegend.sourcewall.commonview.LoadingView;
-import net.nashlegend.sourcewall.connection.ResultObject;
-import net.nashlegend.sourcewall.connection.api.QuestionAPI;
-import net.nashlegend.sourcewall.connection.api.UserAPI;
 import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.model.QuestionAnswer;
 import net.nashlegend.sourcewall.model.UComment;
+import net.nashlegend.sourcewall.request.ResultObject;
+import net.nashlegend.sourcewall.request.api.QuestionAPI;
+import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.view.SimpleCommentItemView;
 

@@ -9,9 +9,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import net.nashlegend.sourcewall.R;
-import net.nashlegend.sourcewall.connection.ResultObject;
-import net.nashlegend.sourcewall.connection.api.UserAPI;
 import net.nashlegend.sourcewall.model.Basket;
+import net.nashlegend.sourcewall.request.ResultObject;
+import net.nashlegend.sourcewall.request.api.UserAPI;
 
 /**
  * Created by NashLegend on 2014/12/2 0002

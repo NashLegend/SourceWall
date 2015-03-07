@@ -1,15 +1,15 @@
-package net.nashlegend.sourcewall.connection.api;
+package net.nashlegend.sourcewall.request.api;
 
 import android.text.TextUtils;
 
-import net.nashlegend.sourcewall.connection.HttpFetcher;
-import net.nashlegend.sourcewall.connection.ResultObject;
 import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.PrepareData;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.model.QuestionAnswer;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.model.UComment;
+import net.nashlegend.sourcewall.request.HttpFetcher;
+import net.nashlegend.sourcewall.request.ResultObject;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.MDUtil;
 

@@ -20,10 +20,10 @@ import net.nashlegend.sourcewall.commonview.AAsyncTask;
 import net.nashlegend.sourcewall.commonview.IStackedAsyncTaskInterface;
 import net.nashlegend.sourcewall.commonview.LListView;
 import net.nashlegend.sourcewall.commonview.LoadingView;
-import net.nashlegend.sourcewall.connection.ResultObject;
-import net.nashlegend.sourcewall.connection.api.ArticleAPI;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.SubItem;
+import net.nashlegend.sourcewall.request.ResultObject;
+import net.nashlegend.sourcewall.request.api.ArticleAPI;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.view.ArticleListItemView;
 

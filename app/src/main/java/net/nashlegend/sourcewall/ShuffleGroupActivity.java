@@ -14,11 +14,11 @@ import android.widget.TextView;
 import net.nashlegend.sourcewall.commonview.shuffle.GroupMovableButton;
 import net.nashlegend.sourcewall.commonview.shuffle.MovableButton;
 import net.nashlegend.sourcewall.commonview.shuffle.ShuffleDesk;
-import net.nashlegend.sourcewall.connection.ResultObject;
-import net.nashlegend.sourcewall.connection.api.PostAPI;
 import net.nashlegend.sourcewall.db.GroupHelper;
 import net.nashlegend.sourcewall.db.gen.MyGroup;
 import net.nashlegend.sourcewall.model.SubItem;
+import net.nashlegend.sourcewall.request.ResultObject;
+import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.util.Consts;
 
 import java.util.ArrayList;

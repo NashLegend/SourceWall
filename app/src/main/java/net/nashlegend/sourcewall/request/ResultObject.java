@@ -1,4 +1,4 @@
-package net.nashlegend.sourcewall.connection;
+package net.nashlegend.sourcewall.request;
 
 /**
  * Created by NashLegend on 2014/9/23 0023

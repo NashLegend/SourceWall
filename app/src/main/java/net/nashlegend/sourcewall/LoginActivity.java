@@ -16,7 +16,7 @@ import android.webkit.SslErrorHandler;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import net.nashlegend.sourcewall.connection.HttpFetcher;
+import net.nashlegend.sourcewall.request.HttpFetcher;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.SharedUtil;
 

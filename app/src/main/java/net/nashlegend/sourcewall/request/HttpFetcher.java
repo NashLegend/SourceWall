@@ -1,8 +1,8 @@
-package net.nashlegend.sourcewall.connection;
+package net.nashlegend.sourcewall.request;
 
 import android.text.TextUtils;
 
-import net.nashlegend.sourcewall.connection.api.UserAPI;
+import net.nashlegend.sourcewall.request.api.UserAPI;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpEntityEnclosingRequest;

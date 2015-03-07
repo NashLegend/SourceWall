@@ -1,0 +1,346 @@
+package net.nashlegend.sourcewall.request;
+
+import android.annotation.TargetApi;
+import android.content.Context;
+import android.os.Build;
+import android.os.Environment;
+import android.os.StatFs;
+import android.support.v4.util.LruCache;
+
+import net.nashlegend.sourcewall.AppApplication;
+import net.nashlegend.sourcewall.util.ImageFetcher.DiskLruCache;
+import net.nashlegend.sourcewall.util.ImageFetcher.Utils;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+public class RequestCache {
+
+    private static final int DEFAULT_MEM_CACHE_SIZE = 1024 * 5; // 5MB
+
+    private static final int DEFAULT_DISK_CACHE_SIZE = 1024 * 1024 * 20; // 10MB
+
+    private static final int DISK_CACHE_INDEX = 0;
+
+    private static final boolean DEFAULT_MEM_CACHE_ENABLED = true;
+    private static final boolean DEFAULT_DISK_CACHE_ENABLED = true;
+    private static final boolean DEFAULT_INIT_DISK_CACHE_ON_CREATE = false;
+
+    private DiskLruCache mDiskLruCache;
+    private LruCache<String, String> mMemoryCache;
+    private RequestCacheParams mCacheParams;
+    private final Object mDiskCacheLock = new Object();
+    private boolean mDiskCacheStarting = true;
+    private static RequestCache requestCache;
+
+
+    private RequestCache(RequestCacheParams cacheParams) {
+        init(cacheParams);
+    }
+
+    public static RequestCache getInstance() {
+        if (requestCache == null) {
+            requestCache = new RequestCache(new RequestCacheParams(AppApplication.getApplication(), "request.cache"));
+        }
+        return requestCache;
+    }
+
+    private void init(RequestCacheParams cacheParams) {
+        mCacheParams = cacheParams;
+        if (mCacheParams.memoryCacheEnabled) {
+            mMemoryCache = new LruCache<String, String>(mCacheParams.memCacheSize) {
+                /**
+                 * 以k计算cache
+                 */
+                @Override
+                protected int sizeOf(String key, String value) {
+                    final int bitmapSize = value.getBytes().length / 1024;
+                    return bitmapSize == 0 ? 1 : bitmapSize;
+                }
+            };
+        }
+
+        if (cacheParams.initDiskCacheOnCreate) {
+            initDiskCache();
+        }
+    }
+
+    /**
+     * 通常在开始时onCreate等
+     */
+    public void initDiskCache() {
+        synchronized (mDiskCacheLock) {
+            if (mDiskLruCache == null || mDiskLruCache.isClosed()) {
+                File diskCacheDir = mCacheParams.diskCacheDir;
+                if (mCacheParams.diskCacheEnabled && diskCacheDir != null) {
+                    if (!diskCacheDir.exists()) {
+                        diskCacheDir.mkdirs();
+                    }
+                    if (getUsableSpace(diskCacheDir) > mCacheParams.diskCacheSize) {
+                        try {
+                            mDiskLruCache = DiskLruCache.open(
+                                    diskCacheDir, 1, 1, mCacheParams.diskCacheSize);
+                        } catch (final IOException e) {
+                            mCacheParams.diskCacheDir = null;
+                        }
+                    }
+                }
+            }
+            mDiskCacheStarting = false;
+            mDiskCacheLock.notifyAll();
+        }
+    }
+
+    public void addStringToCache(String data, String value) {
+        if (data == null || value == null) {
+            return;
+        }
+        if (mMemoryCache != null) {
+            mMemoryCache.put(data, value);
+        }
+        synchronized (mDiskCacheLock) {
+            if (mDiskLruCache != null) {
+                final String key = hashKeyForDisk(data);
+                OutputStream out = null;
+                try {
+                    DiskLruCache.Snapshot snapshot = mDiskLruCache.get(key);
+                    if (snapshot == null) {
+                        final DiskLruCache.Editor editor = mDiskLruCache.edit(key);
+                        if (editor != null) {
+                            out = editor.newOutputStream(DISK_CACHE_INDEX);
+                            out.write(value.getBytes("utf-8"));
+                            editor.commit();
+                            out.close();
+                        }
+                    } else {
+                        snapshot.getInputStream(DISK_CACHE_INDEX).close();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        if (out != null) {
+                            out.close();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+
+    public String getStringFromCache(String data) {
+        if (mMemoryCache != null) {
+            String memValue = mMemoryCache.get(data);
+            if (memValue != null) {
+                return memValue;
+            }
+        }
+        final String key = hashKeyForDisk(data);
+        String request = null;
+        synchronized (mDiskCacheLock) {
+            while (mDiskCacheStarting) {
+                try {
+                    mDiskCacheLock.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (mDiskLruCache != null) {
+                InputStream inputStream = null;
+                try {
+                    final DiskLruCache.Snapshot snapshot = mDiskLruCache.get(key);
+                    if (snapshot != null) {
+                        inputStream = snapshot.getInputStream(DISK_CACHE_INDEX);
+                        if (inputStream != null) {
+                            InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "utf-8");
+                            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                            StringBuilder sb = new StringBuilder();
+                            String lineTxt;
+                            while ((lineTxt = bufferedReader.readLine()) != null) {
+                                sb.append(lineTxt);
+                            }
+                            request = sb.toString();
+                            bufferedReader.close();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        if (inputStream != null) {
+                            inputStream.close();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return request;
+        }
+    }
+
+    public void clearCache() {
+        if (mMemoryCache != null) {
+            mMemoryCache.evictAll();
+        }
+        synchronized (mDiskCacheLock) {
+            mDiskCacheStarting = true;
+            if (mDiskLruCache != null && !mDiskLruCache.isClosed()) {
+                try {
+                    mDiskLruCache.delete();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                mDiskLruCache = null;
+                initDiskCache();
+            }
+        }
+    }
+
+    /**
+     * Flushes the disk cache associated with this ImageCache object. Note that this includes
+     * disk access so this should not be executed on the main/UI thread.通常在onPause时执行
+     */
+    public void flush() {
+        synchronized (mDiskCacheLock) {
+            if (mDiskLruCache != null) {
+                try {
+                    mDiskLruCache.flush();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    /**
+     * Closes the disk cache associated with this ImageCache object. Note that this includes
+     * disk access so this should not be executed on the main/UI thread.通常在onDestroy时执行
+     */
+    public void close() {
+        synchronized (mDiskCacheLock) {
+            if (mDiskLruCache != null) {
+                try {
+                    if (!mDiskLruCache.isClosed()) {
+                        mDiskLruCache.close();
+                        mDiskLruCache = null;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    /**
+     * A holder class that contains cache parameters.
+     */
+    public static class RequestCacheParams {
+        public int memCacheSize = DEFAULT_MEM_CACHE_SIZE;
+        public int diskCacheSize = DEFAULT_DISK_CACHE_SIZE;
+        public File diskCacheDir;
+        public boolean memoryCacheEnabled = DEFAULT_MEM_CACHE_ENABLED;
+        public boolean diskCacheEnabled = DEFAULT_DISK_CACHE_ENABLED;
+        public boolean initDiskCacheOnCreate = DEFAULT_INIT_DISK_CACHE_ON_CREATE;
+
+        public RequestCacheParams(Context context, String diskCacheDirectoryName) {
+            diskCacheDir = getDiskCacheDir(context, diskCacheDirectoryName);
+        }
+
+        public void setMemCacheSizePercent(float percent) {
+            if (percent < 0.01f || percent > 0.8f) {
+                throw new IllegalArgumentException("setMemCacheSizePercent - percent must be "
+                        + "between 0.01 and 0.8 (inclusive)");
+            }
+            memCacheSize = Math.round(percent * Runtime.getRuntime().maxMemory() / 1024);
+        }
+    }
+
+    public static File getDiskCacheDir(Context context, String uniqueName) {
+        final String cachePath =
+                Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) ||
+                        !isExternalStorageRemovable() ? getExternalCacheDir(context).getPath() :
+                        context.getCacheDir().getPath();
+        return new File(cachePath + File.separator + uniqueName);
+    }
+
+    /**
+     * A hashing method that changes a string (like a URL) into a hash suitable for using as a
+     * disk filename.
+     */
+    public static String hashKeyForDisk(String key) {
+        String cacheKey;
+        try {
+            final MessageDigest mDigest = MessageDigest.getInstance("MD5");
+            mDigest.update(key.getBytes());
+            cacheKey = bytesToHexString(mDigest.digest());
+        } catch (NoSuchAlgorithmException e) {
+            cacheKey = String.valueOf(key.hashCode());
+        }
+        return cacheKey;
+    }
+
+    private static String bytesToHexString(byte[] bytes) {
+        // http://stackoverflow.com/questions/332079
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < bytes.length; i++) {
+            String hex = Integer.toHexString(0xFF & bytes[i]);
+            if (hex.length() == 1) {
+                sb.append('0');
+            }
+            sb.append(hex);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Check if external storage is built-in or removable.
+     *
+     * @return True if external storage is removable (like an SD card), false
+     * otherwise.
+     */
+    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
+    public static boolean isExternalStorageRemovable() {
+        return !Utils.hasGingerbread() || Environment.isExternalStorageRemovable();
+    }
+
+    /**
+     * Get the external app cache directory.
+     *
+     * @param context The context to use
+     * @return The external cache dir
+     */
+    @TargetApi(Build.VERSION_CODES.FROYO)
+    public static File getExternalCacheDir(Context context) {
+        if (Utils.hasFroyo()) {
+            return context.getExternalCacheDir();
+        }
+        // Before Froyo we need to construct the external cache dir ourselves
+        final String cacheDir = "/Android/data/" + context.getPackageName() + "/cache/";
+        return new File(Environment.getExternalStorageDirectory().getPath() + cacheDir);
+    }
+
+    /**
+     * Check how much usable space is available at a given path.
+     *
+     * @param path The path to check
+     * @return The space available in bytes
+     */
+    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
+    public static long getUsableSpace(File path) {
+        if (Utils.hasGingerbread()) {
+            return path.getUsableSpace();
+        }
+        final StatFs stats = new StatFs(path.getPath());
+        return (long) stats.getBlockSize() * (long) stats.getAvailableBlocks();
+    }
+
+}

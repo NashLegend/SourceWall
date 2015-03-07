@@ -14,11 +14,11 @@ import android.widget.TextView;
 import net.nashlegend.sourcewall.commonview.shuffle.AskTagMovableButton;
 import net.nashlegend.sourcewall.commonview.shuffle.MovableButton;
 import net.nashlegend.sourcewall.commonview.shuffle.ShuffleDesk;
-import net.nashlegend.sourcewall.connection.ResultObject;
-import net.nashlegend.sourcewall.connection.api.QuestionAPI;
 import net.nashlegend.sourcewall.db.AskTagHelper;
 import net.nashlegend.sourcewall.db.gen.AskTag;
 import net.nashlegend.sourcewall.model.SubItem;
+import net.nashlegend.sourcewall.request.ResultObject;
+import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.util.Consts;
 
 import java.util.ArrayList;

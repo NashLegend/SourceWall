@@ -1,12 +1,12 @@
-package net.nashlegend.sourcewall.connection.api;
+package net.nashlegend.sourcewall.request.api;
 
 import android.text.TextUtils;
 
-import net.nashlegend.sourcewall.connection.HttpFetcher;
-import net.nashlegend.sourcewall.connection.ResultObject;
 import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.UComment;
+import net.nashlegend.sourcewall.request.HttpFetcher;
+import net.nashlegend.sourcewall.request.ResultObject;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;

@@ -1,7 +1,7 @@
 package net.nashlegend.sourcewall.util;
 
-import net.nashlegend.sourcewall.connection.ResultObject;
-import net.nashlegend.sourcewall.connection.api.APIBase;
+import net.nashlegend.sourcewall.request.ResultObject;
+import net.nashlegend.sourcewall.request.api.APIBase;
 
 /**
  * Created by NashLegend on 2014/12/5 0005

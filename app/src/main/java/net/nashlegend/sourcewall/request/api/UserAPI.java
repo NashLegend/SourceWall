@@ -1,12 +1,10 @@
-package net.nashlegend.sourcewall.connection.api;
+package net.nashlegend.sourcewall.request.api;
 
 import android.text.TextUtils;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
 import net.nashlegend.sourcewall.AppApplication;
-import net.nashlegend.sourcewall.connection.HttpFetcher;
-import net.nashlegend.sourcewall.connection.ResultObject;
 import net.nashlegend.sourcewall.db.AskTagHelper;
 import net.nashlegend.sourcewall.db.GroupHelper;
 import net.nashlegend.sourcewall.model.Basket;
@@ -16,6 +14,8 @@ import net.nashlegend.sourcewall.model.Notice;
 import net.nashlegend.sourcewall.model.Reminder;
 import net.nashlegend.sourcewall.model.ReminderNoticeNum;
 import net.nashlegend.sourcewall.model.UserInfo;
+import net.nashlegend.sourcewall.request.HttpFetcher;
+import net.nashlegend.sourcewall.request.ResultObject;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.SharedUtil;
 

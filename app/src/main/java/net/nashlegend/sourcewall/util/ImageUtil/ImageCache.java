@@ -5,7 +5,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 
 import net.nashlegend.sourcewall.AppApplication;
-import net.nashlegend.sourcewall.connection.HttpFetcher;
+import net.nashlegend.sourcewall.request.HttpFetcher;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
