@@ -1,22 +1,33 @@
 package net.nashlegend.sourcewall.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import net.nashlegend.sourcewall.AppApplication;
 import net.nashlegend.sourcewall.R;
+import net.nashlegend.sourcewall.adapters.PostDetailAdapter;
+import net.nashlegend.sourcewall.commonview.AAsyncTask;
 import net.nashlegend.sourcewall.commonview.WWebView;
+import net.nashlegend.sourcewall.connection.ResultObject;
+import net.nashlegend.sourcewall.connection.api.PostAPI;
+import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.SharedUtil;
 import net.nashlegend.sourcewall.util.StyleChecker;
+
+import java.util.ArrayList;
 
 /**
  * Created by NashLegend on 2014/9/18 0018
@@ -28,6 +39,9 @@ public class PostView extends AceView<Post> {
     private TextView authorView;
     private TextView dateView;
     private ImageView avatarImage;
+    private View loadDesc;
+    private PostDetailAdapter adapter;
+    private LoaderTask task;
 
     public PostView(Context context) {
         super(context);
@@ -43,6 +57,7 @@ public class PostView extends AceView<Post> {
         authorView = (TextView) findViewById(R.id.text_author);
         dateView = (TextView) findViewById(R.id.text_date);
         avatarImage = (ImageView) findViewById(R.id.image_avatar);
+        loadDesc = findViewById(R.id.view_load_latest);
 
         Resources.Theme theme = getContext().getTheme();
         TypedArray typedArray = theme.obtainStyledAttributes(new int[]{R.attr.cardBackgroundColor});
@@ -75,6 +90,75 @@ public class PostView extends AceView<Post> {
             } else {
                 avatarImage.setImageResource(R.drawable.default_avatar);
             }
+        } else {
+            post = model;
+        }
+
+        if (post.isDesc()) {
+            loadDesc.setVisibility(VISIBLE);
+        } else {
+            loadDesc.setVisibility(GONE);
+        }
+
+        loadDesc.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadLatest();
+            }
+        });
+    }
+
+    private void loadLatest() {
+        if (loadDesc.findViewById(R.id.text_header_load_hint).getVisibility() == View.VISIBLE) {
+            cancelPotentialTask();
+            task = new LoaderTask();
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+    }
+
+    private void cancelPotentialTask() {
+        if (task != null && task.getStatus() == AAsyncTask.Status.RUNNING) {
+            task.cancel(true);
+            loadDesc.findViewById(R.id.text_header_load_hint).setVisibility(View.VISIBLE);
+            loadDesc.findViewById(R.id.progress_header_loading).setVisibility(View.INVISIBLE);
+        }
+    }
+
+    public void setAdapter(PostDetailAdapter adapter) {
+        this.adapter = adapter;
+    }
+
+    class LoaderTask extends AAsyncTask<Integer, ResultObject, ResultObject> {
+
+        @Override
+        protected void onPreExecute() {
+            Intent intent = new Intent();
+            intent.setAction(Consts.Action_Start_Loading_Latest);
+            AppApplication.getApplication().sendBroadcast(intent);
+            loadDesc.findViewById(R.id.text_header_load_hint).setVisibility(View.INVISIBLE);
+            loadDesc.findViewById(R.id.progress_header_loading).setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected ResultObject doInBackground(Integer... params) {
+            return PostAPI.getPostCommentsFromJsonUrl(post.getId(), post.getReplyNum(), 1000);//1000足够了
+        }
+
+        @Override
+        protected void onPostExecute(ResultObject result) {
+            loadDesc.findViewById(R.id.text_header_load_hint).setVisibility(View.VISIBLE);
+            loadDesc.findViewById(R.id.progress_header_loading).setVisibility(View.INVISIBLE);
+            if (result.ok) {
+                ArrayList<AceModel> ars = (ArrayList<AceModel>) result.result;
+                if (ars.size() > 0) {
+                    adapter.addAllReversely(ars, 1);
+                    adapter.notifyDataSetChanged();
+                }
+                post.setReplyNum(post.getReplyNum() + ars.size());
+            }
+            Intent intent = new Intent();
+            intent.setAction(Consts.Action_Finish_Loading_Latest);
+            AppApplication.getApplication().sendBroadcast(intent);
         }
     }
 

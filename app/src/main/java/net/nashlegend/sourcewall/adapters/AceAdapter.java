@@ -21,11 +21,21 @@ public abstract class AceAdapter<T> extends BaseAdapter {
         this.list.addAll(list);
     }
 
+    public void addAll(int index, ArrayList<T> list) {
+        this.list.addAll(index, list);
+    }
+
     public void addAllReversely(ArrayList<T> list) {
         if (list.size() > 0) {
             for (int i = list.size() - 1; i >= 0; i--) {
                 this.list.add(list.get(i));
             }
+        }
+    }
+
+    public void addAllReversely(ArrayList<T> list, int index) {
+        for (int i = 0; i < list.size(); i++) {
+            this.list.add(index, list.get(i));
         }
     }
 

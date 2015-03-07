@@ -121,9 +121,9 @@
     <!--LListView-->
     <color name="llist_foot_head_text">#888888</color>
     <color name="llist_foot_head_text_night">#777777</color>
-    <color name="llist_header_button_background">#e2e2e2</color>
+    <color name="llist_header_button_background">#f2f2f2</color>
     <color name="llist_header_button_background_night">#515151</color>
     <color name="llist_header_button_background_pressed">#dddddd</color>
-    <color name="llist_header_button_background_pressed_night">#616161</color>
+    <color name="llist_header_button_background_pressed_night">#717171</color>
 
 </resources>

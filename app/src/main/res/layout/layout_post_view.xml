@@ -1,86 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:cardBackgroundColor="?attr/cardBackgroundColor"
-    app:cardUseCompatPadding="true">
+    android:orientation="vertical">
 
-    <LinearLayout
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/list_standard_item_padding_vertical"
-        android:paddingLeft="@dimen/list_standard_item_padding_horizontal"
-        android:paddingRight="@dimen/list_standard_item_padding_horizontal"
-        android:paddingTop="@dimen/list_standard_item_padding_vertical">
-
-        <TextView
-            android:id="@+id/text_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/post_view_title_margin_bottom"
-            android:text="@string/sample_title"
-            android:textColor="?attr/color_article_title"
-            android:textSize="@dimen/Text_title_size_dimen" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        app:cardBackgroundColor="?attr/cardBackgroundColor"
+        app:cardUseCompatPadding="true">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingBottom="3dp"
-            android:paddingTop="3dp">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/list_standard_item_padding_vertical"
+            android:paddingLeft="@dimen/list_standard_item_padding_horizontal"
+            android:paddingRight="@dimen/list_standard_item_padding_horizontal"
+            android:paddingTop="@dimen/list_standard_item_padding_vertical">
 
-            <ImageView
-                android:id="@+id/image_avatar"
-                android:layout_width="@dimen/list_standard_comment_avatar_dimen"
-                android:layout_height="@dimen/list_standard_comment_avatar_dimen"
-                android:layout_marginRight="@dimen/avatar_right_span_dimen"
-                android:layout_weight="0"
-                android:src="@drawable/default_avatar" />
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/text_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:orientation="vertical">
+                android:layout_marginBottom="@dimen/post_view_title_margin_bottom"
+                android:text="@string/sample_title"
+                android:textColor="?attr/color_article_title"
+                android:textSize="@dimen/Text_title_size_dimen" />
 
-                <TextView
-                    android:id="@+id/text_author"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/sample_author"
-                    android:textColor="?attr/color_author_color" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="3dp"
+                android:paddingTop="3dp">
+
+                <ImageView
+                    android:id="@+id/image_avatar"
+                    android:layout_width="@dimen/list_standard_comment_avatar_dimen"
+                    android:layout_height="@dimen/list_standard_comment_avatar_dimen"
+                    android:layout_marginRight="@dimen/avatar_right_span_dimen"
+                    android:layout_weight="0"
+                    android:src="@drawable/default_avatar" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/text_floor"
+                        android:id="@+id/text_author"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/post_author"
+                        android:text="@string/sample_author"
                         android:textColor="?attr/color_author_color" />
 
-                    <TextView
-                        android:id="@+id/text_date"
+                    <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/list_standard_item_text_text_gap"
-                        android:text="@string/sample_date"
-                        android:textColor="?attr/color_author_color" />
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/text_floor"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/post_author"
+                            android:textColor="?attr/color_author_color" />
+
+                        <TextView
+                            android:id="@+id/text_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/list_standard_item_text_text_gap"
+                            android:text="@string/sample_date"
+                            android:textColor="?attr/color_author_color" />
+                    </LinearLayout>
                 </LinearLayout>
+
             </LinearLayout>
 
+            <net.nashlegend.sourcewall.commonview.WWebView
+                android:id="@+id/web_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_content_font_size_dimen" />
         </LinearLayout>
+    </android.support.v7.widget.CardView>
 
-        <net.nashlegend.sourcewall.commonview.WWebView
-            android:id="@+id/web_content"
-            android:layout_width="match_parent"
+    <RelativeLayout
+        android:id="@+id/view_load_latest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/drawable_llist_header_button_background"
+        android:clickable="true">
+
+        <TextView
+            android:id="@+id/text_header_load_hint"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_content_font_size_dimen" />
+            android:layout_centerInParent="true"
+            android:layout_margin="15dp"
+            android:text="@string/click_to_load_latest_replies"
+            android:textColor="?attr/color_drawer_button_text" />
 
-    </LinearLayout>
-</android.support.v7.widget.CardView>
+        <ProgressBar
+            android:id="@+id/progress_header_loading"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_centerInParent="true"
+            android:visibility="invisible" />
+    </RelativeLayout>
+</LinearLayout>

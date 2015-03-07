@@ -393,11 +393,13 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     }
 
     private void loadPrePage() {
-        listView.setCanPullToLoadMore(false);
-        listView.setCanPullToRefresh(false);
-        headerView.findViewById(R.id.text_header_load_hint).setVisibility(View.INVISIBLE);
-        headerView.findViewById(R.id.progress_header_loading).setVisibility(View.VISIBLE);
-        loadData(currentPage - 1);
+        if (headerView.findViewById(R.id.text_header_load_hint).getVisibility() == View.VISIBLE) {
+            listView.setCanPullToLoadMore(false);
+            listView.setCanPullToRefresh(false);
+            headerView.findViewById(R.id.text_header_load_hint).setVisibility(View.INVISIBLE);
+            headerView.findViewById(R.id.progress_header_loading).setVisibility(View.VISIBLE);
+            loadData(currentPage - 1);
+        }
     }
 
     private void writePost() {

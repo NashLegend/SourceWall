@@ -1,10 +1,13 @@
 package net.nashlegend.sourcewall;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -39,7 +42,7 @@ import java.util.ArrayList;
 
 public class PostActivity extends SwipeActivity implements LListView.OnRefreshListener, View.OnClickListener, LoadingView.ReloadListener {
     private LListView listView;
-    private PostDetailAdapter adapter;
+    private final PostDetailAdapter adapter;
     private Post post;
     private LoaderTask task;
     private LoadingView loadingView;
@@ -48,6 +51,8 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
     private FloatingActionsMenu floatingActionsMenu;
     private boolean loadDesc = false;
     private Menu menu;
+    private Receiver receiver;
+    private boolean lastLoad = false;
 
     public PostActivity() {
         onItemClickListener = new AdapterView.OnItemClickListener() {
@@ -56,6 +61,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
                 onReplyItemClick(view, position, id);
             }
         };
+        adapter = new PostDetailAdapter(this);
     }
 
     @Override
@@ -91,7 +97,6 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
             setTitle(post.getGroupName() + " -- 小组");
         }
         listView = (LListView) findViewById(R.id.list_detail);
-        adapter = new PostDetailAdapter(this);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(onItemClickListener);
@@ -110,6 +115,18 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         AutoHideUtil.applyListViewAutoHide(this, listView, toolbar, floatingActionsMenu, (int) getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
         floatingActionsMenu.setVisibility(View.GONE);
         loadData(-1);
+
+        receiver = new Receiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Consts.Action_Start_Loading_Latest);
+        filter.addAction(Consts.Action_Finish_Loading_Latest);
+        registerReceiver(receiver, filter);
+    }
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(receiver);
+        super.onDestroy();
     }
 
     private void loadData(int offset) {
@@ -205,6 +222,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         setMenuVisibility();
         if (adapter.getCount() > 0 && adapter.getList().get(0) instanceof Post) {
             post = (Post) adapter.getList().get(0);
+            post.setDesc(loadDesc);
             adapter.clear();
             adapter.add(post);
             loadData(0);
@@ -225,6 +243,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         setMenuVisibility();
         if (adapter.getCount() > 0 && adapter.getList().get(0) instanceof Post) {
             post = (Post) adapter.getList().get(0);
+            post.setDesc(loadDesc);
             adapter.clear();
             adapter.add(post);
             loadData(0);
@@ -236,19 +255,20 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
     }
 
     private void setMenuVisibility() {
-        if (loadDesc) {
-            menu.findItem(R.id.action_load_acs).setVisible(true);
-            menu.findItem(R.id.action_load_desc).setVisible(false);
-        } else {
-            menu.findItem(R.id.action_load_acs).setVisible(false);
-            menu.findItem(R.id.action_load_desc).setVisible(true);
+        if (menu != null) {
+            if (loadDesc) {
+                menu.findItem(R.id.action_load_acs).setVisible(true);
+                menu.findItem(R.id.action_load_desc).setVisible(false);
+            } else {
+                menu.findItem(R.id.action_load_acs).setVisible(false);
+                menu.findItem(R.id.action_load_desc).setVisible(true);
+            }
         }
     }
 
     class LoaderTask extends AAsyncTask<Integer, ResultObject, ResultObject> {
 
         int offset;
-        boolean lastLoad = false;
 
         LoaderTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
             super(iStackedAsyncTaskInterface);
@@ -292,6 +312,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
             loadingView.onLoadSuccess();
             ResultObject resultObject = values[0];
             post = (Post) resultObject.result;
+            post.setDesc(loadDesc);
             adapter.add(0, post);
             adapter.notifyDataSetChanged();
         }
@@ -484,6 +505,37 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
                 adapter.notifyDataSetChanged();
             } else {
                 toastSingleton(getString(R.string.delete_failed));
+            }
+        }
+    }
+
+    private void onStartLoadingLatest() {
+        cancelPotentialTask();
+        listView.setCanPullToLoadMore(false);
+        menu.findItem(R.id.action_load_acs).setVisible(false);
+        menu.findItem(R.id.action_load_desc).setVisible(false);
+    }
+
+    private void onFinishLoadingLatest() {
+        if (adapter.getCount() > 0) {
+            listView.setCanPullToLoadMore(true);
+        } else {
+            listView.setCanPullToLoadMore(false);
+        }
+        if (loadDesc && lastLoad) {
+            listView.setCanPullToLoadMore(false);
+        }
+        setMenuVisibility();
+    }
+
+    class Receiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (Consts.Action_Start_Loading_Latest.equals(intent.getAction())) {
+                onStartLoadingLatest();
+            } else if (Consts.Action_Finish_Loading_Latest.equals(intent.getAction())) {
+                onFinishLoadingLatest();
             }
         }
     }

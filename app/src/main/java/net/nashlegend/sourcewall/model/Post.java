@@ -20,6 +20,7 @@ public class Post extends AceModel {
     private String content = "";
     private String date = "";
     private boolean featured = true;//是否展现在集合列表还是单个小组。true表示展示在单个小组列表中
+    private boolean desc = false;
 
     private ArrayList<UComment> hotComments = new ArrayList<>();
     private ArrayList<UComment> comments = new ArrayList<>();
@@ -170,5 +171,13 @@ public class Post extends AceModel {
 
     public void setAuthorExists(boolean authorExists) {
         this.authorExists = authorExists;
+    }
+
+    public boolean isDesc() {
+        return desc;
+    }
+
+    public void setDesc(boolean desc) {
+        this.desc = desc;
     }
 }
