@@ -527,7 +527,7 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
         }
 
         @Override
-        protected void onCancelled() {
+        public void onCancel() {
             resetImageButtons();
         }
     }

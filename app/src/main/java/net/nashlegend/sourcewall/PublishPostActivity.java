@@ -622,7 +622,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         }
 
         @Override
-        protected void onCancelled() {
+        public void onCancel() {
             resetImageButtons();
         }
     }

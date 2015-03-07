@@ -376,8 +376,8 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
     }
 
     private void loadOver() {
-        loadingView.startLoading();
         loadData(0);
+        loadingView.startLoading();
     }
 
     private void loadData(int offset) {
@@ -568,12 +568,11 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
             }
             headerView.findViewById(R.id.text_header_load_hint).setVisibility(View.VISIBLE);
             headerView.findViewById(R.id.progress_header_loading).setVisibility(View.GONE);
-
         }
 
         @Override
-        protected void onCancelled() {
-            super.onCancelled();
+        public void onCancel() {
+            System.out.println("onLoadSuccess");
             listView.doneOperation();
             loadingView.onLoadSuccess();
             if (currentPage > 0) {

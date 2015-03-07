@@ -90,8 +90,8 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
     }
 
     private void loadOver() {
-        loadingView.startLoading();
         loadData(0);
+        loadingView.startLoading();
     }
 
     private void loadData(int offset) {
@@ -227,8 +227,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
         }
 
         @Override
-        protected void onCancelled() {
-            super.onCancelled();
+        public void onCancel() {
             loadingView.onLoadSuccess();
             if (adapter.getCount() > 0) {
                 listView.setCanPullToLoadMore(true);

@@ -379,8 +379,8 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     }
 
     private void loadOver() {
-        loadingView.startLoading();
         loadData(0);
+        loadingView.startLoading();
     }
 
     private void loadData(int offset) {
@@ -593,8 +593,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         }
 
         @Override
-        protected void onCancelled() {
-            super.onCancelled();
+        public void onCancel() {
             loadingView.onLoadSuccess();
             listView.doneOperation();
             if (currentPage > 0) {

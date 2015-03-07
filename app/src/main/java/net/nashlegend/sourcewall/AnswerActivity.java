@@ -408,11 +408,6 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         boolean isSupport;
 
         @Override
-        protected void onCancelled(ResultObject resultObject) {
-            super.onCancelled(resultObject);
-        }
-
-        @Override
         protected ResultObject doInBackground(Boolean... params) {
             isSupport = params[0];
             if (isSupport) {

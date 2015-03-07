@@ -436,11 +436,6 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
     class LikeTask extends AsyncTask<Void, Integer, ResultObject> {
 
         @Override
-        protected void onCancelled(ResultObject resultObject) {
-            super.onCancelled(resultObject);
-        }
-
-        @Override
         protected ResultObject doInBackground(Void... params) {
             ResultObject resultObject = new ResultObject();
             switch (hostSection) {

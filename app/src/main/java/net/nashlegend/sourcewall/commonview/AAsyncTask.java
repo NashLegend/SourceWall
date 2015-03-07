@@ -475,7 +475,15 @@ public abstract class AAsyncTask<Params, Progress, Result> {
      */
     public final boolean cancel(boolean mayInterruptIfRunning) {
         mCancelled.set(true);
+        onCancel();
         return mFuture.cancel(mayInterruptIfRunning);
+    }
+
+    /**
+     * 在执行{@link #cancel(boolean)} 时立即执行
+     */
+    public void onCancel() {
+
     }
 
     /**
