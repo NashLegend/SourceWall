@@ -46,6 +46,8 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
     private AdapterView.OnItemClickListener onItemClickListener;
     private String notice_id;
     private FloatingActionsMenu floatingActionsMenu;
+    private boolean loadDesc = false;
+    private Menu menu;
 
     public PostActivity() {
         onItemClickListener = new AdapterView.OnItemClickListener() {
@@ -127,13 +129,23 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_post, menu);
+        this.menu = menu;
+        setMenuVisibility();
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        return super.onOptionsItemSelected(item);
+        switch (id) {
+            case R.id.action_load_acs:
+                startLoadAcs();
+                break;
+            case R.id.action_load_desc:
+                startLoadDesc();
+                break;
+        }
+        return true;
     }
 
     @Override
@@ -183,8 +195,60 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         loadData(-1);
     }
 
+    /**
+     * 倒序查看
+     */
+    public void startLoadDesc() {
+        loadDesc = true;
+        loadingView.startLoading();
+        listView.setCanPullToLoadMore(false);
+        setMenuVisibility();
+        if (adapter.getCount() > 0 && adapter.getList().get(0) instanceof Post) {
+            post = (Post) adapter.getList().get(0);
+            adapter.clear();
+            adapter.add(post);
+            loadData(0);
+        } else {
+            adapter.clear();
+            loadData(-1);
+        }
+        adapter.notifyDataSetChanged();
+    }
+
+    /**
+     * 正序查看
+     */
+    private void startLoadAcs() {
+        loadDesc = false;
+        loadingView.startLoading();
+        listView.setCanPullToLoadMore(false);
+        setMenuVisibility();
+        if (adapter.getCount() > 0 && adapter.getList().get(0) instanceof Post) {
+            post = (Post) adapter.getList().get(0);
+            adapter.clear();
+            adapter.add(post);
+            loadData(0);
+        } else {
+            adapter.clear();
+            loadData(-1);
+        }
+        adapter.notifyDataSetChanged();
+    }
+
+    private void setMenuVisibility() {
+        if (loadDesc) {
+            menu.findItem(R.id.action_load_acs).setVisible(true);
+            menu.findItem(R.id.action_load_desc).setVisible(false);
+        } else {
+            menu.findItem(R.id.action_load_acs).setVisible(false);
+            menu.findItem(R.id.action_load_desc).setVisible(true);
+        }
+    }
+
     class LoaderTask extends AAsyncTask<Integer, ResultObject, ResultObject> {
+
         int offset;
+        boolean lastLoad = false;
 
         LoaderTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
             super(iStackedAsyncTaskInterface);
@@ -197,17 +261,28 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
                 notice_id = null;
             }
             offset = params[0];
+            int limit = 20;
             if (offset < 0) {
-                ResultObject postResult = PostAPI.getPostDetailByIDFromMobileUrl(post.getId());
+                offset = 0;
+                ResultObject postResult = PostAPI.getPostDetailByIDFromJsonUrl(post.getId());//得不到回复数量
                 if (postResult.ok) {
                     publishProgress(postResult);
-                    return PostAPI.getPostCommentsFromJsonUrl(post.getId(), 0);
                 } else {
                     return postResult;
                 }
-            } else {
-                return PostAPI.getPostCommentsFromJsonUrl(post.getId(), offset);
             }
+            if (loadDesc) {
+                int tmpOffset = post.getReplyNum() - offset - 20;
+                if (tmpOffset <= 0) {
+                    lastLoad = true;
+                    limit = 20 + tmpOffset;
+                    tmpOffset = 0;
+                } else {
+                    lastLoad = false;
+                }
+                offset = tmpOffset;
+            }
+            return PostAPI.getPostCommentsFromJsonUrl(post.getId(), offset, limit);
         }
 
         @Override
@@ -227,7 +302,11 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
                 loadingView.onLoadSuccess();
                 ArrayList<AceModel> ars = (ArrayList<AceModel>) result.result;
                 if (ars.size() > 0) {
-                    adapter.addAll(ars);
+                    if (loadDesc) {
+                        adapter.addAllReversely(ars);
+                    } else {
+                        adapter.addAll(ars);
+                    }
                     adapter.notifyDataSetChanged();
                 }
                 if (adapter.getCount() > 0) {
@@ -235,6 +314,10 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
                 } else {
                     listView.setCanPullToLoadMore(false);
                 }
+                if (loadDesc && lastLoad) {
+                    listView.setCanPullToLoadMore(false);
+                }
+
             } else {
                 if (result.statusCode == 404) {
                     toastSingleton(R.string.page_404);

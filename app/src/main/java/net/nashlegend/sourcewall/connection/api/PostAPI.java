@@ -332,13 +332,61 @@ public class PostAPI extends APIBase {
     }
 
     /**
-     * 根据帖子id解析帖子详细内容，解析html获得
+     * 根据帖子id获取帖子内容，json格式
      *
      * @param id，帖子id
      * @return resultObject
      */
-    public static ResultObject getPostDetailByIDFromMobileUrl(String id) {
-        return getPostDetailByPostMobileUrl("http://m.guokr.com/post/" + id + "/");
+    public static ResultObject getPostDetailByIDFromJsonUrl(String id) {
+        ResultObject resultObject = new ResultObject();
+        String url = "http://apis.guokr.com/group/post/" + id + ".json";
+        try {
+            Post detail = new Post();
+            ResultObject response = HttpFetcher.get(url);
+            resultObject.statusCode = response.statusCode;
+            if (resultObject.statusCode == 404) {
+                return resultObject;
+            }
+            String json = response.toString();
+            JSONObject postResult = getUniversalJsonObject(json, resultObject);
+            if (postResult != null) {
+                String postID = getJsonString(postResult, "id");
+                String title = getJsonString(postResult, "title");
+                String date = getJsonString(postResult, "date_created");
+                String content = "<div id=\"postContent\" class=\"html-text-mixin gbbcode-content\">" + getJsonString(postResult, "html") + "</div>";
+                //int likeNum = getJsonInt(postResult, "");//取不到like数量
+                int recommendNum = getJsonInt(postResult, "recommends_count");
+                int reply_num = getJsonInt(postResult, "replies_count");
+
+                JSONObject authorObject = getJsonObject(postResult, "author");
+                String authorAvatarUrl = getJsonObject(authorObject, "avatar").getString("large").replaceAll("\\?.*$", "");
+                String author = getJsonString(authorObject, "nickname");
+                String authorID = getJsonString(authorObject, "url").replaceAll("\\D+", "");
+
+                JSONObject groupObject = getJsonObject(postResult, "group");
+                String groupName = getJsonString(groupObject, "name");
+                String groupID = getJsonString(postResult, "group_id");
+
+                detail.setGroupID(groupID);
+                detail.setGroupName(groupName);
+                detail.setAuthor(author);
+                detail.setAuthorAvatarUrl(authorAvatarUrl);
+                detail.setAuthorID(authorID);
+                detail.setId(postID);
+                detail.setTitle(title);
+                detail.setDate(parseDate(date));
+                detail.setContent(content);
+                detail.setReplyNum(reply_num);
+                resultObject.ok = true;
+                resultObject.result = detail;
+            }
+
+        } catch (Exception e) {
+            handleRequestException(e, resultObject);
+        }
+
+        return resultObject;
+//        return getPostDetailByPostMobileUrl("http://m.guokr.com/post/" + id + "/");
     }
 
     /**
@@ -399,6 +447,19 @@ public class PostAPI extends APIBase {
      * @return resultObject
      */
     public static ResultObject getPostCommentsFromJsonUrl(String id, int offset) {
+        return getPostCommentsFromJsonUrl(id, offset, 20);
+    }
+
+    /**
+     * 使用Json解析方式获得帖子评论列表
+     * resultObject.result是ArrayList[UComment]
+     *
+     * @param id     帖子id
+     * @param offset 从第offset个开始加载
+     * @param limit  要加载多少个
+     * @return resultObject
+     */
+    public static ResultObject getPostCommentsFromJsonUrl(String id, int offset, int limit) {
         ResultObject resultObject = new ResultObject();
         try {
             ArrayList<UComment> list = new ArrayList<>();
@@ -406,7 +467,7 @@ public class PostAPI extends APIBase {
             ArrayList<NameValuePair> pairs = new ArrayList<>();
             pairs.add(new BasicNameValuePair("retrieve_type", "by_post"));
             pairs.add(new BasicNameValuePair("post_id", id));
-            pairs.add(new BasicNameValuePair("limit", "20"));
+            pairs.add(new BasicNameValuePair("limit", limit + ""));
             pairs.add(new BasicNameValuePair("offset", offset + ""));
             String jString = HttpFetcher.get(url, pairs).toString();
             JSONArray comments = getUniversalJsonArray(jString, resultObject);
@@ -431,7 +492,8 @@ public class PostAPI extends APIBase {
                     comment.setDate(parseDate(getJsonString(jo, "date_created")));
                     comment.setLikeNum(getJsonInt(jo, "likings_count"));
                     comment.setContent(getJsonString(jo, "html"));
-                    comment.setFloor((offset + i + 1) + "楼");
+//                    comment.setFloor((offset + i + 1) + "楼");
+                    comment.setFloor(getJsonInt(jo, "level") + "楼");
                     comment.setHostID(jo.getJSONObject("post").getString("id"));
                     list.add(comment);
                 }
@@ -454,7 +516,7 @@ public class PostAPI extends APIBase {
     public static ResultObject getPostFirstPage(Post pPost) {
         ResultObject resultObject = new ResultObject();
         ArrayList<AceModel> aceModels = new ArrayList<>();
-        ResultObject postResult = getPostDetailByIDFromMobileUrl(pPost.getId());
+        ResultObject postResult = getPostDetailByIDFromJsonUrl(pPost.getId());
         resultObject.statusCode = postResult.statusCode;
         resultObject.code = postResult.code;
         if (postResult.ok) {
