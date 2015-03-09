@@ -64,6 +64,10 @@ public class Consts {
     public static final int Code_Invoke_Image_Selector = 1030;
     public static final int Code_Invoke_Camera = 1031;
     public static final int Code_Message_Center = 1032;
+    public static final int Code_Reply_Post = 1033;
+    public static final int Code_Reply_Article = 1034;
+    public static final int Code_Reply_Question = 1035;
+    public static final int Code_Answer_Question = 1036;
 
     // 登录页保存Cookie
     public static final String LOGIN_URL = "https://account.guokr.com/sign_in/?display=mobile";

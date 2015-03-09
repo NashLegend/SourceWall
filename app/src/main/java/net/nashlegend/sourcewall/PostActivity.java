@@ -365,9 +365,17 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
             if (comment != null) {
                 intent.putExtra(Consts.Extra_Simple_Comment, comment);
             }
-            startActivity(intent);
+            startActivityForResult(intent, Consts.Code_Reply_Post);
             overridePendingTransition(R.anim.slide_in_right, 0);
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == Consts.Code_Reply_Post && resultCode == RESULT_OK) {
+            post.setReplyNum(post.getReplyNum() + 1);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void replyComment(UComment comment) {

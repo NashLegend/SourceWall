@@ -141,7 +141,7 @@ public class SwipeActivity extends BaseActivity {
         boolean canSwipe = false;
         View content;
         Activity mActivity;
-        int sideWidthInDP = 20;
+        int sideWidthInDP = 24;
         int sideWidth = 72;
         int screenWidth = 1080;
         VelocityTracker tracker;
