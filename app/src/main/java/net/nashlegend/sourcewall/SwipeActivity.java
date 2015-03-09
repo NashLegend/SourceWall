@@ -16,6 +16,7 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 
 import net.nashlegend.sourcewall.util.Consts;
@@ -274,6 +275,7 @@ public class SwipeActivity extends BaseActivity {
                 tmpDuration = 100;
             }
             animator.setDuration(tmpDuration);
+            animator.setInterpolator(new DecelerateInterpolator());
             animator.start();
         }
 
@@ -285,6 +287,7 @@ public class SwipeActivity extends BaseActivity {
                 tmpDuration = 100;
             }
             animator.setDuration(tmpDuration);
+            animator.setInterpolator(new DecelerateInterpolator());
             animator.addListener(new AnimatorListener() {
 
                 @Override
