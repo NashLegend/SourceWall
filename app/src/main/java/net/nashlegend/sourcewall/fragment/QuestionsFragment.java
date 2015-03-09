@@ -572,7 +572,6 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
 
         @Override
         public void onCancel() {
-            System.out.println("onLoadSuccess");
             listView.doneOperation();
             loadingView.onLoadSuccess();
             if (currentPage > 0) {

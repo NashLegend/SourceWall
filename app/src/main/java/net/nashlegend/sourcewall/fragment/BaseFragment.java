@@ -58,7 +58,6 @@ public abstract class BaseFragment extends Fragment implements IStackedAsyncTask
 
     @Override
     public void stopAllTasks() {
-        System.out.println("stopAllTasks");
         for (int i = 0; i < stackedTasks.size(); i++) {
             AAsyncTask task = stackedTasks.get(i);
             if (task != null && task.getStatus() == AAsyncTask.Status.RUNNING) {
