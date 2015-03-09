@@ -161,6 +161,11 @@ public class SwipeActivity extends BaseActivity {
         public boolean onInterceptTouchEvent(MotionEvent ev) {
             switch (ev.getAction()) {
                 case MotionEvent.ACTION_DOWN:
+                    if (!swipeAnyWhere && ev.getX() < sideWidth) {
+                        canSwipe = true;
+                        tracker = VelocityTracker.obtain();
+                        return true;
+                    }
                     downX = ev.getX();
                     downY = ev.getY();
                     currentX = downX;
@@ -168,23 +173,27 @@ public class SwipeActivity extends BaseActivity {
                     lastX = downX;
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    float dx = ev.getX() - downX;
-                    float dy = ev.getY() - downY;
-                    boolean flag;
                     if (swipeAnyWhere) {
-                        flag = (dy == 0f || Math.abs(dx / dy) > 1) && (dx * dx + dy * dy > touchSlop * touchSlop);
-                    } else {
-                        flag = ((dx != 0 && dy == 0f) || Math.abs(dx / dy) > 1) && ev.getX() < sideWidth;
-                    }
-                    if (flag) {
-                        downX = ev.getX();
-                        downY = ev.getY();
-                        currentX = downX;
-                        currentY = downY;
-                        lastX = downX;
-                        canSwipe = true;
-                        tracker = VelocityTracker.obtain();
-                        return true;
+                        float dx = ev.getX() - downX;
+                        float dy = ev.getY() - downY;
+                        //这样有一个问题就是子ViewGroup中如果有一个在一开始ACTION_DOWN的时候onInterceptTouchEvent就返回了true，那么就跪了
+                        //要么让所有白ViewGroup都不在ACTION_DOWN的时候返回true，要么改成在此view中一旦ACTION_DOWN，便自行返回true
+                        //boolean flag;
+                        //if (swipeAnyWhere) {
+                        //    flag = (dy == 0f || Math.abs(dx / dy) > 1) && (dx * dx + dy * dy > touchSlop * touchSlop);
+                        //} else {
+                        //    flag = ((dx != 0 && dy == 0f) || Math.abs(dx / dy) > 1) && ev.getX() < sideWidth;
+                        //}
+                        if ((dy == 0f || Math.abs(dx / dy) > 1) && (dx * dx + dy * dy > touchSlop * touchSlop)) {
+                            downX = ev.getX();
+                            downY = ev.getY();
+                            currentX = downX;
+                            currentY = downY;
+                            lastX = downX;
+                            canSwipe = true;
+                            tracker = VelocityTracker.obtain();
+                            return true;
+                        }
                     }
                     break;
             }

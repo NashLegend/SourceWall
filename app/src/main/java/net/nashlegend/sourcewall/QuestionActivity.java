@@ -112,6 +112,10 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_question, menu);
+        if (!UserAPI.isLoggedIn()) {
+            menu.findItem(R.id.action_follow_question).setVisible(false);
+            menu.findItem(R.id.action_unfollow_question).setVisible(false);
+        }
         return true;
     }
 
@@ -121,8 +125,17 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        switch (id) {
+            case R.id.action_follow_question:
+                followQuestion();
+                break;
+            case R.id.action_unfollow_question:
+                unfollowQuestion();
+                break;
+        }
         return super.onOptionsItemSelected(item);
     }
+
 
     @Override
     public void onStartRefresh() {
@@ -297,6 +310,61 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
                 toast(R.string.recommend_ok);
             } else {
                 toast(R.string.recommend_failed);
+            }
+        }
+    }
+
+    FollowTask followTask;
+    UnfollowTask unfollowTask;
+
+    private void followQuestion() {
+        if (followTask != null && followTask.getStatus() == AsyncTask.Status.RUNNING) {
+            followTask.cancel(true);
+        }
+        followTask = new FollowTask();
+        followTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, question.getId());
+    }
+
+    private void unfollowQuestion() {
+        if (unfollowTask != null && unfollowTask.getStatus() == AsyncTask.Status.RUNNING) {
+            unfollowTask.cancel(true);
+        }
+        unfollowTask = new UnfollowTask();
+        unfollowTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, question.getId());
+    }
+
+    class FollowTask extends AsyncTask<String, Integer, ResultObject> {
+
+        @Override
+        protected ResultObject doInBackground(String... params) {
+            String questionID = params[0];
+            return QuestionAPI.followQuestion(questionID);
+        }
+
+        @Override
+        protected void onPostExecute(ResultObject resultObject) {
+            if (resultObject.ok) {
+                toast(R.string.follow_ok);
+            } else {
+                toast(R.string.follow_failed);
+            }
+        }
+    }
+
+    class UnfollowTask extends AsyncTask<String, Integer, ResultObject> {
+
+        @Override
+        protected ResultObject doInBackground(String... params) {
+            String questionID = params[0];
+            return QuestionAPI.unfollowQuestion(questionID);
+        }
+
+        @Override
+        protected void onPostExecute(ResultObject resultObject) {
+            if (resultObject.ok) {
+                toast(R.string.unfollow_ok);
+            } else {
+                toast(R.string.unfollow_failed);
             }
         }
     }

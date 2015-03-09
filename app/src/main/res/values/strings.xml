@@ -79,6 +79,10 @@
     <string name="sample_reply_title">回复文章</string>
     <string name="recommend_ok">推荐成功 ^_^</string>
     <string name="recommend_failed">推荐失败 0.0</string>
+    <string name="follow_ok">关注成功 ^_^</string>
+    <string name="follow_failed">关注失败 0.0</string>
+    <string name="unfollow_ok">取消关注成功 ^_^</string>
+    <string name="unfollow_failed">取消关注失败 0.0</string>
     <string name="title_activity_answer">回答</string>
     <string name="title_activity_simple_reply">评论区</string>
     <string name="have_not_login">尚未登录</string>
@@ -164,5 +168,7 @@
     <string name="no_notice">没有通知</string>
     <string name="no_more_notice">没有更多的通知了</string>
     <string name="upload_failed">上传失败</string>
+    <string name="action_follow_question">关注问题</string>
+    <string name="action_unfollow_question">取消关注</string>
 
 </resources>

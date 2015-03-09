@@ -142,7 +142,6 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         }
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_post, menu);

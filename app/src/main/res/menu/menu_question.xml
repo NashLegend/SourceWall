@@ -1,2 +1,15 @@
-<menu xmlns:tools="http://schemas.android.com/tools"
-    tools:context="net.nashlegend.sourcewall.QuestionActivity"></menu>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="net.nashlegend.sourcewall.QuestionActivity">
+    <item
+        android:id="@+id/action_follow_question"
+        android:orderInCategory="100"
+        android:title="@string/action_follow_question"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_unfollow_question"
+        android:orderInCategory="100"
+        android:title="@string/action_unfollow_question"
+        app:showAsAction="never" />
+</menu>
