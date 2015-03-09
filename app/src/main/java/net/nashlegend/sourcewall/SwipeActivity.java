@@ -158,34 +158,34 @@ public class SwipeActivity extends BaseActivity {
 
         @Override
         public boolean onInterceptTouchEvent(MotionEvent ev) {
-            if (swipeAnyWhere) {
-                switch (ev.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
+            switch (ev.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    downX = ev.getX();
+                    downY = ev.getY();
+                    currentX = downX;
+                    currentY = downY;
+                    lastX = downX;
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    float dx = ev.getX() - downX;
+                    float dy = ev.getY() - downY;
+                    boolean flag;
+                    if (swipeAnyWhere) {
+                        flag = (dy == 0f || Math.abs(dx / dy) > 1) && (dx * dx + dy * dy > touchSlop * touchSlop);
+                    } else {
+                        flag = ((dx != 0 && dy == 0f) || Math.abs(dx / dy) > 1) && ev.getX() < sideWidth;
+                    }
+                    if (flag) {
                         downX = ev.getX();
                         downY = ev.getY();
                         currentX = downX;
                         currentY = downY;
                         lastX = downX;
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        float dx = ev.getX() - downX;
-                        float dy = ev.getY() - downY;
-                        if ((dy == 0f || Math.abs(dx / dy) > 1) && (dx * dx + dy * dy > touchSlop * touchSlop)) {
-                            downX = ev.getX();
-                            downY = ev.getY();
-                            currentX = downX;
-                            currentY = downY;
-                            lastX = downX;
-                            canSwipe = true;
-                            tracker = VelocityTracker.obtain();
-                            return true;
-                        }
-                        break;
-                }
-            } else if (ev.getAction() == MotionEvent.ACTION_DOWN && ev.getX() < sideWidth) {
-                canSwipe = true;
-                tracker = VelocityTracker.obtain();
-                return true;
+                        canSwipe = true;
+                        tracker = VelocityTracker.obtain();
+                        return true;
+                    }
+                    break;
             }
             return super.onInterceptTouchEvent(ev);
         }
