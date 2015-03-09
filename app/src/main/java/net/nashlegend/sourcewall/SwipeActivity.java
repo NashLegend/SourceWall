@@ -142,7 +142,7 @@ public class SwipeActivity extends BaseActivity {
         boolean canSwipe = false;
         View content;
         Activity mActivity;
-        int sideWidthInDP = 20;
+        int sideWidthInDP = 16;
         int sideWidth = 72;
         int screenWidth = 1080;
         VelocityTracker tracker;
@@ -191,6 +191,8 @@ public class SwipeActivity extends BaseActivity {
             return super.onInterceptTouchEvent(ev);
         }
 
+        boolean hasIgnoreFirstMove;
+
         @Override
         public boolean onTouchEvent(@NonNull MotionEvent event) {
             if (canSwipe) {
@@ -208,6 +210,10 @@ public class SwipeActivity extends BaseActivity {
                         currentX = event.getX();
                         currentY = event.getY();
                         float dx = currentX - lastX;
+                        if (dx != 0f && !hasIgnoreFirstMove) {
+                            hasIgnoreFirstMove = true;
+                            dx = dx / dx;
+                        }
                         if (getContentX() + dx < 0) {
                             setContentX(0);
                         } else {
@@ -220,6 +226,7 @@ public class SwipeActivity extends BaseActivity {
                         tracker.computeCurrentVelocity(10000);
                         tracker.computeCurrentVelocity(1000, 20000);
                         canSwipe = false;
+                        hasIgnoreFirstMove = false;
                         int mv = screenWidth / 200 * 1000;
                         if (Math.abs(tracker.getXVelocity()) > mv) {
                             animateFromVelocity(tracker.getXVelocity());
