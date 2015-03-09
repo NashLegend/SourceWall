@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.text.Html;
@@ -16,6 +17,9 @@ import com.squareup.picasso.Picasso;
 
 import net.nashlegend.sourcewall.AppApplication;
 import net.nashlegend.sourcewall.R;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by NashLegend on 2015/1/4 0004
@@ -67,11 +71,29 @@ public class TextHtmlHelper {
     Html.ImageGetter emptyImageGetter = new Html.ImageGetter() {
         @Override
         public Drawable getDrawable(String source) {
-            Drawable drawable = context.getResources().getDrawable(R.drawable.default_text_image);
-            int width = drawable.getIntrinsicWidth();
-            int height = drawable.getIntrinsicHeight();
-            drawable.setBounds(0, 0, width, height);
-            return drawable;
+            //这是图片格式
+            //http://2.im.guokr.com/xxx.jpg?imageView2/1/w/480/h/329
+            float stretch = DisplayUtil.getPixelDensity(AppApplication.getApplication());
+            maxWidth = getMaxWidth();
+            String reg = ".+/w/(\\d+)/h/(\\d+)";
+            Matcher matcher = Pattern.compile(reg).matcher(source);
+            if (Config.shouldLoadImage() && matcher.find()) {
+                int width = (int) (Integer.valueOf(matcher.group(1)) * stretch);
+                int height = (int) (Integer.valueOf(matcher.group(2)) * stretch);
+                if (width > maxWidth) {
+                    height *= (maxWidth / width);
+                    width = (int) maxWidth;
+                }
+                ColorDrawable drawable = new ColorDrawable(0);//透明
+                drawable.setBounds(0, 0, width, height);
+                return drawable;
+            } else {
+                Drawable drawable = context.getResources().getDrawable(R.drawable.default_text_image);
+                int width = drawable.getIntrinsicWidth();
+                int height = drawable.getIntrinsicHeight();
+                drawable.setBounds(0, 0, width, height);
+                return drawable;
+            }
         }
     };
 
@@ -87,8 +109,17 @@ public class TextHtmlHelper {
                     bitmap = Picasso.with(context).load(source).resize((int) maxWidth, 0).setTargetSizeAsMax(true).get();
                     if (bitmap != null) {
                         drawable = new BitmapDrawable(context.getResources(), bitmap);
-                        int width = (int) (drawable.getIntrinsicWidth() * stretch);
-                        int height = (int) (drawable.getIntrinsicHeight() * stretch);
+                        String reg = ".+/w/(\\d+)/h/(\\d+)";
+                        Matcher matcher = Pattern.compile(reg).matcher(source);
+                        int width;
+                        int height;
+                        if (matcher.find()) {
+                            width = (int) (Integer.valueOf(matcher.group(1)) * stretch);
+                            height = (int) (Integer.valueOf(matcher.group(2)) * stretch);
+                        } else {
+                            width = (int) (drawable.getIntrinsicWidth() * stretch);
+                            height = (int) (drawable.getIntrinsicHeight() * stretch);
+                        }
                         if (width > maxWidth) {
                             height *= (maxWidth / width);
                             width = (int) maxWidth;
