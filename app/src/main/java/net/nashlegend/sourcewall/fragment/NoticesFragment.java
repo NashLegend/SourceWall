@@ -207,11 +207,15 @@ public class NoticesFragment extends ChannelsFragment implements LListView.OnRef
             if (progressDialog.isShowing()) {
                 progressDialog.cancel();
             }
-            if (isAdded() && resultObject.ok) {
-                listView.setCanPullToRefresh(true);
-                listView.doneOperation();
-                adapter.clear();
-                adapter.notifyDataSetInvalidated();
+            if (isActive()) {
+                if (resultObject.ok) {
+                    listView.setCanPullToRefresh(true);
+                    listView.doneOperation();
+                    adapter.clear();
+                    adapter.notifyDataSetInvalidated();
+                } else {
+                    toast("忽略未遂");
+                }
             }
         }
     }
