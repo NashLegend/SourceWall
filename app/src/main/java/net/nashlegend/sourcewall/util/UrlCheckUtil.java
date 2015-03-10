@@ -62,10 +62,6 @@ public class UrlCheckUtil {
         if ((host.equals("www.guokr.com") || host.equals("m.guokr.com")) && (segments != null && segments.size() >= 2)) {
             String section = segments.get(0);
             String secondSegment = segments.get(1);
-            String thirdSegment = "";
-            if (segments.size() == 3) {
-                thirdSegment = segments.get(2);
-            }
             Intent intent = new Intent();
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra(Consts.Extra_Notice_Id, notice_id);
