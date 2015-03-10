@@ -180,17 +180,27 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
         }
     }
 
-    private void hideInput(EditText editText) {
+//    private void hideInput(EditText editText) {
+//        try {
+//            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(
+//                    INPUT_METHOD_SERVICE);
+//            if (inputMethodManager != null && inputMethodManager.isActive(editText)) {
+//                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+    private void hideInput() {
         try {
-            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(
-                    INPUT_METHOD_SERVICE);
-            if (inputMethodManager != null && inputMethodManager.isActive(editText)) {
-                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            if (getCurrentFocus() != null) {
+                ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
+                        .hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
@@ -233,7 +243,7 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
                 mMenu.findItem(R.id.action_cancel_simple_reply).setVisible(false);
                 textReply.setHint(R.string.hint_reply);
                 textReply.setText("");
-                hideInput(textReply);
+                hideInput();
                 if (task == null || task.getStatus() != AAsyncTask.Status.RUNNING) {
                     UComment uComment = (UComment) result.result;
                     adapter.add(0, uComment);

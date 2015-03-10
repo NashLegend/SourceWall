@@ -25,6 +25,7 @@ import android.text.style.ImageSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -59,6 +60,7 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
     private AceModel aceModel;
     private ImageButton imgButton;
     private ImageButton insertButton;
+    private ImageButton publishButton;
     private View uploadingProgress;
     private ProgressDialog progressDialog;
     private String tmpImagePath;
@@ -87,7 +89,7 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
             setTitle("回答问题");
             editText.setHint(R.string.hint_answer);
         }
-        ImageButton publishButton = (ImageButton) findViewById(R.id.btn_publish);
+        publishButton = (ImageButton) findViewById(R.id.btn_publish);
         imgButton = (ImageButton) findViewById(R.id.btn_add_img);
         insertButton = (ImageButton) findViewById(R.id.btn_insert_img);
         ImageButton linkButton = (ImageButton) findViewById(R.id.btn_link);
@@ -248,7 +250,6 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
                     }
                     ImageSpan imageSpan = getImageSpan(displayed, sourceBitmap);
                     spanned.setSpan(imageSpan, 0, result.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
                     int start = editText.getSelectionStart();
                     editText.getText().insert(start, " ").insert(start + 1, spanned).insert(start + 1 + result.length(), " ");
                 }
@@ -267,11 +268,23 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
         task.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR, header, rep);
     }
 
+    private void hideInput() {
+        try {
+            if (getCurrentFocus() != null) {
+                ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
+                        .hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_publish:
                 if (!TextUtils.isEmpty(editText.getText().toString().trim())) {
+                    hideInput();
                     publishReply(editText.getText().toString());
                 } else {
                     toast(R.string.content_cannot_be_empty);

@@ -25,6 +25,7 @@ import android.text.style.ImageSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -458,11 +459,22 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         } else {
             topic = tagEditText.getText().toString();
         }
-
+        hideInput();
         PublishTask task = new PublishTask();
         String title = titleEditText.getText().toString();
         String body = bodyEditText.getText().toString();
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, group_id, csrf, title, body, topic);
+    }
+
+    private void hideInput() {
+        try {
+            if (getCurrentFocus() != null) {
+                ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
+                        .hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
