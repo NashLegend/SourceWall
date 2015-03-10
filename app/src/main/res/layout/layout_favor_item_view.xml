@@ -16,11 +16,24 @@
         android:text="@string/sample_title"
         android:textColor="?attr/color_dialog_list_text" />
 
-    <ImageButton
-        android:id="@+id/button_add_2_favor"
+    <RelativeLayout
         android:layout_width="@dimen/basket_item_height"
-        android:layout_height="@dimen/basket_item_height"
-        android:layout_weight="0"
-        android:background="@android:color/transparent"
-        android:src="@drawable/plus" />
+        android:layout_height="@dimen/basket_item_height">
+
+        <ProgressBar
+            android:id="@+id/progress_adding_favor"
+            android:layout_centerInParent="true"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:visibility="gone"
+            android:background="@android:color/transparent" />
+
+        <ImageButton
+            android:id="@+id/button_add_2_favor"
+            android:layout_width="@dimen/basket_item_height"
+            android:layout_height="@dimen/basket_item_height"
+            android:background="@android:color/transparent"
+            android:src="@drawable/plus" />
+    </RelativeLayout>
+
 </LinearLayout>
