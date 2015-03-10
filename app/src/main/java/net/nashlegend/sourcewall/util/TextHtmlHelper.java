@@ -3,6 +3,8 @@ package net.nashlegend.sourcewall.util;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -77,6 +79,7 @@ public class TextHtmlHelper {
             maxWidth = getMaxWidth();
             String reg = ".+/w/(\\d+)/h/(\\d+)";
             Matcher matcher = Pattern.compile(reg).matcher(source);
+            Drawable drawable;
             if (Config.shouldLoadImage() && matcher.find()) {
                 int width = (int) (Integer.valueOf(matcher.group(1)) * stretch);
                 int height = (int) (Integer.valueOf(matcher.group(2)) * stretch);
@@ -84,16 +87,17 @@ public class TextHtmlHelper {
                     height *= (maxWidth / width);
                     width = (int) maxWidth;
                 }
-                ColorDrawable drawable = new ColorDrawable(0);//透明
+                drawable = new ColorDrawable(0);//透明
                 drawable.setBounds(0, 0, width, height);
-                return drawable;
             } else {
-                Drawable drawable = context.getResources().getDrawable(R.drawable.default_text_image);
-                int width = drawable.getIntrinsicWidth();
-                int height = drawable.getIntrinsicHeight();
-                drawable.setBounds(0, 0, width, height);
-                return drawable;
+                drawable = context.getResources().getDrawable(R.drawable.default_text_image);
+                if (drawable != null) {
+                    int width = drawable.getIntrinsicWidth();
+                    int height = drawable.getIntrinsicHeight();
+                    drawable.setBounds(0, 0, width, height);
+                }
             }
+            return drawable;
         }
     };
 
@@ -105,26 +109,47 @@ public class TextHtmlHelper {
             Drawable drawable = null;
             try {
                 if (source.startsWith("http")) {
-                    Bitmap bitmap = null;
-                    bitmap = Picasso.with(context).load(source).resize((int) maxWidth, 0).setTargetSizeAsMax(true).get();
+                    Bitmap bitmap = Picasso.with(context).load(source).resize((int) maxWidth, 0).setTargetSizeAsMax(true).get();
                     if (bitmap != null) {
-                        drawable = new BitmapDrawable(context.getResources(), bitmap);
                         String reg = ".+/w/(\\d+)/h/(\\d+)";
                         Matcher matcher = Pattern.compile(reg).matcher(source);
-                        int width;
-                        int height;
+                        float width;
+                        float height;
                         if (matcher.find()) {
-                            width = (int) (Integer.valueOf(matcher.group(1)) * stretch);
-                            height = (int) (Integer.valueOf(matcher.group(2)) * stretch);
+                            width = Integer.valueOf(matcher.group(1)) * stretch;
+                            height = Integer.valueOf(matcher.group(2)) * stretch;
                         } else {
-                            width = (int) (drawable.getIntrinsicWidth() * stretch);
-                            height = (int) (drawable.getIntrinsicHeight() * stretch);
+                            width = bitmap.getWidth() * stretch;
+                            height = bitmap.getHeight() * stretch;
                         }
                         if (width > maxWidth) {
                             height *= (maxWidth / width);
                             width = (int) maxWidth;
                         }
-                        drawable.setBounds(0, 0, width, height);
+
+                        String realLink = source.replaceAll("\\?.*$", "");
+                        String suffix = "";
+                        int offset = realLink.lastIndexOf(".");
+                        if (offset >= 0) {
+                            suffix = realLink.substring(offset + 1);
+                        }
+                        if ("gif".equals(suffix)) {
+                            Bitmap tmpBitmap = Bitmap.createBitmap((int) width, (int) height, Bitmap.Config.ARGB_8888);
+                            Bitmap indBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.gif_text);
+                            Canvas canvas = new Canvas(tmpBitmap);
+                            Matrix matrix = new Matrix();
+                            matrix.setScale(width / bitmap.getWidth(), height / bitmap.getHeight());
+                            canvas.drawBitmap(bitmap, matrix, null);
+                            if (width > 2 + indBitmap.getWidth() && height > 2 * indBitmap.getHeight()) {
+                                canvas.drawBitmap(indBitmap, 0, 0, null);
+                            }
+                            drawable = new BitmapDrawable(context.getResources(), tmpBitmap);
+                            drawable.setBounds(0, 0, (int) width, (int) height);
+                        } else {
+                            drawable = new BitmapDrawable(context.getResources(), bitmap);
+                            drawable.setBounds(0, 0, (int) width, (int) height);
+                        }
+                        return drawable;
                     }
                 }
             } catch (Exception e) {
@@ -132,9 +157,11 @@ public class TextHtmlHelper {
             }
             if (drawable == null) {
                 drawable = context.getResources().getDrawable(R.drawable.broken_image);
-                int width = drawable.getIntrinsicWidth();
-                int height = drawable.getIntrinsicHeight();
-                drawable.setBounds(0, 0, width, height);
+                if (drawable != null) {
+                    int width = drawable.getIntrinsicWidth();
+                    int height = drawable.getIntrinsicHeight();
+                    drawable.setBounds(0, 0, width, height);
+                }
             }
             return drawable;
         }
@@ -160,8 +187,7 @@ public class TextHtmlHelper {
         options.inSampleSize = calculateInSampleSize(options, maxWidth);
         options.inJustDecodeBounds = false;
         Bitmap bitmap = BitmapFactory.decodeFile(filename, options);
-        BitmapDrawable bitmapDrawable = new BitmapDrawable(context.getResources(), bitmap);
-        return bitmapDrawable;
+        return new BitmapDrawable(context.getResources(), bitmap);
     }
 
     private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth) {
@@ -195,8 +221,8 @@ public class TextHtmlHelper {
     /**
      * 消除Html尾部空白
      *
-     * @param s
-     * @return
+     * @param s 要处理的html span
+     * @return 处理过的span
      */
     public static CharSequence trimEnd(CharSequence s) {
         int start = 0;
@@ -214,8 +240,8 @@ public class TextHtmlHelper {
     /**
      * 解决相对路径的问题
      *
-     * @param spannedText
-     * @return
+     * @param spannedText 要处理的span
+     * @return 处理过的span
      */
     public static Spanned correctLinkPaths(Spanned spannedText) {
         Object[] spans = spannedText.getSpans(0, spannedText.length(), Object.class);

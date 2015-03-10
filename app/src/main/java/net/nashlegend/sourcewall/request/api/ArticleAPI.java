@@ -100,7 +100,7 @@ public class ArticleAPI extends APIBase {
                     JSONObject jo = articles.getJSONObject(i);
                     Article article = new Article();
                     article.setId(getJsonString(jo, "id"));
-                    article.setCommentNum(jo.getInt("replies_count"));
+                    article.setCommentNum(getJsonInt(jo, "replies_count"));
                     article.setAuthor(getJsonString(getJsonObject(jo, "author"), "nickname"));
                     article.setAuthorID(getJsonString(getJsonObject(jo, "author"), "url")
                             .replaceAll("\\D+", ""));
