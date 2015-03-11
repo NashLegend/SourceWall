@@ -199,10 +199,10 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
                 if (cachedResultObject.ok) {
                     long lastLoad = SharedUtil.readLong(key, 0l);
                     if (System.currentTimeMillis() - lastLoad > cacheDuration) {
-                        System.out.println(" 问答" + subItem.getName() + " 使用缓存内容作为临时填充");
+                        System.out.println("科学人 " + subItem.getName() + " 使用缓存内容作为临时填充");
                         publishProgress(cachedResultObject);
                     } else {
-                        System.out.println(" 问答" + subItem.getName() + " 本次加载使用缓存内容");
+                        System.out.println("科学人 " + subItem.getName() + " 本次加载使用缓存内容");
                         return cachedResultObject;
                     }
                 }
