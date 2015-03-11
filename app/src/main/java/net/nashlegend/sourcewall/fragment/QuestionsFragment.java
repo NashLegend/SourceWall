@@ -75,6 +75,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
     private Button manageButton;
     private long currentDBVersion = -1;
     private final int Code_Publish_Question = 1055;
+    private final int cacheDuration = 300000;
 
     @Override
     public void onAttach(Activity activity) {
@@ -528,29 +529,44 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
         @Override
         protected ResultObject doInBackground(Integer... datas) {
             loadedPage = datas[0];
+            String key = String.valueOf(subItem.getSection()) + subItem.getType() + subItem.getName() + subItem.getValue();
 
             if (loadedPage == 0 && adapter.getCount() == 0) {
                 ResultObject cachedResultObject = QuestionAPI.getCachedQuestionList(subItem);
                 if (cachedResultObject.ok) {
-                    publishProgress(cachedResultObject);
+                    long lastLoad = SharedUtil.readLong(key, 0l);
+                    if (System.currentTimeMillis() - lastLoad > cacheDuration) {
+                        System.out.println("问答 " + subItem.getName() + " 使用缓存内容作为临时填充");
+                        publishProgress(cachedResultObject);
+                    } else {
+                        System.out.println("问答 " + subItem.getName() + " 本次加载使用缓存内容");
+                        return cachedResultObject;
+                    }
                 }
+
             }
 
+            ResultObject resultObject = new ResultObject();
             if (subItem.getType() == SubItem.Type_Collections) {
                 if (HOTTEST.equals(subItem.getValue())) {
-                    return QuestionAPI.getHotQuestions(loadedPage + 1);
+                    resultObject = QuestionAPI.getHotQuestions(loadedPage + 1);
                 } else {
-                    return QuestionAPI.getHighlightQuestions(loadedPage + 1);
+                    resultObject = QuestionAPI.getHighlightQuestions(loadedPage + 1);
                 }
             } else {
                 try {
                     //如果是最后一页，低于20条，那么就会有问题——也就是请求不到数据
-                    return QuestionAPI.getQuestionsByTagFromJsonUrl(URLEncoder.encode(subItem.getValue(), "UTF-8"), loadedPage * 20);
+                    resultObject = QuestionAPI.getQuestionsByTagFromJsonUrl(URLEncoder.encode(subItem.getValue(), "UTF-8"), loadedPage * 20);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
-                    return new ResultObject();
                 }
             }
+
+            if (resultObject.ok) {
+                SharedUtil.saveLong(key, System.currentTimeMillis());
+            }
+
+            return resultObject;
         }
 
         /**

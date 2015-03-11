@@ -26,6 +26,7 @@ import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.ResultObject;
 import net.nashlegend.sourcewall.request.api.ArticleAPI;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.SharedUtil;
 import net.nashlegend.sourcewall.view.ArticleListItemView;
 
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
     private LoaderTask task;
     private SubItem subItem;
     private LoadingView loadingView;
+    private final long cacheDuration = 300000;//5分钟内连续进入，则不更新
 
     @Override
     public void onAttach(Activity activity) {
@@ -190,23 +192,36 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
         @Override
         protected ResultObject doInBackground(Integer... datas) {
             offset = datas[0];
+            String key = String.valueOf(subItem.getSection()) + subItem.getType() + subItem.getName() + subItem.getValue();
 
             if (offset == 0 && adapter.getCount() == 0) {
                 ResultObject cachedResultObject = ArticleAPI.getCachedArticleList(subItem);
                 if (cachedResultObject.ok) {
-                    publishProgress(cachedResultObject);
+                    long lastLoad = SharedUtil.readLong(key, 0l);
+                    if (System.currentTimeMillis() - lastLoad > cacheDuration) {
+                        System.out.println(" 问答" + subItem.getName() + " 使用缓存内容作为临时填充");
+                        publishProgress(cachedResultObject);
+                    } else {
+                        System.out.println(" 问答" + subItem.getName() + " 本次加载使用缓存内容");
+                        return cachedResultObject;
+                    }
                 }
             }
 
+            ResultObject resultObject = new ResultObject();
             if (subItem.getType() == SubItem.Type_Collections) {
-                return ArticleAPI.getArticleListIndexPage(offset);
+                resultObject = ArticleAPI.getArticleListIndexPage(offset);
             } else if (subItem.getType() == SubItem.Type_Single_Channel) {
-                return ArticleAPI.getArticleListByChannel(subItem.getValue(), offset);
+                resultObject = ArticleAPI.getArticleListByChannel(subItem.getValue(), offset);
             } else if (subItem.getType() == SubItem.Type_Subject_Channel) {
-                return ArticleAPI.getArticleListBySubject(subItem.getValue(), offset);
-            } else {
-                return new ResultObject();
+                resultObject = ArticleAPI.getArticleListBySubject(subItem.getValue(), offset);
             }
+
+            if (resultObject.ok) {
+                SharedUtil.saveLong(key, System.currentTimeMillis());
+            }
+
+            return resultObject;
         }
 
         /**

@@ -75,6 +75,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     private ShuffleDeskSimple deskSimple;
     private Button manageButton;
     private long currentDBVersion = -1;
+    private final int cacheDuration = 300000;
 
     @Override
     public void onAttach(Activity activity) {
@@ -555,22 +556,39 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         @Override
         protected ResultObject doInBackground(Integer... datas) {
             loadedPage = datas[0];
+            String key = String.valueOf(subItem.getSection()) + subItem.getType() + subItem.getName() + subItem.getValue();
 
             if (loadedPage == 0 && adapter.getCount() == 0) {
                 ResultObject cachedResultObject = PostAPI.getCachedPostList(subItem);
                 if (cachedResultObject.ok) {
-                    publishProgress(cachedResultObject);
+
+                    long lastLoad = SharedUtil.readLong(key, 0l);
+                    if (subItem.getType() == SubItem.Type_Private_Channel || System.currentTimeMillis() - lastLoad > cacheDuration) {
+                        //我的小组，更新较快，不缓存
+                        System.out.println("小组 " + subItem.getName() + " 使用缓存内容作为临时填充");
+                        publishProgress(cachedResultObject);
+                    } else {
+                        System.out.println("小组 " + subItem.getName() + " 本次加载使用缓存内容");
+                        return cachedResultObject;
+                    }
                 }
             }
 
+            ResultObject resultObject = new ResultObject();
             //解析html的page是从1开始的，所以offset要+1
             if (subItem.getType() == SubItem.Type_Collections) {
-                return PostAPI.getGroupHotPostListFromMobileUrl(loadedPage + 1);// not featured
+                resultObject = PostAPI.getGroupHotPostListFromMobileUrl(loadedPage + 1);// not featured
             } else if (subItem.getType() == SubItem.Type_Private_Channel) {
-                return PostAPI.getMyGroupRecentRepliesPosts(loadedPage + 1);// not featured
-            } else {
-                return PostAPI.getGroupPostListByJsonUrl(subItem.getValue(), loadedPage * 20);// featured
+                resultObject = PostAPI.getMyGroupRecentRepliesPosts(loadedPage + 1);// not featured
+            } else if (subItem.getType() == SubItem.Type_Single_Channel) {
+                resultObject = PostAPI.getGroupPostListByJsonUrl(subItem.getValue(), loadedPage * 20);// featured
             }
+
+            if (resultObject.ok) {
+                SharedUtil.saveLong(key, System.currentTimeMillis());
+            }
+
+            return resultObject;
         }
 
         /**
