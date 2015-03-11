@@ -65,7 +65,7 @@ public class ArticleListItemView extends AceView<Article> {
         if (TextUtils.isEmpty(article.getImageUrl())) {
             titleImage.setImageBitmap(null);
         } else {
-            if (Config.shouldLoadImage()) {
+            if (Config.shouldLoadImage() && Config.shouldLoadHomepageImage()) {
                 Picasso.with(getContext()).load(article.getImageUrl())
                         .resize(DisplayUtil.getScreenWidth(getContext()), -1)
                         .into(titleImage);

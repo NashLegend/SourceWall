@@ -170,5 +170,6 @@
     <string name="upload_failed">上传失败</string>
     <string name="action_follow_question">关注问题</string>
     <string name="action_unfollow_question">取消关注</string>
+    <string name="no_load_homepage_image">不加载首页图片</string>
 
 </resources>

@@ -39,6 +39,7 @@ public class Consts {
     public static final String Key_Last_Post_Groups_Version = "sourcewall.key.last.post.groups.version";
     public static final String Key_Last_Ask_Tags_Version = "sourcewall.key.last.ask.tag.groups.version";
     public static final String Key_Image_Load_Mode = "sourcewall.key.image.load.mode";
+    public static final String Key_Image_No_Load_Homepage = "sourcewall.key.image.no.load.homepage";
     public static final String key_Use_Tail_Type = "sourcewall.key.use.tail.type";
     public static final String key_Custom_Tail = "sourcewall.key.custom.tail";
     public static final String key_Swipe_Any_Where = "sourcewall.key.swipe_any_where";//是否可以任意位置右滑关闭页面

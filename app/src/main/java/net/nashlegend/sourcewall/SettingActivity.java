@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -24,12 +25,21 @@ public class SettingActivity extends SwipeActivity implements View.OnClickListen
     private TextView imageText;
     private TextView logText;
     private View tailsView;
+    private View modesView;
     private ImageView tailArrow;
-    private EditText tailText;
+    private ImageView modeArrow;
+
+    private RadioButton buttonAlways;
+    private RadioButton buttonNever;
+    private RadioButton buttonWifi;
+    private CheckBox checkBox;
+
     private RadioButton buttonDefault;
     private RadioButton buttonPhone;
     private RadioButton buttonCustom;
+    private EditText tailText;
     private int tailsHeight;
+    private int modesHeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,14 +54,29 @@ public class SettingActivity extends SwipeActivity implements View.OnClickListen
         imageText = (TextView) findViewById(R.id.text_image_mode);
         logText = (TextView) findViewById(R.id.text_log_in_out);
         tailsView = findViewById(R.id.layout_tails);
-        tailText = (EditText) findViewById(R.id.text_tail);
+        modesView = findViewById(R.id.layout_modes);
         tailArrow = (ImageView) findViewById(R.id.image_tail_arrow);
+        modeArrow = (ImageView) findViewById(R.id.image_mode_arrow);
+
         buttonDefault = (RadioButton) findViewById(R.id.button_use_default);
         buttonPhone = (RadioButton) findViewById(R.id.button_use_phone);
         buttonCustom = (RadioButton) findViewById(R.id.button_use_custom);
+        tailText = (EditText) findViewById(R.id.text_tail);
+
+        buttonAlways = (RadioButton) findViewById(R.id.button_always_load);
+        buttonNever = (RadioButton) findViewById(R.id.button_never_load);
+        buttonWifi = (RadioButton) findViewById(R.id.button_wifi_only);
+        checkBox = (CheckBox) findViewById(R.id.check_homepage);
+
         buttonDefault.setOnCheckedChangeListener(this);
         buttonPhone.setOnCheckedChangeListener(this);
         buttonCustom.setOnCheckedChangeListener(this);
+
+        buttonAlways.setOnCheckedChangeListener(this);
+        buttonNever.setOnCheckedChangeListener(this);
+        buttonWifi.setOnCheckedChangeListener(this);
+
+        checkBox.setOnCheckedChangeListener(this);
 
         imageModeView.setOnClickListener(this);
         customTailView.setOnClickListener(this);
@@ -67,6 +92,16 @@ public class SettingActivity extends SwipeActivity implements View.OnClickListen
                 }
             }
         });
+        modesView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (modesView.getHeight() > 0) {
+                    modesView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                    modesHeight = modesView.getHeight();
+                    modesView.getLayoutParams().height = 0;
+                }
+            }
+        });
     }
 
 
@@ -79,16 +114,24 @@ public class SettingActivity extends SwipeActivity implements View.OnClickListen
             logText.setText(R.string.log_in);
         }
 
+        checkBox.setChecked(SharedUtil.readBoolean(Consts.Key_Image_No_Load_Homepage, false));
+
         int mode = Config.getImageLoadMode();
         switch (mode) {
             case Consts.MODE_ALWAYS_LOAD:
                 imageText.setText(R.string.mode_always_load);
+                buttonAlways.setChecked(true);
+                checkBox.setEnabled(true);
                 break;
             case Consts.MODE_NEVER_LOAD:
                 imageText.setText(R.string.mode_never_load);
+                buttonNever.setChecked(true);
+                checkBox.setEnabled(false);
                 break;
             case Consts.MODE_LOAD_WHEN_WIFI:
                 imageText.setText(R.string.mode_load_load_when_wifi);
+                buttonWifi.setChecked(true);
+                checkBox.setEnabled(true);
                 break;
         }
 
@@ -130,28 +173,15 @@ public class SettingActivity extends SwipeActivity implements View.OnClickListen
     }
 
     private void popupImageMode() {
-        String[] ways = {getString(R.string.mode_always_load),
-                getString(R.string.mode_never_load),
-                getString(R.string.mode_load_load_when_wifi)};
-        new AlertDialog.Builder(this).setTitle(R.string.way_to_load_image).setItems(ways, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case 0:
-                        SharedUtil.saveInt(Consts.Key_Image_Load_Mode, Consts.MODE_ALWAYS_LOAD);
-                        imageText.setText(R.string.mode_always_load);
-                        break;
-                    case 1:
-                        SharedUtil.saveInt(Consts.Key_Image_Load_Mode, Consts.MODE_NEVER_LOAD);
-                        imageText.setText(R.string.mode_never_load);
-                        break;
-                    case 2:
-                        SharedUtil.saveInt(Consts.Key_Image_Load_Mode, Consts.MODE_LOAD_WHEN_WIFI);
-                        imageText.setText(R.string.mode_load_load_when_wifi);
-                        break;
-                }
-            }
-        }).create().show();
+        ViewGroup.LayoutParams params = modesView.getLayoutParams();
+        if (params.height > 0) {
+            params.height = 0;
+            modeArrow.setRotation(0);
+        } else {
+            params.height = modesHeight;
+            modeArrow.setRotation(-90);
+        }
+        modesView.setLayoutParams(params);
     }
 
     private void toggleCustomTailLayout() {
@@ -193,23 +223,36 @@ public class SettingActivity extends SwipeActivity implements View.OnClickListen
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if (isChecked) {
-            switch (buttonView.getId()) {
-                case R.id.button_use_default:
-                    tailText.setText(Config.getDefaultPlainTail());
-                    tailText.setEnabled(false);
-                    break;
-                case R.id.button_use_phone:
-                    tailText.setText(Config.getPhonePlainTail());
-                    tailText.setEnabled(false);
-                    break;
-                case R.id.button_use_custom:
-                    String cus = SharedUtil.readString(Consts.key_Custom_Tail, "");
-                    if (!TextUtils.isEmpty(cus)) {
-                        tailText.setText(cus);
-                    }
-                    tailText.setEnabled(true);
-                    break;
+        if (buttonView.getId() == R.id.check_homepage) {
+            SharedUtil.saveBoolean(Consts.Key_Image_No_Load_Homepage, isChecked);
+        } else {
+            if (isChecked) {
+                switch (buttonView.getId()) {
+                    case R.id.button_use_default:
+                        tailText.setText(Config.getDefaultPlainTail());
+                        tailText.setEnabled(false);
+                        break;
+                    case R.id.button_use_phone:
+                        tailText.setText(Config.getPhonePlainTail());
+                        tailText.setEnabled(false);
+                        break;
+                    case R.id.button_use_custom:
+                        String cus = SharedUtil.readString(Consts.key_Custom_Tail, "");
+                        if (!TextUtils.isEmpty(cus)) {
+                            tailText.setText(cus);
+                        }
+                        tailText.setEnabled(true);
+                        break;
+                    case R.id.button_always_load:
+                        checkBox.setEnabled(true);
+                        break;
+                    case R.id.button_never_load:
+                        checkBox.setEnabled(false);
+                        break;
+                    case R.id.button_wifi_only:
+                        checkBox.setEnabled(true);
+                        break;
+                }
             }
         }
     }
@@ -223,6 +266,14 @@ public class SettingActivity extends SwipeActivity implements View.OnClickListen
         } else {
             SharedUtil.saveInt(Consts.key_Use_Tail_Type, Consts.Type_Use_Custom_Tail);
             SharedUtil.saveString(Consts.key_Custom_Tail, tailText.getText().toString());
+        }
+
+        if (buttonAlways.isChecked()) {
+            SharedUtil.saveInt(Consts.Key_Image_Load_Mode, Consts.MODE_ALWAYS_LOAD);
+        } else if (buttonNever.isChecked()) {
+            SharedUtil.saveInt(Consts.Key_Image_Load_Mode, Consts.MODE_NEVER_LOAD);
+        } else {
+            SharedUtil.saveInt(Consts.Key_Image_Load_Mode, Consts.MODE_LOAD_WHEN_WIFI);
         }
         super.onPause();
     }

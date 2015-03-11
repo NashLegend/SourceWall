@@ -44,10 +44,53 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/image_mode_arrow"
             android:layout_alignParentRight="true"
             android:layout_marginRight="16dp"
             android:background="@drawable/chevron_right" />
     </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_modes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="10dp">
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/button_always_load"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:text="@string/mode_always_load" />
+
+            <RadioButton
+                android:id="@+id/button_never_load"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:text="@string/mode_never_load" />
+
+            <RadioButton
+                android:id="@+id/button_wifi_only"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:text="@string/mode_load_load_when_wifi" />
+        </RadioGroup>
+
+        <CheckBox
+            android:id="@+id/check_homepage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/no_load_homepage_image"
+            android:singleLine="true" />
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"
@@ -97,27 +140,27 @@
             <RadioGroup
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
                 <RadioButton
                     android:id="@+id/button_use_default"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:textSize="16sp"
                     android:text="@string/use_default_tail" />
 
                 <RadioButton
                     android:id="@+id/button_use_phone"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:textSize="16sp"
                     android:text="@string/use_phone_as_tail" />
 
                 <RadioButton
                     android:id="@+id/button_use_custom"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:textSize="16sp"
                     android:text="@string/use_custom_tail" />
             </RadioGroup>
 

@@ -34,6 +34,10 @@ public class Config {
         return flag;
     }
 
+    public static boolean shouldLoadHomepageImage() {
+        return !SharedUtil.readBoolean(Consts.Key_Image_No_Load_Homepage, false);
+    }
+
     private static boolean isWifi() {
         ConnectivityManager manager = (ConnectivityManager) AppApplication.getApplication().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
