@@ -1,5 +1,6 @@
 package net.nashlegend.sourcewall.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,7 +23,6 @@ import net.nashlegend.sourcewall.commonview.LListView;
 import net.nashlegend.sourcewall.commonview.LoadingView;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.SubItem;
-import net.nashlegend.sourcewall.request.RequestCache;
 import net.nashlegend.sourcewall.request.ResultObject;
 import net.nashlegend.sourcewall.request.api.ArticleAPI;
 import net.nashlegend.sourcewall.util.Consts;
@@ -42,8 +42,9 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
     private LoadingView loadingView;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        getActivity().invalidateOptionsMenu();
     }
 
     @Override
@@ -159,6 +160,11 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
     @Override
     public void triggerRefresh() {
         listView.startRefreshing();
+    }
+
+    @Override
+    public void prepareLoading() {
+        loadingView.startLoading();
     }
 
     private void cancelPotentialTask() {

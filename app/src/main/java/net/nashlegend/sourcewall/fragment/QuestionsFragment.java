@@ -3,6 +3,7 @@ package net.nashlegend.sourcewall.fragment;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -45,7 +46,6 @@ import net.nashlegend.sourcewall.db.gen.AskTag;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.ResultObject;
-import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Consts;
@@ -75,6 +75,12 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
     private Button manageButton;
     private long currentDBVersion = -1;
     private final int Code_Publish_Question = 1055;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        getActivity().invalidateOptionsMenu();
+    }
 
     @Override
     public View onCreateLayoutView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -493,6 +499,11 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
     @Override
     public void triggerRefresh() {
         listView.startRefreshing();
+    }
+
+    @Override
+    public void prepareLoading() {
+        loadingView.startLoading();
     }
 
     private void cancelPotentialTask() {

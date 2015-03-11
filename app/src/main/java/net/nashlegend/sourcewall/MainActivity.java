@@ -55,6 +55,7 @@ public class MainActivity extends BaseActivity {
         receiver = new Receiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction(Consts.Action_Open_Content_Fragment);
+        filter.addAction(Consts.Action_Prepare_Open_Content_Fragment);
         registerReceiver(receiver, filter);
         Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
@@ -131,6 +132,7 @@ public class MainActivity extends BaseActivity {
     public void replaceFragment(ChannelsFragment fragment, SubItem subItem) {
         if (currentFragment == fragment) {
             fragment.resetData(subItem);
+            invalidateOptionsMenu();
         } else {
             Bundle bundle = new Bundle();
             bundle.putSerializable(Consts.Extra_SubItem, subItem);
@@ -140,31 +142,42 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    public void prepareFragment() {
+        if (currentFragment != null) {
+            currentFragment.prepareLoading();
+        }
+    }
+
     class Receiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            SubItem subItem = (SubItem) intent.getSerializableExtra(Consts.Extra_SubItem);
-            switch (subItem.getSection()) {
-                case SubItem.Section_Article:
-                    if (articlesFragment == null) {
-                        articlesFragment = new ArticlesFragment();
-                    }
-                    replaceFragment(articlesFragment, subItem);
-                    break;
-                case SubItem.Section_Post:
-                    if (postsFragment == null) {
-                        postsFragment = new PostsFragment();
-                    }
-                    replaceFragment(postsFragment, subItem);
-                    break;
-                case SubItem.Section_Question:
-                    if (questionsFragment == null) {
-                        questionsFragment = new QuestionsFragment();
-                    }
-                    replaceFragment(questionsFragment, subItem);
-                    break;
+            if (Consts.Action_Open_Content_Fragment.equals(intent.getAction())) {
+                SubItem subItem = (SubItem) intent.getSerializableExtra(Consts.Extra_SubItem);
+                switch (subItem.getSection()) {
+                    case SubItem.Section_Article:
+                        if (articlesFragment == null) {
+                            articlesFragment = new ArticlesFragment();
+                        }
+                        replaceFragment(articlesFragment, subItem);
+                        break;
+                    case SubItem.Section_Post:
+                        if (postsFragment == null) {
+                            postsFragment = new PostsFragment();
+                        }
+                        replaceFragment(postsFragment, subItem);
+                        break;
+                    case SubItem.Section_Question:
+                        if (questionsFragment == null) {
+                            questionsFragment = new QuestionsFragment();
+                        }
+                        replaceFragment(questionsFragment, subItem);
+                        break;
+                }
+            } else if (Consts.Action_Prepare_Open_Content_Fragment.equals(intent.getAction())) {
+                prepareFragment();
             }
+
         }
     }
 }

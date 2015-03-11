@@ -32,4 +32,6 @@ public abstract class ChannelsFragment extends BaseFragment {
     abstract public void resetData(SubItem subItem);
 
     abstract public void triggerRefresh();
+
+    abstract public void prepareLoading();
 }

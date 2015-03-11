@@ -151,6 +151,11 @@ public class NoticesFragment extends ChannelsFragment implements LListView.OnRef
 
     }
 
+    @Override
+    public void prepareLoading() {
+
+    }
+
     class LoaderTask extends AAsyncTask<Integer, Integer, ResultObject> {
 
         LoaderTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {

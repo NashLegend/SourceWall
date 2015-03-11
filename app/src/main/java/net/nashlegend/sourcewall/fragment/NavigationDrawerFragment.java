@@ -89,7 +89,9 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
     private boolean loginState = false;
     private String userKey = "";
     private boolean isFirstLoad = true;
-    ImageView noticeView;
+    private ImageView noticeView;
+    private Intent lazyIntent;
+
 
     public NavigationDrawerFragment() {
 
@@ -156,11 +158,13 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
                     if (mDrawerLayout != null) {
                         mDrawerLayout.closeDrawer(mFragmentContainerView);
                     }
+
                     SubItem subItem = ((SubItemView) v).getSubItem();
-                    Intent intent = new Intent();
-                    intent.setAction(Consts.Action_Open_Content_Fragment);
-                    intent.putExtra(Consts.Extra_SubItem, subItem);
-                    getActivity().sendBroadcast(intent);
+                    lazyIntent = new Intent();
+                    lazyIntent.setAction(Consts.Action_Open_Content_Fragment);
+                    lazyIntent.putExtra(Consts.Extra_SubItem, subItem);
+
+                    getActivity().sendBroadcast(new Intent(Consts.Action_Prepare_Open_Content_Fragment));
                 }
                 return false;
             }
@@ -209,7 +213,11 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
                 if (!isAdded()) {
                     return;
                 }
-                getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
+                if (lazyIntent != null) {
+                    getActivity().sendBroadcast(lazyIntent);
+                    lazyIntent = null;
+                }
+//                getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
             }
 
             @Override

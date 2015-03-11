@@ -46,7 +46,6 @@ import net.nashlegend.sourcewall.db.gen.MyGroup;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.ResultObject;
-import net.nashlegend.sourcewall.request.api.ArticleAPI;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Consts;
@@ -76,6 +75,12 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     private ShuffleDeskSimple deskSimple;
     private Button manageButton;
     private long currentDBVersion = -1;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        getActivity().invalidateOptionsMenu();
+    }
 
     @Override
     public View onCreateLayoutView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -517,6 +522,11 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     @Override
     public void triggerRefresh() {
         listView.startRefreshing();
+    }
+
+    @Override
+    public void prepareLoading() {
+        loadingView.startLoading();
     }
 
     private void cancelPotentialTask() {
