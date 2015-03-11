@@ -46,6 +46,7 @@ import net.nashlegend.sourcewall.db.gen.MyGroup;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.ResultObject;
+import net.nashlegend.sourcewall.request.api.ArticleAPI;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Consts;
@@ -533,7 +534,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     /**
      * 这几个Task都长得很像，可以封装起来
      */
-    class LoaderTask extends AAsyncTask<Integer, Integer, ResultObject> {
+    class LoaderTask extends AAsyncTask<Integer, ResultObject, ResultObject> {
 
         LoaderTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
             super(iStackedAsyncTaskInterface);
@@ -544,14 +545,37 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         @Override
         protected ResultObject doInBackground(Integer... datas) {
             loadedPage = datas[0];
+
+            if (loadedPage == 0 && adapter.getCount() == 0) {
+                ResultObject cachedResultObject = PostAPI.getCachedPostList(subItem);
+                if (cachedResultObject.ok) {
+                    publishProgress(cachedResultObject);
+                }
+            }
+
             //解析html的page是从1开始的，所以offset要+1
             if (subItem.getType() == SubItem.Type_Collections) {
                 return PostAPI.getGroupHotPostListFromMobileUrl(loadedPage + 1);// not featured
             } else if (subItem.getType() == SubItem.Type_Private_Channel) {
                 return PostAPI.getMyGroupRecentRepliesPosts(loadedPage + 1);// not featured
             } else {
-                //如果是最后一页，低于20条，那么就会有问题——也就是请求不到数据
                 return PostAPI.getGroupPostListByJsonUrl(subItem.getValue(), loadedPage * 20);// featured
+            }
+        }
+
+        /**
+         * 加载缓存的列表，但是会导致点击的时候会更明显的卡一下
+         *
+         * @param values The values indicating progress.
+         */
+        @Override
+        protected void onProgressUpdate(ResultObject... values) {
+            ResultObject o = values[0];
+            ArrayList<Post> ars = (ArrayList<Post>) o.result;
+            if (ars.size() > 0) {
+                loadingView.onLoadSuccess();
+                adapter.setList(ars);
+                adapter.notifyDataSetInvalidated();
             }
         }
 

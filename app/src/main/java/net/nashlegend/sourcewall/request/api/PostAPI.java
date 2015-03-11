@@ -9,6 +9,7 @@ import net.nashlegend.sourcewall.model.PrepareData;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.HttpFetcher;
+import net.nashlegend.sourcewall.request.RequestCache;
 import net.nashlegend.sourcewall.request.ResultObject;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.MDUtil;
@@ -29,11 +30,35 @@ import java.util.regex.Pattern;
 
 /**
  * 单个回复地址。http://www.guokr.com/post/666281/reply/6224695/
+ * 缓存key规则：
+ * 我的小组的key是 Key_Post_My_Recent_Replies
+ * 热门回帖的key是 Key_Post_Hot_Posts
+ * 最近回复的key是 post.{id}
  */
 public class PostAPI extends APIBase {
 
+    public static final String Key_Post_Hot_Posts = "post.hot.post";
+    public static final String Key_Post_My_Recent_Replies = "post.my.recent.replies";
+
     public PostAPI() {
 
+    }
+
+    /**
+     * 获取缓存的问题
+     * @param subItem
+     * @return
+     */
+    public static ResultObject getCachedPostList(SubItem subItem) {
+        ResultObject cachedResultObject = new ResultObject();
+        if (subItem.getType() == SubItem.Type_Collections) {
+            cachedResultObject = PostAPI.getCachedGroupHotPostListFromMobileUrl();
+        } else if (subItem.getType() == SubItem.Type_Private_Channel) {
+            cachedResultObject = PostAPI.getCachedMyGroupRecentRepliesPosts();
+        } else {
+            cachedResultObject = PostAPI.getCachedGroupPostListJson(subItem.getValue());// featured
+        }
+        return cachedResultObject;
     }
 
     /**
@@ -127,17 +152,32 @@ public class PostAPI extends APIBase {
     }
 
     /**
-     * 解析getMyGroupRecentRepliesPosts和getMyGroupHotPosts传过来的url
-     * resultObject.result是ArrayList[Post] list
+     * 缓存的最近回复帖子
      *
-     * @param url 请求地址
      * @return resultObject
      */
-    private static ResultObject getMyGroupPostListFromMobileUrl(String url) {
+    private static ResultObject getCachedMyGroupRecentRepliesPosts() {
+        ResultObject resultObject = new ResultObject();
+        try {
+            String html = RequestCache.getInstance().getStringFromCache(Key_Post_My_Recent_Replies);
+            if (html != null) {
+                resultObject = parseMyGroupPostList(html);
+            }
+        } catch (Exception e) {
+            handleRequestException(e, resultObject);
+        }
+        return resultObject;
+    }
+
+
+    /**
+     * @param html 解析我的小组的帖子
+     * @return
+     */
+    private static ResultObject parseMyGroupPostList(String html) {
         ResultObject resultObject = new ResultObject();
         try {
             ArrayList<Post> list = new ArrayList<>();
-            String html = HttpFetcher.get(url).toString();
             Document doc = Jsoup.parse(html);
             Elements elements = doc.getElementsByClass("post-list");
             if (elements.size() == 1) {
@@ -170,7 +210,6 @@ public class PostAPI extends APIBase {
         } catch (Exception e) {
             handleRequestException(e, resultObject);
         }
-
         return resultObject;
     }
 
@@ -182,7 +221,17 @@ public class PostAPI extends APIBase {
      */
     public static ResultObject getMyGroupRecentRepliesPosts(int pageNo) {
         String url = "http://m.guokr.com/group/user/recent_replies/?page=" + pageNo;
-        return getMyGroupPostListFromMobileUrl(url);
+        ResultObject resultObject = new ResultObject();
+        try {
+            String html = HttpFetcher.get(url).toString();
+            resultObject = parseMyGroupPostList(html);
+            if (resultObject.ok && pageNo == 1) {
+                RequestCache.getInstance().addStringToCache(Key_Post_My_Recent_Replies, html);
+            }
+        } catch (Exception e) {
+            handleRequestException(e, resultObject);
+        }
+        return resultObject;
     }
 
     /**
@@ -193,7 +242,14 @@ public class PostAPI extends APIBase {
      */
     public static ResultObject getMyGroupHotPosts(int pageNo) {
         String url = "http://m.guokr.com/group/user/hot_posts/?page=" + pageNo;
-        return getMyGroupPostListFromMobileUrl(url);
+        ResultObject resultObject = new ResultObject();
+        try {
+            String html = HttpFetcher.get(url).toString();
+            resultObject = parseMyGroupPostList(html);
+        } catch (Exception e) {
+            handleRequestException(e, resultObject);
+        }
+        return resultObject;
     }
 
     /**
@@ -222,56 +278,94 @@ public class PostAPI extends APIBase {
     public static ResultObject getGroupHotPostListFromMobileUrl(int pageNo) {
         ResultObject resultObject = new ResultObject();
         try {
-            ArrayList<Post> list = new ArrayList<Post>();
             String url = "http://m.guokr.com/group/hot_posts/?page=" + pageNo;
             String html = HttpFetcher.get(url).toString();
-            Document doc = Jsoup.parse(html);
-            Elements elements = doc.getElementsByClass("post-index-list");
-            if (elements.size() == 1) {
-                Elements postlist = elements.get(0).getElementsByTag("li");
-                for (Element aPostlist : postlist) {
-                    Post item = new Post();
-                    Element link = aPostlist.getElementsByClass("post").get(0);
-                    String postTitle = link.text();
-                    String postUrl = link.attr("href");
-                    String postImageUrl = "";
-                    if (link.getElementsByClass("post-img").size() > 0) {
-                        String bgimg = link.getElementsByClass("post-img").get(0).attr("style")
-                                .replace("background-image:url(", "");
-                        int idx = bgimg.indexOf("?");
-                        if (idx == -1) {
-                            idx = bgimg.length();
-                        }
-                        postImageUrl = bgimg.substring(0, idx);
-                    }
-                    String postAuthor = "";
-                    String postGroup = "";
-                    String[] ang = aPostlist.getElementsByClass("post-info-content").get(0).text()
-                            .split(" 发表于 ");
-                    postAuthor = ang[0];
-                    postGroup = ang[1];
-                    int postLike = Integer.valueOf(aPostlist.getElementsByClass("like-num").get(0)
-                            .text());
-                    int postComment = Integer.valueOf(aPostlist.getElementsByClass("post-reply-num")
-                            .get(0).text().replaceAll(" 回应$", ""));
-                    item.setTitle(postTitle);
-                    item.setUrl(postUrl);
-                    item.setId(postUrl.replaceAll("\\?.*$", "").replaceAll("\\D+", ""));
-                    item.setTitleImageUrl(postImageUrl);
-                    item.setAuthor(postAuthor);
-                    item.setGroupName(postGroup);
-                    item.setLikeNum(postLike);
-                    item.setReplyNum(postComment);
-                    item.setFeatured(false);
-                    list.add(item);
-                }
-                resultObject.ok = true;
-                resultObject.result = list;
+            resultObject = parseHotPosts(html);
+            if (resultObject.ok && pageNo == 1) {
+                RequestCache.getInstance().addStringToCache(Key_Post_Hot_Posts, html);
             }
         } catch (Exception e) {
             handleRequestException(e, resultObject);
         }
+        return resultObject;
+    }
 
+    /**
+     * 获得缓存的小组热贴
+     *
+     * @return 帖子列表
+     */
+    public static ResultObject getCachedGroupHotPostListFromMobileUrl() {
+        ResultObject resultObject = new ResultObject();
+        try {
+            String html = RequestCache.getInstance().getStringFromCache(Key_Post_Hot_Posts);
+            if (html != null) {
+                resultObject = parseHotPosts(html);
+            }
+        } catch (Exception e) {
+            handleRequestException(e, resultObject);
+        }
+        return resultObject;
+    }
+
+    /**
+     * 获得小组热贴，解析html获得（与登录无关）
+     *
+     * @param html，要解析的页面内容
+     * @return 帖子列表
+     */
+    public static ResultObject parseHotPosts(String html) {
+        ResultObject resultObject = new ResultObject();
+        try {
+            ArrayList<Post> list = new ArrayList<>();
+            if (html != null) {
+                Document doc = Jsoup.parse(html);
+                Elements elements = doc.getElementsByClass("post-index-list");
+                if (elements.size() == 1) {
+                    Elements postlist = elements.get(0).getElementsByTag("li");
+                    for (Element aPostlist : postlist) {
+                        Post item = new Post();
+                        Element link = aPostlist.getElementsByClass("post").get(0);
+                        String postTitle = link.text();
+                        String postUrl = link.attr("href");
+                        String postImageUrl = "";
+                        if (link.getElementsByClass("post-img").size() > 0) {
+                            String bgimg = link.getElementsByClass("post-img").get(0).attr("style")
+                                    .replace("background-image:url(", "");
+                            int idx = bgimg.indexOf("?");
+                            if (idx == -1) {
+                                idx = bgimg.length();
+                            }
+                            postImageUrl = bgimg.substring(0, idx);
+                        }
+                        String postAuthor = "";
+                        String postGroup = "";
+                        String[] ang = aPostlist.getElementsByClass("post-info-content").get(0).text()
+                                .split(" 发表于 ");
+                        postAuthor = ang[0];
+                        postGroup = ang[1];
+                        int postLike = Integer.valueOf(aPostlist.getElementsByClass("like-num").get(0)
+                                .text());
+                        int postComment = Integer.valueOf(aPostlist.getElementsByClass("post-reply-num")
+                                .get(0).text().replaceAll(" 回应$", ""));
+                        item.setTitle(postTitle);
+                        item.setUrl(postUrl);
+                        item.setId(postUrl.replaceAll("\\?.*$", "").replaceAll("\\D+", ""));
+                        item.setTitleImageUrl(postImageUrl);
+                        item.setAuthor(postAuthor);
+                        item.setGroupName(postGroup);
+                        item.setLikeNum(postLike);
+                        item.setReplyNum(postComment);
+                        item.setFeatured(false);
+                        list.add(item);
+                    }
+                    resultObject.ok = true;
+                    resultObject.result = list;
+                }
+            }
+        } catch (Exception e) {
+            handleRequestException(e, resultObject);
+        }
         return resultObject;
     }
 
@@ -286,13 +380,49 @@ public class PostAPI extends APIBase {
         ResultObject resultObject = new ResultObject();
         try {
             String url = "http://apis.guokr.com/group/post.json";
-            ArrayList<Post> list = new ArrayList<>();
             ArrayList<NameValuePair> pairs = new ArrayList<>();
             pairs.add(new BasicNameValuePair("retrieve_type", "by_group"));
             pairs.add(new BasicNameValuePair("group_id", id));
             pairs.add(new BasicNameValuePair("limit", "20"));
             pairs.add(new BasicNameValuePair("offset", offset + ""));
             String jString = HttpFetcher.get(url, pairs).toString();
+            resultObject = parsePostListJson(jString);
+
+            if (resultObject.ok && pairs.get(3).getValue().equals("0")) {
+                //请求成功则缓存之
+                String key = "post." + pairs.get(1).getValue();
+                RequestCache.getInstance().addStringToCache(key, jString);
+            }
+
+        } catch (Exception e) {
+            handleRequestException(e, resultObject);
+        }
+        return resultObject;
+    }
+
+    /**
+     * 根据小组id获得缓存的帖子列表，json格式
+     *
+     * @param id 小组id
+     * @return resultObject
+     */
+    public static ResultObject getCachedGroupPostListJson(String id) {
+        ResultObject resultObject = new ResultObject();
+        try {
+            String jString = RequestCache.getInstance().getStringFromCache("post." + id);
+            if (jString != null) {
+                resultObject = parsePostListJson(jString);
+            }
+        } catch (Exception e) {
+            handleRequestException(e, resultObject);
+        }
+        return resultObject;
+    }
+
+    private static ResultObject parsePostListJson(String jString) {
+        ResultObject resultObject = new ResultObject();
+        try {
+            ArrayList<Post> list = new ArrayList<>();
             JSONArray articles = APIBase.getUniversalJsonArray(jString, resultObject);
             if (articles != null) {
                 for (int i = 0; i < articles.length(); i++) {

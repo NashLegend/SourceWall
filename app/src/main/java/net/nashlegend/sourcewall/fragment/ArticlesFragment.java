@@ -22,6 +22,7 @@ import net.nashlegend.sourcewall.commonview.LListView;
 import net.nashlegend.sourcewall.commonview.LoadingView;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.SubItem;
+import net.nashlegend.sourcewall.request.RequestCache;
 import net.nashlegend.sourcewall.request.ResultObject;
 import net.nashlegend.sourcewall.request.api.ArticleAPI;
 import net.nashlegend.sourcewall.util.Consts;
@@ -172,7 +173,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
         loadData(0);
     }
 
-    class LoaderTask extends AAsyncTask<Integer, Integer, ResultObject> {
+    class LoaderTask extends AAsyncTask<Integer, ResultObject, ResultObject> {
 
         int offset;
 
@@ -183,6 +184,14 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
         @Override
         protected ResultObject doInBackground(Integer... datas) {
             offset = datas[0];
+
+            if (offset == 0 && adapter.getCount() == 0) {
+                ResultObject cachedResultObject = ArticleAPI.getCachedArticleList(subItem);
+                if (cachedResultObject.ok) {
+                    publishProgress(cachedResultObject);
+                }
+            }
+
             if (subItem.getType() == SubItem.Type_Collections) {
                 return ArticleAPI.getArticleListIndexPage(offset);
             } else if (subItem.getType() == SubItem.Type_Single_Channel) {
@@ -194,19 +203,33 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
             }
         }
 
+        /**
+         * 加载缓存的列表，但是会导致点击的时候会更明显的卡一下
+         *
+         * @param values The values indicating progress.
+         */
+        @Override
+        protected void onProgressUpdate(ResultObject... values) {
+            ResultObject o = values[0];
+            ArrayList<Article> ars = (ArrayList<Article>) o.result;
+            if (ars.size() > 0) {
+                loadingView.onLoadSuccess();
+                adapter.setList(ars);
+                adapter.notifyDataSetInvalidated();
+            }
+        }
+
         @Override
         protected void onPostExecute(ResultObject o) {
             if (o.ok) {
                 loadingView.onLoadSuccess();
                 ArrayList<Article> ars = (ArrayList<Article>) o.result;
                 if (offset > 0) {
-                    //Load More
                     if (ars.size() > 0) {
                         adapter.addAll(ars);
                         adapter.notifyDataSetChanged();
                     }
                 } else {
-                    //Refresh
                     if (ars.size() > 0) {
                         adapter.setList(ars);
                         adapter.notifyDataSetInvalidated();

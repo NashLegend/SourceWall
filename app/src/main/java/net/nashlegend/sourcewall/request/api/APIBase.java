@@ -256,9 +256,9 @@ public class APIBase {
     public static JSONObject getUniversalJsonObject(String json, ResultObject resultObject) throws JSONException {
         JSONObject object = new JSONObject(json);
         if (getJsonBoolean(object, "ok")) {
-            resultObject.ok = getJsonBoolean(object, "ok");
             return getJsonObject(object, "result");
         } else {
+            resultObject.ok = false;
             handleBadJson(object, resultObject);
         }
         return null;
@@ -275,9 +275,10 @@ public class APIBase {
     public static JSONArray getUniversalJsonArray(String json, ResultObject resultObject) throws JSONException {
         JSONObject object = new JSONObject(json);
         if (getJsonBoolean(object, "ok")) {
-            resultObject.ok = getJsonBoolean(object, "ok");
+            //这里不处理resultObject.ok，因为返回后，其他地方可能报错
             return getJsonArray(object, "result");
         } else {
+            resultObject.ok = false;
             handleBadJson(object, resultObject);
         }
         return null;
@@ -294,7 +295,7 @@ public class APIBase {
     public static boolean getUniversalJsonSimpleBoolean(String json, ResultObject resultObject) throws JSONException {
         JSONObject object = new JSONObject(json);
         if (getJsonBoolean(object, "ok")) {
-            resultObject.ok = getJsonBoolean(object, "ok");
+            resultObject.ok = true;
             return true;
         } else {
             handleBadJson(object, resultObject);

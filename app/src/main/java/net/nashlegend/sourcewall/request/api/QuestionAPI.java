@@ -9,6 +9,7 @@ import net.nashlegend.sourcewall.model.QuestionAnswer;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.HttpFetcher;
+import net.nashlegend.sourcewall.request.RequestCache;
 import net.nashlegend.sourcewall.request.ResultObject;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.MDUtil;
@@ -22,10 +23,15 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.net.URLDecoder;
 import java.util.ArrayList;
 
 /**
  * 单个答案地址。http://www.guokr.com/answer/782227/
+ * 缓存key规则：
+ * 热门问答的key是 question.hottest
+ * 精彩回答的key是 question.highlight
+ * 按tag加载的问题的key是 question.{tag}
  */
 public class QuestionAPI extends APIBase {
     private static int maxImageWidth = 240;
@@ -34,6 +40,19 @@ public class QuestionAPI extends APIBase {
 
     public QuestionAPI() {
 
+    }
+
+    public static ResultObject getCachedQuestionList(SubItem subItem) {
+        ResultObject cachedResultObject = new ResultObject();
+        String key = "question." + subItem.getValue();
+        if (subItem.getType() == SubItem.Type_Collections) {
+            String html = RequestCache.getInstance().getStringFromCache(key);
+            cachedResultObject = parseQuestionsHtml(html);
+        } else {
+            String json = RequestCache.getInstance().getStringFromCache(key);
+            cachedResultObject = parseQuestionsListJson(json);
+        }
+        return cachedResultObject;
     }
 
     /**
@@ -105,33 +124,61 @@ public class QuestionAPI extends APIBase {
             pairs.add(new BasicNameValuePair("limit", "20"));
             pairs.add(new BasicNameValuePair("offset", offset + ""));
             String jString = HttpFetcher.get(url, pairs).toString();
-            JSONArray results = getUniversalJsonArray(jString, resultObject);
-            if (results != null) {
-                for (int i = 0; i < results.length(); i++) {
-                    JSONObject jsonObject = results.getJSONObject(i);
-                    Question question = new Question();
-                    question.setAnswerNum(getJsonInt(jsonObject, "answers_count"));
-                    question.setAuthor(jsonObject.getJSONObject("author").getString("nickname"));
-                    question.setAuthorID(jsonObject.getJSONObject("author").getString("url")
-                            .replaceAll("\\D+", ""));
-                    question.setAuthorAvatarUrl(jsonObject.getJSONObject("author")
-                            .getJSONObject("avatar").getString("large").replaceAll("\\?.*$", ""));
-                    question.setSummary(getJsonString(jsonObject, "summary"));
-                    question.setDate(parseDate(getJsonString(jsonObject, "date_created")));
-                    question.setFollowNum(getJsonInt(jsonObject, "followers_count"));
-                    question.setId(getJsonString(jsonObject, "id"));
-                    question.setTitle(getJsonString(jsonObject, "question"));
-                    question.setUrl(getJsonString(jsonObject, "url"));
-                    questions.add(question);
-                }
-                resultObject.ok = true;
-                resultObject.result = questions;
+            resultObject = parseQuestionsListJson(jString);
+
+            if (resultObject.ok && pairs.get(3).getValue().equals("0")) {
+                //请求成功则缓存之
+                String key = "question." + URLDecoder.decode(pairs.get(1).getValue(), "utf-8");
+                RequestCache.getInstance().addStringToCache(key, jString);
             }
+
         } catch (Exception e) {
             handleRequestException(e, resultObject);
         }
         return resultObject;
     }
+
+    /**
+     * 解析QuestionList的json
+     *
+     * @param jString json
+     * @return ResultObject
+     */
+    public static ResultObject parseQuestionsListJson(String jString) {
+        ResultObject resultObject = new ResultObject();
+        try {
+            if (jString != null) {
+                ArrayList<Question> questions = new ArrayList<>();
+                JSONArray results = getUniversalJsonArray(jString, resultObject);
+                if (results != null) {
+                    for (int i = 0; i < results.length(); i++) {
+                        JSONObject jsonObject = results.getJSONObject(i);
+                        Question question = new Question();
+                        question.setAnswerNum(getJsonInt(jsonObject, "answers_count"));
+                        question.setAuthor(jsonObject.getJSONObject("author").getString("nickname"));
+                        question.setAuthorID(jsonObject.getJSONObject("author").getString("url")
+                                .replaceAll("\\D+", ""));
+                        question.setAuthorAvatarUrl(jsonObject.getJSONObject("author")
+                                .getJSONObject("avatar").getString("large").replaceAll("\\?.*$", ""));
+                        question.setSummary(getJsonString(jsonObject, "summary"));
+                        question.setDate(parseDate(getJsonString(jsonObject, "date_created")));
+                        question.setFollowNum(getJsonInt(jsonObject, "followers_count"));
+                        question.setId(getJsonString(jsonObject, "id"));
+                        question.setTitle(getJsonString(jsonObject, "question"));
+                        question.setUrl(getJsonString(jsonObject, "url"));
+                        questions.add(question);
+                    }
+                    resultObject.ok = true;
+                    resultObject.result = questions;
+                }
+            }
+
+        } catch (Exception e) {
+            handleRequestException(e, resultObject);
+        }
+        return resultObject;
+    }
+
 
     /**
      * 返回热门回答问题列表，解析html获得
@@ -141,7 +188,17 @@ public class QuestionAPI extends APIBase {
      */
     public static ResultObject getHotQuestions(int pageNo) {
         String url = "http://m.guokr.com/ask/hottest/?page=" + pageNo;
-        return getQuestionsFromMobileUrl(url);
+        ResultObject resultObject = new ResultObject();
+        try {
+            String html = HttpFetcher.get(url).toString();
+            resultObject = parseQuestionsHtml(html);
+            if (resultObject.ok && pageNo == 1) {
+                RequestCache.getInstance().addStringToCache("question.hottest", html);
+            }
+        } catch (Exception e) {
+            handleRequestException(e, resultObject);
+        }
+        return resultObject;
     }
 
     /**
@@ -152,20 +209,29 @@ public class QuestionAPI extends APIBase {
      */
     public static ResultObject getHighlightQuestions(int pageNo) {
         String url = "http://m.guokr.com/ask/highlight/?page=" + pageNo;
-        return getQuestionsFromMobileUrl(url);
+        ResultObject resultObject = new ResultObject();
+        try {
+            String html = HttpFetcher.get(url).toString();
+            resultObject = parseQuestionsHtml(html);
+            if (resultObject.ok && pageNo == 1) {
+                RequestCache.getInstance().addStringToCache("question.highlight", html);
+            }
+        } catch (Exception e) {
+            handleRequestException(e, resultObject);
+        }
+        return resultObject;
     }
 
     /**
      * 解析html页面获得问题列表
      *
-     * @param url 页面地址
+     * @param html 页面内容
      * @return ResultObject
      */
-    public static ResultObject getQuestionsFromMobileUrl(String url) {
+    public static ResultObject parseQuestionsHtml(String html) {
         ResultObject resultObject = new ResultObject();
         try {
             ArrayList<Question> questions = new ArrayList<>();
-            String html = HttpFetcher.get(url).toString();
             Document doc = Jsoup.parse(html);
             Elements elements = doc.getElementsByClass("ask-list");
             if (elements.size() == 1) {

@@ -4,8 +4,10 @@ import android.text.TextUtils;
 
 import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Article;
+import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.HttpFetcher;
+import net.nashlegend.sourcewall.request.RequestCache;
 import net.nashlegend.sourcewall.request.ResultObject;
 
 import org.apache.http.NameValuePair;
@@ -23,6 +25,9 @@ import java.util.regex.Pattern;
 
 /**
  * 暂无单个回复地址
+ * 缓存key规则：
+ * 科学人的key是 article
+ * 其余的是 article.{id}
  */
 public class ArticleAPI extends APIBase {
 
@@ -92,38 +97,98 @@ public class ArticleAPI extends APIBase {
     private static ResultObject getArticleListFromJsonUrl(String url, ArrayList<NameValuePair> pairs) {
         ResultObject resultObject = new ResultObject();
         try {
-            ArrayList<Article> articleList = new ArrayList<>();
             String jString = HttpFetcher.get(url, pairs, false).toString();
-            JSONArray articles = APIBase.getUniversalJsonArray(jString, resultObject);
-            if (articles != null) {
-                for (int i = 0; i < articles.length(); i++) {
-                    JSONObject jo = articles.getJSONObject(i);
-                    Article article = new Article();
-                    article.setId(getJsonString(jo, "id"));
-                    article.setCommentNum(getJsonInt(jo, "replies_count"));
-                    article.setAuthor(getJsonString(getJsonObject(jo, "author"), "nickname"));
-                    article.setAuthorID(getJsonString(getJsonObject(jo, "author"), "url")
-                            .replaceAll("\\D+", ""));
-                    article.setAuthorAvatarUrl(jo.getJSONObject("author").getJSONObject("avatar")
-                            .getString("large").replaceAll("\\?.*$", ""));
-                    article.setDate(parseDate(getJsonString(jo, "date_published")));
-                    article.setSubjectName(getJsonString(getJsonObject(jo, "subject"), "name"));
-                    article.setSubjectKey(getJsonString(getJsonObject(jo, "subject"), "key"));
-                    article.setUrl(getJsonString(jo, "url"));
-                    article.setImageUrl(getJsonString(jo, "small_image"));
-                    article.setSummary(getJsonString(jo, "summary"));
-                    article.setTitle(getJsonString(jo, "title"));
-                    articleList.add(article);
+            resultObject = parseArticleListJson(jString);
+            if (resultObject.ok) {
+                //请求成功则缓存之
+                String key = null;
+                if (pairs.size() == 4 && pairs.get(3).getValue().equals("0")) {
+                    key = "article." + pairs.get(1).getValue();
+                } else if (pairs.size() == 3 && pairs.get(2).getValue().equals("0")) {
+                    key = "article";
                 }
-                resultObject.ok = true;
-                resultObject.result = articleList;
-            } else {
-                resultObject.ok = false;
+                if (key != null) {
+                    RequestCache.getInstance().addStringToCache(key, jString);
+                }
             }
         } catch (Exception e) {
             handleRequestException(e, resultObject);
         }
+        return resultObject;
+    }
 
+
+    /**
+     * 获取缓存的文章列表
+     * resultObject.result是ArrayList[Article]
+     *
+     * @param subItem SubItem
+     * @return ResultObject
+     */
+    public static ResultObject getCachedArticleList(SubItem subItem) {
+        ResultObject resultObject = new ResultObject();
+        String key = null;
+        if (subItem.getType() == SubItem.Type_Collections) {
+            key = "article";
+        } else if (subItem.getType() == SubItem.Type_Single_Channel) {
+            key = "article." + subItem.getValue();
+        } else if (subItem.getType() == SubItem.Type_Subject_Channel) {
+            key = "article." + subItem.getValue();
+        }
+        if (key != null) {
+            try {
+                String jString = RequestCache.getInstance().getStringFromCache(key);
+                if (jString != null) {
+                    resultObject = parseArticleListJson(jString);
+                }
+            } catch (Exception e) {
+                handleRequestException(e, resultObject);
+            }
+        }
+
+        return resultObject;
+    }
+
+    /**
+     * 获取缓存的文章列表
+     * resultObject.result是ArrayList[Article]
+     *
+     * @param jString 要解析的json
+     * @return ResultObject
+     */
+    public static ResultObject parseArticleListJson(String jString) {
+        ResultObject resultObject = new ResultObject();
+        try {
+            ArrayList<Article> articleList = new ArrayList<>();
+            if (jString != null) {
+                JSONArray articles = APIBase.getUniversalJsonArray(jString, resultObject);
+                if (articles != null) {
+                    for (int i = 0; i < articles.length(); i++) {
+                        JSONObject jo = articles.getJSONObject(i);
+                        Article article = new Article();
+                        article.setId(getJsonString(jo, "id"));
+                        article.setCommentNum(getJsonInt(jo, "replies_count"));
+                        article.setAuthor(getJsonString(getJsonObject(jo, "author"), "nickname"));
+                        article.setAuthorID(getJsonString(getJsonObject(jo, "author"), "url")
+                                .replaceAll("\\D+", ""));
+                        article.setAuthorAvatarUrl(jo.getJSONObject("author").getJSONObject("avatar")
+                                .getString("large").replaceAll("\\?.*$", ""));
+                        article.setDate(parseDate(getJsonString(jo, "date_published")));
+                        article.setSubjectName(getJsonString(getJsonObject(jo, "subject"), "name"));
+                        article.setSubjectKey(getJsonString(getJsonObject(jo, "subject"), "key"));
+                        article.setUrl(getJsonString(jo, "url"));
+                        article.setImageUrl(getJsonString(jo, "small_image"));
+                        article.setSummary(getJsonString(jo, "summary"));
+                        article.setTitle(getJsonString(jo, "title"));
+                        articleList.add(article);
+                    }
+                    resultObject.ok = true;
+                    resultObject.result = articleList;
+                }
+            }
+        } catch (Exception e) {
+            handleRequestException(e, resultObject);
+        }
         return resultObject;
     }
 

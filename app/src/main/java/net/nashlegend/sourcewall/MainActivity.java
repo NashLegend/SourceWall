@@ -18,10 +18,10 @@ import net.nashlegend.sourcewall.fragment.NavigationDrawerFragment;
 import net.nashlegend.sourcewall.fragment.PostsFragment;
 import net.nashlegend.sourcewall.fragment.QuestionsFragment;
 import net.nashlegend.sourcewall.model.SubItem;
+import net.nashlegend.sourcewall.request.RequestCache;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.SharedUtil;
-
 
 public class MainActivity extends BaseActivity {
 
@@ -61,14 +61,20 @@ public class MainActivity extends BaseActivity {
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 
-        // Set up the drawer.
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
     }
 
     @Override
+    protected void onPause() {
+        RequestCache.getInstance().flushCache();
+        super.onPause();
+    }
+
+    @Override
     protected void onDestroy() {
+        RequestCache.getInstance().closeCache();
         unregisterReceiver(receiver);
         super.onDestroy();
     }

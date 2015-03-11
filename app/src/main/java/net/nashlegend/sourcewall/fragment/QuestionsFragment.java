@@ -45,6 +45,7 @@ import net.nashlegend.sourcewall.db.gen.AskTag;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.ResultObject;
+import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Consts;
@@ -505,7 +506,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
         loadData(0);
     }
 
-    class LoaderTask extends AAsyncTask<Integer, Integer, ResultObject> {
+    class LoaderTask extends AAsyncTask<Integer, ResultObject, ResultObject> {
 
         int loadedPage;
 
@@ -516,6 +517,14 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
         @Override
         protected ResultObject doInBackground(Integer... datas) {
             loadedPage = datas[0];
+
+            if (loadedPage == 0 && adapter.getCount() == 0) {
+                ResultObject cachedResultObject = QuestionAPI.getCachedQuestionList(subItem);
+                if (cachedResultObject.ok) {
+                    publishProgress(cachedResultObject);
+                }
+            }
+
             if (subItem.getType() == SubItem.Type_Collections) {
                 if (HOTTEST.equals(subItem.getValue())) {
                     return QuestionAPI.getHotQuestions(loadedPage + 1);
@@ -530,6 +539,22 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
                     e.printStackTrace();
                     return new ResultObject();
                 }
+            }
+        }
+
+        /**
+         * 加载缓存的列表，但是会导致点击的时候会更明显的卡一下
+         *
+         * @param values The values indicating progress.
+         */
+        @Override
+        protected void onProgressUpdate(ResultObject... values) {
+            ResultObject o = values[0];
+            ArrayList<Question> ars = (ArrayList<Question>) o.result;
+            if (ars.size() > 0) {
+                loadingView.onLoadSuccess();
+                adapter.setList(ars);
+                adapter.notifyDataSetInvalidated();
             }
         }
 

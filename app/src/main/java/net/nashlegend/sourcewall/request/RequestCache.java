@@ -2,6 +2,7 @@ package net.nashlegend.sourcewall.request;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
@@ -44,9 +45,10 @@ public class RequestCache {
         init(cacheParams);
     }
 
-    public static RequestCache getInstance() {
+    synchronized public static RequestCache getInstance() {
         if (requestCache == null) {
             requestCache = new RequestCache(new RequestCacheParams(AppApplication.getApplication(), "request.cache"));
+            requestCache.initDiskCache();
         }
         return requestCache;
     }
@@ -187,7 +189,7 @@ public class RequestCache {
         }
     }
 
-    public void clearCache() {
+    public void clear() {
         if (mMemoryCache != null) {
             mMemoryCache.evictAll();
         }
@@ -341,6 +343,59 @@ public class RequestCache {
         }
         final StatFs stats = new StatFs(path.getPath());
         return (long) stats.getBlockSize() * (long) stats.getAvailableBlocks();
+    }
+
+    private static final int MESSAGE_CLEAR = 0;
+    private static final int MESSAGE_INIT_DISK_CACHE = 1;
+    private static final int MESSAGE_FLUSH = 2;
+    private static final int MESSAGE_CLOSE = 3;
+
+//    public void addImageCache() {
+//        requestCache = RequestCache.getInstance();
+//        new CacheAsyncTask().execute(MESSAGE_INIT_DISK_CACHE);
+//    }
+
+    public void clearCache() {
+        new CacheAsyncTask().execute(MESSAGE_CLEAR);
+    }
+
+    public void flushCache() {
+        new CacheAsyncTask().execute(MESSAGE_FLUSH);
+    }
+
+    public void closeCache() {
+        new CacheAsyncTask().execute(MESSAGE_CLOSE);
+    }
+
+    protected class CacheAsyncTask extends AsyncTask<Object, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Object... params) {
+            switch ((Integer) params[0]) {
+                case MESSAGE_CLEAR:
+                    if (requestCache != null) {
+                        requestCache.clear();
+                    }
+                    break;
+                case MESSAGE_INIT_DISK_CACHE:
+                    if (requestCache != null) {
+                        requestCache.initDiskCache();
+                    }
+                    break;
+                case MESSAGE_FLUSH:
+                    if (requestCache != null) {
+                        requestCache.flush();
+                    }
+                    break;
+                case MESSAGE_CLOSE:
+                    if (requestCache != null) {
+                        requestCache.close();
+                        requestCache = null;
+                    }
+                    break;
+            }
+            return null;
+        }
     }
 
 }
