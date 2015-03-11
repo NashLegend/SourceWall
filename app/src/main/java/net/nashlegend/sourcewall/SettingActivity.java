@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -203,6 +204,10 @@ public class SettingActivity extends SwipeActivity implements View.OnClickListen
                     tailText.setEnabled(false);
                     break;
                 case R.id.button_use_custom:
+                    String cus = SharedUtil.readString(Consts.key_Custom_Tail, "");
+                    if (!TextUtils.isEmpty(cus)) {
+                        tailText.setText(cus);
+                    }
                     tailText.setEnabled(true);
                     break;
             }
