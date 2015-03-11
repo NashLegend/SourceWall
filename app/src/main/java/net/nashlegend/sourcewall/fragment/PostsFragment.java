@@ -526,8 +526,10 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     }
 
     @Override
-    public void prepareLoading() {
-        loadingView.startLoading();
+    public void prepareLoading(SubItem sub) {
+        if (!sub.equals(this.subItem)) {
+            loadingView.startLoading();
+        }
     }
 
     private void cancelPotentialTask() {
@@ -616,7 +618,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                 if (ars.size() > 0) {
                     currentPage = loadedPage;
                     adapter.setList(ars);
-                    adapter.notifyDataSetInvalidated();
+                    adapter.notifyDataSetChanged();
                     listView.setSelection(0);
                 } else {
                     //没有数据，页码不变

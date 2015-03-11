@@ -164,7 +164,10 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
                     lazyIntent.setAction(Consts.Action_Open_Content_Fragment);
                     lazyIntent.putExtra(Consts.Extra_SubItem, subItem);
 
-                    getActivity().sendBroadcast(new Intent(Consts.Action_Prepare_Open_Content_Fragment));
+                    Intent prepareIntent = new Intent();
+                    prepareIntent.setAction(Consts.Action_Prepare_Open_Content_Fragment);
+                    prepareIntent.putExtra(Consts.Extra_SubItem, subItem);
+                    getActivity().sendBroadcast(prepareIntent);
                 }
                 return false;
             }

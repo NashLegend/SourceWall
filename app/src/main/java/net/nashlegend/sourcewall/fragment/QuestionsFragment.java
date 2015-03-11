@@ -503,8 +503,10 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
     }
 
     @Override
-    public void prepareLoading() {
-        loadingView.startLoading();
+    public void prepareLoading(SubItem sub) {
+        if (!sub.equals(this.subItem)) {
+            loadingView.startLoading();
+        }
     }
 
     private void cancelPotentialTask() {
@@ -594,7 +596,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
                 if (ars.size() > 0) {
                     currentPage = loadedPage;
                     adapter.setList(ars);
-                    adapter.notifyDataSetInvalidated();
+                    adapter.notifyDataSetChanged();
                     listView.setSelection(0);
                 } else {
                     //没有数据，页码不变

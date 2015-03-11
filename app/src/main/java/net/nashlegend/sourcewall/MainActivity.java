@@ -142,9 +142,9 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    public void prepareFragment() {
+    public void prepareFragment(SubItem subItem) {
         if (currentFragment != null) {
-            currentFragment.prepareLoading();
+            currentFragment.prepareLoading(subItem);
         }
     }
 
@@ -152,8 +152,8 @@ public class MainActivity extends BaseActivity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            SubItem subItem = (SubItem) intent.getSerializableExtra(Consts.Extra_SubItem);
             if (Consts.Action_Open_Content_Fragment.equals(intent.getAction())) {
-                SubItem subItem = (SubItem) intent.getSerializableExtra(Consts.Extra_SubItem);
                 switch (subItem.getSection()) {
                     case SubItem.Section_Article:
                         if (articlesFragment == null) {
@@ -175,7 +175,7 @@ public class MainActivity extends BaseActivity {
                         break;
                 }
             } else if (Consts.Action_Prepare_Open_Content_Fragment.equals(intent.getAction())) {
-                prepareFragment();
+                prepareFragment(subItem);
             }
 
         }

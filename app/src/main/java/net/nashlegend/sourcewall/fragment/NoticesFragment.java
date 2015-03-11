@@ -152,7 +152,7 @@ public class NoticesFragment extends ChannelsFragment implements LListView.OnRef
     }
 
     @Override
-    public void prepareLoading() {
+    public void prepareLoading(SubItem sub) {
 
     }
 

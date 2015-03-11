@@ -165,8 +165,10 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
     }
 
     @Override
-    public void prepareLoading() {
-        loadingView.startLoading();
+    public void prepareLoading(SubItem sub) {
+        if (!sub.equals(this.subItem)) {
+            loadingView.startLoading();
+        }
     }
 
     private void cancelPotentialTask() {
@@ -253,7 +255,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
                 } else {
                     if (ars.size() > 0) {
                         adapter.setList(ars);
-                        adapter.notifyDataSetInvalidated();
+                        adapter.notifyDataSetChanged();
                     }
                 }
             } else {
