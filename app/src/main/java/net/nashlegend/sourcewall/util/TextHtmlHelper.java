@@ -140,7 +140,7 @@ public class TextHtmlHelper {
                             Matrix matrix = new Matrix();
                             matrix.setScale(width / bitmap.getWidth(), height / bitmap.getHeight());
                             canvas.drawBitmap(bitmap, matrix, null);
-                            if (width > 2 + indBitmap.getWidth() && height > 2 * indBitmap.getHeight()) {
+                            if (width > 2 * indBitmap.getWidth() && height > 2 * indBitmap.getHeight()) {
                                 canvas.drawBitmap(indBitmap, 0, 0, null);
                             }
                             drawable = new BitmapDrawable(context.getResources(), tmpBitmap);
