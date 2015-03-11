@@ -13,7 +13,7 @@ import net.nashlegend.sourcewall.R;
 public class Config {
 
     public final static int ExitTapsGap = 1200;
-    public final static String defaultDisplayName = "果的壳";
+    public final static String defaultDisplayName = "果壳的壳";
 
     public static boolean shouldLoadImage() {
         //略微有点耗时，最多可耗时3ms，最低0.3ms
