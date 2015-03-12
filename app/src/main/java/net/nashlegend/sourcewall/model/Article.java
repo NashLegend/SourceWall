@@ -1,5 +1,7 @@
 package net.nashlegend.sourcewall.model;
 
+import android.text.TextUtils;
+
 import java.util.ArrayList;
 
 /**
@@ -33,6 +35,9 @@ public class Article extends AceModel {
     }
 
     public String getTitle() {
+        if (TextUtils.isEmpty(title)) {
+            url = "科学人--果壳网";
+        }
         return title;
     }
 
@@ -41,6 +46,9 @@ public class Article extends AceModel {
     }
 
     public String getUrl() {
+        if (!TextUtils.isEmpty(id) && TextUtils.isEmpty(url)) {
+            url = "http://www.guokr.com/article/" + id + "/";
+        }
         return url;
     }
 
@@ -105,6 +113,9 @@ public class Article extends AceModel {
     }
 
     public String getSummary() {
+        if (TextUtils.isEmpty(summary)) {
+            summary = getTitle();
+        }
         return summary;
     }
 

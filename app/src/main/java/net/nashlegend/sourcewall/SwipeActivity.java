@@ -21,7 +21,7 @@ import android.widget.FrameLayout;
 
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.DisplayUtil;
-import net.nashlegend.sourcewall.util.SharedUtil;
+import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 
 public class SwipeActivity extends BaseActivity {
 
@@ -30,7 +30,7 @@ public class SwipeActivity extends BaseActivity {
 
     @Override
     public void setTheme(int resid) {
-        if (SharedUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
+        if (SharedPreferencesUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
             resid = R.style.AppThemeNight;
         } else {
             resid = R.style.AppTheme;

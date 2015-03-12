@@ -35,7 +35,7 @@ public class Config {
     }
 
     public static boolean shouldLoadHomepageImage() {
-        return !SharedUtil.readBoolean(Consts.Key_Image_No_Load_Homepage, false);
+        return !SharedPreferencesUtil.readBoolean(Consts.Key_Image_No_Load_Homepage, false);
     }
 
     private static boolean isWifi() {
@@ -45,7 +45,7 @@ public class Config {
     }
 
     public static int getImageLoadMode() {
-        return SharedUtil.readInt(Consts.Key_Image_Load_Mode, Consts.MODE_ALWAYS_LOAD);
+        return SharedPreferencesUtil.readInt(Consts.Key_Image_Load_Mode, Consts.MODE_ALWAYS_LOAD);
     }
 
     /**
@@ -64,7 +64,7 @@ public class Config {
      */
     public static String getComplexReplyTail() {
         String tail = "";
-        switch (SharedUtil.readInt(Consts.key_Use_Tail_Type, Consts.Type_Use_Default_Tail)) {
+        switch (SharedPreferencesUtil.readInt(Consts.key_Use_Tail_Type, Consts.Type_Use_Default_Tail)) {
             case Consts.Type_Use_Default_Tail:
                 tail = getDefaultComplexTail();
                 break;
@@ -105,7 +105,7 @@ public class Config {
      */
     public static String getParametricCustomComplexTail() {
         //bit##参数##
-        String tail = SharedUtil.readString(Consts.key_Custom_Tail, "");
+        String tail = SharedPreferencesUtil.readString(Consts.key_Custom_Tail, "");
         if (!tail.trim().equals("")) {
             String reg = "##([^#]+)##";
             tail = tail.replaceAll(reg, "<a href=\"https://github.com/NashLegend/SourceWall/blob/master/README.md\" target=\"_blank\">$1</a>");
@@ -120,7 +120,7 @@ public class Config {
      */
     public static String getSimpleReplyTail() {
         String tail = "";
-        switch (SharedUtil.readInt(Consts.key_Use_Tail_Type, Consts.Type_Use_Default_Tail)) {
+        switch (SharedPreferencesUtil.readInt(Consts.key_Use_Tail_Type, Consts.Type_Use_Default_Tail)) {
             case Consts.Type_Use_Default_Tail:
                 tail = getDefaultSimpleTail();
                 break;
@@ -161,7 +161,7 @@ public class Config {
      * @return 参数化的尾巴
      */
     public static String getParametricCustomSimpleTail() {
-        String tail = SharedUtil.readString(Consts.key_Custom_Tail, "");
+        String tail = SharedPreferencesUtil.readString(Consts.key_Custom_Tail, "");
         if (!tail.trim().equals("")) {
             String reg = "##([^#]+)##";
             tail = tail.replaceAll(reg, "[url=https://github.com/NashLegend/SourceWall/blob/master/README.md]$1[/url]");

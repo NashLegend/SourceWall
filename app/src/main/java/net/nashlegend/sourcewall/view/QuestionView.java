@@ -12,7 +12,7 @@ import net.nashlegend.sourcewall.SimpleReplyActivity;
 import net.nashlegend.sourcewall.commonview.TTextView;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.util.Consts;
-import net.nashlegend.sourcewall.util.SharedUtil;
+import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 import net.nashlegend.sourcewall.util.TextHtmlHelper;
 
 /**
@@ -29,7 +29,7 @@ public class QuestionView extends AceView<Question> {
 
     public QuestionView(Context context) {
         super(context);
-        if (SharedUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
+        if (SharedPreferencesUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
             setBackgroundColor(getContext().getResources().getColor(R.color.page_background_night));
         } else {
             setBackgroundColor(getContext().getResources().getColor(R.color.page_background));

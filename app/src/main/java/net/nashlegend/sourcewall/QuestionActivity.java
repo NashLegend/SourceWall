@@ -29,6 +29,7 @@ import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.AutoHideUtil;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.ShareUtil;
 import net.nashlegend.sourcewall.view.AnswerListItemView;
 
 import java.util.ArrayList;
@@ -131,6 +132,12 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
                 break;
             case R.id.action_unfollow_question:
                 unfollowQuestion();
+                break;
+            case R.id.action_share_to_wechat_circle:
+                ShareUtil.shareToWeiXin(this, question.getUrl(), question.getTitle(), question.getSummary(), null, false);
+                break;
+            case R.id.action_share_to_wechat_friends:
+                ShareUtil.shareToWeiXin(this, question.getUrl(), question.getTitle(), question.getSummary(), null, true);
                 break;
         }
         return super.onOptionsItemSelected(item);

@@ -21,7 +21,7 @@ import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.RequestCache;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
-import net.nashlegend.sourcewall.util.SharedUtil;
+import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 
 public class MainActivity extends BaseActivity {
 
@@ -40,7 +40,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void setTheme(int resId) {
-        if (SharedUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
+        if (SharedPreferencesUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
             resId = R.style.BottomThemeNight;
         } else {
             resId = R.style.BottomTheme;

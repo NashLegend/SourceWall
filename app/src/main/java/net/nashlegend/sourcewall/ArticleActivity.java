@@ -34,6 +34,7 @@ import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.AutoHideUtil;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.RegUtil;
+import net.nashlegend.sourcewall.util.ShareUtil;
 import net.nashlegend.sourcewall.view.MediumListItemView;
 
 import java.util.ArrayList;
@@ -163,8 +164,6 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
                         String text = d.InputString;
                         RecommendTask recommendTask = new RecommendTask();
                         recommendTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, article.getId(), article.getTitle(), article.getSummary(), text);
-                    } else {
-                        // cancel recommend
                     }
                 }
             });
@@ -191,7 +190,14 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
+        switch (id) {
+            case R.id.action_share_to_wechat_circle:
+                ShareUtil.shareToWeiXin(this, article.getUrl(), article.getTitle(), article.getSummary(), null, false);
+                break;
+            case R.id.action_share_to_wechat_friends:
+                ShareUtil.shareToWeiXin(this, article.getUrl(), article.getTitle(), article.getSummary(), null, true);
+                break;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -350,7 +356,10 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
             floatingActionsMenu.setVisibility(View.VISIBLE);
             loadingView.onLoadSuccess();
             ResultObject result = values[0];
-            article = (Article) result.result;
+            Article tmpArticle=(Article) result.result;
+            tmpArticle.setUrl(article.getUrl());
+            tmpArticle.setSummary(article.getSummary());
+            article = tmpArticle;
             adapter.add(0, article);
             adapter.notifyDataSetChanged();
         }

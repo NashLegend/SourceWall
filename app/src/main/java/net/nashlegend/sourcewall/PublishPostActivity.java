@@ -42,7 +42,7 @@ import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.FileUtil;
-import net.nashlegend.sourcewall.util.SharedUtil;
+import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 import net.nashlegend.sourcewall.util.SketchSharedUtil;
 
 import org.apache.http.message.BasicNameValuePair;
@@ -598,14 +598,14 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
 
         @Override
         protected void onPreExecute() {
-            if (!SharedUtil.readBoolean(Consts.Key_User_Has_Learned_Add_Image, false)) {
+            if (!SharedPreferencesUtil.readBoolean(Consts.Key_User_Has_Learned_Add_Image, false)) {
                 new AlertDialog.Builder(PublishPostActivity.this)
                         .setTitle(R.string.hint)
                         .setMessage(R.string.tip_of_user_learn_add_image)
                         .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                SharedUtil.saveBoolean(Consts.Key_User_Has_Learned_Add_Image, true);
+                                SharedPreferencesUtil.saveBoolean(Consts.Key_User_Has_Learned_Add_Image, true);
                             }
                         }).create().show();
             }

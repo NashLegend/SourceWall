@@ -26,7 +26,7 @@ import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.ResultObject;
 import net.nashlegend.sourcewall.request.api.ArticleAPI;
 import net.nashlegend.sourcewall.util.Consts;
-import net.nashlegend.sourcewall.util.SharedUtil;
+import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 import net.nashlegend.sourcewall.view.ArticleListItemView;
 
 import java.util.ArrayList;
@@ -199,7 +199,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
             if (offset == 0 && adapter.getCount() == 0) {
                 ResultObject cachedResultObject = ArticleAPI.getCachedArticleList(subItem);
                 if (cachedResultObject.ok) {
-                    long lastLoad = SharedUtil.readLong(key, 0l);
+                    long lastLoad = SharedPreferencesUtil.readLong(key, 0l);
                     if (System.currentTimeMillis() - lastLoad > cacheDuration) {
                         System.out.println("科学人 " + subItem.getName() + " 使用缓存内容作为临时填充");
                         publishProgress(cachedResultObject);
@@ -220,7 +220,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
             }
 
             if (resultObject.ok) {
-                SharedUtil.saveLong(key, System.currentTimeMillis());
+                SharedPreferencesUtil.saveLong(key, System.currentTimeMillis());
             }
 
             return resultObject;

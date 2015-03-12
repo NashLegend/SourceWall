@@ -17,7 +17,7 @@ import net.nashlegend.sourcewall.model.UserInfo;
 import net.nashlegend.sourcewall.request.HttpFetcher;
 import net.nashlegend.sourcewall.request.ResultObject;
 import net.nashlegend.sourcewall.util.Consts;
-import net.nashlegend.sourcewall.util.SharedUtil;
+import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -507,11 +507,11 @@ public class UserAPI extends APIBase {
      * 退出登录、清除过期数据
      */
     public static void clearMyInfo() {
-        SharedUtil.remove(Consts.Key_Access_Token);
-        SharedUtil.remove(Consts.Key_Ukey);
-        SharedUtil.remove(Consts.Key_User_Avatar);
-        SharedUtil.remove(Consts.Key_User_ID);
-        SharedUtil.remove(Consts.Key_User_Name);
+        SharedPreferencesUtil.remove(Consts.Key_Access_Token);
+        SharedPreferencesUtil.remove(Consts.Key_Ukey);
+        SharedPreferencesUtil.remove(Consts.Key_User_Avatar);
+        SharedPreferencesUtil.remove(Consts.Key_User_ID);
+        SharedPreferencesUtil.remove(Consts.Key_User_Name);
         GroupHelper.clearAllMyGroups();
         AskTagHelper.clearAllMyTags();
         CookieSyncManager.createInstance(AppApplication.getApplication());
@@ -530,7 +530,7 @@ public class UserAPI extends APIBase {
      * @return 用户token，正确的话，64位长度
      */
     public static String getToken() {
-        return SharedUtil.readString(Consts.Key_Access_Token, "");
+        return SharedPreferencesUtil.readString(Consts.Key_Access_Token, "");
     }
 
     /**
@@ -539,7 +539,7 @@ public class UserAPI extends APIBase {
      * @return 用户ukey，6位长度
      */
     public static String getUkey() {
-        return SharedUtil.readString(Consts.Key_Ukey, "");
+        return SharedPreferencesUtil.readString(Consts.Key_Ukey, "");
     }
 
     /**
@@ -548,7 +548,7 @@ public class UserAPI extends APIBase {
      * @return 用户id，一串数字
      */
     public static String getUserID() {
-        return SharedUtil.readString(Consts.Key_User_ID, "");
+        return SharedPreferencesUtil.readString(Consts.Key_User_ID, "");
     }
 
     /**
@@ -557,7 +557,7 @@ public class UserAPI extends APIBase {
      * @return 头像地址为http链接
      */
     public static String getUserAvatar() {
-        return SharedUtil.readString(Consts.Key_User_Avatar, "");
+        return SharedPreferencesUtil.readString(Consts.Key_User_Avatar, "");
     }
 
     /**
@@ -566,7 +566,7 @@ public class UserAPI extends APIBase {
      * @return 用户登录时保存下来的cookie，未使用
      */
     public static String getCookie() {
-        return SharedUtil.readString(Consts.Key_Cookie, "");
+        return SharedPreferencesUtil.readString(Consts.Key_Cookie, "");
     }
 
     /**

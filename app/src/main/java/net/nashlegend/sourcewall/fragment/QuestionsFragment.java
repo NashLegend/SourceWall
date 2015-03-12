@@ -49,7 +49,7 @@ import net.nashlegend.sourcewall.request.ResultObject;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Consts;
-import net.nashlegend.sourcewall.util.SharedUtil;
+import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 import net.nashlegend.sourcewall.view.QuestionListItemView;
 
 import java.io.UnsupportedEncodingException;
@@ -299,11 +299,11 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
             public void onAnimationEnd(Animator animation) {
                 if (isAdded()) {
                     if (AskTagHelper.getAskTagsNumber() > 0) {
-                        long lastDBVersion = SharedUtil.readLong(Consts.Key_Last_Ask_Tags_Version, 0);
+                        long lastDBVersion = SharedPreferencesUtil.readLong(Consts.Key_Last_Ask_Tags_Version, 0);
                         if (currentDBVersion != lastDBVersion) {
                             getButtons();
                             initView();
-                            currentDBVersion = SharedUtil.readLong(Consts.Key_Last_Ask_Tags_Version, 0);
+                            currentDBVersion = SharedPreferencesUtil.readLong(Consts.Key_Last_Ask_Tags_Version, 0);
                         }
                         manageButton.setVisibility(View.VISIBLE);
                     } else {
@@ -536,7 +536,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
             if (loadedPage == 0 && adapter.getCount() == 0) {
                 ResultObject cachedResultObject = QuestionAPI.getCachedQuestionList(subItem);
                 if (cachedResultObject.ok) {
-                    long lastLoad = SharedUtil.readLong(key, 0l);
+                    long lastLoad = SharedPreferencesUtil.readLong(key, 0l);
                     if (System.currentTimeMillis() - lastLoad > cacheDuration) {
                         System.out.println("问答 " + subItem.getName() + " 使用缓存内容作为临时填充");
                         publishProgress(cachedResultObject);
@@ -565,7 +565,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
             }
 
             if (resultObject.ok) {
-                SharedUtil.saveLong(key, System.currentTimeMillis());
+                SharedPreferencesUtil.saveLong(key, System.currentTimeMillis());
             }
 
             return resultObject;

@@ -9,7 +9,7 @@ import net.nashlegend.sourcewall.AppApplication;
 /**
  * Created by NashLegend on 2014/11/25 0025
  */
-public class SharedUtil {
+public class SharedPreferencesUtil {
 
     // 本地xml文件名
     private final static String SP_NAME = "sourcewall";

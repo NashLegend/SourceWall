@@ -18,7 +18,7 @@ import android.webkit.WebViewClient;
 
 import net.nashlegend.sourcewall.request.HttpFetcher;
 import net.nashlegend.sourcewall.util.Consts;
-import net.nashlegend.sourcewall.util.SharedUtil;
+import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 
 import org.apache.http.impl.cookie.BasicClientCookie;
 
@@ -77,10 +77,10 @@ public class LoginActivity extends SwipeActivity {
                     clientCookie.setPath("/");
                     HttpFetcher.getDefaultHttpClient().getCookieStore().addCookie(clientCookie);
                     if (Consts.Cookie_Token_Key.equals(paramName)) {
-                        SharedUtil.saveString(Consts.Key_Access_Token, paramValue);
+                        SharedPreferencesUtil.saveString(Consts.Key_Access_Token, paramValue);
                         tmpToken = paramValue;
                     } else if (Consts.Cookie_Ukey_Key.equals(paramName)) {
-                        SharedUtil.saveString(Consts.Key_Ukey, paramValue);
+                        SharedPreferencesUtil.saveString(Consts.Key_Ukey, paramValue);
                         tmpUkey = paramValue;
                     }
                 }
@@ -98,7 +98,7 @@ public class LoginActivity extends SwipeActivity {
                 // login ok
                 if (parseRawCookie(cookieStr)) {
                     webView.stopLoading();
-                    SharedUtil.saveString(Consts.Key_Cookie, cookieStr);
+                    SharedPreferencesUtil.saveString(Consts.Key_Cookie, cookieStr);
                     setResult(RESULT_OK);
                     delayFinish();
                 } else {
@@ -147,7 +147,7 @@ public class LoginActivity extends SwipeActivity {
             }
             if (parseRawCookie(cookieStr)) {
                 webView.stopLoading();
-                SharedUtil.saveString(Consts.Key_Cookie, cookieStr);
+                SharedPreferencesUtil.saveString(Consts.Key_Cookie, cookieStr);
                 setResult(RESULT_OK);
                 delayFinish();
             } else {

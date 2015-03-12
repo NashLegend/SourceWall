@@ -8,7 +8,7 @@ import android.widget.TextView;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.util.Consts;
-import net.nashlegend.sourcewall.util.SharedUtil;
+import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 
 /**
  * Created by NashLegend on 2014/9/15 0015
@@ -20,7 +20,7 @@ public class QuestionListItemView extends AceView<Question> {
 
     public QuestionListItemView(Context context) {
         super(context);
-        if (SharedUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
+        if (SharedPreferencesUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
             setBackgroundColor(getContext().getResources().getColor(R.color.page_background_night));
         } else {
             setBackgroundColor(getContext().getResources().getColor(R.color.page_background));

@@ -9,7 +9,19 @@
         app:showAsAction="never" />
     <item
         android:id="@+id/action_unfollow_question"
-        android:orderInCategory="100"
+        android:orderInCategory="101"
         android:title="@string/action_unfollow_question"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_share_to_wechat_circle"
+        android:title="@string/action_share_to_wechat_circle"
+        android:orderInCategory="102"
+        android:icon="@drawable/share"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_share_to_wechat_friends"
+        android:title="@string/action_share_to_wechat_friends"
+        android:orderInCategory="103"
+        android:icon="@drawable/share"
         app:showAsAction="never" />
 </menu>

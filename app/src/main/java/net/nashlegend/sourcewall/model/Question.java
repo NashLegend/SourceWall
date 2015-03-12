@@ -1,5 +1,7 @@
 package net.nashlegend.sourcewall.model;
 
+import android.text.TextUtils;
+
 /**
  * Created by NashLegend on 2014/9/16 0016
  */
@@ -31,6 +33,9 @@ public class Question extends AceModel {
     }
 
     public String getTitle() {
+        if (TextUtils.isEmpty(title)) {
+            url = "科学人--果壳网";
+        }
         return title;
     }
 
@@ -39,6 +44,9 @@ public class Question extends AceModel {
     }
 
     public String getUrl() {
+        if (!TextUtils.isEmpty(id) && TextUtils.isEmpty(url)) {
+            url = "http://m.guokr.com/question/" + id + "/";
+        }
         return url;
     }
 
@@ -135,6 +143,9 @@ public class Question extends AceModel {
     }
 
     public String getSummary() {
+        if (TextUtils.isEmpty(summary)) {
+            summary = getTitle();
+        }
         return summary;
     }
 

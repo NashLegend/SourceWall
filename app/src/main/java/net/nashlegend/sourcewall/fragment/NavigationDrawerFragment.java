@@ -42,7 +42,7 @@ import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.ChannelHelper;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
-import net.nashlegend.sourcewall.util.SharedUtil;
+import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 import net.nashlegend.sourcewall.view.SubItemView;
 
 import java.util.ArrayList;
@@ -124,7 +124,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
         dayView = layoutView.findViewById(R.id.view_switch_to_day);
         nightView = layoutView.findViewById(R.id.view_switch_to_night);
 
-        if (SharedUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
+        if (SharedPreferencesUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
             dayView.setVisibility(View.VISIBLE);
             nightView.setVisibility(View.GONE);
         } else {
@@ -315,7 +315,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
             startActivityForResult(intent, Consts.Code_Login);
             getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
         } else {
-            String nameString = SharedUtil.readString(Consts.Key_User_Name, "");
+            String nameString = SharedPreferencesUtil.readString(Consts.Key_User_Name, "");
             if (TextUtils.isEmpty(nameString)) {
                 loadUserInfo();
             } else {
@@ -327,7 +327,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
     }
 
     private void revertMode() {
-        SharedUtil.saveBoolean(Consts.Key_Is_Night_Mode, !SharedUtil.readBoolean(Consts.Key_Is_Night_Mode, false));
+        SharedPreferencesUtil.saveBoolean(Consts.Key_Is_Night_Mode, !SharedPreferencesUtil.readBoolean(Consts.Key_Is_Night_Mode, false));
         getActivity().recreate();
     }
 
@@ -360,11 +360,11 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
     private void recheckData() {
         if (isFirstLoad) {
             if (UserAPI.isLoggedIn()) {
-                String nameString = SharedUtil.readString(Consts.Key_User_Name, "");
+                String nameString = SharedPreferencesUtil.readString(Consts.Key_User_Name, "");
                 if (!TextUtils.isEmpty(nameString)) {
                     userName.setText(nameString);
                 }
-                String avatarString = SharedUtil.readString(Consts.Key_User_Avatar, "");
+                String avatarString = SharedPreferencesUtil.readString(Consts.Key_User_Avatar, "");
                 if (!TextUtils.isEmpty(avatarString)) {
                     if (Config.shouldLoadImage()) {
                         Picasso.with(getActivity()).load(avatarString)
@@ -387,8 +387,8 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
                 }
             } else {
                 if (UserAPI.isLoggedIn()) {
-                    if (userKey != null && userKey.equals(SharedUtil.readString(Consts.Key_Ukey, ""))) {
-                        String avatarString = SharedUtil.readString(Consts.Key_User_Avatar, "");
+                    if (userKey != null && userKey.equals(SharedPreferencesUtil.readString(Consts.Key_Ukey, ""))) {
+                        String avatarString = SharedPreferencesUtil.readString(Consts.Key_User_Avatar, "");
                         if (!TextUtils.isEmpty(avatarString)) {
                             if (Config.shouldLoadImage()) {
                                 Picasso.with(getActivity()).load(avatarString)
@@ -399,7 +399,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
                             }
                         }
                         //重新加载小组数据库
-                        long lastGroupDBVersion = SharedUtil.readLong(Consts.Key_Last_Post_Groups_Version, 0);
+                        long lastGroupDBVersion = SharedPreferencesUtil.readLong(Consts.Key_Last_Post_Groups_Version, 0);
                         if (currentGroupDBVersion != lastGroupDBVersion) {
                             ArrayList<SubItem> groupSubItems = adapter.getSubLists().get(1);
                             groupSubItems.clear();
@@ -415,7 +415,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
                         currentGroupDBVersion = lastGroupDBVersion;
 
                         //重新加载标签数据库
-                        long lastTagDBVersion = SharedUtil.readLong(Consts.Key_Last_Ask_Tags_Version, 0);
+                        long lastTagDBVersion = SharedPreferencesUtil.readLong(Consts.Key_Last_Ask_Tags_Version, 0);
                         if (currentTagDBVersion != lastTagDBVersion) {
                             ArrayList<SubItem> questionSubItems = adapter.getSubLists().get(2);
                             if (AskTagHelper.getAskTagsNumber() > 0) {
@@ -443,7 +443,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
             }
         }
         loginState = UserAPI.isLoggedIn();
-        userKey = SharedUtil.readString(Consts.Key_Ukey, "");
+        userKey = SharedPreferencesUtil.readString(Consts.Key_Ukey, "");
         if (loginState) {
             loadMessages();
         } else {
@@ -612,7 +612,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
 
         @Override
         protected void onPreExecute() {
-            String nameString = SharedUtil.readString(Consts.Key_User_Name, "");
+            String nameString = SharedPreferencesUtil.readString(Consts.Key_User_Name, "");
             if (TextUtils.isEmpty(nameString)) {
                 userName.setText(R.string.loading);
             }
@@ -628,7 +628,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
             if (resultObject.ok) {
                 setupUserInfo((UserInfo) resultObject.result);
             } else {
-                String nameString = SharedUtil.readString(Consts.Key_User_Name, "");
+                String nameString = SharedPreferencesUtil.readString(Consts.Key_User_Name, "");
                 if (TextUtils.isEmpty(nameString)) {
                     userName.setText(R.string.click_to_reload);
                 }
@@ -637,9 +637,9 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
     }
 
     private void setupUserInfo(UserInfo info) {
-        SharedUtil.saveString(Consts.Key_User_Name, info.getNickname());
-        SharedUtil.saveString(Consts.Key_User_ID, info.getId());
-        SharedUtil.saveString(Consts.Key_User_Avatar, info.getAvatar());
+        SharedPreferencesUtil.saveString(Consts.Key_User_Name, info.getNickname());
+        SharedPreferencesUtil.saveString(Consts.Key_User_ID, info.getId());
+        SharedPreferencesUtil.saveString(Consts.Key_User_Avatar, info.getAvatar());
         if (Config.shouldLoadImage()) {
             Picasso.with(getActivity()).load(info.getAvatar())
                     .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)

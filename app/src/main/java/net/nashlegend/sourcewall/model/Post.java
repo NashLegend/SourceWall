@@ -1,5 +1,7 @@
 package net.nashlegend.sourcewall.model;
 
+import android.text.TextUtils;
+
 import java.util.ArrayList;
 
 public class Post extends AceModel {
@@ -38,6 +40,9 @@ public class Post extends AceModel {
     }
 
     public String getTitle() {
+        if (TextUtils.isEmpty(title)) {
+            url = "果壳小组";
+        }
         return title;
     }
 
@@ -46,6 +51,9 @@ public class Post extends AceModel {
     }
 
     public String getUrl() {
+        if (!TextUtils.isEmpty(id) && TextUtils.isEmpty(url)) {
+            url = "http://m.guokr.com/post/" + id + "/";
+        }
         return url;
     }
 

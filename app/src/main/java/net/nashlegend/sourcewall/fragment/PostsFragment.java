@@ -49,7 +49,7 @@ import net.nashlegend.sourcewall.request.ResultObject;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Consts;
-import net.nashlegend.sourcewall.util.SharedUtil;
+import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 import net.nashlegend.sourcewall.view.PostListItemView;
 
 import java.util.ArrayList;
@@ -259,11 +259,11 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
             public void onAnimationEnd(Animator animation) {
                 if (isAdded()) {
                     if (GroupHelper.getMyGroupsNumber() > 0) {
-                        long lastDBVersion = SharedUtil.readLong(Consts.Key_Last_Post_Groups_Version, 0);
+                        long lastDBVersion = SharedPreferencesUtil.readLong(Consts.Key_Last_Post_Groups_Version, 0);
                         if (currentDBVersion != lastDBVersion) {
                             getButtons();
                             initView();
-                            currentDBVersion = SharedUtil.readLong(Consts.Key_Last_Post_Groups_Version, 0);
+                            currentDBVersion = SharedPreferencesUtil.readLong(Consts.Key_Last_Post_Groups_Version, 0);
                         }
                         manageButton.setVisibility(View.VISIBLE);
                     } else {
@@ -564,7 +564,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                 ResultObject cachedResultObject = PostAPI.getCachedPostList(subItem);
                 if (cachedResultObject.ok) {
 
-                    long lastLoad = SharedUtil.readLong(key, 0l);
+                    long lastLoad = SharedPreferencesUtil.readLong(key, 0l);
                     if (subItem.getType() == SubItem.Type_Private_Channel || System.currentTimeMillis() - lastLoad > cacheDuration) {
                         //我的小组，更新较快，不缓存
                         System.out.println("小组 " + subItem.getName() + " 使用缓存内容作为临时填充");
@@ -587,7 +587,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
             }
 
             if (resultObject.ok) {
-                SharedUtil.saveLong(key, System.currentTimeMillis());
+                SharedPreferencesUtil.saveLong(key, System.currentTimeMillis());
             }
 
             return resultObject;

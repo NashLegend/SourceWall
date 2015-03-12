@@ -24,7 +24,7 @@ import net.nashlegend.sourcewall.request.ResultObject;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
-import net.nashlegend.sourcewall.util.SharedUtil;
+import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 import net.nashlegend.sourcewall.util.StyleChecker;
 
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public class PostView extends AceView<Post> {
 
     public PostView(Context context) {
         super(context);
-        if (SharedUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
+        if (SharedPreferencesUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
             setBackgroundColor(getContext().getResources().getColor(R.color.page_background_night));
         } else {
             setBackgroundColor(getContext().getResources().getColor(R.color.page_background));

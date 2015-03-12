@@ -155,7 +155,8 @@
     <string name="login_needed">需要登录</string>
     <string name="post_author">楼主</string>
     <string name="page_404">页面不存在</string>
-    <string name="action_share">分享</string>
+    <string name="action_share_to_wechat_circle">分享到朋友圈</string>
+    <string name="action_share_to_wechat_friends">分享给微信好友</string>
     <string name="tip_of_user_learn_add_image">上传完成后，请点击左下角的按钮将图片添加到编辑器~</string>
     <string name="hint_click_to_add_image_to_editor">上传完成，点击左下角按钮添加到编辑器~</string>
     <string name="uploading">上传中</string>
@@ -171,5 +172,6 @@
     <string name="action_follow_question">关注问题</string>
     <string name="action_unfollow_question">取消关注</string>
     <string name="no_load_homepage_image">不加载首页图片</string>
+    <string name="hint_wechat_not_installed">微信未安装</string>
 
 </resources>

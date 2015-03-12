@@ -43,7 +43,7 @@ import net.nashlegend.sourcewall.request.api.APIBase;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.FileUtil;
 import net.nashlegend.sourcewall.util.RegUtil;
-import net.nashlegend.sourcewall.util.SharedUtil;
+import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 import net.nashlegend.sourcewall.util.SketchSharedUtil;
 
 import java.io.File;
@@ -504,14 +504,14 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
 
         @Override
         protected void onPreExecute() {
-            if (!SharedUtil.readBoolean(Consts.Key_User_Has_Learned_Add_Image, false)) {
+            if (!SharedPreferencesUtil.readBoolean(Consts.Key_User_Has_Learned_Add_Image, false)) {
                 new AlertDialog.Builder(ReplyActivity.this)
                         .setTitle(R.string.hint)
                         .setMessage(R.string.tip_of_user_learn_add_image)
                         .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                SharedUtil.saveBoolean(Consts.Key_User_Has_Learned_Add_Image, true);
+                                SharedPreferencesUtil.saveBoolean(Consts.Key_User_Has_Learned_Add_Image, true);
                             }
                         }).create().show();
             }
