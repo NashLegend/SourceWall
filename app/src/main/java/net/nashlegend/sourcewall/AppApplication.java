@@ -5,9 +5,6 @@ import android.app.Application;
 import net.nashlegend.sourcewall.db.BaseDB;
 import net.nashlegend.sourcewall.db.gen.DaoMaster;
 import net.nashlegend.sourcewall.db.gen.DaoSession;
-import net.nashlegend.sourcewall.util.CrashReporter;
-
-import java.lang.Thread.UncaughtExceptionHandler;
 
 /**
  * Created by NashLegend on 2014/9/24 0024
@@ -15,7 +12,7 @@ import java.lang.Thread.UncaughtExceptionHandler;
 public class AppApplication extends Application {
 
     private static AppApplication application;
-    private UncaughtExceptionHandler uncaughtExceptionHandler;
+    //    private UncaughtExceptionHandler uncaughtExceptionHandler;
     private static DaoMaster daoMaster;
     private static DaoSession daoSession;
 
@@ -24,17 +21,17 @@ public class AppApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        uncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
-        CrashReporter crashReporter = new CrashReporter(getApplicationContext());
-        crashReporter.setOnCrashListener(new CrashReporter.CrashListener() {
-
-            @Override
-            public void onCrash(String info, Thread thread, Throwable ex) {
-                //用于调用系统关闭程序窗口
-                uncaughtExceptionHandler.uncaughtException(thread, ex);
-            }
-        });
-        Thread.setDefaultUncaughtExceptionHandler(crashReporter);
+//        uncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
+//        CrashReporter crashReporter = new CrashReporter(getApplicationContext());
+//        crashReporter.setOnCrashListener(new CrashReporter.CrashListener() {
+//
+//            @Override
+//            public void onCrash(String info, Thread thread, Throwable ex) {
+//                //用于调用系统关闭程序窗口
+//                uncaughtExceptionHandler.uncaughtException(thread, ex);
+//            }
+//        });
+//        Thread.setDefaultUncaughtExceptionHandler(crashReporter);
         application = this;
     }
 

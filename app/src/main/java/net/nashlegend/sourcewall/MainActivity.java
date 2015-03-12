@@ -12,6 +12,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.umeng.analytics.AnalyticsConfig;
+import com.umeng.analytics.MobclickAgent;
+
 import net.nashlegend.sourcewall.fragment.ArticlesFragment;
 import net.nashlegend.sourcewall.fragment.ChannelsFragment;
 import net.nashlegend.sourcewall.fragment.NavigationDrawerFragment;
@@ -52,6 +55,9 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        MobclickAgent.setDebugMode(true);
+        AnalyticsConfig.enableEncrypt(true);
+        MobclickAgent.updateOnlineConfig(this);
         receiver = new Receiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction(Consts.Action_Open_Content_Fragment);

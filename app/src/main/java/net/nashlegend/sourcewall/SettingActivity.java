@@ -16,9 +16,12 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.umeng.analytics.MobclickAgent;
+
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 
 public class SettingActivity extends SwipeActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
@@ -204,6 +207,7 @@ public class SettingActivity extends SwipeActivity implements View.OnClickListen
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             UserAPI.clearMyInfo();
+                            MobclickAgent.onEvent(SettingActivity.this, Mob.Event_Logout);
                             logText.setText(R.string.log_in);
                         }
                     }).setNegativeButton(R.string.cancel, null).create();
@@ -259,6 +263,7 @@ public class SettingActivity extends SwipeActivity implements View.OnClickListen
 
     @Override
     protected void onPause() {
+        String preTail = Config.getSimpleReplyTail();
         if (buttonDefault.isChecked()) {
             SharedPreferencesUtil.saveInt(Consts.key_Use_Tail_Type, Consts.Type_Use_Default_Tail);
         } else if (buttonPhone.isChecked()) {
@@ -266,6 +271,11 @@ public class SettingActivity extends SwipeActivity implements View.OnClickListen
         } else {
             SharedPreferencesUtil.saveInt(Consts.key_Use_Tail_Type, Consts.Type_Use_Custom_Tail);
             SharedPreferencesUtil.saveString(Consts.key_Custom_Tail, tailText.getText().toString());
+        }
+        String crtTail = Config.getSimpleReplyTail();
+
+        if (crtTail.equals(preTail)) {
+            MobclickAgent.onEvent(this, Mob.Event_Modify_Tail);
         }
 
         if (buttonAlways.isChecked()) {

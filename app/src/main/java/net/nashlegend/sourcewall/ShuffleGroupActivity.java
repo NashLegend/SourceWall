@@ -11,6 +11,8 @@ import android.view.MenuItem;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.TextView;
 
+import com.umeng.analytics.MobclickAgent;
+
 import net.nashlegend.sourcewall.commonview.shuffle.GroupMovableButton;
 import net.nashlegend.sourcewall.commonview.shuffle.MovableButton;
 import net.nashlegend.sourcewall.commonview.shuffle.ShuffleDesk;
@@ -20,6 +22,7 @@ import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.ResultObject;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.Mob;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -233,8 +236,10 @@ public class ShuffleGroupActivity extends SwipeActivity {
         protected void onPostExecute(Boolean aBoolean) {
             progressDialog.dismiss();
             if (aBoolean) {
+                MobclickAgent.onEvent(ShuffleGroupActivity.this, Mob.Event_Load_My_Groups_OK);
                 initView();
             } else {
+                MobclickAgent.onEvent(ShuffleGroupActivity.this, Mob.Event_Load_My_Groups_Failed);
                 toast("加载我的小组失败");
             }
         }

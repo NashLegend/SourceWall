@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.LoginActivity;
 import net.nashlegend.sourcewall.MessageCenterActivity;
@@ -42,6 +43,7 @@ import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.ChannelHelper;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 import net.nashlegend.sourcewall.view.SubItemView;
 
@@ -328,6 +330,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
 
     private void revertMode() {
         SharedPreferencesUtil.saveBoolean(Consts.Key_Is_Night_Mode, !SharedPreferencesUtil.readBoolean(Consts.Key_Is_Night_Mode, false));
+        MobclickAgent.onEvent(getActivity(), Mob.Event_Switch_Day_Night_Mode);
         getActivity().recreate();
     }
 

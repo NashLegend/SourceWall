@@ -11,6 +11,8 @@ import android.view.MenuItem;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.TextView;
 
+import com.umeng.analytics.MobclickAgent;
+
 import net.nashlegend.sourcewall.commonview.shuffle.AskTagMovableButton;
 import net.nashlegend.sourcewall.commonview.shuffle.MovableButton;
 import net.nashlegend.sourcewall.commonview.shuffle.ShuffleDesk;
@@ -20,6 +22,7 @@ import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.ResultObject;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.Mob;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -231,8 +234,10 @@ public class ShuffleTagActivity extends SwipeActivity {
         protected void onPostExecute(Boolean aBoolean) {
             progressDialog.dismiss();
             if (aBoolean) {
+                MobclickAgent.onEvent(ShuffleTagActivity.this, Mob.Event_Load_My_Tags_OK);
                 initView();
             } else {
+                MobclickAgent.onEvent(ShuffleTagActivity.this, Mob.Event_Load_My_Tags_Failed);
                 toast("加载标签失败");
             }
         }

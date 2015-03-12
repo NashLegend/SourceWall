@@ -27,6 +27,8 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.umeng.analytics.MobclickAgent;
+
 import net.nashlegend.sourcewall.BaseActivity;
 import net.nashlegend.sourcewall.MainActivity;
 import net.nashlegend.sourcewall.PostActivity;
@@ -49,6 +51,7 @@ import net.nashlegend.sourcewall.request.ResultObject;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 import net.nashlegend.sourcewall.view.PostListItemView;
 
@@ -277,6 +280,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                                         new Handler().postDelayed(new Runnable() {
                                             @Override
                                             public void run() {
+                                                MobclickAgent.onEvent(getActivity(), Mob.Event_Load_My_Groups);
                                                 Intent intent = new Intent(getActivity(), ShuffleGroupActivity.class);
                                                 intent.putExtra(Consts.Extra_Should_Load_Before_Shuffle, true);
                                                 startActivityForResult(intent, Consts.Code_Start_Shuffle_Groups);

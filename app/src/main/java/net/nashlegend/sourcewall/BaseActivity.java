@@ -5,6 +5,8 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 
+import com.umeng.analytics.MobclickAgent;
+
 import net.nashlegend.sourcewall.commonview.AAsyncTask;
 import net.nashlegend.sourcewall.commonview.IStackedAsyncTaskInterface;
 import net.nashlegend.sourcewall.util.ToastUtil;
@@ -28,12 +30,14 @@ public abstract class BaseActivity extends ActionBarActivity implements IStacked
     @Override
     protected void onResume() {
         super.onResume();
+        MobclickAgent.onResume(this);
         isActive = true;
     }
 
     @Override
     protected void onPause() {
         isActive = false;
+        MobclickAgent.onPause(this);
         super.onPause();
     }
 

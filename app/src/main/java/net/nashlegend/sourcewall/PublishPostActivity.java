@@ -31,6 +31,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 
+import com.umeng.analytics.MobclickAgent;
+
 import net.nashlegend.sourcewall.commonview.AAsyncTask;
 import net.nashlegend.sourcewall.commonview.IStackedAsyncTaskInterface;
 import net.nashlegend.sourcewall.dialogs.InputDialog;
@@ -42,6 +44,7 @@ import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.FileUtil;
+import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 import net.nashlegend.sourcewall.util.SketchSharedUtil;
 
@@ -464,6 +467,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         String title = titleEditText.getText().toString();
         String body = bodyEditText.getText().toString();
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, group_id, csrf, title, body, topic);
+        MobclickAgent.onEvent(this, Mob.Event_Publish_Post);
     }
 
     private void hideInput() {
@@ -530,13 +534,15 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         protected void onPostExecute(ResultObject resultObject) {
             progressDialog.dismiss();
             if (resultObject.ok) {
-                toast(R.string.reply_ok);
+                MobclickAgent.onEvent(PublishPostActivity.this, Mob.Event_Publish_Post_OK);
+                toast(R.string.publish_post_ok);
                 setResult(RESULT_OK);
                 replyOK = true;
                 tryClearSketch();
                 finish();
             } else {
-                toast(R.string.reply_failed);
+                MobclickAgent.onEvent(PublishPostActivity.this, Mob.Event_Publish_Post_Failed);
+                toast(R.string.publish_post_failed);
             }
         }
     }

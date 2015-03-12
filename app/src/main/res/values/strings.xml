@@ -74,6 +74,8 @@
     <string name="title_cannot_be_empty">标题不能为空</string>
     <string name="reply_ok">回复成功</string>
     <string name="reply_failed">回复失败</string>
+    <string name="publish_post_ok">发帖成功</string>
+    <string name="publish_post_failed">发帖失败</string>
 
     <!-- Article -->
     <string name="sample_reply_title">回复文章</string>

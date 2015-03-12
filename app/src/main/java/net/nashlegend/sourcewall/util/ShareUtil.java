@@ -11,6 +11,7 @@ import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.sdk.modelmsg.WXWebpageObject;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
+import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.R;
 
@@ -56,6 +57,11 @@ public class ShareUtil {
             api.sendReq(req);
         } else {
             ToastUtil.toastSingleton(R.string.hint_wechat_not_installed);
+        }
+        if (tag) {
+            MobclickAgent.onEvent(context, Mob.Event_Share_To_Wechat_Friends);
+        } else {
+            MobclickAgent.onEvent(context, Mob.Event_Share_To_Wechat_Circle);
         }
     }
 

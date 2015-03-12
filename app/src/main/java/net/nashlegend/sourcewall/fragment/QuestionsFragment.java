@@ -27,6 +27,8 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.umeng.analytics.MobclickAgent;
+
 import net.nashlegend.sourcewall.BaseActivity;
 import net.nashlegend.sourcewall.MainActivity;
 import net.nashlegend.sourcewall.PublishPostActivity;
@@ -49,6 +51,7 @@ import net.nashlegend.sourcewall.request.ResultObject;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 import net.nashlegend.sourcewall.view.QuestionListItemView;
 
@@ -164,6 +167,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        MobclickAgent.onEvent(getActivity(), Mob.Event_Load_My_Tags);
                         Intent intent = new Intent(getActivity(), ShuffleTagActivity.class);
                         startActivityForResult(intent, Consts.Code_Start_Shuffle_Ask_Tags);
                         getActivity().overridePendingTransition(R.anim.slide_in_right, 0);

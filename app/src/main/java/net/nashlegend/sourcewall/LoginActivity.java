@@ -16,8 +16,11 @@ import android.webkit.SslErrorHandler;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.umeng.analytics.MobclickAgent;
+
 import net.nashlegend.sourcewall.request.HttpFetcher;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 
 import org.apache.http.impl.cookie.BasicClientCookie;
@@ -36,9 +39,11 @@ public class LoginActivity extends SwipeActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        MobclickAgent.onEvent(this, Mob.Event_Login);
         Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
 
+        //TODO API22²»Í¬
         CookieSyncManager.createInstance(AppApplication.getApplication());
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.removeAllCookie();
