@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ProgressBar;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
@@ -49,6 +50,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
     private String notice_id;
     private AdapterView.OnItemClickListener onItemClickListener;
     private FloatingActionsMenu floatingActionsMenu;
+    private ProgressBar progressBar;
 
     public ArticleActivity() {
         onItemClickListener = new AdapterView.OnItemClickListener() {
@@ -65,6 +67,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         setContentView(R.layout.activity_article);
         loadingView = (LoadingView) findViewById(R.id.article_progress_loading);
         loadingView.setReloadListener(this);
+        progressBar = (ProgressBar) findViewById(R.id.article_loading);
         Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         toolbar.setOnClickListener(new View.OnClickListener() {
@@ -353,10 +356,11 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         @Override
         protected void onProgressUpdate(ResultObject... values) {
             //在这里取到正文，正文的结果一定是正确的
+            progressBar.setVisibility(View.VISIBLE);
             floatingActionsMenu.setVisibility(View.VISIBLE);
             loadingView.onLoadSuccess();
             ResultObject result = values[0];
-            Article tmpArticle=(Article) result.result;
+            Article tmpArticle = (Article) result.result;
             tmpArticle.setUrl(article.getUrl());
             tmpArticle.setSummary(article.getSummary());
             article = tmpArticle;
@@ -366,6 +370,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
 
         @Override
         protected void onPostExecute(ResultObject result) {
+            progressBar.setVisibility(View.GONE);
             if (result.ok) {
                 loadingView.onLoadSuccess();
                 ArrayList<AceModel> ars = (ArrayList<AceModel>) result.result;

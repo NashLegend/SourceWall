@@ -11,11 +11,22 @@
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="false" />
 
+    <ProgressBar
+        android:id="@+id/posts_loading"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:visibility="gone" />
+
     <net.nashlegend.sourcewall.commonview.LoadingView
         android:id="@+id/post_progress_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone" />
+
 
     <FrameLayout
         android:id="@+id/layout_more_sections"

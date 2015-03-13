@@ -24,6 +24,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -79,6 +80,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
     private long currentDBVersion = -1;
     private final int Code_Publish_Question = 1055;
     private final int cacheDuration = 300;
+    private ProgressBar progressBar;
 
     @Override
     public void onAttach(Activity activity) {
@@ -185,6 +187,8 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
                 }
             }
         });
+
+        progressBar = (ProgressBar) view.findViewById(R.id.questions_loading);
 
         setTitle();
         loadOver();
@@ -586,6 +590,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
             ResultObject o = values[0];
             ArrayList<Question> ars = (ArrayList<Question>) o.result;
             if (ars.size() > 0) {
+                progressBar.setVisibility(View.VISIBLE);
                 loadingView.onLoadSuccess();
                 adapter.setList(ars);
                 adapter.notifyDataSetInvalidated();
@@ -595,6 +600,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
         @Override
         protected void onPostExecute(ResultObject o) {
             listView.doneOperation();
+            progressBar.setVisibility(View.GONE);
             if (o.ok) {
                 loadingView.onLoadSuccess();
                 ArrayList<Question> ars = (ArrayList<Question>) o.result;

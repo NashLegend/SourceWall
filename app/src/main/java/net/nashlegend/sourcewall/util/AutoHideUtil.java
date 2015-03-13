@@ -81,9 +81,7 @@ public class AutoHideUtil {
             if (hideAnimatorSet != null && hideAnimatorSet.isRunning()) {
                 hideAnimatorSet.cancel();
             }
-            if (backAnimatorSet != null && backAnimatorSet.isRunning()) {
-
-            } else {
+            if (backAnimatorSet == null || !backAnimatorSet.isRunning()) {
                 backAnimatorSet = new AnimatorSet();
                 ObjectAnimator headerAnimator = ObjectAnimator.ofFloat(header, "translationY", header.getTranslationY(), 0f);
                 ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(footer, "translationY", footer.getTranslationY(), 0f);
@@ -102,9 +100,7 @@ public class AutoHideUtil {
             if (backAnimatorSet != null && backAnimatorSet.isRunning()) {
                 backAnimatorSet.cancel();
             }
-            if (hideAnimatorSet != null && hideAnimatorSet.isRunning()) {
-
-            } else {
+            if (hideAnimatorSet == null || !hideAnimatorSet.isRunning()) {
                 hideAnimatorSet = new AnimatorSet();
                 ObjectAnimator headerAnimator = ObjectAnimator.ofFloat(header, "translationY", header.getTranslationY(), -header.getHeight());
                 ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(footer, "translationY", footer.getTranslationY(), footer.getHeight());

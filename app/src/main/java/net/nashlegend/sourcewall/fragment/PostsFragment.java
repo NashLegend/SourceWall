@@ -24,6 +24,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -79,6 +80,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     private Button manageButton;
     private long currentDBVersion = -1;
     private final int cacheDuration = 300;
+    private ProgressBar progressBar;
 
     @Override
     public void onAttach(Activity activity) {
@@ -184,7 +186,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                 }
             }
         });
-
+        progressBar = (ProgressBar) view.findViewById(R.id.posts_loading);
         setTitle();
         loadOver();
         return view;
@@ -606,6 +608,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
             ResultObject o = values[0];
             ArrayList<Post> ars = (ArrayList<Post>) o.result;
             if (ars.size() > 0) {
+                progressBar.setVisibility(View.VISIBLE);
                 loadingView.onLoadSuccess();
                 adapter.setList(ars);
                 adapter.notifyDataSetInvalidated();
@@ -615,6 +618,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         @Override
         protected void onPostExecute(ResultObject o) {
             listView.doneOperation();
+            progressBar.setVisibility(View.GONE);
             if (o.ok) {
                 loadingView.onLoadSuccess();
                 ArrayList<Post> ars = (ArrayList<Post>) o.result;

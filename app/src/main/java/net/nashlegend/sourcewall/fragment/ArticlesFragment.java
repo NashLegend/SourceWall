@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ProgressBar;
 
 import net.nashlegend.sourcewall.AppApplication;
 import net.nashlegend.sourcewall.ArticleActivity;
@@ -42,6 +43,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
     private SubItem subItem;
     private LoadingView loadingView;
     private final long cacheDuration = 300;//5分钟内连续进入，则不更新
+    private ProgressBar progressBar;
 
     @Override
     public void onAttach(Activity activity) {
@@ -71,6 +73,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
                 getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
             }
         });
+        progressBar = (ProgressBar) view.findViewById(R.id.articles_loading);
         setTitle();
         loadOver();
         return view;
@@ -199,7 +202,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
             if (offset == 0 && adapter.getCount() == 0) {
                 ResultObject cachedResultObject = ArticleAPI.getCachedArticleList(subItem);
                 if (cachedResultObject.ok) {
-                    long lastLoad = SharedPreferencesUtil.readLong(key, 0l)/1000;
+                    long lastLoad = SharedPreferencesUtil.readLong(key, 0l) / 1000;
                     long crtLoad = System.currentTimeMillis() / 1000;
                     if (crtLoad - lastLoad > cacheDuration) {
                         System.out.println("科学人 " + subItem.getName() + " 使用缓存内容作为临时填充");
@@ -237,6 +240,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
             ResultObject o = values[0];
             ArrayList<Article> ars = (ArrayList<Article>) o.result;
             if (ars.size() > 0) {
+                progressBar.setVisibility(View.VISIBLE);
                 loadingView.onLoadSuccess();
                 adapter.setList(ars);
                 adapter.notifyDataSetInvalidated();
@@ -245,6 +249,8 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
 
         @Override
         protected void onPostExecute(ResultObject o) {
+            listView.doneOperation();
+            progressBar.setVisibility(View.GONE);
             if (o.ok) {
                 loadingView.onLoadSuccess();
                 ArrayList<Article> ars = (ArrayList<Article>) o.result;
@@ -270,7 +276,6 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
                 listView.setCanPullToLoadMore(false);
                 listView.setCanPullToRefresh(true);
             }
-            listView.doneOperation();
         }
 
         @Override

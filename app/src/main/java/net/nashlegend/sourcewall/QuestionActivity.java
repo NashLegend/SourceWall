@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ProgressBar;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
@@ -44,6 +45,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
     private LoadingView loadingView;
     private String notice_id;
     private FloatingActionsMenu floatingActionsMenu;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         setContentView(R.layout.activity_question);
         loadingView = (LoadingView) findViewById(R.id.question_progress_loading);
         loadingView.setReloadListener(this);
+        progressBar = (ProgressBar) findViewById(R.id.question_loading);
         Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         toolbar.setOnClickListener(new View.OnClickListener() {
@@ -265,6 +268,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         @Override
         protected void onProgressUpdate(ResultObject... values) {
             //在这里取到正文，正文的结果一定是正确的
+            progressBar.setVisibility(View.VISIBLE);
             floatingActionsMenu.setVisibility(View.VISIBLE);
             loadingView.onLoadSuccess();
             ResultObject resultObject = values[0];
@@ -275,6 +279,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
 
         @Override
         protected void onPostExecute(ResultObject result) {
+            progressBar.setVisibility(View.GONE);
             if (result.ok) {
                 loadingView.onLoadSuccess();
                 ArrayList<AceModel> ars = (ArrayList<AceModel>) result.result;

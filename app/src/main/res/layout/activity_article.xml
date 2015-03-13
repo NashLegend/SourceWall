@@ -32,6 +32,16 @@
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary" />
 
+    <ProgressBar
+        android:id="@+id/article_loading"
+        android:layout_below="@id/action_bar"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_alignParentRight="true"
+        android:visibility="gone" />
+
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/layout_operation"
         android:layout_width="wrap_content"
