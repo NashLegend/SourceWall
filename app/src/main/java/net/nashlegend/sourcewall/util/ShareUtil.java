@@ -34,12 +34,7 @@ public class ShareUtil {
             WXMediaMessage msg = new WXMediaMessage(webpage);
             msg.title = title;
             msg.description = summary;
-
-            Bitmap thumb = BitmapFactory
-                    .decodeResource(context.getResources(), R.drawable.ic_guokr_logo);
-            msg.thumbData = bmpToByteArray(thumb, true);
-            thumb.recycle();
-
+            msg.setThumbImage(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_guokr_logo));
             SendMessageToWX.Req req = new SendMessageToWX.Req();
             req.transaction = String.valueOf(System.currentTimeMillis());
             req.message = msg;

@@ -43,7 +43,6 @@ public class LoginActivity extends SwipeActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
 
-        //TODO API22²»Í¬
         CookieSyncManager.createInstance(AppApplication.getApplication());
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.removeAllCookie();
