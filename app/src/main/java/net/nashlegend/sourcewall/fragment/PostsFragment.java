@@ -78,7 +78,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     private ShuffleDeskSimple deskSimple;
     private Button manageButton;
     private long currentDBVersion = -1;
-    private final int cacheDuration = 300000;
+    private final int cacheDuration = 300;
 
     @Override
     public void onAttach(Activity activity) {
@@ -563,13 +563,12 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         protected ResultObject doInBackground(Integer... datas) {
             loadedPage = datas[0];
             String key = String.valueOf(subItem.getSection()) + subItem.getType() + subItem.getName() + subItem.getValue();
-
             if (loadedPage == 0 && adapter.getCount() == 0) {
                 ResultObject cachedResultObject = PostAPI.getCachedPostList(subItem);
                 if (cachedResultObject.ok) {
-
-                    long lastLoad = SharedPreferencesUtil.readLong(key, 0l);
-                    if (subItem.getType() == SubItem.Type_Private_Channel || System.currentTimeMillis() - lastLoad > cacheDuration) {
+                    long lastLoad = SharedPreferencesUtil.readLong(key, 0l) / 1000;
+                    long crtLoad = System.currentTimeMillis() / 1000;
+                    if (subItem.getType() == SubItem.Type_Private_Channel || crtLoad - lastLoad > cacheDuration) {
                         //我的小组，更新较快，不缓存
                         System.out.println("小组 " + subItem.getName() + " 使用缓存内容作为临时填充");
                         publishProgress(cachedResultObject);

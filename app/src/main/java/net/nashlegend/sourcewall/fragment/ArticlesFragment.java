@@ -41,7 +41,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
     private LoaderTask task;
     private SubItem subItem;
     private LoadingView loadingView;
-    private final long cacheDuration = 300000;//5分钟内连续进入，则不更新
+    private final long cacheDuration = 300;//5分钟内连续进入，则不更新
 
     @Override
     public void onAttach(Activity activity) {
@@ -199,8 +199,9 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
             if (offset == 0 && adapter.getCount() == 0) {
                 ResultObject cachedResultObject = ArticleAPI.getCachedArticleList(subItem);
                 if (cachedResultObject.ok) {
-                    long lastLoad = SharedPreferencesUtil.readLong(key, 0l);
-                    if (System.currentTimeMillis() - lastLoad > cacheDuration) {
+                    long lastLoad = SharedPreferencesUtil.readLong(key, 0l)/1000;
+                    long crtLoad = System.currentTimeMillis() / 1000;
+                    if (crtLoad - lastLoad > cacheDuration) {
                         System.out.println("科学人 " + subItem.getName() + " 使用缓存内容作为临时填充");
                         publishProgress(cachedResultObject);
                     } else {

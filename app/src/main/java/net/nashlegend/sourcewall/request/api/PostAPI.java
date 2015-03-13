@@ -226,7 +226,7 @@ public class PostAPI extends APIBase {
             String html = HttpFetcher.get(url).toString();
             resultObject = parseMyGroupPostList(html);
             if (resultObject.ok && pageNo == 1) {
-                RequestCache.getInstance().addStringToCache(Key_Post_My_Recent_Replies, html);
+                RequestCache.getInstance().addStringToCacheForceUpdate(Key_Post_My_Recent_Replies, html);
             }
         } catch (Exception e) {
             handleRequestException(e, resultObject);
@@ -268,7 +268,6 @@ public class PostAPI extends APIBase {
         return resultObject;
     }
 
-
     /**
      * 获得小组热贴，解析html获得（与登录无关）
      *
@@ -282,7 +281,7 @@ public class PostAPI extends APIBase {
             String html = HttpFetcher.get(url).toString();
             resultObject = parseHotPosts(html);
             if (resultObject.ok && pageNo == 1) {
-                RequestCache.getInstance().addStringToCache(Key_Post_Hot_Posts, html);
+                RequestCache.getInstance().addStringToCacheForceUpdate(Key_Post_Hot_Posts, html);
             }
         } catch (Exception e) {
             handleRequestException(e, resultObject);
@@ -391,7 +390,7 @@ public class PostAPI extends APIBase {
             if (resultObject.ok && pairs.get(3).getValue().equals("0")) {
                 //请求成功则缓存之
                 String key = "post." + pairs.get(1).getValue();
-                RequestCache.getInstance().addStringToCache(key, jString);
+                RequestCache.getInstance().addStringToCacheForceUpdate(key, jString);
             }
 
         } catch (Exception e) {

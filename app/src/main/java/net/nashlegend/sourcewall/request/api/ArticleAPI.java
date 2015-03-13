@@ -108,7 +108,7 @@ public class ArticleAPI extends APIBase {
                     key = "article";
                 }
                 if (key != null) {
-                    RequestCache.getInstance().addStringToCache(key, jString);
+                    RequestCache.getInstance().addStringToCacheForceUpdate(key, jString);
                 }
             }
         } catch (Exception e) {

@@ -99,6 +99,41 @@ public class RequestCache {
         }
     }
 
+    public void addStringToCacheForceUpdate(String data, String value) {
+        if (data == null || value == null) {
+            return;
+        }
+        if (mMemoryCache != null) {
+            mMemoryCache.put(data, value);
+        }
+        synchronized (mDiskCacheLock) {
+            if (mDiskLruCache != null) {
+                final String key = hashKeyForDisk(data);
+                OutputStream out = null;
+                try {
+                    mDiskLruCache.remove(key);
+                    final DiskLruCache.Editor editor = mDiskLruCache.edit(key);
+                    if (editor != null) {
+                        out = editor.newOutputStream(DISK_CACHE_INDEX);
+                        out.write(value.getBytes("utf-8"));
+                        editor.commit();
+                        out.close();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        if (out != null) {
+                            out.close();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+
     public void addStringToCache(String data, String value) {
         if (data == null || value == null) {
             return;

@@ -78,7 +78,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
     private Button manageButton;
     private long currentDBVersion = -1;
     private final int Code_Publish_Question = 1055;
-    private final int cacheDuration = 300000;
+    private final int cacheDuration = 300;
 
     @Override
     public void onAttach(Activity activity) {
@@ -540,8 +540,9 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
             if (loadedPage == 0 && adapter.getCount() == 0) {
                 ResultObject cachedResultObject = QuestionAPI.getCachedQuestionList(subItem);
                 if (cachedResultObject.ok) {
-                    long lastLoad = SharedPreferencesUtil.readLong(key, 0l);
-                    if (System.currentTimeMillis() - lastLoad > cacheDuration) {
+                    long lastLoad = SharedPreferencesUtil.readLong(key, 0l) / 1000;
+                    long crtLoad = System.currentTimeMillis() / 1000;
+                    if (crtLoad - lastLoad > cacheDuration) {
                         System.out.println("问答 " + subItem.getName() + " 使用缓存内容作为临时填充");
                         publishProgress(cachedResultObject);
                     } else {

@@ -129,7 +129,7 @@ public class QuestionAPI extends APIBase {
             if (resultObject.ok && pairs.get(3).getValue().equals("0")) {
                 //请求成功则缓存之
                 String key = "question." + URLDecoder.decode(pairs.get(1).getValue(), "utf-8");
-                RequestCache.getInstance().addStringToCache(key, jString);
+                RequestCache.getInstance().addStringToCacheForceUpdate(key, jString);
             }
 
         } catch (Exception e) {
@@ -193,7 +193,7 @@ public class QuestionAPI extends APIBase {
             String html = HttpFetcher.get(url).toString();
             resultObject = parseQuestionsHtml(html);
             if (resultObject.ok && pageNo == 1) {
-                RequestCache.getInstance().addStringToCache("question.hottest", html);
+                RequestCache.getInstance().addStringToCacheForceUpdate("question.hottest", html);
             }
         } catch (Exception e) {
             handleRequestException(e, resultObject);
@@ -214,7 +214,7 @@ public class QuestionAPI extends APIBase {
             String html = HttpFetcher.get(url).toString();
             resultObject = parseQuestionsHtml(html);
             if (resultObject.ok && pageNo == 1) {
-                RequestCache.getInstance().addStringToCache("question.highlight", html);
+                RequestCache.getInstance().addStringToCacheForceUpdate("question.highlight", html);
             }
         } catch (Exception e) {
             handleRequestException(e, resultObject);
