@@ -15,9 +15,9 @@ SourceWall，中文就叫它“果壳的壳”吧，毕竟SourceWall不是所有
 - 除主页外，所有页面都可以从左侧向右滑动关闭。
 
 
-###应用下载地址: [SourceWall.apk](https://raw.githubusercontent.com/NashLegend/SourceWall/master/app/release/SourceWall.apk)###
+###应用下载地址: [SourceWall.apk](https://github.com/NashLegend/SourceWall/releases/download/1.5.0/SourceWall.apk)###
 
 ###或者手机扫码下载：###
 
-![](http://i.imgur.com/j7XlnME.png)
+![](http://i.imgur.com/verQi1U.png)
 
