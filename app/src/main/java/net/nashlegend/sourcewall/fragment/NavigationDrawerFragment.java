@@ -220,8 +220,10 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
                 }
                 if (lazyIntent != null) {
                     getActivity().sendBroadcast(lazyIntent);
+                    lazyIntent = null;
+                } else {
+                    getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
                 }
-//                getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
             }
 
             @Override
