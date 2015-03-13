@@ -89,7 +89,7 @@
             android:value="55018d1dfd98c583330009fd" />
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="Wandoujia" />
+            android:value="Github" />
     </application>
 
 </manifest>
