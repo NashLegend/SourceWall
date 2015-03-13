@@ -220,7 +220,6 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
                 }
                 if (lazyIntent != null) {
                     getActivity().sendBroadcast(lazyIntent);
-                    lazyIntent = null;
                 }
 //                getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
             }
@@ -260,10 +259,10 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         SubItem subItem = (SubItem) adapter.getChild(0, 0);
-        Intent intent = new Intent();
-        intent.setAction(Consts.Action_Open_Content_Fragment);
-        intent.putExtra(Consts.Extra_SubItem, subItem);
-        getActivity().sendBroadcast(intent);
+        lazyIntent = new Intent();
+        lazyIntent.setAction(Consts.Action_Open_Content_Fragment);
+        lazyIntent.putExtra(Consts.Extra_SubItem, subItem);
+        getActivity().sendBroadcast(lazyIntent);
     }
 
     @Override
