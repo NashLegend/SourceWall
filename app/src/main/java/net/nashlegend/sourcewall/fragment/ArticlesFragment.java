@@ -146,8 +146,8 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
 
     @Override
     public void resetData(SubItem subItem) {
-        loadingView.onLoadSuccess();
         if (subItem.equals(this.subItem)) {
+            loadingView.onLoadSuccess();
             if (adapter == null || adapter.getCount() == 0) {
                 triggerRefresh();
             }

@@ -60,6 +60,10 @@ public class LoadingView extends FrameLayout {
         this.reloadListener = listener;
     }
 
+    public boolean isShowing() {
+        return getVisibility() == VISIBLE;
+    }
+
     public void startLoading() {
         progressBar.setVisibility(VISIBLE);
         loadingButton.setVisibility(GONE);
