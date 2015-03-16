@@ -55,6 +55,7 @@ public class AutoHideUtil {
         View footer;
         ListView listView;
         int touchSlop = 10;
+        int headerHeight = 60;
 
         public ListViewAutoHideTool() {
 
@@ -66,6 +67,7 @@ public class AutoHideUtil {
             this.header = header;
             this.footer = footer;
 
+            this.headerHeight = headerHeight;
             View mHeader = new View(listView.getContext());
             mHeader.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, headerHeight));
             mHeader.setBackgroundColor(Color.parseColor("#00000000"));
@@ -102,7 +104,7 @@ public class AutoHideUtil {
             }
             if (hideAnimatorSet == null || !hideAnimatorSet.isRunning()) {
                 hideAnimatorSet = new AnimatorSet();
-                ObjectAnimator headerAnimator = ObjectAnimator.ofFloat(header, "translationY", header.getTranslationY(), -header.getHeight());
+                ObjectAnimator headerAnimator = ObjectAnimator.ofFloat(header, "translationY", header.getTranslationY(), -headerHeight);
                 ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(footer, "translationY", footer.getTranslationY(), footer.getHeight());
                 ArrayList<Animator> animators = new ArrayList<>();
                 animators.add(headerAnimator);

@@ -56,6 +56,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
     private Receiver receiver;
     private boolean lastLoad = false;
     private ProgressBar progressBar;
+    private View headview;
 
     public PostActivity() {
         onItemClickListener = new AdapterView.OnItemClickListener() {
@@ -95,6 +96,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
                 }
             }
         });
+        headview = findViewById(R.id.head_view);
         post = (Post) getIntent().getSerializableExtra(Consts.Extra_Post);
         notice_id = getIntent().getStringExtra(Consts.Extra_Notice_Id);
         if (!TextUtils.isEmpty(post.getGroupName())) {
@@ -116,7 +118,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         recomButton.setOnClickListener(this);
         favorButton.setOnClickListener(this);
 
-        AutoHideUtil.applyListViewAutoHide(this, listView, toolbar, floatingActionsMenu, (int) getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
+        AutoHideUtil.applyListViewAutoHide(this, listView, headview, floatingActionsMenu, (int) getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
         floatingActionsMenu.setVisibility(View.GONE);
         loadData(-1);
 

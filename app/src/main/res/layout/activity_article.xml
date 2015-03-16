@@ -25,22 +25,28 @@
             android:layout_height="match_parent" />
     </RelativeLayout>
 
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/action_bar"
+    <RelativeLayout
+        android:id="@+id/head_view"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary" />
+        android:layout_height="wrap_content">
 
-    <ProgressBar
-        android:id="@+id/article_loading"
-        android:layout_below="@id/action_bar"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_alignParentRight="true"
-        android:visibility="gone" />
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/action_bar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary" />
+
+        <ProgressBar
+            android:id="@+id/article_loading"
+            android:layout_below="@id/action_bar"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_alignParentRight="true"
+            android:visibility="gone" />
+    </RelativeLayout>
+
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/layout_operation"
