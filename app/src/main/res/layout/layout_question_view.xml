@@ -65,6 +65,7 @@
             android:padding="5dp">
 
             <ImageView
+                android:layout_marginTop="1dp"
                 android:layout_width="@dimen/list_standard_item_reply_image_dimen"
                 android:layout_height="@dimen/list_standard_item_reply_image_dimen"
                 android:src="@drawable/comment" />

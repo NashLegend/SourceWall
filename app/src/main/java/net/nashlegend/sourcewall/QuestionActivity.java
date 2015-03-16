@@ -46,7 +46,6 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
     private String notice_id;
     private FloatingActionsMenu floatingActionsMenu;
     private ProgressBar progressBar;
-    private View headview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +75,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
                 }
             }
         });
-        headview = findViewById(R.id.head_view);
+        View headView = findViewById(R.id.head_view);
         question = (Question) getIntent().getSerializableExtra(Consts.Extra_Question);
         notice_id = getIntent().getStringExtra(Consts.Extra_Notice_Id);
         listView = (LListView) findViewById(R.id.list_detail);
@@ -96,7 +95,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         recomButton.setOnClickListener(this);
         favorButton.setOnClickListener(this);
 
-        AutoHideUtil.applyListViewAutoHide(this, listView, headview, floatingActionsMenu, (int) getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
+        AutoHideUtil.applyListViewAutoHide(this, listView, headView, floatingActionsMenu, (int) getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
         floatingActionsMenu.setVisibility(View.GONE);
         loadData(-1);
     }

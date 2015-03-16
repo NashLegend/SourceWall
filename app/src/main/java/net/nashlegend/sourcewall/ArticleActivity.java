@@ -51,7 +51,6 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
     private AdapterView.OnItemClickListener onItemClickListener;
     private FloatingActionsMenu floatingActionsMenu;
     private ProgressBar progressBar;
-    private View headview;
 
     public ArticleActivity() {
         onItemClickListener = new AdapterView.OnItemClickListener() {
@@ -90,7 +89,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
                 }
             }
         });
-        headview = findViewById(R.id.head_view);
+        View headView = findViewById(R.id.head_view);
         article = (Article) getIntent().getSerializableExtra(Consts.Extra_Article);
         notice_id = getIntent().getStringExtra(Consts.Extra_Notice_Id);
         if (!TextUtils.isEmpty(article.getSubjectName())) {
@@ -113,7 +112,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         recomButton.setOnClickListener(this);
         favorButton.setOnClickListener(this);
 
-        AutoHideUtil.applyListViewAutoHide(this, listView, headview, floatingActionsMenu, (int) getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
+        AutoHideUtil.applyListViewAutoHide(this, listView, headView, floatingActionsMenu, (int) getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
         floatingActionsMenu.setVisibility(View.GONE);
         loadData(-1);
     }
@@ -197,7 +196,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         int id = item.getItemId();
         switch (id) {
             case R.id.action_share_to_wechat_circle:
-                ShareUtil.shareToWeiXin(this, article.getUrl(), article.getTitle(), article.getSummary(), null, false);
+                ShareUtil.shareToWeiXin(this, article.getUrl(), "", "", null, false);
                 break;
             case R.id.action_share_to_wechat_friends:
                 ShareUtil.shareToWeiXin(this, article.getUrl(), article.getTitle(), article.getSummary(), null, true);

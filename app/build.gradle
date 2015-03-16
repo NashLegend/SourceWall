@@ -4,12 +4,30 @@ android {
     compileSdkVersion 22
     buildToolsVersion "22.0.0"
 
+    android{
+        productFlavors{
+            qihu360 {
+                manifestPlaceholders = [ CHANNEL_NAME:"360" ]
+            }
+            baidu {
+                manifestPlaceholders = [ CHANNEL_NAME:"baidu" ]
+            }
+            xiaomi {
+                manifestPlaceholders = [ CHANNEL_NAME:"xiaomi" ]
+            }
+            github {
+                manifestPlaceholders = [ CHANNEL_NAME:"github" ]
+            }
+        }
+    }
+
     defaultConfig {
+        manifestPlaceholders = [ CHANNEL_NAME:"unspecified"]
         applicationId "net.nashlegend.sourcewall"
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 20150313
-        versionName "1.5.0"
+        versionCode 20150316
+        versionName "1.5.1"
     }
     buildTypes {
         release {

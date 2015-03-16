@@ -54,6 +54,7 @@ import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
+import net.nashlegend.sourcewall.view.ArticleListItemView;
 import net.nashlegend.sourcewall.view.QuestionListItemView;
 
 import java.io.UnsupportedEncodingException;
@@ -104,11 +105,13 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent();
-                intent.setClass(getActivity(), QuestionActivity.class);
-                intent.putExtra(Consts.Extra_Question, ((QuestionListItemView) view).getData());
-                startActivity(intent);
-                getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
+                if (view instanceof QuestionListItemView) {
+                    Intent intent = new Intent();
+                    intent.setClass(getActivity(), QuestionActivity.class);
+                    intent.putExtra(Consts.Extra_Question, ((QuestionListItemView) view).getData());
+                    startActivity(intent);
+                    getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
+                }
             }
         });
 

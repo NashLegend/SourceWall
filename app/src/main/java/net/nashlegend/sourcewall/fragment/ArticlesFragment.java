@@ -66,11 +66,14 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent();
-                intent.setClass(AppApplication.getApplication(), ArticleActivity.class);
-                intent.putExtra(Consts.Extra_Article, ((ArticleListItemView) view).getData());
-                startActivity(intent);
-                getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
+                if (view instanceof ArticleListItemView){
+                    Intent intent = new Intent();
+                    intent.setClass(AppApplication.getApplication(), ArticleActivity.class);
+                    intent.putExtra(Consts.Extra_Article, ((ArticleListItemView) view).getData());
+                    startActivity(intent);
+                    getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
+                }
+
             }
         });
         progressBar = (ProgressBar) view.findViewById(R.id.articles_loading);
