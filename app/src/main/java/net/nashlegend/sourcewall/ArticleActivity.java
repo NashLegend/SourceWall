@@ -36,6 +36,7 @@ import net.nashlegend.sourcewall.util.AutoHideUtil;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.RegUtil;
 import net.nashlegend.sourcewall.util.ShareUtil;
+import net.nashlegend.sourcewall.util.UrlCheckUtil;
 import net.nashlegend.sourcewall.view.MediumListItemView;
 
 import java.util.ArrayList;
@@ -196,10 +197,15 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         int id = item.getItemId();
         switch (id) {
             case R.id.action_share_to_wechat_circle:
-                ShareUtil.shareToWeiXin(this, article.getUrl(), "", "", null, false);
+                ShareUtil.shareToWeiXin(this, article.getUrl(), article.getTitle(), article.getSummary(), null, false);
                 break;
             case R.id.action_share_to_wechat_friends:
                 ShareUtil.shareToWeiXin(this, article.getUrl(), article.getTitle(), article.getSummary(), null, true);
+                break;
+            case R.id.action_open_in_browser:
+                if (!TextUtils.isEmpty(article.getUrl())) {
+                    UrlCheckUtil.openWithBrowser(article.getUrl());
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);

@@ -184,6 +184,10 @@ public class UrlCheckUtil {
         }
     }
 
+    public static void openWithBrowser(String url) {
+        openWithBrowser(Uri.parse(url));
+    }
+
     public static void openWithBrowser(Uri uri) {
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         intent.putExtra(Browser.EXTRA_APPLICATION_ID, AppApplication.getApplication().getPackageName());

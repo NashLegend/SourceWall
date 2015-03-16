@@ -38,6 +38,7 @@ import net.nashlegend.sourcewall.util.AutoHideUtil;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.RegUtil;
 import net.nashlegend.sourcewall.util.ShareUtil;
+import net.nashlegend.sourcewall.util.UrlCheckUtil;
 import net.nashlegend.sourcewall.view.MediumListItemView;
 
 import java.util.ArrayList;
@@ -164,6 +165,11 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
                 break;
             case R.id.action_load_desc:
                 startLoadDesc();
+                break;
+            case R.id.action_open_in_browser:
+                if (!TextUtils.isEmpty(post.getUrl())) {
+                    UrlCheckUtil.openWithBrowser(post.getUrl());
+                }
                 break;
             case R.id.action_share_to_wechat_circle:
                 ShareUtil.shareToWeiXin(this, post.getUrl(), post.getTitle(), post.getTitle(), null, false);
