@@ -13,20 +13,20 @@
         android:title="@string/action_load_acs"
         app:showAsAction="never" />
     <item
-        android:id="@+id/action_open_in_browser"
-        android:title="@string/open_in_browser"
-        android:orderInCategory="102"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/action_share_to_wechat_circle"
         android:title="@string/action_share_to_wechat_circle"
-        android:orderInCategory="103"
+        android:orderInCategory="102"
         android:icon="@drawable/share"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_share_to_wechat_friends"
         android:title="@string/action_share_to_wechat_friends"
-        android:orderInCategory="104"
+        android:orderInCategory="103"
         android:icon="@drawable/share"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_open_in_browser"
+        android:title="@string/open_in_browser"
+        android:orderInCategory="104"
         app:showAsAction="never" />
 </menu>
