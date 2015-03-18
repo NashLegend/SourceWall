@@ -8,11 +8,14 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.umeng.analytics.MobclickAgent;
+
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.NoticeAdapter;
 import net.nashlegend.sourcewall.model.Notice;
 import net.nashlegend.sourcewall.request.ResultObject;
 import net.nashlegend.sourcewall.request.api.UserAPI;
+import net.nashlegend.sourcewall.util.Mob;
 
 /**
  * Created by NashLegend on 2015/2/12 0012
@@ -65,6 +68,7 @@ public class NoticeView extends AceView<Notice> implements View.OnClickListener 
     }
 
     private void ignoreNotice() {
+        MobclickAgent.onEvent(getContext(), Mob.Event_Ignore_One_Notice);
         IgnoreTask ignoreTask = new IgnoreTask();
         ignoreTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, data);
     }

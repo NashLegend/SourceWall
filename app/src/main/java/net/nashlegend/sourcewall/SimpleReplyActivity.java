@@ -15,6 +15,8 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import com.umeng.analytics.MobclickAgent;
+
 import net.nashlegend.sourcewall.adapters.SimpleCommentAdapter;
 import net.nashlegend.sourcewall.commonview.AAsyncTask;
 import net.nashlegend.sourcewall.commonview.IStackedAsyncTaskInterface;
@@ -28,6 +30,7 @@ import net.nashlegend.sourcewall.request.ResultObject;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.view.SimpleCommentItemView;
 
 import java.util.ArrayList;
@@ -212,6 +215,11 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
 
         @Override
         protected void onPreExecute() {
+            if (aceModel instanceof Question) {
+                MobclickAgent.onEvent(SimpleReplyActivity.this, Mob.Event_Comment_On_Question);
+            } else if (aceModel instanceof QuestionAnswer) {
+                MobclickAgent.onEvent(SimpleReplyActivity.this, Mob.Event_Comment_On_Answer);
+            }
             progressDialog = new ProgressDialog(SimpleReplyActivity.this);
             progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.setMessage(getString(R.string.message_replying));

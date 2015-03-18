@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.adapters.QuestionDetailAdapter;
 import net.nashlegend.sourcewall.commonview.AAsyncTask;
@@ -30,6 +31,7 @@ import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.AutoHideUtil;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.ShareUtil;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;
 import net.nashlegend.sourcewall.view.AnswerListItemView;
@@ -52,6 +54,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question);
+        MobclickAgent.onEvent(this, Mob.Event_Open_Question);
         loadingView = (LoadingView) findViewById(R.id.question_progress_loading);
         loadingView.setReloadListener(this);
         progressBar = (ProgressBar) findViewById(R.id.question_loading);
@@ -140,13 +143,16 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
                 break;
             case R.id.action_open_in_browser:
                 if (!TextUtils.isEmpty(question.getUrl())) {
+                    MobclickAgent.onEvent(this, Mob.Event_Open_Question_In_Browser);
                     UrlCheckUtil.openWithBrowser(question.getUrl());
                 }
                 break;
             case R.id.action_share_to_wechat_circle:
+                MobclickAgent.onEvent(this, Mob.Event_Share_Question_To_Wechat_Circle);
                 ShareUtil.shareToWeiXin(this, question.getUrl(), question.getTitle(), question.getSummary(), null, false);
                 break;
             case R.id.action_share_to_wechat_friends:
+                MobclickAgent.onEvent(this, Mob.Event_Share_Question_To_Wechat_friend);
                 ShareUtil.shareToWeiXin(this, question.getUrl(), question.getTitle(), question.getSummary(), null, true);
                 break;
         }
@@ -200,6 +206,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
         } else {
+            MobclickAgent.onEvent(this, Mob.Event_Favor_Question);
             new FavorDialog.Builder(this).setTitle(R.string.action_favor).create(question).show();
         }
     }
@@ -208,8 +215,9 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
         } else {
+            MobclickAgent.onEvent(this, Mob.Event_Recommend_Question);
             InputDialog.Builder builder = new InputDialog.Builder(this);
-            builder.setTitle(R.string.recommend_article);
+            builder.setTitle(R.string.recommend_question);
             builder.setCancelable(true);
             builder.setCanceledOnTouchOutside(false);
             builder.setOnClickListener(new DialogInterface.OnClickListener() {
@@ -355,6 +363,11 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
     class FollowTask extends AsyncTask<String, Integer, ResultObject> {
 
         @Override
+        protected void onPreExecute() {
+            MobclickAgent.onEvent(QuestionActivity.this, Mob.Event_Follow_Question);
+        }
+
+        @Override
         protected ResultObject doInBackground(String... params) {
             String questionID = params[0];
             return QuestionAPI.followQuestion(questionID);
@@ -371,6 +384,11 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
     }
 
     class UnfollowTask extends AsyncTask<String, Integer, ResultObject> {
+
+        @Override
+        protected void onPreExecute() {
+            MobclickAgent.onEvent(QuestionActivity.this, Mob.Event_Unfollow_Question);
+        }
 
         @Override
         protected ResultObject doInBackground(String... params) {

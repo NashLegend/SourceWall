@@ -7,11 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import com.umeng.analytics.MobclickAgent;
+
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.SimpleReplyActivity;
 import net.nashlegend.sourcewall.commonview.TTextView;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 import net.nashlegend.sourcewall.util.TextHtmlHelper;
 
@@ -46,6 +49,7 @@ public class QuestionView extends AceView<Question> {
         layoutComments.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                MobclickAgent.onEvent(getContext(), Mob.Event_Open_Question_Comment);
                 Intent intent = new Intent(getContext(), SimpleReplyActivity.class);
                 intent.putExtra(Consts.Extra_Ace_Model, question);
                 getContext().startActivity(intent);

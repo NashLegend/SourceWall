@@ -30,6 +30,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.umeng.analytics.MobclickAgent;
+
 import net.nashlegend.sourcewall.commonview.AAsyncTask;
 import net.nashlegend.sourcewall.commonview.IStackedAsyncTaskInterface;
 import net.nashlegend.sourcewall.dialogs.InputDialog;
@@ -42,6 +44,7 @@ import net.nashlegend.sourcewall.request.ResultObject;
 import net.nashlegend.sourcewall.request.api.APIBase;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.FileUtil;
+import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.RegUtil;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 import net.nashlegend.sourcewall.util.SketchSharedUtil;
@@ -306,6 +309,15 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
 
         @Override
         protected void onPreExecute() {
+
+            if (aceModel instanceof Article) {
+                MobclickAgent.onEvent(ReplyActivity.this, Mob.Event_Reply_Article);
+            } else if (aceModel instanceof Post) {
+                MobclickAgent.onEvent(ReplyActivity.this, Mob.Event_Reply_Post);
+            } else if (aceModel instanceof Question) {
+                MobclickAgent.onEvent(ReplyActivity.this, Mob.Event_Answer_Question);
+            }
+
             progressDialog = new ProgressDialog(ReplyActivity.this);
             progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.setMessage(getString(R.string.message_replying));

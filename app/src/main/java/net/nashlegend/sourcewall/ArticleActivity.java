@@ -18,6 +18,7 @@ import android.widget.ProgressBar;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.adapters.ArticleDetailAdapter;
 import net.nashlegend.sourcewall.commonview.AAsyncTask;
@@ -34,6 +35,7 @@ import net.nashlegend.sourcewall.request.api.ArticleAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.AutoHideUtil;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.RegUtil;
 import net.nashlegend.sourcewall.util.ShareUtil;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;
@@ -66,6 +68,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article);
+        MobclickAgent.onEvent(this, Mob.Event_Open_Article);
         loadingView = (LoadingView) findViewById(R.id.article_progress_loading);
         loadingView.setReloadListener(this);
         progressBar = (ProgressBar) findViewById(R.id.article_loading);
@@ -156,6 +159,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
         } else {
+            MobclickAgent.onEvent(this, Mob.Event_Recommend_Article);
             InputDialog.Builder builder = new InputDialog.Builder(this);
             builder.setTitle(R.string.recommend_article);
             builder.setCancelable(true);
@@ -182,6 +186,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
             notifyNeedLog();
         } else {
             // basket dialog
+            MobclickAgent.onEvent(this, Mob.Event_Favor_Article);
             new FavorDialog.Builder(this).setTitle(R.string.action_favor).create(article).show();
         }
     }
@@ -197,13 +202,16 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         int id = item.getItemId();
         switch (id) {
             case R.id.action_share_to_wechat_circle:
+                MobclickAgent.onEvent(this, Mob.Event_Share_Article_To_Wechat_Circle);
                 ShareUtil.shareToWeiXin(this, article.getUrl(), article.getTitle(), article.getSummary(), null, false);
                 break;
             case R.id.action_share_to_wechat_friends:
+                MobclickAgent.onEvent(this, Mob.Event_Share_Article_To_Wechat_friend);
                 ShareUtil.shareToWeiXin(this, article.getUrl(), article.getTitle(), article.getSummary(), null, true);
                 break;
             case R.id.action_open_in_browser:
                 if (!TextUtils.isEmpty(article.getUrl())) {
+                    MobclickAgent.onEvent(this, Mob.Event_Open_Article_In_Browser);
                     UrlCheckUtil.openWithBrowser(article.getUrl());
                 }
                 break;

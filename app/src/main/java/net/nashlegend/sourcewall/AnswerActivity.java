@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.squareup.picasso.Picasso;
+import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.commonview.LoadingView;
 import net.nashlegend.sourcewall.commonview.SScrollView;
@@ -37,6 +38,7 @@ import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.StyleChecker;
 
 import java.util.ArrayList;
@@ -73,6 +75,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_answer);
+        MobclickAgent.onEvent(this, Mob.Event_Open_Answer);
         handler = new Handler();
         rootView = findViewById(R.id.rootView);
         toolbar = (Toolbar) findViewById(R.id.action_bar);
@@ -317,6 +320,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
     }
 
     private void replyAnswer() {
+        MobclickAgent.onEvent(this, Mob.Event_Open_Answer_Comment);
         Intent intent = new Intent(this, SimpleReplyActivity.class);
         intent.putExtra(Consts.Extra_Ace_Model, answer);
         startActivity(intent);
@@ -411,9 +415,12 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         protected ResultObject doInBackground(Boolean... params) {
             isSupport = params[0];
             if (isSupport) {
+                MobclickAgent.onEvent(AnswerActivity.this, Mob.Event_Support_Answer);
                 return QuestionAPI.supportAnswer(answer.getID());
+            } else {
+                MobclickAgent.onEvent(AnswerActivity.this, Mob.Event_Oppose_Answer);
+                return QuestionAPI.opposeAnswer(answer.getID());
             }
-            return QuestionAPI.opposeAnswer(answer.getID());
         }
 
         @Override
@@ -432,6 +439,11 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
 
     class BuryTask extends AsyncTask<Boolean, Integer, ResultObject> {
         boolean bury = true;
+
+        @Override
+        protected void onPreExecute() {
+            MobclickAgent.onEvent(AnswerActivity.this, Mob.Event_Bury_Answer);
+        }
 
         @Override
         protected ResultObject doInBackground(Boolean... params) {
@@ -468,6 +480,11 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
     }
 
     class ThankTask extends AsyncTask<String, Integer, ResultObject> {
+
+        @Override
+        protected void onPreExecute() {
+            MobclickAgent.onEvent(AnswerActivity.this, Mob.Event_Thank_Answer);
+        }
 
         @Override
         protected ResultObject doInBackground(String... params) {

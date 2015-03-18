@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
+import com.umeng.analytics.MobclickAgent;
+
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.NoticeAdapter;
 import net.nashlegend.sourcewall.commonview.AAsyncTask;
@@ -22,6 +24,7 @@ import net.nashlegend.sourcewall.model.Notice;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.ResultObject;
 import net.nashlegend.sourcewall.request.api.UserAPI;
+import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;
 import net.nashlegend.sourcewall.view.NoticeView;
 
@@ -55,6 +58,7 @@ public class NoticesFragment extends ChannelsFragment implements LListView.OnRef
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 if (view instanceof NoticeView) {
                     //这里要做两个请求，但是可以直接请求notice地址，让系统主动删除请求 TODO
+                    MobclickAgent.onEvent(getActivity(), Mob.Event_Open_One_Notice);
                     Notice notice = ((NoticeView) view).getData();
                     UrlCheckUtil.redirectRequest(notice.getUrl(), notice.getId());
                 }
@@ -124,6 +128,7 @@ public class NoticesFragment extends ChannelsFragment implements LListView.OnRef
         switch (id) {
             case R.id.action_ignore_all:
                 if (adapter.getCount() > 0) {
+                    MobclickAgent.onEvent(getActivity(), Mob.Event_Ignore_All_Notice);
                     cancelPotentialTask();
                     if (ignoreTask != null && ignoreTask.getStatus() == AsyncTask.Status.RUNNING) {
                         ignoreTask.cancel(true);
