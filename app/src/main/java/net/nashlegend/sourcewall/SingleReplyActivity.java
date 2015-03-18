@@ -67,7 +67,7 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
     private FloatingActionsMenu floatingActionsMenu;
     private FloatingActionButton replyButton;
     private FloatingActionButton deleteButton;
-    private FloatingActionButton thankButton;
+    private FloatingActionButton likeButton;
     private Handler handler;
     private int topBarHeight;
     private int headerHeight;
@@ -96,13 +96,13 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
 
         replyButton = (FloatingActionButton) findViewById(R.id.button_reply);
         deleteButton = (FloatingActionButton) findViewById(R.id.button_Delete);
-        thankButton = (FloatingActionButton) findViewById(R.id.button_like);
+        likeButton = (FloatingActionButton) findViewById(R.id.button_like);
 
         hostTitle.setOnClickListener(this);
         likeView.setOnClickListener(this);
         replyButton.setOnClickListener(this);
         deleteButton.setOnClickListener(this);
-        thankButton.setOnClickListener(this);
+        likeButton.setOnClickListener(this);
         loadingView.setReloadListener(this);
 
         //来自其他地方的跳转
@@ -161,9 +161,9 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
         }
         if (data.isHasLiked()) {
             //TODO
-            thankButton.setIcon(R.drawable.heart);
+            likeButton.setIcon(R.drawable.heart);
         } else {
-            thankButton.setIcon(R.drawable.heart_outline);
+            likeButton.setIcon(R.drawable.heart_outline);
         }
         if (Config.shouldLoadImage()) {
             Picasso.with(this).load(data.getAuthorAvatarUrl())
@@ -455,6 +455,7 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
                 data.setHasLiked(true);
                 data.setLikeNum(data.getLikeNum() + 1);
                 supportText.setText(data.getLikeNum() + "");
+                likeButton.setIcon(R.drawable.heart);
                 toast("点赞成功");
             } else {
                 toast("点赞未遂");
