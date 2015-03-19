@@ -43,11 +43,6 @@ public class ShareUtil {
         } else {
             ToastUtil.toastSingleton(R.string.hint_wechat_not_installed);
         }
-        if (tag) {
-            MobclickAgent.onEvent(context, Mob.Event_Share_To_Wechat_Friends);
-        } else {
-            MobclickAgent.onEvent(context, Mob.Event_Share_To_Wechat_Circle);
-        }
     }
 
     public static String getWeixinAppId() {
