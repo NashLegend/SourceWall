@@ -7,6 +7,8 @@ import android.net.NetworkInfo;
 import net.nashlegend.sourcewall.AppApplication;
 import net.nashlegend.sourcewall.R;
 
+import java.util.regex.Pattern;
+
 /**
  * Created by NashLegend on 2014/12/15 0015
  */
@@ -14,6 +16,8 @@ public class Config {
 
     public final static int ExitTapsGap = 1200;
     public final static String defaultDisplayName = "果壳的壳";
+    public final static String defaultUrl = "https://github.com/NashLegend/SourceWall/blob/master/README.md";
+    public final static String altUrl = "http://www.guokr.com/blog/798434/";
 
     public static boolean shouldLoadImage() {
         //略微有点耗时，最多可耗时3ms，最低0.3ms
@@ -84,7 +88,7 @@ public class Config {
      * @return 默认尾巴
      */
     private static String getDefaultComplexTail() {
-        return "<p></p><p>来自 <a href=\"https://github.com/NashLegend/SourceWall/blob/master/README.md\" target=\"_blank\">" + defaultDisplayName + "</a></p>";
+        return "<p></p><p>来自 <a href=\"" + defaultUrl + "\" target=\"_blank\">" + defaultDisplayName + "</a></p>";
     }
 
     /**
@@ -95,7 +99,7 @@ public class Config {
     private static String getPhoneComplexTail() {
         String mTypeString = android.os.Build.MODEL == null ? AppApplication.getApplication().getString(R.string.unknown_phone)
                 : android.os.Build.MODEL;
-        return "<p></p><p>来自 <a href=\"https://github.com/NashLegend/SourceWall/blob/master/README.md\" target=\"_blank\">" + mTypeString + "</a></p>";
+        return "<p></p><p>来自 <a href=\"" + defaultUrl + "\" target=\"_blank\">" + mTypeString + "</a></p>";
     }
 
     /**
@@ -107,8 +111,15 @@ public class Config {
         //bit##参数##
         String tail = SharedPreferencesUtil.readString(Consts.key_Custom_Tail, "");
         if (!tail.trim().equals("")) {
-            String reg = "##([^#]+)##";
-            tail = tail.replaceAll(reg, "<a href=\"https://github.com/NashLegend/SourceWall/blob/master/README.md\" target=\"_blank\">$1</a>");
+            String reg2 = "##([^#]+)##";
+            String reg3 = "###([^#]+)###";
+            String ts = defaultUrl;
+            String tr = reg2;
+            if (Pattern.compile(reg3).matcher(tail).find()) {
+                ts = altUrl;
+                tr = reg3;
+            }
+            tail = tail.replaceAll(tr, "<a href=\"" + ts + "\" target=\"_blank\">$1</a>");
         }
         return "<p></p><p>" + tail + "</p>";
     }
@@ -142,7 +153,7 @@ public class Config {
     private static String getPhoneSimpleTail() {
         String mTypeString = android.os.Build.MODEL == null ? AppApplication.getApplication().getString(R.string.unknown_phone)
                 : android.os.Build.MODEL;
-        return "\n\n[blockquote]来自 [url=https://github.com/NashLegend/SourceWall/blob/master/README.md]" + mTypeString + "[/url][/blockquote]";
+        return "\n\n[blockquote]来自 [url=" + defaultUrl + "]" + mTypeString + "[/url][/blockquote]";
     }
 
 
@@ -152,7 +163,7 @@ public class Config {
      * @return 默认尾巴
      */
     private static String getDefaultSimpleTail() {
-        return "\n\n[blockquote]来自 [url=https://github.com/NashLegend/SourceWall/blob/master/README.md]" + defaultDisplayName + "[/url][/blockquote]";
+        return "\n\n[blockquote]来自 [url=" + defaultUrl + "]" + defaultDisplayName + "[/url][/blockquote]";
     }
 
     /**
@@ -163,8 +174,15 @@ public class Config {
     public static String getParametricCustomSimpleTail() {
         String tail = SharedPreferencesUtil.readString(Consts.key_Custom_Tail, "");
         if (!tail.trim().equals("")) {
-            String reg = "##([^#]+)##";
-            tail = tail.replaceAll(reg, "[url=https://github.com/NashLegend/SourceWall/blob/master/README.md]$1[/url]");
+            String reg2 = "##([^#]+)##";
+            String reg3 = "###([^#]+)###";
+            String ts = defaultUrl;
+            String tr = reg2;
+            if (Pattern.compile(reg3).matcher(tail).find()) {
+                ts = altUrl;
+                tr = reg3;
+            }
+            tail = tail.replaceAll(tr, "[url=" + ts + "]$1[/url]");
         }
         return "\n\n[blockquote]" + tail + "[/blockquote]";
     }
