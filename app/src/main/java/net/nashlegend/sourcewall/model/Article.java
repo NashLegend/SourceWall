@@ -36,7 +36,7 @@ public class Article extends AceModel {
 
     public String getTitle() {
         if (TextUtils.isEmpty(title)) {
-            url = "¿ÆÑ§ÈË--¹û¿ÇÍø";
+            url = "ç§‘å­¦äºº--æžœå£³ç½‘";
         }
         return title;
     }
