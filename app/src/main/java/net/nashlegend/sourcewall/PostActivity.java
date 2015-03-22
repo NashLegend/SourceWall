@@ -400,7 +400,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Consts.Code_Reply_Post && resultCode == RESULT_OK) {
+        if (requestCode == Consts.Code_Reply_Post && resultCode == RESULT_OK && !loadDesc) {
             post.setReplyNum(post.getReplyNum() + 1);
         }
         super.onActivityResult(requestCode, resultCode, data);

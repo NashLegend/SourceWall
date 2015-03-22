@@ -22,7 +22,7 @@ android {
     }
 
     defaultConfig {
-        manifestPlaceholders = [ CHANNEL_NAME:"unspecified"]
+        manifestPlaceholders = [CHANNEL_NAME: "github"]
         applicationId "net.nashlegend.sourcewall"
         minSdkVersion 14
         targetSdkVersion 22
