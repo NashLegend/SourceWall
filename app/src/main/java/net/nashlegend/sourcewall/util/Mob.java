@@ -2,68 +2,68 @@ package net.nashlegend.sourcewall.util;
 
 /**
  * Created by NashLegend on 2015/3/12 0012
- * ÓÃ»§Í³¼Æ
+ * ç”¨æˆ·ç»Ÿè®¡
  */
 public class Mob {
 
-    //Í¨ÓÃ
-    public static final String Event_Login = "Event_Login";//µÇÂ¼¹û¿Ç
-    public static final String Event_Logout = "Event_Logout";//µÇ³ö¹û¿Ç
-    public static final String Event_Modify_Tail = "Event_Modify_Tail";//ĞŞ¸ÄĞ¡Î²°Í
-    public static final String Event_Switch_Day_Night_Mode = "Event_Switch_Day_Night_Mode";//ÇĞ»»ÈÕÒ¹Ä£Ê½
+    //é€šç”¨
+    public static final String Event_Login = "Event_Login";//ç™»å½•æœå£³
+    public static final String Event_Logout = "Event_Logout";//ç™»å‡ºæœå£³
+    public static final String Event_Modify_Tail = "Event_Modify_Tail";//ä¿®æ”¹å°å°¾å·´
+    public static final String Event_Switch_Day_Night_Mode = "Event_Switch_Day_Night_Mode";//åˆ‡æ¢æ—¥å¤œæ¨¡å¼
 
-    //¿ÆÑ§ÈË
-    public static final String Event_Open_Article = "Event_Open_Article";//´ò¿ªÎÄÕÂ
-    public static final String Event_Favor_Article = "Event_Favor_Article";//ÊÕ²ØÎÄÕÂ
-    public static final String Event_Recommend_Article = "Event_Recommend_Article";//ÍÆ¼öÎÄÕÂ
-    public static final String Event_Reply_Article = "Event_Reply_Article";//»Ø¸´ÎÄÕÂ
-    public static final String Event_Share_Article_To_Wechat_Circle = "Event_Share_Article_To_Wechat_Circle";//·ÖÏíÎÄÕÂµ½ÅóÓÑÈ¦
-    public static final String Event_Share_Article_To_Wechat_friend = "Event_Share_Article_To_Wechat_friend";//·ÖÏíÎÄÕÂ¸øÎ¢ĞÅÅóÓÑ
-    public static final String Event_Open_Article_In_Browser = "Event_Open_Article_In_Browser";//´òä¯ÀÀÆ÷ÖĞ´ò¿ªÎÄÕÂ
+    //ç§‘å­¦äºº
+    public static final String Event_Open_Article = "Event_Open_Article";//æ‰“å¼€æ–‡ç« 
+    public static final String Event_Favor_Article = "Event_Favor_Article";//æ”¶è—æ–‡ç« 
+    public static final String Event_Recommend_Article = "Event_Recommend_Article";//æ¨èæ–‡ç« 
+    public static final String Event_Reply_Article = "Event_Reply_Article";//å›å¤æ–‡ç« 
+    public static final String Event_Share_Article_To_Wechat_Circle = "Event_Share_Article_To_Wechat_Circle";//åˆ†äº«æ–‡ç« åˆ°æœ‹å‹åœˆ
+    public static final String Event_Share_Article_To_Wechat_friend = "Event_Share_Article_To_Wechat_friend";//åˆ†äº«æ–‡ç« ç»™å¾®ä¿¡æœ‹å‹
+    public static final String Event_Open_Article_In_Browser = "Event_Open_Article_In_Browser";//æ‰“æµè§ˆå™¨ä¸­æ‰“å¼€æ–‡ç« 
 
-    //Ğ¡×é
-    public static final String Event_Load_My_Groups = "Event_Load_My_Groups";//¼ÓÔØ¹Ø×¢µÄĞ¡×é
-    public static final String Event_Load_My_Groups_OK = "Event_Load_My_Groups_OK";//¼ÓÔØ¹Ø×¢Ğ¡×é³É¹¦
-    public static final String Event_Load_My_Groups_Failed = "Event_Load_My_Groups_Failed";//¼ÓÔØ¹Ø×¢Ğ¡×éÊ§°Ü
-    public static final String Event_Open_Post = "Event_Open_Post";//´ò¿ªÌû×Ó
-    public static final String Event_Reverse_Read_Post = "Event_Reverse_Read_Post";//µ¹Ğò²é¿´Ìû×Ó
-    public static final String Event_Normal_Read_Post = "Event_Normal_Read_Post";//ÕıĞò²é¿´Ìû×Ó
-    public static final String Event_Like_Post = "Event_Like_Post";//ÔŞÌû×Ó
-    public static final String Event_Favor_Post = "Event_Favor_Post";//ÊÕ²ØÌû×Ó
-    public static final String Event_Reply_Post = "Event_Reply_Post";//»Ø¸´Ìû×Ó
-    public static final String Event_Share_Post_To_Wechat_Circle = "Event_Share_Post_To_Wechat_Circle";//·ÖÏíÌû×Óµ½ÅóÓÑÈ¦
-    public static final String Event_Share_Post_To_Wechat_friend = "Event_Share_Post_To_Wechat_friend";//·ÖÏíÌû×Óµ½Î¢ĞÅºÃÓÑ
-    public static final String Event_Open_Post_In_Browser = "Event_Open_Post_In_Browser";//´òä¯ÀÀÆ÷ÖĞ´ò¿ªÌû×Ó
-    public static final String Event_Publish_Post = "Event_Publish_Post";//ÓÃ»§·¢Ìû
-    public static final String Event_Publish_Post_OK = "Event_Publish_Post_OK";//·¢±íÌû×Ó³É¹¦
-    public static final String Event_Publish_Post_Failed = "Event_Publish_Post_Failed";//·¢±íÌû×ÓÊ§°Ü
+    //å°ç»„
+    public static final String Event_Load_My_Groups = "Event_Load_My_Groups";//åŠ è½½å…³æ³¨çš„å°ç»„
+    public static final String Event_Load_My_Groups_OK = "Event_Load_My_Groups_OK";//åŠ è½½å…³æ³¨å°ç»„æˆåŠŸ
+    public static final String Event_Load_My_Groups_Failed = "Event_Load_My_Groups_Failed";//åŠ è½½å…³æ³¨å°ç»„å¤±è´¥
+    public static final String Event_Open_Post = "Event_Open_Post";//æ‰“å¼€å¸–å­
+    public static final String Event_Reverse_Read_Post = "Event_Reverse_Read_Post";//å€’åºæŸ¥çœ‹å¸–å­
+    public static final String Event_Normal_Read_Post = "Event_Normal_Read_Post";//æ­£åºæŸ¥çœ‹å¸–å­
+    public static final String Event_Like_Post = "Event_Like_Post";//èµå¸–å­
+    public static final String Event_Favor_Post = "Event_Favor_Post";//æ”¶è—å¸–å­
+    public static final String Event_Reply_Post = "Event_Reply_Post";//å›å¤å¸–å­
+    public static final String Event_Share_Post_To_Wechat_Circle = "Event_Share_Post_To_Wechat_Circle";//åˆ†äº«å¸–å­åˆ°æœ‹å‹åœˆ
+    public static final String Event_Share_Post_To_Wechat_friend = "Event_Share_Post_To_Wechat_friend";//åˆ†äº«å¸–å­åˆ°å¾®ä¿¡å¥½å‹
+    public static final String Event_Open_Post_In_Browser = "Event_Open_Post_In_Browser";//æ‰“æµè§ˆå™¨ä¸­æ‰“å¼€å¸–å­
+    public static final String Event_Publish_Post = "Event_Publish_Post";//ç”¨æˆ·å‘å¸–
+    public static final String Event_Publish_Post_OK = "Event_Publish_Post_OK";//å‘è¡¨å¸–å­æˆåŠŸ
+    public static final String Event_Publish_Post_Failed = "Event_Publish_Post_Failed";//å‘è¡¨å¸–å­å¤±è´¥
 
-    //ÎÊ´ğ
-    public static final String Event_Load_My_Tags = "Event_Load_My_Tags";//¼ÓÔØ¹Ø×¢ÎÊ´ğ±êÇ©
-    public static final String Event_Load_My_Tags_OK = "Event_Load_My_Tags_OK";//¼ÓÔØ¹Ø×¢±êÇ©³É¹¦
-    public static final String Event_Load_My_Tags_Failed = "Event_Load_My_Tags_Failed";//¼ÓÔØ¹Ø×¢±êÇ©Ê§°Ü
-    public static final String Event_Open_Question = "Event_Open_Question";//´ò¿ªÎÊÌâ
-    public static final String Event_Open_Question_Comment = "Event_Open_Question_Comment";//´ò¿ªÎÊÌâÆÀÂÛ
-    public static final String Event_Comment_On_Question = "Event_Comment_On_Question";//ÆÀÂÛÎÊÌâ
-    public static final String Event_Favor_Question = "Event_Favor_Question";//ÊÕ²ØÎÊÌâ
-    public static final String Event_Recommend_Question = "Event_Recommend_Question";//ÍÆ¼öÎÊÌâ
-    public static final String Event_Answer_Question = "Event_Answer_Question";//»Ø´ğÎÊÌâ
-    public static final String Event_Follow_Question = "Event_Follow_Question";//¹Ø×¢ÎÊÌâ
-    public static final String Event_Unfollow_Question = "Event_Unfollow_Question";//È¡¹ØÎÊÌâ
-    public static final String Event_Share_Question_To_Wechat_Circle = "Event_Share_Question_To_Wechat_Circle";//·ÖÏíÎÊÌâµ½ÅóÓÑÈ¦
-    public static final String Event_Share_Question_To_Wechat_friend = "Event_Share_Question_To_Wechat_friend";//·ÖÏíÎÊÌâµ½Î¢ĞÅºÃÓÑ
+    //é—®ç­”
+    public static final String Event_Load_My_Tags = "Event_Load_My_Tags";//åŠ è½½å…³æ³¨é—®ç­”æ ‡ç­¾
+    public static final String Event_Load_My_Tags_OK = "Event_Load_My_Tags_OK";//åŠ è½½å…³æ³¨æ ‡ç­¾æˆåŠŸ
+    public static final String Event_Load_My_Tags_Failed = "Event_Load_My_Tags_Failed";//åŠ è½½å…³æ³¨æ ‡ç­¾å¤±è´¥
+    public static final String Event_Open_Question = "Event_Open_Question";//æ‰“å¼€é—®é¢˜
+    public static final String Event_Open_Question_Comment = "Event_Open_Question_Comment";//æ‰“å¼€é—®é¢˜è¯„è®º
+    public static final String Event_Comment_On_Question = "Event_Comment_On_Question";//è¯„è®ºé—®é¢˜
+    public static final String Event_Favor_Question = "Event_Favor_Question";//æ”¶è—é—®é¢˜
+    public static final String Event_Recommend_Question = "Event_Recommend_Question";//æ¨èé—®é¢˜
+    public static final String Event_Answer_Question = "Event_Answer_Question";//å›ç­”é—®é¢˜
+    public static final String Event_Follow_Question = "Event_Follow_Question";//å…³æ³¨é—®é¢˜
+    public static final String Event_Unfollow_Question = "Event_Unfollow_Question";//å–å…³é—®é¢˜
+    public static final String Event_Share_Question_To_Wechat_Circle = "Event_Share_Question_To_Wechat_Circle";//åˆ†äº«é—®é¢˜åˆ°æœ‹å‹åœˆ
+    public static final String Event_Share_Question_To_Wechat_friend = "Event_Share_Question_To_Wechat_friend";//åˆ†äº«é—®é¢˜åˆ°å¾®ä¿¡å¥½å‹
     public static final String Event_Open_Question_In_Browser = "Event_Open_Question_In_Browser";
-    public static final String Event_Open_Answer = "Event_Open_Answer";//´ò¿ª´ğ°¸
-    public static final String Event_Open_Answer_Comment = "Event_Open_Answer_Comment";//´ò¿ª´ğ°¸ÆÀÂÛ
-    public static final String Event_Comment_On_Answer = "Event_Comment_On_Answer";//ÆÀÂÛ´ğ°¸
-    public static final String Event_Support_Answer = "Event_Support_Answer";//Ö§³Ö´ğ°¸
-    public static final String Event_Oppose_Answer = "Event_Oppose_Answer";//·´¶Ô´ğ°¸
-    public static final String Event_Thank_Answer = "Event_Thank_Answer";//¸ĞĞ»´ğ°¸
-    public static final String Event_Bury_Answer = "Event_Bury_Answer";//ÂñÔá´ğ°¸
+    public static final String Event_Open_Answer = "Event_Open_Answer";//æ‰“å¼€ç­”æ¡ˆ
+    public static final String Event_Open_Answer_Comment = "Event_Open_Answer_Comment";//æ‰“å¼€ç­”æ¡ˆè¯„è®º
+    public static final String Event_Comment_On_Answer = "Event_Comment_On_Answer";//è¯„è®ºç­”æ¡ˆ
+    public static final String Event_Support_Answer = "Event_Support_Answer";//æ”¯æŒç­”æ¡ˆ
+    public static final String Event_Oppose_Answer = "Event_Oppose_Answer";//åå¯¹ç­”æ¡ˆ
+    public static final String Event_Thank_Answer = "Event_Thank_Answer";//æ„Ÿè°¢ç­”æ¡ˆ
+    public static final String Event_Bury_Answer = "Event_Bury_Answer";//åŸ‹è‘¬ç­”æ¡ˆ
 
-    //Í¨Öª
-    public static final String Event_Check_Notice = "Event_Check_Notice";//²é¿´Í¨Öª
-    public static final String Event_Open_One_Notice = "Event_Open_One_Notice";//´ò¿ªÒ»ÌõÍ¨Öª
-    public static final String Event_Ignore_One_Notice = "Event_Ignore_One_Notice";//ºöÂÔÒ»ÌõÍ¨Öª
-    public static final String Event_Ignore_All_Notice = "Event_Ignore_All_Notice";//ºöÂÔËùÓĞÍ¨Öª
+    //é€šçŸ¥
+    public static final String Event_Check_Notice = "Event_Check_Notice";//æŸ¥çœ‹é€šçŸ¥
+    public static final String Event_Open_One_Notice = "Event_Open_One_Notice";//æ‰“å¼€ä¸€æ¡é€šçŸ¥
+    public static final String Event_Ignore_One_Notice = "Event_Ignore_One_Notice";//å¿½ç•¥ä¸€æ¡é€šçŸ¥
+    public static final String Event_Ignore_All_Notice = "Event_Ignore_All_Notice";//å¿½ç•¥æ‰€æœ‰é€šçŸ¥
 }
