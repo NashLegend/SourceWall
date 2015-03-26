@@ -14,7 +14,6 @@ public class AppApplication extends Application {
     private static AppApplication application;
     private static DaoMaster daoMaster;
     private static DaoSession daoSession;
-    public static final boolean DEBUG = false;
 
     //TODO Network Monitor
 
@@ -42,6 +41,4 @@ public class AppApplication extends Application {
         }
         return daoSession;
     }
-
-
 }

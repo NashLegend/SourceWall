@@ -9,9 +9,7 @@ import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.sdk.modelmsg.WXWebpageObject;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
-import com.umeng.analytics.MobclickAgent;
-
-import net.nashlegend.sourcewall.AppApplication;
+import net.nashlegend.sourcewall.BuildConfig;
 import net.nashlegend.sourcewall.R;
 
 import java.io.ByteArrayOutputStream;
@@ -46,7 +44,7 @@ public class ShareUtil {
     }
 
     public static String getWeixinAppId() {
-        if (AppApplication.DEBUG) {
+        if (BuildConfig.DEBUG) {
             return WEIXIN_APP_ID_DEBUG;
         } else {
             return WEIXIN_APP_ID_RELEASE;

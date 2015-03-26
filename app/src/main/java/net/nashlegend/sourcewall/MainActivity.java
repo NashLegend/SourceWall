@@ -55,7 +55,7 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        MobclickAgent.setDebugMode(AppApplication.DEBUG);
+        MobclickAgent.setDebugMode(BuildConfig.DEBUG);
         AnalyticsConfig.enableEncrypt(true);
         MobclickAgent.updateOnlineConfig(this);
         receiver = new Receiver();
