@@ -114,6 +114,10 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    public boolean isDrawerOpen() {
+        return mNavigationDrawerFragment != null && mNavigationDrawerFragment.isDrawerOpen();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (!mNavigationDrawerFragment.isDrawerOpen()) {

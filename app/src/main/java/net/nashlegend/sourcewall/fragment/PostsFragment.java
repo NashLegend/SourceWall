@@ -104,7 +104,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if (view instanceof PostListItemView){
+                if (view instanceof PostListItemView) {
                     Intent intent = new Intent();
                     intent.setClass(getActivity(), PostActivity.class);
                     intent.putExtra(Consts.Extra_Post, ((PostListItemView) view).getData());
@@ -192,6 +192,27 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         setTitle();
         loadOver();
         return view;
+    }
+
+    boolean User_Has_Learned_Load_My_Groups = false;
+
+    private void checkUserLearnedLoadGroups() {
+        if (User_Has_Learned_Load_My_Groups) {
+            return;
+        }
+        if (!SharedPreferencesUtil.readBoolean(Consts.Key_User_Has_Learned_Load_My_Groups, false)) {
+            SharedPreferencesUtil.saveBoolean(Consts.Key_User_Has_Learned_Load_My_Groups, true);
+            User_Has_Learned_Load_My_Groups = true;
+            AlertDialog dialog = new AlertDialog.Builder(getActivity()).setTitle(R.string.hint)
+                    .setMessage(R.string.hint_of_load_my_groups)
+                    .setPositiveButton(R.string.ok_i_know, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).create();
+            dialog.show();
+        }
     }
 
     private void onSectionButtonClicked(GroupMovableButton button) {
@@ -284,7 +305,6 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                                         new Handler().postDelayed(new Runnable() {
                                             @Override
                                             public void run() {
-                                                MobclickAgent.onEvent(getActivity(), Mob.Event_Load_My_Groups);
                                                 Intent intent = new Intent(getActivity(), ShuffleGroupActivity.class);
                                                 intent.putExtra(Consts.Extra_Should_Load_Before_Shuffle, true);
                                                 startActivityForResult(intent, Consts.Code_Start_Shuffle_Groups);
@@ -465,6 +485,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         if (!UserAPI.isLoggedIn()) {
             menu.findItem(R.id.action_more_sections).setVisible(false);
         } else {
+            checkUserLearnedLoadGroups();
             moreSectionsImageView = (ImageView) ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.action_view_more_sections, null);
             MenuItemCompat.setActionView(menu.findItem(R.id.action_more_sections), moreSectionsImageView);
             moreSectionsImageView.setOnClickListener(new View.OnClickListener() {

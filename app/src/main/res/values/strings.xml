@@ -177,5 +177,8 @@
     <string name="no_load_homepage_image">不加载首页图片</string>
     <string name="hint_wechat_not_installed">微信未安装</string>
     <string name="open_in_browser">在浏览器中打开</string>
+    <string name="hint_of_load_my_groups">点击右上角箭头可加载我关注的小组以及管理小组……</string>
+    <string name="hint_of_load_my_tags">点击右上角箭头可加载我关注的问答标签以及管理标签……</string>
+    <string name="ok_i_know">好了我知道了</string>
 
 </resources>

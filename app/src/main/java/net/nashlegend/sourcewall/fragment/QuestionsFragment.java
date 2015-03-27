@@ -198,6 +198,27 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
         return view;
     }
 
+    boolean User_Has_Learned_Load_My_Tags = false;
+
+    private void checkUserLearnedLoadTags() {
+        if (User_Has_Learned_Load_My_Tags) {
+            return;
+        }
+        if (!SharedPreferencesUtil.readBoolean(Consts.Key_User_Has_Learned_Load_My_Tags, false)) {
+            SharedPreferencesUtil.saveBoolean(Consts.Key_User_Has_Learned_Load_My_Tags, true);
+            User_Has_Learned_Load_My_Tags = true;
+            AlertDialog dialog = new AlertDialog.Builder(getActivity()).setTitle(R.string.hint)
+                    .setMessage(R.string.hint_of_load_my_tags)
+                    .setPositiveButton(R.string.ok_i_know, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).create();
+            dialog.show();
+        }
+    }
+
     private void onSectionButtonClicked(AskTagMovableButton button) {
         AskTag askTag = button.getSection();
         SubItem subItem = new SubItem(askTag.getSection(), askTag.getType(), askTag.getName(), askTag.getValue());
@@ -451,6 +472,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
         if (!UserAPI.isLoggedIn()) {
             menu.findItem(R.id.action_more_sections).setVisible(false);
         } else {
+            checkUserLearnedLoadTags();
             moreSectionsImageView = (ImageView) ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.action_view_more_sections, null);
             MenuItemCompat.setActionView(menu.findItem(R.id.action_more_sections), moreSectionsImageView);
             moreSectionsImageView.setOnClickListener(new View.OnClickListener() {

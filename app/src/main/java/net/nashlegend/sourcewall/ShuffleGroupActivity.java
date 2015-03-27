@@ -195,6 +195,7 @@ public class ShuffleGroupActivity extends SwipeActivity {
 
         @Override
         protected void onPreExecute() {
+            MobclickAgent.onEvent(ShuffleGroupActivity.this, Mob.Event_Load_My_Groups);
             progressDialog = new ProgressDialog(ShuffleGroupActivity.this);
             progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.setMessage(getString(R.string.message_replying));

@@ -42,7 +42,10 @@ public class Consts {
     public static final String Key_Image_No_Load_Homepage = "sourcewall.key.image.no.load.homepage";
     public static final String key_Use_Tail_Type = "sourcewall.key.use.tail.type";
     public static final String key_Custom_Tail = "sourcewall.key.custom.tail";
-    public static final String key_Swipe_Any_Where = "sourcewall.key.swipe_any_where";//是否可以任意位置右滑关闭页面
+    public static final String key_Swipe_Any_Where = "sourcewall.key.swipe_any_where";
+    public static final String Key_User_Has_Learned_Load_My_Groups = "sourcewall.key.user.has.learned.load.my.groups";
+    public static final String Key_User_Has_Learned_Load_My_Tags = "sourcewall.key.user.has.learned.load.my.tags";
+    public static final String Key_User_Has_Learned_Add_Image = "sourcewall.key.user.has.learned.add.image";
 
     // 保存SharedPreferences的Key，用于保存草稿
     public static final String Key_Sketch_Article_Reply = "sourcewall.key.sketch.article.reply";
@@ -50,7 +53,7 @@ public class Consts {
     public static final String Key_Sketch_Question_Answer = "sourcewall.key.sketch.question.answer";
     public static final String Key_Sketch_Publish_Post_Title = "sourcewall.key.sketch.publish.post.title";
     public static final String Key_Sketch_Publish_Post_Content = "sourcewall.key.sketch.publish.post.content";
-    public static final String Key_User_Has_Learned_Add_Image = "sourcewall.key.user.has.learned.add.image";
+
 
     //小尾巴类型
     public static final int Type_Use_Default_Tail = 0;
