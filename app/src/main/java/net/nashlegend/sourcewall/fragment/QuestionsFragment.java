@@ -542,6 +542,11 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
         }
     }
 
+    @Override
+    public void scrollToHead() {
+        listView.setSelection(0);
+    }
+
     private void cancelPotentialTask() {
         if (task != null && task.getStatus() == AAsyncTask.Status.RUNNING) {
             task.cancel(true);
@@ -565,7 +570,6 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
         protected ResultObject doInBackground(Integer... datas) {
             loadedPage = datas[0];
             String key = String.valueOf(subItem.getSection()) + subItem.getType() + subItem.getName() + subItem.getValue();
-
             if (loadedPage == 0 && adapter.getCount() == 0) {
                 ResultObject cachedResultObject = QuestionAPI.getCachedQuestionList(subItem);
                 if (cachedResultObject.ok) {

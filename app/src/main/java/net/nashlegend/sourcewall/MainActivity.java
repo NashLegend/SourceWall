@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.umeng.analytics.AnalyticsConfig;
 import com.umeng.analytics.MobclickAgent;
@@ -65,6 +66,31 @@ public class MainActivity extends BaseActivity {
         registerReceiver(receiver, filter);
         Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
+
+        toolbar.setOnClickListener(new View.OnClickListener() {
+
+            boolean preparingToScrollToHead = false;
+
+            @Override
+            public void onClick(View v) {
+                if (!mNavigationDrawerFragment.isDrawerOpen()) {
+                    if (preparingToScrollToHead) {
+                        if (currentFragment != null) {
+                            currentFragment.scrollToHead();
+                        }
+                    } else {
+                        preparingToScrollToHead = true;
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                preparingToScrollToHead = false;
+                            }
+                        }, 200);
+                    }
+                }
+
+            }
+        });
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 

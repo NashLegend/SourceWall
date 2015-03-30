@@ -45,12 +45,13 @@ public class QuestionAPI extends APIBase {
     public static ResultObject getCachedQuestionList(SubItem subItem) {
         ResultObject cachedResultObject = new ResultObject();
         String key = "question." + subItem.getValue();
-        if (subItem.getType() == SubItem.Type_Collections) {
-            String html = RequestCache.getInstance().getStringFromCache(key);
-            cachedResultObject = parseQuestionsHtml(html);
-        } else {
-            String json = RequestCache.getInstance().getStringFromCache(key);
-            cachedResultObject = parseQuestionsListJson(json);
+        String content = RequestCache.getInstance().getStringFromCache(key);
+        if (!TextUtils.isEmpty(content)) {
+            if (subItem.getType() == SubItem.Type_Collections) {
+                cachedResultObject = parseQuestionsHtml(content);
+            } else {
+                cachedResultObject = parseQuestionsListJson(content);
+            }
         }
         return cachedResultObject;
     }

@@ -34,4 +34,6 @@ public abstract class ChannelsFragment extends BaseFragment {
     abstract public void triggerRefresh();
 
     abstract public void prepareLoading(SubItem subItem);
+
+    abstract public void scrollToHead();
 }

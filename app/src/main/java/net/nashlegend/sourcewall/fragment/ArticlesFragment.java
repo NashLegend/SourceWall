@@ -177,6 +177,11 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
         }
     }
 
+    @Override
+    public void scrollToHead() {
+        listView.setSelection(0);
+    }
+
     private void cancelPotentialTask() {
         if (task != null && task.getStatus() == AAsyncTask.Status.RUNNING) {
             task.cancel(true);

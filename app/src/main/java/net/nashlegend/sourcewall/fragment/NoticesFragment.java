@@ -161,6 +161,11 @@ public class NoticesFragment extends ChannelsFragment implements LListView.OnRef
 
     }
 
+    @Override
+    public void scrollToHead() {
+        listView.setSelection(0);
+    }
+
     class LoaderTask extends AAsyncTask<Integer, Integer, ResultObject> {
 
         LoaderTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
