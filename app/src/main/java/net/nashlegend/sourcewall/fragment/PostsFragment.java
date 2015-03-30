@@ -600,10 +600,8 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                     long crtLoad = System.currentTimeMillis() / 1000;
                     if (subItem.getType() == SubItem.Type_Private_Channel || crtLoad - lastLoad > cacheDuration) {
                         //我的小组，更新较快，不缓存
-                        System.out.println("小组 " + subItem.getName() + " 使用缓存内容作为临时填充");
                         publishProgress(cachedResultObject);
                     } else {
-                        System.out.println("小组 " + subItem.getName() + " 本次加载使用缓存内容");
                         return cachedResultObject;
                     }
                 }

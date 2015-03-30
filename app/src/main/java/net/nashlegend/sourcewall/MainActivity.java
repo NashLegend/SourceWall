@@ -41,6 +41,7 @@ public class MainActivity extends BaseActivity {
     private ArticlesFragment articlesFragment;
     private PostsFragment postsFragment;
     private QuestionsFragment questionsFragment;
+    public ChannelsFragment currentFragment;
 
     @Override
     public void setTheme(int resId) {
@@ -66,9 +67,7 @@ public class MainActivity extends BaseActivity {
         registerReceiver(receiver, filter);
         Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
-
         toolbar.setOnClickListener(new View.OnClickListener() {
-
             boolean preparingToScrollToHead = false;
 
             @Override
@@ -88,12 +87,10 @@ public class MainActivity extends BaseActivity {
                         }, 200);
                     }
                 }
-
             }
         });
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
@@ -163,7 +160,6 @@ public class MainActivity extends BaseActivity {
         return currentFragment != null && currentFragment.takeOverOptionsItemSelect(item) || super.onOptionsItemSelected(item);
     }
 
-    private ChannelsFragment currentFragment;
 
     public void replaceFragment(ChannelsFragment fragment, SubItem subItem) {
         if (currentFragment == fragment) {
@@ -183,6 +179,7 @@ public class MainActivity extends BaseActivity {
             currentFragment.prepareLoading(subItem);
         }
     }
+
 
     class Receiver extends BroadcastReceiver {
 

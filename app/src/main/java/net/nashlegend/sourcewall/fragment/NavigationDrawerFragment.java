@@ -77,8 +77,8 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
     private View layoutView;
     private View mFragmentContainerView;
 
-    private int mCurrentSelectedPosition = 0;
     private boolean mFromSavedInstanceState;
+    private SubItem currentSubItem = new SubItem(SubItem.Section_Article, SubItem.Type_Collections, "科学人", "");
     private boolean mUserLearnedDrawer;
     private ExpandableListView listView;
     private ChannelsAdapter adapter;
@@ -94,7 +94,6 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
     private ImageView noticeView;
     private Intent lazyIntent;
 
-
     public NavigationDrawerFragment() {
 
     }
@@ -105,7 +104,11 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mUserLearnedDrawer = sp.getBoolean(PREF_USER_LEARNED_DRAWER, false);
         if (savedInstanceState != null) {
-            mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
+            int section = savedInstanceState.getInt("section", SubItem.Section_Article);
+            int type = savedInstanceState.getInt("type", SubItem.Type_Collections);
+            String name = savedInstanceState.getString("name", "科学人");
+            String value = savedInstanceState.getString("value", "");
+            currentSubItem = new SubItem(section, type, name, value);
             mFromSavedInstanceState = true;
         }
     }
@@ -162,6 +165,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
                     }
 
                     SubItem subItem = ((SubItemView) v).getSubItem();
+                    currentSubItem = subItem;
                     lazyIntent = new Intent();
                     lazyIntent.setAction(Consts.Action_Open_Content_Fragment);
                     lazyIntent.putExtra(Consts.Extra_SubItem, subItem);
@@ -244,8 +248,6 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
             }
         };
 
-        // If the user hasn't 'learned' about the drawer, open it to introduce them to the drawer,
-        // per the navigation drawer design guidelines.
         if (!mUserLearnedDrawer && !mFromSavedInstanceState) {
             mDrawerLayout.openDrawer(mFragmentContainerView);
         }
@@ -260,11 +262,13 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        SubItem subItem = (SubItem) adapter.getChild(0, 0);
-        lazyIntent = new Intent();
-        lazyIntent.setAction(Consts.Action_Open_Content_Fragment);
-        lazyIntent.putExtra(Consts.Extra_SubItem, subItem);
-        getActivity().sendBroadcast(lazyIntent);
+        if (currentSubItem != null) {
+            lazyIntent = new Intent();
+            lazyIntent.setAction(Consts.Action_Open_Content_Fragment);
+            lazyIntent.putExtra(Consts.Extra_SubItem, currentSubItem);
+            getActivity().sendBroadcast(lazyIntent);
+        }
+
     }
 
     @Override
@@ -275,7 +279,12 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(STATE_SELECTED_POSITION, mCurrentSelectedPosition);
+        if (currentSubItem != null) {
+            outState.putInt("section", currentSubItem.getSection());
+            outState.putInt("type", currentSubItem.getType());
+            outState.putString("value", currentSubItem.getValue());
+            outState.putString("name", currentSubItem.getName());
+        }
     }
 
     @Override

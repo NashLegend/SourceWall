@@ -66,7 +66,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if (view instanceof ArticleListItemView){
+                if (view instanceof ArticleListItemView) {
                     Intent intent = new Intent();
                     intent.setClass(AppApplication.getApplication(), ArticleActivity.class);
                     intent.putExtra(Consts.Extra_Article, ((ArticleListItemView) view).getData());
@@ -138,7 +138,6 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
 
     @Override
     public boolean takeOverOptionsItemSelect(MenuItem item) {
-        int id = item.getItemId();
         return true;
     }
 
@@ -213,10 +212,8 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
                     long lastLoad = SharedPreferencesUtil.readLong(key, 0l) / 1000;
                     long crtLoad = System.currentTimeMillis() / 1000;
                     if (crtLoad - lastLoad > cacheDuration) {
-                        System.out.println("科学人 " + subItem.getName() + " 使用缓存内容作为临时填充");
                         publishProgress(cachedResultObject);
                     } else {
-                        System.out.println("科学人 " + subItem.getName() + " 本次加载使用缓存内容");
                         return cachedResultObject;
                     }
                 }

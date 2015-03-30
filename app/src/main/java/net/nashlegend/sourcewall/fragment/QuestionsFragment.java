@@ -576,10 +576,8 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
                     long lastLoad = SharedPreferencesUtil.readLong(key, 0l) / 1000;
                     long crtLoad = System.currentTimeMillis() / 1000;
                     if (crtLoad - lastLoad > cacheDuration) {
-                        System.out.println("问答 " + subItem.getName() + " 使用缓存内容作为临时填充");
                         publishProgress(cachedResultObject);
                     } else {
-                        System.out.println("问答 " + subItem.getName() + " 本次加载使用缓存内容");
                         return cachedResultObject;
                     }
                 }
