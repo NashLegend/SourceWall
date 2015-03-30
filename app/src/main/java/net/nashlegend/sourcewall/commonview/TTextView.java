@@ -8,11 +8,13 @@ import android.text.Selection;
 import android.text.Spannable;
 import android.text.method.LinkMovementMethod;
 import android.text.method.Touch;
+import android.text.style.ImageSpan;
 import android.text.style.URLSpan;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
+import net.nashlegend.sourcewall.util.ImageSizeMap;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;
 
 /**
@@ -88,6 +90,16 @@ public class TTextView extends TextView {
                 Layout layout = widget.getLayout();
                 int line = layout.getLineForVertical(y);
                 int off = layout.getOffsetForHorizontal(line, x);
+
+                ImageSpan[] images = buffer.getSpans(off, off, ImageSpan.class);
+                if (images.length > 0) {
+                    ImageSpan span = images[0];
+                    String source = span.getSource();//TODO，这个是图片url，显示图片用
+                    //显示图片时，打开ImageActivity，传入text和当前Image地址,使用正则匹(或者其他方式，使用Html.From同样的方式最好)配出所有url，构成一个列表
+                    //或者先生成列表再传给ImageActivity，打开ImageActivity。
+                    //现在的问题是如果有两个相同图片怎么办……
+                    return true;
+                }
 
                 URLSpan[] link = buffer.getSpans(off, off, URLSpan.class);
 

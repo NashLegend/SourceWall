@@ -79,10 +79,16 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".SingleReplyActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_single_reply" />
         <activity
             android:name=".MessageCenterActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_message_center" />
+        <activity
+            android:name="net.nashlegend.sourcewall.ImageActivity"
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_image" />
 
         <meta-data
             android:name="UMENG_APPKEY"
