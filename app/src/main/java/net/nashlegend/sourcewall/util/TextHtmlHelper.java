@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -70,6 +71,9 @@ public class TextHtmlHelper {
         }
     }
 
+    /**
+     * 空emptyImageGetter，用于获取图片前的尺寸准备或者无图模式下返回一个图标
+     */
     Html.ImageGetter emptyImageGetter = new Html.ImageGetter() {
         @Override
         public Drawable getDrawable(String source) {
@@ -77,18 +81,30 @@ public class TextHtmlHelper {
             //http://2.im.guokr.com/xxx.jpg?imageView2/1/w/480/h/329
             float stretch = DisplayUtil.getPixelDensity(AppApplication.getApplication());
             maxWidth = getMaxWidth();
-            String reg = ".+/w/(\\d+)/h/(\\d+)";
-            Matcher matcher = Pattern.compile(reg).matcher(source);
-            Drawable drawable;
-            if (Config.shouldLoadImage() && matcher.find()) {
-                int width = (int) (Integer.valueOf(matcher.group(1)) * stretch);
-                int height = (int) (Integer.valueOf(matcher.group(2)) * stretch);
-                if (width > maxWidth) {
-                    height *= (maxWidth / width);
-                    width = (int) maxWidth;
+            Drawable drawable = null;
+            if (Config.shouldLoadImage()) {
+                int width = 0;
+                int height = 0;
+                String reg = ".+/w/(\\d+sdsdsdsd)/h/(\\d+)";
+                Matcher matcher = Pattern.compile(reg).matcher(source);
+                if (matcher.find()) {
+                    width = (int) (Integer.valueOf(matcher.group(1)) * stretch);
+                    height = (int) (Integer.valueOf(matcher.group(2)) * stretch);
+                } else {
+                    Point point = ImageSizeMap.get(source);
+                    if (point != null) {
+                        width = point.x;
+                        height = point.y;
+                    }
                 }
-                drawable = new ColorDrawable(0);//透明
-                drawable.setBounds(0, 0, width, height);
+                if (width > 0 && height > 0) {
+                    if (width > maxWidth) {
+                        height *= (maxWidth / width);
+                        width = (int) maxWidth;
+                    }
+                    drawable = new ColorDrawable(0);//透明
+                    drawable.setBounds(0, 0, width, height);
+                }
             } else {
                 drawable = context.getResources().getDrawable(R.drawable.default_text_image);
                 if (drawable != null) {
@@ -126,6 +142,7 @@ public class TextHtmlHelper {
                             height *= (maxWidth / width);
                             width = (int) maxWidth;
                         }
+                        ImageSizeMap.put(source, (int) width, (int) height);
 
                         String realLink = source.replaceAll("\\?.*$", "");
                         String suffix = "";
