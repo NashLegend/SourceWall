@@ -171,7 +171,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
 
     @Override
     public void prepareLoading(SubItem sub) {
-        if (!sub.equals(this.subItem)) {
+        if (sub == null || !sub.equals(this.subItem)) {
             loadingView.startLoading();
         }
     }

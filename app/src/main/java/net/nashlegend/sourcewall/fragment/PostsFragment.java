@@ -28,8 +28,6 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.umeng.analytics.MobclickAgent;
-
 import net.nashlegend.sourcewall.BaseActivity;
 import net.nashlegend.sourcewall.MainActivity;
 import net.nashlegend.sourcewall.PostActivity;
@@ -52,7 +50,6 @@ import net.nashlegend.sourcewall.request.ResultObject;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Consts;
-import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 import net.nashlegend.sourcewall.view.PostListItemView;
 
@@ -120,8 +117,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
             public void onGlobalLayout() {
                 if (headerView.getLayoutParams() != null) {
                     headerView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                    headerView.getLayoutParams().height = 1;
-                    headerView.setVisibility(View.GONE);
+                    hideHeader();
                 }
             }
         });
@@ -456,10 +452,27 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         }
     }
 
+    /**
+     * 有可能LoaderTask已经结束但是Header仍然没有layoutParams，下同
+     * 不过不用担心，只会出现在刚刚进入的时候，这时不设置Height,getViewTreeObserver也会很快将其隐藏的
+     */
+    private void hideHeader() {
+        if (headerView.getLayoutParams() != null) {
+            headerView.getLayoutParams().height = 1;
+        }
+        headerView.setVisibility(View.GONE);
+    }
+
+    private void showHeader() {
+        if (headerView.getLayoutParams() != null) {
+            headerView.getLayoutParams().height = 0;
+        }
+        headerView.setVisibility(View.VISIBLE);
+    }
+
     @Override
     public void onStartRefresh() {
-        headerView.getLayoutParams().height = 1;
-        headerView.setVisibility(View.GONE);
+        hideHeader();
         loadData(0);
     }
 
@@ -539,8 +552,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
             adapter.notifyDataSetInvalidated();
             listView.setCanPullToRefresh(false);
             listView.setCanPullToLoadMore(false);
-            headerView.getLayoutParams().height = 1;
-            headerView.setVisibility(View.GONE);
+            hideHeader();
             loadOver();
         }
         if (isMoreSectionsButtonShowing) {
@@ -556,7 +568,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
 
     @Override
     public void prepareLoading(SubItem sub) {
-        if (!sub.equals(this.subItem)) {
+        if (sub == null || !sub.equals(this.subItem)) {
             loadingView.startLoading();
         }
     }
@@ -662,11 +674,9 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                 loadingView.onLoadFailed();
             }
             if (currentPage > 0) {
-                headerView.setVisibility(View.VISIBLE);
-                headerView.getLayoutParams().height = 0;
+                showHeader();
             } else {
-                headerView.getLayoutParams().height = 1;
-                headerView.setVisibility(View.GONE);
+                hideHeader();
             }
             if (adapter.getCount() > 0) {
                 listView.setCanPullToLoadMore(true);
@@ -684,11 +694,9 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
             loadingView.onLoadSuccess();
             listView.doneOperation();
             if (currentPage > 0) {
-                headerView.setVisibility(View.VISIBLE);
-                headerView.getLayoutParams().height = 0;
+                showHeader();
             } else {
-                headerView.getLayoutParams().height = 1;
-                headerView.setVisibility(View.GONE);
+                hideHeader();
             }
             if (adapter.getCount() > 0) {
                 listView.setCanPullToLoadMore(true);

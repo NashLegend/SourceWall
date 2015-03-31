@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.nashlegend.sourcewall.util.ImageFetcher;
+package net.nashlegend.sourcewall.request;
 
 import android.os.Build;
 import android.os.Build.VERSION_CODES;

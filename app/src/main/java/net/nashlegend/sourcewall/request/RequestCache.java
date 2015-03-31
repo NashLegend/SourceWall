@@ -9,8 +9,6 @@ import android.os.StatFs;
 import android.support.v4.util.LruCache;
 
 import net.nashlegend.sourcewall.AppApplication;
-import net.nashlegend.sourcewall.util.ImageFetcher.DiskLruCache;
-import net.nashlegend.sourcewall.util.ImageFetcher.Utils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -39,7 +37,6 @@ public class RequestCache {
     private final Object mDiskCacheLock = new Object();
     private boolean mDiskCacheStarting = true;
     private static RequestCache requestCache;
-
 
     private RequestCache(RequestCacheParams cacheParams) {
         init(cacheParams);
@@ -302,6 +299,11 @@ public class RequestCache {
     }
 
     public static File getDiskCacheDir(Context context, String uniqueName) {
+        //错误记录显示下一行可能报NullPointerException，
+        // 难道是getExternalCacheDir(context)返回了null？getExternalCacheDir显然不可能返回null，
+        //那么难道是context.getCacheDir()返回null？卧槽这简直不可能
+        //context也不可能是null，是null也不会在这报错
+        //机型是HUAWEI C8813Q，难道是机器问题？妈蛋不改……
         final String cachePath =
                 Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) ||
                         !isExternalStorageRemovable() ? getExternalCacheDir(context).getPath() :
@@ -385,10 +387,7 @@ public class RequestCache {
     private static final int MESSAGE_FLUSH = 2;
     private static final int MESSAGE_CLOSE = 3;
 
-//    public void addImageCache() {
-//        requestCache = RequestCache.getInstance();
-//        new CacheAsyncTask().execute(MESSAGE_INIT_DISK_CACHE);
-//    }
+    //执行flush等操作有可能还没有完成初始化requestCache？
 
     public void clearCache() {
         new CacheAsyncTask().execute(MESSAGE_CLEAR);
