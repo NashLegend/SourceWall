@@ -1,5 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/ctt"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/color_clear_page_background"
@@ -8,6 +9,8 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/action_bar"
         android:layout_width="match_parent"
+        app:theme="?attr/toolbarTheme"
+        app:popupTheme="?attr/toolbarPopTheme"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize" />

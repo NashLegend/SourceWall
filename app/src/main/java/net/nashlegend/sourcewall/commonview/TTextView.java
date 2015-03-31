@@ -53,22 +53,18 @@ public class TTextView extends TextView {
         if (noConsumeNonUrlClicks)
             return linkHit;
         return res;
-
     }
 
     private static void handleURLSpanClick(URLSpan urlSpan) {
         UrlCheckUtil.redirectRequest(urlSpan.getURL());
     }
 
-
     public static class LocalLinkMovementMethod extends LinkMovementMethod {
         static LocalLinkMovementMethod sInstance;
-
 
         public static LocalLinkMovementMethod getInstance() {
             if (sInstance == null)
                 sInstance = new LocalLinkMovementMethod();
-
             return sInstance;
         }
 
@@ -98,6 +94,7 @@ public class TTextView extends TextView {
                     //显示图片时，打开ImageActivity，传入text和当前Image地址,使用正则匹(或者其他方式，使用Html.From同样的方式最好)配出所有url，构成一个列表
                     //或者先生成列表再传给ImageActivity，打开ImageActivity。
                     //现在的问题是如果有两个相同图片怎么办……
+//                    ((TTextView) widget).linkHit = true;
                     return true;
                 }
 
@@ -111,7 +108,6 @@ public class TTextView extends TextView {
                                 buffer.getSpanStart(link[0]),
                                 buffer.getSpanEnd(link[0]));
                     }
-
                     if (widget instanceof TTextView) {
                         ((TTextView) widget).linkHit = true;
                     }

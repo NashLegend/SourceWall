@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--通用-->
-
+    <!--ToolBar-->
+    <attr name="toolbarTheme" format="reference"/>
+    <attr name="toolbarPopTheme" format="reference"/>
     <!--主题色-->
     <attr name="colorPrimaryBright" format="color" />
     <!--内容中含有CardView的使用color_page_background-->

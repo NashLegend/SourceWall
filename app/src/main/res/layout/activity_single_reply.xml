@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rootView"
     android:layout_width="match_parent"
@@ -180,6 +181,8 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/action_bar"
         android:layout_width="match_parent"
+        app:theme="?attr/toolbarTheme"
+        app:popupTheme="?attr/toolbarPopTheme"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary" />
 
