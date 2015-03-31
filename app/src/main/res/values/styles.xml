@@ -37,7 +37,6 @@
     <style name="AppTheme_Basic_Day" parent="BaseTheme">
         <item name="toolbarTheme">@style/ToolbarStyleDay</item>
         <item name="toolbarPopTheme">@style/Theme.AppCompat.Light</item>
-
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
         <item name="colorPrimaryBright">@color/color_primary_bright</item>
@@ -159,7 +158,6 @@
     <style name="AppTheme_Basic_Night" parent="BaseTheme">
         <item name="toolbarTheme">@style/ToolbarStyleNight</item>
         <item name="toolbarPopTheme">@style/ThemeOverlay.AppCompat.Dark</item>
-
         <item name="android:textColorPrimary">#eeeeee</item>
         <item name="android:textColorPrimaryInverse">@color/abc_primary_text_material_light</item>
         <item name="android:textColorPrimaryDisableOnly">

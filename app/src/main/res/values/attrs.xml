@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <declare-styleable name="GIFPlayer">
+        <attr name="src" format="reference" />
+    </declare-styleable>
+    <declare-styleable name="ZoomImageView">
+        <attr name="assetName" format="string" />
+        <attr name="panEnabled" format="boolean" />
+        <attr name="zoomEnabled" format="boolean" />
+    </declare-styleable>
+
     <!--通用-->
     <!--ToolBar-->
     <attr name="toolbarTheme" format="reference"/>

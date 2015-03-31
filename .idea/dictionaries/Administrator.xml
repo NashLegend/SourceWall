@@ -2,6 +2,7 @@
   <dictionary name="Administrator">
     <words>
       <w>appid</w>
+      <w>commonview</w>
       <w>csrf</w>
       <w>nashlegend</w>
       <w>okhttp</w>

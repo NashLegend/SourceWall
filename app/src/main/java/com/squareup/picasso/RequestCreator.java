@@ -344,7 +344,6 @@ public class RequestCreator {
         return this;
     }
 
-
     /**
      * Disable brief fade in of images loaded from the disk cache or network.
      */
