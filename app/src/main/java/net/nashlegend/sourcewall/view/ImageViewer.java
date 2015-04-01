@@ -1,6 +1,7 @@
 package net.nashlegend.sourcewall.view;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 
@@ -9,7 +10,6 @@ import net.nashlegend.sourcewall.commonview.LoadingView;
 import net.nashlegend.sourcewall.commonview.ZoomImageView;
 import net.nashlegend.sourcewall.model.ImageInfo;
 import net.nashlegend.sourcewall.request.ResultObject;
-import net.nashlegend.sourcewall.util.ImageFetcher.AsyncTask;
 
 /**
  * Created by NashLegend on 2015/3/31 0031

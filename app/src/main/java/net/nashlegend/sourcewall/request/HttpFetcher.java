@@ -41,6 +41,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
@@ -48,6 +49,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.zip.GZIPInputStream;
 
 import javax.net.ssl.SSLHandshakeException;
 
@@ -85,37 +87,41 @@ public class HttpFetcher {
         }
     }
 
-    public static ResultObject post(String url, List<NameValuePair> params) throws Exception {
-        return post(url, params, true);
-    }
-
-    public static ResultObject post(String url, List<NameValuePair> params, boolean needToken) throws Exception {
-        ResultObject resultObject = new ResultObject();
-        HttpPost httpPost = new HttpPost(url);
-        String token = UserAPI.getToken();
-        if (params == null) {
-            params = new ArrayList<>();
+    private static String getResponseBodyAsString(HttpResponse response) throws IOException {
+        GZIPInputStream gzipInputStream;
+        HttpEntity entity;
+        if (response != null && response.getEntity() != null) {
+            entity = response.getEntity();
+            if (entity.getContentEncoding() != null
+                    && entity.getContentEncoding().getValue().toLowerCase().contains("gzip")) {
+                InputStream is = entity.getContent();
+                gzipInputStream = new GZIPInputStream(is);
+                InputStreamReader isr = new InputStreamReader(gzipInputStream, HTTP.UTF_8);
+                java.io.BufferedReader br = new java.io.BufferedReader(isr);
+                StringBuilder sb = new StringBuilder();
+                String buffer;
+                while ((buffer = br.readLine()) != null) {
+                    sb.append(buffer);
+                    sb.append("\r\n");
+                }
+                isr.close();
+                gzipInputStream.close();
+                return sb.toString();
+            } else {
+                return EntityUtils.toString(entity, HTTP.UTF_8);
+            }
+        } else {
+            return null;
         }
-        if (needToken && !TextUtils.isEmpty(token)) {
-            params.add(new BasicNameValuePair("access_token", token));
-        }
-        httpPost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
-        HttpResponse response = getDefaultHttpClient().execute(httpPost);
-        int statusCode = response.getStatusLine().getStatusCode();
-        HttpEntity entity = response.getEntity();
-        String result = EntityUtils.toString(entity, HTTP.UTF_8);
-        resultObject.statusCode = statusCode;
-        resultObject.result = result;
-        return resultObject;
     }
 
     public static ResultObject get(String url) throws Exception {
         ResultObject resultObject = new ResultObject();
         HttpGet httpGet = new HttpGet(url);
+        httpGet.addHeader("Accept-Encoding", "gzip");
         HttpResponse response = getDefaultHttpClient().execute(httpGet);
         int statusCode = response.getStatusLine().getStatusCode();
-        HttpEntity entity = response.getEntity();
-        String result = EntityUtils.toString(entity, HTTP.UTF_8);
+        String result = getResponseBodyAsString(response);
         resultObject.statusCode = statusCode;
         resultObject.result = result;
         return resultObject;
@@ -145,6 +151,30 @@ public class HttpFetcher {
         return get(url, params, true);
     }
 
+    public static ResultObject post(String url, List<NameValuePair> params, boolean needToken) throws Exception {
+        ResultObject resultObject = new ResultObject();
+        HttpPost httpPost = new HttpPost(url);
+        String token = UserAPI.getToken();
+        if (params == null) {
+            params = new ArrayList<>();
+        }
+        if (needToken && !TextUtils.isEmpty(token)) {
+            params.add(new BasicNameValuePair("access_token", token));
+        }
+        httpPost.addHeader("Accept-Encoding", "gzip");
+        httpPost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+        HttpResponse response = getDefaultHttpClient().execute(httpPost);
+        int statusCode = response.getStatusLine().getStatusCode();
+        String result = getResponseBodyAsString(response);
+        resultObject.statusCode = statusCode;
+        resultObject.result = result;
+        return resultObject;
+    }
+
+    public static ResultObject post(String url, List<NameValuePair> params) throws Exception {
+        return post(url, params, true);
+    }
+
     public static ResultObject put(String url, List<NameValuePair> params, boolean needToken) throws Exception {
         ResultObject resultObject = new ResultObject();
         HttpPut httpPut = new HttpPut(url);
@@ -155,11 +185,11 @@ public class HttpFetcher {
         if (needToken && !TextUtils.isEmpty(token)) {
             params.add(new BasicNameValuePair("access_token", token));
         }
+        httpPut.addHeader("Accept-Encoding", "gzip");
         httpPut.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
         HttpResponse response = getDefaultHttpClient().execute(httpPut);
         int statusCode = response.getStatusLine().getStatusCode();
-        HttpEntity entity = response.getEntity();
-        String result = EntityUtils.toString(entity, HTTP.UTF_8);
+        String result = getResponseBodyAsString(response);
         resultObject.statusCode = statusCode;
         resultObject.result = result;
         return resultObject;
@@ -176,11 +206,10 @@ public class HttpFetcher {
     public static ResultObject delete(String url) throws Exception {
         ResultObject resultObject = new ResultObject();
         HttpDelete httpDelete = new HttpDelete(url);
-        DefaultHttpClient defaultHttpClient1 = getDefaultHttpClient();
-        HttpResponse response = defaultHttpClient1.execute(httpDelete);
+        httpDelete.addHeader("Accept-Encoding", "gzip");
+        HttpResponse response = getDefaultHttpClient().execute(httpDelete);
         int statusCode = response.getStatusLine().getStatusCode();
-        HttpEntity entity = response.getEntity();
-        String result = EntityUtils.toString(entity, HTTP.UTF_8);
+        String result = getResponseBodyAsString(response);
         resultObject.statusCode = statusCode;
         resultObject.result = result;
         return resultObject;
