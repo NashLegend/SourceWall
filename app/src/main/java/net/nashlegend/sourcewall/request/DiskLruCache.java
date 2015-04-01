@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.nashlegend.sourcewall.util.ImageFetcher;
+package net.nashlegend.sourcewall.request;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
@@ -83,8 +83,8 @@ import java.util.concurrent.TimeUnit;
  * to supply data for every value; values default to their previous
  * value.
  * </ul>
- * Every {@link #edit} call must be matched by a call to {@link net.nashlegend.sourcewall.util.ImageFetcher.DiskLruCache.Editor#commit}
- * or {@link net.nashlegend.sourcewall.util.ImageFetcher.DiskLruCache.Editor#abort}. Committing is atomic: a read observes the full set
+ * Every {@link #edit} call must be matched by a call to {@link DiskLruCache.Editor#commit}
+ * or {@link DiskLruCache.Editor#abort}. Committing is atomic: a read observes the full set
  * of values as they were before or after the commit, but never a mix of values.
  * <p/>
  * <p>Clients call {@link #get} to read a snapshot of an entry. The read will
@@ -209,7 +209,7 @@ public final class DiskLruCache implements Closeable {
      * Returns the ASCII characters up to but not including the next "\r\n", or
      * "\n".
      *
-     * @throws java.io.EOFException if the stream is exhausted before the next newline
+     * @throws EOFException if the stream is exhausted before the next newline
      *                              character.
      */
     public static String readAsciiLine(InputStream in) throws IOException {
@@ -305,7 +305,7 @@ public final class DiskLruCache implements Closeable {
      * @param appVersion
      * @param valueCount the number of values per cache entry. Must be positive.
      * @param maxSize    the maximum number of bytes this cache should use to store
-     * @throws java.io.IOException if reading or writing the cache directory fails
+     * @throws IOException if reading or writing the cache directory fails
      */
     public static DiskLruCache open(File directory, int appVersion, int valueCount, long maxSize)
             throws IOException {

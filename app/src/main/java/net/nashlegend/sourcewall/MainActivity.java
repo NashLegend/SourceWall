@@ -180,12 +180,14 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-
     class Receiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
             SubItem subItem = (SubItem) intent.getSerializableExtra(Consts.Extra_SubItem);
+            if (subItem == null) {
+                subItem = new SubItem(SubItem.Section_Article, SubItem.Type_Collections, "科学人", "");
+            }
             if (Consts.Action_Open_Content_Fragment.equals(intent.getAction())) {
                 switch (subItem.getSection()) {
                     case SubItem.Section_Article:

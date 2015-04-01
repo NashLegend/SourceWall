@@ -54,7 +54,6 @@ import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
-import net.nashlegend.sourcewall.view.ArticleListItemView;
 import net.nashlegend.sourcewall.view.QuestionListItemView;
 
 import java.io.UnsupportedEncodingException;
@@ -121,8 +120,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
             public void onGlobalLayout() {
                 if (headerView.getLayoutParams() != null) {
                     headerView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                    headerView.getLayoutParams().height = 1;
-                    headerView.setVisibility(View.GONE);
+                    hideHeader();
                 }
             }
         });
@@ -446,13 +444,30 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
         } else {
             ((BaseActivity) getActivity()).notifyNeedLog();
         }
+    }
 
+
+    /**
+     * 有可能LoaderTask已经结束但是Header仍然没有layoutParams，下同
+     * 不过不用担心，只会出现在刚刚进入的时候，这时不设置Height,getViewTreeObserver也会很快将其隐藏的
+     */
+    private void hideHeader() {
+        if (headerView.getLayoutParams() != null) {
+            headerView.getLayoutParams().height = 1;
+        }
+        headerView.setVisibility(View.GONE);
+    }
+
+    private void showHeader() {
+        if (headerView.getLayoutParams() != null) {
+            headerView.getLayoutParams().height = 0;
+        }
+        headerView.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onStartRefresh() {
-        headerView.getLayoutParams().height = 1;
-        headerView.setVisibility(View.GONE);
+        hideHeader();
         loadData(0);
     }
 
@@ -520,8 +535,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
             adapter.notifyDataSetInvalidated();
             listView.setCanPullToRefresh(false);
             listView.setCanPullToLoadMore(false);
-            headerView.getLayoutParams().height = 1;
-            headerView.setVisibility(View.GONE);
+            hideHeader();
             loadOver();
         }
         if (isMoreSectionsButtonShowing) {
@@ -537,7 +551,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
 
     @Override
     public void prepareLoading(SubItem sub) {
-        if (!sub.equals(this.subItem)) {
+        if (sub == null || !sub.equals(this.subItem)) {
             loadingView.startLoading();
         }
     }
@@ -645,11 +659,9 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
                 loadingView.onLoadFailed();
             }
             if (currentPage > 0) {
-                headerView.setVisibility(View.VISIBLE);
-                headerView.getLayoutParams().height = 0;
+                showHeader();
             } else {
-                headerView.getLayoutParams().height = 1;
-                headerView.setVisibility(View.GONE);
+                hideHeader();
             }
             if (adapter.getCount() > 0) {
                 listView.setCanPullToLoadMore(true);
@@ -667,11 +679,9 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
             listView.doneOperation();
             loadingView.onLoadSuccess();
             if (currentPage > 0) {
-                headerView.setVisibility(View.VISIBLE);
-                headerView.getLayoutParams().height = 0;
+                showHeader();
             } else {
-                headerView.getLayoutParams().height = 1;
-                headerView.setVisibility(View.GONE);
+                hideHeader();
             }
             if (adapter.getCount() > 0) {
                 listView.setCanPullToLoadMore(true);
