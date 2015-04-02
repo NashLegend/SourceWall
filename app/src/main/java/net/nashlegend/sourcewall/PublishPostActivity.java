@@ -505,7 +505,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         protected void onPreExecute() {
             progressDialog = new ProgressDialog(PublishPostActivity.this);
             progressDialog.setCanceledOnTouchOutside(false);
-            progressDialog.setMessage(getString(R.string.message_replying));
+            progressDialog.setMessage(getString(R.string.message_wait_a_minute));
             progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialog) {

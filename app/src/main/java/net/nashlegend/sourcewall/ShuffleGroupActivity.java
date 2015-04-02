@@ -201,7 +201,7 @@ public class ShuffleGroupActivity extends SwipeActivity {
             MobclickAgent.onEvent(ShuffleGroupActivity.this, Mob.Event_Load_My_Groups);
             progressDialog = new ProgressDialog(ShuffleGroupActivity.this);
             progressDialog.setCanceledOnTouchOutside(false);
-            progressDialog.setMessage(getString(R.string.message_replying));
+            progressDialog.setMessage(getString(R.string.message_loading_my_groups));
             progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialog) {
@@ -245,7 +245,7 @@ public class ShuffleGroupActivity extends SwipeActivity {
             } else {
                 MobclickAgent.onEvent(ShuffleGroupActivity.this, Mob.Event_Load_My_Groups_Failed);
                 MobclickAgent.reportError(ShuffleGroupActivity.this,
-                        "是否WIFI：" + Config.isWifi() + "\n" + UserAPI.getUserInfoString() + resultObject.error_message);
+                        "加载我的小组失败\n是否WIFI：" + Config.isWifi() + "\n" + UserAPI.getUserInfoString() + resultObject.error_message);
                 if (resultObject.code == ResultCode.CODE_NO_USER_ID) {
                     toast("未获得用户ID，无法加载");
                 } else {

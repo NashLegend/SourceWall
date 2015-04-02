@@ -202,7 +202,7 @@ public class NoticesFragment extends ChannelsFragment implements LListView.OnRef
         protected void onPreExecute() {
             progressDialog = new ProgressDialog(getActivity());
             progressDialog.setCanceledOnTouchOutside(false);
-            progressDialog.setMessage(getString(R.string.message_replying));
+            progressDialog.setMessage(getString(R.string.message_wait_a_minute));
             progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialog) {

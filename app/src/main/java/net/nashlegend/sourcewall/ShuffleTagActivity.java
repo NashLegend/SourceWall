@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +22,8 @@ import net.nashlegend.sourcewall.db.gen.AskTag;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.ResultObject;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
+import net.nashlegend.sourcewall.request.api.UserAPI;
+import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Mob;
 
@@ -189,13 +192,13 @@ public class ShuffleTagActivity extends SwipeActivity {
         }
     }
 
-    class LoaderFromNetTask extends AsyncTask<String, Integer, Boolean> {
+    class LoaderFromNetTask extends AsyncTask<String, Integer, ResultObject> {
 
         @Override
         protected void onPreExecute() {
             progressDialog = new ProgressDialog(ShuffleTagActivity.this);
             progressDialog.setCanceledOnTouchOutside(false);
-            progressDialog.setMessage(getString(R.string.message_replying));
+            progressDialog.setMessage(getString(R.string.message_wait_a_minute));
             progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialog) {
@@ -206,8 +209,13 @@ public class ShuffleTagActivity extends SwipeActivity {
         }
 
         @Override
-        protected Boolean doInBackground(String[] params) {
+        protected ResultObject doInBackground(String[] params) {
             ResultObject resultObject = QuestionAPI.getAllMyTags();
+            if (TextUtils.isEmpty(UserAPI.getUserID())) {
+                resultObject.error_message = "无法获得用户id";
+                resultObject.code = ResultObject.ResultCode.CODE_NO_USER_ID;
+                return resultObject;
+            }
             if (resultObject.ok) {
                 ArrayList<SubItem> subItems = (ArrayList<SubItem>) resultObject.result;
                 ArrayList<AskTag> myTags = new ArrayList<>();
@@ -225,20 +233,25 @@ public class ShuffleTagActivity extends SwipeActivity {
                 mergeMyGroups(myTags);
                 AskTagHelper.putAllMyTags(myTags);
                 getButtons();
-                return true;
             }
-            return false;
+            return resultObject;
         }
 
         @Override
-        protected void onPostExecute(Boolean aBoolean) {
+        protected void onPostExecute(ResultObject result) {
             progressDialog.dismiss();
-            if (aBoolean) {
+            if (result.ok) {
                 MobclickAgent.onEvent(ShuffleTagActivity.this, Mob.Event_Load_My_Tags_OK);
                 initView();
             } else {
                 MobclickAgent.onEvent(ShuffleTagActivity.this, Mob.Event_Load_My_Tags_Failed);
-                toast("加载标签失败");
+                MobclickAgent.reportError(ShuffleTagActivity.this,
+                        "加载标签失败\n是否WIFI：" + Config.isWifi() + "\n" + UserAPI.getUserInfoString() + result.error_message);
+                if (result.code == ResultObject.ResultCode.CODE_NO_USER_ID) {
+                    toast("未获得用户ID，无法加载");
+                } else {
+                    toast("加载标签失败");
+                }
             }
         }
     }
