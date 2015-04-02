@@ -3,6 +3,7 @@ package net.nashlegend.sourcewall.commonview;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.text.Layout;
 import android.text.Selection;
 import android.text.Spannable;
@@ -69,7 +70,7 @@ public class TTextView extends TextView {
         }
 
         @Override
-        public boolean onTouchEvent(TextView widget, Spannable buffer, MotionEvent event) {
+        public boolean onTouchEvent(@NonNull TextView widget, @NonNull Spannable spannable, @NonNull MotionEvent event) {
             int action = event.getAction();
 
             if (action == MotionEvent.ACTION_UP ||
@@ -87,38 +88,37 @@ public class TTextView extends TextView {
                 int line = layout.getLineForVertical(y);
                 int off = layout.getOffsetForHorizontal(line, x);
 
-                ImageSpan[] images = buffer.getSpans(off, off, ImageSpan.class);
-                if (images.length > 0) {
-                    ImageSpan span = images[0];
-                    String source = span.getSource();//TODO，这个是图片url，显示图片用
-                    //显示图片时，打开ImageActivity，传入text和当前Image地址,使用正则匹(或者其他方式，使用Html.From同样的方式最好)配出所有url，构成一个列表
-                    //或者先生成列表再传给ImageActivity，打开ImageActivity。
-                    //现在的问题是如果有两个相同图片怎么办……
-//                    ((TTextView) widget).linkHit = true;
-                    return true;
-                }
-
-                URLSpan[] link = buffer.getSpans(off, off, URLSpan.class);
+                URLSpan[] link = spannable.getSpans(off, off, URLSpan.class);
 
                 if (link.length != 0) {
                     if (action == MotionEvent.ACTION_UP) {
                         handleURLSpanClick(link[0]);
                     } else {
-                        Selection.setSelection(buffer,
-                                buffer.getSpanStart(link[0]),
-                                buffer.getSpanEnd(link[0]));
+                        Selection.setSelection(spannable,
+                                spannable.getSpanStart(link[0]),
+                                spannable.getSpanEnd(link[0]));
                     }
                     if (widget instanceof TTextView) {
                         ((TTextView) widget).linkHit = true;
                     }
                     return true;
                 } else {
-                    Selection.removeSelection(buffer);
-                    Touch.onTouchEvent(widget, buffer, event);
-                    return false;
+                    Selection.removeSelection(spannable);
+                    ImageSpan[] images = spannable.getSpans(off, off, ImageSpan.class);
+                    if (images.length > 0) {
+                        ImageSpan span = images[0];
+                        String source = span.getSource();//TODO，这个是图片url，显示图片用
+                        //显示图片时，打开ImageActivity，传入text和当前Image地址,使用正则匹(或者其他方式，使用Html.From同样的方式最好)配出所有url，构成一个列表
+                        //或者先生成列表再传给ImageActivity，打开ImageActivity。
+                        //现在的问题是如果有两个相同图片怎么办……
+                        return true;
+                    }else {
+                        Touch.onTouchEvent(widget, spannable, event);
+                        return false;
+                    }
                 }
             }
-            return Touch.onTouchEvent(widget, buffer, event);
+            return Touch.onTouchEvent(widget, spannable, event);
         }
     }
 }
