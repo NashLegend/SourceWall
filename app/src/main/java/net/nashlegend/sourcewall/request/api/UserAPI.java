@@ -1,5 +1,6 @@
 package net.nashlegend.sourcewall.request.api;
 
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -47,6 +48,10 @@ public class UserAPI extends APIBase {
             sb.insert(0, ALPHABET.charAt((int) (id % 36)));
         }
         return sb.toString().toLowerCase();
+    }
+
+    public static String getUserInfoString() {
+        return "用户名：" + UserAPI.getName() + "\n用户key：" + getUkey() + "\n用户ID：" + UserAPI.getUserID() + "\n";
     }
 
     /**
@@ -549,6 +554,15 @@ public class UserAPI extends APIBase {
      */
     public static String getUserID() {
         return SharedPreferencesUtil.readString(Consts.Key_User_ID, "");
+    }
+
+    /**
+     * 获取保存的用户名
+     *
+     * @return 用户id，一串数字
+     */
+    public static String getName() {
+        return SharedPreferencesUtil.readString(Consts.Key_User_Name, "");
     }
 
     /**

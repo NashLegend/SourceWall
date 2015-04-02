@@ -25,8 +25,9 @@ public class ResultObject {
         CODE_ALREADY_LIKED,
         CODE_ALREADY_THANKED,
         CODE_ALREADY_BURIED,
-        CODE_UNKNOWN,
         CODE_NO_TOKEN,
+        CODE_NO_USER_ID,
         CODE_FORBIDDEN,
+        CODE_UNKNOWN,
     }
 }

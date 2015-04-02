@@ -20,7 +20,10 @@ import net.nashlegend.sourcewall.db.GroupHelper;
 import net.nashlegend.sourcewall.db.gen.MyGroup;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.ResultObject;
+import net.nashlegend.sourcewall.request.ResultObject.ResultCode;
 import net.nashlegend.sourcewall.request.api.PostAPI;
+import net.nashlegend.sourcewall.request.api.UserAPI;
+import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Mob;
 
@@ -191,7 +194,7 @@ public class ShuffleGroupActivity extends SwipeActivity {
         }
     }
 
-    class LoaderFromNetTask extends AsyncTask<String, Integer, Boolean> {
+    class LoaderFromNetTask extends AsyncTask<String, Integer, ResultObject> {
 
         @Override
         protected void onPreExecute() {
@@ -209,7 +212,7 @@ public class ShuffleGroupActivity extends SwipeActivity {
         }
 
         @Override
-        protected Boolean doInBackground(String[] params) {
+        protected ResultObject doInBackground(String[] params) {
             ResultObject resultObject = PostAPI.getAllMyGroups();
             if (resultObject.ok) {
                 ArrayList<SubItem> subItems = (ArrayList<SubItem>) resultObject.result;
@@ -228,20 +231,27 @@ public class ShuffleGroupActivity extends SwipeActivity {
                 mergeMyGroups(myGroups);
                 GroupHelper.putAllMyGroups(myGroups);
                 getButtons();
-                return true;
+                return resultObject;
             }
-            return false;
+            return resultObject;
         }
 
         @Override
-        protected void onPostExecute(Boolean aBoolean) {
+        protected void onPostExecute(ResultObject resultObject) {
             progressDialog.dismiss();
-            if (aBoolean) {
+            if (resultObject.ok) {
                 MobclickAgent.onEvent(ShuffleGroupActivity.this, Mob.Event_Load_My_Groups_OK);
                 initView();
             } else {
                 MobclickAgent.onEvent(ShuffleGroupActivity.this, Mob.Event_Load_My_Groups_Failed);
-                toast("加载我的小组失败");
+                MobclickAgent.reportError(ShuffleGroupActivity.this,
+                        "是否WIFI：" + Config.isWifi() + "\n" + UserAPI.getUserInfoString() + resultObject.error_message);
+                if (resultObject.code == ResultCode.CODE_NO_USER_ID) {
+                    toast("未获得用户ID，无法加载");
+                } else {
+                    toast("加载我的小组失败");
+                }
+
             }
         }
     }

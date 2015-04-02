@@ -366,7 +366,6 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
                 if (loadDesc && lastLoad) {
                     listView.setCanPullToLoadMore(false);
                 }
-
             } else {
                 if (result.statusCode == 404) {
                     toastSingleton(R.string.page_404);

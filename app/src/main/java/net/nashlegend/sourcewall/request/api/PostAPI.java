@@ -46,6 +46,7 @@ public class PostAPI extends APIBase {
 
     /**
      * 获取缓存的问题
+     *
      * @param subItem
      * @return
      */
@@ -108,6 +109,11 @@ public class PostAPI extends APIBase {
      */
     public static ResultObject getAllMyGroups() {
         ResultObject resultObject = new ResultObject();
+        if (TextUtils.isEmpty(UserAPI.getUserID())) {
+            resultObject.error_message = "无法获得用户id";
+            resultObject.code = ResultObject.ResultCode.CODE_NO_USER_ID;
+            return resultObject;
+        }
         String pageUrl = "http://m.guokr.com/group/i/" + UserAPI.getUserID() + "/joined/";
         ArrayList<SubItem> subItems = new ArrayList<>();
         int numPages;

@@ -42,7 +42,7 @@ public class Config {
         return !SharedPreferencesUtil.readBoolean(Consts.Key_Image_No_Load_Homepage, false);
     }
 
-    private static boolean isWifi() {
+    public static boolean isWifi() {
         ConnectivityManager manager = (ConnectivityManager) AppApplication.getApplication().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         return info != null && info.getState() == NetworkInfo.State.CONNECTED;

@@ -331,10 +331,6 @@ public class APIBase {
                 resultObject.code = ResultObject.ResultCode.CODE_UNKNOWN;
                 break;
         }
-        //str hasBuried={"error_code": 242013, "request_uri": "/apis/ask/answer_burying.json", "ok": false, "error": "You have already buried the answer."}
-        //string hasThanked = {"error_code": 242033, "request_uri": "/apis/ask/answer_thanking.json", "ok": false, "error": "You have already thanked the answer."}
-        //String invalidToken = " {\"error_code\": 200004, \"request_uri\": \"/apis/community/rn_num.json?_=1422011885139&access_token=51096037c7aa15ccd08c12c3fba8f856ae65d672cda50f25cec883343f3597a6\", \"ok\": false, \"error\": \"Illegal access token.\"}\n";
-        //String alreadyLiked = "{\"error_code\": 240004, \"request_uri\": \"/apis/group/post_reply_liking.json\", \"ok\": false, \"error\": \"You have already liked this reply!\"}";
     }
 
     /**
@@ -345,7 +341,6 @@ public class APIBase {
      */
     public static void handleRequestException(Exception e, ResultObject resultObject) {
         e.printStackTrace();
-
         resultObject.ok = false;
         resultObject.error_message = e.getMessage();
         if (e instanceof IOException) {
