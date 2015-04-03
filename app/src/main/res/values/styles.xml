@@ -27,7 +27,6 @@
     </style>
 
     <style name="ToolbarStyleDay" parent="@style/Theme.AppCompat.Light">
-        <item name="android:textColor">@android:color/white</item>
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="titleTextAppearance">@style/ToolbarTextAppearance</item>
         <item name="actionMenuTextAppearance">@style/actionMenuTextAppearance</item>
@@ -150,7 +149,6 @@
     </style>
 
     <style name="ToolbarStyleNight" parent="@style/Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:textColor">@android:color/white</item>
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="titleTextAppearance">@style/ToolbarTextAppearance</item>
         <item name="actionMenuTextAppearance">@style/actionMenuTextAppearance</item>
