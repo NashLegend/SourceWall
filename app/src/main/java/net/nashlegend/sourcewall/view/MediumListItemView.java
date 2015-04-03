@@ -3,6 +3,8 @@ package net.nashlegend.sourcewall.view;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,7 +30,9 @@ public class MediumListItemView extends AceView<UComment> {
     private TextView likesView;
     private TextView floorView;
     private ImageView avatarImage;
+    private ImageButton imageButton;
     private UComment comment;
+    private View authorLayout;
     private TextHtmlHelper htmlHelper;
 
     public MediumListItemView(Context context) {
@@ -42,11 +46,19 @@ public class MediumListItemView extends AceView<UComment> {
         inflater.inflate(R.layout.layout_medium_comment_item_view, this);
         htmlHelper = new TextHtmlHelper(context);
         contentView = (TTextView) findViewById(R.id.text_content);
+        authorLayout=findViewById(R.id.layout_author);
         authorView = (TextView) findViewById(R.id.text_author);
         dateView = (TextView) findViewById(R.id.text_date);
         likesView = (TextView) findViewById(R.id.text_like_num);
         floorView = (TextView) findViewById(R.id.text_floor);
         avatarImage = (ImageView) findViewById(R.id.image_avatar);
+        imageButton = (ImageButton) findViewById(R.id.button_overflow);
+        imageButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popMeu();
+            }
+        });
     }
 
     public MediumListItemView(Context context, AttributeSet attrs) {
@@ -84,5 +96,9 @@ public class MediumListItemView extends AceView<UComment> {
     @Override
     public UComment getData() {
         return comment;
+    }
+
+    public void popMeu() {
+
     }
 }

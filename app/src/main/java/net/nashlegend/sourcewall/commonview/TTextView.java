@@ -13,6 +13,7 @@ import android.text.style.ImageSpan;
 import android.text.style.URLSpan;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import net.nashlegend.sourcewall.util.ImageSizeMap;
@@ -60,6 +61,10 @@ public class TTextView extends TextView {
         UrlCheckUtil.redirectRequest(urlSpan.getURL());
     }
 
+    private static void handleImageSpanClick(ImageSpan imageSpan) {
+
+    }
+
     public static class LocalLinkMovementMethod extends LinkMovementMethod {
         static LocalLinkMovementMethod sInstance;
 
@@ -81,6 +86,8 @@ public class TTextView extends TextView {
                 x -= widget.getTotalPaddingLeft();
                 y -= widget.getTotalPaddingTop();
 
+                PopupMenu menu;
+
                 x += widget.getScrollX();
                 y += widget.getScrollY();
 
@@ -90,7 +97,7 @@ public class TTextView extends TextView {
 
                 URLSpan[] link = spannable.getSpans(off, off, URLSpan.class);
 
-                if (link.length != 0) {
+                if (link.length > 0) {
                     if (action == MotionEvent.ACTION_UP) {
                         handleURLSpanClick(link[0]);
                     } else {
@@ -103,7 +110,6 @@ public class TTextView extends TextView {
                     }
                     return true;
                 } else {
-                    Selection.removeSelection(spannable);
                     ImageSpan[] images = spannable.getSpans(off, off, ImageSpan.class);
                     if (images.length > 0) {
                         ImageSpan span = images[0];
@@ -111,8 +117,19 @@ public class TTextView extends TextView {
                         //显示图片时，打开ImageActivity，传入text和当前Image地址,使用正则匹(或者其他方式，使用Html.From同样的方式最好)配出所有url，构成一个列表
                         //或者先生成列表再传给ImageActivity，打开ImageActivity。
                         //现在的问题是如果有两个相同图片怎么办……
+                        if (action == MotionEvent.ACTION_UP) {
+                            handleImageSpanClick(span);
+                        } else {
+                            Selection.setSelection(spannable,
+                                    spannable.getSpanStart(span),
+                                    spannable.getSpanEnd(span));
+                        }
+                        if (widget instanceof TTextView) {
+                            ((TTextView) widget).linkHit = true;
+                        }
                         return true;
                     }else {
+                        Selection.removeSelection(spannable);
                         Touch.onTouchEvent(widget, spannable, event);
                         return false;
                     }

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@android:id/text1"
-    style="?android:attr/spinnerItemStyle"
-    android:layout_width="match_parent"
+    android:paddingLeft="8dp"
+    android:textSize="16sp"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:ellipsize="marquee"
     android:paddingBottom="6dp"
     android:paddingTop="6dp"
     android:text="@string/sample_title"
     android:singleLine="true"
-    android:textAlignment="inherit"
     android:textColor="?attr/color_dialog_list_text" />
