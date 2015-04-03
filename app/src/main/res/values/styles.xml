@@ -22,13 +22,16 @@
 
     <style name="actionMenuTextAppearance" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Menu">
         <item name="android:textSize">16sp</item>
-        <item name="android:textColor">#fff000</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="ToolbarStyleDay" parent="@style/Theme.AppCompat.Light">
+        <item name="android:textColor">@android:color/white</item>
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="titleTextAppearance">@style/ToolbarTextAppearance</item>
         <item name="actionMenuTextAppearance">@style/actionMenuTextAppearance</item>
+        <item name="actionMenuTextColor">@android:color/white</item>
         <item name="colorControlNormal">@android:color/white</item>
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
         <item name="colorPrimary">@color/color_primary</item>
@@ -147,9 +150,11 @@
     </style>
 
     <style name="ToolbarStyleNight" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:textColor">@android:color/white</item>
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="titleTextAppearance">@style/ToolbarTextAppearance</item>
         <item name="actionMenuTextAppearance">@style/actionMenuTextAppearance</item>
+        <item name="actionMenuTextColor">@android:color/white</item>
         <item name="colorControlNormal">@android:color/white</item>
         <item name="colorPrimaryDark">@color/color_primary_dark_night</item>
         <item name="colorPrimary">@color/color_primary_night</item>
