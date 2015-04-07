@@ -85,7 +85,7 @@ public class TextHtmlHelper {
             if (Config.shouldLoadImage()) {
                 int width = 0;
                 int height = 0;
-                String reg = ".+/w/(\\d+sdsdsdsd)/h/(\\d+)";
+                String reg = ".+/w/(\\d+)/h/(\\d+)";
                 Matcher matcher = Pattern.compile(reg).matcher(source);
                 if (matcher.find()) {
                     width = (int) (Integer.valueOf(matcher.group(1)) * stretch);
