@@ -66,17 +66,17 @@ public class RequestCreator {
     private final Picasso picasso;
     private final Request.Builder mRequestBuilder;
 
-	private boolean skipMemoryCache;
-	private boolean updateMemoryCache;
-	private boolean noFade;
-	private boolean fitFlag;
-	private boolean canPixelSample;
-	private float pixelDensity = -1;
-	private int placeholderResId;
-	private int errorResId;
-	private Drawable placeholderDrawable;
-	private Drawable errorDrawable;
-	private Object tag;
+    private boolean skipMemoryCache;
+    private boolean updateMemoryCache;
+    private boolean noFade;
+    private boolean fitFlag;
+    private boolean canPixelSample;
+    private float pixelDensity = -1;
+    private int placeholderResId;
+    private int errorResId;
+    private Drawable placeholderDrawable;
+    private Drawable errorDrawable;
+    private Object tag;
 
     RequestCreator(Picasso picasso, Uri uri, int resourceId) {
         if (picasso.shutdown) {
@@ -161,7 +161,7 @@ public class RequestCreator {
      * <strong>WARNING:</strong>: Picasso will keep a reference to the tag for
      * as long as this tag is paused and/or has active requests. Look out for
      * potential leaks.
-     * 
+     *
      * @see com.squareup.picasso.Picasso#cancelTag(Object)
      * @see com.squareup.picasso.Picasso#pauseTag(Object)
      * @see com.squareup.picasso.Picasso#resumeTag(Object)
@@ -286,27 +286,28 @@ public class RequestCreator {
         return this;
     }
 
-	/**
-	 * Indicate that this action should not use the memory cache for attempting
-	 * to load or save the image. This can be useful when you know an image will
-	 * only ever be used once (e.g., loading an image from the filesystem and
-	 * uploading to a remote server).
-	 */
-	public RequestCreator skipMemoryCache() {
-		if(updateMemoryCache){
-			throw new IllegalStateException("updateMemoryCache been set, set skipMemory lead to updateMemoryCache inoperative");
-		}
-		skipMemoryCache = true;
-		return this;
-	}
-	
-	public RequestCreator updateMemoryCache() {
-		if(skipMemoryCache){
-			throw new IllegalStateException("skipMemoryCache been set, so updateMemoryCache inoperative");
-		}
-		updateMemoryCache = true;
-		return this;
-	}
+    /**
+     * Indicate that this action should not use the memory cache for attempting
+     * to load or save the image. This can be useful when you know an image will
+     * only ever be used once (e.g., loading an image from the filesystem and
+     * uploading to a remote server).
+     */
+    public RequestCreator skipMemoryCache() {
+        if (updateMemoryCache) {
+            throw new IllegalStateException("updateMemoryCache been set, set skipMemory lead to updateMemoryCache inoperative");
+        }
+        skipMemoryCache = true;
+        return this;
+    }
+
+    public RequestCreator updateMemoryCache() {
+        if (skipMemoryCache) {
+            throw new IllegalStateException("skipMemoryCache been set, so updateMemoryCache inoperative");
+        }
+        updateMemoryCache = true;
+        return this;
+    }
+
     /**
      * Attempt to decode the image using the specified config.
      * <p/>
@@ -357,6 +358,20 @@ public class RequestCreator {
         return this;
     }
 
+    public void download() {
+        try {
+            long started = System.nanoTime();
+            Utils.checkNotMain();
+            Request finalData = createRequest(started);
+            String key = Utils.createKey(finalData, new StringBuilder());
+            Action action = new GetAction(picasso, finalData, skipMemoryCache, updateMemoryCache, key, tag);
+            BitmapHunter.forRequest(picasso, picasso.dispatcher, picasso.cache, picasso.stats, action).download();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
     /**
      * Synchronously fulfill this request. Must not be called from the main
      * thread.
@@ -379,9 +394,10 @@ public class RequestCreator {
         Request finalData = createRequest(started);
         String key = Utils.createKey(finalData, new StringBuilder());
 
-		Action action = new GetAction(picasso, finalData, skipMemoryCache, updateMemoryCache, key, tag);
-		return BitmapHunter.forRequest(picasso, picasso.dispatcher, picasso.cache, picasso.stats, action).hunt();
-	}
+        Action action = new GetAction(picasso, finalData, skipMemoryCache, updateMemoryCache, key, tag);
+        return BitmapHunter.forRequest(picasso, picasso.dispatcher, picasso.cache, picasso.stats, action).hunt();
+    }
+
     /**
      * 异步预加载图片到内存 Asynchronously fulfills the request without a
      * {@link android.widget.ImageView} or {@link Target}. This is useful
@@ -404,10 +420,11 @@ public class RequestCreator {
             Request request = createRequest(started);
             String key = Utils.createKey(request, new StringBuilder());
 
-			Action action = new FetchAction(picasso, request, skipMemoryCache, updateMemoryCache, key, tag);
-			picasso.submit(action);
-		}
-	}
+            Action action = new FetchAction(picasso, request, skipMemoryCache, updateMemoryCache, key, tag);
+            picasso.submit(action);
+        }
+    }
+
     /**
      * Asynchronously fulfills the request into the specified
      * {@link Target}. In most cases, you should use this
@@ -416,45 +433,45 @@ public class RequestCreator {
      * interface.
      * <p/>
      * Implementing on a {@link android.view.View View}: <blockquote>
-     * 
+     * <p/>
      * <pre>
      * public class ProfileView extends FrameLayout implements Target {
      *   {@literal @}Override public void onBitmapLoaded(Bitmap bitmap, LoadedFrom from) {
      *     setBackgroundDrawable(new BitmapDrawable(bitmap));
      *   }
-     * <p/>
+     *
      *   {@literal @}Override public void onBitmapFailed() {
      *     setBackgroundResource(R.drawable.profile_error);
      *   }
-     * <p/>
+     *
      *   {@literal @}Override public void onPrepareLoad(Drawable placeHolderDrawable) {
      *     frame.setBackgroundDrawable(placeHolderDrawable);
      *   }
      * }
      * </pre>
-     * 
+     * <p/>
      * </blockquote> Implementing on a view holder object for use inside of an
      * adapter: <blockquote>
-     * 
+     * <p/>
      * <pre>
      * public class ViewHolder implements Target {
      *   public FrameLayout frame;
      *   public TextView name;
-     * <p/>
+     *
      *   {@literal @}Override public void onBitmapLoaded(Bitmap bitmap, LoadedFrom from) {
      *     frame.setBackgroundDrawable(new BitmapDrawable(bitmap));
      *   }
-     * <p/>
+     *
      *   {@literal @}Override public void onBitmapFailed() {
      *     frame.setBackgroundResource(R.drawable.profile_error);
      *   }
-     * <p/>
+     *
      *   {@literal @}Override public void onPrepareLoad(Drawable placeHolderDrawable) {
      *     frame.setBackgroundDrawable(placeHolderDrawable);
      *   }
      * }
      * </pre>
-     * 
+     * <p/>
      * </blockquote>
      * <p/>
      * <em>Note:</em> This method keeps a weak reference to the
@@ -498,17 +515,18 @@ public class RequestCreator {
 
         target.onPrepareLoad(drawable);
 
-		Action action = new TargetAction(picasso, target, request, skipMemoryCache, updateMemoryCache, errorResId, errorDrawable,
-				requestKey, tag);
-		picasso.enqueueAndSubmit(action);
-	}
+        Action action = new TargetAction(picasso, target, request, skipMemoryCache, updateMemoryCache, errorResId, errorDrawable,
+                requestKey, tag);
+        picasso.enqueueAndSubmit(action);
+    }
+
     /**
      * Asynchronously fulfills the request into the specified
      * {@link android.widget.RemoteViews} object with the given {@code viewId}. This is used
      * for loading bitmaps into a {@link android.app.Notification}.
      */
     public void into(RemoteViews remoteViews, int viewId, int notificationId,
-            Notification notification) {
+                     Notification notification) {
         long started = System.nanoTime();
         Utils.checkMain();
 
@@ -529,8 +547,8 @@ public class RequestCreator {
         Request request = createRequest(started);
         String key = Utils.createKey(request);
 
-		RemoteViewsAction action = new RemoteViewsAction.NotificationAction(picasso, request, remoteViews, viewId,
-				notificationId, notification, skipMemoryCache, updateMemoryCache, errorResId, key, tag);
+        RemoteViewsAction action = new RemoteViewsAction.NotificationAction(picasso, request, remoteViews, viewId,
+                notificationId, notification, skipMemoryCache, updateMemoryCache, errorResId, key, tag);
         performRemoteViewInto(action);
     }
 
@@ -560,8 +578,8 @@ public class RequestCreator {
         Request request = createRequest(started);
         String key = Utils.createKey(request);
 
-		RemoteViewsAction action = new RemoteViewsAction.AppWidgetAction(picasso, request, remoteViews, viewId,
-				appWidgetIds, skipMemoryCache, updateMemoryCache, errorResId, key, tag);
+        RemoteViewsAction action = new RemoteViewsAction.AppWidgetAction(picasso, request, remoteViews, viewId,
+                appWidgetIds, skipMemoryCache, updateMemoryCache, errorResId, key, tag);
         performRemoteViewInto(action);
     }
 
@@ -639,8 +657,8 @@ public class RequestCreator {
 
         PicassoDrawable.setPlaceholder(target, placeholderResId, placeholderDrawable);
 
-		Action action = new ImageViewAction(picasso, target, request, skipMemoryCache, updateMemoryCache, noFade, errorResId,
-				errorDrawable, requestKey, tag, callback);
+        Action action = new ImageViewAction(picasso, target, request, skipMemoryCache, updateMemoryCache, noFade, errorResId,
+                errorDrawable, requestKey, tag, callback);
         picasso.enqueueAndSubmit(action);
     }
 

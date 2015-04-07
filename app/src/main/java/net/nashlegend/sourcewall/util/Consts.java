@@ -27,6 +27,8 @@ public class Consts {
     public static final String Extra_Should_Load_Before_Shuffle = "sourcewall.extra.should.load.before.shuffle";
     public static final String Extra_Redirect_Uri = "sourcewall.extra.redirect.url";//通知的跳转链接
     public static final String Extra_Notice_Id = "sourcewall.extra.notice.id";//通知id
+    public static final String Extra_Image_String_Array = "sourcewall.extra.image.string.array";//图片Activity接收的图片地址们
+    public static final String Extra_Image_Current_Position = "sourcewall.extra.image.current.position";//图片Activity刚进入时打开的图片
 
     // 保存SharedPreferences的Key
     public static final String Key_Cookie = "sourcewall.key.cookie";

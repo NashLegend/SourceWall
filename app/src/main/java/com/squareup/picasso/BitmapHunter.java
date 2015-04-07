@@ -143,6 +143,12 @@ class BitmapHunter implements Runnable {
         }
     }
 
+    void download() throws IOException {
+        if (requestHandler instanceof NetworkRequestHandler) {
+            ((NetworkRequestHandler) requestHandler).download(data, cache);
+        }
+    }
+
     Bitmap hunt() throws IOException {
         Bitmap bitmap = null;
         if (updateMemoryCache) {
@@ -340,11 +346,9 @@ class BitmapHunter implements Runnable {
 
     static void updateThreadName(Request data) {
         String name = data.getName();
-
         StringBuilder builder = NAME_BUILDER.get();
         builder.ensureCapacity(Utils.THREAD_PREFIX.length() + name.length());
         builder.replace(Utils.THREAD_PREFIX.length(), builder.length(), name);
-
         Thread.currentThread().setName(builder.toString());
     }
 

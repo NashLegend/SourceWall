@@ -96,6 +96,53 @@ public class RequestCache {
         }
     }
 
+    int IO_BUFFER_SIZE = 8 * 1024;
+
+    public void addStreamToCacheForceUpdate(String data, InputStream inputStream) {
+        if (data == null || inputStream == null) {
+            return;
+        }
+        synchronized (mDiskCacheLock) {
+            if (mDiskLruCache != null) {
+                final String key = hashKeyForDisk(data);
+                OutputStream out = null;
+                try {
+                    mDiskLruCache.remove(key);
+                    final DiskLruCache.Editor editor = mDiskLruCache.edit(key);
+                    if (editor != null) {
+                        out = editor.newOutputStream(DISK_CACHE_INDEX);
+                        byte[] buff = new byte[IO_BUFFER_SIZE];
+                        int len;
+                        while ((len = inputStream.read(buff)) != -1) {
+                            out.write(buff, 0, len);
+                        }
+                        editor.commit();
+                        out.close();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        if (out != null) {
+                            out.close();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+
+    public String getCachedFile(String data) {
+        File file = new File(getDiskCacheDir(AppApplication.getApplication(), "request.cache"), hashKeyForDisk(data) + ".0");
+        if (file.exists()) {
+            return file.getAbsolutePath();
+        } else {
+            return null;
+        }
+    }
+
     public void addStringToCacheForceUpdate(String data, String value) {
         if (data == null || value == null) {
             return;
@@ -188,33 +235,13 @@ public class RequestCache {
                 }
             }
             if (mDiskLruCache != null) {
-                InputStream inputStream = null;
                 try {
                     final DiskLruCache.Snapshot snapshot = mDiskLruCache.get(key);
                     if (snapshot != null) {
-                        inputStream = snapshot.getInputStream(DISK_CACHE_INDEX);
-                        if (inputStream != null) {
-                            InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "utf-8");
-                            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                            StringBuilder sb = new StringBuilder();
-                            String lineTxt;
-                            while ((lineTxt = bufferedReader.readLine()) != null) {
-                                sb.append(lineTxt);
-                            }
-                            request = sb.toString();
-                            bufferedReader.close();
-                        }
+                        request = snapshot.getString(DISK_CACHE_INDEX);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                } finally {
-                    try {
-                        if (inputStream != null) {
-                            inputStream.close();
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                 }
             }
             return request;

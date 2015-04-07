@@ -16,7 +16,6 @@ import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
-import net.nashlegend.sourcewall.util.TextHtmlHelper;
 
 /**
  * Created by NashLegend on 2014/9/18 0018.
@@ -33,7 +32,6 @@ public class MediumListItemView extends AceView<UComment> {
     private ImageButton imageButton;
     private UComment comment;
     private View authorLayout;
-    private TextHtmlHelper htmlHelper;
 
     public MediumListItemView(Context context) {
         super(context);
@@ -44,9 +42,8 @@ public class MediumListItemView extends AceView<UComment> {
         }
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_medium_comment_item_view, this);
-        htmlHelper = new TextHtmlHelper(context);
         contentView = (TTextView) findViewById(R.id.text_content);
-        authorLayout=findViewById(R.id.layout_author);
+        authorLayout = findViewById(R.id.layout_author);
         authorView = (TextView) findViewById(R.id.text_author);
         dateView = (TextView) findViewById(R.id.text_date);
         likesView = (TextView) findViewById(R.id.text_like_num);
@@ -56,7 +53,7 @@ public class MediumListItemView extends AceView<UComment> {
         imageButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                popMeu();
+                popMenu();
             }
         });
     }
@@ -83,7 +80,7 @@ public class MediumListItemView extends AceView<UComment> {
         dateView.setText(comment.getDate());
         likesView.setText(comment.getLikeNum() + "");
         floorView.setText(comment.getFloor());
-        htmlHelper.load(contentView, comment.getContent());
+        contentView.loadHtml(comment.getContent());
         if (Config.shouldLoadImage()) {
             Picasso.with(getContext()).load(comment.getAuthorAvatarUrl())
                     .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen).placeholder(R.drawable.default_avatar)
@@ -98,7 +95,7 @@ public class MediumListItemView extends AceView<UComment> {
         return comment;
     }
 
-    public void popMeu() {
+    public void popMenu() {
 
     }
 }

@@ -427,47 +427,4 @@ public class HttpFetcher {
         }
         return !errorCatch;
     }
-
-    public static ResultObject downloadImage(String urlString, String dest) {
-        ResultObject resultObject = new ResultObject();
-        HttpURLConnection urlConnection = null;
-        InputStream inputStream = null;
-        FileOutputStream fileOutputStream = null;
-        boolean errorCatch = false;
-        try {
-            final URL url = new URL(urlString);
-            urlConnection = (HttpURLConnection) url.openConnection();
-            File deskFile = new File(dest);
-            if (deskFile.exists()) {
-                deskFile.delete();
-            } else if (!deskFile.getParentFile().exists()) {
-                deskFile.getParentFile().mkdirs();
-            }
-            inputStream = urlConnection.getInputStream();
-            fileOutputStream = new FileOutputStream(new File(dest));
-            byte[] buff = new byte[IO_BUFFER_SIZE];
-            int len;
-            while ((len = inputStream.read(buff)) != -1) {
-                fileOutputStream.write(buff, 0, len);
-            }
-        } catch (Exception e) {
-            errorCatch = true;
-        } finally {
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-            }
-            try {
-                if (inputStream != null) {
-                    inputStream.close();
-                }
-                if (fileOutputStream != null) {
-                    fileOutputStream.close();
-                }
-            } catch (IOException e) {
-                errorCatch = true;
-            }
-        }
-        return resultObject;
-    }
-
 }

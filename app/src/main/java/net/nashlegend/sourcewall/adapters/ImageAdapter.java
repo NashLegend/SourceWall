@@ -5,8 +5,6 @@ import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
-import net.nashlegend.sourcewall.model.ImageInfo;
-
 import java.util.ArrayList;
 
 /**
@@ -14,9 +12,9 @@ import java.util.ArrayList;
  */
 public class ImageAdapter extends PagerAdapter {
     private Context mContext;
-    private final ArrayList<ImageInfo> list = new ArrayList<>();
+    private final ArrayList<String> list = new ArrayList<>();
 
-    public ImageAdapter(Context context, ArrayList<ImageInfo> images) {
+    public ImageAdapter(Context context, ArrayList<String> images) {
         mContext = context;
         list.addAll(images);
     }
@@ -40,23 +38,23 @@ public class ImageAdapter extends PagerAdapter {
         list.clear();
     }
 
-    public void add(ImageInfo imageInfo) {
+    public void add(String imageInfo) {
         list.add(imageInfo);
     }
 
-    public void add(int index, ImageInfo imageInfo) {
+    public void add(int index, String imageInfo) {
         list.add(index, imageInfo);
     }
 
-    public void addAll(ArrayList<ImageInfo> list) {
+    public void addAll(ArrayList<String> list) {
         this.list.addAll(list);
     }
 
-    public void addAll(int index, ArrayList<ImageInfo> list) {
+    public void addAll(int index, ArrayList<String> list) {
         this.list.addAll(index, list);
     }
 
-    public void remove(ImageInfo imageInfo) {
+    public void remove(String imageInfo) {
         list.remove(imageInfo);
     }
 
