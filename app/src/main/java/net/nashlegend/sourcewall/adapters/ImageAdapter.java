@@ -5,6 +5,8 @@ import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
+import net.nashlegend.sourcewall.view.ImageViewer;
+
 import java.util.ArrayList;
 
 /**
@@ -14,9 +16,8 @@ public class ImageAdapter extends PagerAdapter {
     private Context mContext;
     private final ArrayList<String> list = new ArrayList<>();
 
-    public ImageAdapter(Context context, ArrayList<String> images) {
+    public ImageAdapter(Context context) {
         mContext = context;
-        list.addAll(images);
     }
 
     @Override
@@ -30,8 +31,23 @@ public class ImageAdapter extends PagerAdapter {
     }
 
     @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        try {
+            if (object instanceof ImageViewer) {
+                ((ImageViewer) object).unload();
+                container.removeView((View) object);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        return super.instantiateItem(container, position);
+        ImageViewer imageViewer = new ImageViewer(mContext);
+        imageViewer.load(list.get(position));
+        container.addView(imageViewer);
+        return imageViewer;
     }
 
     public void clear() {

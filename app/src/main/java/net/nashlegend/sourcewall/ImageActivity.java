@@ -1,26 +1,35 @@
 package net.nashlegend.sourcewall;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import net.nashlegend.sourcewall.adapters.ImageAdapter;
 import net.nashlegend.sourcewall.util.Consts;
 
 import java.util.ArrayList;
 
-public class ImageActivity extends ActionBarActivity {
+public class ImageActivity extends BaseActivity {
 
-    ArrayList<String> images = new ArrayList<>();
+    ArrayList<String> images;
+    ViewPager pager;
+    ImageAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
-        ArrayList<String> urls = getIntent().getStringArrayListExtra(Consts.Extra_Image_String_Array);
+        pager = (ViewPager) findViewById(R.id.image_pager);
+        adapter = new ImageAdapter(this);
+        images = getIntent().getStringArrayListExtra(Consts.Extra_Image_String_Array);
         int position = getIntent().getIntExtra(Consts.Extra_Image_Current_Position, 0);
-        if (urls!=null&&urls.size()>0){
-
+        if (images != null && images.size() > 0) {
+            adapter.addAll(images);
+            pager.setAdapter(adapter);
+            if (position < images.size()) {
+                pager.setCurrentItem(position);
+            }
         }
     }
 

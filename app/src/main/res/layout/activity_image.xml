@@ -15,7 +15,8 @@
         app:theme="?attr/toolbarTheme"
         app:popupTheme="?attr/toolbarPopTheme"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@android:color/transparent"/>
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:minHeight="?attr/actionBarSize"/>
 
 </RelativeLayout>

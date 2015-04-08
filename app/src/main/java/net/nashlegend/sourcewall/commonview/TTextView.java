@@ -302,7 +302,7 @@ public class TTextView extends TextView {
             String clickedUrl = imageSpan.getSource();
             if (!TextUtils.isEmpty(html)) {
                 Document doc = Jsoup.parse(html);
-                Elements elements = doc.getElementsByTag("tag");
+                Elements elements = doc.getElementsByTag("img");
                 ArrayList<String> images = new ArrayList<>();
                 int clickedPosition = 0;
                 for (int i = 0; i < elements.size(); i++) {
@@ -377,11 +377,7 @@ public class TTextView extends TextView {
                     Selection.removeSelection(spannable);
                     ImageSpan[] images = spannable.getSpans(off, off, ImageSpan.class);
                     if (images.length > 0) {
-                        ImageSpan span = images[0];
-                        String source = span.getSource();//TODO，这个是图片url，显示图片用
-                        //显示图片时，打开ImageActivity，传入text和当前Image地址,使用正则匹(或者其他方式，使用Html.From同样的方式最好)配出所有url，构成一个列表
-                        //或者先生成列表再传给ImageActivity，打开ImageActivity。
-                        //现在的问题是如果有两个相同图片怎么办……
+                        ImageSpan span = images[images.length - 1];//0貌似有时不太管用，images[images.length-1]应该可以解决
                         if (action == MotionEvent.ACTION_UP) {
                             handleImageSpanClick(widget, span);
                         }
