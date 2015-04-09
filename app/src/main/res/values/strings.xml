@@ -183,5 +183,6 @@
     <string name="hint_of_load_my_tags">点击右上角箭头可加载我关注的问答标签以及管理标签……</string>
     <string name="ok_i_know">好了我知道了</string>
     <string name="title_activity_image">ImageActivity</string>
+    <string name="title_activity_test">TestActivity</string>
 
 </resources>

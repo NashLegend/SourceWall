@@ -376,6 +376,7 @@ public class TTextView extends TextView {
                 } else {
                     Selection.removeSelection(spannable);
                     ImageSpan[] images = spannable.getSpans(off, off, ImageSpan.class);
+                    System.out.println(images.length);
                     if (images.length > 0) {
                         ImageSpan span = images[images.length - 1];//0貌似有时不太管用，images[images.length-1]应该可以解决
                         if (action == MotionEvent.ACTION_UP) {

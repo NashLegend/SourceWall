@@ -47,7 +47,7 @@
             android:id="@+id/text_comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:lineSpacingMultiplier="@dimen/lineSpacingMultiplier"
+            android:lineSpacingExtra="@dimen/lineSpacingExtra"
             android:textColor="?attr/color_author_color"
             android:layout_marginTop="5dp"
             android:text="@string/sample_summary" />

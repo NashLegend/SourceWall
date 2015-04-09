@@ -90,6 +90,10 @@
             android:screenOrientation="portrait"
             android:label="@string/title_activity_image" />
 
+        <activity
+            android:name="net.nashlegend.sourcewall.TestActivity"
+            android:label="@string/title_activity_test" />
+
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="55018d1dfd98c583330009fd" />

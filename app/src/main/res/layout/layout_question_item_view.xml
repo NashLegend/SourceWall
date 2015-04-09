@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/list_standard_title_author_span"
             android:ellipsize="end"
-            android:lineSpacingMultiplier="@dimen/lineSpacingMultiplier"
+            android:lineSpacingExtra="@dimen/lineSpacingExtra"
             android:maxLines="3"
             android:text="@string/sample_summary"
             android:textColor="?attr/color_list_summary"
