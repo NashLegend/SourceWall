@@ -17,6 +17,11 @@ public class ImageActivity extends BaseActivity {
     ImageAdapter adapter;
 
     @Override
+    public void setTheme(int resId) {
+        super.setTheme(R.style.ImageThemeNight);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
@@ -40,6 +45,12 @@ public class ImageActivity extends BaseActivity {
     }
 
     @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(0, R.anim.scale_out_center);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
@@ -47,7 +58,6 @@ public class ImageActivity extends BaseActivity {
         if (id == R.id.action_save) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

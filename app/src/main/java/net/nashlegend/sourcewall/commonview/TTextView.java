@@ -1,6 +1,7 @@
 package net.nashlegend.sourcewall.commonview;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -14,6 +15,8 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.text.Html;
 import android.text.Layout;
 import android.text.Selection;
@@ -32,6 +35,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import net.nashlegend.sourcewall.AppApplication;
+import net.nashlegend.sourcewall.BaseActivity;
 import net.nashlegend.sourcewall.ImageActivity;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.util.Config;
@@ -315,14 +319,20 @@ public class TTextView extends TextView {
                         images.add(src);
                     }
                 }
-
                 if (images.size() > 0) {
                     Intent intent = new Intent();
                     intent.putStringArrayListExtra(Consts.Extra_Image_String_Array, images);
                     intent.putExtra(Consts.Extra_Image_Current_Position, clickedPosition);
-                    intent.setClass(AppApplication.getApplication(), ImageActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    AppApplication.getApplication().startActivity(intent);
+                    Context context = textView.getContext();
+                    if (context != null && context instanceof Activity) {
+                        intent.setClass(context, ImageActivity.class);
+                        ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(AppApplication.getApplication(), R.anim.scale_in_center, 0);
+                        ActivityCompat.startActivity((Activity) context, intent, options.toBundle());
+                    } else {
+                        intent.setClass(AppApplication.getApplication(), ImageActivity.class);
+                        AppApplication.getApplication().startActivity(intent);
+                    }
                 }
 
             }
@@ -341,26 +351,18 @@ public class TTextView extends TextView {
         @Override
         public boolean onTouchEvent(@NonNull TextView widget, @NonNull Spannable spannable, @NonNull MotionEvent event) {
             int action = event.getAction();
-
             if (action == MotionEvent.ACTION_UP ||
                     action == MotionEvent.ACTION_DOWN) {
                 int x = (int) event.getX();
                 int y = (int) event.getY();
-
                 x -= widget.getTotalPaddingLeft();
                 y -= widget.getTotalPaddingTop();
-
-                PopupMenu menu;
-
                 x += widget.getScrollX();
                 y += widget.getScrollY();
-
                 Layout layout = widget.getLayout();
                 int line = layout.getLineForVertical(y);
                 int off = layout.getOffsetForHorizontal(line, x);
-
                 URLSpan[] link = spannable.getSpans(off, off, URLSpan.class);
-
                 if (link.length > 0) {
                     if (action == MotionEvent.ACTION_UP) {
                         handleURLSpanClick(link[0]);
@@ -376,7 +378,6 @@ public class TTextView extends TextView {
                 } else {
                     Selection.removeSelection(spannable);
                     ImageSpan[] images = spannable.getSpans(off, off, ImageSpan.class);
-                    System.out.println(images.length);
                     if (images.length > 0) {
                         ImageSpan span = images[images.length - 1];//0貌似有时不太管用，images[images.length-1]应该可以解决
                         if (action == MotionEvent.ACTION_UP) {
