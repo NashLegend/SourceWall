@@ -1346,7 +1346,7 @@ public class ZoomImageView extends View {
                                     Log.w(TAG, "Unsupported EXIF orientation: " + orientationAttr);
                                 }
                             } catch (Exception e) {
-                                return null;
+                                return null;//todo 返回错误标志，或者返回一个正常decode的bitmap
                             }
 
                         }
