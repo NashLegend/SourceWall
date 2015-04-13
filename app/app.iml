@@ -120,5 +120,6 @@
     <orderEntry type="library" exported="" name="libammsdk" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-22.0.0" level="project" />
     <orderEntry type="library" exported="" name="httpmime-4.2.1" level="project" />
+    <orderEntry type="library" exported="" name="android-gif-drawable-1.1.5" level="project" />
   </component>
 </module>

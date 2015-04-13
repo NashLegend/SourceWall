@@ -390,7 +390,7 @@ public class ZoomImageView extends View {
 
     /**
      * Display an image from a file in internal or external storage.
-     * 
+     *
      * @param extFile URI of the file to display.
      */
     public final void setImageFile(String extFile) {
@@ -408,7 +408,7 @@ public class ZoomImageView extends View {
      * method to use when you want scale and center to be restored after screen
      * orientation change; it avoids any redundant loading of tiles in the wrong
      * orientation.
-     * 
+     *
      * @param extFile URI of the file to display.
      * @param state State to be restored. Nullable.
      */
@@ -424,7 +424,7 @@ public class ZoomImageView extends View {
 
     /**
      * Display an image from a file in assets.
-     * 
+     *
      * @param assetName asset name.
      */
     public final void setImageAsset(String assetName) {
@@ -436,7 +436,7 @@ public class ZoomImageView extends View {
      * setting, scale and center. This is the best method to use when you want
      * scale and center to be restored after screen orientation change; it
      * avoids any redundant loading of tiles in the wrong orientation.
-     * 
+     *
      * @param assetName asset name.
      * @param state State to be restored. Nullable.
      */
@@ -978,7 +978,7 @@ public class ZoomImageView extends View {
      * Loads the optimum tiles for display at the current scale and translate,
      * so the screen can be filled with tiles that are at least as high
      * resolution as the screen. Frees up bitmaps that are now off the screen.
-     * 
+     *
      * @param load Whether to load the new tiles needed. Use false while
      *            scrolling/panning for performance.
      */
@@ -1072,7 +1072,7 @@ public class ZoomImageView extends View {
      * within the allowed range and the image on screen. Minimum scale is set so
      * one dimension fills the view and the image is centered on the other
      * dimension. Used to calculate what the target of an animation should be.
-     * 
+     *
      * @param center Whether the image should be centered in the dimension it's
      *            too small to fill. While animating this can be false to avoid
      *            changes in direction as bounds are reached.
@@ -1124,7 +1124,7 @@ public class ZoomImageView extends View {
      * allowed range and the image on screen. Minimum scale is set so one
      * dimension fills the view and the image is centered on the other
      * dimension.
-     * 
+     *
      * @param center Whether the image should be centered in the dimension it's
      *            too small to fill. While animating this can be false to avoid
      *            changes in direction as bounds are reached.
@@ -1716,7 +1716,7 @@ public class ZoomImageView extends View {
 
     /**
      * Apply a selected type of easing.
-     * 
+     *
      * @param type Easing type, from static fields
      * @param time Elapsed time
      * @param from Start value
@@ -1738,7 +1738,7 @@ public class ZoomImageView extends View {
     /**
      * Quadratic easing for fling. With thanks to Robert Penner -
      * http://gizma.com/easing/
-     * 
+     *
      * @param time Elapsed time
      * @param from Start value
      * @param change Target value
@@ -1753,7 +1753,7 @@ public class ZoomImageView extends View {
     /**
      * Quadratic easing for scale and center animations. With thanks to Robert
      * Penner - http://gizma.com/easing/
-     * 
+     *
      * @param time Elapsed time
      * @param from Start value
      * @param change Target value
@@ -1823,7 +1823,7 @@ public class ZoomImageView extends View {
      * minimum pixel density. This avoids the problem of 1:1 scale still being
      * too small on a high density screen. A sensible starting point is 160 -
      * the default used by this view.
-     * 
+     *
      * @param dpi Source image pixel density at maximum zoom.
      */
     public final void setMinimumDpi(int dpi) {
@@ -1846,7 +1846,7 @@ public class ZoomImageView extends View {
      * resolution tiles should be loaded. Using a lower number will on average
      * use less memory but result in a lower quality image. 160-240dpi will
      * usually be enough.
-     * 
+     *
      * @param minimumTileDpi Tile loading threshold.
      */
     public void setMinimumTileDpi(int minimumTileDpi) {
@@ -1879,7 +1879,7 @@ public class ZoomImageView extends View {
      * Externally change the scale and translation of the source image. This may
      * be used with getCenter() and getScale() to restore the scale and zoom
      * after a screen rotate.
-     * 
+     *
      * @param scale New scale to set.
      * @param sCenter New source image coordinate to center on the screen,
      *            subject to boundaries.
@@ -2016,7 +2016,7 @@ public class ZoomImageView extends View {
      * scale point where a double tap is interpreted as a zoom out gesture - if
      * the scale is greater than 90% of this value, a double tap zooms out.
      * Avoid using values greater than the max zoom.
-     * 
+     *
      * @param doubleTapZoomScale New value for double tap gesture zoom scale.
      */
     public final void setDoubleTapZoomScale(float doubleTapZoomScale) {
@@ -2029,7 +2029,7 @@ public class ZoomImageView extends View {
      * double tapped in terms of the image pixel density. Values lower than the
      * max scale will be ignored. A sensible starting point is 160 - the default
      * used by this view.
-     * 
+     *
      * @param dpi New value for double tap gesture zoom scale.
      */
     public final void setDoubleTapZoomDpi(int dpi) {
@@ -2041,7 +2041,7 @@ public class ZoomImageView extends View {
     /**
      * Set the type of zoom animation to be used for double taps. See static
      * fields.
-     * 
+     *
      * @param doubleTapZoomStyle New value for zoom style.
      */
     public final void setDoubleTapZoomStyle(int doubleTapZoomStyle) {
@@ -2064,7 +2064,7 @@ public class ZoomImageView extends View {
      * screen. If doing this would move the image beyond the edges of the
      * screen, the image is instead animated to move the center point as near to
      * the center of the screen as is allowed - it's guaranteed to be on screen.
-     * 
+     *
      * @param sCenter Target center point
      * @return {@link AnimationBuilder} instance. Call
      *         {@link net.nashlegend.sourcewall.commonview.ZoomImageView.AnimationBuilder#start()}
@@ -2081,7 +2081,7 @@ public class ZoomImageView extends View {
      * Creates a scale animation builder, that when started will animate a zoom
      * in or out. If this would move the image beyond the panning limits, the
      * image is automatically panned during the animation.
-     * 
+     *
      * @param scale Target scale.
      * @return {@link AnimationBuilder} instance. Call
      *         {@link net.nashlegend.sourcewall.commonview.ZoomImageView.AnimationBuilder#start()}
@@ -2098,7 +2098,7 @@ public class ZoomImageView extends View {
      * Creates a scale animation builder, that when started will animate a zoom
      * in or out. If this would move the image beyond the panning limits, the
      * image is automatically panned during the animation.
-     * 
+     *
      * @param scale Target scale.
      * @return {@link AnimationBuilder} instance. Call
      *         {@link net.nashlegend.sourcewall.commonview.ZoomImageView.AnimationBuilder#start()}
@@ -2152,7 +2152,7 @@ public class ZoomImageView extends View {
 
         /**
          * Desired duration of the anim in milliseconds. Default is 500.
-         * 
+         *
          * @param duration duration in milliseconds.
          * @return this builder for method chaining.
          */
@@ -2164,7 +2164,7 @@ public class ZoomImageView extends View {
         /**
          * Whether the animation can be interrupted with a touch. Default is
          * true.
-         * 
+         *
          * @param interruptible interruptible flag.
          * @return this builder for method chaining.
          */
@@ -2176,7 +2176,7 @@ public class ZoomImageView extends View {
         /**
          * Set the easing style. See static fields. {@link #EASE_IN_OUT_QUAD} is
          * recommended, and the default.
-         * 
+         *
          * @param easing easing style.
          * @return this builder for method chaining.
          */
