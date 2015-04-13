@@ -1,5 +1,6 @@
 package net.nashlegend.sourcewall.request.api;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -36,6 +37,9 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class APIBase {
 
@@ -358,7 +362,27 @@ public class APIBase {
      * @param dateString 传入的时间字符串
      * @return 解析后的时间 yyyy-mm-dd hh:mm:ss
      */
+    @SuppressLint("SimpleDateFormat")
     public static String parseDate(String dateString) {
-        return dateString.replace("T", " ").replaceAll("[\\+\\.]\\S+$", "");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String time = dateString.replace("T", " ").replaceAll("[\\+\\.]\\S+$", "");
+        try {
+            Date date = sdf.parse(time);
+            long mills = date.getTime();
+            long gap = System.currentTimeMillis() / 86400000 - mills / 86400000;
+            if (gap == 0) {
+                sdf = new SimpleDateFormat("今天HH:mm");
+            } else {
+                if (gap == 1) {
+                    sdf = new SimpleDateFormat("昨天HH:mm");
+                } else {
+                    sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                }
+            }
+            time = sdf.format(date.getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return time;
     }
 }
