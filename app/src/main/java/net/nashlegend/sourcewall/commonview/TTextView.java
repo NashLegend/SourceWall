@@ -249,7 +249,7 @@ public class TTextView extends TextView {
                         if (offset >= 0) {
                             suffix = realLink.substring(offset + 1);
                         }
-                        if ("gif".equals(suffix)) {
+                        if ("gif".equalsIgnoreCase(suffix)) {
                             Bitmap tmpBitmap = Bitmap.createBitmap((int) width, (int) height, Bitmap.Config.ARGB_8888);
                             Bitmap indBitmap = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.gif_text);
                             Canvas canvas = new Canvas(tmpBitmap);

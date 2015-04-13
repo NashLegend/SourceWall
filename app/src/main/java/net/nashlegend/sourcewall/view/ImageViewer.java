@@ -88,7 +88,7 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
                 if (offset >= 0) {
                     suffix = realLink.substring(offset + 1);
                 }
-                if ("gif".equals(suffix)) {
+                if ("gif".equalsIgnoreCase(suffix)) {
                     gifImageView.setVisibility(VISIBLE);
                     imageView.setVisibility(GONE);
                     gifImageView.setImageURI(Uri.fromFile(new File((String) resultObject.result)));
