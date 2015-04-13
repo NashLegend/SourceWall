@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -40,6 +41,7 @@ import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.RoundTransformation;
 import net.nashlegend.sourcewall.util.StyleChecker;
 
 import java.util.ArrayList;
@@ -166,9 +168,9 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
             likeButton.setIcon(R.drawable.heart_outline);
         }
         if (Config.shouldLoadImage()) {
-            Picasso.with(this).load(data.getAuthorAvatarUrl())
+            Picasso.with(this).load(data.getAuthorAvatarUrl()).placeholder(R.drawable.default_avatar)
                     .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
-                    .into(avatar);
+                    .transform(new RoundTransformation(Color.parseColor("#00000000"), 0, true)).into(avatar);
         } else {
             avatar.setImageResource(R.drawable.default_avatar);
         }

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -44,6 +45,7 @@ import net.nashlegend.sourcewall.util.ChannelHelper;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Mob;
+import net.nashlegend.sourcewall.util.RoundTransformation;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 import net.nashlegend.sourcewall.view.SubItemView;
 
@@ -382,7 +384,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
                     if (Config.shouldLoadImage()) {
                         Picasso.with(getActivity()).load(avatarString)
                                 .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen).placeholder(R.drawable.default_avatar)
-                                .into(avatarView);
+                                .transform(new RoundTransformation(Color.parseColor("#00000000"), 0, true)).into(avatarView);
                     } else {
                         avatarView.setImageResource(R.drawable.default_avatar);
                     }
@@ -404,9 +406,9 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
                         String avatarString = SharedPreferencesUtil.readString(Consts.Key_User_Avatar, "");
                         if (!TextUtils.isEmpty(avatarString)) {
                             if (Config.shouldLoadImage()) {
-                                Picasso.with(getActivity()).load(avatarString)
+                                Picasso.with(getActivity()).load(avatarString).placeholder(R.drawable.default_avatar)
                                         .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
-                                        .into(avatarView);
+                                        .transform(new RoundTransformation(Color.parseColor("#00000000"), 0, true)).into(avatarView);
                             } else {
                                 avatarView.setImageResource(R.drawable.default_avatar);
                             }
@@ -654,9 +656,9 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
         SharedPreferencesUtil.saveString(Consts.Key_User_ID, info.getId());
         SharedPreferencesUtil.saveString(Consts.Key_User_Avatar, info.getAvatar());
         if (Config.shouldLoadImage()) {
-            Picasso.with(getActivity()).load(info.getAvatar())
+            Picasso.with(getActivity()).load(info.getAvatar()).placeholder(R.drawable.default_avatar)
                     .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
-                    .into(avatarView);
+                    .transform(new RoundTransformation(Color.parseColor("#00000000"), 0, true)).into(avatarView);
         } else {
             avatarView.setImageResource(R.drawable.default_avatar);
         }

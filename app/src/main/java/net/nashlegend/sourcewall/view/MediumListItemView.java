@@ -1,6 +1,7 @@
 package net.nashlegend.sourcewall.view;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import net.nashlegend.sourcewall.commonview.TTextView;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.RoundTransformation;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 
 /**
@@ -84,7 +86,7 @@ public class MediumListItemView extends AceView<UComment> {
         if (Config.shouldLoadImage()) {
             Picasso.with(getContext()).load(comment.getAuthorAvatarUrl())
                     .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen).placeholder(R.drawable.default_avatar)
-                    .into(avatarImage);
+                    .transform(new RoundTransformation(Color.parseColor("#00000000"), 0, true)).into(avatarImage);
         } else {
             avatarImage.setImageResource(R.drawable.default_avatar);
         }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -24,6 +25,7 @@ import net.nashlegend.sourcewall.request.ResultObject;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.RoundTransformation;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 import net.nashlegend.sourcewall.util.StyleChecker;
 
@@ -86,7 +88,7 @@ public class PostView extends AceView<Post> {
             if (Config.shouldLoadImage()) {
                 Picasso.with(getContext()).load(post.getAuthorAvatarUrl())
                         .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen).placeholder(R.drawable.default_avatar)
-                        .into(avatarImage);
+                        .transform(new RoundTransformation(Color.parseColor("#00000000"), 0, true)).into(avatarImage);
             } else {
                 avatarImage.setImageResource(R.drawable.default_avatar);
             }

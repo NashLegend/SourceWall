@@ -1,6 +1,7 @@
 package net.nashlegend.sourcewall.view;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
@@ -11,6 +12,7 @@ import com.squareup.picasso.Picasso;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.util.Config;
+import net.nashlegend.sourcewall.util.RoundTransformation;
 
 /**
  * Created by NashLegend on 2014/9/18 0018.
@@ -50,7 +52,7 @@ public class SimpleCommentItemView extends AceView<UComment> {
         if (Config.shouldLoadImage()) {
             Picasso.with(getContext()).load(comment.getAuthorAvatarUrl())
                     .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen).placeholder(R.drawable.default_avatar)
-                    .into(avatarImage);
+                    .transform(new RoundTransformation(Color.parseColor("#00000000"), 0, true)).into(avatarImage);
         } else {
             avatarImage.setImageResource(R.drawable.default_avatar);
         }
