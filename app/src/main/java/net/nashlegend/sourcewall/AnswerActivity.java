@@ -99,6 +99,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         notAnButton = (FloatingActionButton) findViewById(R.id.button_Bury);
         thankButton = (FloatingActionButton) findViewById(R.id.button_thank);
 
+        authorLayout.setOnClickListener(this);
         questionText.setOnClickListener(this);
         supportView.setOnClickListener(this);
         replyButton.setOnClickListener(this);
@@ -317,6 +318,15 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
                 break;
             case R.id.button_thank:
                 thankAnswer();
+                break;
+            case R.id.layout_author:
+                if (authorLayout.getTranslationY() < 0) {
+                    autoHideListener.animateBack();
+                } else {
+                    if (scrollView.getScrollY() > authorLayout.getTop()) {
+                        autoHideListener.animateHide();
+                    }
+                }
                 break;
         }
     }

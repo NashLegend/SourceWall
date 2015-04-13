@@ -100,6 +100,7 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
         deleteButton = (FloatingActionButton) findViewById(R.id.button_Delete);
         likeButton = (FloatingActionButton) findViewById(R.id.button_like);
 
+        authorLayout.setOnClickListener(this);
         hostTitle.setOnClickListener(this);
         likeView.setOnClickListener(this);
         replyButton.setOnClickListener(this);
@@ -330,6 +331,15 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
                 break;
             case R.id.button_thank:
                 likeThis();
+                break;
+            case R.id.layout_author:
+                if (authorLayout.getTranslationY() < 0) {
+                    autoHideListener.animateBack();
+                } else {
+                    if (scrollView.getScrollY() > authorLayout.getTop()) {
+                        autoHideListener.animateHide();
+                    }
+                }
                 break;
         }
     }
