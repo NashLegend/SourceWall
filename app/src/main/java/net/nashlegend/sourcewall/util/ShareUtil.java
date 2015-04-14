@@ -63,6 +63,10 @@ public class ShareUtil {
         }
     }
 
+    public static void shareToWeibo(Context context, String url, String title, String summary, Bitmap bitmap) {
+        //TODO
+    }
+
     public static String getWeixinAppId() {
         if (BuildConfig.DEBUG) {
             return WEIXIN_APP_ID_DEBUG;
