@@ -203,11 +203,11 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         switch (id) {
             case R.id.action_share_to_wechat_circle:
                 MobclickAgent.onEvent(this, Mob.Event_Share_Article_To_Wechat_Circle);
-                ShareUtil.shareToWeiXin(this, article.getUrl(), article.getTitle(), article.getSummary(), null, false);
+                ShareUtil.shareToWeiXinCircle(this, article.getUrl(), article.getTitle(), article.getSummary(), null);
                 break;
             case R.id.action_share_to_wechat_friends:
                 MobclickAgent.onEvent(this, Mob.Event_Share_Article_To_Wechat_friend);
-                ShareUtil.shareToWeiXin(this, article.getUrl(), article.getTitle(), article.getSummary(), null, true);
+                ShareUtil.shareToWeiXinFriends(this, article.getUrl(), article.getTitle(), article.getSummary(), null);
                 break;
             case R.id.action_open_in_browser:
                 if (!TextUtils.isEmpty(article.getUrl())) {

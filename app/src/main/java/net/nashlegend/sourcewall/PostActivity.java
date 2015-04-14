@@ -177,11 +177,11 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
                 break;
             case R.id.action_share_to_wechat_circle:
                 MobclickAgent.onEvent(this, Mob.Event_Share_Post_To_Wechat_Circle);
-                ShareUtil.shareToWeiXin(this, post.getUrl(), post.getTitle(), post.getTitle(), null, false);
+                ShareUtil.shareToWeiXinCircle(this, post.getUrl(), post.getTitle(), post.getTitle(), null);
                 break;
             case R.id.action_share_to_wechat_friends:
                 MobclickAgent.onEvent(this, Mob.Event_Share_Post_To_Wechat_friend);
-                ShareUtil.shareToWeiXin(this, post.getUrl(), post.getTitle(), post.getTitle(), null, true);
+                ShareUtil.shareToWeiXinFriends(this, post.getUrl(), post.getTitle(), post.getTitle(), null);
                 break;
         }
         return true;

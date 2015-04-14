@@ -149,11 +149,11 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
                 break;
             case R.id.action_share_to_wechat_circle:
                 MobclickAgent.onEvent(this, Mob.Event_Share_Question_To_Wechat_Circle);
-                ShareUtil.shareToWeiXin(this, question.getUrl(), question.getTitle(), question.getSummary(), null, false);
+                ShareUtil.shareToWeiXinCircle(this, question.getUrl(), question.getTitle(), question.getSummary(), null);
                 break;
             case R.id.action_share_to_wechat_friends:
                 MobclickAgent.onEvent(this, Mob.Event_Share_Question_To_Wechat_friend);
-                ShareUtil.shareToWeiXin(this, question.getUrl(), question.getTitle(), question.getSummary(), null, true);
+                ShareUtil.shareToWeiXinFriends(this, question.getUrl(), question.getTitle(), question.getSummary(), null);
                 break;
         }
         return super.onOptionsItemSelected(item);
