@@ -1,0 +1,25 @@
+POST http://www.guokr.com/apis/group/post_liking.json HTTP/1.1
+Host: www.guokr.com
+Connection: keep-alive
+Content-Length: 92
+Accept: application/json, text/javascript, */*; q=0.01
+Origin: http://www.guokr.com
+X-Requested-With: XMLHttpRequest
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.104 Safari/537.36
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+Referer: http://www.guokr.com/post/647876/
+Accept-Encoding: gzip,deflate
+Accept-Language: zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4,id;q=0.2
+
+post_id=647876&access_token={token}}
+HTTP/1.1 201 CREATED
+Server: nginx/1.2.1
+Date: Tue, 02 Dec 2014 08:24:04 GMT
+Content-Type: application/json
+Content-Length: 163
+Connection: close
+X-Served-By: gkserver13
+X-Served-In-Seconds: 0.1731
+Set-Cookie: session=097dc030-b6bc-44a1-a9fc-60b81beb992a; Domain=www.guokr.com; Path=/; HttpOnly
+
+{"now": "2014-12-02T16:24:06.807821+08:00", "ok": true, "result": {"post_id": 647876, "ukey_liking": "5p6t9t", "date_created": "2014-12-02T16:24:06.927932+08:00"}}

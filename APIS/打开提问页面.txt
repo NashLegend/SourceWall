@@ -1,0 +1,392 @@
+GET http://www.guokr.com/questions/new/ HTTP/1.1
+Host: www.guokr.com
+Connection: keep-alive
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36
+Referer: http://www.guokr.com/question/534239/
+Accept-Encoding: gzip, deflate, sdch
+Accept-Language: zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4,id;q=0.2
+Cookie: tip=1; rank=1; post_like=1; _ga=GA1.2.44737763.1389158113; bdshare_firstime=1419309862756; _32382_auto_signin=1; _32353_auto_signin=1; support=1; isN=1; _32353_access_token=df86e202797028f8adbdcbee1c9849b00238087b78dc2f32087f5ddafed446ad; _32353_ukey=5p6t9t; _32382_access_token=01f7ae56dbd1f220ac8b821f6acc4bf2cf4206f85769ffd4515ff7481a81ea3e; _32382_ukey=5p6t9t; __utmt=1; session=1700739b-6baa-4ae4-a84c-5ddd165d58d4; Hm_lvt_95dfd07652f91dffd9647f46a3ca9fab=1420790582,1420792590,1421023834,1421029505; Hm_lpvt_95dfd07652f91dffd9647f46a3ca9fab=1421029554; __utma=253067679.44737763.1389158113.1421023834.1421029502.337; __utmb=253067679.5.9.1421029571795; __utmc=253067679; __utmz=253067679.1421023834.336.41.utmcsr=baidu|utmccn=(organic)|utmcmd=organic|utmctr=%E6%95%B0%E7%8B%AC%20%E5%AD%99%E5%BD%BB%E7%84%B6; __utmv=253067679.|1=Is%20Registered=Yes=1
+
+
+HTTP/1.1 200 OK
+Server: nginx/1.2.1
+Content-Type: text/html; charset=utf-8
+X-Served-By: gkserver12
+X-Served-In-Seconds: 0.0537
+Set-Cookie: session=1700739b-6baa-4ae4-a84c-5ddd165d58d4; Domain=www.guokr.com; Path=/; HttpOnly
+X-UA-Device: 
+Content-Length: 14428
+Accept-Ranges: bytes
+Date: Mon, 12 Jan 2015 02:26:08 GMT
+X-Varnish: 3225442048
+Age: 0
+Via: 1.1 varnish
+Connection: keep-alive
+
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7 screen-scroll"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8 screen-scroll"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9 screen-scroll"> <![endif]-->
+<html class="no-js screen-scroll">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+        <meta name="Keywords" content="果壳问答, ask, 果壳,果壳网,科技,泛科技,智趣,生活,科普"/>
+        <meta name="Description" content="汇集知识碎片，创造有价值的答案"/>
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1,user-scalable=no" />
+        <meta name="format-detection" content="telephone=no" />
+        <title>提新问题 | 问答 | 果壳网 科技有意思</title>
+        <link rel="stylesheet" href="http://static.guokr.com/apps/ask/styles/3192ac2b.main.css" />
+    
+    <link rel="stylesheet" type="text/css" href="http://static.guokr.com/apps/ask/styles/e8ff5a9c.gbbcode.css" />
+    <link rel="stylesheet" type="text/css" href="http://static.guokr.com/apps/ask/styles/editor/014cbc1e.skin.css" />
+    <link rel="stylesheet" href="http://static.guokr.com/apps/ask/styles/61eff452.newPage.css" />
+</head>
+    <body>
+        
+
+<div class="gheader-wrap">
+<div class="gheader-new">
+    <div class="gh-wrap">
+        <div class="gfl">
+            <ul class="gh-nav">
+                
+<li>
+<a href="http://www.guokr.com/"><span class="gnicon-home"></span>首页<b ></b></a>
+</li>
+
+                
+<li>
+<a href="/scientific">科学人<b ></b></a>
+</li>
+
+                
+<li>
+<a href="http://www.guokr.com/group/user/recent_replies/">小组<b ></b></a>
+</li>
+
+                
+<li>
+<a href="http://www.guokr.com/ask/">问答<b class="gnarrow-up"></b></a>
+</li>
+
+                
+<li class="gh-sm-hidden">
+<a href="http://mooc.guokr.com/" target="_blank">MOOC 学院</a>
+</li>
+
+                
+<li class="gh-sm-hidden">
+<a href="http://sex.guokr.com/" target="_blank">知性</a>
+</li>
+
+                <li id="moreNav" class="gh-sm-hidden">
+                    <a href="javascript:void 0;" class="other">更多<i class="gnarrow-down"></i></a>
+                    <div class="gh-list">
+                        <ul>
+                            
+<li class="gh-sm-hidden">
+<a href="http://www.guokr.com/blogs/" target="_blank">日志</a>
+</li>
+
+                            
+<li class="gh-sm-hidden">
+<a href="http://www.guokr.com/event/home/" target="_blank">活动</a>
+</li>
+
+                            
+<li class="gh-sm-hidden">
+<a href="http://www.zaihang.me/" target="_blank">在行</a>
+</li>
+
+                            
+<li class="gh-sm-hidden">
+<a href="http://www.15yan.com/" target="_blank">十五言</a>
+</li>
+
+                            
+<li class="gh-sm-hidden">
+<a href="http://www.guokr.com/pregnancy/" target="_blank">研究生</a>
+</li>
+
+                            
+<li class="gh-sm-hidden">
+<a href="http://www.guokr.com/mobile/" target="_blank">果壳精选</a>
+</li>
+
+                            
+<li class="gh-sm-hidden">
+<a href="http://www.liuyanbaike.com/" target="_blank">流言百科</a>
+</li>
+
+                            
+<li class="gh-sm-hidden">
+<a href="http://gate.guokr.com/" target="_blank">任意门</a>
+</li>
+
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+            <form class="gh-search" id="search" method="get" action="http://www.guokr.com/search/all/">
+                <p id="searchBox">
+                    <input id="searchTxt" class="gh-search-txt" type="text" name="wd" maxlength="30" value="">
+                    <input class="gnicon-search" type="submit" value="搜索">
+                </p>
+            </form>
+        </div>
+        
+        <ul class="gh-notice gfr">
+        <li>
+        </li>
+        <li id="gheaderNotice">
+            <a data-gaevent="home_nav_news:guokr" href="javascript:void 0;" class="gh-i-notice">
+                <span class="gnicon-notice gfl"></span>
+                <span class="gh-i-num unread" id="noticeNum">0</span>
+            </a>
+            <div class="gh-notice-panel" id="noticeBlock" style="display:none">
+                <div class="notice-content">
+                    <div class="gh-i-popup-category">
+                        <span class="gfl">通知</span>
+                        <a href="http://www.guokr.com/settings/notice/" class="gnicon-set gfl"></a>
+                        <a href="http://www.guokr.com/user/notice/" class="gfr">全部通知</a>
+                    </div>
+                    <ul>
+                    </ul>
+                </div>
+                <div class="gh-panel-bottom ghide" id="noticeBottom">
+                    <a href="javascript:void 0;" class="gnbtn miss-all" data-operation="dismissAll">知道了</a>
+                </div>
+            </div>
+        </li>
+        <li id="gheaderRemind">
+            <a data-gaevent="home_nav_news:guokr" href="javascript:void 0;" class="gh-i-remind">
+                <span class="gnicon-msg gfl"></span>
+                <span class="gh-i-num" id="totleNum">0</span>
+            </a>
+            <div class="gh-remind-panel" id="remindBlock" style="display:none">
+                <div class="remind-content">
+                   <div class="gh-i-popup-category gh-msg-title">
+                        <span class="gfl">站内信</span>
+                        <a href="http://www.guokr.com/user/messages/" class="gfr">全部站内信</a>
+                    </div>
+                    <ul class="msg-list no-msg"></ul>
+                    <div class="gh-i-popup-category gh-draft-title">
+                        <span class="gfl">草稿箱</span>
+                        <a href="http://www.guokr.com/user/draft/" class="gfr no-draft" id="draftDoor">暂无草稿</a>
+                    </div>
+                    <ul>
+                    </ul>
+                </div>
+            </div>
+        </li>
+        <li id="gheaderSettings">
+            <a href="javascript:void 0;" class="gh-i-me">
+                <img src="http://2.im.guokr.com/4P2ONG8AAw0pUoTVwnTL6e1urZOdUzTfT6UUXNGB4GegAAAAoAAAAEpQ.jpg?imageView2/1/w/24/h/24" width="24" height="24">
+                <i class="gnarrow-down"></i>
+            </a>
+            <div class="gh-list" style="display:none;" id="settingsBlock">
+                <ul>
+                    <li><a data-gaevent="home_nav_i:guokr" href="http://www.guokr.com/i/0344639153/">我的主页</a></li>
+                    <li><a href="http://www.guokr.com/settings/profile/">设置</a></li>
+                    <li><a href="https://account.guokr.com/sign_out/0344639153/?success=http%3A%2F%2Fwww.guokr.com%2Fquestions%2Fnew%2F">退出</a></li>
+                </ul>
+            </div>
+        </li>
+   </ul>
+   
+    </div>
+</div>
+</div>
+
+<div class="sub-nav">
+    <div class="sub-nav-wrap gclear">
+        <h2>
+            <a href="/ask/"><span class="gnav-logo">果壳</span>问答</a>
+        </h2>
+        <ul class="sub-nav-link gfl">
+            
+
+
+<li >
+    <a href="/ask/">问答首页</a>
+</li>
+
+            
+
+
+<li >
+    <a href="/ask/hottest/">发现问答</a>
+</li>
+
+            
+
+
+<li >
+    <a href="/ask/pending/">等待回答</a>
+</li>
+
+            
+
+
+<li >
+    <a href="/ask/newest/">最新问题</a>
+</li>
+
+            
+
+
+<li >
+    <a href="/ask/tag/category/">标签广场</a>
+</li>
+
+            
+            
+
+
+<li >
+    <a href="http://www.guokr.com/ask/i/0344639153/">我的问答</a>
+</li>
+
+            
+        </ul>
+        <div class="sub-nav-btn gfr">
+            <a data-gaevent="ask_nav_button_ask:ask" href="/questions/new/" class="gnbtn-primary" data-redirect="" data-login="http://www.guokr.com/questions/new/">提问</a>
+            <a data-gaevent="ask_nav_button_answer:ask" href="/ask/pending/" class="gnbtn-primary">我要回答</a>
+        </div>
+    </div>
+</div>
+        
+    <div class="gwrap ask-new-page">
+        <div class="gmain">
+            
+    <div>
+        <div class="page-title">
+            <h2>提新问题</h2>
+        </div>
+        <form id="newAsk" class="gform" action="" method="POST">
+            <input id="csrf_token" name="csrf_token" type="hidden" value="1421033168.74##517ebf9f6466595fc563f826be449c2e2e288e58">
+            
+    
+        
+    
+    <label for="askTitle">问题</label>
+    
+<div class="gform-box gclear">
+            <textarea autofocus="" class="gttxt" id="askTitle" name="question" required=""></textarea>
+            
+            
+    <span class="tip"></span>
+
+        
+        </div>
+
+
+            <div class="ask-desc">
+                <a href="javascript:void 0;" id="descTrigger"><span class="icon-plus"></span>添加补充说明</a>
+                <div class="ghide">
+                    <textarea id="askDesc" name="annotation"></textarea>
+                </div>
+            </div>
+            <label>标签</label>
+            <div class="gform-box">
+                <div class="editor-tags-fix">
+                    <p class="post-tags tags" id="tagContent">
+                    
+                    </p>
+                    <div class="hide post-autoComp_tags gclear" style="display: block;">
+                        <input type="text" id="tagAdd" class="gstxt">
+                        <p class="editor-tags-i">给问题打上正确的标签有助于更快获得解答</p>
+                    </div>
+                    <script type="text/javascript" async="" src="http://www.google-analytics.com/ga.js"></script>
+                    <script type="text/javascript" async="" src="http://hm.baidu.com/h.js?95dfd07652f91dffd9647f46a3ca9fab">
+                        </script><script class="hide tagsData" type="text/data">
+                        []
+                    </script>
+                </div>
+            </div>
+
+            
+    
+    <input id="captcha" name="captcha" type="hidden" value="">
+
+
+            <div class="cmts-submit-box gclear">
+                <a href="javascript:void 0;" class="draft-btn" id="draftTip"></a>
+                <input type="submit" class="submit" value="发布">
+                <a href="/ask/newest/" class="cancel-new">取消</a>
+                <div class="cmts-share" id="checkAlias" style="position: relative;">
+                </div>
+            </div>
+        </form>
+    </div>
+
+        </div>
+        
+    <div class="gside">
+        <div class="side-summary">
+            <h2>如何更快得到靠谱答案</h2>
+            以下要点可以方便你更快寻求到靠谱答案：
+            <ol>
+                <li>
+                    1.请先搜索是否已经有同类问题得到解决;
+                </li>
+                <li>
+                    2.请在提问时精确描述你的问题，不要写与问题无关的内容，也不要用“详情请入内”之类无意义的语句；
+                </li>
+                <li>
+                    3.果壳er们更热衷于回答能引起思考和讨论的知识性问题；
+                </li>
+                <li>
+                    4.提问时，@相关领域的果壳达人，会让他们更快关注到你的问题。
+                </li>
+            </ol>
+            <a href="http://www.guokr.com/question/446444/">果壳问答详细指南 &gt;</a>
+        </div>
+    </div>
+
+        
+    </div>
+
+
+        
+        <div class="gbottom">
+    <div class="gbottom-nav">
+        <a href="http://www.guokr.com/about/">关于我们</a>
+        <a href="http://www.guokr.com/zone/job/">加入果壳</a>
+        <a href="http://www.guokr.com/spread/">媒体报道</a>
+        <a href="http://www.guokr.com/question/446161/">帮助中心</a>
+        <a href="http://www.guokr.com/zone/">内容专区</a>
+        <a href="http://www.guokr.com/help/policy/">免责声明</a>
+        <a href="http://www.guokr.com/contact/">联系我们</a>
+        <a href="http://m.guokr.com/">移动版</a>
+        <a href="http://www.guokr.com/mobile/">移动应用</a>
+    </div>
+    <div class="gbottom-i">©2013果壳网&nbsp;京ICP备09043258号-2&nbsp;京公网安备1101052730</div>
+</div>
+        
+    <script type="text/html" id="aTagTmpl">
+        <span class="tag"><a href="<%=url%>"><%=name%></a><a href="javascript: void 0;" class="gnicon-close-small" title="移除标签" data-operation="delete">X</a><input type="hidden" name="tags" value="<%=name%>"></span>
+    </script>
+    <script src="http://static.guokr.com/apps/ask/scripts/5d020fd0.editor.js"></script>
+    <script>
+            var g_page_name = "askNewPage",
+            GJS_VERSION = 'doom',
+            ukey = "5p6t9t",
+            client_id = 32382,
+                url_re_signin = "https:\/\/account.guokr.com\/sign_out\/0344639153\/?success=http%3A%2F%2Fwww.guokr.com%2Fsso%2Fask%2F%3Fsuppress_prompt%3D1%26lazy%3Dy%26success%3Dhttp%253A%252F%252Fwww.guokr.com%252Fquestions%252Fnew%252F",
+                url_email_bind = "https:\/\/account.guokr.com\/settings\/security\/email\/change\/",
+                weibo_signin = "https:\/\/account.guokr.com\/weibo\/sign_in\/?success=http%3A%2F%2Fwww.guokr.com%2Fsso%2Fask%2F%3Fsuppress_prompt%3D1%26lazy%3Dy%26success%3Dhttp%253A%252F%252Fwww.guokr.com%252Fquestions%252Fnew%252F",
+                renren_signin = "https:\/\/account.guokr.com\/renren\/sign_in\/?success=http%3A%2F%2Fwww.guokr.com%2Fsso%2Fask%2F%3Fsuppress_prompt%3D1%26lazy%3Dy%26success%3Dhttp%253A%252F%252Fwww.guokr.com%252Fquestions%252Fnew%252F",
+                qq_signin = "https:\/\/account.guokr.com\/qq\/sign_in\/?success=http%3A%2F%2Fwww.guokr.com%2Fsso%2Fask%2F%3Fsuppress_prompt%3D1%26lazy%3Dy%26success%3Dhttp%253A%252F%252Fwww.guokr.com%252Fquestions%252Fnew%252F";
+                douban_signin = "https:\/\/account.guokr.com\/douban\/sign_in\/?success=http%3A%2F%2Fwww.guokr.com%2Fsso%2Fask%2F%3Fsuppress_prompt%3D1%26lazy%3Dy%26success%3Dhttp%253A%252F%252Fwww.guokr.com%252Fquestions%252Fnew%252F";
+            </script>
+        <script src="http://static.guokr.com/apps/ask/scripts/b0519797.base.js"></script>
+        <script src="http://static.guokr.com/apps/ask/scripts/55c8b0a8.main.js"></script>
+    <script type="text/javascript">
+        var tinymce_content_css = "http:\/\/static.guokr.com\/apps\/ask\/styles\/editor\/89bb7519.content.css";
+    </script>
+    <script src="http://static.guokr.com/apps/ask/scripts/a283dd4c.newPage.js"></script>
+</body>
+</html>

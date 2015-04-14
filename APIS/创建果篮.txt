@@ -1,0 +1,27 @@
+POST http://www.guokr.com/apis/favorite/basket.json HTTP/1.1
+Host: www.guokr.com
+Connection: keep-alive
+Content-Length: 163
+Accept: application/json, text/javascript, */*; q=0.01
+Origin: http://www.guokr.com
+X-Requested-With: XMLHttpRequest
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.104 Safari/537.36
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+Referer: http://www.guokr.com/article/438007/
+Accept-Encoding: gzip,deflate
+Accept-Language: zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4,id;q=0.2
+
+title=%E4%B8%AD%E6%96%87Test&introduction=%E4%B8%AD%E6%96%87Desciption&category_id=13&access_token={token}
+
+
+HTTP/1.1 201 CREATED
+Server: nginx/1.2.1
+Date: Tue, 02 Dec 2014 04:17:11 GMT
+Content-Type: application/json
+Content-Length: 1016
+Connection: close
+X-Served-By: gkserver12
+X-Served-In-Seconds: 0.1253
+Set-Cookie: session=937dc0b5-19b7-4ec4-9130-522c1351c69e; Domain=www.guokr.com; Path=/; HttpOnly
+
+{"now": "2014-12-02T12:17:11.375281+08:00", "ok": true, "result": {"category": {"id": 13, "name": "\u5403\u8d27"}, "introduction": "\u4e2d\u6587Desciption", "html": "\u4e2d\u6587Desciption", "user": {"ukey": "5p6t9t", "is_title_authorized": false, "nickname": "NashLegend", "amended_reliability": "0", "is_exists": true, "title": "", "url": "http://www.guokr.com/i/0344639153/", "gender": "male", "followers_count": 4, "avatar": {"large": "http://2.im.guokr.com/4P2ONG8AAw0pUoTVwnTL6e1urZOdUzTfT6UUXNGB4GegAAAAoAAAAEpQ.jpg?imageView2/1/w/160/h/160", "small": "http://2.im.guokr.com/4P2ONG8AAw0pUoTVwnTL6e1urZOdUzTfT6UUXNGB4GegAAAAoAAAAEpQ.jpg?imageView2/1/w/24/h/24", "normal": "http://2.im.guokr.com/4P2ONG8AAw0pUoTVwnTL6e1urZOdUzTfT6UUXNGB4GegAAAAoAAAAEpQ.jpg?imageView2/1/w/48/h/48"}, "resource_url": "http://apis.guokr.com/community/user/5p6t9t.json"}, "ukey": "5p6t9t", "title": "\u4e2d\u6587Test", "url": "http://www.guokr.com/basket/833891/", "date_created": "2014-12-02T12:17:13.809411+08:00", "id": 833891}}

@@ -1,0 +1,26 @@
+DELETE http://www.guokr.com/apis/group/post.json?reason=%E4%BD%9C%E8%80%85%E5%88%A0%E9%99%A4&post_id=655299&access_token=8800981f84cfc0416f147c1e65628ed0e30e5ce0019ef662ceb517678de9de44 HTTP/1.1
+Host: www.guokr.com
+Connection: keep-alive
+Content-Length: 136
+Accept: application/json, text/javascript, */*; q=0.01
+Origin: http://www.guokr.com
+X-Requested-With: XMLHttpRequest
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8
+Referer: http://www.guokr.com/post/655299/
+Accept-Encoding: gzip, deflate, sdch
+Accept-Language: zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4,id;q=0.2
+Cookie: support=1; tip=1; rank=1; post_like=1; _ga=GA1.2.44737763.1389158113; bdshare_firstime=1419309862756; _32382_auto_signin=1; _32353_auto_signin=1; isN=1; _32353_access_token=8800981f84cfc0416f147c1e65628ed0e30e5ce0019ef662ceb517678de9de44; _32353_ukey=5p6t9t; __utmt=1; __utma=253067679.44737763.1389158113.1420599145.1420607066.329; __utmb=253067679.37.9.1420608524375; __utmc=253067679; __utmz=253067679.1420590868.326.39.utmcsr=baidu|utmccn=(organic)|utmcmd=organic|utmctr=1997%E5%B9%B4%E5%9B%9B%E5%9B%BD%E8%B5%9B%20%E6%B3%95%E5%9B%BD1-1%E5%B7%B4%E8%A5%BF; __utmv=253067679.|1=Is%20Registered=Yes=1; Hm_lvt_95dfd07652f91dffd9647f46a3ca9fab=1420590868,1420594115,1420599145,1420607066; Hm_lpvt_95dfd07652f91dffd9647f46a3ca9fab=1420608664; session=6388ba4e-ca85-4e6a-b793-b5869cefa36f
+
+reason=%E4%BD%9C%E8%80%85%E5%88%A0%E9%99%A4&post_id=655299&access_token=8800981f84cfc0416f147c1e65628ed0e30e5ce0019ef662ceb517678de9de44
+HTTP/1.1 200 OK
+Server: nginx/1.2.1
+Date: Wed, 07 Jan 2015 05:33:50 GMT
+Content-Type: application/json
+Content-Length: 96
+Connection: close
+X-Served-By: gkserver14
+X-Served-In-Seconds: 0.1490
+Set-Cookie: session=6388ba4e-ca85-4e6a-b793-b5869cefa36f; Domain=www.guokr.com; Path=/; HttpOnly
+
+{"now": "2015-01-07T13:33:50.301191+08:00", "ok": true, "result": {"reason": "deleted_by_user"}}

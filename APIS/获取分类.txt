@@ -1,0 +1,20 @@
+GET http://www.guokr.com/apis/favorite/category.json?access_token={token} HTTP/1.1
+Host: www.guokr.com
+Connection: keep-alive
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.104 Safari/537.36
+Accept-Encoding: gzip,deflate,sdch
+Accept-Language: zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4,id;q=0.2
+
+
+HTTP/1.1 200 OK
+Server: nginx/1.2.1
+Date: Tue, 02 Dec 2014 04:23:54 GMT
+Content-Type: application/json
+Content-Length: 659
+Connection: close
+X-Served-By: gkserver13
+X-Served-In-Seconds: 0.0032
+Set-Cookie: session=937dc0b5-19b7-4ec4-9130-522c1351c69e; Domain=www.guokr.com; Path=/; HttpOnly
+
+{"now": "2014-12-02T12:23:57.157087+08:00", "ok": true, "result": [{"id": 1, "name": "\u7b11\u70b9\u4f4e"}, {"id": 3, "name": "\u5b66\u4e60"}, {"id": 5, "name": "\u51b7\u77e5\u8bc6"}, {"id": 2, "name": "\uff27\uff45\uff45\uff4b"}, {"id": 4, "name": "\u81ea\u7136\u63a7"}, {"id": 6, "name": "DIY"}, {"id": 7, "name": "\u4e8c\u6b21\u5143"}, {"id": 8, "name": "\u6e38\u620f"}, {"id": 9, "name": "\u79d1\u5e7b"}, {"id": 10, "name": "\u7535\u5f71"}, {"id": 11, "name": "\u6444\u5f71"}, {"id": 12, "name": "\u6587\u79d1\u751f"}, {"id": 13, "name": "\u5403\u8d27"}, {"id": 14, "name": "\u7f8e\u5bb9"}, {"id": 15, "name": "2^10"}, {"id": 16, "name": "\u5176\u5b83"}]}

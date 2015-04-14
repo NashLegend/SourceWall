@@ -1,0 +1,37 @@
+POST http://www.guokr.com/questions/new/ HTTP/1.1
+Host: www.guokr.com
+Connection: keep-alive
+Content-Length: 573
+Cache-Control: max-age=0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+Origin: http://www.guokr.com
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36
+Content-Type: application/x-www-form-urlencoded
+Referer: http://www.guokr.com/questions/new/
+Accept-Encoding: gzip, deflate
+Accept-Language: zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4,id;q=0.2
+Cookie: tip=1; rank=1; post_like=1; _ga=GA1.2.44737763.1389158113; bdshare_firstime=1419309862756; _32382_auto_signin=1; _32353_auto_signin=1; support=1; isN=1; _32353_access_token=df86e202797028f8adbdcbee1c9849b00238087b78dc2f32087f5ddafed446ad; _32353_ukey=5p6t9t; _32382_access_token=01f7ae56dbd1f220ac8b821f6acc4bf2cf4206f85769ffd4515ff7481a81ea3e; _32382_ukey=5p6t9t; __utmt=1; Hm_lvt_95dfd07652f91dffd9647f46a3ca9fab=1420790582,1420792590,1421023834,1421029505; Hm_lpvt_95dfd07652f91dffd9647f46a3ca9fab=1421029572; __utma=253067679.44737763.1389158113.1421023834.1421029502.337; __utmb=253067679.6.9.1421029571795; __utmc=253067679; __utmz=253067679.1421023834.336.41.utmcsr=baidu|utmccn=(organic)|utmcmd=organic|utmctr=%E6%95%B0%E7%8B%AC%20%E5%AD%99%E5%BD%BB%E7%84%B6; __utmv=253067679.|1=Is%20Registered=Yes=1; session=1700739b-6baa-4ae4-a84c-5ddd165d58d4
+
+csrf_token=1421033168.74%23%23517ebf9f6466595fc563f826be449c2e2e288e58&question=%E5%BC%80%E5%8F%91%E4%B8%80%E4%B8%AA%E7%AC%AC%E4%B8%89%E6%96%B9%E7%9A%84%E6%9E%9C%E5%A3%B3Android%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%BC%9A%E8%A2%AB%E6%9E%9C%E5%A3%B3%E5%AE%98%E6%96%B9%E5%B0%81%E6%9D%80%E4%B9%88%7E&annotation=%3Cp%3E%E5%A6%82%E9%A2%98%EF%BC%8C%E9%A1%BA%E4%BE%BF%E6%AD%A4%E9%A2%98%E9%99%84%E5%B8%A6%E6%8A%93%E5%8C%85%E7%9A%84%E4%BD%BF%E5%91%BD%26hellip%3B%26hellip%3B%3C%2Fp%3E&tags=%E6%9E%9C%E5%A3%B3%E5%AE%A2%E6%88%B7%E7%AB%AF&tags=%E6%9E%9C%E5%A3%B3%E7%BD%91&tags=Android&captcha=
+
+
+HTTP/1.1 302 FOUND
+Server: nginx/1.2.1
+Content-Type: text/html; charset=utf-8
+Location: http://www.guokr.com/question/591046/
+X-Served-By: gkserver12
+X-Served-In-Seconds: 0.4982
+Set-Cookie: session=1700739b-6baa-4ae4-a84c-5ddd165d58d4; Domain=www.guokr.com; Path=/; HttpOnly
+X-UA-Device: 
+Content-Length: 241
+Accept-Ranges: bytes
+Date: Mon, 12 Jan 2015 02:28:48 GMT
+X-Varnish: 3225537173
+Age: 0
+Via: 1.1 varnish
+Connection: keep-alive
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<title>Redirecting...</title>
+<h1>Redirecting...</h1>
+<p>You should be redirected automatically to target URL: <a href="/question/591046/">/question/591046/</a>.  If not click the link.
