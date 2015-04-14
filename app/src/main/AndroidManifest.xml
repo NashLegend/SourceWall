@@ -79,20 +79,27 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".SingleReplyActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_single_reply" />
+            android:label="@string/title_activity_single_reply"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MessageCenterActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_message_center" />
+            android:label="@string/title_activity_message_center"
+            android:screenOrientation="portrait" />
         <activity
-            android:name="net.nashlegend.sourcewall.ImageActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_image" />
+            android:name=".ImageActivity"
+            android:label="@string/title_activity_image"
+            android:screenOrientation="portrait" />
+        <activity
+
+            android:name=".TestActivity"
+            android:label="@string/title_activity_test"
+            android:screenOrientation="portrait" />
 
         <activity
-            android:name="net.nashlegend.sourcewall.TestActivity"
-            android:label="@string/title_activity_test" />
+            android:name=".wxapi.WXEntryActivity"
+            android:label="@string/title_activity_wxentry"
+            android:exported="true"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="UMENG_APPKEY"

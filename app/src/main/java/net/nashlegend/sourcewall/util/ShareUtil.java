@@ -9,6 +9,7 @@ import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.sdk.modelmsg.WXWebpageObject;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
+
 import net.nashlegend.sourcewall.BuildConfig;
 import net.nashlegend.sourcewall.R;
 
@@ -22,14 +23,13 @@ public class ShareUtil {
     public static final String WEIXIN_APP_ID_DEBUG = "wxb38f35b29cf6703d";
     public static final String WEIXIN_APP_ID_RELEASE = "wx6383bc21d7a89367";
 
-    public static void shareToWeiXin(Context context, String url, String title, String summary, Bitmap mBitmap, boolean tag) {
+    public static void shareToWeiXin(Context context, String url, String title, String summary, Bitmap bitmap, boolean tag) {
         String appid = getWeixinAppId();
         IWXAPI api = WXAPIFactory.createWXAPI(context, appid, false);
         if (api.isWXAppInstalled()) {
-            api.registerApp(appid);
-            WXWebpageObject webpage = new WXWebpageObject();
-            webpage.webpageUrl = url;
-            WXMediaMessage msg = new WXMediaMessage(webpage);
+            WXWebpageObject webPage = new WXWebpageObject();
+            webPage.webpageUrl = url;
+            WXMediaMessage msg = new WXMediaMessage(webPage);
             msg.title = title;
             msg.description = summary;
             msg.setThumbImage(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_guokr_logo));

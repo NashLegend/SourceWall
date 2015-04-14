@@ -184,5 +184,15 @@
     <string name="ok_i_know">好了我知道了</string>
     <string name="title_activity_image">ImageActivity</string>
     <string name="title_activity_test">TestActivity</string>
+    <string name="title_activity_wxentry">分享到微信</string>
+
+    <!-- 分享-->
+    <string name="ERR_OK">分享成功</string>
+    <string name="ERR_USER_CANCEL">分享取消</string>
+    <string name="ERR_AUTH_DENIED">授权拒绝</string>
+    <string name="ERR_SENT_FAILED">发送失败</string>
+    <string name="ERR_COMM">分享失败</string>
+    <string name="ERR_UNSUPPORT">分享不支持</string>
+    <string name="ERR_UNKNOWN">未知错误</string>
 
 </resources>
