@@ -410,7 +410,7 @@ public class ZoomImageView extends View {
      * orientation.
      *
      * @param extFile URI of the file to display.
-     * @param state State to be restored. Nullable.
+     * @param state   State to be restored. Nullable.
      */
     public final void setImageFile(String extFile, ImageViewState state) {
         type = SourceType.FileSource;
@@ -438,7 +438,7 @@ public class ZoomImageView extends View {
      * avoids any redundant loading of tiles in the wrong orientation.
      *
      * @param assetName asset name.
-     * @param state State to be restored. Nullable.
+     * @param state     State to be restored. Nullable.
      */
     public final void setImageAsset(String assetName, ImageViewState state) {
         type = SourceType.AssetSource;
@@ -616,7 +616,7 @@ public class ZoomImageView extends View {
         }
         // Detect flings, taps and double taps
         if (detector == null || detector.onTouchEvent(event)) {
-            isPanning=false;
+            isPanning = false;
             return true;
         }
 
@@ -667,7 +667,7 @@ public class ZoomImageView extends View {
 
                         if (zoomEnabled
                                 && (distance(vCenterStart.x, vCenterEnd.x, vCenterStart.y,
-                                        vCenterEnd.y) > 5 || Math.abs(vDistEnd - vDistStart) > 5 || isPanning)) {
+                                vCenterEnd.y) > 5 || Math.abs(vDistEnd - vDistStart) > 5 || isPanning)) {
                             isZooming = true;
                             isPanning = true;
                             consumed = true;
@@ -969,7 +969,7 @@ public class ZoomImageView extends View {
 
         List<Tile> baseGrid = tileMap.get(fullImageSampleSize);
         for (Tile baseTile : baseGrid) {
-            BitmapTileTask task = new BitmapTileTask(this, decoder, decoderLock, baseTile);
+            BitmapTileTask task = new BitmapTileTask(this, decoder, baseTile);
             task.execute();
         }
     }
@@ -980,7 +980,7 @@ public class ZoomImageView extends View {
      * resolution as the screen. Frees up bitmaps that are now off the screen.
      *
      * @param load Whether to load the new tiles needed. Use false while
-     *            scrolling/panning for performance.
+     *             scrolling/panning for performance.
      */
     private void refreshRequiredTiles(boolean load) {
         int sampleSize = Math.min(fullImageSampleSize, calculateInSampleSize());
@@ -1005,8 +1005,7 @@ public class ZoomImageView extends View {
                     if (RectF.intersects(sVisRect, convertRect(tile.sRect))) {
                         tile.visible = true;
                         if (!tile.loading && tile.bitmap == null && load) {
-                            BitmapTileTask task = new BitmapTileTask(this, decoder, decoderLock,
-                                    tile);
+                            BitmapTileTask task = new BitmapTileTask(this, decoder, tile);
                             task.execute();
                         }
                     } else if (tile.sampleSize != fullImageSampleSize) {
@@ -1073,11 +1072,11 @@ public class ZoomImageView extends View {
      * one dimension fills the view and the image is centered on the other
      * dimension. Used to calculate what the target of an animation should be.
      *
-     * @param center Whether the image should be centered in the dimension it's
-     *            too small to fill. While animating this can be false to avoid
-     *            changes in direction as bounds are reached.
+     * @param center            Whether the image should be centered in the dimension it's
+     *                          too small to fill. While animating this can be false to avoid
+     *                          changes in direction as bounds are reached.
      * @param scaleAndTranslate The scale we want and the translation we're
-     *            aiming for. The values are adjusted to be valid.
+     *                          aiming for. The values are adjusted to be valid.
      */
     private void fitToBounds(boolean center, ScaleAndTranslate scaleAndTranslate) {
         if (panLimit == PAN_LIMIT_OUTSIDE && isImageReady()) {
@@ -1126,8 +1125,8 @@ public class ZoomImageView extends View {
      * dimension.
      *
      * @param center Whether the image should be centered in the dimension it's
-     *            too small to fill. While animating this can be false to avoid
-     *            changes in direction as bounds are reached.
+     *               too small to fill. While animating this can be false to avoid
+     *               changes in direction as bounds are reached.
      */
     private void fitToBounds(boolean center) {
         boolean init = false;
@@ -1180,7 +1179,7 @@ public class ZoomImageView extends View {
                             y * sTileHeight,
                             (x + 1) * sTileWidth,
                             (y + 1) * sTileHeight
-                            );
+                    );
                     tileGrid.add(tile);
                 }
             }
@@ -1198,7 +1197,7 @@ public class ZoomImageView extends View {
      * orientation is known.
      */
     private void onImageInited(BitmapRegionDecoder decoder, int sWidth, int sHeight,
-            int sOrientation) {
+                               int sOrientation) {
         if (listener != null) {
             listener.onInitOK();
         }
@@ -1244,16 +1243,12 @@ public class ZoomImageView extends View {
         private ErrorType typeError = ErrorType.NoError;
 
         public BitmapInitTask(ZoomImageView view, Context context, String source,
-                SourceType sourceType) {
+                              SourceType sourceType) {
             this.viewRef = new WeakReference<ZoomImageView>(view);
             this.contextRef = new WeakReference<Context>(context);
             this.source = source;
             this.sourceType = sourceType;
-            if (sourceType == SourceType.AssetSource) {
-                this.sourceIsAsset = true;
-            } else {
-                this.sourceIsAsset = false;
-            }
+            this.sourceIsAsset = sourceType == SourceType.AssetSource;
         }
 
         private String downloadImage(String urlString) throws UnsupportedEncodingException,
@@ -1301,60 +1296,57 @@ public class ZoomImageView extends View {
         @Override
         protected int[] doInBackground(Void... params) {
             try {
-                if (viewRef != null && contextRef != null) {
-                    Context context = contextRef.get();
-                    if (context != null) {
-                        int exifOrientation = ORIENTATION_0;
-                        if (sourceIsAsset) {
-                            decoder = BitmapRegionDecoder.newInstance(
-                                    context.getAssets().open(source, AssetManager.ACCESS_RANDOM),
-                                    true);
-                        } else {
-                            String realSource = source;
-                            if (sourceType == SourceType.UrlSource) {
-                                // TODO
-                                try {
-                                    realSource = downloadImage(source);
-                                } catch (UnsupportedEncodingException e) {
-                                    e.printStackTrace();
-                                } catch (MalformedURLException e) {
-                                    typeError = ErrorType.UrlError;
-                                    e.printStackTrace();
-                                } catch (IOException e) {
-                                    typeError = ErrorType.DownloadError;
-                                    e.printStackTrace();
-                                }
-                            }
-                            if (realSource == null) {
-                                return null;
-                            }
-                            decoder = BitmapRegionDecoder.newInstance(realSource, true);
+                Context context = contextRef.get();
+                if (context != null) {
+                    int exifOrientation = ORIENTATION_0;
+                    if (sourceIsAsset) {
+                        decoder = BitmapRegionDecoder.newInstance(
+                                context.getAssets().open(source, AssetManager.ACCESS_RANDOM),
+                                true);
+                    } else {
+                        String realSource = source;
+                        if (sourceType == SourceType.UrlSource) {
                             try {
-                                ExifInterface exifInterface = new ExifInterface(realSource);
-                                int orientationAttr = exifInterface.getAttributeInt(
-                                        ExifInterface.TAG_ORIENTATION,
-                                        ExifInterface.ORIENTATION_NORMAL);
-                                if (orientationAttr == ExifInterface.ORIENTATION_NORMAL) {
-                                    exifOrientation = ORIENTATION_0;
-                                } else if (orientationAttr == ExifInterface.ORIENTATION_ROTATE_90) {
-                                    exifOrientation = ORIENTATION_90;
-                                } else if (orientationAttr == ExifInterface.ORIENTATION_ROTATE_180) {
-                                    exifOrientation = ORIENTATION_180;
-                                } else if (orientationAttr == ExifInterface.ORIENTATION_ROTATE_270) {
-                                    exifOrientation = ORIENTATION_270;
-                                } else {
-                                    Log.w(TAG, "Unsupported EXIF orientation: " + orientationAttr);
-                                }
-                            } catch (Exception e) {
-                                return null;//todo 返回错误标志，或者返回一个正常decode的bitmap
+                                realSource = downloadImage(source);
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            } catch (MalformedURLException e) {
+                                typeError = ErrorType.UrlError;
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                typeError = ErrorType.DownloadError;
+                                e.printStackTrace();
                             }
-
                         }
-                        typeError = ErrorType.NoError;
-                        return new int[] {
-                                decoder.getWidth(), decoder.getHeight(), exifOrientation
-                        };
+                        if (realSource == null) {
+                            return null;
+                        }
+                        decoder = BitmapRegionDecoder.newInstance(realSource, true);
+                        try {
+                            ExifInterface exifInterface = new ExifInterface(realSource);
+                            int orientationAttr = exifInterface.getAttributeInt(
+                                    ExifInterface.TAG_ORIENTATION,
+                                    ExifInterface.ORIENTATION_NORMAL);
+                            if (orientationAttr == ExifInterface.ORIENTATION_NORMAL) {
+                                exifOrientation = ORIENTATION_0;
+                            } else if (orientationAttr == ExifInterface.ORIENTATION_ROTATE_90) {
+                                exifOrientation = ORIENTATION_90;
+                            } else if (orientationAttr == ExifInterface.ORIENTATION_ROTATE_180) {
+                                exifOrientation = ORIENTATION_180;
+                            } else if (orientationAttr == ExifInterface.ORIENTATION_ROTATE_270) {
+                                exifOrientation = ORIENTATION_270;
+                            } else {
+                                Log.w(TAG, "Unsupported EXIF orientation: " + orientationAttr);
+                            }
+                        } catch (Exception e) {
+                            return null;//todo 返回错误标志，或者返回一个正常decode的bitmap
+                        }
+
                     }
+                    typeError = ErrorType.NoError;
+                    return new int[]{
+                            decoder.getWidth(), decoder.getHeight(), exifOrientation
+                    };
                 }
             } catch (IOException e) {
                 Log.e(TAG, "Failed to initialise bitmap decoder", e);
@@ -1369,18 +1361,16 @@ public class ZoomImageView extends View {
             if (isCancelled()) {
                 return;
             }
-            if (viewRef != null) {
-                final ZoomImageView subsamplingScaleImageView = viewRef.get();
-                if (subsamplingScaleImageView != null) {
-                    if (decoder != null && xyo != null && xyo.length == 3) {
-                        subsamplingScaleImageView.onImageInited(decoder, xyo[0], xyo[1], xyo[2]);
-                        return;
-                    }
-                    if (typeError == ErrorType.NoError) {
-                        typeError = ErrorType.UnknownError;
-                    }
-                    subsamplingScaleImageView.onInitError(typeError);
+            final ZoomImageView subsamplingScaleImageView = viewRef.get();
+            if (subsamplingScaleImageView != null) {
+                if (decoder != null && xyo != null && xyo.length == 3) {
+                    subsamplingScaleImageView.onImageInited(decoder, xyo[0], xyo[1], xyo[2]);
+                    return;
                 }
+                if (typeError == ErrorType.NoError) {
+                    typeError = ErrorType.UnknownError;
+                }
+                subsamplingScaleImageView.onInitError(typeError);
             }
         }
     }
@@ -1388,50 +1378,44 @@ public class ZoomImageView extends View {
     /**
      * Async task used to load images without blocking the UI thread.
      */
-    private static class BitmapTileTask extends AsyncTask<Void, Void, Bitmap> {
+    private class BitmapTileTask extends AsyncTask<Void, Void, Bitmap> {
         private final WeakReference<ZoomImageView> viewRef;
         private final WeakReference<BitmapRegionDecoder> decoderRef;
-        private final WeakReference<Object> decoderLockRef;
         private final WeakReference<Tile> tileRef;
 
-        public BitmapTileTask(ZoomImageView view, BitmapRegionDecoder decoder, Object decoderLock,
-                Tile tile) {
-            this.viewRef = new WeakReference<ZoomImageView>(view);
-            this.decoderRef = new WeakReference<BitmapRegionDecoder>(decoder);
-            this.decoderLockRef = new WeakReference<Object>(decoderLock);
-            this.tileRef = new WeakReference<Tile>(tile);
+        public BitmapTileTask(ZoomImageView view, BitmapRegionDecoder decoder, Tile tile) {
+            this.viewRef = new WeakReference<>(view);
+            this.decoderRef = new WeakReference<>(decoder);
+            this.tileRef = new WeakReference<>(tile);
             tile.loading = true;
         }
 
         @Override
         protected Bitmap doInBackground(Void... params) {
             try {
-                if (decoderRef != null && tileRef != null && viewRef != null) {
-                    final BitmapRegionDecoder decoder = decoderRef.get();
-                    final Object decoderLock = decoderLockRef.get();
-                    final Tile tile = tileRef.get();
-                    final ZoomImageView view = viewRef.get();
-                    if (decoder != null && decoderLock != null && tile != null && view != null
-                            && !decoder.isRecycled()) {
-                        synchronized (decoderLock) {
-                            BitmapFactory.Options options = new BitmapFactory.Options();
-                            options.inSampleSize = tile.sampleSize;
-                            options.inPreferredConfig = Config.RGB_565;
-                            options.inDither = true;
-                            Bitmap bitmap = decoder.decodeRegion(view.fileSRect(tile.sRect),
-                                    options);
-                            int rotation = view.getRequiredRotation();
-                            if (rotation != 0) {
-                                Matrix matrix = new Matrix();
-                                matrix.postRotate(rotation);
-                                bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
-                                        bitmap.getHeight(), matrix, true);
-                            }
-                            return bitmap;
+                final BitmapRegionDecoder decoder = decoderRef.get();
+                final Tile tile = tileRef.get();
+                final ZoomImageView view = viewRef.get();
+                if (decoder != null && decoderLock != null && tile != null && view != null
+                        && !decoder.isRecycled()) {
+                    synchronized (decoderLock) {
+                        BitmapFactory.Options options = new BitmapFactory.Options();
+                        options.inSampleSize = tile.sampleSize;
+                        options.inPreferredConfig = Config.RGB_565;
+                        options.inDither = true;
+                        Bitmap bitmap = decoder.decodeRegion(view.fileSRect(tile.sRect),
+                                options);
+                        int rotation = view.getRequiredRotation();
+                        if (rotation != 0) {
+                            Matrix matrix = new Matrix();
+                            matrix.postRotate(rotation);
+                            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
+                                    bitmap.getHeight(), matrix, true);
                         }
-                    } else if (tile != null) {
-                        tile.loading = false;
+                        return bitmap;
                     }
+                } else if (tile != null) {
+                    tile.loading = false;
                 }
             } catch (Exception e) {
                 Log.e(TAG, "Failed to decode tile", e);
@@ -1441,14 +1425,14 @@ public class ZoomImageView extends View {
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
-            if (!isCancelled() && viewRef != null && tileRef != null && bitmap != null) {
-                final ZoomImageView subsamplingScaleImageView = viewRef.get();
+            if (!isCancelled() && bitmap != null) {
+                final ZoomImageView subSamplingScaleImageView = viewRef.get();
                 final Tile tile = tileRef.get();
-                if (subsamplingScaleImageView != null && tile != null
-                        && subsamplingScaleImageView.isAttachedToWnd()) {
+                if (subSamplingScaleImageView != null && tile != null
+                        && subSamplingScaleImageView.isAttachedToWnd()) {
                     tile.bitmap = bitmap;
                     tile.loading = false;
-                    subsamplingScaleImageView.onTileLoaded();
+                    subSamplingScaleImageView.onTileLoaded();
                 }
             }
         }
@@ -1470,15 +1454,15 @@ public class ZoomImageView extends View {
         private float scaleEnd; // Scale at end of anim (target)
         private PointF sCenterStart; // Source center point at start
         private PointF sCenterEnd; // Source center point at end, adjusted for
-                                   // pan limits
+        // pan limits
         private PointF sCenterEndRequested; // Source center point that was
-                                            // requested, without adjustment
+        // requested, without adjustment
         private PointF vFocusStart; // View point that was double tapped
         private PointF vFocusEnd; // Where the view focal point should be moved
-                                  // to during the anim
+        // to during the anim
         private long duration = 500; // How long the anim takes
         private boolean interruptible = true; // Whether the anim can be
-                                              // interrupted by a touch
+        // interrupted by a touch
         private int easing = EASE_IN_OUT_QUAD; // Easing style
         private long time = System.currentTimeMillis(); // Start time
 
@@ -1717,10 +1701,10 @@ public class ZoomImageView extends View {
     /**
      * Apply a selected type of easing.
      *
-     * @param type Easing type, from static fields
-     * @param time Elapsed time
-     * @param from Start value
-     * @param change Target value
+     * @param type     Easing type, from static fields
+     * @param time     Elapsed time
+     * @param from     Start value
+     * @param change   Target value
      * @param duration Anm duration
      * @return Current value
      */
@@ -1739,9 +1723,9 @@ public class ZoomImageView extends View {
      * Quadratic easing for fling. With thanks to Robert Penner -
      * http://gizma.com/easing/
      *
-     * @param time Elapsed time
-     * @param from Start value
-     * @param change Target value
+     * @param time     Elapsed time
+     * @param from     Start value
+     * @param change   Target value
      * @param duration Anm duration
      * @return Current value
      */
@@ -1754,9 +1738,9 @@ public class ZoomImageView extends View {
      * Quadratic easing for scale and center animations. With thanks to Robert
      * Penner - http://gizma.com/easing/
      *
-     * @param time Elapsed time
-     * @param from Start value
-     * @param change Target value
+     * @param time     Elapsed time
+     * @param from     Start value
+     * @param change   Target value
      * @param duration Anm duration
      * @return Current value
      */
@@ -1880,9 +1864,9 @@ public class ZoomImageView extends View {
      * be used with getCenter() and getScale() to restore the scale and zoom
      * after a screen rotate.
      *
-     * @param scale New scale to set.
+     * @param scale   New scale to set.
      * @param sCenter New source image coordinate to center on the screen,
-     *            subject to boundaries.
+     *                subject to boundaries.
      */
     public final void setScaleAndCenter(float scale, PointF sCenter) {
         this.anim = null;
@@ -2067,8 +2051,8 @@ public class ZoomImageView extends View {
      *
      * @param sCenter Target center point
      * @return {@link AnimationBuilder} instance. Call
-     *         {@link net.nashlegend.sourcewall.commonview.ZoomImageView.AnimationBuilder#start()}
-     *         to start the anim.
+     * {@link net.nashlegend.sourcewall.commonview.ZoomImageView.AnimationBuilder#start()}
+     * to start the anim.
      */
     public AnimationBuilder animateCenter(PointF sCenter) {
         if (!isImageReady()) {
@@ -2084,8 +2068,8 @@ public class ZoomImageView extends View {
      *
      * @param scale Target scale.
      * @return {@link AnimationBuilder} instance. Call
-     *         {@link net.nashlegend.sourcewall.commonview.ZoomImageView.AnimationBuilder#start()}
-     *         to start the anim.
+     * {@link net.nashlegend.sourcewall.commonview.ZoomImageView.AnimationBuilder#start()}
+     * to start the anim.
      */
     public AnimationBuilder animateScale(float scale) {
         if (!isImageReady()) {
@@ -2101,8 +2085,8 @@ public class ZoomImageView extends View {
      *
      * @param scale Target scale.
      * @return {@link AnimationBuilder} instance. Call
-     *         {@link net.nashlegend.sourcewall.commonview.ZoomImageView.AnimationBuilder#start()}
-     *         to start the anim.
+     * {@link net.nashlegend.sourcewall.commonview.ZoomImageView.AnimationBuilder#start()}
+     * to start the anim.
      */
     public AnimationBuilder animateScaleAndCenter(float scale, PointF sCenter) {
         if (!isImageReady()) {
@@ -2218,7 +2202,7 @@ public class ZoomImageView extends View {
             anim.vFocusEnd = new PointF(
                     getWidth() / 2,
                     getHeight() / 2
-                    );
+            );
             anim.duration = duration;
             anim.interruptible = interruptible;
             anim.easing = easing;
@@ -2237,7 +2221,7 @@ public class ZoomImageView extends View {
                 anim.vFocusEnd = new PointF(
                         vFocus.x + (satEnd.translate.x - vTranslateXEnd),
                         vFocus.y + (satEnd.translate.y - vTranslateYEnd)
-                        );
+                );
             }
 
             invalidate();
