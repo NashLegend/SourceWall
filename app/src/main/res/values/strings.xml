@@ -162,6 +162,7 @@
     <string name="page_404">页面不存在</string>
     <string name="action_share_to_wechat_circle">分享到朋友圈</string>
     <string name="action_share_to_wechat_friends">分享给微信好友</string>
+    <string name="action_share_to_weibo">分享到新浪微博</string>
     <string name="tip_of_user_learn_add_image">上传完成后，请点击左下角的按钮将图片添加到编辑器~</string>
     <string name="hint_click_to_add_image_to_editor">上传完成，点击左下角按钮添加到编辑器~</string>
     <string name="uploading">上传中</string>
@@ -184,7 +185,6 @@
     <string name="ok_i_know">好了我知道了</string>
     <string name="title_activity_image">ImageActivity</string>
     <string name="title_activity_test">TestActivity</string>
-    <string name="title_activity_wxentry">分享到微信</string>
 
     <!-- 分享-->
     <string name="ERR_OK">分享成功</string>
@@ -194,5 +194,7 @@
     <string name="ERR_COMM">分享失败</string>
     <string name="ERR_UNSUPPORT">分享不支持</string>
     <string name="ERR_UNKNOWN">未知错误</string>
+    <string name="title_activity_wxentry">分享到微信</string>
+    <string name="title_activity_weibo_share">分享到新浪微博</string>
 
 </resources>

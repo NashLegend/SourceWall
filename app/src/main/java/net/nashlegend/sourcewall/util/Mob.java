@@ -19,6 +19,7 @@ public class Mob {
     public static final String Event_Reply_Article = "Event_Reply_Article";//回复文章
     public static final String Event_Share_Article_To_Wechat_Circle = "Event_Share_Article_To_Wechat_Circle";//分享文章到朋友圈
     public static final String Event_Share_Article_To_Wechat_friend = "Event_Share_Article_To_Wechat_friend";//分享文章给微信朋友
+    public static final String Event_Share_Article_To_Weibo = "Event_Share_Article_To_Weibo";//分享文章到新浪微博
     public static final String Event_Open_Article_In_Browser = "Event_Open_Article_In_Browser";//打浏览器中打开文章
 
     //小组
@@ -33,6 +34,7 @@ public class Mob {
     public static final String Event_Reply_Post = "Event_Reply_Post";//回复帖子
     public static final String Event_Share_Post_To_Wechat_Circle = "Event_Share_Post_To_Wechat_Circle";//分享帖子到朋友圈
     public static final String Event_Share_Post_To_Wechat_friend = "Event_Share_Post_To_Wechat_friend";//分享帖子到微信好友
+    public static final String Event_Share_Post_To_Weibo = "Event_Share_Post_To_Weibo";//分享帖子到新浪微博
     public static final String Event_Open_Post_In_Browser = "Event_Open_Post_In_Browser";//打浏览器中打开帖子
     public static final String Event_Publish_Post = "Event_Publish_Post";//用户发帖
     public static final String Event_Publish_Post_OK = "Event_Publish_Post_OK";//发表帖子成功
@@ -52,6 +54,7 @@ public class Mob {
     public static final String Event_Unfollow_Question = "Event_Unfollow_Question";//取关问题
     public static final String Event_Share_Question_To_Wechat_Circle = "Event_Share_Question_To_Wechat_Circle";//分享问题到朋友圈
     public static final String Event_Share_Question_To_Wechat_friend = "Event_Share_Question_To_Wechat_friend";//分享问题到微信好友
+    public static final String Event_Share_Question_To_Weibo = "Event_Share_Question_To_Weibo";//分享问题到新浪微博
     public static final String Event_Open_Question_In_Browser = "Event_Open_Question_In_Browser";
     public static final String Event_Open_Answer = "Event_Open_Answer";//打开答案
     public static final String Event_Open_Answer_Comment = "Event_Open_Answer_Comment";//打开答案评论

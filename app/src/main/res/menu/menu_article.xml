@@ -15,8 +15,14 @@
         android:icon="@drawable/share"
         app:showAsAction="never" />
     <item
+        android:id="@+id/action_share_to_weibo"
+        android:title="@string/action_share_to_weibo"
+        android:orderInCategory="102"
+        android:icon="@drawable/share"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_open_in_browser"
         android:title="@string/open_in_browser"
-        android:orderInCategory="102"
+        android:orderInCategory="103"
         app:showAsAction="never" />
 </menu>

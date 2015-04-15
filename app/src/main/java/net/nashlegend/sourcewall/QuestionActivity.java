@@ -155,6 +155,10 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
                 MobclickAgent.onEvent(this, Mob.Event_Share_Question_To_Wechat_friend);
                 ShareUtil.shareToWeiXinFriends(this, question.getUrl(), question.getTitle(), question.getSummary(), null);
                 break;
+            case R.id.action_share_to_weibo:
+                MobclickAgent.onEvent(this, Mob.Event_Share_Question_To_Weibo);
+                ShareUtil.shareToWeibo(this, question.getUrl(), question.getTitle(), question.getSummary(), null);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

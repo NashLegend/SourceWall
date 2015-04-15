@@ -45,12 +45,15 @@ public class Question extends AceModel {
 
     public String getUrl() {
         if (!TextUtils.isEmpty(id) && TextUtils.isEmpty(url)) {
-            url = "http://m.guokr.com/question/" + id + "/";
+            url = "http://www.guokr.com/question/" + id + "/";
         }
         return url;
     }
 
     public void setUrl(String url) {
+        if (url != null && url.startsWith("http://m.guokr.com")) {
+            url.replace("http://m.guokr.com", "http://www.guokr.com");
+        }
         this.url = url;
     }
 

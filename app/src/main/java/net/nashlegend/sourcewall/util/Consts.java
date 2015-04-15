@@ -29,6 +29,10 @@ public class Consts {
     public static final String Extra_Notice_Id = "sourcewall.extra.notice.id";//通知id
     public static final String Extra_Image_String_Array = "sourcewall.extra.image.string.array";//图片Activity接收的图片地址们
     public static final String Extra_Image_Current_Position = "sourcewall.extra.image.current.position";//图片Activity刚进入时打开的图片
+    public static final String Extra_Shared_Url = "sourcewall.extra.share.url";//分享的url地址
+    public static final String Extra_Shared_Title = "sourcewall.extra.share.title";//分享的标题
+    public static final String Extra_Shared_Summary = "sourcewall.extra.share.summary";//分享的标题
+    public static final String Extra_Shared_Bitmap = "sourcewall.extra.share.bitmap";//分享的图片
 
     // 保存SharedPreferences的Key
     public static final String Key_Cookie = "sourcewall.key.cookie";

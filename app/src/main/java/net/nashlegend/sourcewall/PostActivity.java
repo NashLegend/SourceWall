@@ -183,6 +183,10 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
                 MobclickAgent.onEvent(this, Mob.Event_Share_Post_To_Wechat_friend);
                 ShareUtil.shareToWeiXinFriends(this, post.getUrl(), post.getTitle(), post.getTitle(), null);
                 break;
+            case R.id.action_share_to_weibo:
+                MobclickAgent.onEvent(this, Mob.Event_Share_Post_To_Weibo);
+                ShareUtil.shareToWeibo(this, post.getUrl(), post.getTitle(), post.getTitle(), null);
+                break;
         }
         return true;
     }

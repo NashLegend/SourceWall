@@ -1,6 +1,8 @@
 package net.nashlegend.sourcewall.util;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
@@ -12,6 +14,7 @@ import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 import net.nashlegend.sourcewall.BuildConfig;
 import net.nashlegend.sourcewall.R;
+import net.nashlegend.sourcewall.WeiboShareActivity;
 
 import java.io.ByteArrayOutputStream;
 
@@ -22,6 +25,12 @@ public class ShareUtil {
 
     public static final String WEIXIN_APP_ID_DEBUG = "wxb38f35b29cf6703d";
     public static final String WEIXIN_APP_ID_RELEASE = "wx6383bc21d7a89367";
+    public static final String WEIBO_APP_KEY = "2946702059";
+    public static final String SCOPE =
+            "email,direct_messages_read,direct_messages_write,"
+                    + "friendships_groups_read,friendships_groups_write,statuses_to_me_read,"
+                    + "follow_app_official_microblog," + "invitation_write";
+    public static final String REDIRECT_URL = "http://www.sina.com";
 
     public static void shareToWeiXinCircle(Context context, String url, String title, String summary, Bitmap bitmap) {
         String appid = getWeixinAppId();
@@ -32,7 +41,7 @@ public class ShareUtil {
             WXMediaMessage msg = new WXMediaMessage(webPage);
             msg.title = title;
             msg.description = summary;
-            msg.setThumbImage(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_guokr_logo));
+            msg.setThumbImage(getDefaultLogo(context));
             SendMessageToWX.Req req = new SendMessageToWX.Req();
             req.transaction = String.valueOf(System.currentTimeMillis());
             req.message = msg;
@@ -52,7 +61,7 @@ public class ShareUtil {
             WXMediaMessage msg = new WXMediaMessage(webPage);
             msg.title = title;
             msg.description = summary;
-            msg.setThumbImage(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_guokr_logo));
+            msg.setThumbImage(getDefaultLogo(context));
             SendMessageToWX.Req req = new SendMessageToWX.Req();
             req.transaction = String.valueOf(System.currentTimeMillis());
             req.message = msg;
@@ -63,8 +72,12 @@ public class ShareUtil {
         }
     }
 
-    public static void shareToWeibo(Context context, String url, String title, String summary, Bitmap bitmap) {
-        //TODO
+    public static void shareToWeibo(Activity context, String url, String title, String summary, Bitmap bitmap) {
+        Intent intent = new Intent(context, WeiboShareActivity.class);
+        intent.putExtra(Consts.Extra_Shared_Title, title);
+        intent.putExtra(Consts.Extra_Shared_Summary, summary);
+        intent.putExtra(Consts.Extra_Shared_Url, url);
+        context.startActivity(intent);
     }
 
     public static String getWeixinAppId() {
@@ -73,6 +86,14 @@ public class ShareUtil {
         } else {
             return WEIXIN_APP_ID_RELEASE;
         }
+    }
+
+    public static String getWeiboAppKey() {
+        return WEIBO_APP_KEY;
+    }
+
+    public static Bitmap getDefaultLogo(Context context) {
+        return BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_guokr_logo);
     }
 
     public static byte[] bmpToByteArray(Bitmap bmp, boolean needRecycle) {

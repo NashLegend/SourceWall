@@ -90,23 +90,39 @@
             android:label="@string/title_activity_image"
             android:screenOrientation="portrait" />
         <activity
-
             android:name=".TestActivity"
             android:label="@string/title_activity_test"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".wxapi.WXEntryActivity"
-            android:label="@string/title_activity_wxentry"
             android:exported="true"
+            android:label="@string/title_activity_wxentry"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".WeiboShareActivity"
+            android:exported="true"
+            android:label="@string/title_activity_weibo_share"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
 
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.sina.weibo.sdk.component.WeiboSdkBrowser"
+            android:configChanges="keyboardHidden|orientation"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"
+            android:exported="false"/>
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="55018d1dfd98c583330009fd" />
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="${CHANNEL_NAME}" />
+
+
     </application>
 
 </manifest>
