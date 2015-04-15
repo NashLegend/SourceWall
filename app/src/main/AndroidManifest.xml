@@ -71,6 +71,7 @@
         <activity
             android:name=".SimpleReplyActivity"
             android:label="@string/title_activity_simple_reply"
+            android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait" />
         <activity
             android:name=".PublishPostActivity"
@@ -105,7 +106,6 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -121,8 +121,5 @@
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="${CHANNEL_NAME}" />
-
-
     </application>
-
 </manifest>
