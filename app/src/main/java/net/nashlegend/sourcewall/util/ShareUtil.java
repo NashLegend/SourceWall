@@ -73,6 +73,7 @@ public class ShareUtil {
     }
 
     public static void shareToWeibo(Activity context, String url, String title, String summary, Bitmap bitmap) {
+        System.out.println(System.currentTimeMillis());
         Intent intent = new Intent(context, WeiboShareActivity.class);
         intent.putExtra(Consts.Extra_Shared_Title, title);
         intent.putExtra(Consts.Extra_Shared_Summary, summary);

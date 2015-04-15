@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.Toast;
 
 import com.sina.weibo.sdk.api.TextObject;
@@ -34,6 +36,13 @@ public class WeiboShareActivity extends BaseActivity implements IWeiboHandler.Re
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weibo_share);
+        findViewById(R.id.container).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                finish();
+                return false;
+            }
+        });
         mWeiboShareAPI = WeiboShareSDK.createWeiboAPI(this, ShareUtil.getWeiboAppKey());
         mWeiboShareAPI.registerApp();
         if (savedInstanceState != null) {
@@ -56,14 +65,11 @@ public class WeiboShareActivity extends BaseActivity implements IWeiboHandler.Re
         mediaObject.actionUrl = url;
         mediaObject.defaultText = summary;
         mediaObject.setThumbImage(BitmapFactory.decodeResource(getResources(), R.drawable.ic_guokr_logo));
-
         TextObject textObject = new TextObject();
         textObject.text = summary;
-
         WeiboMultiMessage weiboMessage = new WeiboMultiMessage();
         weiboMessage.mediaObject = mediaObject;
         weiboMessage.textObject = textObject;
-
         SendMultiMessageToWeiboRequest request = new SendMultiMessageToWeiboRequest();
         request.transaction = String.valueOf(System.currentTimeMillis());
         request.multiMessage = weiboMessage;
