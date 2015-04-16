@@ -255,8 +255,8 @@ public class ZoomImageView extends View {
 
     public ZoomImageView(Context context, AttributeSet attr) {
         super(context, attr);
-        setMinimumDpi(160);
-        setDoubleTapZoomDpi(160);
+        setMinimumDpi(96);
+        setDoubleTapZoomDpi(96);
         setGestureDetector(context);
         this.handler = new Handler(new Handler.Callback() {
             public boolean handleMessage(Message message) {

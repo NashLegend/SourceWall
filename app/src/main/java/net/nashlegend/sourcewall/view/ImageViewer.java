@@ -1,9 +1,9 @@
 package net.nashlegend.sourcewall.view;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.squareup.picasso.Picasso;
@@ -13,10 +13,9 @@ import net.nashlegend.sourcewall.commonview.LoadingView;
 import net.nashlegend.sourcewall.commonview.ZoomImageView;
 import net.nashlegend.sourcewall.request.RequestCache;
 import net.nashlegend.sourcewall.request.ResultObject;
+import net.nashlegend.sourcewall.util.DisplayUtil;
 
-import java.io.File;
-import java.io.IOException;
-
+import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageView;
 
 /**
@@ -91,7 +90,28 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
                 if ("gif".equalsIgnoreCase(suffix)) {
                     gifImageView.setVisibility(VISIBLE);
                     imageView.setVisibility(GONE);
-                    gifImageView.setImageURI(Uri.fromFile(new File((String) resultObject.result)));
+                    try {
+                        GifDrawable gifDrawable = new GifDrawable((String) resultObject.result);
+                        int initWidth = gifDrawable.getIntrinsicWidth();
+                        int initHeight = gifDrawable.getIntrinsicHeight();
+                        if (initWidth > 0 && initHeight > 0) {
+                            //以96dpi或者更高dpi显示gif图，以不超出屏幕为准
+                            float rat = DisplayUtil.getPixelDensity(getContext()) * 1.66f;
+                            int minScaledWidth = (int) (DisplayUtil.getScreenWidth(getContext()) / rat);
+                            if (minScaledWidth > initWidth) {
+                                //如果gif宽度不足以占满屏幕宽度
+                                ViewGroup.LayoutParams params = gifImageView.getLayoutParams();
+                                if (params != null) {
+                                    params.width = (int) (initWidth * rat);
+                                    params.height = (int) (initHeight * rat);
+                                    gifImageView.setLayoutParams(params);
+                                }
+                            }
+                        }
+                        gifImageView.setImageDrawable(gifDrawable);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     gifImageView.setVisibility(GONE);
                     imageView.setVisibility(VISIBLE);
