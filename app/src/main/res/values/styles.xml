@@ -48,6 +48,12 @@
         <item name="color_clear_page_background">@color/page_clear_background</item>
         <item name="color_webview_background">@color/webview_background</item>
         <item name="cardBackgroundColor">@color/card_background</item>
+        
+        <item name="browser_icon">@drawable/browser_day</item>
+        <item name="eye_open_icon">@drawable/eye_open_day</item>
+        <item name="eye_closed_icon">@drawable/eye_closed_day</item>
+        <item name="arrow_up_icon">@drawable/arrow_up_day</item>
+        <item name="arrow_down_icon">@drawable/arrow_down_day</item>
 
         <!--作者名字颜色，同时还是日期、数量等的颜色，正文列表通用-->
         <item name="color_author_color">@color/author_color</item>
@@ -183,6 +189,12 @@
             @color/abc_background_cache_hint_selector_material_dark
         </item>
         <item name="isLightTheme">false</item>
+
+        <item name="browser_icon">@drawable/browser_night</item>
+        <item name="eye_open_icon">@drawable/eye_open_night</item>
+        <item name="eye_closed_icon">@drawable/eye_closed_night</item>
+        <item name="arrow_up_icon">@drawable/arrow_up_night</item>
+        <item name="arrow_down_icon">@drawable/arrow_down_night</item>
 
         <!--提示框背景-->
         <item name="android:alertDialogTheme">@style/AlertDialogThemeNight</item>

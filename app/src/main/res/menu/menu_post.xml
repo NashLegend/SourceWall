@@ -3,36 +3,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="net.nashlegend.sourcewall.PostActivity">
     <item
-        android:id="@+id/action_load_desc"
-        android:orderInCategory="100"
-        android:title="@string/action_load_desc"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_load_acs"
-        android:orderInCategory="101"
-        android:title="@string/action_load_acs"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/action_share_to_wechat_circle"
         android:title="@string/action_share_to_wechat_circle"
         android:orderInCategory="102"
-        android:icon="@drawable/share"
+        android:icon="@drawable/weixin_circle_logo"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_share_to_wechat_friends"
         android:title="@string/action_share_to_wechat_friends"
         android:orderInCategory="103"
-        android:icon="@drawable/share"
+        android:icon="@drawable/weixin_chat_logo"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_share_to_weibo"
         android:title="@string/action_share_to_weibo"
         android:orderInCategory="104"
-        android:icon="@drawable/share"
+        android:icon="@drawable/weibo_logo"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_load_desc"
+        android:orderInCategory="105"
+        android:title="@string/action_load_desc"
+        android:icon="?attr/arrow_up_icon"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_load_acs"
+        android:orderInCategory="105"
+        android:title="@string/action_load_acs"
+        android:icon="?attr/arrow_down_icon"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_open_in_browser"
         android:title="@string/open_in_browser"
-        android:orderInCategory="105"
+        android:orderInCategory="106"
+        android:icon="?attr/browser_icon"
         app:showAsAction="never" />
 </menu>

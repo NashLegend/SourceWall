@@ -36,6 +36,7 @@ import net.nashlegend.sourcewall.util.ShareUtil;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;
 import net.nashlegend.sourcewall.view.AnswerListItemView;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 
@@ -161,6 +162,19 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onMenuOpened(int featureId, Menu menu) {
+        try {
+            Method m = menu.getClass().getDeclaredMethod(
+                    "setOptionalIconsVisible", Boolean.TYPE);
+            m.setAccessible(true);
+            m.invoke(menu, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return super.onMenuOpened(featureId, menu);
     }
 
 
