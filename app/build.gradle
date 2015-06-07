@@ -4,20 +4,25 @@ android {
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
 
-    android{
-        productFlavors{
-            qihu360 {
-                manifestPlaceholders = [ CHANNEL_NAME:"360" ]
-            }
-            baidu {
-                manifestPlaceholders = [ CHANNEL_NAME:"baidu" ]
-            }
-            xiaomi {
-                manifestPlaceholders = [ CHANNEL_NAME:"xiaomi" ]
-            }
-            github {
-                manifestPlaceholders = [ CHANNEL_NAME:"github" ]
-            }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    productFlavors {
+        qihu360 {
+            manifestPlaceholders = [CHANNEL_NAME: "360"]
+        }
+        baidu {
+            manifestPlaceholders = [CHANNEL_NAME: "baidu"]
+        }
+        xiaomi {
+            manifestPlaceholders = [CHANNEL_NAME: "xiaomi"]
+        }
+        github {
+            manifestPlaceholders = [CHANNEL_NAME: "github"]
         }
     }
 
@@ -29,12 +34,7 @@ android {
         versionCode 20150401
         versionName "1.5.5.0"
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
+
     packagingOptions {
         exclude 'META-INF/NOTICE.txt'
         exclude 'META-INF/LICENSE.txt'
@@ -43,9 +43,9 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:22.1.1'
-    compile 'com.android.support:support-v4:22.1.1'
-    compile 'com.android.support:cardview-v7:21.0.3'
+    compile 'com.android.support:appcompat-v7:22.2.0'
+    compile 'com.android.support:support-v4:22.2.0'
+    compile 'com.android.support:cardview-v7:22.2.0'
     compile 'org.apache.httpcomponents:httpmime:4.2.1'
     compile 'com.getbase:floatingactionbutton:1.9.0'
     compile 'de.greenrobot:greendao-generator:1.3.1'
