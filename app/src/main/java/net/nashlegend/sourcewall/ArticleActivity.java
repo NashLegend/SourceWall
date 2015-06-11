@@ -405,11 +405,6 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
                     adapter.addAll(ars);
                     adapter.notifyDataSetChanged();
                 }
-                if (adapter.getCount() > 0) {
-                    listView.setCanPullToLoadMore(true);
-                } else {
-                    listView.setCanPullToLoadMore(false);
-                }
             } else {
                 if (result.statusCode == 404) {
                     toastSingleton(R.string.page_404);
@@ -418,6 +413,11 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
                     toastSingleton(getString(R.string.load_failed));
                     loadingView.onLoadFailed();
                 }
+            }
+            if (adapter.getCount() > 0) {
+                listView.setCanPullToLoadMore(true);
+            } else {
+                listView.setCanPullToLoadMore(false);
             }
             listView.doneOperation();
         }

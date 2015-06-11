@@ -58,6 +58,9 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
     private boolean loadDesc = false;
     private Menu menu;
     private Receiver receiver;
+    /**
+     * 是否倒序加载已经加载完成了所有的回帖
+     */
     private boolean lastLoad = false;
     private ProgressBar progressBar;
 
@@ -370,14 +373,6 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
                     }
                     adapter.notifyDataSetChanged();
                 }
-                if (adapter.getCount() > 0) {
-                    listView.setCanPullToLoadMore(true);
-                } else {
-                    listView.setCanPullToLoadMore(false);
-                }
-                if (loadDesc && lastLoad) {
-                    listView.setCanPullToLoadMore(false);
-                }
             } else {
                 if (result.statusCode == 404) {
                     toastSingleton(R.string.page_404);
@@ -386,6 +381,14 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
                     toastSingleton(getString(R.string.load_failed));
                     loadingView.onLoadFailed();
                 }
+            }
+            if (adapter.getCount() > 0) {
+                listView.setCanPullToLoadMore(true);
+            } else {
+                listView.setCanPullToLoadMore(false);
+            }
+            if (loadDesc && lastLoad) {
+                listView.setCanPullToLoadMore(false);
             }
             listView.doneOperation();
         }
