@@ -30,6 +30,7 @@
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="titleTextAppearance">@style/ToolbarTextAppearance</item>
         <item name="actionMenuTextAppearance">@style/actionMenuTextAppearance</item>
+        <item name="actionModeBackground">@color/color_primary_dark</item>
         <item name="actionMenuTextColor">@android:color/white</item>
         <item name="colorControlNormal">@android:color/white</item>
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
@@ -158,6 +159,7 @@
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="titleTextAppearance">@style/ToolbarTextAppearance</item>
         <item name="actionMenuTextAppearance">@style/actionMenuTextAppearance</item>
+        <item name="actionModeBackground">@color/color_primary_dark_night</item>
         <item name="actionMenuTextColor">@android:color/white</item>
         <item name="colorControlNormal">@android:color/white</item>
         <item name="colorPrimaryDark">@color/color_primary_dark_night</item>
