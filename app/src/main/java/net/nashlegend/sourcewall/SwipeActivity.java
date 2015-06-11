@@ -66,8 +66,7 @@ public class SwipeActivity extends BaseActivity {
 
     public static int getScreenWidth(Context context) {
         DisplayMetrics metrics = new DisplayMetrics();
-        WindowManager manager = (WindowManager) context
-                .getSystemService(WINDOW_SERVICE);
+        WindowManager manager = (WindowManager) context.getSystemService(WINDOW_SERVICE);
         manager.getDefaultDisplay().getMetrics(metrics);
         return metrics.widthPixels;
     }
@@ -110,8 +109,8 @@ public class SwipeActivity extends BaseActivity {
             mActivity = activity;
             screenWidth = getScreenWidth(activity);
             setClickable(true);
-//            backgroundLayer = new View(activity);
-//            backgroundLayer.setBackgroundColor(Color.parseColor("#88000000"));
+            //            backgroundLayer = new View(activity);
+            //            backgroundLayer.setBackgroundColor(Color.parseColor("#88000000"));
             final ViewGroup root = (ViewGroup) activity.getWindow().getDecorView();
             content = root.getChildAt(0);
             //在Android5.0上，content的高度不再是屏幕高度，而是变成了Activity高度，比屏幕高度低一些，
@@ -121,9 +120,9 @@ public class SwipeActivity extends BaseActivity {
             //所以我们要做的就是给content一个新的LayoutParams，Match_Parent那种，也就是下面的-1
             ViewGroup.LayoutParams params = content.getLayoutParams();
             ViewGroup.LayoutParams params2 = new ViewGroup.LayoutParams(-1, -1);
-//            ViewGroup.LayoutParams params3 = new ViewGroup.LayoutParams(-1, -1);
+            //            ViewGroup.LayoutParams params3 = new ViewGroup.LayoutParams(-1, -1);
             root.removeView(content);
-//            this.addView(backgroundLayer, params3);
+            //            this.addView(backgroundLayer, params3);
             this.addView(content, params2);
             root.addView(this, params);
         }
@@ -133,8 +132,7 @@ public class SwipeActivity extends BaseActivity {
             boolean result = super.drawChild(canvas, child, drawingTime);
             final int shadowWidth = leftShadow.getIntrinsicWidth();
             int left = (int) (getContentX()) - shadowWidth;
-            leftShadow.setBounds(left, child.getTop(),
-                    left + shadowWidth, child.getBottom());
+            leftShadow.setBounds(left, child.getTop(), left + shadowWidth, child.getBottom());
             leftShadow.draw(canvas);
             return result;
         }
@@ -259,9 +257,9 @@ public class SwipeActivity extends BaseActivity {
             int ix = (int) x;
             content.setX(ix);
             invalidate();
-//            if (backgroundLayer != null) {
-//                backgroundLayer.setAlpha(1 - x / getWidth());
-//            }
+            //            if (backgroundLayer != null) {
+            //                backgroundLayer.setAlpha(1 - x / getWidth());
+            //            }
         }
 
         public float getContentX() {
@@ -327,15 +325,13 @@ public class SwipeActivity extends BaseActivity {
 
         private void animateFromVelocity(float v) {
             if (v > 0) {
-                if (getContentX() < screenWidth / 2
-                        && v * duration / 1000 + getContentX() < screenWidth) {
+                if (getContentX() < screenWidth / 2 && v * duration / 1000 + getContentX() < screenWidth / 2) {
                     animateBack(false);
                 } else {
                     animateFinish(true);
                 }
             } else {
-                if (getContentX() > screenWidth / 2
-                        && v * duration / 1000 + getContentX() > screenWidth / 2) {
+                if (getContentX() > screenWidth / 2 && v * duration / 1000 + getContentX() > screenWidth / 2) {
                     animateFinish(false);
                 } else {
                     animateBack(true);
