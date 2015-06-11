@@ -150,6 +150,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
         listView.setGroupIndicator(null);
         adapter = new ChannelsAdapter(getActivity());
         adapter.createDefaultChannels();
+        checkChannelList();
         listView.setAdapter(adapter);
         listView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
@@ -441,12 +442,9 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
                         currentTagDBVersion = lastTagDBVersion;
                         adapter.notifyDataSetChanged();
                     } else {
+                        //切换了用户的话
                         checkChannelList();
-                        if (UserAPI.isLoggedIn()) {
-                            loadUserInfo();
-                        } else {
-                            back2UnLogged();
-                        }
+                        loadUserInfo();
                     }
                 }
             }
@@ -474,30 +472,24 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
      */
     private void checkChannelList() {
         ArrayList<SubItem> groupSubItems = adapter.getSubLists().get(1);
-        if (UserAPI.isLoggedIn()) {
-            groupSubItems.clear();
-            groupSubItems.add(new SubItem(SubItem.Section_Post, SubItem.Type_Private_Channel, "我的小组", "user_group"));
-            if (GroupHelper.getMyGroupsNumber() > 0) {
-                //如果已经加载了栏目
-                groupSubItems.add(new SubItem(SubItem.Section_Post, SubItem.Type_Collections, "小组热贴", "hot_posts"));
-                groupSubItems.addAll(GroupHelper.getSelectedGroupSubItems());
-            } else {
-                groupSubItems.addAll(ChannelHelper.getPosts());
-            }
+        groupSubItems.clear();
+        groupSubItems.add(new SubItem(SubItem.Section_Post, SubItem.Type_Private_Channel, "我的小组", "user_group"));
+        if (GroupHelper.getMyGroupsNumber() > 0) {
+            //如果已经加载了栏目
+            groupSubItems.add(new SubItem(SubItem.Section_Post, SubItem.Type_Collections, "小组热贴", "hot_posts"));
+            groupSubItems.addAll(GroupHelper.getSelectedGroupSubItems());
         } else {
-            groupSubItems.clear();
             groupSubItems.addAll(ChannelHelper.getPosts());
         }
 
         ArrayList<SubItem> questionSubItems = adapter.getSubLists().get(2);
-        if (UserAPI.isLoggedIn() && AskTagHelper.getAskTagsNumber() > 0) {
+        questionSubItems.clear();
+        if (AskTagHelper.getAskTagsNumber() > 0) {
             //如果已经加载了栏目
-            questionSubItems.clear();
             questionSubItems.add(new SubItem(SubItem.Section_Question, SubItem.Type_Collections, "热门问答", "hottest"));
             questionSubItems.add(new SubItem(SubItem.Section_Question, SubItem.Type_Collections, "精彩回答", "highlight"));
             questionSubItems.addAll(AskTagHelper.getSelectedQuestionSubItems());
         } else {
-            questionSubItems.clear();
             questionSubItems.addAll(ChannelHelper.getQuestions());
         }
         adapter.notifyDataSetInvalidated();
@@ -605,7 +597,6 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
             }
 
             if (!shouldMarkAsFailed) {
-                checkChannelList();
                 loadUserInfo();
                 loginState = true;
             } else {

@@ -1,13 +1,10 @@
 package net.nashlegend.sourcewall.request.api;
 
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
 import net.nashlegend.sourcewall.AppApplication;
-import net.nashlegend.sourcewall.db.AskTagHelper;
-import net.nashlegend.sourcewall.db.GroupHelper;
 import net.nashlegend.sourcewall.model.Basket;
 import net.nashlegend.sourcewall.model.Category;
 import net.nashlegend.sourcewall.model.Message;
@@ -517,8 +514,6 @@ public class UserAPI extends APIBase {
         SharedPreferencesUtil.remove(Consts.Key_User_Avatar);
         SharedPreferencesUtil.remove(Consts.Key_User_ID);
         SharedPreferencesUtil.remove(Consts.Key_User_Name);
-        GroupHelper.clearAllMyGroups();
-        AskTagHelper.clearAllMyTags();
         CookieSyncManager.createInstance(AppApplication.getApplication());
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.removeAllCookie();

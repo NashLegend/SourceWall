@@ -5,6 +5,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 
+import net.nashlegend.sourcewall.db.AskTagHelper;
+import net.nashlegend.sourcewall.db.GroupHelper;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.util.ChannelHelper;
 import net.nashlegend.sourcewall.view.GroupItemView;
@@ -101,12 +103,35 @@ public class ChannelsAdapter extends BaseExpandableListAdapter {
 
 
     public void createDefaultChannels() {
-
+        //添加科学人的所有栏目
         ArrayList<SubItem> groups = ChannelHelper.getSections();
         ArrayList<ArrayList<SubItem>> cols = new ArrayList<>();
         cols.add(ChannelHelper.getArticles());
-        cols.add(ChannelHelper.getPosts());
-        cols.add(ChannelHelper.getQuestions());
+
+        //添加小组
+        ArrayList<SubItem> groupSubItems = new ArrayList<>();
+        groupSubItems.add(new SubItem(SubItem.Section_Post, SubItem.Type_Private_Channel, "我的小组", "user_group"));
+        if (GroupHelper.getMyGroupsNumber() > 0) {
+            //如果已经加载了栏目
+            groupSubItems.add(new SubItem(SubItem.Section_Post, SubItem.Type_Collections, "小组热贴", "hot_posts"));
+            groupSubItems.addAll(GroupHelper.getSelectedGroupSubItems());
+        } else {
+            groupSubItems.addAll(ChannelHelper.getPosts());
+        }
+        cols.add(groupSubItems);
+
+        //添加问答
+        ArrayList<SubItem> questionSubItems = new ArrayList<>();
+        questionSubItems.clear();
+        if (AskTagHelper.getAskTagsNumber() > 0) {
+            //如果已经加载了栏目
+            questionSubItems.add(new SubItem(SubItem.Section_Question, SubItem.Type_Collections, "热门问答", "hottest"));
+            questionSubItems.add(new SubItem(SubItem.Section_Question, SubItem.Type_Collections, "精彩回答", "highlight"));
+            questionSubItems.addAll(AskTagHelper.getSelectedQuestionSubItems());
+        } else {
+            questionSubItems.addAll(ChannelHelper.getQuestions());
+        }
+        cols.add(questionSubItems);
 
         setGroupList(groups);
         setSubLists(cols);
