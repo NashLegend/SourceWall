@@ -3,7 +3,7 @@ package net.nashlegend.sourcewall;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 
 import com.umeng.analytics.MobclickAgent;
 
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 /**
  * Created by NashLegend on 2014/9/15 0015
  */
-public abstract class BaseActivity extends ActionBarActivity implements IStackedAsyncTaskInterface {
+public abstract class BaseActivity extends AppCompatActivity implements IStackedAsyncTaskInterface {
 
     private final ArrayList<AAsyncTask> stackedTasks = new ArrayList<>();
     private boolean isActive = false;

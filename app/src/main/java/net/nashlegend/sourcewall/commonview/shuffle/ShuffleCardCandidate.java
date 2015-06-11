@@ -40,16 +40,13 @@ public class ShuffleCardCandidate extends ShuffleCard {
         setupAnimator(animateAfter(button.getPosition().y, button.getPosition().x, true));
         button.setSelected(false);
         addButtonAt(button, new Point(0, 0));
-        if (computeHeight() > targetHeight) {
-            expand();
-        }
         setFinalPosition();
     }
 
     public void addButtonAt(MovableButton button, Point point) {
         list.add(button);
 
-        if (computeHeight() > getHeight()) {
+        if (computeHeight() > targetHeight) {
             expand();
         }
 

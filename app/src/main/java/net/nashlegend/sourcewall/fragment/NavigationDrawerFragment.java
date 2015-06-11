@@ -12,8 +12,8 @@ import android.preference.PreferenceManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -123,8 +123,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
 
     @Override
     public View onCreateLayoutView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        layoutView = inflater.inflate(
-                R.layout.fragment_navigation_drawer, container, false);
+        layoutView = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
 
         settingView = layoutView.findViewById(R.id.view_setting);
         userView = layoutView.findViewById(R.id.layout_user);
@@ -242,8 +241,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
                     // The user manually opened the drawer; store this flag to prevent auto-showing
                     // the navigation drawer automatically in the future.
                     mUserLearnedDrawer = true;
-                    SharedPreferences sp = PreferenceManager
-                            .getDefaultSharedPreferences(getActivity());
+                    SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
                     sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true).apply();
                 }
                 getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
@@ -320,7 +318,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
     }
 
     private ActionBar getActionBar() {
-        return ((ActionBarActivity) getActivity()).getSupportActionBar();
+        return ((AppCompatActivity) getActivity()).getSupportActionBar();
     }
 
     private void onUserViewClicked() {
@@ -382,9 +380,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
                 String avatarString = SharedPreferencesUtil.readString(Consts.Key_User_Avatar, "");
                 if (!TextUtils.isEmpty(avatarString)) {
                     if (Config.shouldLoadImage()) {
-                        Picasso.with(getActivity()).load(avatarString)
-                                .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen).placeholder(R.drawable.default_avatar)
-                                .transform(new RoundTransformation(Color.parseColor("#00000000"), 0, true)).into(avatarView);
+                        Picasso.with(getActivity()).load(avatarString).resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen).placeholder(R.drawable.default_avatar).transform(new RoundTransformation(Color.parseColor("#00000000"), 0, true)).into(avatarView);
                     } else {
                         avatarView.setImageResource(R.drawable.default_avatar);
                     }
@@ -406,9 +402,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
                         String avatarString = SharedPreferencesUtil.readString(Consts.Key_User_Avatar, "");
                         if (!TextUtils.isEmpty(avatarString)) {
                             if (Config.shouldLoadImage()) {
-                                Picasso.with(getActivity()).load(avatarString).placeholder(R.drawable.default_avatar)
-                                        .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
-                                        .transform(new RoundTransformation(Color.parseColor("#00000000"), 0, true)).into(avatarView);
+                                Picasso.with(getActivity()).load(avatarString).placeholder(R.drawable.default_avatar).resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen).transform(new RoundTransformation(Color.parseColor("#00000000"), 0, true)).into(avatarView);
                             } else {
                                 avatarView.setImageResource(R.drawable.default_avatar);
                             }
@@ -656,9 +650,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
         SharedPreferencesUtil.saveString(Consts.Key_User_ID, info.getId());
         SharedPreferencesUtil.saveString(Consts.Key_User_Avatar, info.getAvatar());
         if (Config.shouldLoadImage()) {
-            Picasso.with(getActivity()).load(info.getAvatar()).placeholder(R.drawable.default_avatar)
-                    .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
-                    .transform(new RoundTransformation(Color.parseColor("#00000000"), 0, true)).into(avatarView);
+            Picasso.with(getActivity()).load(info.getAvatar()).placeholder(R.drawable.default_avatar).resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen).transform(new RoundTransformation(Color.parseColor("#00000000"), 0, true)).into(avatarView);
         } else {
             avatarView.setImageResource(R.drawable.default_avatar);
         }

@@ -122,6 +122,13 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_question, menu);
+        try {
+            Method m = menu.getClass().getDeclaredMethod("setOptionalIconsVisible", Boolean.TYPE);
+            m.setAccessible(true);
+            m.invoke(menu, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if (!UserAPI.isLoggedIn()) {
             menu.findItem(R.id.action_follow_question).setVisible(false);
             menu.findItem(R.id.action_unfollow_question).setVisible(false);
@@ -163,20 +170,6 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         }
         return super.onOptionsItemSelected(item);
     }
-
-    @Override
-    public boolean onMenuOpened(int featureId, Menu menu) {
-        try {
-            Method m = menu.getClass().getDeclaredMethod(
-                    "setOptionalIconsVisible", Boolean.TYPE);
-            m.setAccessible(true);
-            m.invoke(menu, true);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return super.onMenuOpened(featureId, menu);
-    }
-
 
     @Override
     public void onStartRefresh() {

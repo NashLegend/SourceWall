@@ -1,14 +1,10 @@
 package net.nashlegend.sourcewall;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-
-import net.nashlegend.sourcewall.commonview.TTextView;
+import android.support.v7.app.AppCompatActivity;
 
 
-public class TestActivity extends ActionBarActivity {
+public class TestActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
