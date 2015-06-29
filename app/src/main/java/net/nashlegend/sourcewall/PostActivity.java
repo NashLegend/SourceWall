@@ -344,7 +344,11 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
                 }
                 offset = tmpOffset;
             }
-            return PostAPI.getPostCommentsFromJsonUrl(post.getId(), offset, limit);
+            ResultObject resultObject = PostAPI.getPostCommentsFromJsonUrl(post.getId(), offset, limit);
+            if (!resultObject.ok) {
+                hasLoadAll = false;
+            }
+            return resultObject;
         }
 
         @Override

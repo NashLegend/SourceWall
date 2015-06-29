@@ -144,7 +144,7 @@ public class ArticleView extends AceView<Article> {
 
         @Override
         protected ResultObject doInBackground(Integer... params) {
-            return ArticleAPI.getArticleComments(article.getId(), adapter.getCount() - 1, 4999);//1000足够了
+            return ArticleAPI.getArticleComments(article.getId(), article.getCommentNum(), 4999);//1000足够了
         }
 
         @Override

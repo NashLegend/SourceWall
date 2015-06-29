@@ -61,6 +61,10 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
     private boolean loadDesc = false;
     private Receiver receiver;
     private Menu menu;
+    /**
+     * 是否倒序加载已经加载完成了所有的回帖
+     */
+    private boolean hasLoadAll = false;
 
     public ArticleActivity() {
         onItemClickListener = new AdapterView.OnItemClickListener() {
@@ -462,12 +466,30 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
                     return articleResult;
                 }
             }
+            article.setCommentNum(409);
             if (loadDesc) {
                 //因为无法保证获取回复的数据，所以只能采取一次全部加载的方式,但是又不能超过5000，这是服务器的限制
-                limit = 4999;
-                offset = 0;
+                if (article.getCommentNum() <= 0) {
+                    limit = 4999;
+                    offset = 0;
+                    hasLoadAll = true;
+                } else {
+                    int tmpOffset = article.getCommentNum() - offset - 20;
+                    if (tmpOffset <= 0) {
+                        hasLoadAll = true;
+                        limit = 20 + tmpOffset;
+                        tmpOffset = 0;
+                    } else {
+                        hasLoadAll = false;
+                    }
+                    offset = tmpOffset;
+                }
             }
-            return ArticleAPI.getArticleComments(article.getId(), offset, limit);
+            ResultObject resultObject = ArticleAPI.getArticleComments(article.getId(), offset, limit);
+            if (!resultObject.ok && loadDesc) {
+                hasLoadAll = false;
+            }
+            return resultObject;
         }
 
         @Override
@@ -513,10 +535,8 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
             } else {
                 listView.setCanPullToLoadMore(false);
             }
-            if (loadDesc && adapter.getCount() > 1) {
+            if (loadDesc && hasLoadAll) {
                 article.setCommentNum(adapter.getCount() - 1);
-                //adapter.getCount() > 1表示有数据了，由于倒序加载是采取一次全部加载的方式
-                //所以这表明加载成功了，从此不需要加载更多
                 listView.setCanPullToLoadMore(false);
             }
             listView.doneOperation();
@@ -583,7 +603,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         } else {
             listView.setCanPullToLoadMore(false);
         }
-        if (loadDesc && adapter.getCount() > 1) {
+        if (loadDesc && hasLoadAll) {
             listView.setCanPullToLoadMore(false);
         }
         setMenuVisibility();
