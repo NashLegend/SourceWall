@@ -5,7 +5,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import net.nashlegend.sourcewall.model.AceModel;
-import net.nashlegend.sourcewall.view.AceView;
+import net.nashlegend.sourcewall.model.Article;
+import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.view.ArticleView;
 import net.nashlegend.sourcewall.view.MediumListItemView;
 
@@ -56,7 +57,12 @@ public class ArticleDetailAdapter extends AceAdapter<AceModel> {
                 convertView = new MediumListItemView(getContext());
             }
         }
-        ((AceView) convertView).setData(list.get(position));
+        if (convertView instanceof ArticleView) {
+            ((ArticleView) convertView).setData((Article) list.get(position));
+            ((ArticleView) convertView).setAdapter(this);
+        } else {
+            ((MediumListItemView) convertView).setData((UComment) list.get(position));
+        }
         return convertView;
     }
 }

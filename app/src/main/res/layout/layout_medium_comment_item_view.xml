@@ -86,18 +86,6 @@
                 android:layout_weight="0"
                 android:text="@string/sample_like_num" />
 
-            <ImageButton
-                android:id="@+id/button_overflow"
-                android:layout_marginLeft="8dp"
-                android:background="?attr/background_selectable_borderless"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:scaleType="centerCrop"
-                android:minHeight="0dp"
-                android:minWidth="0dp"
-                android:layout_weight="0"
-                android:src="@drawable/dots_vertical" />
-
         </LinearLayout>
 
         <net.nashlegend.sourcewall.commonview.TTextView

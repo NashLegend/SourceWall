@@ -40,6 +40,7 @@ public class ArticleAPI extends APIBase {
      * resultObject.result是ArrayList[Article]
      *
      * @param offset 从第offset个开始取
+     *
      * @return ResultObject
      */
     public static ResultObject getArticleListIndexPage(int offset) {
@@ -57,6 +58,7 @@ public class ArticleAPI extends APIBase {
      *
      * @param channelKey 频道key
      * @param offset     加载开始的index
+     *
      * @return ResultObject
      */
     public static ResultObject getArticleListByChannel(String channelKey, int offset) {
@@ -75,6 +77,7 @@ public class ArticleAPI extends APIBase {
      *
      * @param subject_key 学科key
      * @param offset      从第几个开始加载
+     *
      * @return ResultObject
      */
     public static ResultObject getArticleListBySubject(String subject_key, int offset) {
@@ -92,6 +95,7 @@ public class ArticleAPI extends APIBase {
      * resultObject.result是ArrayList[Article]
      *
      * @param url jsonUrl
+     *
      * @return ResultObject
      */
     private static ResultObject getArticleListFromJsonUrl(String url, ArrayList<NameValuePair> pairs) {
@@ -123,6 +127,7 @@ public class ArticleAPI extends APIBase {
      * resultObject.result是ArrayList[Article]
      *
      * @param subItem SubItem
+     *
      * @return ResultObject
      */
     public static ResultObject getCachedArticleList(SubItem subItem) {
@@ -154,6 +159,7 @@ public class ArticleAPI extends APIBase {
      * resultObject.result是ArrayList[Article]
      *
      * @param jString 要解析的json
+     *
      * @return ResultObject
      */
     public static ResultObject parseArticleListJson(String jString) {
@@ -169,10 +175,8 @@ public class ArticleAPI extends APIBase {
                         article.setId(getJsonString(jo, "id"));
                         article.setCommentNum(getJsonInt(jo, "replies_count"));
                         article.setAuthor(getJsonString(getJsonObject(jo, "author"), "nickname"));
-                        article.setAuthorID(getJsonString(getJsonObject(jo, "author"), "url")
-                                .replaceAll("\\D+", ""));
-                        article.setAuthorAvatarUrl(jo.getJSONObject("author").getJSONObject("avatar")
-                                .getString("large").replaceAll("\\?.*$", ""));
+                        article.setAuthorID(getJsonString(getJsonObject(jo, "author"), "url").replaceAll("\\D+", ""));
+                        article.setAuthorAvatarUrl(jo.getJSONObject("author").getJSONObject("avatar").getString("large").replaceAll("\\?.*$", ""));
                         article.setDate(parseDate(getJsonString(jo, "date_published")));
                         article.setSubjectName(getJsonString(getJsonObject(jo, "subject"), "name"));
                         article.setSubjectKey(getJsonString(getJsonObject(jo, "subject"), "key"));
@@ -197,6 +201,7 @@ public class ArticleAPI extends APIBase {
      * resultObject.result是Article
      *
      * @param id article ID
+     *
      * @return ResultObject
      */
     public static ResultObject getArticleDetailByID(String id) {
@@ -226,8 +231,7 @@ public class ArticleAPI extends APIBase {
             String articleContent = doc.getElementById("articleContent").outerHtml().replaceAll("line-height: normal;", "");
             String copyright = doc.getElementsByClass("copyright").outerHtml();
             article.setContent(articleContent + copyright);
-            int likeNum = Integer.valueOf(doc.getElementsByClass("recom-num").get(0).text()
-                    .replaceAll("\\D+", ""));
+            int likeNum = Integer.valueOf(doc.getElementsByClass("recom-num").get(0).text().replaceAll("\\D+", ""));
             // 其他数据已经在列表取得，按理说这里只要合过去就行了，
             // 但是因为有可能从其他地方进入这个页面，所以下面的数据还是要取
             // 但是可以尽量少取，因为很多数据基本已经用不到了
@@ -237,10 +241,10 @@ public class ArticleAPI extends APIBase {
                 Element info = infos.get(0);
                 Elements infoSubs = info.getElementsByTag("a");//记得见过不是a的
                 if (infoSubs != null && infoSubs.size() > 0) {
-//                    String authorId = info.getElementsByTag("a").attr("href").replaceAll("\\D+", "");
+                    //                    String authorId = info.getElementsByTag("a").attr("href").replaceAll("\\D+", "");
                     String author = info.getElementsByTag("a").text();
                     article.setAuthor(author);
-//                    article.setAuthorID(authorId);
+                    //                    article.setAuthorID(authorId);
                 }
                 Elements meta = info.getElementsByTag("meta");
                 if (meta != null && meta.size() > 0) {
@@ -248,10 +252,10 @@ public class ArticleAPI extends APIBase {
                     article.setDate(date);
                 }
             }
-//            String num = doc.select(".cmts-title").select(".cmts-hide").get(0).getElementsByClass("gfl").get(0).text().replaceAll("\\D+", "");
-//            article.setCommentNum(Integer.valueOf(num));
+            //            String num = doc.select(".cmts-title").select(".cmts-hide").get(0).getElementsByClass("gfl").get(0).text().replaceAll("\\D+", "");
+            //            article.setCommentNum(Integer.valueOf(num));
             article.setTitle(doc.getElementById("articleTitle").text());
-//            article.setLikeNum(likeNum);
+            //            article.setLikeNum(likeNum);
             resultObject.ok = true;
             resultObject.result = article;
         } catch (Exception e) {
@@ -267,6 +271,7 @@ public class ArticleAPI extends APIBase {
      *
      * @param hotElement 热门评论元素
      * @param aid        article ID
+     *
      * @return ResultObject
      */
     private static ArrayList<UComment> getArticleHotComments(Element hotElement, String aid) throws Exception {
@@ -279,19 +284,15 @@ public class ArticleAPI extends APIBase {
                 String id = element.id().replace("reply", "");
                 Element tmp = element.select(".cmt-img").select(".cmtImg").select(".pt-pic").get(0);
 
-                String authorID = tmp.getElementsByTag("a").get(0).attr("href")
-                        .replaceAll("\\D+", "");
-                String authorAvatarUrl = tmp.getElementsByTag("img").get(0).attr("src")
-                        .replaceAll("\\?.*$", "");
+                String authorID = tmp.getElementsByTag("a").get(0).attr("href").replaceAll("\\D+", "");
+                String authorAvatarUrl = tmp.getElementsByTag("img").get(0).attr("src").replaceAll("\\?.*$", "");
                 String author = tmp.getElementsByTag("a").get(0).attr("title");
                 String likeNum = element.getElementsByClass("cmt-do-num").get(0).text();
                 String date = element.getElementsByClass("cmt-info").get(0).text();
-                String content = element.select(".cmt-content").select(".gbbcode-content")
-                        .select(".cmtContent").get(0).outerHtml();
+                String content = element.select(".cmt-content").select(".gbbcode-content").select(".cmtContent").get(0).outerHtml();
                 Elements tmpElements = element.getElementsByClass("cmt-auth");
                 if (tmpElements != null && tmpElements.size() > 0) {
-                    String authorTitle = element.getElementsByClass("cmt-auth").get(0)
-                            .attr("title");
+                    String authorTitle = element.getElementsByClass("cmt-auth").get(0).attr("title");
                     comment.setAuthorTitle(authorTitle);
                 }
                 comment.setID(id);
@@ -314,16 +315,30 @@ public class ArticleAPI extends APIBase {
      *
      * @param id     article ID
      * @param offset 从第几个开始加载
+     *
      * @return ResultObject
      */
     public static ResultObject getArticleComments(String id, int offset) {
+        return getArticleComments(id, offset, 20);
+    }
+
+    /**
+     * 获取文章评论，json格式
+     * resultObject.result是ArrayList[UComment]
+     *
+     * @param id     article ID
+     * @param offset 从第几个开始加载
+     *
+     * @return ResultObject
+     */
+    public static ResultObject getArticleComments(String id, int offset, int limit) {
         ResultObject resultObject = new ResultObject();
         try {
             ArrayList<UComment> list = new ArrayList<>();
             String url = "http://apis.guokr.com/minisite/article_reply.json";
             ArrayList<NameValuePair> pairs = new ArrayList<>();
             pairs.add(new BasicNameValuePair("article_id", id));
-            pairs.add(new BasicNameValuePair("limit", "20"));
+            pairs.add(new BasicNameValuePair("limit", String.valueOf(limit)));
             pairs.add(new BasicNameValuePair("offset", offset + ""));
             String jString = HttpFetcher.get(url, pairs).toString();
             JSONArray articles = APIBase.getUniversalJsonArray(jString, resultObject);
@@ -340,10 +355,8 @@ public class ArticleAPI extends APIBase {
                     if (exists) {
                         comment.setAuthor(getJsonString(authorObject, "nickname"));
                         comment.setAuthorTitle(getJsonString(authorObject, "title"));
-                        comment.setAuthorID(getJsonString(authorObject, "url")
-                                .replaceAll("\\D+", ""));
-                        comment.setAuthorAvatarUrl(getJsonObject(authorObject, "avatar")
-                                .getString("large").replaceAll("\\?.*$", ""));
+                        comment.setAuthorID(getJsonString(authorObject, "url").replaceAll("\\D+", ""));
+                        comment.setAuthorAvatarUrl(getJsonObject(authorObject, "avatar").getString("large").replaceAll("\\?.*$", ""));
                     } else {
                         comment.setAuthor("此用户不存在");
                     }
@@ -371,6 +384,7 @@ public class ArticleAPI extends APIBase {
      * 所以还要在这里再赋值一次，但是这里取不到summary了……
      *
      * @param article 文章对象,至少有一个id属性不为空
+     *
      * @return ResultObject
      */
     public static ResultObject getArticleFirstPage(Article article) {
@@ -403,6 +417,7 @@ public class ArticleAPI extends APIBase {
      * @param title     文章标题
      * @param summary   文章总结
      * @param comment   推荐评语
+     *
      * @return ResultObject
      */
     public static ResultObject recommendArticle(String articleID, String title, String summary, String comment) {
@@ -414,6 +429,7 @@ public class ArticleAPI extends APIBase {
      * 赞一个文章评论
      *
      * @param id 文章id
+     *
      * @return ResultObject
      */
     public static ResultObject likeComment(String id) {
@@ -436,6 +452,7 @@ public class ArticleAPI extends APIBase {
      * 删除我的评论
      *
      * @param id 评论id
+     *
      * @return ResultObject
      */
     public static ResultObject deleteMyComment(String id) {
@@ -457,6 +474,7 @@ public class ArticleAPI extends APIBase {
      *
      * @param id      文章id
      * @param content 回复内容
+     *
      * @return ResultObject.result is the reply_id if ok;
      */
     public static ResultObject replyArticle(String id, String content) {
@@ -484,6 +502,7 @@ public class ArticleAPI extends APIBase {
      *
      * @param id      文章id
      * @param content 回复内容，html格式
+     *
      * @return ResultObject.result is the reply_id if ok;
      */
     public static ResultObject replyArticleAdvanced(String id, String content) {
@@ -510,6 +529,7 @@ public class ArticleAPI extends APIBase {
      * 获取一条article的简介，也就是除了正文之外的一切，这里只需要两个，id和title
      *
      * @param article_id article_id
+     *
      * @return ResultObject
      */
     private static ResultObject getArticleSimpleByID(String article_id) {
@@ -546,6 +566,7 @@ public class ArticleAPI extends APIBase {
      * 还需要另一个接口获取article的摘要。getArticleSimpleByID(article_id)
      *
      * @param notice_id 通知id
+     *
      * @return resultObject resultObject.result是UComment
      */
     public static ResultObject getSingleCommentByNoticeID(String notice_id) {
@@ -588,6 +609,7 @@ public class ArticleAPI extends APIBase {
      * 多次跳转真让人想死啊。
      *
      * @param reply_url 评论地址
+     *
      * @return resultObject resultObject.result是UComment
      */
     public static ResultObject getSingleCommentFromRedirectUrl(String reply_url) {
@@ -626,6 +648,7 @@ public class ArticleAPI extends APIBase {
      * 太蛋疼了，只能不显示文章标题或者提前传入
      *
      * @param reply_id 评论id
+     *
      * @return resultObject resultObject.result是UComment
      */
     public static ResultObject getSingleCommentByID(String reply_id, String article_id, String article_title) {

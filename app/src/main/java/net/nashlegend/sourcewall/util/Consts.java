@@ -33,6 +33,7 @@ public class Consts {
     public static final String Extra_Shared_Title = "sourcewall.extra.share.title";//分享的标题
     public static final String Extra_Shared_Summary = "sourcewall.extra.share.summary";//分享的标题
     public static final String Extra_Shared_Bitmap = "sourcewall.extra.share.bitmap";//分享的图片
+    public static final String Extra_Activity_Hashcode = "sourcewall.extra.activity.hashcode";//分享的图片
 
     // 保存SharedPreferences的Key
     public static final String Key_Cookie = "sourcewall.key.cookie";

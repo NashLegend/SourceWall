@@ -1,29 +1,41 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="net.nashlegend.sourcewall.ArticleActivity">
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="net.nashlegend.sourcewall.ArticleActivity">
     <item
         android:id="@+id/action_share_to_wechat_circle"
-        android:title="@string/action_share_to_wechat_circle"
-        android:orderInCategory="100"
         android:icon="@drawable/weixin_circle_logo"
-        app:showAsAction="never" />
+        android:orderInCategory="100"
+        android:title="@string/action_share_to_wechat_circle"
+        app:showAsAction="never"/>
     <item
         android:id="@+id/action_share_to_wechat_friends"
-        android:title="@string/action_share_to_wechat_friends"
-        android:orderInCategory="101"
         android:icon="@drawable/weixin_chat_logo"
-        app:showAsAction="never" />
+        android:orderInCategory="101"
+        android:title="@string/action_share_to_wechat_friends"
+        app:showAsAction="never"/>
     <item
         android:id="@+id/action_share_to_weibo"
-        android:title="@string/action_share_to_weibo"
-        android:orderInCategory="102"
         android:icon="@drawable/weibo_logo"
-        app:showAsAction="never" />
+        android:orderInCategory="102"
+        android:title="@string/action_share_to_weibo"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_load_desc"
+        android:icon="?attr/arrow_up_icon"
+        android:orderInCategory="103"
+        android:title="@string/action_load_desc"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_load_acs"
+        android:icon="?attr/arrow_down_icon"
+        android:orderInCategory="104"
+        android:title="@string/action_load_acs"
+        app:showAsAction="never"/>
     <item
         android:id="@+id/action_open_in_browser"
-        android:title="@string/open_in_browser"
-        android:orderInCategory="103"
         android:icon="?attr/browser_icon"
-        app:showAsAction="never" />
+        android:orderInCategory="105"
+        android:title="@string/open_in_browser"
+        app:showAsAction="never"/>
 </menu>

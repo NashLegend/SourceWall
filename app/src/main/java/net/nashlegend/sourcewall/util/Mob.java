@@ -14,6 +14,8 @@ public class Mob {
 
     //科学人
     public static final String Event_Open_Article = "Event_Open_Article";//打开文章
+    public static final String Event_Reverse_Read_Article = "Event_Reverse_Read_Article";//倒序查看文章
+    public static final String Event_Normal_Read_Article = "Event_Normal_Read_Article";//正序查看文章
     public static final String Event_Favor_Article = "Event_Favor_Article";//收藏文章
     public static final String Event_Recommend_Article = "Event_Recommend_Article";//推荐文章
     public static final String Event_Reply_Article = "Event_Reply_Article";//回复文章

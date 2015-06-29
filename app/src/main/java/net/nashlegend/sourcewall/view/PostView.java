@@ -98,8 +98,10 @@ public class PostView extends AceView<Post> {
 
         if (post.isDesc()) {
             loadDesc.setVisibility(VISIBLE);
+            contentView.setVisibility(GONE);
         } else {
             loadDesc.setVisibility(GONE);
+            contentView.setVisibility(VISIBLE);
         }
 
         loadDesc.setOnClickListener(new OnClickListener() {
@@ -160,6 +162,7 @@ public class PostView extends AceView<Post> {
             }
             Intent intent = new Intent();
             intent.setAction(Consts.Action_Finish_Loading_Latest);
+            intent.putExtra(Consts.Extra_Activity_Hashcode, getContext().hashCode());
             AppApplication.getApplication().sendBroadcast(intent);
         }
     }

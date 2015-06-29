@@ -1,10 +1,13 @@
 package net.nashlegend.sourcewall;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -55,6 +58,9 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
     private AdapterView.OnItemClickListener onItemClickListener;
     private FloatingActionsMenu floatingActionsMenu;
     private ProgressBar progressBar;
+    private boolean loadDesc = false;
+    private Receiver receiver;
+    private Menu menu;
 
     public ArticleActivity() {
         onItemClickListener = new AdapterView.OnItemClickListener() {
@@ -120,6 +126,18 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         AutoHideUtil.applyListViewAutoHide(this, listView, headView, floatingActionsMenu, (int) getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
         floatingActionsMenu.setVisibility(View.GONE);
         loadData(-1);
+
+        receiver = new Receiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Consts.Action_Start_Loading_Latest);
+        filter.addAction(Consts.Action_Finish_Loading_Latest);
+        registerReceiver(receiver, filter);
+    }
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(receiver);
+        super.onDestroy();
     }
 
     /**
@@ -202,6 +220,8 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         } catch (Exception e) {
             e.printStackTrace();
         }
+        this.menu = menu;
+        setMenuVisibility();
         return true;
     }
 
@@ -209,6 +229,12 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
+            case R.id.action_load_acs:
+                startLoadAcs();
+                break;
+            case R.id.action_load_desc:
+                startLoadDesc();
+                break;
             case R.id.action_share_to_wechat_circle:
                 MobclickAgent.onEvent(this, Mob.Event_Share_Article_To_Wechat_Circle);
                 ShareUtil.shareToWeiXinCircle(this, article.getUrl(), article.getTitle(), article.getSummary(), null);
@@ -318,6 +344,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
 
     @Override
     public void reload() {
+        adapter.clear();
         loadData(-1);
     }
 
@@ -352,6 +379,63 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         loadData(adapter.getCount() - 1);
     }
 
+    /**
+     * 倒序查看
+     */
+    public void startLoadDesc() {
+        MobclickAgent.onEvent(this, Mob.Event_Reverse_Read_Article);
+        loadDesc = true;
+        loadingView.startLoading();
+        listView.setCanPullToLoadMore(false);
+        setMenuVisibility();
+        if (adapter.getCount() > 0 && adapter.getList().get(0) instanceof Article) {
+            article = (Article) adapter.getList().get(0);
+            article.setDesc(loadDesc);
+            adapter.clear();
+            adapter.add(article);
+            loadData(0);
+        } else {
+            adapter.clear();
+            loadData(-1);
+        }
+        adapter.notifyDataSetChanged();
+    }
+
+    /**
+     * 正序查看
+     */
+    private void startLoadAcs() {
+        MobclickAgent.onEvent(this, Mob.Event_Normal_Read_Article);
+        loadDesc = false;
+        loadingView.startLoading();
+        listView.setCanPullToLoadMore(false);
+        setMenuVisibility();
+        if (adapter.getCount() > 0 && adapter.getList().get(0) instanceof Article) {
+            article = (Article) adapter.getList().get(0);
+            article.setDesc(loadDesc);
+            adapter.clear();
+            adapter.add(article);
+            loadData(0);
+        } else {
+            adapter.clear();
+            loadData(-1);
+        }
+        adapter.notifyDataSetChanged();
+    }
+
+
+    private void setMenuVisibility() {
+        if (menu != null) {
+            if (loadDesc) {
+                menu.findItem(R.id.action_load_acs).setVisible(true);
+                menu.findItem(R.id.action_load_desc).setVisible(false);
+            } else {
+                menu.findItem(R.id.action_load_acs).setVisible(false);
+                menu.findItem(R.id.action_load_desc).setVisible(true);
+            }
+        }
+    }
+
     class LoaderTask extends AAsyncTask<Integer, ResultObject, ResultObject> {
         int offset;
 
@@ -365,19 +449,25 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
                 UserAPI.ignoreOneNotice(notice_id);
                 notice_id = null;
             }
+            int limit = 20;
+            offset = params[0];
             offset = params[0];
             if (offset < 0) {
                 //同时取了热门回帖，但是在这里没有显示 TODO
-                ResultObject articleResult = ArticleAPI.getArticleDetailByID(article.getId());
+                offset = 0;
+                ResultObject articleResult = ArticleAPI.getArticleDetailByID(article.getId());//得不到回复数量
                 if (articleResult.ok) {
                     publishProgress(articleResult);
-                    return ArticleAPI.getArticleComments(article.getId(), 0);
                 } else {
                     return articleResult;
                 }
-            } else {
-                return ArticleAPI.getArticleComments(article.getId(), offset);
             }
+            if (loadDesc) {
+                //因为无法保证获取回复的数据，所以只能采取一次全部加载的方式,但是又不能超过5000，这是服务器的限制
+                limit = 4999;
+                offset = 0;
+            }
+            return ArticleAPI.getArticleComments(article.getId(), offset, limit);
         }
 
         @Override
@@ -402,7 +492,11 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
                 loadingView.onLoadSuccess();
                 ArrayList<AceModel> ars = (ArrayList<AceModel>) result.result;
                 if (ars.size() > 0) {
-                    adapter.addAll(ars);
+                    if (loadDesc) {
+                        adapter.addAllReversely(ars);
+                    } else {
+                        adapter.addAll(ars);
+                    }
                     adapter.notifyDataSetChanged();
                 }
             } else {
@@ -411,12 +505,18 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
                     finish();
                 } else {
                     toastSingleton(getString(R.string.load_failed));
-                    loadingView.onLoadFailed();
+                    loadingView.onLoadSuccess();
                 }
             }
             if (adapter.getCount() > 0) {
                 listView.setCanPullToLoadMore(true);
             } else {
+                listView.setCanPullToLoadMore(false);
+            }
+            if (loadDesc && adapter.getCount() > 1) {
+                article.setCommentNum(adapter.getCount() - 1);
+                //adapter.getCount() > 1表示有数据了，由于倒序加载是采取一次全部加载的方式
+                //所以这表明加载成功了，从此不需要加载更多
                 listView.setCanPullToLoadMore(false);
             }
             listView.doneOperation();
@@ -467,6 +567,40 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
             } else {
                 toastSingleton("删除失败~");
             }
+        }
+    }
+
+    private void onStartLoadingLatest() {
+        cancelPotentialTask();
+        listView.setCanPullToLoadMore(false);
+        menu.findItem(R.id.action_load_acs).setVisible(false);
+        menu.findItem(R.id.action_load_desc).setVisible(false);
+    }
+
+    private void onFinishLoadingLatest() {
+        if (adapter.getCount() > 0) {
+            listView.setCanPullToLoadMore(true);
+        } else {
+            listView.setCanPullToLoadMore(false);
+        }
+        if (loadDesc && adapter.getCount() > 1) {
+            listView.setCanPullToLoadMore(false);
+        }
+        setMenuVisibility();
+    }
+
+    class Receiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (isActive() && intent.getIntExtra(Consts.Extra_Activity_Hashcode, 0) == ArticleActivity.this.hashCode()) {
+                if (Consts.Action_Start_Loading_Latest.equals(intent.getAction())) {
+                    onStartLoadingLatest();
+                } else if (Consts.Action_Finish_Loading_Latest.equals(intent.getAction())) {
+                    onFinishLoadingLatest();
+                }
+            }
+
         }
     }
 }

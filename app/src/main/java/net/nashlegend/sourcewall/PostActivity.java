@@ -61,7 +61,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
     /**
      * 是否倒序加载已经加载完成了所有的回帖
      */
-    private boolean lastLoad = false;
+    private boolean hasLoadAll = false;
     private ProgressBar progressBar;
 
     public PostActivity() {
@@ -248,6 +248,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
 
     @Override
     public void reload() {
+        adapter.clear();
         loadData(-1);
     }
 
@@ -335,11 +336,11 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
             if (loadDesc) {
                 int tmpOffset = post.getReplyNum() - offset - 20;
                 if (tmpOffset <= 0) {
-                    lastLoad = true;
+                    hasLoadAll = true;
                     limit = 20 + tmpOffset;
                     tmpOffset = 0;
                 } else {
-                    lastLoad = false;
+                    hasLoadAll = false;
                 }
                 offset = tmpOffset;
             }
@@ -387,7 +388,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
             } else {
                 listView.setCanPullToLoadMore(false);
             }
-            if (loadDesc && lastLoad) {
+            if (loadDesc && hasLoadAll) {
                 listView.setCanPullToLoadMore(false);
             }
             listView.doneOperation();
@@ -572,7 +573,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         } else {
             listView.setCanPullToLoadMore(false);
         }
-        if (loadDesc && lastLoad) {
+        if (loadDesc && hasLoadAll) {
             listView.setCanPullToLoadMore(false);
         }
         setMenuVisibility();
@@ -582,11 +583,14 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (Consts.Action_Start_Loading_Latest.equals(intent.getAction())) {
-                onStartLoadingLatest();
-            } else if (Consts.Action_Finish_Loading_Latest.equals(intent.getAction())) {
-                onFinishLoadingLatest();
+            if (isActive() && intent.getIntExtra(Consts.Extra_Activity_Hashcode, 0) == PostActivity.this.hashCode()) {
+                if (Consts.Action_Start_Loading_Latest.equals(intent.getAction())) {
+                    onStartLoadingLatest();
+                } else if (Consts.Action_Finish_Loading_Latest.equals(intent.getAction())) {
+                    onFinishLoadingLatest();
+                }
             }
+
         }
     }
 }

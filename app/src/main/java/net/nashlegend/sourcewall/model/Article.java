@@ -25,6 +25,7 @@ public class Article extends AceModel {
     private String content = "";
     private ArrayList<UComment> hotComments = new ArrayList<UComment>();
     private ArrayList<UComment> comments = new ArrayList<UComment>();
+    private boolean desc = false;
 
     public String getId() {
         return id;
@@ -161,5 +162,13 @@ public class Article extends AceModel {
 
     public void setLikeNum(int likeNum) {
         this.likeNum = likeNum;
+    }
+
+    public boolean isDesc() {
+        return desc;
+    }
+
+    public void setDesc(boolean desc) {
+        this.desc = desc;
     }
 }
