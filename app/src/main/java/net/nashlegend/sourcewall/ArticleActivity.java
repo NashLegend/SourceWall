@@ -486,7 +486,6 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
             }
             ResultObject resultObject = ArticleAPI.getArticleComments(article.getId(), offset, limit);
             if (!resultObject.ok && loadDesc) {
-                //TODO 应该不显示LoadDesc 如果没有加载到评论，则不显示LoadDesc
                 hasLoadAll = false;
             }
             return resultObject;
@@ -502,6 +501,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
             Article tmpArticle = (Article) result.result;
             tmpArticle.setUrl(article.getUrl());
             tmpArticle.setSummary(article.getSummary());
+            tmpArticle.setCommentNum(article.getCommentNum());
             article = tmpArticle;
             adapter.add(0, article);
             adapter.notifyDataSetChanged();

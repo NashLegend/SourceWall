@@ -346,7 +346,6 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
             }
             ResultObject resultObject = PostAPI.getPostCommentsFromJsonUrl(post.getId(), offset, limit);
             if (!resultObject.ok) {
-                //TODO 应该不显示LoadDesc 如果没有加载到评论，则不显示LoadDesc
                 hasLoadAll = false;
             }
             return resultObject;
