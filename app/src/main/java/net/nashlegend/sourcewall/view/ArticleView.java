@@ -157,7 +157,7 @@ public class ArticleView extends AceView<Article> {
                     adapter.addAllReversely(ars, 1);
                     adapter.notifyDataSetChanged();
                 }
-                article.setCommentNum(adapter.getCount() - 1);
+                article.setCommentNum(article.getCommentNum() + ars.size());
             }
             Intent intent = new Intent();
             intent.setAction(Consts.Action_Finish_Loading_Latest);
