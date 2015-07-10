@@ -9,6 +9,7 @@ import net.nashlegend.sourcewall.AppApplication;
 import net.nashlegend.sourcewall.ArticleActivity;
 import net.nashlegend.sourcewall.PostActivity;
 import net.nashlegend.sourcewall.QuestionActivity;
+import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.SingleReplyActivity;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.Post;
@@ -56,6 +57,9 @@ public class UrlCheckUtil {
      * @param uri 要检查的链接
      */
     public static void redirectRequest(Uri uri, String notice_id) {
+        if (uri == null) {
+            return;
+        }
         String host = uri.getHost();
         String url = uri.toString();
         List<String> segments = uri.getPathSegments();
@@ -189,9 +193,13 @@ public class UrlCheckUtil {
     }
 
     public static void openWithBrowser(Uri uri) {
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        intent.putExtra(Browser.EXTRA_APPLICATION_ID, AppApplication.getApplication().getPackageName());
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        AppApplication.getApplication().startActivity(intent);
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            intent.putExtra(Browser.EXTRA_APPLICATION_ID, AppApplication.getApplication().getPackageName());
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            AppApplication.getApplication().startActivity(intent);
+        } catch (Exception e) {
+            ToastUtil.toastSingleton(AppApplication.getApplication().getString(R.string.maybe_you_have_no_browsers));
+        }
     }
 }

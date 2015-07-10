@@ -197,5 +197,6 @@
     <string name="ERR_UNKNOWN">未知错误</string>
     <string name="title_activity_wxentry">分享到微信</string>
     <string name="title_activity_weibo_share">分享到新浪微博</string>
+    <string name="maybe_you_have_no_browsers">没能打开啊，难道没有浏览器？</string>
 
 </resources>

@@ -22,7 +22,6 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.os.Environment;
 import android.os.Looper;
 import android.os.Process;
 import android.os.StatFs;
@@ -147,8 +146,9 @@ public final class Utils {
         List<Action> actions = hunter.getActions();
         if (actions != null) {
             for (int i = 0, count = actions.size(); i < count; i++) {
-                if (i > 0 || action != null)
+                if (i > 0 || action != null) {
                     builder.append(", ");
+                }
                 builder.append(actions.get(i).request.logId());
             }
         }
@@ -213,8 +213,9 @@ public final class Utils {
     }
 
     public static void closeQuietly(InputStream is) {
-        if (is == null)
+        if (is == null) {
             return;
+        }
         try {
             is.close();
         } catch (IOException ignored) {
@@ -253,16 +254,11 @@ public final class Utils {
         if (null != cacheDir) {
             return cacheDir;
         }
-        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-            cacheDir = context.getExternalCacheDir();
-        } else {
-            cacheDir = new File(context.getApplicationContext().getCacheDir(), PICASSO_CACHE);
+        File file = context.getExternalCacheDir();
+        if (file == null || (!file.exists() && !file.mkdirs())) {
+            file = context.getCacheDir();
         }
-        if (!cacheDir.exists()) {
-            // noinspection ResultOfMethodCallIgnored
-            cacheDir.mkdirs();
-        }
-        return cacheDir;
+        return new File(file, PICASSO_CACHE);
     }
 
     /**
@@ -371,8 +367,7 @@ public final class Utils {
         if (stream.read(fileHeaderBytes, 0, WEBP_FILE_HEADER_SIZE) == WEBP_FILE_HEADER_SIZE) {
             // If a file's header starts with RIFF and end with WEBP, the file
             // is a WebP file
-            isWebPFile = WEBP_FILE_HEADER_RIFF.equals(new String(fileHeaderBytes, 0, 4, "US-ASCII"))
-                    && WEBP_FILE_HEADER_WEBP.equals(new String(fileHeaderBytes, 8, 4, "US-ASCII"));
+            isWebPFile = WEBP_FILE_HEADER_RIFF.equals(new String(fileHeaderBytes, 0, 4, "US-ASCII")) && WEBP_FILE_HEADER_WEBP.equals(new String(fileHeaderBytes, 8, 4, "US-ASCII"));
         }
         return isWebPFile;
     }
@@ -383,8 +378,9 @@ public final class Utils {
         }
 
         String pkg = data.uri.getAuthority();
-        if (pkg == null)
+        if (pkg == null) {
             throw new FileNotFoundException("No package provided: " + data.uri);
+        }
 
         int id;
         List<String> segments = data.uri.getPathSegments();
@@ -413,8 +409,9 @@ public final class Utils {
         }
 
         String pkg = data.uri.getAuthority();
-        if (pkg == null)
+        if (pkg == null) {
             throw new FileNotFoundException("No package provided: " + data.uri);
+        }
         try {
             PackageManager pm = context.getPackageManager();
             return pm.getResourcesForApplication(pkg);

@@ -10,11 +10,9 @@ import android.support.v4.util.LruCache;
 
 import net.nashlegend.sourcewall.AppApplication;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -326,16 +324,11 @@ public class RequestCache {
     }
 
     public static File getDiskCacheDir(Context context, String uniqueName) {
-        //错误记录显示下一行可能报NullPointerException，
-        // 难道是getExternalCacheDir(context)返回了null？getExternalCacheDir显然不可能返回null，
-        //那么难道是context.getCacheDir()返回null？卧槽这简直不可能
-        //context也不可能是null，是null也不会在这报错
-        //机型是HUAWEI C8813Q，难道是机器问题？妈蛋不改……
-        final String cachePath =
-                Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) ||
-                        !isExternalStorageRemovable() ? getExternalCacheDir(context).getPath() :
-                        context.getCacheDir().getPath();
-        return new File(cachePath + File.separator + uniqueName);
+        File file = getExternalCacheDir(context);
+        if (file == null || (!file.exists() && !file.mkdirs())) {
+            file = context.getCacheDir();
+        }
+        return new File(file, uniqueName);
     }
 
     /**
