@@ -22,6 +22,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.os.Environment;
 import android.os.Looper;
 import android.os.Process;
 import android.os.StatFs;
@@ -254,11 +255,18 @@ public final class Utils {
         if (null != cacheDir) {
             return cacheDir;
         }
-        File file = context.getExternalCacheDir();
+        File file = null;
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) || !isExternalStorageRemovable()) {
+            file = context.getExternalCacheDir();
+        }
         if (file == null || (!file.exists() && !file.mkdirs())) {
             file = context.getCacheDir();
         }
         return new File(file, PICASSO_CACHE);
+    }
+
+    public static boolean isExternalStorageRemovable() {
+        return !net.nashlegend.sourcewall.request.Utils.hasGingerbread() || Environment.isExternalStorageRemovable();
     }
 
     /**

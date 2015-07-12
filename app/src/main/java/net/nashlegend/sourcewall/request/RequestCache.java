@@ -324,7 +324,10 @@ public class RequestCache {
     }
 
     public static File getDiskCacheDir(Context context, String uniqueName) {
-        File file = getExternalCacheDir(context);
+        File file = null;
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) || !isExternalStorageRemovable()) {
+            file = getExternalCacheDir(context);
+        }
         if (file == null || (!file.exists() && !file.mkdirs())) {
             file = context.getCacheDir();
         }

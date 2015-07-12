@@ -3,6 +3,7 @@ package net.nashlegend.sourcewall.util;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.Browser;
+import android.text.TextUtils;
 
 import net.nashlegend.sourcewall.AnswerActivity;
 import net.nashlegend.sourcewall.AppApplication;
@@ -30,6 +31,9 @@ public class UrlCheckUtil {
      * @param url 要检查的链接
      */
     public static void redirectRequest(String url) {
+        if (TextUtils.isEmpty(url)) {
+            return;
+        }
         redirectRequest(Uri.parse(url));
     }
 
@@ -39,6 +43,9 @@ public class UrlCheckUtil {
      * @param uri 要检查的链接
      */
     public static void redirectRequest(Uri uri) {
+        if (uri == null) {
+            return;
+        }
         redirectRequest(uri, null);
     }
 
@@ -48,6 +55,9 @@ public class UrlCheckUtil {
      * @param url 要检查的链接
      */
     public static void redirectRequest(String url, String notice_id) {
+        if (TextUtils.isEmpty(url)) {
+            return;
+        }
         redirectRequest(Uri.parse(url), notice_id);
     }
 
