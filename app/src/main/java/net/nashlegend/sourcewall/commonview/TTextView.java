@@ -49,6 +49,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -277,15 +278,16 @@ public class TTextView extends TextView {
                         }
                     }
                 } else {
-                    if (source.matches("data:image/\\w{3,4};base64%2C.*")) {
-                        String encodedBitmap = source.replaceAll("data:image.*base64%2C", "");
+                    if (source.startsWith("data:image/")) {
+                        source = URLDecoder.decode(source, "utf-8");
+                        String encodedBitmap = source.replaceAll("data:image/\\w{3,4};base64,", "");
                         byte[] data = Base64.decode(encodedBitmap, Base64.DEFAULT);
                         Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
                         drawable = new BitmapDrawable(getContext().getResources(), bitmap);
                         int width;
                         int height;
-                        width = drawable.getIntrinsicWidth();
-                        height = drawable.getIntrinsicHeight();
+                        width = (int) (drawable.getIntrinsicWidth() * stretch);
+                        height = (int) (drawable.getIntrinsicHeight() * stretch);
                         if (width <= 0) {
                             return null;
                         } else {
