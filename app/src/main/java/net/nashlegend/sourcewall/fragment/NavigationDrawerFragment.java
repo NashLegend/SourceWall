@@ -462,7 +462,6 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
      * 清除头像与名字，回到未登录状态
      */
     private void back2UnLogged() {
-        avatarView.setImageBitmap(null);
         avatarView.setImageResource(R.drawable.default_avatar);
         userName.setText(R.string.click_to_login);
     }
