@@ -626,8 +626,9 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
          *
          * @param values The values indicating progress.
          */
+        @SafeVarargs
         @Override
-        protected void onProgressUpdate(ResultObject<ArrayList<Question>>... values) {
+        protected final void onProgressUpdate(ResultObject<ArrayList<Question>>... values) {
             ResultObject<ArrayList<Question>> result = values[0];
             ArrayList<Question> ars = result.result;
             if (ars.size() > 0) {

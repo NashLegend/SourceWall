@@ -351,8 +351,9 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
             return resultObject;
         }
 
+        @SafeVarargs
         @Override
-        protected void onProgressUpdate(ResultObject<Post>... values) {
+        protected final void onProgressUpdate(ResultObject<Post>... values) {
             //在这里取到正文，正文的结果一定是正确的
             progressBar.setVisibility(View.VISIBLE);
             floatingActionsMenu.setVisibility(View.VISIBLE);

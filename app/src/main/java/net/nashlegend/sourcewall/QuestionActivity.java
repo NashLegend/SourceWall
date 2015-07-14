@@ -291,8 +291,9 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
             }
         }
 
+        @SafeVarargs
         @Override
-        protected void onProgressUpdate(ResultObject<Question>... values) {
+        protected final void onProgressUpdate(ResultObject<Question>... values) {
             //在这里取到正文，正文的结果一定是正确的
             progressBar.setVisibility(View.VISIBLE);
             floatingActionsMenu.setVisibility(View.VISIBLE);

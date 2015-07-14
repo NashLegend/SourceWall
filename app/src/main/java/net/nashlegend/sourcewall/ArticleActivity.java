@@ -462,13 +462,11 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
                 UserAPI.ignoreOneNotice(notice_id);
                 notice_id = null;
             }
+            offset = params[0];
             int limit = 20;
-            offset = params[0];
-            offset = params[0];
             if (offset < 0) {
-                //同时取了热门回帖，但是在这里没有显示 TODO
                 offset = 0;
-                ResultObject articleResult = ArticleAPI.getArticleDetailByID(article.getId());//得不到回复数量
+                ResultObject<Article> articleResult = ArticleAPI.getArticleDetailByID(article.getId());//得不到回复数量
                 if (articleResult.ok) {
                     publishProgress(articleResult);
                 } else {
@@ -500,8 +498,9 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
             return resultObject;
         }
 
+        @SafeVarargs
         @Override
-        protected void onProgressUpdate(ResultObject<Article>... values) {
+        protected final void onProgressUpdate(ResultObject<Article>... values) {
             //在这里取到正文，正文的结果一定是正确的
             progressBar.setVisibility(View.VISIBLE);
             floatingActionsMenu.setVisibility(View.VISIBLE);

@@ -641,8 +641,9 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
          *
          * @param values The values indicating progress.
          */
+        @SafeVarargs
         @Override
-        protected void onProgressUpdate(ResultObject<ArrayList<Post>>... values) {
+        protected final void onProgressUpdate(ResultObject<ArrayList<Post>>... values) {
             ResultObject<ArrayList<Post>> result = values[0];
             ArrayList<Post> ars = result.result;
             if (ars.size() > 0) {

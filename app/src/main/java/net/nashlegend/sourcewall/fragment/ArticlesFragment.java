@@ -240,8 +240,9 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
          *
          * @param values The values indicating progress.
          */
+        @SafeVarargs
         @Override
-        protected void onProgressUpdate(ResultObject<ArrayList<Article>>... values) {
+        protected final void onProgressUpdate(ResultObject<ArrayList<Article>>... values) {
             ResultObject<ArrayList<Article>> result = values[0];
             ArrayList<Article> ars = result.result;
             if (ars.size() > 0) {
