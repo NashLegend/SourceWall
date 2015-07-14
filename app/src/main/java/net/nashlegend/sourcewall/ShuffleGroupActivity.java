@@ -213,9 +213,9 @@ public class ShuffleGroupActivity extends SwipeActivity {
 
         @Override
         protected ResultObject doInBackground(String[] params) {
-            ResultObject resultObject = PostAPI.getAllMyGroups();
-            if (resultObject.ok) {
-                ArrayList<SubItem> subItems = (ArrayList<SubItem>) resultObject.result;
+            ResultObject<ArrayList<SubItem>> result = PostAPI.getAllMyGroups();
+            if (result.ok) {
+                ArrayList<SubItem> subItems = result.result;
                 ArrayList<MyGroup> myGroups = new ArrayList<>();
                 for (int i = 0; i < subItems.size(); i++) {
                     SubItem item = subItems.get(i);
@@ -231,9 +231,8 @@ public class ShuffleGroupActivity extends SwipeActivity {
                 mergeMyGroups(myGroups);
                 GroupHelper.putAllMyGroups(myGroups);
                 getButtons();
-                return resultObject;
             }
-            return resultObject;
+            return result;
         }
 
         @Override

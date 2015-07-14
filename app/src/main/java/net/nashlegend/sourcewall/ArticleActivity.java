@@ -449,7 +449,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         }
     }
 
-    class LoaderTask extends AAsyncTask<Integer, ResultObject, ResultObject> {
+    class LoaderTask extends AAsyncTask<Integer, ResultObject<Article>, ResultObject<ArrayList<AceModel>>> {
         int offset;
 
         LoaderTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
@@ -457,7 +457,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         }
 
         @Override
-        protected ResultObject doInBackground(Integer... params) {
+        protected ResultObject<ArrayList<AceModel>> doInBackground(Integer... params) {
             if (!TextUtils.isEmpty(notice_id)) {
                 UserAPI.ignoreOneNotice(notice_id);
                 notice_id = null;
@@ -472,7 +472,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
                 if (articleResult.ok) {
                     publishProgress(articleResult);
                 } else {
-                    return articleResult;
+                    return new ResultObject<>();
                 }
             }
             if (loadDesc) {
@@ -493,7 +493,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
                     offset = tmpOffset;
                 }
             }
-            ResultObject resultObject = ArticleAPI.getArticleComments(article.getId(), offset, limit);
+            ResultObject<ArrayList<AceModel>> resultObject = ArticleAPI.getArticleComments(article.getId(), offset, limit);
             if (!resultObject.ok && loadDesc) {
                 hasLoadAll = false;
             }
@@ -501,13 +501,13 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         }
 
         @Override
-        protected void onProgressUpdate(ResultObject... values) {
+        protected void onProgressUpdate(ResultObject<Article>... values) {
             //在这里取到正文，正文的结果一定是正确的
             progressBar.setVisibility(View.VISIBLE);
             floatingActionsMenu.setVisibility(View.VISIBLE);
             loadingView.onLoadSuccess();
-            ResultObject result = values[0];
-            Article tmpArticle = (Article) result.result;
+            ResultObject<Article> result = values[0];
+            Article tmpArticle = result.result;
             tmpArticle.setUrl(article.getUrl());
             tmpArticle.setSummary(article.getSummary());
             tmpArticle.setCommentNum(article.getCommentNum());
@@ -517,11 +517,11 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         }
 
         @Override
-        protected void onPostExecute(ResultObject result) {
+        protected void onPostExecute(ResultObject<ArrayList<AceModel>> result) {
             progressBar.setVisibility(View.GONE);
             if (result.ok) {
                 loadingView.onLoadSuccess();
-                ArrayList<AceModel> ars = (ArrayList<AceModel>) result.result;
+                ArrayList<AceModel> ars = result.result;
                 if (ars.size() > 0) {
                     if (loadDesc) {
                         adapter.addAllReversely(ars);

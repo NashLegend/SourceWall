@@ -97,11 +97,11 @@ public class ImageActivity extends BaseActivity {
         overridePendingTransition(0, R.anim.scale_out_center);
     }
 
-    class DownloadTask extends AsyncTask<String, Integer, ResultObject> {
+    class DownloadTask extends AsyncTask<String, Integer, ResultObject<String>> {
 
         @Override
-        protected ResultObject doInBackground(String... params) {
-            ResultObject resultObject = new ResultObject();
+        protected ResultObject<String> doInBackground(String... params) {
+            ResultObject<String> resultObject = new ResultObject<>();
             if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
                 File folder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), getString(R.string.app_name));
                 if ((folder.exists() || !folder.exists() && folder.mkdirs())) {
@@ -131,10 +131,10 @@ public class ImageActivity extends BaseActivity {
         }
 
         @Override
-        protected void onPostExecute(ResultObject resultObject) {
-            if (resultObject.ok) {
-                MediaScannerConnection.scanFile(ImageActivity.this, new String[]{(String) resultObject.result}, null, null);
-                toastSingleton(getString(R.string.hint_download_successfully_to) + resultObject.result);
+        protected void onPostExecute(ResultObject<String> result) {
+            if (result.ok) {
+                MediaScannerConnection.scanFile(ImageActivity.this, new String[]{result.result}, null, null);
+                toastSingleton(getString(R.string.hint_download_successfully_to) + result.result);
             } else {
                 toastSingleton(R.string.hint_download_failed);
             }

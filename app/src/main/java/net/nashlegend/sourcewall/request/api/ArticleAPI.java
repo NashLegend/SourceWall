@@ -40,10 +40,9 @@ public class ArticleAPI extends APIBase {
      * resultObject.result是ArrayList[Article]
      *
      * @param offset 从第offset个开始取
-     *
      * @return ResultObject
      */
-    public static ResultObject getArticleListIndexPage(int offset) {
+    public static ResultObject<ArrayList<Article>> getArticleListIndexPage(int offset) {
         String url = "http://www.guokr.com/apis/minisite/article.json";
         ArrayList<NameValuePair> pairs = new ArrayList<>();
         pairs.add(new BasicNameValuePair("retrieve_type", "by_subject"));
@@ -58,10 +57,9 @@ public class ArticleAPI extends APIBase {
      *
      * @param channelKey 频道key
      * @param offset     加载开始的index
-     *
      * @return ResultObject
      */
-    public static ResultObject getArticleListByChannel(String channelKey, int offset) {
+    public static ResultObject<ArrayList<Article>> getArticleListByChannel(String channelKey, int offset) {
         String url = "http://www.guokr.com/apis/minisite/article.json";
         ArrayList<NameValuePair> pairs = new ArrayList<>();
         pairs.add(new BasicNameValuePair("retrieve_type", "by_channel"));
@@ -77,10 +75,9 @@ public class ArticleAPI extends APIBase {
      *
      * @param subject_key 学科key
      * @param offset      从第几个开始加载
-     *
      * @return ResultObject
      */
-    public static ResultObject getArticleListBySubject(String subject_key, int offset) {
+    public static ResultObject<ArrayList<Article>> getArticleListBySubject(String subject_key, int offset) {
         String url = "http://www.guokr.com/apis/minisite/article.json";
         ArrayList<NameValuePair> pairs = new ArrayList<>();
         pairs.add(new BasicNameValuePair("retrieve_type", "by_subject"));
@@ -95,11 +92,10 @@ public class ArticleAPI extends APIBase {
      * resultObject.result是ArrayList[Article]
      *
      * @param url jsonUrl
-     *
      * @return ResultObject
      */
-    private static ResultObject getArticleListFromJsonUrl(String url, ArrayList<NameValuePair> pairs) {
-        ResultObject resultObject = new ResultObject();
+    private static ResultObject<ArrayList<Article>> getArticleListFromJsonUrl(String url, ArrayList<NameValuePair> pairs) {
+        ResultObject<ArrayList<Article>> resultObject = new ResultObject<>();
         try {
             String jString = HttpFetcher.get(url, pairs, false).toString();
             resultObject = parseArticleListJson(jString);
@@ -127,11 +123,10 @@ public class ArticleAPI extends APIBase {
      * resultObject.result是ArrayList[Article]
      *
      * @param subItem SubItem
-     *
      * @return ResultObject
      */
-    public static ResultObject getCachedArticleList(SubItem subItem) {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<ArrayList<Article>> getCachedArticleList(SubItem subItem) {
+        ResultObject<ArrayList<Article>> resultObject = new ResultObject<>();
         String key = null;
         if (subItem.getType() == SubItem.Type_Collections) {
             key = "article";
@@ -159,11 +154,10 @@ public class ArticleAPI extends APIBase {
      * resultObject.result是ArrayList[Article]
      *
      * @param jString 要解析的json
-     *
      * @return ResultObject
      */
-    public static ResultObject parseArticleListJson(String jString) {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<ArrayList<Article>> parseArticleListJson(String jString) {
+        ResultObject<ArrayList<Article>> resultObject = new ResultObject<>();
         try {
             ArrayList<Article> articleList = new ArrayList<>();
             if (jString != null) {
@@ -201,10 +195,9 @@ public class ArticleAPI extends APIBase {
      * resultObject.result是Article
      *
      * @param id article ID
-     *
      * @return ResultObject
      */
-    public static ResultObject getArticleDetailByID(String id) {
+    public static ResultObject<Article> getArticleDetailByID(String id) {
         return getArticleDetailByUrl("http://www.guokr.com/article/" + id + "/");
     }
 
@@ -214,8 +207,8 @@ public class ArticleAPI extends APIBase {
      *
      * @param url article页面地址
      */
-    public static ResultObject getArticleDetailByUrl(String url) {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<Article> getArticleDetailByUrl(String url) {
+        ResultObject<Article> resultObject = new ResultObject<>();
         try {
             Article article = new Article();
             String aid = url.replaceAll("\\?.*$", "").replaceAll("\\D+", "");
@@ -271,7 +264,6 @@ public class ArticleAPI extends APIBase {
      *
      * @param hotElement 热门评论元素
      * @param aid        article ID
-     *
      * @return ResultObject
      */
     private static ArrayList<UComment> getArticleHotComments(Element hotElement, String aid) throws Exception {
@@ -315,26 +307,12 @@ public class ArticleAPI extends APIBase {
      *
      * @param id     article ID
      * @param offset 从第几个开始加载
-     *
      * @return ResultObject
      */
-    public static ResultObject getArticleComments(String id, int offset) {
-        return getArticleComments(id, offset, 20);
-    }
-
-    /**
-     * 获取文章评论，json格式
-     * resultObject.result是ArrayList[UComment]
-     *
-     * @param id     article ID
-     * @param offset 从第几个开始加载
-     *
-     * @return ResultObject
-     */
-    public static ResultObject getArticleComments(String id, int offset, int limit) {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<ArrayList<AceModel>> getArticleComments(String id, int offset, int limit) {
+        ResultObject<ArrayList<AceModel>> resultObject = new ResultObject<>();
         try {
-            ArrayList<UComment> list = new ArrayList<>();
+            ArrayList<AceModel> list = new ArrayList<>();
             String url = "http://apis.guokr.com/minisite/article_reply.json";
             ArrayList<NameValuePair> pairs = new ArrayList<>();
             pairs.add(new BasicNameValuePair("article_id", id));
@@ -377,163 +355,13 @@ public class ArticleAPI extends APIBase {
     }
 
     /**
-     * 返回第一页数据，包括Article与第一页的评论列表
-     * resultObject.result是ArrayList[AceModel]
-     * article很有可能只有一个id属性，而其余的都是空的
-     * 因为有时候我们要用到其他属性，主要是title和summary
-     * 所以还要在这里再赋值一次，但是这里取不到summary了……
-     *
-     * @param article 文章对象,至少有一个id属性不为空
-     *
-     * @return ResultObject
-     */
-    public static ResultObject getArticleFirstPage(Article article) {
-        ResultObject resultObject = new ResultObject();
-        ArrayList<AceModel> aceModels = new ArrayList<>();
-        ResultObject articleResult = ArticleAPI.getArticleDetailByID(article.getId());
-        resultObject.statusCode = articleResult.statusCode;
-        resultObject.code = articleResult.code;
-        if (articleResult.ok) {
-            ResultObject commentsResult = ArticleAPI.getArticleComments(article.getId(), 0);
-            resultObject.statusCode = commentsResult.statusCode;
-            resultObject.code = commentsResult.code;
-            if (commentsResult.ok) {
-                Article detailArticle = (Article) articleResult.result;
-                article.setTitle(detailArticle.getTitle());
-                ArrayList<UComment> simpleComments = (ArrayList<UComment>) commentsResult.result;
-                aceModels.add(detailArticle);
-                aceModels.addAll(simpleComments);
-                resultObject.ok = true;
-                resultObject.result = aceModels;
-            }
-        }
-        return resultObject;
-    }
-
-    /**
-     * 推荐文章
-     *
-     * @param articleID article ID
-     * @param title     文章标题
-     * @param summary   文章总结
-     * @param comment   推荐评语
-     *
-     * @return ResultObject
-     */
-    public static ResultObject recommendArticle(String articleID, String title, String summary, String comment) {
-        String articleUrl = "http://www.guokr.com/article/" + articleID + "/";
-        return UserAPI.recommendLink(articleUrl, title, summary, comment);
-    }
-
-    /**
-     * 赞一个文章评论
-     *
-     * @param id 文章id
-     *
-     * @return ResultObject
-     */
-    public static ResultObject likeComment(String id) {
-        String url = "http://www.guokr.com/apis/minisite/article_reply_liking.json";
-        ResultObject resultObject = new ResultObject();
-        try {
-            ArrayList<NameValuePair> pairs = new ArrayList<>();
-            pairs.add(new BasicNameValuePair("reply_id", id));
-            String result = HttpFetcher.post(url, pairs).toString();
-            if (getUniversalJsonSimpleBoolean(result, resultObject)) {
-                resultObject.ok = true;
-            }
-        } catch (Exception e) {
-            handleRequestException(e, resultObject);
-        }
-        return resultObject;
-    }
-
-    /**
-     * 删除我的评论
-     *
-     * @param id 评论id
-     *
-     * @return ResultObject
-     */
-    public static ResultObject deleteMyComment(String id) {
-        ResultObject resultObject = new ResultObject();
-        String url = "http://www.guokr.com/apis/minisite/article_reply.json";
-        ArrayList<NameValuePair> pairs = new ArrayList<>();
-        pairs.add(new BasicNameValuePair("reply_id", id));
-        try {
-            String result = HttpFetcher.delete(url, pairs).toString();
-            resultObject.ok = getUniversalJsonSimpleBoolean(result, resultObject);
-        } catch (Exception e) {
-            handleRequestException(e, resultObject);
-        }
-        return resultObject;
-    }
-
-    /**
-     * 使用json请求回复文章
-     *
-     * @param id      文章id
-     * @param content 回复内容
-     *
-     * @return ResultObject.result is the reply_id if ok;
-     */
-    public static ResultObject replyArticle(String id, String content) {
-        ResultObject resultObject = new ResultObject();
-        try {
-            String url = "http://apis.guokr.com/minisite/article_reply.json";
-            ArrayList<NameValuePair> pairs = new ArrayList<>();
-            pairs.add(new BasicNameValuePair("article_id", id));
-            pairs.add(new BasicNameValuePair("content", content));
-            String result = HttpFetcher.post(url, pairs).toString();
-            JSONObject resultJson = APIBase.getUniversalJsonObject(result, resultObject);
-            if (resultJson != null) {
-                String replyID = getJsonString(resultJson, "id");
-                resultObject.ok = true;
-                resultObject.result = replyID;
-            }
-        } catch (Exception e) {
-            handleRequestException(e, resultObject);
-        }
-        return resultObject;
-    }
-
-    /**
-     * 使用网页请求而不是json来获得结果，可以使用高级样式 TODO
-     *
-     * @param id      文章id
-     * @param content 回复内容，html格式
-     *
-     * @return ResultObject.result is the reply_id if ok;
-     */
-    public static ResultObject replyArticleAdvanced(String id, String content) {
-        ResultObject resultObject = new ResultObject();
-        try {
-            String url = "http://apis.guokr.com/minisite/article_reply.json";
-            ArrayList<NameValuePair> pairs = new ArrayList<>();
-            pairs.add(new BasicNameValuePair("article_id", id));
-            pairs.add(new BasicNameValuePair("content", content));
-            String result = HttpFetcher.post(url, pairs).toString();
-            JSONObject resultJson = APIBase.getUniversalJsonObject(result, resultObject);
-            if (resultJson != null) {
-                String replyID = getJsonString(resultJson, "id");
-                resultObject.ok = true;
-                resultObject.result = replyID;
-            }
-        } catch (Exception e) {
-            handleRequestException(e, resultObject);
-        }
-        return resultObject;
-    }
-
-    /**
      * 获取一条article的简介，也就是除了正文之外的一切，这里只需要两个，id和title
      *
      * @param article_id article_id
-     *
      * @return ResultObject
      */
-    private static ResultObject getArticleSimpleByID(String article_id) {
-        ResultObject resultObject = new ResultObject();
+    private static ResultObject<Article> getArticleSimpleByID(String article_id) {
+        ResultObject<Article> resultObject = new ResultObject<>();
         String url = "http://apis.guokr.com/minisite/article.json";
         ArrayList<NameValuePair> pairs = new ArrayList<>();
         pairs.add(new BasicNameValuePair("article_id", article_id));
@@ -541,7 +369,7 @@ public class ArticleAPI extends APIBase {
             Article article = new Article();
             String result = HttpFetcher.get(url, pairs).toString();
             JSONArray articlesArray = getUniversalJsonArray(result, resultObject);
-            if (articlesArray.length() == 1) {
+            if (articlesArray != null && articlesArray.length() == 1) {
                 JSONObject articleObject = articlesArray.getJSONObject(0);
                 String id = getJsonString(articleObject, "id");
                 String title = getJsonString(articleObject, "title");
@@ -566,11 +394,10 @@ public class ArticleAPI extends APIBase {
      * 还需要另一个接口获取article的摘要。getArticleSimpleByID(article_id)
      *
      * @param notice_id 通知id
-     *
      * @return resultObject resultObject.result是UComment
      */
-    public static ResultObject getSingleCommentByNoticeID(String notice_id) {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<UComment> getSingleCommentByNoticeID(String notice_id) {
+        ResultObject<UComment> resultObject = new ResultObject<>();
         //todo
         String article_id;
         String reply_id;
@@ -588,9 +415,9 @@ public class ArticleAPI extends APIBase {
                 if (matcher.find()) {
                     article_id = matcher.group(1);
                     reply_id = matcher.group(2);
-                    ResultObject articleResult = getArticleSimpleByID(article_id);
+                    ResultObject<Article> articleResult = getArticleSimpleByID(article_id);
                     if (articleResult.ok) {
-                        Article article = (Article) articleResult.result;
+                        Article article = articleResult.result;
                         return getSingleCommentByID(reply_id, article.getId(), article.getTitle());
                     }
                 }
@@ -609,11 +436,10 @@ public class ArticleAPI extends APIBase {
      * 多次跳转真让人想死啊。
      *
      * @param reply_url 评论地址
-     *
      * @return resultObject resultObject.result是UComment
      */
-    public static ResultObject getSingleCommentFromRedirectUrl(String reply_url) {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<UComment> getSingleCommentFromRedirectUrl(String reply_url) {
+        ResultObject<UComment> resultObject = new ResultObject<>();
         //todo
         String article_id;
         String reply_id;
@@ -627,9 +453,9 @@ public class ArticleAPI extends APIBase {
                 Matcher matcher = Pattern.compile("^/article/(\\d+)/.*#reply(\\d+)$").matcher(elements.get(0).text());
                 if (matcher.find()) {
                     article_id = matcher.group(1);
-                    ResultObject articleResult = getArticleSimpleByID(article_id);
+                    ResultObject<Article> articleResult = getArticleSimpleByID(article_id);
                     if (articleResult.ok) {
-                        Article article = (Article) articleResult.result;
+                        Article article = articleResult.result;
                         return getSingleCommentByID(reply_id, article.getId(), article.getTitle());
                     }
                 }
@@ -648,11 +474,10 @@ public class ArticleAPI extends APIBase {
      * 太蛋疼了，只能不显示文章标题或者提前传入
      *
      * @param reply_id 评论id
-     *
      * @return resultObject resultObject.result是UComment
      */
-    public static ResultObject getSingleCommentByID(String reply_id, String article_id, String article_title) {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<UComment> getSingleCommentByID(String reply_id, String article_id, String article_title) {
+        ResultObject<UComment> resultObject = new ResultObject<>();
         String url = "http://apis.guokr.com/minisite/article_reply.json";
         //url还有另一种形式，http://apis.guokr.com/minisite/article_reply/99999999.json;
         //这样后面就不必带reply_id参数了
@@ -693,6 +518,117 @@ public class ArticleAPI extends APIBase {
             comment.setID(reply_id);
             resultObject.ok = true;
             resultObject.result = comment;
+        } catch (Exception e) {
+            handleRequestException(e, resultObject);
+        }
+        return resultObject;
+    }
+
+
+    /**
+     * 推荐文章
+     *
+     * @param articleID article ID
+     * @param title     文章标题
+     * @param summary   文章总结
+     * @param comment   推荐评语
+     * @return ResultObject
+     */
+    public static ResultObject recommendArticle(String articleID, String title, String summary, String comment) {
+        String articleUrl = "http://www.guokr.com/article/" + articleID + "/";
+        return UserAPI.recommendLink(articleUrl, title, summary, comment);
+    }
+
+    /**
+     * 赞一个文章评论
+     *
+     * @param id 文章id
+     * @return ResultObject
+     */
+    public static ResultObject likeComment(String id) {
+        String url = "http://www.guokr.com/apis/minisite/article_reply_liking.json";
+        ResultObject resultObject = new ResultObject();
+        try {
+            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            pairs.add(new BasicNameValuePair("reply_id", id));
+            String result = HttpFetcher.post(url, pairs).toString();
+            if (getUniversalJsonSimpleBoolean(result, resultObject)) {
+                resultObject.ok = true;
+            }
+        } catch (Exception e) {
+            handleRequestException(e, resultObject);
+        }
+        return resultObject;
+    }
+
+    /**
+     * 删除我的评论
+     *
+     * @param id 评论id
+     * @return ResultObject
+     */
+    public static ResultObject deleteMyComment(String id) {
+        ResultObject resultObject = new ResultObject();
+        String url = "http://www.guokr.com/apis/minisite/article_reply.json";
+        ArrayList<NameValuePair> pairs = new ArrayList<>();
+        pairs.add(new BasicNameValuePair("reply_id", id));
+        try {
+            String result = HttpFetcher.delete(url, pairs).toString();
+            resultObject.ok = getUniversalJsonSimpleBoolean(result, resultObject);
+        } catch (Exception e) {
+            handleRequestException(e, resultObject);
+        }
+        return resultObject;
+    }
+
+    /**
+     * 使用json请求回复文章
+     *
+     * @param id      文章id
+     * @param content 回复内容
+     * @return ResultObject.result is the reply_id if ok;
+     */
+    public static ResultObject replyArticle(String id, String content) {
+        ResultObject resultObject = new ResultObject();
+        try {
+            String url = "http://apis.guokr.com/minisite/article_reply.json";
+            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            pairs.add(new BasicNameValuePair("article_id", id));
+            pairs.add(new BasicNameValuePair("content", content));
+            String result = HttpFetcher.post(url, pairs).toString();
+            JSONObject resultJson = APIBase.getUniversalJsonObject(result, resultObject);
+            if (resultJson != null) {
+                String replyID = getJsonString(resultJson, "id");
+                resultObject.ok = true;
+                resultObject.result = replyID;
+            }
+        } catch (Exception e) {
+            handleRequestException(e, resultObject);
+        }
+        return resultObject;
+    }
+
+    /**
+     * 使用网页请求而不是json来获得结果，可以使用高级样式
+     *
+     * @param id      文章id
+     * @param content 回复内容，html格式
+     * @return ResultObject.result is the reply_id if ok;
+     */
+    public static ResultObject replyArticleAdvanced(String id, String content) {
+        ResultObject resultObject = new ResultObject();
+        try {
+            String url = "http://apis.guokr.com/minisite/article_reply.json";
+            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            pairs.add(new BasicNameValuePair("article_id", id));
+            pairs.add(new BasicNameValuePair("content", content));
+            String result = HttpFetcher.post(url, pairs).toString();
+            JSONObject resultJson = APIBase.getUniversalJsonObject(result, resultObject);
+            if (resultJson != null) {
+                String replyID = getJsonString(resultJson, "id");
+                resultObject.ok = true;
+                resultObject.result = replyID;
+            }
         } catch (Exception e) {
             handleRequestException(e, resultObject);
         }

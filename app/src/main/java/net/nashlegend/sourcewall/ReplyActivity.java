@@ -508,7 +508,7 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
         uploadingProgress.setVisibility(View.GONE);
     }
 
-    class ImageUploadTask extends AAsyncTask<String, Integer, ResultObject> {
+    class ImageUploadTask extends AAsyncTask<String, Integer, ResultObject<String>> {
 
         ImageUploadTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
             super(iStackedAsyncTaskInterface);
@@ -531,17 +531,17 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
         }
 
         @Override
-        protected ResultObject doInBackground(String... params) {
+        protected ResultObject<String> doInBackground(String... params) {
             String path = params[0];
             return APIBase.uploadImage(path, true);
         }
 
         @Override
-        protected void onPostExecute(ResultObject resultObject) {
-            if (resultObject.ok) {
+        protected void onPostExecute(ResultObject<String> result) {
+            if (result.ok) {
                 // tap to insert image
                 toast(getString(R.string.hint_click_to_add_image_to_editor));
-                doneUploadingImage((String) resultObject.result);
+                doneUploadingImage(result.result);
                 if (tmpUploadFile != null && tmpUploadFile.exists()) {
                     tmpUploadFile.delete();
                 }

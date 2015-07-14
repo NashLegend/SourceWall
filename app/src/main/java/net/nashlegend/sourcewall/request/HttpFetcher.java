@@ -115,8 +115,8 @@ public class HttpFetcher {
         }
     }
 
-    public static ResultObject get(String url) throws Exception {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<String> get(String url) throws Exception {
+        ResultObject<String> resultObject = new ResultObject<>();
         HttpGet httpGet = new HttpGet(url);
         httpGet.addHeader("Accept-Encoding", "gzip");
         HttpResponse response = getDefaultHttpClient().execute(httpGet);
@@ -127,7 +127,7 @@ public class HttpFetcher {
         return resultObject;
     }
 
-    public static ResultObject get(String url, List<NameValuePair> params, boolean needToken) throws Exception {
+    public static ResultObject<String> get(String url, List<NameValuePair> params, boolean needToken) throws Exception {
         StringBuilder paramString = new StringBuilder("");
         String token = UserAPI.getToken();
         if (params == null) {
@@ -147,12 +147,12 @@ public class HttpFetcher {
         return get(url + paramString.toString());
     }
 
-    public static ResultObject get(String url, List<NameValuePair> params) throws Exception {
+    public static ResultObject<String> get(String url, List<NameValuePair> params) throws Exception {
         return get(url, params, true);
     }
 
-    public static ResultObject post(String url, List<NameValuePair> params, boolean needToken) throws Exception {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<String> post(String url, List<NameValuePair> params, boolean needToken) throws Exception {
+        ResultObject<String> resultObject = new ResultObject<>();
         HttpPost httpPost = new HttpPost(url);
         String token = UserAPI.getToken();
         if (params == null) {
@@ -171,12 +171,12 @@ public class HttpFetcher {
         return resultObject;
     }
 
-    public static ResultObject post(String url, List<NameValuePair> params) throws Exception {
+    public static ResultObject<String> post(String url, List<NameValuePair> params) throws Exception {
         return post(url, params, true);
     }
 
-    public static ResultObject put(String url, List<NameValuePair> params, boolean needToken) throws Exception {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<String> put(String url, List<NameValuePair> params, boolean needToken) throws Exception {
+        ResultObject<String> resultObject = new ResultObject<>();
         HttpPut httpPut = new HttpPut(url);
         String token = UserAPI.getToken();
         if (params == null) {
@@ -195,16 +195,16 @@ public class HttpFetcher {
         return resultObject;
     }
 
-    public static ResultObject put(String url) throws Exception {
+    public static ResultObject<String> put(String url) throws Exception {
         return put(url, new ArrayList<NameValuePair>(), true);
     }
 
-    public static ResultObject put(String url, List<NameValuePair> params) throws Exception {
+    public static ResultObject<String> put(String url, List<NameValuePair> params) throws Exception {
         return put(url, params, true);
     }
 
-    public static ResultObject delete(String url) throws Exception {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<String> delete(String url) throws Exception {
+        ResultObject<String> resultObject = new ResultObject<>();
         HttpDelete httpDelete = new HttpDelete(url);
         httpDelete.addHeader("Accept-Encoding", "gzip");
         HttpResponse response = getDefaultHttpClient().execute(httpDelete);
@@ -215,11 +215,11 @@ public class HttpFetcher {
         return resultObject;
     }
 
-    public static ResultObject delete(String url, List<NameValuePair> params) throws Exception {
+    public static ResultObject<String> delete(String url, List<NameValuePair> params) throws Exception {
         return delete(url, params, true);
     }
 
-    public static ResultObject delete(String url, List<NameValuePair> params, boolean needToken) throws Exception {
+    public static ResultObject<String> delete(String url, List<NameValuePair> params, boolean needToken) throws Exception {
         StringBuilder paramString = new StringBuilder("");
         String token = UserAPI.getToken();
         if (params == null) {

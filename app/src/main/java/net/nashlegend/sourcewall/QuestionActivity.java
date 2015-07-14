@@ -264,7 +264,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         loadData(-1);
     }
 
-    class LoaderTask extends AAsyncTask<Integer, ResultObject, ResultObject> {
+    class LoaderTask extends AAsyncTask<Integer, ResultObject<Question>, ResultObject<ArrayList<AceModel>>> {
         int offset;
 
         LoaderTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
@@ -272,19 +272,19 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         }
 
         @Override
-        protected ResultObject doInBackground(Integer... params) {
+        protected ResultObject<ArrayList<AceModel>> doInBackground(Integer... params) {
             if (!TextUtils.isEmpty(notice_id)) {
                 UserAPI.ignoreOneNotice(notice_id);
                 notice_id = null;
             }
             offset = params[0];
             if (offset < 0) {
-                ResultObject questionResult = QuestionAPI.getQuestionDetailByID(question.getId());
+                ResultObject<Question> questionResult = QuestionAPI.getQuestionDetailByID(question.getId());
                 if (questionResult.ok) {
                     publishProgress(questionResult);
                     return QuestionAPI.getQuestionAnswers(question.getId(), 0);
                 } else {
-                    return questionResult;
+                    return new ResultObject<>();
                 }
             } else {
                 return QuestionAPI.getQuestionAnswers(question.getId(), offset);
@@ -292,23 +292,23 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         }
 
         @Override
-        protected void onProgressUpdate(ResultObject... values) {
+        protected void onProgressUpdate(ResultObject<Question>... values) {
             //在这里取到正文，正文的结果一定是正确的
             progressBar.setVisibility(View.VISIBLE);
             floatingActionsMenu.setVisibility(View.VISIBLE);
             loadingView.onLoadSuccess();
-            ResultObject resultObject = values[0];
-            question = (Question) resultObject.result;
+            ResultObject<Question> result = values[0];
+            question = result.result;
             adapter.add(0, question);
             adapter.notifyDataSetChanged();
         }
 
         @Override
-        protected void onPostExecute(ResultObject result) {
+        protected void onPostExecute(ResultObject<ArrayList<AceModel>> result) {
             progressBar.setVisibility(View.GONE);
             if (result.ok) {
                 loadingView.onLoadSuccess();
-                ArrayList<AceModel> ars = (ArrayList<AceModel>) result.result;
+                ArrayList<AceModel> ars = result.result;
                 if (ars.size() > 0) {
                     adapter.addAll(ars);
                     adapter.notifyDataSetChanged();

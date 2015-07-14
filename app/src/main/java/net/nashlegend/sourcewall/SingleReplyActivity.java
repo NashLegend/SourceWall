@@ -381,7 +381,7 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
         loadDataByUri();
     }
 
-    class LoaderTask extends AsyncTask<Uri, Integer, ResultObject> {
+    class LoaderTask extends AsyncTask<Uri, Integer, ResultObject<UComment>> {
 
         @Override
         protected void onPreExecute() {
@@ -389,8 +389,8 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
         }
 
         @Override
-        protected ResultObject doInBackground(Uri... params) {
-            ResultObject resultObject = new ResultObject();
+        protected ResultObject<UComment> doInBackground(Uri... params) {
+            ResultObject<UComment> resultObject = new ResultObject<>();
             if (TextUtils.isEmpty(notice_id)) {
                 switch (hostSection) {
                     case SubItem.Section_Article:
@@ -415,11 +415,11 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
         }
 
         @Override
-        protected void onPostExecute(ResultObject resultObject) {
-            if (resultObject.ok) {
+        protected void onPostExecute(ResultObject<UComment> result) {
+            if (result.ok) {
                 floatingActionsMenu.setVisibility(View.VISIBLE);
                 loadingView.onLoadSuccess();
-                data = (UComment) resultObject.result;
+                data = result.result;
                 if (UserAPI.getUserID().equals(data.getAuthorID())) {
                     deleteButton.setVisibility(View.VISIBLE);
                 } else {

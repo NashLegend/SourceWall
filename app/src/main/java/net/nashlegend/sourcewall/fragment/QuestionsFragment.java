@@ -572,7 +572,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
         loadData(0);
     }
 
-    class LoaderTask extends AAsyncTask<Integer, ResultObject, ResultObject> {
+    class LoaderTask extends AAsyncTask<Integer, ResultObject<ArrayList<Question>>, ResultObject<ArrayList<Question>>> {
 
         int loadedPage;
 
@@ -581,11 +581,11 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
         }
 
         @Override
-        protected ResultObject doInBackground(Integer... datas) {
+        protected ResultObject<ArrayList<Question>> doInBackground(Integer... datas) {
             loadedPage = datas[0];
             String key = String.valueOf(subItem.getSection()) + subItem.getType() + subItem.getName() + subItem.getValue();
             if (loadedPage == 0 && adapter.getCount() == 0) {
-                ResultObject cachedResultObject = QuestionAPI.getCachedQuestionList(subItem);
+                ResultObject<ArrayList<Question>> cachedResultObject = QuestionAPI.getCachedQuestionList(subItem);
                 if (cachedResultObject.ok) {
                     long lastLoad = SharedPreferencesUtil.readLong(key, 0l) / 1000;
                     long crtLoad = System.currentTimeMillis() / 1000;
@@ -598,7 +598,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
 
             }
 
-            ResultObject resultObject = new ResultObject();
+            ResultObject<ArrayList<Question>> resultObject = new ResultObject<>();
             if (subItem.getType() == SubItem.Type_Collections) {
                 if (HOTTEST.equals(subItem.getValue())) {
                     resultObject = QuestionAPI.getHotQuestions(loadedPage + 1);
@@ -627,9 +627,9 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
          * @param values The values indicating progress.
          */
         @Override
-        protected void onProgressUpdate(ResultObject... values) {
-            ResultObject o = values[0];
-            ArrayList<Question> ars = (ArrayList<Question>) o.result;
+        protected void onProgressUpdate(ResultObject<ArrayList<Question>>... values) {
+            ResultObject<ArrayList<Question>> result = values[0];
+            ArrayList<Question> ars = result.result;
             if (ars.size() > 0) {
                 progressBar.setVisibility(View.VISIBLE);
                 loadingView.onLoadSuccess();
@@ -639,12 +639,12 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
         }
 
         @Override
-        protected void onPostExecute(ResultObject o) {
+        protected void onPostExecute(ResultObject<ArrayList<Question>> result) {
             listView.doneOperation();
             progressBar.setVisibility(View.GONE);
-            if (o.ok) {
+            if (result.ok) {
                 loadingView.onLoadSuccess();
-                ArrayList<Question> ars = (ArrayList<Question>) o.result;
+                ArrayList<Question> ars = result.result;
                 if (ars.size() > 0) {
                     currentPage = loadedPage;
                     adapter.setList(ars);

@@ -66,8 +66,8 @@ public class FavorView extends FrameLayout implements View.OnClickListener, ISta
     }
 
     public void setData(AceModel model) {
-        String link = "";
-        String title = "";
+        String link;
+        String title;
         if (model instanceof Article) {
             link = "http://www.guokr.com/article/" + ((Article) model).getId() + "/";
             title = ((Article) model).getTitle();
@@ -172,7 +172,7 @@ public class FavorView extends FrameLayout implements View.OnClickListener, ISta
         super.onDetachedFromWindow();
     }
 
-    class LoadBasketTask extends AsyncTask<Void, Integer, ResultObject> {
+    class LoadBasketTask extends AsyncTask<Void, Integer, ResultObject<ArrayList<Basket>>> {
 
         @Override
         protected void onPreExecute() {
@@ -181,14 +181,14 @@ public class FavorView extends FrameLayout implements View.OnClickListener, ISta
         }
 
         @Override
-        protected ResultObject doInBackground(Void... params) {
+        protected ResultObject<ArrayList<Basket>> doInBackground(Void... params) {
             return UserAPI.getBaskets();
         }
 
         @Override
-        protected void onPostExecute(ResultObject resultObject) {
-            if (resultObject.ok) {
-                ArrayList<Basket> baskets = (ArrayList<Basket>) resultObject.result;
+        protected void onPostExecute(ResultObject<ArrayList<Basket>> result) {
+            if (result.ok) {
+                ArrayList<Basket> baskets = result.result;
                 adapter.clear();
                 if (baskets != null && baskets.size() > 0) {
                     adapter.setList(baskets);
@@ -202,17 +202,17 @@ public class FavorView extends FrameLayout implements View.OnClickListener, ISta
         }
     }
 
-    class LoadCategoryTask extends AsyncTask<Void, Integer, ResultObject> {
+    class LoadCategoryTask extends AsyncTask<Void, Integer, ResultObject<ArrayList<Category>>> {
 
         @Override
-        protected ResultObject doInBackground(Void... params) {
+        protected ResultObject<ArrayList<Category>> doInBackground(Void... params) {
             return UserAPI.getCategoryList();
         }
 
         @Override
-        protected void onPostExecute(ResultObject resultObject) {
-            if (resultObject.ok) {
-                categories = (ArrayList<Category>) resultObject.result;
+        protected void onPostExecute(ResultObject<ArrayList<Category>> result) {
+            if (result.ok) {
+                categories = result.result;
                 String[] items = new String[categories.size()];
                 for (int i = 0; i < categories.size(); i++) {
                     items[i] = categories.get(i).getName();
@@ -226,10 +226,10 @@ public class FavorView extends FrameLayout implements View.OnClickListener, ISta
     }
 
 
-    class CreateBasketTask extends AsyncTask<String, Integer, ResultObject> {
+    class CreateBasketTask extends AsyncTask<String, Integer, ResultObject<Basket>> {
 
         @Override
-        protected ResultObject doInBackground(String... params) {
+        protected ResultObject<Basket> doInBackground(String... params) {
             String title = params[0];
             String introduction = params[1];
             String categoryID = params[2];
@@ -237,10 +237,10 @@ public class FavorView extends FrameLayout implements View.OnClickListener, ISta
         }
 
         @Override
-        protected void onPostExecute(ResultObject resultObject) {
-            if (resultObject.ok) {
+        protected void onPostExecute(ResultObject<Basket> result) {
+            if (result.ok) {
                 ToastUtil.toast("创建成功");
-                Basket basket = (Basket) resultObject.result;
+                Basket basket = result.result;
                 adapter.add(basket);
                 adapter.notifyDataSetChanged();
                 openBasketListView();

@@ -56,11 +56,11 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
 
     }
 
-    class LoaderTask extends AsyncTask<String, Integer, ResultObject> {
+    class LoaderTask extends AsyncTask<String, Integer, ResultObject<String>> {
 
         @Override
-        protected ResultObject doInBackground(String... params) {
-            ResultObject resultObject = new ResultObject();
+        protected ResultObject<String> doInBackground(String... params) {
+            ResultObject<String> resultObject = new ResultObject<>();
             String url = params[0];
             String filePath = RequestCache.getInstance().getCachedFile(url);
             if (filePath != null) {
@@ -78,8 +78,8 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
         }
 
         @Override
-        protected void onPostExecute(ResultObject resultObject) {
-            if (resultObject.ok) {
+        protected void onPostExecute(ResultObject<String> result) {
+            if (result.ok) {
                 loadingView.onLoadSuccess();
                 String realLink = url.replaceAll("\\?.*$", "");
                 String suffix = "";
@@ -91,7 +91,7 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
                     gifImageView.setVisibility(VISIBLE);
                     imageView.setVisibility(GONE);
                     try {
-                        GifDrawable gifDrawable = new GifDrawable((String) resultObject.result);
+                        GifDrawable gifDrawable = new GifDrawable(result.result);
                         int initWidth = gifDrawable.getIntrinsicWidth();
                         int initHeight = gifDrawable.getIntrinsicHeight();
                         if (initWidth > 0 && initHeight > 0) {
@@ -115,7 +115,7 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
                 } else {
                     gifImageView.setVisibility(GONE);
                     imageView.setVisibility(VISIBLE);
-                    imageView.setImageFile((String) resultObject.result);
+                    imageView.setImageFile(result.result);
                 }
             } else {
                 loadingView.onLoadFailed();

@@ -57,8 +57,8 @@ public class UserAPI extends APIBase {
      * @param ukey 用户ukey
      * @return ResultObject
      */
-    public static ResultObject getUserInfoByUkey(String ukey) {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<UserInfo> getUserInfoByUkey(String ukey) {
+        ResultObject<UserInfo> resultObject = new ResultObject<>();
         try {
             String result = HttpFetcher.get("http://apis.guokr.com/community/user/" + ukey + ".json").toString();
             JSONObject subObject = getUniversalJsonObject(result, resultObject);
@@ -88,7 +88,7 @@ public class UserAPI extends APIBase {
      * @param id 用户id
      * @return ResultObject
      */
-    public static ResultObject getUserInfoByID(String id) {
+    public static ResultObject<UserInfo> getUserInfoByID(String id) {
         return getUserInfoByUkey(base36Encode(Long.valueOf(id)));
     }
 
@@ -97,8 +97,8 @@ public class UserAPI extends APIBase {
      *
      * @return ResultObject
      */
-    public static ResultObject testLogin() {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<ReminderNoticeNum> testLogin() {
+        ResultObject<ReminderNoticeNum> resultObject = new ResultObject<>();
         String token = getToken();
         String ukey = getUkey();
         //先判断有没有token，没有就是未登录，有的话检测一下是否过期
@@ -116,8 +116,8 @@ public class UserAPI extends APIBase {
      *
      * @return ResultObject.result是ReminderNoticeNum
      */
-    public static ResultObject getReminderAndNoticeNum() {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<ReminderNoticeNum> getReminderAndNoticeNum() {
+        ResultObject<ReminderNoticeNum> resultObject = new ResultObject<>();
         try {
             String url = "http://www.guokr.com/apis/community/rn_num.json";
             ArrayList<NameValuePair> pairs = new ArrayList<>();
@@ -142,8 +142,8 @@ public class UserAPI extends APIBase {
      *
      * @return ResultObject
      */
-    public static ResultObject getReminderList(int offset) {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<ArrayList<Reminder>> getReminderList(int offset) {
+        ResultObject<ArrayList<Reminder>> resultObject = new ResultObject<>();
         try {
             String url = "http://www.guokr.com/apis/community/reminder.json";
             ArrayList<NameValuePair> pairs = new ArrayList<>();
@@ -179,8 +179,8 @@ public class UserAPI extends APIBase {
      *
      * @return ResultObject
      */
-    public static ResultObject getNoticeList() {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<ArrayList<Notice>> getNoticeList() {
+        ResultObject<ArrayList<Notice>> resultObject = new ResultObject<>();
         try {
             String url = "http://www.guokr.com/apis/community/notice.json";
             ArrayList<NameValuePair> pairs = new ArrayList<>();
@@ -234,8 +234,8 @@ public class UserAPI extends APIBase {
      *
      * @return ResultObject resultObject.result是剩余的NoticeList
      */
-    public static ResultObject ignoreOneNotice(String noticeID) {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<ArrayList<Notice>> ignoreOneNotice(String noticeID) {
+        ResultObject<ArrayList<Notice>> resultObject = new ResultObject<>();
         try {
             String url = "http://www.guokr.com/apis/community/notice_ignore.json";
             ArrayList<NameValuePair> pairs = new ArrayList<>();
@@ -271,8 +271,8 @@ public class UserAPI extends APIBase {
      *
      * @return ResultObject
      */
-    public static ResultObject getMessageList(int offset) {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<ArrayList<Message>> getMessageList(int offset) {
+        ResultObject<ArrayList<Message>> resultObject = new ResultObject<>();
         try {
             String url = "http://www.guokr.com/apis/community/user/message.json";
             ArrayList<NameValuePair> pairs = new ArrayList<>();
@@ -310,8 +310,8 @@ public class UserAPI extends APIBase {
      *
      * @return ResultObject
      */
-    public static ResultObject getOneMessage(String id) {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<Message> getOneMessage(String id) {
+        ResultObject<Message> resultObject = new ResultObject<>();
         try {
             String url = "http://www.guokr.com/apis/community/user/message/" + id + ".json";
             ArrayList<NameValuePair> pairs = new ArrayList<>();
@@ -327,7 +327,7 @@ public class UserAPI extends APIBase {
                 message.setId(getJsonString(noticesObject, "id"));
                 message.setIs_read(getJsonBoolean(noticesObject, "is_read"));
                 resultObject.ok = true;
-                resultObject.result = noticesObject;
+                resultObject.result = message;
             }
         } catch (Exception e) {
             handleRequestException(e, resultObject);
@@ -398,8 +398,8 @@ public class UserAPI extends APIBase {
      *
      * @return ResultObject.result is ArrayList[Basket]
      */
-    public static ResultObject getBaskets() {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<ArrayList<Basket>> getBaskets() {
+        ResultObject<ArrayList<Basket>> resultObject = new ResultObject<>();
         String url = "http://www.guokr.com/apis/favorite/basket.json";
         try {
             ArrayList<NameValuePair> pairs = new ArrayList<>();
@@ -443,8 +443,8 @@ public class UserAPI extends APIBase {
      * @param category_id  category
      * @return ResultObject.result is Basket
      */
-    public static ResultObject createBasket(String title, String introduction, String category_id) {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<Basket> createBasket(String title, String introduction, String category_id) {
+        ResultObject<Basket> resultObject = new ResultObject<>();
         try {
             String url = "http://www.guokr.com/apis/favorite/basket.json";
             ArrayList<NameValuePair> params = new ArrayList<>();
@@ -480,8 +480,8 @@ public class UserAPI extends APIBase {
      *
      * @return ResultObject
      */
-    public static ResultObject getCategoryList() {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<ArrayList<Category>> getCategoryList() {
+        ResultObject<ArrayList<Category>> resultObject = new ResultObject<>();
         try {
             String url = "http://www.guokr.com/apis/favorite/category.json";
             ArrayList<NameValuePair> pairs = new ArrayList<>();

@@ -210,14 +210,12 @@ public class ShuffleTagActivity extends SwipeActivity {
 
         @Override
         protected ResultObject doInBackground(String[] params) {
-            ResultObject resultObject = QuestionAPI.getAllMyTags();
+            ResultObject<ArrayList<SubItem>> result = QuestionAPI.getAllMyTags();
             if (TextUtils.isEmpty(UserAPI.getUserID())) {
-                resultObject.error_message = "无法获得用户id";
-                resultObject.code = ResultObject.ResultCode.CODE_NO_USER_ID;
-                return resultObject;
-            }
-            if (resultObject.ok) {
-                ArrayList<SubItem> subItems = (ArrayList<SubItem>) resultObject.result;
+                result.error_message = "无法获得用户id";
+                result.code = ResultObject.ResultCode.CODE_NO_USER_ID;
+            }else if (result.ok) {
+                ArrayList<SubItem> subItems = result.result;
                 ArrayList<AskTag> myTags = new ArrayList<>();
                 for (int i = 0; i < subItems.size(); i++) {
                     SubItem item = subItems.get(i);
@@ -234,7 +232,7 @@ public class ShuffleTagActivity extends SwipeActivity {
                 AskTagHelper.putAllMyTags(myTags);
                 getButtons();
             }
-            return resultObject;
+            return result;
         }
 
         @Override

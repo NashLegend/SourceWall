@@ -524,17 +524,17 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
         messageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    class MessageTask extends AsyncTask<Void, Integer, ResultObject> {
+    class MessageTask extends AsyncTask<Void, Integer, ResultObject<ReminderNoticeNum>> {
 
         @Override
-        protected ResultObject doInBackground(Void... params) {
+        protected ResultObject<ReminderNoticeNum> doInBackground(Void... params) {
             return UserAPI.getReminderAndNoticeNum();
         }
 
         @Override
-        protected void onPostExecute(ResultObject resultObject) {
-            if (resultObject.ok) {
-                ReminderNoticeNum num = (ReminderNoticeNum) resultObject.result;
+        protected void onPostExecute(ResultObject<ReminderNoticeNum> result) {
+            if (result.ok) {
+                ReminderNoticeNum num = result.result;
                 if (num.getNotice_num() > 0) {
                     noticeView.setVisibility(View.VISIBLE);
                 } else {
@@ -607,7 +607,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
         }
     }
 
-    class UserInfoTask extends AsyncTask<String, Intent, ResultObject> {
+    class UserInfoTask extends AsyncTask<String, Intent, ResultObject<UserInfo>> {
 
         @Override
         protected void onPreExecute() {
@@ -618,14 +618,14 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
         }
 
         @Override
-        protected ResultObject doInBackground(String... params) {
+        protected ResultObject<UserInfo> doInBackground(String... params) {
             return UserAPI.getUserInfoByUkey(UserAPI.getUkey());
         }
 
         @Override
-        protected void onPostExecute(ResultObject resultObject) {
-            if (resultObject.ok) {
-                setupUserInfo((UserInfo) resultObject.result);
+        protected void onPostExecute(ResultObject<UserInfo> result) {
+            if (result.ok) {
+                setupUserInfo(result.result);
             } else {
                 String nameString = SharedPreferencesUtil.readString(Consts.Key_User_Name, "");
                 if (TextUtils.isEmpty(nameString)) {

@@ -168,22 +168,22 @@ public class NoticesFragment extends ChannelsFragment implements LListView.OnRef
         listView.setSelection(0);
     }
 
-    class LoaderTask extends AAsyncTask<Integer, Integer, ResultObject> {
+    class LoaderTask extends AAsyncTask<Integer, Integer, ResultObject<ArrayList<Notice>>> {
 
         LoaderTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
             super(iStackedAsyncTaskInterface);
         }
 
         @Override
-        protected ResultObject doInBackground(Integer... params) {
+        protected ResultObject<ArrayList<Notice>> doInBackground(Integer... params) {
             return UserAPI.getNoticeList();
         }
 
         @Override
-        protected void onPostExecute(ResultObject resultObject) {
-            if (resultObject.ok) {
+        protected void onPostExecute(ResultObject<ArrayList<Notice>> result) {
+            if (result.ok) {
                 loadingView.onLoadSuccess();
-                ArrayList<Notice> ars = (ArrayList<Notice>) resultObject.result;
+                ArrayList<Notice> ars = result.result;
                 if (ars.size() == 0) {
                     toast(R.string.no_notice);
                 }

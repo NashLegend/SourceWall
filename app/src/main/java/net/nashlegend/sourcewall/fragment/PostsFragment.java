@@ -593,7 +593,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     /**
      * 这几个Task都长得很像，可以封装起来
      */
-    class LoaderTask extends AAsyncTask<Integer, ResultObject, ResultObject> {
+    class LoaderTask extends AAsyncTask<Integer, ResultObject<ArrayList<Post>>, ResultObject<ArrayList<Post>>> {
 
         LoaderTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
             super(iStackedAsyncTaskInterface);
@@ -602,11 +602,11 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         int loadedPage;
 
         @Override
-        protected ResultObject doInBackground(Integer... datas) {
+        protected ResultObject<ArrayList<Post>> doInBackground(Integer... datas) {
             loadedPage = datas[0];
             String key = String.valueOf(subItem.getSection()) + subItem.getType() + subItem.getName() + subItem.getValue();
             if (loadedPage == 0 && adapter.getCount() == 0) {
-                ResultObject cachedResultObject = PostAPI.getCachedPostList(subItem);
+                ResultObject<ArrayList<Post>> cachedResultObject = PostAPI.getCachedPostList(subItem);
                 if (cachedResultObject.ok) {
                     long lastLoad = SharedPreferencesUtil.readLong(key, 0l) / 1000;
                     long crtLoad = System.currentTimeMillis() / 1000;
@@ -619,7 +619,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                 }
             }
 
-            ResultObject resultObject = new ResultObject();
+            ResultObject<ArrayList<Post>> resultObject = new ResultObject<>();
             //解析html的page是从1开始的，所以offset要+1
             if (subItem.getType() == SubItem.Type_Collections) {
                 resultObject = PostAPI.getGroupHotPostListFromMobileUrl(loadedPage + 1);// not featured
@@ -642,9 +642,9 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
          * @param values The values indicating progress.
          */
         @Override
-        protected void onProgressUpdate(ResultObject... values) {
-            ResultObject o = values[0];
-            ArrayList<Post> ars = (ArrayList<Post>) o.result;
+        protected void onProgressUpdate(ResultObject<ArrayList<Post>>... values) {
+            ResultObject<ArrayList<Post>> result = values[0];
+            ArrayList<Post> ars = result.result;
             if (ars.size() > 0) {
                 progressBar.setVisibility(View.VISIBLE);
                 loadingView.onLoadSuccess();
@@ -654,12 +654,12 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         }
 
         @Override
-        protected void onPostExecute(ResultObject o) {
+        protected void onPostExecute(ResultObject<ArrayList<Post>> result) {
             listView.doneOperation();
             progressBar.setVisibility(View.GONE);
-            if (o.ok) {
+            if (result.ok) {
                 loadingView.onLoadSuccess();
-                ArrayList<Post> ars = (ArrayList<Post>) o.result;
+                ArrayList<Post> ars = result.result;
                 if (ars.size() > 0) {
                     currentPage = loadedPage;
                     adapter.setList(ars);

@@ -566,10 +566,10 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         uploadingProgress.setVisibility(View.GONE);
     }
 
-    class PrepareTask extends AsyncTask<String, Integer, ResultObject> {
+    class PrepareTask extends AsyncTask<String, Integer, ResultObject<PrepareData>> {
 
         @Override
-        protected ResultObject doInBackground(String... params) {
+        protected ResultObject<PrepareData> doInBackground(String... params) {
             String group_id = params[0];
             if (isPost()) {
                 return PostAPI.getPostPrepareData(group_id);
@@ -579,13 +579,13 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         }
 
         @Override
-        protected void onPostExecute(ResultObject resultObject) {
-            if (resultObject.ok) {
+        protected void onPostExecute(ResultObject<PrepareData> result) {
+            if (result.ok) {
                 toast(getString(R.string.get_csrf_ok));
-                PrepareData prepareData = (PrepareData) resultObject.result;
+                PrepareData prepareData = result.result;
                 onReceivePreparedData(prepareData);
             } else {
-                if (resultObject.statusCode == 403) {
+                if (result.statusCode == 403) {
                     new AlertDialog.Builder(PublishPostActivity.this).setTitle(R.string.hint)
                             .setMessage(getString(R.string.have_not_join_this_group)).setPositiveButton(R.string.ok, null).create().show();
                 } else {
@@ -596,7 +596,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         }
     }
 
-    class ImageUploadTask extends AAsyncTask<String, Integer, ResultObject> {
+    class ImageUploadTask extends AAsyncTask<String, Integer, ResultObject<String>> {
 
         ImageUploadTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
             super(iStackedAsyncTaskInterface);
@@ -619,17 +619,16 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         }
 
         @Override
-        protected ResultObject doInBackground(String... params) {
+        protected ResultObject<String> doInBackground(String... params) {
             String path = params[0];
             return APIBase.uploadImage(path, true);
         }
 
         @Override
-        protected void onPostExecute(ResultObject resultObject) {
-            if (resultObject.ok) {
-                // tap to insert image
+        protected void onPostExecute(ResultObject<String> result) {
+            if (result.ok) {
                 toast(R.string.hint_click_to_add_image_to_editor);
-                doneUploadingImage((String) resultObject.result);
+                doneUploadingImage(result.result);
                 if (tmpUploadFile != null && tmpUploadFile.exists()) {
                     tmpUploadFile.delete();
                 }

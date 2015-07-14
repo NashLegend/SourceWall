@@ -132,7 +132,7 @@ public class PostView extends AceView<Post> {
         this.adapter = adapter;
     }
 
-    class LoaderTask extends AAsyncTask<Integer, ResultObject, ResultObject> {
+    class LoaderTask extends AAsyncTask<Integer, ResultObject, ResultObject<ArrayList<AceModel>>> {
 
         @Override
         protected void onPreExecute() {
@@ -144,16 +144,16 @@ public class PostView extends AceView<Post> {
         }
 
         @Override
-        protected ResultObject doInBackground(Integer... params) {
+        protected ResultObject<ArrayList<AceModel>> doInBackground(Integer... params) {
             return PostAPI.getPostCommentsFromJsonUrl(post.getId(), post.getReplyNum(), 1000);//1000足够了
         }
 
         @Override
-        protected void onPostExecute(ResultObject result) {
+        protected void onPostExecute(ResultObject<ArrayList<AceModel>> result) {
             loadDesc.findViewById(R.id.text_header_load_hint).setVisibility(View.VISIBLE);
             loadDesc.findViewById(R.id.progress_header_loading).setVisibility(View.INVISIBLE);
             if (result.ok) {
-                ArrayList<AceModel> ars = (ArrayList<AceModel>) result.result;
+                ArrayList<AceModel> ars = result.result;
                 if (ars.size() > 0) {
                     adapter.addAllReversely(ars, 1);
                     adapter.notifyDataSetChanged();

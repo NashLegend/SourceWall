@@ -14,7 +14,7 @@ public class MDUtil {
      * @param text
      * @return
      */
-    public static ResultObject parseMarkdownByGitHub(String text) {
+    public static ResultObject<String> parseMarkdownByGitHub(String text) {
         return APIBase.parseMarkdownByGitHub(text);
     }
 

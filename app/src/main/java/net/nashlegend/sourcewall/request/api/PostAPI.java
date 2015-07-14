@@ -40,18 +40,13 @@ public class PostAPI extends APIBase {
     public static final String Key_Post_Hot_Posts = "post.hot.post";
     public static final String Key_Post_My_Recent_Replies = "post.my.recent.replies";
 
-    public PostAPI() {
-
-    }
-
     /**
      * 获取缓存的问题
      *
-     * @param subItem
-     * @return
+     * @param subItem 要取缓存的栏目
      */
-    public static ResultObject getCachedPostList(SubItem subItem) {
-        ResultObject cachedResultObject = new ResultObject();
+    public static ResultObject<ArrayList<Post>> getCachedPostList(SubItem subItem) {
+        ResultObject<ArrayList<Post>> cachedResultObject;
         if (subItem.getType() == SubItem.Type_Collections) {
             cachedResultObject = PostAPI.getCachedGroupHotPostListFromMobileUrl();
         } else if (subItem.getType() == SubItem.Type_Private_Channel) {
@@ -107,8 +102,8 @@ public class PostAPI extends APIBase {
      *
      * @return ResultObject，resultObject.result是ArrayList[SubItem]
      */
-    public static ResultObject getAllMyGroups() {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<ArrayList<SubItem>> getAllMyGroups() {
+        ResultObject<ArrayList<SubItem>> resultObject = new ResultObject<>();
         if (TextUtils.isEmpty(UserAPI.getUserID())) {
             resultObject.error_message = "无法获得用户id";
             resultObject.code = ResultObject.ResultCode.CODE_NO_USER_ID;
@@ -162,8 +157,8 @@ public class PostAPI extends APIBase {
      *
      * @return resultObject
      */
-    private static ResultObject getCachedMyGroupRecentRepliesPosts() {
-        ResultObject resultObject = new ResultObject();
+    private static ResultObject<ArrayList<Post>> getCachedMyGroupRecentRepliesPosts() {
+        ResultObject<ArrayList<Post>> resultObject = new ResultObject<>();
         try {
             String html = RequestCache.getInstance().getStringFromCache(Key_Post_My_Recent_Replies);
             if (html != null) {
@@ -178,10 +173,9 @@ public class PostAPI extends APIBase {
 
     /**
      * @param html 解析我的小组的帖子
-     * @return
      */
-    private static ResultObject parseMyGroupPostList(String html) {
-        ResultObject resultObject = new ResultObject();
+    private static ResultObject<ArrayList<Post>> parseMyGroupPostList(String html) {
+        ResultObject<ArrayList<Post>> resultObject = new ResultObject<>();
         try {
             ArrayList<Post> list = new ArrayList<>();
             Document doc = Jsoup.parse(html);
@@ -225,9 +219,9 @@ public class PostAPI extends APIBase {
      * @param pageNo 页码
      * @return resultObject
      */
-    public static ResultObject getMyGroupRecentRepliesPosts(int pageNo) {
+    public static ResultObject<ArrayList<Post>> getMyGroupRecentRepliesPosts(int pageNo) {
         String url = "http://m.guokr.com/group/user/recent_replies/?page=" + pageNo;
-        ResultObject resultObject = new ResultObject();
+        ResultObject<ArrayList<Post>> resultObject = new ResultObject<>();
         try {
             String html = HttpFetcher.get(url).toString();
             resultObject = parseMyGroupPostList(html);
@@ -246,9 +240,9 @@ public class PostAPI extends APIBase {
      * @param pageNo 页码
      * @return resultObject
      */
-    public static ResultObject getMyGroupHotPosts(int pageNo) {
+    public static ResultObject<ArrayList<Post>> getMyGroupHotPosts(int pageNo) {
         String url = "http://m.guokr.com/group/user/hot_posts/?page=" + pageNo;
-        ResultObject resultObject = new ResultObject();
+        ResultObject<ArrayList<Post>> resultObject = new ResultObject<>();
         try {
             String html = HttpFetcher.get(url).toString();
             resultObject = parseMyGroupPostList(html);
@@ -265,8 +259,8 @@ public class PostAPI extends APIBase {
      * @return resultObject
      * @throws Exception
      */
-    public static ResultObject getMyGroupRecentPosts(int pageNo) throws Exception {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<ArrayList<Post>> getMyGroupRecentPosts(int pageNo) throws Exception {
+        ResultObject<ArrayList<Post>> resultObject = new ResultObject<>();
         ArrayList<Post> list = new ArrayList<Post>();
         String url = "http://www.guokr.com/group/user/recent_posts/?page=" + pageNo;
         String html = HttpFetcher.get(url).toString();
@@ -280,8 +274,8 @@ public class PostAPI extends APIBase {
      * @param pageNo，要获取的页码
      * @return 帖子列表
      */
-    public static ResultObject getGroupHotPostListFromMobileUrl(int pageNo) {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<ArrayList<Post>> getGroupHotPostListFromMobileUrl(int pageNo) {
+        ResultObject<ArrayList<Post>> resultObject = new ResultObject<>();
         try {
             String url = "http://m.guokr.com/group/hot_posts/?page=" + pageNo;
             String html = HttpFetcher.get(url).toString();
@@ -300,8 +294,8 @@ public class PostAPI extends APIBase {
      *
      * @return 帖子列表
      */
-    public static ResultObject getCachedGroupHotPostListFromMobileUrl() {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<ArrayList<Post>> getCachedGroupHotPostListFromMobileUrl() {
+        ResultObject<ArrayList<Post>> resultObject = new ResultObject<>();
         try {
             String html = RequestCache.getInstance().getStringFromCache(Key_Post_Hot_Posts);
             if (html != null) {
@@ -319,8 +313,8 @@ public class PostAPI extends APIBase {
      * @param html，要解析的页面内容
      * @return 帖子列表
      */
-    public static ResultObject parseHotPosts(String html) {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<ArrayList<Post>> parseHotPosts(String html) {
+        ResultObject<ArrayList<Post>> resultObject = new ResultObject<>();
         try {
             ArrayList<Post> list = new ArrayList<>();
             if (html != null) {
@@ -343,8 +337,8 @@ public class PostAPI extends APIBase {
                             }
                             postImageUrl = bgimg.substring(0, idx);
                         }
-                        String postAuthor = "";
-                        String postGroup = "";
+                        String postAuthor;
+                        String postGroup;
                         String[] ang = aPostlist.getElementsByClass("post-info-content").get(0).text()
                                 .split(" 发表于 ");
                         postAuthor = ang[0];
@@ -381,8 +375,8 @@ public class PostAPI extends APIBase {
      * @param offset 从第几个帖子开始取
      * @return resultObject
      */
-    public static ResultObject getGroupPostListByJsonUrl(String id, int offset) {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<ArrayList<Post>> getGroupPostListByJsonUrl(String id, int offset) {
+        ResultObject<ArrayList<Post>> resultObject = new ResultObject<>();
         try {
             String url = "http://apis.guokr.com/group/post.json";
             ArrayList<NameValuePair> pairs = new ArrayList<>();
@@ -411,8 +405,8 @@ public class PostAPI extends APIBase {
      * @param id 小组id
      * @return resultObject
      */
-    public static ResultObject getCachedGroupPostListJson(String id) {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<ArrayList<Post>> getCachedGroupPostListJson(String id) {
+        ResultObject<ArrayList<Post>> resultObject = new ResultObject<>();
         try {
             String jString = RequestCache.getInstance().getStringFromCache("post." + id);
             if (jString != null) {
@@ -424,8 +418,8 @@ public class PostAPI extends APIBase {
         return resultObject;
     }
 
-    private static ResultObject parsePostListJson(String jString) {
-        ResultObject resultObject = new ResultObject();
+    private static ResultObject<ArrayList<Post>> parsePostListJson(String jString) {
+        ResultObject<ArrayList<Post>> resultObject = new ResultObject<>();
         try {
             ArrayList<Post> list = new ArrayList<>();
             JSONArray articles = APIBase.getUniversalJsonArray(jString, resultObject);
@@ -472,8 +466,8 @@ public class PostAPI extends APIBase {
      * @param id，帖子id
      * @return resultObject
      */
-    public static ResultObject getPostDetailByIDFromJsonUrl(String id) {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<Post> getPostDetailByIDFromJsonUrl(String id) {
+        ResultObject<Post> resultObject = new ResultObject<>();
         String url = "http://apis.guokr.com/group/post/" + id + ".json";
         try {
             Post detail = new Post();
@@ -529,9 +523,9 @@ public class PostAPI extends APIBase {
      *
      * @param url 帖子地址
      */
-    public static ResultObject getPostDetailByPostMobileUrl(String url) {
+    public static ResultObject<Post> getPostDetailByPostMobileUrl(String url) {
         // 手机页面无法取得评论数，最好是从点击时带过来。
-        ResultObject resultObject = new ResultObject();
+        ResultObject<Post> resultObject = new ResultObject<>();
         try {
             Post detail = new Post();
             ResultObject response = HttpFetcher.get(url);
@@ -579,25 +573,13 @@ public class PostAPI extends APIBase {
      *
      * @param id     帖子id
      * @param offset 从第offset个开始加载
-     * @return resultObject
-     */
-    public static ResultObject getPostCommentsFromJsonUrl(String id, int offset) {
-        return getPostCommentsFromJsonUrl(id, offset, 20);
-    }
-
-    /**
-     * 使用Json解析方式获得帖子评论列表
-     * resultObject.result是ArrayList[UComment]
-     *
-     * @param id     帖子id
-     * @param offset 从第offset个开始加载
      * @param limit  要加载多少个
      * @return resultObject
      */
-    public static ResultObject getPostCommentsFromJsonUrl(String id, int offset, int limit) {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<ArrayList<AceModel>> getPostCommentsFromJsonUrl(String id, int offset, int limit) {
+        ResultObject<ArrayList<AceModel>> resultObject = new ResultObject<>();
         try {
-            ArrayList<UComment> list = new ArrayList<>();
+            ArrayList<AceModel> list = new ArrayList<>();
             String url = "http://apis.guokr.com/group/post_reply.json";
             ArrayList<NameValuePair> pairs = new ArrayList<>();
             pairs.add(new BasicNameValuePair("retrieve_type", "by_post"));
@@ -637,36 +619,6 @@ public class PostAPI extends APIBase {
             }
         } catch (Exception e) {
             handleRequestException(e, resultObject);
-        }
-        return resultObject;
-    }
-
-    /**
-     * 返回第一页数据，包括Post与第一页的评论列表
-     * resultObject.result是ArrayList[AceModel]
-     *
-     * @param pPost 帖子对象
-     * @return resultObject
-     */
-    public static ResultObject getPostFirstPage(Post pPost) {
-        ResultObject resultObject = new ResultObject();
-        ArrayList<AceModel> aceModels = new ArrayList<>();
-        ResultObject postResult = getPostDetailByIDFromJsonUrl(pPost.getId());
-        resultObject.statusCode = postResult.statusCode;
-        resultObject.code = postResult.code;
-        if (postResult.ok) {
-            ResultObject commentsResult = getPostCommentsFromJsonUrl(pPost.getId(), 0);
-            resultObject.statusCode = commentsResult.statusCode;
-            resultObject.code = commentsResult.code;
-            if (commentsResult.ok) {
-                Post post = (Post) postResult.result;
-                pPost.setTitle(post.getTitle());
-                ArrayList<UComment> simpleComments = (ArrayList<UComment>) commentsResult.result;
-                aceModels.add(post);
-                aceModels.addAll(simpleComments);
-                resultObject.ok = true;
-                resultObject.result = aceModels;
-            }
         }
         return resultObject;
     }
@@ -766,8 +718,8 @@ public class PostAPI extends APIBase {
      * @param content 回复内容
      * @return ResultObject.result is the reply_id if ok;
      */
-    public static ResultObject replyPost(String id, String content) {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<String> replyPost(String id, String content) {
+        ResultObject<String> resultObject = new ResultObject<>();
         try {
             String url = "http://apis.guokr.com/group/post_reply.json";
             ArrayList<NameValuePair> pairs = new ArrayList<>();
@@ -794,8 +746,8 @@ public class PostAPI extends APIBase {
      * @param notice_id 通知id
      * @return resultObject resultObject.result是UComment
      */
-    public static ResultObject getSingleCommentByNoticeID(String notice_id) {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<UComment> getSingleCommentByNoticeID(String notice_id) {
+        ResultObject<UComment> resultObject = new ResultObject<>();
         String reply_id;
         if (TextUtils.isEmpty(notice_id)) {
             return resultObject;
@@ -827,7 +779,7 @@ public class PostAPI extends APIBase {
      * @param url 评论id
      * @return resultObject resultObject.result是UComment
      */
-    public static ResultObject getSingleCommentFromRedirectUrl(String url) {
+    public static ResultObject<UComment> getSingleCommentFromRedirectUrl(String url) {
         //url sample：http://www.guokr.com/post/reply/6224695/
         //uri http://www.guokr.com/post/666281/reply/6224695/
         //TODO
@@ -846,8 +798,8 @@ public class PostAPI extends APIBase {
      * @param id 评论id
      * @return resultObject resultObject.result是UComment
      */
-    public static ResultObject getSingleCommentByID(String id) {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<UComment> getSingleCommentByID(String id) {
+        ResultObject<UComment> resultObject = new ResultObject<>();
         String url = "http://www.guokr.com/apis/group/post_reply.json";
         //url还有另一种形式，http://www.guokr.com/apis/group/post_reply/99999999.json
         //这样后面就不必带reply_id参数了
@@ -950,8 +902,8 @@ public class PostAPI extends APIBase {
      * @param group_id 小组id
      * @return resultObject
      */
-    public static ResultObject getPostPrepareData(String group_id) {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<PrepareData> getPostPrepareData(String group_id) {
+        ResultObject<PrepareData> resultObject = new ResultObject<>();
         try {
             String url = "http://www.guokr.com/group/" + group_id + "/post/edit/";
             ResultObject response = HttpFetcher.get(url);
@@ -998,15 +950,15 @@ public class PostAPI extends APIBase {
      * @param topic    帖子主题
      * @return resultObject
      */
-    public static ResultObject publishPost(String group_id, String csrf, String title, String body, String topic) {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<String> publishPost(String group_id, String csrf, String title, String body, String topic) {
+        ResultObject<String> resultObject = new ResultObject<>();
         String url = "http://www.guokr.com/group/" + group_id + "/post/edit/";
         try {
-            ResultObject mdResult = MDUtil.parseMarkdownByGitHub(body);
+            ResultObject<String> mdResult = MDUtil.parseMarkdownByGitHub(body);
             String htmlBody = "";
             if (mdResult.ok) {
                 //使用github接口转换成html
-                htmlBody = (String) mdResult.result;
+                htmlBody = mdResult.result;
             } else {
                 htmlBody = MDUtil.Markdown2HtmlDumb(body);
             }

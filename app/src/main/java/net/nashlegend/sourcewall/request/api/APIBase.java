@@ -126,8 +126,8 @@ public class APIBase {
      * @param watermark 是否打水印
      * @return 返回ResultObject，resultObject.result是上传后的图片地址，果壳并不会对图片进行压缩
      */
-    public static ResultObject uploadImage(String path, boolean watermark) {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<String> uploadImage(String path, boolean watermark) {
+        ResultObject<String> resultObject = new ResultObject<>();
         File file = new File(path);
         if (file.exists() && !file.isDirectory() && file.length() >= 0) {
             try {
@@ -170,9 +170,9 @@ public class APIBase {
      * @param text 要转换的文本内容
      * @return ResultObject
      */
-    public static ResultObject parseMarkdownByGitHub(String text) {
+    public static ResultObject<String> parseMarkdownByGitHub(String text) {
 
-        ResultObject resultObject = new ResultObject();
+        ResultObject<String> resultObject = new ResultObject<>();
         if (TextUtils.isEmpty(text)) {
             resultObject.ok = true;
             resultObject.result = "";

@@ -3,13 +3,13 @@ package net.nashlegend.sourcewall.request;
 /**
  * Created by NashLegend on 2014/9/23 0023
  */
-public class ResultObject {
+public class ResultObject<T> {
     public boolean ok = false;
     public ResultCode code = ResultCode.CODE_OK;
     public int statusCode = 200;
     public String message = "";
     public String error_message = "";
-    public Object result;
+    public T result;
 
     @Override
     public String toString() {

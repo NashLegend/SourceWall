@@ -308,7 +308,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         }
     }
 
-    class LoaderTask extends AAsyncTask<Integer, ResultObject, ResultObject> {
+    class LoaderTask extends AAsyncTask<Integer, ResultObject<Post>, ResultObject<ArrayList<AceModel>>> {
 
         int offset;
 
@@ -317,7 +317,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         }
 
         @Override
-        protected ResultObject doInBackground(Integer... params) {
+        protected ResultObject<ArrayList<AceModel>> doInBackground(Integer... params) {
             if (!TextUtils.isEmpty(notice_id)) {
                 UserAPI.ignoreOneNotice(notice_id);
                 notice_id = null;
@@ -326,11 +326,11 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
             int limit = 20;
             if (offset < 0) {
                 offset = 0;
-                ResultObject postResult = PostAPI.getPostDetailByIDFromJsonUrl(post.getId());//得不到回复数量
+                ResultObject<Post> postResult = PostAPI.getPostDetailByIDFromJsonUrl(post.getId());//得不到回复数量
                 if (postResult.ok) {
                     publishProgress(postResult);
                 } else {
-                    return postResult;
+                    return new ResultObject<>();
                 }
             }
             if (loadDesc) {
@@ -344,7 +344,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
                 }
                 offset = tmpOffset;
             }
-            ResultObject resultObject = PostAPI.getPostCommentsFromJsonUrl(post.getId(), offset, limit);
+            ResultObject<ArrayList<AceModel>> resultObject = PostAPI.getPostCommentsFromJsonUrl(post.getId(), offset, limit);
             if (!resultObject.ok) {
                 hasLoadAll = false;
             }
@@ -352,24 +352,24 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         }
 
         @Override
-        protected void onProgressUpdate(ResultObject... values) {
+        protected void onProgressUpdate(ResultObject<Post>... values) {
             //在这里取到正文，正文的结果一定是正确的
             progressBar.setVisibility(View.VISIBLE);
             floatingActionsMenu.setVisibility(View.VISIBLE);
             loadingView.onLoadSuccess();
-            ResultObject resultObject = values[0];
-            post = (Post) resultObject.result;
+            ResultObject<Post> result = values[0];
+            post = result.result;
             post.setDesc(loadDesc);
             adapter.add(0, post);
             adapter.notifyDataSetChanged();
         }
 
         @Override
-        protected void onPostExecute(ResultObject result) {
+        protected void onPostExecute(ResultObject<ArrayList<AceModel>> result) {
             progressBar.setVisibility(View.GONE);
             if (result.ok) {
                 loadingView.onLoadSuccess();
-                ArrayList<AceModel> ars = (ArrayList<AceModel>) result.result;
+                ArrayList<AceModel> ars = result.result;
                 if (ars.size() > 0) {
                     if (loadDesc) {
                         adapter.addAllReversely(ars);

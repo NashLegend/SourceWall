@@ -38,12 +38,8 @@ public class QuestionAPI extends APIBase {
     private static String prefix = "<div class=\"ZoomBox\"><div class=\"content-zoom ZoomIn\">";
     private static String suffix = "</div></div>";
 
-    public QuestionAPI() {
-
-    }
-
-    public static ResultObject getCachedQuestionList(SubItem subItem) {
-        ResultObject cachedResultObject = new ResultObject();
+    public static ResultObject<ArrayList<Question>> getCachedQuestionList(SubItem subItem) {
+        ResultObject<ArrayList<Question>> cachedResultObject = new ResultObject<>();
         String key = "question." + subItem.getValue();
         String content = RequestCache.getInstance().getStringFromCache(key);
         if (!TextUtils.isEmpty(content)) {
@@ -61,8 +57,8 @@ public class QuestionAPI extends APIBase {
      *
      * @return ResultObject，resultObject.result是ArrayList[SubItem]
      */
-    public static ResultObject getAllMyTags() {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<ArrayList<SubItem>> getAllMyTags() {
+        ResultObject<ArrayList<SubItem>> resultObject = new ResultObject<>();
         String pageUrl = "http://www.guokr.com/ask/i/" + UserAPI.getUserID() + "/following_tags/";
         ArrayList<SubItem> subItems = new ArrayList<>();
         int numPages;
@@ -114,10 +110,9 @@ public class QuestionAPI extends APIBase {
      * @param offset 从第几个开始加载
      * @return ResultObject
      */
-    public static ResultObject getQuestionsByTagFromJsonUrl(String tag, int offset) {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<ArrayList<Question>> getQuestionsByTagFromJsonUrl(String tag, int offset) {
+        ResultObject<ArrayList<Question>> resultObject = new ResultObject<>();
         try {
-            ArrayList<Question> questions = new ArrayList<>();
             String url = "http://apis.guokr.com/ask/question.json";
             ArrayList<NameValuePair> pairs = new ArrayList<>();
             pairs.add(new BasicNameValuePair("retrieve_type", "by_tag"));
@@ -145,8 +140,8 @@ public class QuestionAPI extends APIBase {
      * @param jString json
      * @return ResultObject
      */
-    public static ResultObject parseQuestionsListJson(String jString) {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<ArrayList<Question>> parseQuestionsListJson(String jString) {
+        ResultObject<ArrayList<Question>> resultObject = new ResultObject<>();
         try {
             if (jString != null) {
                 ArrayList<Question> questions = new ArrayList<>();
@@ -187,9 +182,9 @@ public class QuestionAPI extends APIBase {
      * @param pageNo 页码
      * @return ResultObject
      */
-    public static ResultObject getHotQuestions(int pageNo) {
+    public static ResultObject<ArrayList<Question>> getHotQuestions(int pageNo) {
         String url = "http://m.guokr.com/ask/hottest/?page=" + pageNo;
-        ResultObject resultObject = new ResultObject();
+        ResultObject<ArrayList<Question>> resultObject = new ResultObject<>();
         try {
             String html = HttpFetcher.get(url).toString();
             resultObject = parseQuestionsHtml(html);
@@ -208,9 +203,9 @@ public class QuestionAPI extends APIBase {
      * @param pageNo 页码
      * @return ResultObject
      */
-    public static ResultObject getHighlightQuestions(int pageNo) {
+    public static ResultObject<ArrayList<Question>> getHighlightQuestions(int pageNo) {
         String url = "http://m.guokr.com/ask/highlight/?page=" + pageNo;
-        ResultObject resultObject = new ResultObject();
+        ResultObject<ArrayList<Question>> resultObject = new ResultObject<>();
         try {
             String html = HttpFetcher.get(url).toString();
             resultObject = parseQuestionsHtml(html);
@@ -229,8 +224,8 @@ public class QuestionAPI extends APIBase {
      * @param html 页面内容
      * @return ResultObject
      */
-    public static ResultObject parseQuestionsHtml(String html) {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<ArrayList<Question>> parseQuestionsHtml(String html) {
+        ResultObject<ArrayList<Question>> resultObject = new ResultObject<>();
         try {
             ArrayList<Question> questions = new ArrayList<>();
             Document doc = Jsoup.parse(html);
@@ -270,7 +265,7 @@ public class QuestionAPI extends APIBase {
      * @param id 问题ID
      * @return ResultObject
      */
-    public static ResultObject getQuestionDetailByID(String id) {
+    public static ResultObject<Question> getQuestionDetailByID(String id) {
         String url = "http://apis.guokr.com/ask/question/" + id + ".json";
         return getQuestionDetailFromJsonUrl(url);
     }
@@ -282,8 +277,8 @@ public class QuestionAPI extends APIBase {
      * @param url 返回问题内容,json格式
      * @return ResultObject
      */
-    public static ResultObject getQuestionDetailFromJsonUrl(String url) {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<Question> getQuestionDetailFromJsonUrl(String url) {
+        ResultObject<Question> resultObject = new ResultObject<>();
         try {
             Question question;
             ResultObject httpResult = HttpFetcher.get(url, null);
@@ -328,10 +323,10 @@ public class QuestionAPI extends APIBase {
      * @param offset 从第几个开始加载
      * @return ResultObject
      */
-    public static ResultObject getQuestionAnswers(String id, int offset) {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<ArrayList<AceModel>> getQuestionAnswers(String id, int offset) {
+        ResultObject<ArrayList<AceModel>> resultObject = new ResultObject<>();
         try {
-            ArrayList<QuestionAnswer> answers = new ArrayList<>();
+            ArrayList<AceModel> answers = new ArrayList<>();
             String url = "http://apis.guokr.com/ask/answer.json";
             ArrayList<NameValuePair> pairs = new ArrayList<>();
             pairs.add(new BasicNameValuePair("retrieve_type", "by_question"));
@@ -386,7 +381,7 @@ public class QuestionAPI extends APIBase {
      * @param url 评论id
      * @return resultObject resultObject.result是UComment
      */
-    public static ResultObject getSingleAnswerFromRedirectUrl(String url) {
+    public static ResultObject<QuestionAnswer> getSingleAnswerFromRedirectUrl(String url) {
         //http://www.guokr.com/answer/654321/redirect/
         //http://www.guokr.com/answer/654321/
         return getSingleAnswerByID(url.replaceAll("\\D+", ""));
@@ -398,8 +393,8 @@ public class QuestionAPI extends APIBase {
      * @param id 评论id
      * @return resultObject resultObject.result是UComment
      */
-    public static ResultObject getSingleAnswerByID(String id) {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<QuestionAnswer> getSingleAnswerByID(String id) {
+        ResultObject<QuestionAnswer> resultObject = new ResultObject<>();
         String url = "http://apis.guokr.com/ask/answer.json";
         //url还有另一种形式，http://apis.guokr.com/ask/answer/999999.json
         //这样后面就不必带answer_id参数了
@@ -467,34 +462,6 @@ public class QuestionAPI extends APIBase {
     }
 
     /**
-     * 返回第一页数据，包括Post与第一页的评论列表
-     * resultObject.result是ArrayList[AceModel]
-     *
-     * @param qQuestion 问题对象，至少有一个id属性不为空
-     * @return ResultObject
-     */
-    public static ResultObject getQuestionFirstPage(Question qQuestion) {
-        ResultObject resultObject = new ResultObject();
-        ArrayList<AceModel> aceModels = new ArrayList<>();
-        ResultObject questionResult = getQuestionDetailByID(qQuestion.getId());
-        resultObject.statusCode = questionResult.statusCode;
-        if (questionResult.ok) {
-            ResultObject commentsResult = getQuestionAnswers(qQuestion.getId(), 0);
-            resultObject.statusCode = commentsResult.statusCode;
-            if (commentsResult.ok) {
-                Question question = (Question) questionResult.result;
-                qQuestion.setTitle(question.getTitle());
-                ArrayList<UComment> simpleComments = (ArrayList<UComment>) commentsResult.result;
-                aceModels.add(question);
-                aceModels.addAll(simpleComments);
-                resultObject.ok = true;
-                resultObject.result = aceModels;
-            }
-        }
-        return resultObject;
-    }
-
-    /**
      * 返回问题的评论，json格式
      * resultObject.result是ArrayList[UComment]
      *
@@ -502,8 +469,8 @@ public class QuestionAPI extends APIBase {
      * @param offset 从第几个开始加载
      * @return ResultObject
      */
-    public static ResultObject getQuestionComments(String id, int offset) {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<ArrayList<UComment>> getQuestionComments(String id, int offset) {
+        ResultObject<ArrayList<UComment>> resultObject = new ResultObject<>();
         try {
             ArrayList<UComment> list = new ArrayList<>();
             String url = "http://www.guokr.com/apis/ask/question_reply.json";
@@ -546,8 +513,8 @@ public class QuestionAPI extends APIBase {
      * @param offset 从第几个开始加载
      * @return ResultObject
      */
-    public static ResultObject getAnswerComments(String id, int offset) {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<ArrayList<UComment>> getAnswerComments(String id, int offset) {
+        ResultObject<ArrayList<UComment>> resultObject = new ResultObject<>();
         try {
             ArrayList<UComment> list = new ArrayList<>();
             String url = "http://www.guokr.com/apis/ask/answer_reply.json";
@@ -598,8 +565,8 @@ public class QuestionAPI extends APIBase {
      * @param content 答案内容
      * @return ResultObject.result is the reply_id if ok;
      */
-    public static ResultObject answerQuestion(String id, String content) {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<String> answerQuestion(String id, String content) {
+        ResultObject<String> resultObject = new ResultObject<>();
         try {
             String url = "http://apis.guokr.com/ask/answer.json";
             ArrayList<NameValuePair> pairs = new ArrayList<>();
@@ -798,9 +765,9 @@ public class QuestionAPI extends APIBase {
      * @param comment    评论内容
      * @return ResultObject
      */
-    public static ResultObject commentOnQuestion(String questionID, String comment) {
+    public static ResultObject<UComment> commentOnQuestion(String questionID, String comment) {
         String url = "http://www.guokr.com/apis/ask/question_reply.json";
-        ResultObject resultObject = new ResultObject();
+        ResultObject<UComment> resultObject = new ResultObject<>();
         try {
             ArrayList<NameValuePair> pairs = new ArrayList<>();
             pairs.add(new BasicNameValuePair("question_id", questionID));
@@ -854,9 +821,9 @@ public class QuestionAPI extends APIBase {
      * @param comment  评论内容
      * @return ResultObject
      */
-    public static ResultObject commentOnAnswer(String answerID, String comment) {
+    public static ResultObject<UComment> commentOnAnswer(String answerID, String comment) {
         String url = "http://www.guokr.com/apis/ask/answer_reply.json";
-        ResultObject resultObject = new ResultObject();
+        ResultObject<UComment> resultObject = new ResultObject<>();
         try {
             ArrayList<NameValuePair> pairs = new ArrayList<>();
             pairs.add(new BasicNameValuePair("answer_id", answerID));
@@ -890,8 +857,8 @@ public class QuestionAPI extends APIBase {
      *
      * @return ResultObject
      */
-    public static ResultObject getQuestionPrepareData() {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<PrepareData> getQuestionPrepareData() {
+        ResultObject<PrepareData> resultObject = new ResultObject<>();
         try {
             String url = "http://www.guokr.com/questions/new/";
             String html = HttpFetcher.get(url).toString();
@@ -920,14 +887,14 @@ public class QuestionAPI extends APIBase {
      * @return ResultObject
      * @deprecated
      */
-    public static ResultObject publishQuestion(String csrf, String question, String annotation, String[] tags) {
-        ResultObject resultObject = new ResultObject();
+    public static ResultObject<String> publishQuestion(String csrf, String question, String annotation, String[] tags) {
+        ResultObject<String> resultObject = new ResultObject<>();
         String url = "http://www.guokr.com/questions/new/";
         try {
-            ResultObject mdResult = MDUtil.parseMarkdownByGitHub(annotation);
+            ResultObject<String> mdResult = MDUtil.parseMarkdownByGitHub(annotation);
             String htmlDesc = "";
             if (mdResult.ok) {
-                htmlDesc = (String) mdResult.result;
+                htmlDesc = mdResult.result;
             } else {
                 htmlDesc = MDUtil.Markdown2HtmlDumb(annotation);
             }

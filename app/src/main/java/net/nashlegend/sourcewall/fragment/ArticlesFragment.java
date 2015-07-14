@@ -193,7 +193,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
         loadData(0);
     }
 
-    class LoaderTask extends AAsyncTask<Integer, ResultObject, ResultObject> {
+    class LoaderTask extends AAsyncTask<Integer, ResultObject<ArrayList<Article>>, ResultObject<ArrayList<Article>>> {
 
         int offset;
 
@@ -202,12 +202,12 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
         }
 
         @Override
-        protected ResultObject doInBackground(Integer... datas) {
+        protected ResultObject<ArrayList<Article>> doInBackground(Integer... datas) {
             offset = datas[0];
             String key = String.valueOf(subItem.getSection()) + subItem.getType() + subItem.getName() + subItem.getValue();
 
             if (offset == 0 && adapter.getCount() == 0) {
-                ResultObject cachedResultObject = ArticleAPI.getCachedArticleList(subItem);
+                ResultObject<ArrayList<Article>> cachedResultObject = ArticleAPI.getCachedArticleList(subItem);
                 if (cachedResultObject.ok) {
                     long lastLoad = SharedPreferencesUtil.readLong(key, 0l) / 1000;
                     long crtLoad = System.currentTimeMillis() / 1000;
@@ -219,7 +219,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
                 }
             }
 
-            ResultObject resultObject = new ResultObject();
+            ResultObject<ArrayList<Article>> resultObject = new ResultObject<>();
             if (subItem.getType() == SubItem.Type_Collections) {
                 resultObject = ArticleAPI.getArticleListIndexPage(offset);
             } else if (subItem.getType() == SubItem.Type_Single_Channel) {
@@ -241,9 +241,9 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
          * @param values The values indicating progress.
          */
         @Override
-        protected void onProgressUpdate(ResultObject... values) {
-            ResultObject o = values[0];
-            ArrayList<Article> ars = (ArrayList<Article>) o.result;
+        protected void onProgressUpdate(ResultObject<ArrayList<Article>>... values) {
+            ResultObject<ArrayList<Article>> result = values[0];
+            ArrayList<Article> ars = result.result;
             if (ars.size() > 0) {
                 progressBar.setVisibility(View.VISIBLE);
                 loadingView.onLoadSuccess();
@@ -253,12 +253,12 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
         }
 
         @Override
-        protected void onPostExecute(ResultObject o) {
+        protected void onPostExecute(ResultObject<ArrayList<Article>> result) {
             listView.doneOperation();
             progressBar.setVisibility(View.GONE);
-            if (o.ok) {
+            if (result.ok) {
                 loadingView.onLoadSuccess();
-                ArrayList<Article> ars = (ArrayList<Article>) o.result;
+                ArrayList<Article> ars = result.result;
                 if (offset > 0) {
                     if (ars.size() > 0) {
                         adapter.addAll(ars);

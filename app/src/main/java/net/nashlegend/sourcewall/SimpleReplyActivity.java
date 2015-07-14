@@ -211,7 +211,7 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
         loadData(0);
     }
 
-    class ReplyTask extends AsyncTask<String, Integer, ResultObject> {
+    class ReplyTask extends AsyncTask<String, Integer, ResultObject<UComment>> {
 
         @Override
         protected void onPreExecute() {
@@ -233,9 +233,9 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
         }
 
         @Override
-        protected ResultObject doInBackground(String... params) {
+        protected ResultObject<UComment> doInBackground(String... params) {
             String content = params[0];
-            ResultObject resultObject = new ResultObject();
+            ResultObject<UComment> resultObject = new ResultObject<>();
             if (aceModel instanceof Question) {
                 resultObject = QuestionAPI.commentOnQuestion(((Question) aceModel).getId(), content);
             } else if (aceModel instanceof QuestionAnswer) {
@@ -245,7 +245,7 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
         }
 
         @Override
-        protected void onPostExecute(ResultObject result) {
+        protected void onPostExecute(ResultObject<UComment> result) {
             progressDialog.dismiss();
             if (result.ok) {
                 mMenu.findItem(R.id.action_cancel_simple_reply).setVisible(false);
@@ -253,7 +253,7 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
                 textReply.setText("");
                 hideInput();
                 if (task == null || task.getStatus() != AAsyncTask.Status.RUNNING) {
-                    UComment uComment = (UComment) result.result;
+                    UComment uComment = result.result;
                     adapter.add(0, uComment);
                     adapter.notifyDataSetChanged();
                 }
@@ -264,7 +264,7 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
         }
     }
 
-    class LoaderTask extends AAsyncTask<Integer, Integer, ResultObject> {
+    class LoaderTask extends AAsyncTask<Integer, Integer, ResultObject<ArrayList<UComment>>> {
         int offset;
 
         LoaderTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
@@ -272,23 +272,23 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
         }
 
         @Override
-        protected ResultObject doInBackground(Integer... params) {
+        protected ResultObject<ArrayList<UComment>> doInBackground(Integer... params) {
+            ResultObject<ArrayList<UComment>> resultObject = new ResultObject<>();
             offset = params[0];
             if (aceModel instanceof Question) {
-                return QuestionAPI.getQuestionComments(((Question) aceModel).getId(), offset);
+                resultObject = QuestionAPI.getQuestionComments(((Question) aceModel).getId(), offset);
             } else if (aceModel instanceof QuestionAnswer) {
-                return QuestionAPI.getAnswerComments(((QuestionAnswer) aceModel).getID(), offset);
-            } else {
-                //执行不到的
-                return new ResultObject();
+                resultObject = QuestionAPI.getAnswerComments(((QuestionAnswer) aceModel).getID(), offset);
             }
+            return resultObject;
+
         }
 
         @Override
-        protected void onPostExecute(ResultObject result) {
+        protected void onPostExecute(ResultObject<ArrayList<UComment>> result) {
             if (result.ok) {
                 loadingView.onLoadSuccess();
-                ArrayList<UComment> ars = (ArrayList<UComment>) result.result;
+                ArrayList<UComment> ars = result.result;
                 if (offset == 0) {
                     //Refresh
                     if (ars.size() > 0) {

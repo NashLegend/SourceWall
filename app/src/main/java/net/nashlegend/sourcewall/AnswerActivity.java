@@ -390,7 +390,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         loadDataByUri();
     }
 
-    class LoaderTask extends AsyncTask<Uri, Integer, ResultObject> {
+    class LoaderTask extends AsyncTask<Uri, Integer, ResultObject<QuestionAnswer>> {
 
         @Override
         protected void onPreExecute() {
@@ -398,17 +398,17 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         }
 
         @Override
-        protected ResultObject doInBackground(Uri... params) {
+        protected ResultObject<QuestionAnswer> doInBackground(Uri... params) {
             UserAPI.ignoreOneNotice(notice_id);
             return QuestionAPI.getSingleAnswerFromRedirectUrl(redirectUri.toString());
         }
 
         @Override
-        protected void onPostExecute(ResultObject resultObject) {
-            if (resultObject.ok) {
+        protected void onPostExecute(ResultObject<QuestionAnswer> result) {
+            if (result.ok) {
                 floatingActionsMenu.setVisibility(View.VISIBLE);
                 loadingView.onLoadSuccess();
-                answer = (QuestionAnswer) resultObject.result;
+                answer = result.result;
                 question = new Question();
                 question.setTitle(answer.getQuestion());
                 question.setId(answer.getQuestionID());
