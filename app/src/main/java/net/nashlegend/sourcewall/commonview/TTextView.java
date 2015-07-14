@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
@@ -29,13 +30,11 @@ import android.text.style.ImageSpan;
 import android.text.style.URLSpan;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
 import net.nashlegend.sourcewall.AppApplication;
-import net.nashlegend.sourcewall.BaseActivity;
 import net.nashlegend.sourcewall.ImageActivity;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.util.Config;
@@ -201,11 +200,18 @@ public class TTextView extends TextView {
                         height *= (maxWidth / width);
                         width = (int) maxWidth;
                     }
-                    drawable = new ColorDrawable(0);//透明
+                    drawable = new ColorDrawable(Color.parseColor("#dbdbdb"));//透明
                     drawable.setBounds(0, 0, width, height);
+                } else {
+                    drawable = getContext().getResources().getDrawable(R.drawable.default_image);
+                    if (drawable != null) {
+                        width = drawable.getIntrinsicWidth();
+                        height = drawable.getIntrinsicHeight();
+                        drawable.setBounds(0, 0, width, height);
+                    }
                 }
             } else {
-                drawable = getContext().getResources().getDrawable(R.drawable.default_text_image);
+                drawable = getContext().getResources().getDrawable(R.drawable.default_image);
                 if (drawable != null) {
                     int width = drawable.getIntrinsicWidth();
                     int height = drawable.getIntrinsicHeight();
