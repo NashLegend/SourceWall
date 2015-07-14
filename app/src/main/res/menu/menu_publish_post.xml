@@ -6,5 +6,5 @@
         android:id="@+id/action_reload_csrf"
         android:title="@string/reload_csrf_token"
         android:orderInCategory="100"
-        app:showAsAction="never" />
+        app:showAsAction="always" />
 </menu>
