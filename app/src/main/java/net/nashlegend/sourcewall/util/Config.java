@@ -3,11 +3,10 @@ package net.nashlegend.sourcewall.util;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.text.TextUtils;
 
 import net.nashlegend.sourcewall.AppApplication;
 import net.nashlegend.sourcewall.R;
-
-import java.util.regex.Pattern;
 
 /**
  * Created by NashLegend on 2014/12/15 0015
@@ -108,20 +107,12 @@ public class Config {
      * @return 参数化的尾巴
      */
     public static String getParametricCustomComplexTail() {
-        //bit##参数##
-        String tail = SharedPreferencesUtil.readString(Consts.key_Custom_Tail, "");
-        if (!tail.trim().equals("")) {
-            String reg2 = "##([^#]+)##";
-            String reg3 = "###([^#]+)###";
-            String ts = defaultUrl;
-            String tr = reg2;
-            if (Pattern.compile(reg3).matcher(tail).find()) {
-                ts = altUrl;
-                tr = reg3;
-            }
-            tail = tail.replaceAll(tr, "<a href=\"" + ts + "\" target=\"_blank\">$1</a>");
+        String tail = MDUtil.UBB2HtmlLink(SharedPreferencesUtil.readString(Consts.key_Custom_Tail, ""));
+        if (TextUtils.isEmpty(tail)) {
+            return "";
+        } else {
+            return "<p></p>" + tail;
         }
-        return "<p></p><p>" + tail + "</p>";
     }
 
     /**
@@ -167,24 +158,15 @@ public class Config {
     }
 
     /**
-     * 返回自定义参数{}尾巴
-     *
-     * @return 参数化的尾巴
+     * @return 自定义尾巴
      */
     public static String getParametricCustomSimpleTail() {
         String tail = SharedPreferencesUtil.readString(Consts.key_Custom_Tail, "");
-        if (!tail.trim().equals("")) {
-            String reg2 = "##([^#]+)##";
-            String reg3 = "###([^#]+)###";
-            String ts = defaultUrl;
-            String tr = reg2;
-            if (Pattern.compile(reg3).matcher(tail).find()) {
-                ts = altUrl;
-                tr = reg3;
-            }
-            tail = tail.replaceAll(tr, "[url=" + ts + "]$1[/url]");
+        if (TextUtils.isEmpty(tail)) {
+            return "";
+        } else {
+            return "\n\n[blockquote]" + tail + "[/blockquote]";
         }
-        return "\n\n[blockquote]" + tail + "[/blockquote]";
     }
 
     public static String getDefaultPlainTail() {
