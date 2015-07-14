@@ -63,13 +63,16 @@ public class ArticleListItemView extends AceView<Article> {
         dateView.setText(article.getDate());
         replyView.setText(article.getCommentNum() + "");
         if (TextUtils.isEmpty(article.getImageUrl())) {
+            titleImage.setVisibility(GONE);
             titleImage.setImageBitmap(null);
         } else {
-            if (Config.shouldLoadImage() && Config.shouldLoadHomepageImage()) {
+            if (!TextUtils.isEmpty(article.getImageUrl()) && Config.shouldLoadImage() && Config.shouldLoadHomepageImage()) {
+                titleImage.setVisibility(VISIBLE);
                 Picasso.with(getContext()).load(article.getImageUrl()).skipMemoryCache()
                         .resize(DisplayUtil.getScreenWidth(getContext()), -1)
                         .into(titleImage);
             } else {
+                titleImage.setVisibility(GONE);
                 titleImage.setImageBitmap(null);
             }
         }
