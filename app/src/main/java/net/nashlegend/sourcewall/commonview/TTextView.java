@@ -101,8 +101,9 @@ public class TTextView extends TextView {
     public boolean onTouchEvent(MotionEvent event) {
         linkHit = false;
         boolean res = super.onTouchEvent(event);
-        if (noConsumeNonUrlClicks)
+        if (noConsumeNonUrlClicks) {
             return linkHit;
+        }
         return res;
     }
 
@@ -130,6 +131,7 @@ public class TTextView extends TextView {
      * 消除Html尾部空白
      *
      * @param s 要处理的html span
+     *
      * @return 处理过的span
      */
     public static CharSequence trimEnd(CharSequence s) {
@@ -145,6 +147,7 @@ public class TTextView extends TextView {
      * 解决相对路径的问题
      *
      * @param spannedText 要处理的span
+     *
      * @return 处理过的span
      */
     public static Spanned correctLinkPaths(Spanned spannedText) {
@@ -180,7 +183,7 @@ public class TTextView extends TextView {
             float stretch = DisplayUtil.getPixelDensity(AppApplication.getApplication());
             maxWidth = getMaxImageWidth();
             Drawable drawable = null;
-            if (Config.shouldLoadImage()) {
+            if (Config.shouldLoadImage() && source.startsWith("http")) {
                 int width = 0;
                 int height = 0;
                 String reg = ".+/w/(\\d+)/h/(\\d+)";
@@ -349,16 +352,16 @@ public class TTextView extends TextView {
         static LocalLinkMovementMethod sInstance;
 
         public static LocalLinkMovementMethod getInstance() {
-            if (sInstance == null)
+            if (sInstance == null) {
                 sInstance = new LocalLinkMovementMethod();
+            }
             return sInstance;
         }
 
         @Override
         public boolean onTouchEvent(@NonNull TextView widget, @NonNull Spannable spannable, @NonNull MotionEvent event) {
             int action = event.getAction();
-            if (action == MotionEvent.ACTION_UP ||
-                    action == MotionEvent.ACTION_DOWN) {
+            if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_DOWN) {
                 int x = (int) event.getX();
                 int y = (int) event.getY();
                 x -= widget.getTotalPaddingLeft();
@@ -373,9 +376,7 @@ public class TTextView extends TextView {
                     if (action == MotionEvent.ACTION_UP) {
                         handleURLSpanClick(link[0]);
                     } else {
-                        Selection.setSelection(spannable,
-                                spannable.getSpanStart(link[0]),
-                                spannable.getSpanEnd(link[0]));
+                        Selection.setSelection(spannable, spannable.getSpanStart(link[0]), spannable.getSpanEnd(link[0]));
                     }
                     if (widget instanceof TTextView) {
                         ((TTextView) widget).linkHit = true;
