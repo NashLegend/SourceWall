@@ -60,7 +60,9 @@ public class NoticesFragment extends ChannelsFragment implements LListView.OnRef
                     //这里要做两个请求，但是可以直接请求notice地址，让系统主动删除请求 TODO
                     MobclickAgent.onEvent(getActivity(), Mob.Event_Open_One_Notice);
                     Notice notice = ((NoticeView) view).getData();
-                    UrlCheckUtil.redirectRequest(notice.getUrl(), notice.getId());
+                    if (!UrlCheckUtil.redirectRequest(notice.getUrl(), notice.getId())) {
+                        new IgnoreOneTask().execute(notice.getId());
+                    }
                 }
             }
         });
@@ -193,6 +195,14 @@ public class NoticesFragment extends ChannelsFragment implements LListView.OnRef
             }
             listView.setCanPullToRefresh(true);
             listView.doneOperation();
+        }
+    }
+
+    class IgnoreOneTask extends AsyncTask<String, Integer, ResultObject> {
+        @Override
+        protected ResultObject doInBackground(String... params) {
+            String id = params[0];
+            return UserAPI.ignoreOneNotice(id);
         }
     }
 

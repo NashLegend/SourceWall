@@ -30,11 +30,8 @@ public class UrlCheckUtil {
      *
      * @param url 要检查的链接
      */
-    public static void redirectRequest(String url) {
-        if (TextUtils.isEmpty(url)) {
-            return;
-        }
-        redirectRequest(Uri.parse(url));
+    public static boolean redirectRequest(String url) {
+        return !TextUtils.isEmpty(url) && redirectRequest(Uri.parse(url));
     }
 
     /**
@@ -42,11 +39,8 @@ public class UrlCheckUtil {
      *
      * @param uri 要检查的链接
      */
-    public static void redirectRequest(Uri uri) {
-        if (uri == null) {
-            return;
-        }
-        redirectRequest(uri, null);
+    public static boolean redirectRequest(Uri uri) {
+        return uri != null && redirectRequest(uri, null);
     }
 
     /**
@@ -54,11 +48,8 @@ public class UrlCheckUtil {
      *
      * @param url 要检查的链接
      */
-    public static void redirectRequest(String url, String notice_id) {
-        if (TextUtils.isEmpty(url)) {
-            return;
-        }
-        redirectRequest(Uri.parse(url), notice_id);
+    public static boolean redirectRequest(String url, String notice_id) {
+        return !TextUtils.isEmpty(url) && redirectRequest(Uri.parse(url), notice_id);
     }
 
     /**
@@ -66,10 +57,11 @@ public class UrlCheckUtil {
      *
      * @param uri 要检查的链接
      */
-    public static void redirectRequest(Uri uri, String notice_id) {
+    public static boolean redirectRequest(Uri uri, String notice_id) {
         if (uri == null) {
-            return;
+            return false;
         }
+        boolean flag = true;
         String host = uri.getHost();
         String url = uri.toString();
         List<String> segments = uri.getPathSegments();
@@ -190,12 +182,15 @@ public class UrlCheckUtil {
                     }
                     break;
                 default:
+                    flag = false;
                     UrlCheckUtil.openWithBrowser(uri);
                     break;
             }
         } else {
+            flag = false;
             openWithBrowser(uri);
         }
+        return flag;
     }
 
     public static void openWithBrowser(String url) {
