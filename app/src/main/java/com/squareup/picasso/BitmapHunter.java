@@ -22,6 +22,7 @@ import android.net.NetworkInfo;
 import com.squareup.picasso.Picasso.Priority;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -147,6 +148,13 @@ class BitmapHunter implements Runnable {
         if (requestHandler instanceof NetworkRequestHandler) {
             ((NetworkRequestHandler) requestHandler).download(data, cache);
         }
+    }
+
+    InputStream getStream() throws IOException {
+        if (requestHandler instanceof NetworkRequestHandler) {
+           return ((NetworkRequestHandler) requestHandler).getStream(data, cache);
+        }
+        return null;
     }
 
     Bitmap hunt() throws IOException {

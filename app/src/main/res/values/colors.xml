@@ -126,4 +126,7 @@
     <color name="llist_header_button_background_pressed">#dddddd</color>
     <color name="llist_header_button_background_pressed_night">#717171</color>
 
+    <!-- 看图页面顶部下载按钮和文字的背景-->
+    <color name="image_header_color_bg">#66333333</color>
+
 </resources>

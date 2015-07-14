@@ -10,4 +10,41 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <LinearLayout
+        android:id="@+id/layoutHead"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/image_header_color_bg"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:paddingBottom="5dp"
+        android:paddingLeft="30dp"
+        android:paddingRight="12dp"
+        android:paddingTop="5dp">
+
+        <TextView
+            android:id="@+id/tvIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:text="0/0"
+            android:textColor="#FFFFFF"
+            android:textIsSelectable="true"
+            android:textSize="17sp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+
+        <ImageButton
+            android:id="@+id/btn_download"
+            android:layout_width="70dp"
+            android:layout_height="35dp"
+            android:layout_weight="0"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_download" />
+
+    </LinearLayout>
 </RelativeLayout>

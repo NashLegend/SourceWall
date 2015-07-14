@@ -76,6 +76,15 @@ class NetworkRequestHandler extends RequestHandler {
         }
     }
 
+    public InputStream getStream(Request data, Cache cache) throws IOException {
+        mCache = cache;
+        Response response = downloader.load(data.uri, data.loadFromLocalCacheOnly);
+        if (response == null) {
+            return null;
+        }
+        return response.getInputStream();
+    }
+
     @Override
     public Result load(Request data, Cache cache) throws IOException {
         mCache = cache;

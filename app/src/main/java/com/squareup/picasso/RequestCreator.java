@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.RemoteViews;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -369,7 +370,20 @@ public class RequestCreator {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    public InputStream getFileStream() {
+        try {
+            long started = System.nanoTime();
+            Utils.checkNotMain();
+            Request finalData = createRequest(started);
+            String key = Utils.createKey(finalData, new StringBuilder());
+            Action action = new GetAction(picasso, finalData, skipMemoryCache, updateMemoryCache, key, tag);
+            return BitmapHunter.forRequest(picasso, picasso.dispatcher, picasso.cache, picasso.stats, action).getStream();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**
