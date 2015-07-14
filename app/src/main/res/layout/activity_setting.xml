@@ -171,8 +171,7 @@
                 android:id="@+id/text_tail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/hint_input_your_tail"
-                android:singleLine="true" />
+                android:hint="@string/hint_input_your_tail"/>
         </LinearLayout>
     </LinearLayout>
 

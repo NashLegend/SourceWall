@@ -78,7 +78,7 @@
     <string name="reply_ok">回复成功</string>
     <string name="reply_failed">回复失败</string>
     <string name="publish_post_ok">发帖成功</string>
-    <string name="publish_post_failed">发帖失败，请点击右上角重新验证，验证成功后再次点击发表。如果仍然不能成功，请退出并重新登录，重新进入发贴页面，放心，退出后系统会保存你的草稿</string>
+    <string name="publish_post_failed">发帖失败，请点击右上角“重新验证”按钮，验证成功后再次点击发表。如果仍然不能成功，请退出并重新登录，重新进入发贴页面。退出后系统会保存你的草稿，进入对应小组的发贴页面就会自动恢复草稿</string>
 
     <!-- Article -->
     <string name="sample_reply_title">回复文章</string>
@@ -200,5 +200,6 @@
     <string name="maybe_you_have_no_browsers">没能打开啊，难道没有浏览器？</string>
     <string name="hint_download_failed">下载失败~</string>
     <string name="hint_download_successfully_to">成功保存到：</string>
+    <string name="validate_failed_try_again">验证失败，请点击右上角“重新验证”，提示成功后再点击发贴……</string>
 
 </resources>

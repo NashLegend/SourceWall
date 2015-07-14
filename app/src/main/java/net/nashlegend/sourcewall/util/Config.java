@@ -107,7 +107,7 @@ public class Config {
      * @return 参数化的尾巴
      */
     public static String getParametricCustomComplexTail() {
-        String tail = MDUtil.UBB2HtmlLink(SharedPreferencesUtil.readString(Consts.key_Custom_Tail, ""));
+        String tail = MDUtil.UBB2HtmlDumb(SharedPreferencesUtil.readString(Consts.key_Custom_Tail, ""));
         if (TextUtils.isEmpty(tail)) {
             return "";
         } else {

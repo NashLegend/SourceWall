@@ -270,7 +270,7 @@ public final class Utils {
     }
 
     /**
-     * 清楚缓存文件夹
+     * 清除缓存文件夹
      */
     static void cleanDefaultCacheDir() {
         if (null != cacheDir) {

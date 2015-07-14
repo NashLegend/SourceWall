@@ -57,7 +57,7 @@ import java.util.regex.Pattern;
 
 
 /**
- *
+ * 发贴，以后再写提问
  */
 public class PublishPostActivity extends SwipeActivity implements View.OnClickListener {
     private EditText titleEditText;
@@ -452,7 +452,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         }
 
         if (TextUtils.isEmpty(csrf)) {
-            toast("No csrf_token");
+            new AlertDialog.Builder(PublishPostActivity.this).setTitle(R.string.hint).setMessage(R.string.validate_failed_try_again).setPositiveButton(R.string.ok, null).show();
             return;
         }
 
@@ -542,7 +542,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
                 finish();
             } else {
                 MobclickAgent.onEvent(PublishPostActivity.this, Mob.Event_Publish_Post_Failed);
-                toast(R.string.publish_post_failed);
+                new AlertDialog.Builder(PublishPostActivity.this).setTitle(R.string.hint).setMessage(R.string.publish_post_failed).setPositiveButton(R.string.ok, null).show();
             }
         }
     }
