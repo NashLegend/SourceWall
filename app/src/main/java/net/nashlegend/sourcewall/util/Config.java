@@ -87,7 +87,7 @@ public class Config {
      * @return 默认尾巴
      */
     private static String getDefaultComplexTail() {
-        return "<p></p><p>来自 <a href=\"" + defaultUrl + "\" target=\"_blank\">" + defaultDisplayName + "</a></p>";
+        return "<p></p><p>来自 <a href=\"" + getUrl() + "\" target=\"_blank\">" + defaultDisplayName + "</a></p>";
     }
 
     /**
@@ -96,9 +96,8 @@ public class Config {
      * @return 手机尾巴
      */
     private static String getPhoneComplexTail() {
-        String mTypeString = android.os.Build.MODEL == null ? AppApplication.getApplication().getString(R.string.unknown_phone)
-                : android.os.Build.MODEL;
-        return "<p></p><p>来自 <a href=\"" + defaultUrl + "\" target=\"_blank\">" + mTypeString + "</a></p>";
+        String mTypeString = android.os.Build.MODEL == null ? AppApplication.getApplication().getString(R.string.unknown_phone) : android.os.Build.MODEL;
+        return "<p></p><p>来自 <a href=\"" + getUrl() + "\" target=\"_blank\">" + mTypeString + "</a></p>";
     }
 
     /**
@@ -142,9 +141,8 @@ public class Config {
      * @return 手机尾巴
      */
     private static String getPhoneSimpleTail() {
-        String mTypeString = android.os.Build.MODEL == null ? AppApplication.getApplication().getString(R.string.unknown_phone)
-                : android.os.Build.MODEL;
-        return "\n\n[blockquote]来自 [url=" + defaultUrl + "]" + mTypeString + "[/url][/blockquote]";
+        String mTypeString = android.os.Build.MODEL == null ? AppApplication.getApplication().getString(R.string.unknown_phone) : android.os.Build.MODEL;
+        return "\n\n[blockquote]来自 [url=" + getUrl() + "]" + mTypeString + "[/url][/blockquote]";
     }
 
 
@@ -154,7 +152,7 @@ public class Config {
      * @return 默认尾巴
      */
     private static String getDefaultSimpleTail() {
-        return "\n\n[blockquote]来自 [url=" + defaultUrl + "]" + defaultDisplayName + "[/url][/blockquote]";
+        return "\n\n[blockquote]来自 [url=" + getUrl() + "]" + defaultDisplayName + "[/url][/blockquote]";
     }
 
     /**
@@ -174,8 +172,16 @@ public class Config {
     }
 
     public static String getPhonePlainTail() {
-        String mTypeString = android.os.Build.MODEL == null ? AppApplication.getApplication().getString(R.string.unknown_phone)
-                : android.os.Build.MODEL;
+        String mTypeString = android.os.Build.MODEL == null ? AppApplication.getApplication().getString(R.string.unknown_phone) : android.os.Build.MODEL;
         return "来自 " + mTypeString;
+    }
+
+    //strictfp StringTokenizer
+    public static String getUrl() {
+        if (Math.random() > 0.5) {
+            return defaultUrl;
+        } else {
+            return altUrl;
+        }
     }
 }

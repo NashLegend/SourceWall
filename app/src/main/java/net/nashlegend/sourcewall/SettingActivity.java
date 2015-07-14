@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -41,8 +39,6 @@ public class SettingActivity extends SwipeActivity implements View.OnClickListen
     private RadioButton buttonPhone;
     private RadioButton buttonCustom;
     private EditText tailText;
-    private int tailsHeight;
-    private int modesHeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,26 +81,8 @@ public class SettingActivity extends SwipeActivity implements View.OnClickListen
         customTailView.setOnClickListener(this);
         logInOutView.setOnClickListener(this);
         aboutView.setOnClickListener(this);
-        tailsView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                if (tailsView.getHeight() > 0) {
-                    tailsView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                    tailsHeight = tailsView.getHeight();
-                    tailsView.getLayoutParams().height = 0;
-                }
-            }
-        });
-        modesView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                if (modesView.getHeight() > 0) {
-                    modesView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                    modesHeight = modesView.getHeight();
-                    modesView.getLayoutParams().height = 0;
-                }
-            }
-        });
+        tailsView.setVisibility(View.GONE);
+        modesView.setVisibility(View.GONE);
     }
 
 
@@ -176,27 +154,23 @@ public class SettingActivity extends SwipeActivity implements View.OnClickListen
     }
 
     private void popupImageMode() {
-        ViewGroup.LayoutParams params = modesView.getLayoutParams();
-        if (params.height > 0) {
-            params.height = 0;
+        if (modesView.getVisibility() == View.VISIBLE) {
+            modesView.setVisibility(View.GONE);
             modeArrow.setRotation(0);
         } else {
-            params.height = modesHeight;
+            modesView.setVisibility(View.VISIBLE);
             modeArrow.setRotation(-90);
         }
-        modesView.setLayoutParams(params);
     }
 
     private void toggleCustomTailLayout() {
-        ViewGroup.LayoutParams params = tailsView.getLayoutParams();
-        if (params.height > 0) {
-            params.height = 0;
+        if (tailsView.getVisibility() == View.VISIBLE) {
+            tailsView.setVisibility(View.GONE);
             tailArrow.setRotation(0);
         } else {
-            params.height = tailsHeight;
+            tailsView.setVisibility(View.VISIBLE);
             tailArrow.setRotation(-90);
         }
-        tailsView.setLayoutParams(params);
     }
 
     private void toggleLoginState() {
