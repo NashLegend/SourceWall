@@ -32,6 +32,7 @@ public class LListFooter extends FrameLayout {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_footer_view, this);
         tvHint = (TextView) findViewById(R.id.text_footer_hint);
+        setClickable(true);
     }
 
     protected boolean handleMoveDistance(float dist) {
