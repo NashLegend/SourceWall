@@ -29,6 +29,7 @@ import android.text.method.Touch;
 import android.text.style.ImageSpan;
 import android.text.style.URLSpan;
 import android.util.AttributeSet;
+import android.util.Base64;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
@@ -274,7 +275,26 @@ public class TTextView extends TextView {
                             drawable = new BitmapDrawable(getContext().getResources(), bitmap);
                             drawable.setBounds(0, 0, (int) width, (int) height);
                         }
-                        return drawable;
+                    }
+                } else {
+                    if (source.matches("data:image/\\w{3,4};base64%2C.*")) {
+                        String encodedBitmap = source.replaceAll("data:image.*base64%2C", "");
+                        byte[] data = Base64.decode(encodedBitmap, Base64.DEFAULT);
+                        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                        drawable = new BitmapDrawable(getContext().getResources(), bitmap);
+                        int width;
+                        int height;
+                        width = drawable.getIntrinsicWidth();
+                        height = drawable.getIntrinsicHeight();
+                        if (width <= 0) {
+                            return null;
+                        } else {
+                            if (width > maxWidth) {
+                                height *= (maxWidth / width);
+                                width = (int) maxWidth;
+                            }
+                            drawable.setBounds(0, 0, width, height);
+                        }
                     }
                 }
             } catch (Exception e) {
