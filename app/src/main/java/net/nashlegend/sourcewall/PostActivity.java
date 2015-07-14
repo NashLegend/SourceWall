@@ -421,6 +421,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Consts.Code_Reply_Post && resultCode == RESULT_OK && !loadDesc) {
             post.setReplyNum(post.getReplyNum() + 1);
+            listView.startLoadingMore();
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -556,6 +557,9 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         @Override
         protected void onPostExecute(ResultObject resultObject) {
             if (resultObject.ok) {
+                if (post.getReplyNum() > 0) {
+                    post.setReplyNum(post.getReplyNum() - 1);
+                }
                 adapter.remove(comment);
                 adapter.notifyDataSetChanged();
             } else {

@@ -173,9 +173,18 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
             if (comment != null) {
                 intent.putExtra(Consts.Extra_Simple_Comment, comment);
             }
-            startActivity(intent);
+            startActivityForResult(intent, Consts.Code_Reply_Article);
             overridePendingTransition(R.anim.slide_in_right, 0);
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == Consts.Code_Reply_Article && resultCode == RESULT_OK && !loadDesc) {
+            article.setCommentNum(article.getCommentNum() + 1);
+            listView.startLoadingMore();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void recommend() {
@@ -582,6 +591,9 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         @Override
         protected void onPostExecute(ResultObject resultObject) {
             if (resultObject.ok) {
+                if (article.getCommentNum() > 0) {
+                    article.setCommentNum(article.getCommentNum() - 1);
+                }
                 adapter.remove(comment);
                 adapter.notifyDataSetChanged();
             } else {
