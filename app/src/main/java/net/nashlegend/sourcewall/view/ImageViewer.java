@@ -43,6 +43,7 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
     }
 
     public void load(String u) {
+        loadingView.startLoading();
         url = u;
         task = new LoaderTask();
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
@@ -56,7 +57,7 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
 
     @Override
     public void reload() {
-
+        load(url);
     }
 
     class LoaderTask extends AsyncTask<String, Integer, ResultObject<String>> {

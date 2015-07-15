@@ -24,7 +24,6 @@ import net.nashlegend.sourcewall.util.UrlCheckUtil;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
@@ -133,15 +132,19 @@ public class WWebView extends WebView {
                 Document doc = Jsoup.parse(html);
                 Elements elements = doc.getElementsByTag("img");
                 for (int i = 0; i < elements.size(); i++) {
-                    Element element = elements.get(i);
-                    String src = element.attr("src");
+                    String src = elements.get(i).attr("src");
                     if (!TextUtils.isEmpty(src) && src.startsWith("http")) {
-                        if (src.equals(clickedUrl)) {
-                            clickedPosition = images.size();
-                        }
                         images.add(src);
                     }
                 }
+            }
+        }
+
+        for (int i = 0; i < images.size(); i++) {
+            String src = images.get(i);
+            if (src.equals(clickedUrl)) {
+                clickedPosition = i;
+                break;
             }
         }
 
