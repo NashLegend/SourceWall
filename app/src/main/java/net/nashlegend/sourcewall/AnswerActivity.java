@@ -203,6 +203,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         webView.setBackgroundColor(colorBack);
 
         webView.getSettings().setDefaultTextEncodingName("UTF-8");
+        webView.setPrimarySource(answer.getContent());
         webView.loadDataWithBaseURL(Consts.Base_Url, html, "text/html", "charset=UTF-8", null);
     }
 

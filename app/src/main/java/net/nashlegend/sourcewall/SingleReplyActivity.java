@@ -216,6 +216,7 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
         typedArray.recycle();
         webView.setBackgroundColor(colorBack);
         webView.getSettings().setDefaultTextEncodingName("UTF-8");
+        webView.setPrimarySource(data.getContent());
         webView.loadDataWithBaseURL(Consts.Base_Url, html, "text/html", "charset=UTF-8", null);
     }
 

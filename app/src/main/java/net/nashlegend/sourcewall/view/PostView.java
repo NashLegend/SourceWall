@@ -84,6 +84,7 @@ public class PostView extends AceView<Post> {
             authorView.setText(post.getAuthor());
             dateView.setText(post.getDate());
             String html = StyleChecker.getPostHtml(post.getContent());
+            contentView.setPrimarySource(post.getContent());
             contentView.loadDataWithBaseURL(Consts.Base_Url, html, "text/html", "charset=UTF-8", null);
             if (Config.shouldLoadImage()) {
                 Picasso.with(getContext()).load(post.getAuthorAvatarUrl())

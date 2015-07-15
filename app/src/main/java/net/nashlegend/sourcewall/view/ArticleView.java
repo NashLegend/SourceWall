@@ -89,6 +89,7 @@ public class ArticleView extends AceView<Article> {
             authorView.setText(article.getAuthor());
             dateView.setText(article.getDate());
             String html = StyleChecker.getArticleHtml(article.getContent());
+            contentView.setPrimarySource(article.getContent());
             contentView.loadDataWithBaseURL(Consts.Base_Url, html, "text/html", "charset=UTF-8", null);
         } else {
             article = model;
