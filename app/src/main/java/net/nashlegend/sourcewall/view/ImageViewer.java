@@ -1,7 +1,10 @@
 package net.nashlegend.sourcewall.view;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -15,6 +18,8 @@ import net.nashlegend.sourcewall.commonview.LoadingView;
 import net.nashlegend.sourcewall.request.RequestCache;
 import net.nashlegend.sourcewall.request.ResultObject;
 import net.nashlegend.sourcewall.util.DisplayUtil;
+
+import java.net.URLDecoder;
 
 import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageView;
@@ -45,8 +50,23 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
     public void load(String u) {
         loadingView.startLoading();
         url = u;
-        task = new LoaderTask();
-        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
+        if (url.startsWith("http")) {
+            task = new LoaderTask();
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
+        } else if (url.startsWith("data:image/")) {
+            try {
+                url = URLDecoder.decode(url, "utf-8");
+                String encodedBitmap = url.replaceAll("data:image/\\w{3,4};base64,", "");
+                byte[] data = Base64.decode(encodedBitmap, Base64.DEFAULT);
+                Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                gifImageView.setVisibility(GONE);
+                imageView.setVisibility(VISIBLE);
+                imageView.setImage(ImageSource.bitmap(bitmap));
+                loadingView.onLoadSuccess();
+            } catch (Exception e) {
+                loadingView.onLoadFailed();
+            }
+        }
     }
 
     public void unload() {

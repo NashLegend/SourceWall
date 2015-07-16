@@ -133,7 +133,6 @@ public class TTextView extends TextView {
      * 消除Html尾部空白
      *
      * @param s 要处理的html span
-     *
      * @return 处理过的span
      */
     public static CharSequence trimEnd(CharSequence s) {
@@ -149,7 +148,6 @@ public class TTextView extends TextView {
      * 解决相对路径的问题
      *
      * @param spannedText 要处理的span
-     *
      * @return 处理过的span
      */
     public static Spanned correctLinkPaths(Spanned spannedText) {
@@ -335,7 +333,7 @@ public class TTextView extends TextView {
         if (textView instanceof TTextView) {
             String html = ((TTextView) textView).html;
             String clickedUrl = imageSpan.getSource();
-            if (!TextUtils.isEmpty(html)) {
+            if (isImageSrcValid(clickedUrl) && !TextUtils.isEmpty(html)) {
                 Document doc = Jsoup.parse(html);
                 Elements elements = doc.getElementsByTag("img");
                 ArrayList<String> images = new ArrayList<>();
@@ -343,7 +341,7 @@ public class TTextView extends TextView {
                 for (int i = 0; i < elements.size(); i++) {
                     Element element = elements.get(i);
                     String src = element.attr("src");
-                    if (!TextUtils.isEmpty(src) && src.startsWith("http")) {
+                    if (isImageSrcValid(src)) {
                         if (src.equals(clickedUrl)) {
                             clickedPosition = images.size();
                         }
@@ -368,6 +366,10 @@ public class TTextView extends TextView {
 
             }
         }
+    }
+
+    private static boolean isImageSrcValid(String src) {
+        return !TextUtils.isEmpty(src) && src.startsWith("http") || src.startsWith("data:image/");
     }
 
     public static class LocalLinkMovementMethod extends LinkMovementMethod {

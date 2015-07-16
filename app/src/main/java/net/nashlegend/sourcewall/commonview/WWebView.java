@@ -114,13 +114,17 @@ public class WWebView extends WebView {
             if (result != null) {
                 if (result.getType() == HitTestResult.IMAGE_TYPE) {
                     String url = result.getExtra();
-                    if (!TextUtils.isEmpty(url) && url.startsWith("http")) {
+                    if (isImageSrcValid(url)) {
                         onImageClicked(url);
                     }
                 }
             }
         }
     };
+
+    private static boolean isImageSrcValid(String src) {
+        return !TextUtils.isEmpty(src) && src.startsWith("http") || src.startsWith("data:image/");
+    }
 
     public void onImageClicked(String clickedUrl) {
         String html = primarySource;
@@ -133,7 +137,7 @@ public class WWebView extends WebView {
                 Elements elements = doc.getElementsByTag("img");
                 for (int i = 0; i < elements.size(); i++) {
                     String src = elements.get(i).attr("src");
-                    if (!TextUtils.isEmpty(src) && src.startsWith("http")) {
+                    if (isImageSrcValid(src)) {
                         images.add(src);
                     }
                 }

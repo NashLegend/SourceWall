@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.view.ViewPager;
+import android.util.Base64;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -21,7 +22,10 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ImageActivity extends BaseActivity {
 
@@ -106,24 +110,46 @@ public class ImageActivity extends BaseActivity {
                 File folder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), getString(R.string.app_name));
                 if ((folder.exists() || !folder.exists() && folder.mkdirs())) {
                     String url = params[0];
-                    String filePath = RequestCache.getInstance().getCachedFile(url);
-                    if (filePath == null || !new File(filePath).exists()) {
-                        Picasso.with(ImageActivity.this).load(url).download();
-                        filePath = RequestCache.getInstance().getCachedFile(url);
-                    }
-                    if (filePath != null && new File(filePath).exists()) {
-                        String trimmedUrl = url.replaceAll("\\?.+", "");
-                        String suffix = ".jpg";
-                        if (trimmedUrl.lastIndexOf(".") > 0) {
-                            suffix = trimmedUrl.substring(trimmedUrl.lastIndexOf(".")).toLowerCase();
-                            if (suffix.length() > 5 || suffix.length() <= 1) {
-                                suffix = ".jpg";
-                            }
+                    if (url.startsWith("http")) {
+                        String filePath = RequestCache.getInstance().getCachedFile(url);
+                        if (filePath == null || !new File(filePath).exists()) {
+                            Picasso.with(ImageActivity.this).load(url).download();
+                            filePath = RequestCache.getInstance().getCachedFile(url);
                         }
-                        File srcFile = new File(filePath);
-                        File destFile = new File(folder, srcFile.getName() + suffix);
-                        resultObject.ok = copy2SingleFile(srcFile, destFile);
-                        resultObject.result = destFile.getAbsolutePath();
+                        if (filePath != null && new File(filePath).exists()) {
+                            String trimmedUrl = url.replaceAll("\\?.+", "");
+                            String suffix = ".jpg";
+                            if (trimmedUrl.lastIndexOf(".") > 0) {
+                                suffix = trimmedUrl.substring(trimmedUrl.lastIndexOf(".")).toLowerCase();
+                                if (suffix.length() > 5 || suffix.length() <= 1) {
+                                    suffix = ".jpg";
+                                }
+                            }
+                            File srcFile = new File(filePath);
+                            File destFile = new File(folder, srcFile.getName() + suffix);
+                            resultObject.ok = copy2SingleFile(srcFile, destFile);
+                            resultObject.result = destFile.getAbsolutePath();
+                        }
+                    } else if (url.startsWith("data:image/")) {
+                        try {
+                            url = URLDecoder.decode(url, "utf-8");
+                            Matcher matcher = Pattern.compile("data:image/(\\w{3,4});base64").matcher(url);
+                            String suffix = ".jpg";
+                            if (matcher.find()) {
+                                suffix = matcher.group(1);
+                            }
+                            File destFile = new File(folder, System.currentTimeMillis() + "." + suffix);
+                            String encodedBitmap = url.replaceAll("data:image/\\w{3,4};base64,", "");
+                            byte[] data = Base64.decode(encodedBitmap, Base64.DEFAULT);
+                            FileOutputStream outputStream = new FileOutputStream(destFile);
+                            outputStream.write(data);
+                            outputStream.flush();
+                            outputStream.close();
+                            resultObject.ok = true;
+                            resultObject.result = destFile.getAbsolutePath();
+                        } catch (Exception ignored) {
+
+                        }
                     }
                 }
             }
@@ -138,6 +164,29 @@ public class ImageActivity extends BaseActivity {
             } else {
                 toastSingleton(R.string.hint_download_failed);
             }
+        }
+    }
+
+    /**
+     * 保存Base64图片
+     */
+    private void saveBase64Image(String src, String path) {
+
+        Matcher matcher = Pattern.compile("data:image/(\\w{3,4});base64").matcher(src);
+        String suffix = ".jpg";
+        if (matcher.find()) {
+            suffix = matcher.group(1);
+        }
+        File destFile = new File(path, System.currentTimeMillis() + "." + suffix);
+        try {
+            String encodedBitmap = src.replaceAll("data:image/\\w{3,4};base64,", "");
+            byte[] data = Base64.decode(encodedBitmap, Base64.DEFAULT);
+            FileOutputStream outputStream = new FileOutputStream(destFile);
+            outputStream.write(data);
+            outputStream.flush();
+            outputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
