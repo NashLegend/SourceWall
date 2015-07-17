@@ -13,4 +13,4 @@
 - 除主页外，所有页面都可以从左侧向右滑动关闭。
 
 
-###应用下载地址: [SourceWall.apk](http://openbox.mobilem.360.cn/index/d/sid/2701815)###
+###应用下载地址: [SourceWall.apk](http://app.mi.com/download/87827)###
