@@ -125,8 +125,6 @@ public class PostAPI extends APIBase {
                 String groupName = element.getElementsByTag("b").text();
                 SubItem subItem = new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, groupName, groupID);
                 subItems.add(subItem);
-                //String groupIcon = element.getElementsByTag("img").get(0).attr("src").replaceAll("\\?.*$", "");
-                //String groupMembers = element.getElementsByClass("group-member").get(0).text();
             }
             if (numPages > 1) {
                 for (int j = 2; j <= numPages; j++) {
@@ -143,6 +141,36 @@ public class PostAPI extends APIBase {
                         subItems.add(subItem);
                     }
                 }
+            }
+            resultObject.ok = true;
+            resultObject.result = subItems;
+        } catch (Exception e) {
+            resultObject = retryGetGroups();
+        }
+        return resultObject;
+    }
+
+    public static ResultObject<ArrayList<SubItem>> retryGetGroups() {
+        ResultObject<ArrayList<SubItem>> resultObject = new ResultObject<>();
+        if (TextUtils.isEmpty(UserAPI.getUserID())) {
+            resultObject.error_message = "无法获得用户id";
+            resultObject.code = ResultObject.ResultCode.CODE_NO_USER_ID;
+            return resultObject;
+        }
+        String pageUrl = "http://m.guokr.com/group/i/" + UserAPI.getUserID() + "/joined/";
+        ArrayList<SubItem> subItems = new ArrayList<>();
+        try {
+            String firstPage = HttpFetcher.get(pageUrl).toString();
+            Document doc1 = Jsoup.parse(firstPage);
+            Elements lis = doc1.getElementsByClass("group-list").get(0).getElementsByTag("li");
+            //第一页
+            for (int i = 0; i < lis.size(); i++) {
+                Element element = lis.get(i).getElementsByTag("a").get(0);
+                String groupUrl = element.attr("href");//
+                String groupID = groupUrl.replaceAll("^\\D+(\\d+)\\D*", "$1");
+                String groupName = element.getElementsByTag("b").text();
+                SubItem subItem = new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, groupName, groupID);
+                subItems.add(subItem);
             }
             resultObject.ok = true;
             resultObject.result = subItems;

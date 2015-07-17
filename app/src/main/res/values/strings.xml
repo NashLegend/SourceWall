@@ -59,7 +59,7 @@
     <string name="hint_input_post_content">在这里输入帖子正文</string>
     <string name="hint_recommend">顺便说点什么吧</string>
     <string name="message_wait_a_minute">稍等片刻……</string>
-    <string name="message_loading_my_groups">稍等片刻———请注意，加载我的小组失败率有点高</string>
+    <string name="message_loading_my_groups">稍等片刻……</string>
     <string name="input_image_url">输入图片地址</string>
     <string name="input_link_url">插入链接</string>
     <string name="way_to_add_image">选择添加图片的方式</string>
