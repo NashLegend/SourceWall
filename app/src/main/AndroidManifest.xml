@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="net.nashlegend.sourcewall">
+    package="net.nashlegend.sourcewall" >
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -15,12 +15,12 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme" >
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/BottomTheme">
+            android:theme="@style/BottomTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,7 +30,7 @@
         <activity
             android:name=".SettingActivity"
             android:label="@string/title_activity_setting"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="net.nashlegend.sourcewall.SettingActivity" />
@@ -71,8 +71,8 @@
         <activity
             android:name=".SimpleReplyActivity"
             android:label="@string/title_activity_simple_reply"
-            android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".PublishPostActivity"
             android:label="@string/title_activity_publish_post"
@@ -103,23 +103,31 @@
             android:name=".WeiboShareActivity"
             android:exported="true"
             android:label="@string/title_activity_weibo_share"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
             android:name="com.sina.weibo.sdk.component.WeiboSdkBrowser"
             android:configChanges="keyboardHidden|orientation"
-            android:windowSoftInputMode="adjustResize"
+            android:exported="false"
             android:screenOrientation="portrait"
-            android:exported="false"/>
+            android:windowSoftInputMode="adjustResize" />
+
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="55018d1dfd98c583330009fd" />
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="${CHANNEL_NAME}" />
+
+        <activity
+            android:name=".PostListActivity"
+            android:label="@string/title_activity_post_list" >
+        </activity>
     </application>
+
 </manifest>
