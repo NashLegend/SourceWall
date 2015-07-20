@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import com.umeng.analytics.MobclickAgent;
 
+import net.nashlegend.sourcewall.commonview.AAsyncTask;
+import net.nashlegend.sourcewall.commonview.IStackedAsyncTaskInterface;
 import net.nashlegend.sourcewall.commonview.shuffle.AskTagMovableButton;
 import net.nashlegend.sourcewall.commonview.shuffle.MovableButton;
 import net.nashlegend.sourcewall.commonview.shuffle.ShuffleDesk;
@@ -60,10 +62,10 @@ public class ShuffleTagActivity extends SwipeActivity {
         ((TextView) desk.findViewById(R.id.text_main_sections)).setText(R.string.selected_tags);
         ((TextView) desk.findViewById(R.id.text_other_sections)).setText(R.string.more_unselected_tags);
         if (getIntent().getBooleanExtra(Consts.Extra_Should_Load_Before_Shuffle, false)) {
-            netTask = new LoaderFromNetTask();
+            netTask = new LoaderFromNetTask(this);
             netTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
-            dbTask = new LoaderFromDBTask();
+            dbTask = new LoaderFromDBTask(this);
             dbTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
@@ -79,10 +81,10 @@ public class ShuffleTagActivity extends SwipeActivity {
         int id = item.getItemId();
         if (id == R.id.action_reload_my_tags) {
             commitChanges();
-            if (netTask != null && netTask.getStatus() == AsyncTask.Status.RUNNING) {
+            if (netTask != null && netTask.getStatus() == AAsyncTask.Status.RUNNING) {
                 netTask.cancel(false);
             }
-            netTask = new LoaderFromNetTask();
+            netTask = new LoaderFromNetTask(this);
             netTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             return true;
         }
@@ -118,10 +120,10 @@ public class ShuffleTagActivity extends SwipeActivity {
 
     @Override
     protected void onDestroy() {
-        if (netTask != null && netTask.getStatus() == AsyncTask.Status.RUNNING) {
+        if (netTask != null && netTask.getStatus() == AAsyncTask.Status.RUNNING) {
             netTask.cancel(false);
         }
-        if (dbTask != null && dbTask.getStatus() == AsyncTask.Status.RUNNING) {
+        if (dbTask != null && dbTask.getStatus() == AAsyncTask.Status.RUNNING) {
             dbTask.cancel(false);
         }
         super.onDestroy();
@@ -178,7 +180,11 @@ public class ShuffleTagActivity extends SwipeActivity {
         }
     }
 
-    class LoaderFromDBTask extends AsyncTask<String, Integer, Boolean> {
+    class LoaderFromDBTask extends AAsyncTask<String, Integer, Boolean> {
+
+        public LoaderFromDBTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
+            super(iStackedAsyncTaskInterface);
+        }
 
         @Override
         protected Boolean doInBackground(String[] params) {
@@ -192,7 +198,11 @@ public class ShuffleTagActivity extends SwipeActivity {
         }
     }
 
-    class LoaderFromNetTask extends AsyncTask<String, Integer, ResultObject> {
+    class LoaderFromNetTask extends AAsyncTask<String, Integer, ResultObject> {
+
+        public LoaderFromNetTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
+            super(iStackedAsyncTaskInterface);
+        }
 
         @Override
         protected void onPreExecute() {

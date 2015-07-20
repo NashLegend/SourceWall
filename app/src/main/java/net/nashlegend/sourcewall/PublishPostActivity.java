@@ -255,7 +255,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
 
     private void prepare() {
         cancelPotentialTask();
-        prepareTask = new PrepareTask();
+        prepareTask = new PrepareTask(this);
         prepareTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, group_id);
     }
 
@@ -274,7 +274,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
     }
 
     private void cancelPotentialTask() {
-        if (prepareTask != null && prepareTask.getStatus() == AsyncTask.Status.RUNNING) {
+        if (prepareTask != null && prepareTask.getStatus() == AAsyncTask.Status.RUNNING) {
             prepareTask.cancel(true);
         }
     }
@@ -566,7 +566,11 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         uploadingProgress.setVisibility(View.GONE);
     }
 
-    class PrepareTask extends AsyncTask<String, Integer, ResultObject<PrepareData>> {
+    class PrepareTask extends AAsyncTask<String, Integer, ResultObject<PrepareData>> {
+
+        public PrepareTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
+            super(iStackedAsyncTaskInterface);
+        }
 
         @Override
         protected ResultObject<PrepareData> doInBackground(String... params) {

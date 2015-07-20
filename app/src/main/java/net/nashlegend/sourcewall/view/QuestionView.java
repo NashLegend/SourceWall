@@ -73,7 +73,7 @@ public class QuestionView extends AceView<Question> {
             titleView.setText(question.getTitle());
             authorView.setText(question.getAuthor());
             dateView.setText(question.getDate());
-            htmlHelper.load(contentView, question.getContent());
+            contentView.loadHtml(question.getContent());
         }
     }
 

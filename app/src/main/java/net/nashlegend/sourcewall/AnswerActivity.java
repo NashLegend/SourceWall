@@ -29,6 +29,8 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.squareup.picasso.Picasso;
 import com.umeng.analytics.MobclickAgent;
 
+import net.nashlegend.sourcewall.commonview.AAsyncTask;
+import net.nashlegend.sourcewall.commonview.IStackedAsyncTaskInterface;
 import net.nashlegend.sourcewall.commonview.LoadingView;
 import net.nashlegend.sourcewall.commonview.SScrollView;
 import net.nashlegend.sourcewall.commonview.WWebView;
@@ -130,11 +132,11 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
     LoaderTask loaderTask;
 
     private void loadDataByUri() {
-        if (loaderTask != null && loaderTask.getStatus() == AsyncTask.Status.RUNNING) {
+        if (loaderTask != null && loaderTask.getStatus() == AAsyncTask.Status.RUNNING) {
             loaderTask.cancel(true);
         }
 
-        loaderTask = new LoaderTask();
+        loaderTask = new LoaderTask(this);
         loaderTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     }
@@ -357,7 +359,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
                         toastSingleton(R.string.has_opposed);
                         return;
                     }
-                    OpinionTask task = new OpinionTask();
+                    OpinionTask task = new OpinionTask(AnswerActivity.this);
                     task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, support);
                 }
             }).create().show();
@@ -368,7 +370,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
         } else {
-            BuryTask task = new BuryTask();
+            BuryTask task = new BuryTask(this);
             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
@@ -380,7 +382,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
             if (answer.isHasThanked()) {
                 toastSingleton("已经感谢过");
             } else {
-                ThankTask task = new ThankTask();
+                ThankTask task = new ThankTask(this);
                 task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         }
@@ -391,7 +393,11 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         loadDataByUri();
     }
 
-    class LoaderTask extends AsyncTask<Uri, Integer, ResultObject<QuestionAnswer>> {
+    class LoaderTask extends AAsyncTask<Uri, Integer, ResultObject<QuestionAnswer>> {
+
+        public LoaderTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
+            super(iStackedAsyncTaskInterface);
+        }
 
         @Override
         protected void onPreExecute() {
@@ -420,9 +426,13 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         }
     }
 
-    class OpinionTask extends AsyncTask<Boolean, Integer, ResultObject> {
+    class OpinionTask extends AAsyncTask<Boolean, Integer, ResultObject> {
 
         boolean isSupport;
+
+        public OpinionTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
+            super(iStackedAsyncTaskInterface);
+        }
 
         @Override
         protected ResultObject doInBackground(Boolean... params) {
@@ -450,8 +460,12 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         }
     }
 
-    class BuryTask extends AsyncTask<Boolean, Integer, ResultObject> {
+    class BuryTask extends AAsyncTask<Boolean, Integer, ResultObject> {
         boolean bury = true;
+
+        public BuryTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
+            super(iStackedAsyncTaskInterface);
+        }
 
         @Override
         protected void onPreExecute() {
@@ -492,7 +506,11 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         }
     }
 
-    class ThankTask extends AsyncTask<String, Integer, ResultObject> {
+    class ThankTask extends AAsyncTask<String, Integer, ResultObject> {
+
+        public ThankTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
+            super(iStackedAsyncTaskInterface);
+        }
 
         @Override
         protected void onPreExecute() {

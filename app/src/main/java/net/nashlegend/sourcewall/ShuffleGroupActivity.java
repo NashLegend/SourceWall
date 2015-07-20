@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import com.umeng.analytics.MobclickAgent;
 
+import net.nashlegend.sourcewall.commonview.AAsyncTask;
+import net.nashlegend.sourcewall.commonview.IStackedAsyncTaskInterface;
 import net.nashlegend.sourcewall.commonview.shuffle.GroupMovableButton;
 import net.nashlegend.sourcewall.commonview.shuffle.MovableButton;
 import net.nashlegend.sourcewall.commonview.shuffle.ShuffleDesk;
@@ -61,10 +63,10 @@ public class ShuffleGroupActivity extends SwipeActivity {
         });
 
         if (getIntent().getBooleanExtra(Consts.Extra_Should_Load_Before_Shuffle, false)) {
-            netTask = new LoaderFromNetTask();
+            netTask = new LoaderFromNetTask(this);
             netTask.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
-            dbTask = new LoaderFromDBTask();
+            dbTask = new LoaderFromDBTask(this);
             dbTask.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
@@ -80,10 +82,10 @@ public class ShuffleGroupActivity extends SwipeActivity {
         int id = item.getItemId();
         if (id == R.id.action_reload_my_groups) {
             commitChanges();
-            if (netTask != null && netTask.getStatus() == AsyncTask.Status.RUNNING) {
+            if (netTask != null && netTask.getStatus() == AAsyncTask.Status.RUNNING) {
                 netTask.cancel(false);
             }
-            netTask = new LoaderFromNetTask();
+            netTask = new LoaderFromNetTask(this);
             netTask.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR);
             return true;
         }
@@ -119,10 +121,10 @@ public class ShuffleGroupActivity extends SwipeActivity {
 
     @Override
     protected void onDestroy() {
-        if (netTask != null && netTask.getStatus() == AsyncTask.Status.RUNNING) {
+        if (netTask != null && netTask.getStatus() == AAsyncTask.Status.RUNNING) {
             netTask.cancel(false);
         }
-        if (dbTask != null && dbTask.getStatus() == AsyncTask.Status.RUNNING) {
+        if (dbTask != null && dbTask.getStatus() == AAsyncTask.Status.RUNNING) {
             dbTask.cancel(false);
         }
         super.onDestroy();
@@ -180,7 +182,11 @@ public class ShuffleGroupActivity extends SwipeActivity {
         }
     }
 
-    class LoaderFromDBTask extends AsyncTask<String, Integer, Boolean> {
+    class LoaderFromDBTask extends AAsyncTask<String, Integer, Boolean> {
+
+        public LoaderFromDBTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
+            super(iStackedAsyncTaskInterface);
+        }
 
         @Override
         protected Boolean doInBackground(String[] params) {
@@ -194,7 +200,11 @@ public class ShuffleGroupActivity extends SwipeActivity {
         }
     }
 
-    class LoaderFromNetTask extends AsyncTask<String, Integer, ResultObject> {
+    class LoaderFromNetTask extends AAsyncTask<String, Integer, ResultObject> {
+
+        public LoaderFromNetTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
+            super(iStackedAsyncTaskInterface);
+        }
 
         @Override
         protected void onPreExecute() {
@@ -244,7 +254,7 @@ public class ShuffleGroupActivity extends SwipeActivity {
             } else {
                 MobclickAgent.onEvent(ShuffleGroupActivity.this, Mob.Event_Load_My_Groups_Failed);
                 MobclickAgent.reportError(ShuffleGroupActivity.this,
-                        "加载我的小组失败\n是否WIFI：" + Config.isWifi() + "\n" + UserAPI.getUserInfoString() + resultObject.error_message);
+                        "Loading my Groups failed \n Is WIFI:" + Config.isWifi() + "\n" + UserAPI.getUserInfoString() + resultObject.error_message);
                 if (resultObject.code == ResultCode.CODE_NO_USER_ID) {
                     toast("未获得用户ID，无法加载");
                 } else {

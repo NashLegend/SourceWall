@@ -27,6 +27,8 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.squareup.picasso.Picasso;
 
+import net.nashlegend.sourcewall.commonview.AAsyncTask;
+import net.nashlegend.sourcewall.commonview.IStackedAsyncTaskInterface;
 import net.nashlegend.sourcewall.commonview.LoadingView;
 import net.nashlegend.sourcewall.commonview.SScrollView;
 import net.nashlegend.sourcewall.commonview.WWebView;
@@ -141,10 +143,10 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
     LoaderTask loaderTask;
 
     private void loadDataByUri() {
-        if (loaderTask != null && loaderTask.getStatus() == AsyncTask.Status.RUNNING) {
+        if (loaderTask != null && loaderTask.getStatus() == AAsyncTask.Status.RUNNING) {
             loaderTask.cancel(true);
         }
-        loaderTask = new LoaderTask();
+        loaderTask = new LoaderTask(this);
         loaderTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, redirectUri);
     }
 
@@ -362,7 +364,7 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
             if (data.isHasLiked()) {
                 toastSingleton(R.string.has_liked_this);
             } else {
-                LikeTask task = new LikeTask();
+                LikeTask task = new LikeTask(this);
                 task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         }
@@ -372,7 +374,7 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
         if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
         } else {
-            DeleteTask task = new DeleteTask();
+            DeleteTask task = new DeleteTask(this);
             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
@@ -382,7 +384,11 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
         loadDataByUri();
     }
 
-    class LoaderTask extends AsyncTask<Uri, Integer, ResultObject<UComment>> {
+    class LoaderTask extends AAsyncTask<Uri, Integer, ResultObject<UComment>> {
+
+        public LoaderTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
+            super(iStackedAsyncTaskInterface);
+        }
 
         @Override
         protected void onPreExecute() {
@@ -446,7 +452,11 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
         }
     }
 
-    class LikeTask extends AsyncTask<Void, Integer, ResultObject> {
+    class LikeTask extends AAsyncTask<Void, Integer, ResultObject> {
+
+        public LikeTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
+            super(iStackedAsyncTaskInterface);
+        }
 
         @Override
         protected ResultObject doInBackground(Void... params) {
@@ -476,7 +486,12 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
         }
     }
 
-    class DeleteTask extends AsyncTask<Boolean, Integer, ResultObject> {
+    class DeleteTask extends AAsyncTask<Boolean, Integer, ResultObject> {
+
+        public DeleteTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
+            super(iStackedAsyncTaskInterface);
+        }
+
         @Override
         protected ResultObject doInBackground(Boolean... params) {
             ResultObject resultObject = new ResultObject();

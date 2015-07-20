@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import net.nashlegend.sourcewall.adapters.ImageAdapter;
+import net.nashlegend.sourcewall.commonview.AAsyncTask;
+import net.nashlegend.sourcewall.commonview.IStackedAsyncTaskInterface;
 import net.nashlegend.sourcewall.request.RequestCache;
 import net.nashlegend.sourcewall.request.ResultObject;
 import net.nashlegend.sourcewall.util.Consts;
@@ -160,7 +162,7 @@ public class ImageActivity extends BaseActivity {
         protected void onPostExecute(ResultObject<String> result) {
             if (result.ok) {
                 MediaScannerConnection.scanFile(ImageActivity.this, new String[]{result.result}, null, null);
-                toastSingleton(getString(R.string.hint_download_successfully_to) + result.result);
+                toastSingleton(getString(R.string.hint_download_successfully_to) + new File(result.result).getParent());
             } else {
                 toastSingleton(R.string.hint_download_failed);
             }

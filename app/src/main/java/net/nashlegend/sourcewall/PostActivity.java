@@ -217,7 +217,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
             notifyNeedLog();
         } else {
             MobclickAgent.onEvent(this, Mob.Event_Like_Post);
-            LikePostTask likePostTask = new LikePostTask();
+            LikePostTask likePostTask = new LikePostTask(this);
             likePostTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, post);
         }
     }
@@ -438,7 +438,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
             if (mediumListItemView.getData().isHasLiked()) {
                 toastSingleton("已经赞过了");
             } else {
-                LikeCommentTask likeCommentTask = new LikeCommentTask();
+                LikeCommentTask likeCommentTask = new LikeCommentTask(this);
                 likeCommentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediumListItemView);
             }
         }
@@ -448,7 +448,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
         } else {
-            DeleteCommentTask deleteCommentTask = new DeleteCommentTask();
+            DeleteCommentTask deleteCommentTask = new DeleteCommentTask(this);
             deleteCommentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, comment);
         }
     }
@@ -498,8 +498,12 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
     }
 
 
-    class LikePostTask extends AsyncTask<Post, Integer, ResultObject> {
+    class LikePostTask extends AAsyncTask<Post, Integer, ResultObject> {
         Post post;
+
+        public LikePostTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
+            super(iStackedAsyncTaskInterface);
+        }
 
         @Override
         protected ResultObject doInBackground(Post... params) {
@@ -517,10 +521,14 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         }
     }
 
-    class LikeCommentTask extends AsyncTask<MediumListItemView, Integer, ResultObject> {
+    class LikeCommentTask extends AAsyncTask<MediumListItemView, Integer, ResultObject> {
 
         UComment comment;
         MediumListItemView mediumListItemView;
+
+        public LikeCommentTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
+            super(iStackedAsyncTaskInterface);
+        }
 
         @Override
         protected ResultObject doInBackground(MediumListItemView... params) {
@@ -545,9 +553,13 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         }
     }
 
-    class DeleteCommentTask extends AsyncTask<UComment, Integer, ResultObject> {
+    class DeleteCommentTask extends AAsyncTask<UComment, Integer, ResultObject> {
 
         UComment comment;
+
+        public DeleteCommentTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
+            super(iStackedAsyncTaskInterface);
+        }
 
         @Override
         protected ResultObject doInBackground(UComment... params) {

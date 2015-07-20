@@ -203,7 +203,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
                     if (which == DialogInterface.BUTTON_POSITIVE) {
                         InputDialog d = (InputDialog) dialog;
                         String text = d.InputString;
-                        RecommendTask recommendTask = new RecommendTask();
+                        RecommendTask recommendTask = new RecommendTask(ArticleActivity.this);
                         recommendTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, article.getId(), article.getTitle(), article.getSummary(), text);
                     }
                 }
@@ -281,7 +281,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
             if (mediumListItemView.getData().isHasLiked()) {
                 toastSingleton(getString(R.string.has_liked_this));
             } else {
-                LikeCommentTask likeCommentTask = new LikeCommentTask();
+                LikeCommentTask likeCommentTask = new LikeCommentTask(ArticleActivity.this);
                 likeCommentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediumListItemView);
             }
         }
@@ -291,7 +291,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
         } else {
-            DeleteCommentTask deleteCommentTask = new DeleteCommentTask();
+            DeleteCommentTask deleteCommentTask = new DeleteCommentTask(this);
             deleteCommentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, comment);
         }
     }
@@ -361,7 +361,11 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         loadData(-1);
     }
 
-    private class RecommendTask extends AsyncTask<String, Integer, ResultObject> {
+    private class RecommendTask extends AAsyncTask<String, Integer, ResultObject> {
+
+        public RecommendTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
+            super(iStackedAsyncTaskInterface);
+        }
 
         @Override
         protected ResultObject doInBackground(String... params) {
@@ -551,10 +555,14 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         }
     }
 
-    class LikeCommentTask extends AsyncTask<MediumListItemView, Integer, ResultObject> {
+    class LikeCommentTask extends AAsyncTask<MediumListItemView, Integer, ResultObject> {
 
         UComment comment;
         MediumListItemView mediumListItemView;
+
+        public LikeCommentTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
+            super(iStackedAsyncTaskInterface);
+        }
 
         @Override
         protected ResultObject doInBackground(MediumListItemView... params) {
@@ -577,9 +585,13 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         }
     }
 
-    class DeleteCommentTask extends AsyncTask<UComment, Integer, ResultObject> {
+    class DeleteCommentTask extends AAsyncTask<UComment, Integer, ResultObject> {
 
         UComment comment;
+
+        public DeleteCommentTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
+            super(iStackedAsyncTaskInterface);
+        }
 
         @Override
         protected ResultObject doInBackground(UComment... params) {
