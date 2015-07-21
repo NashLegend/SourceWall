@@ -144,9 +144,7 @@ public class MainActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
-            if (currentFragment != null) {
-                currentFragment.takeOverMenuInflate(getMenuInflater(), menu);
-            } else {
+            if (currentFragment == null || !currentFragment.takeOverMenuInflate(getMenuInflater(), menu)) {
                 getMenuInflater().inflate(R.menu.main, menu);
             }
             restoreActionBar();

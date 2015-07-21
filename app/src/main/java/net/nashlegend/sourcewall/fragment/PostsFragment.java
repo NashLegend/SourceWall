@@ -491,31 +491,36 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
 
     @Override
     public boolean takeOverMenuInflate(MenuInflater inflater, Menu menu) {
-        inflater.inflate(getFragmentMenu(), menu);
-        if (subItem.getType() == SubItem.Type_Collections || subItem.getType() == SubItem.Type_Private_Channel) {
-            menu.findItem(R.id.action_write_post).setVisible(false);
-        }
-        if (!UserAPI.isLoggedIn()) {
-            menu.findItem(R.id.action_more_sections).setVisible(false);
-        } else {
-            checkUserLearnedLoadGroups();
-            moreSectionsImageView = (ImageView) ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.action_view_more_sections, null);
-            MenuItemCompat.setActionView(menu.findItem(R.id.action_more_sections), moreSectionsImageView);
-            moreSectionsImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (isMoreSectionsButtonShowing) {
-                        hideMoreSections();
-                    } else {
-                        showMoreSections();
-                    }
-                }
-            });
-            if (isMoreSectionsButtonShowing) {
-                moreSectionsImageView.setRotation(180);
+        try {
+            inflater.inflate(getFragmentMenu(), menu);
+            if (subItem.getType() == SubItem.Type_Collections || subItem.getType() == SubItem.Type_Private_Channel) {
+                menu.findItem(R.id.action_write_post).setVisible(false);
             }
+            if (!UserAPI.isLoggedIn()) {
+                menu.findItem(R.id.action_more_sections).setVisible(false);
+            } else {
+                checkUserLearnedLoadGroups();
+                moreSectionsImageView = (ImageView) ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.action_view_more_sections, null);
+                MenuItemCompat.setActionView(menu.findItem(R.id.action_more_sections), moreSectionsImageView);
+                moreSectionsImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (isMoreSectionsButtonShowing) {
+                            hideMoreSections();
+                        } else {
+                            showMoreSections();
+                        }
+                    }
+                });
+                if (isMoreSectionsButtonShowing) {
+                    moreSectionsImageView.setRotation(180);
+                }
+            }
+            return true;
+        } catch (Exception e) {
+            return false;
         }
-        return true;
+
     }
 
     @Override

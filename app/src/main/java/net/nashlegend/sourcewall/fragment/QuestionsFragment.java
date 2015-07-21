@@ -483,28 +483,33 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
 
     @Override
     public boolean takeOverMenuInflate(MenuInflater inflater, Menu menu) {
-        inflater.inflate(getFragmentMenu(), menu);
-        if (!UserAPI.isLoggedIn()) {
-            menu.findItem(R.id.action_more_sections).setVisible(false);
-        } else {
-            checkUserLearnedLoadTags();
-            moreSectionsImageView = (ImageView) ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.action_view_more_sections, null);
-            MenuItemCompat.setActionView(menu.findItem(R.id.action_more_sections), moreSectionsImageView);
-            moreSectionsImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (isMoreSectionsButtonShowing) {
-                        hideMoreSections();
-                    } else {
-                        showMoreSections();
+        try {
+            inflater.inflate(getFragmentMenu(), menu);
+            if (!UserAPI.isLoggedIn()) {
+                menu.findItem(R.id.action_more_sections).setVisible(false);
+            } else {
+                checkUserLearnedLoadTags();
+                moreSectionsImageView = (ImageView) ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.action_view_more_sections, null);
+                MenuItemCompat.setActionView(menu.findItem(R.id.action_more_sections), moreSectionsImageView);
+                moreSectionsImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (isMoreSectionsButtonShowing) {
+                            hideMoreSections();
+                        } else {
+                            showMoreSections();
+                        }
                     }
+                });
+                if (isMoreSectionsButtonShowing) {
+                    moreSectionsImageView.setRotation(180);
                 }
-            });
-            if (isMoreSectionsButtonShowing) {
-                moreSectionsImageView.setRotation(180);
             }
+            return true;
+        } catch (Exception e) {
+            return false;
         }
-        return true;
+
     }
 
     @Override
