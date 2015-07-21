@@ -21,6 +21,9 @@ android {
         xiaomi {
             manifestPlaceholders = [CHANNEL_NAME: "xiaomi"]
         }
+        meizu {
+            manifestPlaceholders = [CHANNEL_NAME: "meizu"]
+        }
         github {
             manifestPlaceholders = [CHANNEL_NAME: "github"]
         }
@@ -43,9 +46,9 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:22.2.0'
-    compile 'com.android.support:support-v4:22.2.0'
-    compile 'com.android.support:cardview-v7:22.2.0'
+    compile 'com.android.support:appcompat-v7:22.2.1'
+    compile 'com.android.support:support-v4:22.2.1'
+    compile 'com.android.support:cardview-v7:22.2.1'
     compile 'org.apache.httpcomponents:httpmime:4.2.1'
     compile 'com.getbase:floatingactionbutton:1.9.1'
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.1.4'
