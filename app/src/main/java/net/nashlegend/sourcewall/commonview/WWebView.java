@@ -14,12 +14,15 @@ import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.umeng.analytics.MobclickAgent;
+
 import net.nashlegend.sourcewall.AppApplication;
 import net.nashlegend.sourcewall.ImageActivity;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.DisplayUtil;
+import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;
 
 import org.jsoup.Jsoup;
@@ -164,6 +167,7 @@ public class WWebView extends WebView {
         intent.putExtra(Consts.Extra_Image_Current_Position, clickedPosition);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Context context = getContext();
+        MobclickAgent.onEvent(context, Mob.Event_Open_Image_From_Browser);
         if (context != null && context instanceof Activity) {
             intent.setClass(context, ImageActivity.class);
             ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(AppApplication.getApplication(), R.anim.scale_in_center, 0);

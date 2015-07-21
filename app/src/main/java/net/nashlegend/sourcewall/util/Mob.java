@@ -12,6 +12,10 @@ public class Mob {
     public static final String Event_Modify_Tail = "Event_Modify_Tail";//修改小尾巴
     public static final String Event_Switch_Day_Night_Mode = "Event_Switch_Day_Night_Mode";//切换日夜模式
 
+    public static final String Event_Open_Image_From_Browser = "Event_Open_Image_From_Browser";//在WebView打开图片页面
+    public static final String Event_Open_Image_From_TextView = "Event_Open_Image_From_TextView";//在TextView打开图片页面
+    public static final String Event_Download_Image_In_Pager = "Event_Download_Image_In_Pager";//在ImageActivity下载图片
+
     //科学人
     public static final String Event_Open_Article = "Event_Open_Article";//打开文章
     public static final String Event_Reverse_Read_Article = "Event_Reverse_Read_Article";//倒序查看文章

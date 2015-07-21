@@ -34,6 +34,7 @@ import android.view.MotionEvent;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.AppApplication;
 import net.nashlegend.sourcewall.ImageActivity;
@@ -42,6 +43,7 @@ import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.DisplayUtil;
 import net.nashlegend.sourcewall.util.ImageSizeMap;
+import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;
 
 import org.jsoup.Jsoup;
@@ -354,6 +356,7 @@ public class TTextView extends TextView {
                     intent.putExtra(Consts.Extra_Image_Current_Position, clickedPosition);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     Context context = textView.getContext();
+                    MobclickAgent.onEvent(context, Mob.Event_Open_Image_From_TextView);
                     if (context != null && context instanceof Activity) {
                         intent.setClass(context, ImageActivity.class);
                         ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(AppApplication.getApplication(), R.anim.scale_in_center, 0);

@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.adapters.ImageAdapter;
 import net.nashlegend.sourcewall.commonview.AAsyncTask;
@@ -18,6 +19,7 @@ import net.nashlegend.sourcewall.commonview.IStackedAsyncTaskInterface;
 import net.nashlegend.sourcewall.request.RequestCache;
 import net.nashlegend.sourcewall.request.ResultObject;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.Mob;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -94,6 +96,7 @@ public class ImageActivity extends BaseActivity {
     }
 
     private void download() {
+        MobclickAgent.onEvent(this, Mob.Event_Download_Image_In_Pager);
         new DownloadTask().execute(images.get(pager.getCurrentItem()));
     }
 
