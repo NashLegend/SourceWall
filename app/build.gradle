@@ -34,8 +34,8 @@ android {
         applicationId "net.nashlegend.sourcewall"
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 20150714
-        versionName "1.6.0.0"
+        versionCode 20150722
+        versionName "1.6.1.0"
     }
 
     packagingOptions {
