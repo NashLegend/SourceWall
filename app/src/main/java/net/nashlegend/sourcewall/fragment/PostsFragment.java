@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -226,10 +227,8 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         deskSimple.initView();
     }
 
-    private List<MyGroup> unselectedSections;
-
     private void getButtons() {
-        unselectedSections = GroupHelper.getUnselectedGroups();
+        List<MyGroup> unselectedSections = GroupHelper.getUnselectedGroups();
         ArrayList<MovableButton> unselectedButtons = new ArrayList<>();
         for (int i = 0; i < unselectedSections.size(); i++) {
             MyGroup section = unselectedSections.get(i);
@@ -248,12 +247,17 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
 
     @Override
     public void setTitle() {
+        if (!isAdded()) {
+            return;
+        }
+        ActionBar actionBar = ((MainActivity) getActivity()).getSupportActionBar();
+        assert actionBar != null;
         if (subItem.getType() == SubItem.Type_Collections) {
             getActivity().setTitle("小组热贴");
-            ((MainActivity) getActivity()).getSupportActionBar().setTitle("小组热贴");
+            actionBar.setTitle("小组热贴");
         } else {
             getActivity().setTitle(this.subItem.getName() + " -- 小组");
-            ((MainActivity) getActivity()).getSupportActionBar().setTitle(this.subItem.getName() + " -- 小组");
+            actionBar.setTitle(this.subItem.getName() + " -- 小组");
         }
     }
 
@@ -262,7 +266,9 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
             return;
         }
         getActivity().setTitle(R.string.more_groups);
-        ((MainActivity) getActivity()).getSupportActionBar().setTitle(R.string.more_groups);
+        ActionBar actionBar = ((MainActivity) getActivity()).getSupportActionBar();
+        assert actionBar != null;
+        actionBar.setTitle(R.string.more_groups);
         isMoreSectionsButtonShowing = true;
         if (animatorSet != null && animatorSet.isRunning()) {
             animatorSet.cancel();
