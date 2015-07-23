@@ -22,7 +22,7 @@ public class MessageCenterActivity extends SwipeActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         noticesFragment = new NoticesFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.message_container, noticesFragment).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.message_container, noticesFragment).commitAllowingStateLoss();
     }
 
     @Override
