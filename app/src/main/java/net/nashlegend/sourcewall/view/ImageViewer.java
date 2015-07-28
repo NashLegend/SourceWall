@@ -85,18 +85,22 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
         @Override
         protected ResultObject<String> doInBackground(String... params) {
             ResultObject<String> resultObject = new ResultObject<>();
-            String url = params[0];
-            String filePath = RequestCache.getInstance().getCachedFile(url);
-            if (filePath != null) {
-                resultObject.ok = true;
-                resultObject.result = filePath;
-            } else {
-                Picasso.with(getContext()).load(url).download();
-                filePath = RequestCache.getInstance().getCachedFile(url);
+            try {
+                String url = params[0];
+                String filePath = RequestCache.getInstance().getCachedFile(url);
                 if (filePath != null) {
                     resultObject.ok = true;
                     resultObject.result = filePath;
+                } else {
+                    Picasso.with(getContext()).load(url).download();
+                    filePath = RequestCache.getInstance().getCachedFile(url);
+                    if (filePath != null) {
+                        resultObject.ok = true;
+                        resultObject.result = filePath;
+                    }
                 }
+            } catch (Exception ignored) {
+
             }
             return resultObject;
         }
