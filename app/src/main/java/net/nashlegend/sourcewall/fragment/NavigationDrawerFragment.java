@@ -472,7 +472,9 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
     private void checkChannelList() {
         ArrayList<SubItem> groupSubItems = adapter.getSubLists().get(1);
         groupSubItems.clear();
-        groupSubItems.add(new SubItem(SubItem.Section_Post, SubItem.Type_Private_Channel, "我的小组", "user_group"));
+        if (UserAPI.isLoggedIn()) {
+            groupSubItems.add(new SubItem(SubItem.Section_Post, SubItem.Type_Private_Channel, "我的小组", "user_group"));
+        }
         if (GroupHelper.getMyGroupsNumber() > 0) {
             //如果已经加载了栏目
             groupSubItems.add(new SubItem(SubItem.Section_Post, SubItem.Type_Collections, "小组热贴", "hot_posts"));
