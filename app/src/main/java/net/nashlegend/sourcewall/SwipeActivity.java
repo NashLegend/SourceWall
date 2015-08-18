@@ -26,7 +26,16 @@ import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 public class SwipeActivity extends BaseActivity {
 
     private SwipeLayout swipeLayout;
-    protected boolean swipeAnyWhere = false;//是否可以在页面任意位置右滑关闭页面，如果是false则从左边滑才可以关闭
+
+    /**
+     * 是否可以滑动关闭页面
+     */
+    protected boolean swipeEnabled = true;
+
+    /**
+     * 是否可以在页面任意位置右滑关闭页面，如果是false则从左边滑才可以关闭。
+     */
+    protected boolean swipeAnyWhere = false;
 
     @Override
     public void setTheme(int resid) {
@@ -54,7 +63,6 @@ public class SwipeActivity extends BaseActivity {
 
     @Override
     protected void onResume() {
-        swipeAnyWhere = false;
         super.onResume();
     }
 
@@ -62,6 +70,22 @@ public class SwipeActivity extends BaseActivity {
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         swipeLayout.replaceLayer(this);
+    }
+
+    public void setSwipeAnyWhere(boolean swipeAnyWhere) {
+        this.swipeAnyWhere = swipeAnyWhere;
+    }
+
+    public boolean isSwipeAnyWhere() {
+        return swipeAnyWhere;
+    }
+
+    public void setSwipeEnabled(boolean swipeEnabled) {
+        this.swipeEnabled = swipeEnabled;
+    }
+
+    public boolean isSwipeEnabled() {
+        return swipeEnabled;
     }
 
     public static int getScreenWidth(Context context) {
@@ -156,37 +180,44 @@ public class SwipeActivity extends BaseActivity {
         int touchSlop = 60;
 
         @Override
-        public boolean onInterceptTouchEvent(MotionEvent ev) {
-            if (swipeAnyWhere) {
-                switch (ev.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        downX = ev.getX();
-                        downY = ev.getY();
-                        currentX = downX;
-                        currentY = downY;
-                        lastX = downX;
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        float dx = ev.getX() - downX;
-                        float dy = ev.getY() - downY;
-                        if ((dy == 0f || Math.abs(dx / dy) > 1) && (dx * dx + dy * dy > touchSlop * touchSlop)) {
+        public boolean dispatchTouchEvent(MotionEvent ev) {
+            if (swipeEnabled && !canSwipe) {
+                if (swipeAnyWhere) {
+                    switch (ev.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
                             downX = ev.getX();
                             downY = ev.getY();
                             currentX = downX;
                             currentY = downY;
                             lastX = downX;
-                            canSwipe = true;
-                            tracker = VelocityTracker.obtain();
-                            return true;
-                        }
-                        break;
+                            break;
+                        case MotionEvent.ACTION_MOVE:
+                            float dx = ev.getX() - downX;
+                            float dy = ev.getY() - downY;
+                            if ((dy == 0f || Math.abs(dx / dy) > 1) && (dx * dx + dy * dy > touchSlop * touchSlop)) {
+                                downX = ev.getX();
+                                downY = ev.getY();
+                                currentX = downX;
+                                currentY = downY;
+                                lastX = downX;
+                                canSwipe = true;
+                                tracker = VelocityTracker.obtain();
+                                return true;
+                            }
+                            break;
+                    }
+                } else if (ev.getAction() == MotionEvent.ACTION_DOWN && ev.getX() < sideWidth) {
+                    canSwipe = true;
+                    tracker = VelocityTracker.obtain();
+                    return true;
                 }
-            } else if (ev.getAction() == MotionEvent.ACTION_DOWN && ev.getX() < sideWidth) {
-                canSwipe = true;
-                tracker = VelocityTracker.obtain();
-                return true;
             }
-            return super.onInterceptTouchEvent(ev);
+            return super.dispatchTouchEvent(ev);
+        }
+
+        @Override
+        public boolean onInterceptTouchEvent(MotionEvent ev) {
+            return canSwipe || super.onInterceptTouchEvent(ev);
         }
 
         boolean hasIgnoreFirstMove;
