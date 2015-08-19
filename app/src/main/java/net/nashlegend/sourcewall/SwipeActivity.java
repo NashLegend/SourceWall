@@ -162,6 +162,7 @@ public class SwipeActivity extends BaseActivity {
         }
 
         boolean canSwipe = false;
+        boolean ignoreSwipe = false;
         View content;
         Activity mActivity;
         int sideWidthInDP = 16;
@@ -181,7 +182,7 @@ public class SwipeActivity extends BaseActivity {
 
         @Override
         public boolean dispatchTouchEvent(MotionEvent ev) {
-            if (swipeEnabled && !canSwipe) {
+            if (swipeEnabled && !canSwipe && !ignoreSwipe) {
                 if (swipeAnyWhere) {
                     switch (ev.getAction()) {
                         case MotionEvent.ACTION_DOWN:
@@ -194,15 +195,19 @@ public class SwipeActivity extends BaseActivity {
                         case MotionEvent.ACTION_MOVE:
                             float dx = ev.getX() - downX;
                             float dy = ev.getY() - downY;
-                            if ((dy == 0f || Math.abs(dx / dy) > 1) && (dx * dx + dy * dy > touchSlop * touchSlop)) {
-                                downX = ev.getX();
-                                downY = ev.getY();
-                                currentX = downX;
-                                currentY = downY;
-                                lastX = downX;
-                                canSwipe = true;
-                                tracker = VelocityTracker.obtain();
-                                return true;
+                            if (dx * dx + dy * dy > touchSlop * touchSlop) {
+                                if (dy == 0f || Math.abs(dx / dy) > 1) {
+                                    downX = ev.getX();
+                                    downY = ev.getY();
+                                    currentX = downX;
+                                    currentY = downY;
+                                    lastX = downX;
+                                    canSwipe = true;
+                                    tracker = VelocityTracker.obtain();
+                                    return true;
+                                } else {
+                                    ignoreSwipe = true;
+                                }
                             }
                             break;
                     }
@@ -211,6 +216,9 @@ public class SwipeActivity extends BaseActivity {
                     tracker = VelocityTracker.obtain();
                     return true;
                 }
+            }
+            if (ev.getAction() == MotionEvent.ACTION_UP || ev.getAction() == MotionEvent.ACTION_CANCEL) {
+                ignoreSwipe = false;
             }
             return super.dispatchTouchEvent(ev);
         }
