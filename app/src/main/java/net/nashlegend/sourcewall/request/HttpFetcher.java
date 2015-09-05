@@ -3,6 +3,7 @@ package net.nashlegend.sourcewall.request;
 import android.text.TextUtils;
 
 import com.squareup.okhttp.FormEncodingBuilder;
+import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
@@ -178,13 +179,10 @@ public class HttpFetcher {
             CookieManager cookieManager = new CookieManager();
             cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
             defaultHttpClient.setCookieHandler(cookieManager);
+            defaultHttpClient.networkInterceptors().add(new RedirectInterceptor());
             defaultHttpClient.setConnectTimeout(CONNECTION_TIMEOUT, TimeUnit.MILLISECONDS);
             defaultHttpClient.setReadTimeout(SO_TIMEOUT, TimeUnit.MILLISECONDS);
             defaultHttpClient.setWriteTimeout(UPLOAD_SO_TIMEOUT, TimeUnit.MILLISECONDS);
-
-            //TODO 重定向
-            //            defaultHttpClient.setHttpRequestRetryHandler(requestRetryHandler);
-            //            defaultHttpClient.setRedirectHandler(redirectHandler);
             setCookie(defaultHttpClient);
         }
         return defaultHttpClient;
@@ -224,61 +222,26 @@ public class HttpFetcher {
         }
     }
 
-    /**
-     * 链接跳转处理
-     */
-    //    private static DefaultRedirectHandler redirectHandler = new DefaultRedirectHandler() {
-    //
-    //        @Override
-    //        public boolean isRedirectRequested(HttpResponse response, HttpContext context) {
-    //            boolean defaultRedirectFlag = super.isRedirectRequested(response, context);
-    //            return defaultRedirectFlag && shouldRedirect(response, context);
-    //        }
-    //
-    //        @Override
-    //        public URI getLocationURI(HttpResponse response, HttpContext context) throws ProtocolException {
-    //            return super.getLocationURI(response, context);
-    //        }
-    //    };
-
-    /**
-     * 判断是否执行默认的跳转
-     *
-     * @param response response
-     * @param context  context
-     *
-     * @return 是否跳转，默认应该是true
-     */
-    //    synchronized private static boolean shouldRedirect(HttpResponse response, HttpContext context) {
-    //        boolean flag = false;
-    //        try {
-    //            RequestWrapper wrapper = (RequestWrapper) context.getAttribute("http.request");
-    //            HttpRequest request = wrapper.getOriginal();
-    //            if (request instanceof HttpRequestBase) {
-    //                String url = ((HttpRequestBase) request).getURI().toString();
-    //                String article_reply_reg = "^http://(www|m).guokr.com/article/reply/\\d+/$";//http://www.guokr.com/article/reply/2903740/
-    //                String post_reply_reg = "^http://(www|m).guokr.com/post/reply/\\d+/$";//http://www.guokr.com/post/reply/6148664/
-    //                String question_answer_reg = "^http://(www|m).guokr.com/answer/\\d+/redirect/$";//http://www.guokr.com/answer/778164/redirect/
-    //                //上面三条，只有通知才会跳到
-    //                String publish_post_reg = "http://www.guokr.com/group/\\d+/post/edit/";//这是发贴的链接跳转
-    //                flag = !url.matches(article_reply_reg) && !url.matches(post_reply_reg) && !url.matches(publish_post_reg);
-    //            }
-    //        } catch (Exception e) {
-    //            e.printStackTrace();
-    //            flag = true;
-    //        }
-    //        return flag;
-    //    }
-
-    /**
-     * 重试处理
-     */
-    //    private static HttpRequestRetryHandler requestRetryHandler = new HttpRequestRetryHandler() {
-    //
-    //        public boolean retryRequest(IOException exception, int executionCount, HttpContext context) {
-    //            return executionCount < MAX_EXECUTION_COUNT && !(exception instanceof SSLHandshakeException) && (exception instanceof NoHttpResponseException || !(context.getAttribute(ExecutionContext.HTTP_REQUEST) instanceof HttpEntityEnclosingRequest));
-    //        }
-    //    };
+    static class RedirectInterceptor implements Interceptor {
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            Request request = chain.request();
+            Response response = chain.proceed(request);
+            if (response.isRedirect()) {
+                String url = chain.request().url().toString();
+                String article_reply_reg = "^http://(www|m).guokr.com/article/reply/\\d+/$";//http://www.guokr.com/article/reply/2903740/
+                String post_reply_reg = "^http://(www|m).guokr.com/post/reply/\\d+/$";//http://www.guokr.com/post/reply/6148664/
+                //上面两条，只有通知才会跳到
+                String publish_post_reg = "http://www.guokr.com/group/\\d+/post/edit/";//这是发贴的链接跳转
+                boolean flag = url.matches(article_reply_reg) || url.matches(post_reply_reg) || url.matches(publish_post_reg);
+                if (flag) {
+                    //匹配上了，要重定向，将code设置成200
+                    response = response.newBuilder().code(HttpURLConnection.HTTP_OK).build();
+                }
+            }
+            return response;
+        }
+    }
 
     private static final int IO_BUFFER_SIZE = 8 * 1024;
 
