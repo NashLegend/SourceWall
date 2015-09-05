@@ -183,23 +183,22 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
         }
     }
 
-//    private void hideInput(EditText editText) {
-//        try {
-//            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(
-//                    INPUT_METHOD_SERVICE);
-//            if (inputMethodManager != null && inputMethodManager.isActive(editText)) {
-//                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
+    //    private void hideInput(EditText editText) {
+    //        try {
+    //            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(
+    //                    INPUT_METHOD_SERVICE);
+    //            if (inputMethodManager != null && inputMethodManager.isActive(editText)) {
+    //                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+    //            }
+    //        } catch (Exception e) {
+    //            e.printStackTrace();
+    //        }
+    //    }
 
     private void hideInput() {
         try {
             if (getCurrentFocus() != null) {
-                ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
-                        .hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
             }
         } catch (Exception e) {
             e.printStackTrace();

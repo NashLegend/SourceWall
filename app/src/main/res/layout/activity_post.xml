@@ -1,11 +1,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?attr/color_page_background"
-    tools:context="net.nashlegend.sourcewall.PostActivity">
+                xmlns:fab="http://schemas.android.com/apk/res-auto"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?attr/color_page_background"
+                tools:context="net.nashlegend.sourcewall.PostActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -18,12 +18,12 @@
             android:divider="@null"
             android:footerDividersEnabled="false"
             android:headerDividersEnabled="false"
-            android:overScrollMode="never" />
+            android:overScrollMode="never"/>
 
         <net.nashlegend.sourcewall.commonview.LoadingView
             android:id="@+id/post_progress_loading"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -37,7 +37,7 @@
             app:popupTheme="?attr/toolbarPopTheme"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary" />
+            android:background="?attr/colorPrimary"/>
 
         <ProgressBar
             android:id="@+id/post_loading"
@@ -47,7 +47,7 @@
             android:layout_marginRight="8dp"
             android:layout_marginTop="8dp"
             android:layout_alignParentRight="true"
-            android:visibility="gone" />
+            android:visibility="gone"/>
     </RelativeLayout>
 
 
@@ -69,7 +69,7 @@
             android:layout_height="wrap_content"
             fab:fab_colorNormal="?attr/colorPrimaryBright"
             fab:fab_colorPressed="?attr/colorPrimaryDark"
-            fab:fab_icon="@drawable/ic_star_white_36dp" />
+            fab:fab_icon="@drawable/ic_star_white_36dp"/>
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/button_recommend"
@@ -78,7 +78,7 @@
             android:paddingTop="10dp"
             fab:fab_colorNormal="?attr/colorPrimaryBright"
             fab:fab_colorPressed="?attr/colorPrimaryDark"
-            fab:fab_icon="@drawable/white_like" />
+            fab:fab_icon="@drawable/white_like"/>
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/button_reply"
@@ -86,7 +86,7 @@
             android:layout_height="wrap_content"
             fab:fab_colorNormal="?attr/colorPrimaryBright"
             fab:fab_colorPressed="?attr/colorPrimaryDark"
-            fab:fab_icon="@drawable/ic_reply_color_white_36dp" />
+            fab:fab_icon="@drawable/ic_reply_color_white_36dp"/>
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 

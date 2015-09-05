@@ -24,8 +24,7 @@ public class DaoSession extends AbstractDaoSession {
     private final MyGroupDao myGroupDao;
     private final AskTagDao askTagDao;
 
-    public DaoSession(SQLiteDatabase db, IdentityScopeType type, Map<Class<? extends AbstractDao<?, ?>>, DaoConfig>
-            daoConfigMap) {
+    public DaoSession(SQLiteDatabase db, IdentityScopeType type, Map<Class<? extends AbstractDao<?, ?>>, DaoConfig> daoConfigMap) {
         super(db);
 
         myGroupDaoConfig = daoConfigMap.get(MyGroupDao.class).clone();

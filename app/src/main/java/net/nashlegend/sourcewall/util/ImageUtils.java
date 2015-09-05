@@ -1,4 +1,3 @@
-
 package net.nashlegend.sourcewall.util;
 
 import android.graphics.Bitmap;
@@ -14,20 +13,19 @@ public class ImageUtils {
 
     /**
      * 将图片转换为圆角, 当radiusRat为半径时为圆形.
-     * 
+     *
      * @param bitmap
      * @param strokeColor 边框颜色
      * @param strokeWidth 边框宽度
-     * @param isCircle 是否圆形
+     * @param isCircle    是否圆形
+     *
      * @return 转换后的bitmap
      */
-    public static Bitmap convertImgRound(Bitmap bitmap, int strokeColor, float strokeWidth,
-            boolean isCircle) {
+    public static Bitmap convertImgRound(Bitmap bitmap, int strokeColor, float strokeWidth, boolean isCircle) {
         Bitmap roundBitmap = null;
         if (bitmap != null) {
             // 画图
-            roundBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(),
-                    Bitmap.Config.ARGB_8888);
+            roundBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
             Canvas userIconCanvas = new Canvas(roundBitmap);
             Paint userIconPaint = new Paint();
             userIconPaint.setAntiAlias(true);

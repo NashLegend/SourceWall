@@ -200,14 +200,12 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         if (!SharedPreferencesUtil.readBoolean(Consts.Key_User_Has_Learned_Load_My_Groups, false)) {
             SharedPreferencesUtil.saveBoolean(Consts.Key_User_Has_Learned_Load_My_Groups, true);
             User_Has_Learned_Load_My_Groups = true;
-            AlertDialog dialog = new AlertDialog.Builder(getActivity()).setTitle(R.string.hint)
-                    .setMessage(R.string.hint_of_load_my_groups)
-                    .setPositiveButton(R.string.ok_i_know, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    }).create();
+            AlertDialog dialog = new AlertDialog.Builder(getActivity()).setTitle(R.string.hint).setMessage(R.string.hint_of_load_my_groups).setPositiveButton(R.string.ok_i_know, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            }).create();
             dialog.show();
         }
     }
@@ -298,33 +296,31 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                         manageButton.setVisibility(View.VISIBLE);
                     } else {
                         manageButton.setVisibility(View.INVISIBLE);
-                        AlertDialog dialog = new AlertDialog.Builder(getActivity()).setTitle(R.string.hint)
-                                .setMessage(R.string.ok_to_load_groups)
-                                .setPositiveButton(R.string.confirm_to_load_my_groups, new DialogInterface.OnClickListener() {
+                        AlertDialog dialog = new AlertDialog.Builder(getActivity()).setTitle(R.string.hint).setMessage(R.string.ok_to_load_groups).setPositiveButton(R.string.confirm_to_load_my_groups, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                hideMoreSections();
+                                new Handler().postDelayed(new Runnable() {
                                     @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        hideMoreSections();
-                                        new Handler().postDelayed(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                Intent intent = new Intent(getActivity(), ShuffleGroupActivity.class);
-                                                intent.putExtra(Consts.Extra_Should_Load_Before_Shuffle, true);
-                                                startActivityForResult(intent, Consts.Code_Start_Shuffle_Groups);
-                                                getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
-                                            }
-                                        }, 320);
+                                    public void run() {
+                                        Intent intent = new Intent(getActivity(), ShuffleGroupActivity.class);
+                                        intent.putExtra(Consts.Extra_Should_Load_Before_Shuffle, true);
+                                        startActivityForResult(intent, Consts.Code_Start_Shuffle_Groups);
+                                        getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
                                     }
-                                }).setNegativeButton(R.string.use_default_groups, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        hideMoreSections();
-                                    }
-                                }).setOnCancelListener(new DialogInterface.OnCancelListener() {
-                                    @Override
-                                    public void onCancel(DialogInterface dialog) {
-                                        hideMoreSections();
-                                    }
-                                }).create();
+                                }, 320);
+                            }
+                        }).setNegativeButton(R.string.use_default_groups, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                hideMoreSections();
+                            }
+                        }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                            @Override
+                            public void onCancel(DialogInterface dialog) {
+                                hideMoreSections();
+                            }
+                        }).create();
                         dialog.show();
                     }
                 }
@@ -633,9 +629,9 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
             ResultObject<ArrayList<Post>> resultObject = new ResultObject<>();
             //解析html的page是从1开始的，所以offset要+1
             if (subItem.getType() == SubItem.Type_Collections) {
-                resultObject = PostAPI.getGroupHotPostListFromMobileUrl(loadedPage + 1);// not featured
+                resultObject = PostAPI.getGroupHotPostListByJson(loadedPage * 20);// not featured
             } else if (subItem.getType() == SubItem.Type_Private_Channel) {
-                resultObject = PostAPI.getMyGroupRecentRepliesPosts(loadedPage + 1);// not featured
+                resultObject = PostAPI.getMyGroupRecentRepliesPostsByJson(loadedPage * 20);// not featured
             } else if (subItem.getType() == SubItem.Type_Single_Channel) {
                 resultObject = PostAPI.getGroupPostListByJsonUrl(subItem.getValue(), loadedPage * 20);// featured
             }

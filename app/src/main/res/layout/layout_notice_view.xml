@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:descendantFocusability="blocksDescendants"
-    android:orientation="horizontal"
-    android:paddingBottom="12dp"
-    android:paddingLeft="8dp"
-    android:paddingRight="8dp"
-    android:paddingTop="12dp">
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:descendantFocusability="blocksDescendants"
+              android:orientation="horizontal"
+              android:paddingBottom="12dp"
+              android:paddingLeft="8dp"
+              android:paddingRight="8dp"
+              android:paddingTop="12dp">
 
     <TextView
         android:id="@+id/text_notice"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="@string/sample_summary" />
+        android:text="@string/sample_summary"/>
 
     <ImageButton
         android:id="@+id/btn_ignore"
@@ -24,5 +24,5 @@
         android:layout_weight="0"
         android:background="?attr/background_selectable_borderless"
         android:padding="6dp"
-        android:src="@drawable/ic_close_grey_24dp" />
+        android:src="@drawable/ic_close_grey_24dp"/>
 </LinearLayout>

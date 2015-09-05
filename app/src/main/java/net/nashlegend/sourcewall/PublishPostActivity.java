@@ -280,9 +280,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
     }
 
     private void invokeImageDialog() {
-        String[] ways = {getString(R.string.add_image_from_disk),
-                getString(R.string.add_image_from_camera),
-                getString(R.string.add_image_from_link)};
+        String[] ways = {getString(R.string.add_image_from_disk), getString(R.string.add_image_from_camera), getString(R.string.add_image_from_link)};
         new AlertDialog.Builder(this).setTitle(R.string.way_to_add_image).setItems(ways, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -473,8 +471,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
     private void hideInput() {
         try {
             if (getCurrentFocus() != null) {
-                ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
-                        .hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -590,11 +587,9 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
                 onReceivePreparedData(prepareData);
             } else {
                 if (result.statusCode == 403) {
-                    new AlertDialog.Builder(PublishPostActivity.this).setTitle(R.string.hint)
-                            .setMessage(getString(R.string.have_not_join_this_group)).setPositiveButton(R.string.ok, null).create().show();
+                    new AlertDialog.Builder(PublishPostActivity.this).setTitle(R.string.hint).setMessage(getString(R.string.have_not_join_this_group)).setPositiveButton(R.string.ok, null).create().show();
                 } else {
-                    new AlertDialog.Builder(PublishPostActivity.this).setTitle(getString(R.string.get_csrf_failed))
-                            .setMessage(getString(R.string.hint_reload_csrf)).setPositiveButton(R.string.ok, null).create().show();
+                    new AlertDialog.Builder(PublishPostActivity.this).setTitle(getString(R.string.get_csrf_failed)).setMessage(getString(R.string.hint_reload_csrf)).setPositiveButton(R.string.ok, null).create().show();
                 }
             }
         }
@@ -609,15 +604,12 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         @Override
         protected void onPreExecute() {
             if (!SharedPreferencesUtil.readBoolean(Consts.Key_User_Has_Learned_Add_Image, false)) {
-                new AlertDialog.Builder(PublishPostActivity.this)
-                        .setTitle(R.string.hint)
-                        .setMessage(R.string.tip_of_user_learn_add_image)
-                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                SharedPreferencesUtil.saveBoolean(Consts.Key_User_Has_Learned_Add_Image, true);
-                            }
-                        }).create().show();
+                new AlertDialog.Builder(PublishPostActivity.this).setTitle(R.string.hint).setMessage(R.string.tip_of_user_learn_add_image).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        SharedPreferencesUtil.saveBoolean(Consts.Key_User_Has_Learned_Add_Image, true);
+                    }
+                }).create().show();
             }
             setImageButtonsUploading();
         }

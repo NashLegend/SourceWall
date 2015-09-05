@@ -72,9 +72,7 @@ public class ShuffleCardSenator extends ShuffleCard {
     }
 
     private void moveButton(float dx, float dy) {
-        int[] location = {
-                0, 0
-        };
+        int[] location = {0, 0};
         this.getLocationOnScreen(location);
         currentButton.setXX(dx - location[0]);
         currentButton.setYY(dy - location[1]);
@@ -123,9 +121,7 @@ public class ShuffleCardSenator extends ShuffleCard {
 
     private PointF getCurrentButtonCenter() {
         if (currentButton != null) {
-            return new PointF(currentButton.getXX() + currentButton.getWidth() / 2,
-                    currentButton.getYY()
-                            + currentButton.getHeight() / 2);
+            return new PointF(currentButton.getXX() + currentButton.getWidth() / 2, currentButton.getYY() + currentButton.getHeight() / 2);
         } else {
             return null;
         }
@@ -259,14 +255,11 @@ public class ShuffleCardSenator extends ShuffleCard {
         @Override
         public boolean onLongClick(View v) {
             currentButton = (MovableButton) v;
-            Vibrator vibrator = (Vibrator) getContext().getSystemService(
-                    Service.VIBRATOR_SERVICE);
+            Vibrator vibrator = (Vibrator) getContext().getSystemService(Service.VIBRATOR_SERVICE);
             vibrator.vibrate(20);
             currentButton = (MovableButton) v;
             startEditMode();
-            int[] location = {
-                    0, 0
-            };
+            int[] location = {0, 0};
             v.getLocationOnScreen(location);
             lastX = location[0] + v.getWidth() / 2;
             lastY = location[1] + v.getHeight() / 2;
@@ -285,8 +278,7 @@ public class ShuffleCardSenator extends ShuffleCard {
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            if ((currentButton == null && event.getAction() == MotionEvent.ACTION_DOWN)
-                    || currentButton == v) {
+            if ((currentButton == null && event.getAction() == MotionEvent.ACTION_DOWN) || currentButton == v) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         if (currentButton == null) {

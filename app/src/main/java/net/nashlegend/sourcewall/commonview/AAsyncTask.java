@@ -195,15 +195,12 @@ public abstract class AAsyncTask<Params, Progress, Result> {
         }
     };
 
-    private static final BlockingQueue<Runnable> sPoolWorkQueue =
-            new LinkedBlockingQueue<Runnable>(128);
+    private static final BlockingQueue<Runnable> sPoolWorkQueue = new LinkedBlockingQueue<Runnable>(128);
 
     /**
      * An {@link Executor} that can be used to execute tasks in parallel.
      */
-    public static final Executor THREAD_POOL_EXECUTOR
-            = new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE,
-            TimeUnit.SECONDS, sPoolWorkQueue, sThreadFactory);
+    public static final Executor THREAD_POOL_EXECUTOR = new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE, TimeUnit.SECONDS, sPoolWorkQueue, sThreadFactory);
 
     /**
      * An {@link Executor} that executes tasks one at a time in serial
@@ -314,8 +311,7 @@ public abstract class AAsyncTask<Params, Progress, Result> {
                 } catch (InterruptedException e) {
                     android.util.Log.w(LOG_TAG, e);
                 } catch (ExecutionException e) {
-                    throw new RuntimeException("An error occured while executing doInBackground()",
-                            e.getCause());
+                    throw new RuntimeException("An error occured while executing doInBackground()", e.getCause());
                 } catch (CancellationException e) {
                     postResultIfNotInvoked(null);
                 }
@@ -331,9 +327,7 @@ public abstract class AAsyncTask<Params, Progress, Result> {
     }
 
     private Result postResult(Result result) {
-        @SuppressWarnings("unchecked")
-        Message message = sHandler.obtainMessage(MESSAGE_POST_RESULT,
-                new AsyncTaskResult<Result>(this, result));
+        @SuppressWarnings("unchecked") Message message = sHandler.obtainMessage(MESSAGE_POST_RESULT, new AsyncTaskResult<Result>(this, result));
         message.sendToTarget();
         return result;
     }
@@ -356,7 +350,9 @@ public abstract class AAsyncTask<Params, Progress, Result> {
      * on the UI thread.
      *
      * @param params The parameters of the task.
+     *
      * @return A result, defined by the subclass of this task.
+     *
      * @see #onPreExecute()
      * @see #onPostExecute
      * @see #publishProgress
@@ -380,6 +376,7 @@ public abstract class AAsyncTask<Params, Progress, Result> {
      * <p>This method won't be invoked if the task was cancelled.</p>
      *
      * @param result The result of the operation computed by {@link #doInBackground}.
+     *
      * @see #onPreExecute
      * @see #doInBackground
      * @see #onCancelled(Object)
@@ -393,6 +390,7 @@ public abstract class AAsyncTask<Params, Progress, Result> {
      * The specified values are the values passed to {@link #publishProgress}.
      *
      * @param values The values indicating progress.
+     *
      * @see #publishProgress
      * @see #doInBackground
      */
@@ -410,6 +408,7 @@ public abstract class AAsyncTask<Params, Progress, Result> {
      *
      * @param result The result, if any, computed in
      *               {@link #doInBackground(Object[])}, can be null
+     *
      * @see #cancel(boolean)
      * @see #isCancelled()
      */
@@ -440,6 +439,7 @@ public abstract class AAsyncTask<Params, Progress, Result> {
      * {@link #doInBackground(Object[])} to end the task as soon as possible.
      *
      * @return <tt>true</tt> if task was cancelled before it completed
+     *
      * @see #cancel(boolean)
      */
     public final boolean isCancelled() {
@@ -467,9 +467,11 @@ public abstract class AAsyncTask<Params, Progress, Result> {
      * @param mayInterruptIfRunning <tt>true</tt> if the thread executing this
      *                              task should be interrupted; otherwise, in-progress tasks are allowed
      *                              to complete.
+     *
      * @return <tt>false</tt> if the task could not be cancelled,
      * typically because it has already completed normally;
      * <tt>true</tt> otherwise
+     *
      * @see #isCancelled()
      * @see #onCancelled(Object)
      */
@@ -505,6 +507,7 @@ public abstract class AAsyncTask<Params, Progress, Result> {
      * retrieves its result.
      *
      * @return The computed result.
+     *
      * @throws CancellationException If the computation was cancelled.
      * @throws ExecutionException    If the computation threw an exception.
      * @throws InterruptedException  If the current thread was interrupted
@@ -520,15 +523,16 @@ public abstract class AAsyncTask<Params, Progress, Result> {
      *
      * @param timeout Time to wait before cancelling the operation.
      * @param unit    The time unit for the timeout.
+     *
      * @return The computed result.
+     *
      * @throws CancellationException If the computation was cancelled.
      * @throws ExecutionException    If the computation threw an exception.
      * @throws InterruptedException  If the current thread was interrupted
      *                               while waiting.
      * @throws TimeoutException      If the wait timed out.
      */
-    public final Result get(long timeout, TimeUnit unit) throws InterruptedException,
-            ExecutionException, TimeoutException {
+    public final Result get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
         return mFuture.get(timeout, unit);
     }
 
@@ -551,7 +555,9 @@ public abstract class AAsyncTask<Params, Progress, Result> {
      * <p>This method must be invoked on the UI thread.
      *
      * @param params The parameters of the task.
+     *
      * @return This instance of AsyncTask.
+     *
      * @throws IllegalStateException If {@link #getStatus()} returns either
      *                               {@link AAsyncTask.Status#RUNNING} or {@link AAsyncTask.Status#FINISHED}.
      * @see #executeOnExecutor(java.util.concurrent.Executor, Object[])
@@ -586,22 +592,20 @@ public abstract class AAsyncTask<Params, Progress, Result> {
      * @param exec   The executor to use.  {@link #THREAD_POOL_EXECUTOR} is available as a
      *               convenient process-wide thread pool for tasks that are loosely coupled.
      * @param params The parameters of the task.
+     *
      * @return This instance of AsyncTask.
+     *
      * @throws IllegalStateException If {@link #getStatus()} returns either
      *                               {@link AAsyncTask.Status#RUNNING} or {@link AAsyncTask.Status#FINISHED}.
      * @see #execute(Object[])
      */
-    public final AAsyncTask<Params, Progress, Result> executeOnExecutor(Executor exec,
-                                                                        Params... params) {
+    public final AAsyncTask<Params, Progress, Result> executeOnExecutor(Executor exec, Params... params) {
         if (mStatus != Status.PENDING) {
             switch (mStatus) {
                 case RUNNING:
-                    throw new IllegalStateException("Cannot execute task:"
-                            + " the task is already running.");
+                    throw new IllegalStateException("Cannot execute task:" + " the task is already running.");
                 case FINISHED:
-                    throw new IllegalStateException("Cannot execute task:"
-                            + " the task has already been executed "
-                            + "(a task can be executed only once)");
+                    throw new IllegalStateException("Cannot execute task:" + " the task has already been executed " + "(a task can be executed only once)");
             }
         }
 
@@ -637,13 +641,13 @@ public abstract class AAsyncTask<Params, Progress, Result> {
      * canceled.
      *
      * @param values The progress values to update the UI with.
+     *
      * @see #onProgressUpdate
      * @see #doInBackground
      */
     protected final void publishProgress(Progress... values) {
         if (!isCancelled()) {
-            sHandler.obtainMessage(MESSAGE_POST_PROGRESS,
-                    new AsyncTaskResult<Progress>(this, values)).sendToTarget();
+            sHandler.obtainMessage(MESSAGE_POST_PROGRESS, new AsyncTaskResult<Progress>(this, values)).sendToTarget();
         }
     }
 

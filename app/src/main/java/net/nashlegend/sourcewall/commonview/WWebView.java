@@ -91,9 +91,7 @@ public class WWebView extends WebView {
                 startY = event.getY();
                 break;
             case MotionEvent.ACTION_UP:
-                if (System.currentTimeMillis() - startMills < duration
-                        && Math.abs(event.getX() - startX) < distance
-                        && Math.abs(event.getY() - startY) < distance) {
+                if (System.currentTimeMillis() - startMills < duration && Math.abs(event.getX() - startX) < distance && Math.abs(event.getY() - startY) < distance) {
                     performClick();
                 }
                 startMills = 0;

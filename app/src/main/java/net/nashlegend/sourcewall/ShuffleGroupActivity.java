@@ -2,7 +2,6 @@ package net.nashlegend.sourcewall;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
@@ -253,8 +252,7 @@ public class ShuffleGroupActivity extends SwipeActivity {
                 initView();
             } else {
                 MobclickAgent.onEvent(ShuffleGroupActivity.this, Mob.Event_Load_My_Groups_Failed);
-                MobclickAgent.reportError(ShuffleGroupActivity.this,
-                        "Loading my Groups failed \n Is WIFI:" + Config.isWifi() + "\n" + UserAPI.getUserInfoString() + resultObject.error_message);
+                MobclickAgent.reportError(ShuffleGroupActivity.this, "Loading my Groups failed \n Is WIFI:" + Config.isWifi() + "\n" + UserAPI.getUserInfoString() + resultObject.error_message);
                 if (resultObject.code == ResultCode.CODE_NO_USER_ID) {
                     toast("未获得用户ID，无法加载");
                 } else {

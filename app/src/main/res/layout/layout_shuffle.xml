@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?attr/color_shuffle_desk_background">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?attr/color_shuffle_desk_background">
 
     <LinearLayout
         android:id="@+id/SenatorLayout"
@@ -21,7 +21,7 @@
             <View
                 android:layout_width="4dp"
                 android:layout_height="24dp"
-                android:background="?attr/color_shuffle_desk_title" />
+                android:background="?attr/color_shuffle_desk_title"/>
 
             <TextView
                 android:id="@+id/text_main_sections"
@@ -31,7 +31,7 @@
                 android:text="@string/selected_groups"
                 android:textColor="?attr/color_shuffle_desk_title"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -39,14 +39,14 @@
                 android:layout_marginLeft="10dp"
                 android:text="@string/selected_section_tip"
                 android:textColor="?attr/color_shuffle_tip"
-                android:textSize="14sp" />
+                android:textSize="14sp"/>
         </LinearLayout>
 
         <net.nashlegend.sourcewall.commonview.shuffle.ShuffleCardSenator
             android:id="@+id/senator"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="144dp" />
+            android:minHeight="144dp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -68,7 +68,7 @@
             <View
                 android:layout_width="4dp"
                 android:layout_height="24dp"
-                android:background="?attr/color_shuffle_desk_title" />
+                android:background="?attr/color_shuffle_desk_title"/>
 
             <TextView
                 android:id="@+id/text_other_sections"
@@ -78,7 +78,7 @@
                 android:text="@string/more_unselected_groups"
                 android:textColor="?attr/color_shuffle_desk_title"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -86,7 +86,7 @@
                 android:layout_marginLeft="10dp"
                 android:text="@string/unselected_section_tip"
                 android:textColor="?attr/color_shuffle_tip"
-                android:textSize="14sp" />
+                android:textSize="14sp"/>
         </LinearLayout>
 
         <ScrollView
@@ -96,7 +96,7 @@
             <net.nashlegend.sourcewall.commonview.shuffle.ShuffleCardCandidate
                 android:id="@+id/candidate"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"/>
         </ScrollView>
 
     </LinearLayout>

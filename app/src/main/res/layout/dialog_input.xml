@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="10dp">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
     <!--使用RelativeLayout是因为在Android5.0上使用LinearLayout太小了-->
 
     <LinearLayout
@@ -20,7 +20,7 @@
             android:minHeight="@dimen/input_dialog_input_height"
             android:padding="5dp"
             android:textColor="?attr/color_reply_input_text"
-            android:textColorHint="?attr/color_reply_hint" />
+            android:textColorHint="?attr/color_reply_hint"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -36,7 +36,7 @@
                 android:layout_height="48dp"
                 android:background="?attr/color_dialog_button_background"
                 android:text="@string/cancel"
-                android:textColor="?attr/drawable_dialog_button_text" />
+                android:textColor="?attr/drawable_dialog_button_text"/>
 
             <Button
                 android:id="@+id/button_dialog_input_ok"
@@ -45,7 +45,7 @@
                 android:layout_height="48dp"
                 android:background="?attr/color_dialog_button_background"
                 android:text="@string/ok"
-                android:textColor="?attr/drawable_dialog_button_text" />
+                android:textColor="?attr/drawable_dialog_button_text"/>
         </LinearLayout>
 
     </LinearLayout>

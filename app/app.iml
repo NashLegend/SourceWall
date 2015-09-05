@@ -36,7 +36,7 @@
       <sourceFolder url="file://$MODULE_DIR$/build/generated/source/buildConfig/baidu/debug" isTestSource="false" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/source/rs/baidu/debug" isTestSource="false" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/res/rs/baidu/debug" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/generated/baidu/debug" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/resValues/baidu/debug" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/baiduDebug/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/baiduDebug/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/baiduDebug/assets" type="java-resource" />
@@ -49,7 +49,7 @@
       <sourceFolder url="file://$MODULE_DIR$/build/generated/source/buildConfig/androidTest/baidu/debug" isTestSource="true" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/source/rs/androidTest/baidu/debug" isTestSource="true" generated="true" />
       <sourceFolder url="file://$MODULE_DIR$/build/generated/res/rs/androidTest/baidu/debug" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/generated/androidTest/baidu/debug" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/resValues/androidTest/baidu/debug" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/baidu/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/baidu/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/baidu/assets" type="java-resource" />
@@ -92,9 +92,9 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/dependency-cache" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/dex" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/dex-cache" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.1/jars" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/cardview-v7/22.2.1/jars" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.1/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/cardview-v7/23.0.1/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.1/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.davemorrissey.labs/subsampling-scale-image-view/3.1.4/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.getbase/floatingactionbutton/1.9.1/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/pl.droidsonroids.gif/android-gif-drawable/1.1.7/jars" />
@@ -113,23 +113,25 @@
       <excludeFolder url="file://$MODULE_DIR$/build/outputs" />
       <excludeFolder url="file://$MODULE_DIR$/build/tmp" />
     </content>
-    <orderEntry type="jdk" jdkName="Android API 22 Platform" jdkType="Android SDK" />
+    <orderEntry type="jdk" jdkName="Android API 23 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="greendao-1.3.7" level="project" />
-    <orderEntry type="library" exported="" name="analytics-5.5.3" level="project" />
-    <orderEntry type="library" exported="" name="httpcore-4.2.1" level="project" />
-    <orderEntry type="library" exported="" name="freemarker-2.3.20" level="project" />
-    <orderEntry type="library" exported="" name="greendao-generator-1.3.1" level="project" />
     <orderEntry type="library" exported="" name="jsoup-1.7.3" level="project" />
-    <orderEntry type="library" exported="" name="weibosdkcore_v3.1.1" level="project" />
-    <orderEntry type="library" exported="" name="cardview-v7-22.2.1" level="project" />
-    <orderEntry type="library" exported="" name="support-annotations-22.2.1" level="project" />
-    <orderEntry type="library" exported="" name="subsampling-scale-image-view-3.1.4" level="project" />
-    <orderEntry type="library" exported="" name="libammsdk" level="project" />
-    <orderEntry type="library" exported="" name="support-v4-22.2.1" level="project" />
+    <orderEntry type="library" exported="" name="okio-1.6.0" level="project" />
     <orderEntry type="library" exported="" name="httpmime-4.2.1" level="project" />
+    <orderEntry type="library" exported="" name="httpcore-4.2.1" level="project" />
+    <orderEntry type="library" exported="" name="greendao-1.3.7" level="project" />
+    <orderEntry type="library" exported="" name="libammsdk" level="project" />
+    <orderEntry type="library" exported="" name="cardview-v7-23.0.1" level="project" />
+    <orderEntry type="library" exported="" name="okhttp-2.5.0" level="project" />
+    <orderEntry type="library" exported="" name="weibosdkcore_v3.1.1" level="project" />
+    <orderEntry type="library" exported="" name="greendao-generator-1.3.1" level="project" />
     <orderEntry type="library" exported="" name="android-gif-drawable-1.1.7" level="project" />
+    <orderEntry type="library" exported="" name="freemarker-2.3.20" level="project" />
     <orderEntry type="library" exported="" name="floatingactionbutton-1.9.1" level="project" />
-    <orderEntry type="library" exported="" name="appcompat-v7-22.2.1" level="project" />
+    <orderEntry type="library" exported="" name="subsampling-scale-image-view-3.1.4" level="project" />
+    <orderEntry type="library" exported="" name="support-v4-23.0.1" level="project" />
+    <orderEntry type="library" exported="" name="appcompat-v7-23.0.1" level="project" />
+    <orderEntry type="library" exported="" name="analytics-5.5.3" level="project" />
+    <orderEntry type="library" exported="" name="support-annotations-23.0.1" level="project" />
   </component>
 </module>

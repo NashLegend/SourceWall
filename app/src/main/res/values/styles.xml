@@ -49,7 +49,7 @@
         <item name="color_clear_page_background">@color/page_clear_background</item>
         <item name="color_webview_background">@color/webview_background</item>
         <item name="cardBackgroundColor">@color/card_background</item>
-        
+
         <item name="browser_icon">@drawable/browser_day</item>
         <item name="eye_open_icon">@drawable/eye_open_day</item>
         <item name="eye_closed_icon">@drawable/eye_closed_day</item>
@@ -183,7 +183,7 @@
         <item name="android:textColorHint">@color/hint_foreground_material_dark</item>
         <item name="android:textColorHintInverse">@color/hint_foreground_material_light</item>
         <item name="android:textColorHighlight">@color/highlighted_text_material_dark</item>
-        <item name="android:textColorLink">@color/link_text_material_dark</item>
+        <item name="android:textColorLink">@color/material_deep_teal_200</item>
 
         <item name="android:colorForeground">@color/bright_foreground_material_dark</item>
         <item name="android:colorForegroundInverse">@color/bright_foreground_material_light</item>

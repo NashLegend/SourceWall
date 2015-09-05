@@ -65,8 +65,7 @@ public class ShuffleCard extends RelativeLayout {
     }
 
     public int computeHeight() {
-        return (int) Math.ceil((double) (list.size()) / ShuffleDesk.Columns)
-                * ShuffleDesk.buttonCellHeight;
+        return (int) Math.ceil((double) (list.size()) / ShuffleDesk.Columns) * ShuffleDesk.buttonCellHeight;
     }
 
     public void banishButton(MovableButton button) {
@@ -111,8 +110,7 @@ public class ShuffleCard extends RelativeLayout {
             button.setPosition(point);
             button.setTargetPosition(new Point(point.x, point.y));
 
-            LayoutParams params = new LayoutParams(ShuffleDesk.buttonWidth,
-                    ShuffleDesk.buttonHeight);
+            LayoutParams params = new LayoutParams(ShuffleDesk.buttonWidth, ShuffleDesk.buttonHeight);
             params.leftMargin = point.x * ShuffleDesk.buttonCellWidth + ShuffleDesk.hGap;
             params.topMargin = point.y * ShuffleDesk.buttonCellHeight + ShuffleDesk.vGap;
             button.setLayoutParams(params);
@@ -161,16 +159,12 @@ public class ShuffleCard extends RelativeLayout {
         setupAnimator(buttons);
     }
 
-    public ArrayList<MovableButton> animateButtonsBetween(int crtRow, int crtCol, int lastRow,
-                                                          int lastCol) {
-        boolean movingForward = crtRow * ShuffleDesk.Columns + crtCol - lastRow * ShuffleDesk.Columns
-                - lastCol < 0;
+    public ArrayList<MovableButton> animateButtonsBetween(int crtRow, int crtCol, int lastRow, int lastCol) {
+        boolean movingForward = crtRow * ShuffleDesk.Columns + crtCol - lastRow * ShuffleDesk.Columns - lastCol < 0;
         ArrayList<MovableButton> buttons = new ArrayList<MovableButton>();
         for (int i = 0; i < list.size(); i++) {
             MovableButton button = list.get(i);
-            if (isBetweenPoint(button.getTargetPosition().y, button.getTargetPosition().x,
-                    crtRow, crtCol, lastRow,
-                    lastCol)) {
+            if (isBetweenPoint(button.getTargetPosition().y, button.getTargetPosition().x, crtRow, crtCol, lastRow, lastCol)) {
                 buttons.add(button);
             }
 
@@ -185,13 +179,11 @@ public class ShuffleCard extends RelativeLayout {
 
     public void setFinalPosition() {
         for (MovableButton movableButton : list) {
-            movableButton.setPosition(new Point(movableButton.getTargetPosition().x,
-                    movableButton.getTargetPosition().y));
+            movableButton.setPosition(new Point(movableButton.getTargetPosition().x, movableButton.getTargetPosition().y));
         }
     }
 
-    private boolean isBetweenPoint(int row, int col, int crtRow, int crtCol, int lastRow,
-                                   int lastCol) {
+    private boolean isBetweenPoint(int row, int col, int crtRow, int crtCol, int lastRow, int lastCol) {
         int tis = row * ShuffleDesk.Columns + col;
         int crt = crtRow * ShuffleDesk.Columns + crtCol;
         int lst = lastRow * ShuffleDesk.Columns + lastCol;
@@ -207,8 +199,7 @@ public class ShuffleCard extends RelativeLayout {
         ArrayList<MovableButton> buttons = new ArrayList<MovableButton>();
         for (int i = 0; i < list.size(); i++) {
             MovableButton button = list.get(i);
-            if (isAfterPoint(button.getTargetPosition().y, button.getTargetPosition().x, lastRow,
-                    lastCol, isTarget)) {
+            if (isAfterPoint(button.getTargetPosition().y, button.getTargetPosition().x, lastRow, lastCol, isTarget)) {
                 buttons.add(button);
             }
         }

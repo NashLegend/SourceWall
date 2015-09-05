@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
     <Button
         android:id="@+id/button_mov"
@@ -14,7 +14,7 @@
         android:minHeight="1dp"
         android:minWidth="1dp"
         android:textColor="?attr/color_shuffle_movable_button_text"
-        android:textSize="14sp" />
+        android:textSize="14sp"/>
 
     <ImageView
         android:id="@+id/section_new_hint"
@@ -23,6 +23,6 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:contentDescription="@string/app_name"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
 </RelativeLayout>

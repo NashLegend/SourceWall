@@ -25,7 +25,7 @@ public class UComment extends AceModel {
     }
 
     public void setContent(String content) {
-        this.content = content.replaceAll("</noscript>","</noscript>\n");
+        this.content = content.replaceAll("</noscript>", "</noscript>\n");
     }
 
     public String getDate() {

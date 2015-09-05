@@ -1,5 +1,6 @@
 package net.nashlegend.sourcewall;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.net.http.SslError;
@@ -23,8 +24,6 @@ import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 
-import org.apache.http.impl.cookie.BasicClientCookie;
-
 public class LoginActivity extends SwipeActivity {
 
     private WebView webView;
@@ -35,6 +34,8 @@ public class LoginActivity extends SwipeActivity {
         directlySetTheme(R.style.AppTheme);
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
+    @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +56,7 @@ public class LoginActivity extends SwipeActivity {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         webView.loadUrl(Consts.LOGIN_URL);
+
     }
 
     @Override
@@ -76,10 +78,6 @@ public class LoginActivity extends SwipeActivity {
                     }
                     String paramName = rawCookieParamNameAndValue[0].trim();
                     String paramValue = rawCookieParamNameAndValue[1].trim();
-                    BasicClientCookie clientCookie = new BasicClientCookie(paramName, paramValue);
-                    clientCookie.setDomain("guokr.com");
-                    clientCookie.setPath("/");
-                    HttpFetcher.getDefaultHttpClient().getCookieStore().addCookie(clientCookie);
                     if (Consts.Cookie_Token_Key.equals(paramName)) {
                         SharedPreferencesUtil.saveString(Consts.Key_Access_Token, paramValue);
                         tmpToken = paramValue;
@@ -88,6 +86,8 @@ public class LoginActivity extends SwipeActivity {
                         tmpUkey = paramValue;
                     }
                 }
+                HttpFetcher.setCookie(HttpFetcher.getDefaultHttpClient());
+                HttpFetcher.setCookie(HttpFetcher.getDefaultUploadHttpClient());
             }
             return !(TextUtils.isEmpty(tmpUkey) || TextUtils.isEmpty(tmpToken));
         } catch (Exception e) {

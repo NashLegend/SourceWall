@@ -224,7 +224,7 @@ public class ShuffleTagActivity extends SwipeActivity {
             if (TextUtils.isEmpty(UserAPI.getUserID())) {
                 result.error_message = "无法获得用户id";
                 result.code = ResultObject.ResultCode.CODE_NO_USER_ID;
-            }else if (result.ok) {
+            } else if (result.ok) {
                 ArrayList<SubItem> subItems = result.result;
                 ArrayList<AskTag> myTags = new ArrayList<>();
                 for (int i = 0; i < subItems.size(); i++) {
@@ -253,8 +253,7 @@ public class ShuffleTagActivity extends SwipeActivity {
                 initView();
             } else {
                 MobclickAgent.onEvent(ShuffleTagActivity.this, Mob.Event_Load_My_Tags_Failed);
-                MobclickAgent.reportError(ShuffleTagActivity.this,
-                        "加载标签失败\n是否WIFI：" + Config.isWifi() + "\n" + UserAPI.getUserInfoString() + result.error_message);
+                MobclickAgent.reportError(ShuffleTagActivity.this, "加载标签失败\n是否WIFI：" + Config.isWifi() + "\n" + UserAPI.getUserInfoString() + result.error_message);
                 if (result.code == ResultObject.ResultCode.CODE_NO_USER_ID) {
                     toast("未获得用户ID，无法加载");
                 } else {

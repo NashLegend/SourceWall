@@ -157,9 +157,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
             thankButton.setIcon(R.drawable.heart_outline);
         }
         if (Config.shouldLoadImage()) {
-            Picasso.with(this).load(answer.getAuthorAvatarUrl()).placeholder(R.drawable.default_avatar)
-                    .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
-                    .transform(new RoundTransformation(Color.parseColor("#00000000"), 0, true)).into(avatar);
+            Picasso.with(this).load(answer.getAuthorAvatarUrl()).placeholder(R.drawable.default_avatar).resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen).transform(new RoundTransformation(Color.parseColor("#00000000"), 0, true)).into(avatar);
         } else {
             avatar.setImageResource(R.drawable.default_avatar);
         }

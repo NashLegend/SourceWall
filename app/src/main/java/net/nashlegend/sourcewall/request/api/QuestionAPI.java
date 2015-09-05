@@ -14,8 +14,6 @@ import net.nashlegend.sourcewall.request.ResultObject;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.MDUtil;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -25,6 +23,7 @@ import org.jsoup.select.Elements;
 
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * 单个答案地址。http://www.guokr.com/answer/782227/
@@ -108,23 +107,24 @@ public class QuestionAPI extends APIBase {
      *
      * @param tag    标签名
      * @param offset 从第几个开始加载
+     *
      * @return ResultObject
      */
     public static ResultObject<ArrayList<Question>> getQuestionsByTagFromJsonUrl(String tag, int offset) {
         ResultObject<ArrayList<Question>> resultObject = new ResultObject<>();
         try {
             String url = "http://apis.guokr.com/ask/question.json";
-            ArrayList<NameValuePair> pairs = new ArrayList<>();
-            pairs.add(new BasicNameValuePair("retrieve_type", "by_tag"));
-            pairs.add(new BasicNameValuePair("tag_name", tag));
-            pairs.add(new BasicNameValuePair("limit", "20"));
-            pairs.add(new BasicNameValuePair("offset", offset + ""));
+            HashMap<String, String> pairs = new HashMap<>();
+            pairs.put("retrieve_type", "by_tag");
+            pairs.put("tag_name", tag);
+            pairs.put("limit", "20");
+            pairs.put("offset", offset + "");
             String jString = HttpFetcher.get(url, pairs).toString();
             resultObject = parseQuestionsListJson(jString);
 
-            if (resultObject.ok && pairs.get(3).getValue().equals("0")) {
+            if (resultObject.ok && offset == 0) {
                 //请求成功则缓存之
-                String key = "question." + URLDecoder.decode(pairs.get(1).getValue(), "utf-8");
+                String key = "question." + URLDecoder.decode(tag, "utf-8");
                 RequestCache.getInstance().addStringToCacheForceUpdate(key, jString);
             }
 
@@ -138,6 +138,7 @@ public class QuestionAPI extends APIBase {
      * 解析QuestionList的json
      *
      * @param jString json
+     *
      * @return ResultObject
      */
     public static ResultObject<ArrayList<Question>> parseQuestionsListJson(String jString) {
@@ -152,10 +153,8 @@ public class QuestionAPI extends APIBase {
                         Question question = new Question();
                         question.setAnswerNum(getJsonInt(jsonObject, "answers_count"));
                         question.setAuthor(jsonObject.getJSONObject("author").getString("nickname"));
-                        question.setAuthorID(jsonObject.getJSONObject("author").getString("url")
-                                .replaceAll("\\D+", ""));
-                        question.setAuthorAvatarUrl(jsonObject.getJSONObject("author")
-                                .getJSONObject("avatar").getString("large").replaceAll("\\?.*$", ""));
+                        question.setAuthorID(jsonObject.getJSONObject("author").getString("url").replaceAll("\\D+", ""));
+                        question.setAuthorAvatarUrl(jsonObject.getJSONObject("author").getJSONObject("avatar").getString("large").replaceAll("\\?.*$", ""));
                         question.setSummary(getJsonString(jsonObject, "summary"));
                         question.setDate(parseDate(getJsonString(jsonObject, "date_created")));
                         question.setFollowNum(getJsonInt(jsonObject, "followers_count"));
@@ -180,6 +179,7 @@ public class QuestionAPI extends APIBase {
      * 返回热门回答问题列表，解析html获得
      *
      * @param pageNo 页码
+     *
      * @return ResultObject
      */
     public static ResultObject<ArrayList<Question>> getHotQuestions(int pageNo) {
@@ -201,6 +201,7 @@ public class QuestionAPI extends APIBase {
      * 返回精彩回答问题列表，解析html所得
      *
      * @param pageNo 页码
+     *
      * @return ResultObject
      */
     public static ResultObject<ArrayList<Question>> getHighlightQuestions(int pageNo) {
@@ -222,6 +223,7 @@ public class QuestionAPI extends APIBase {
      * 解析html页面获得问题列表
      *
      * @param html 页面内容
+     *
      * @return ResultObject
      */
     public static ResultObject<ArrayList<Question>> parseQuestionsHtml(String html) {
@@ -263,6 +265,7 @@ public class QuestionAPI extends APIBase {
      * 返回问题内容,json格式
      *
      * @param id 问题ID
+     *
      * @return ResultObject
      */
     public static ResultObject<Question> getQuestionDetailByID(String id) {
@@ -275,6 +278,7 @@ public class QuestionAPI extends APIBase {
      * resultObject.result是Question
      *
      * @param url 返回问题内容,json格式
+     *
      * @return ResultObject
      */
     public static ResultObject<Question> getQuestionDetailFromJsonUrl(String url) {
@@ -294,10 +298,8 @@ public class QuestionAPI extends APIBase {
                 question.setAnswerNum(getJsonInt(result, "answers_count"));
                 question.setCommentNum(getJsonInt(result, "replies_count"));
                 question.setAuthor(result.getJSONObject("author").getString("nickname"));
-                question.setAuthorID(result.getJSONObject("author").getString("url")
-                        .replaceAll("\\D+", ""));
-                question.setAuthorAvatarUrl(result.getJSONObject("author").getJSONObject("avatar")
-                        .getString("large").replaceAll("\\?.*$", ""));
+                question.setAuthorID(result.getJSONObject("author").getString("url").replaceAll("\\D+", ""));
+                question.setAuthorAvatarUrl(result.getJSONObject("author").getJSONObject("avatar").getString("large").replaceAll("\\?.*$", ""));
                 question.setContent(getJsonString(result, "annotation_html").replaceAll("<img .*?/>", prefix + "$0" + suffix).replaceAll("style=\"max-width: \\d+px\"", "style=\"max-width: " + maxImageWidth + "px\""));
                 question.setDate(parseDate(getJsonString(result, "date_created")));
                 question.setFollowNum(getJsonInt(result, "followers_count"));
@@ -321,6 +323,7 @@ public class QuestionAPI extends APIBase {
      *
      * @param id     问题id
      * @param offset 从第几个开始加载
+     *
      * @return ResultObject
      */
     public static ResultObject<ArrayList<AceModel>> getQuestionAnswers(String id, int offset) {
@@ -328,11 +331,11 @@ public class QuestionAPI extends APIBase {
         try {
             ArrayList<AceModel> answers = new ArrayList<>();
             String url = "http://apis.guokr.com/ask/answer.json";
-            ArrayList<NameValuePair> pairs = new ArrayList<>();
-            pairs.add(new BasicNameValuePair("retrieve_type", "by_question"));
-            pairs.add(new BasicNameValuePair("question_id", id));
-            pairs.add(new BasicNameValuePair("limit", "20"));
-            pairs.add(new BasicNameValuePair("offset", offset + ""));
+            HashMap<String, String> pairs = new HashMap<>();
+            pairs.put("retrieve_type", "by_question");
+            pairs.put("question_id", id);
+            pairs.put("limit", "20");
+            pairs.put("offset", offset + "");
             String jString = HttpFetcher.get(url, pairs).toString();
             JSONArray comments = getUniversalJsonArray(jString, resultObject);
             if (comments != null) {
@@ -345,10 +348,8 @@ public class QuestionAPI extends APIBase {
                     if (exists) {
                         ans.setAuthor(getJsonString(authorObject, "nickname"));
                         ans.setAuthorTitle(getJsonString(authorObject, "title"));
-                        ans.setAuthorID(getJsonString(authorObject, "url")
-                                .replaceAll("\\D+", ""));
-                        ans.setAuthorAvatarUrl(getJsonObject(authorObject, "avatar")
-                                .getString("large").replaceAll("\\?.*$", ""));
+                        ans.setAuthorID(getJsonString(authorObject, "url").replaceAll("\\D+", ""));
+                        ans.setAuthorAvatarUrl(getJsonObject(authorObject, "avatar").getString("large").replaceAll("\\?.*$", ""));
                     } else {
                         ans.setAuthor("此用户不存在");
                     }
@@ -379,6 +380,7 @@ public class QuestionAPI extends APIBase {
      * 根据一条评论的id获取评论内容，主要应用于消息通知
      *
      * @param url 评论id
+     *
      * @return resultObject resultObject.result是UComment
      */
     public static ResultObject<QuestionAnswer> getSingleAnswerFromRedirectUrl(String url) {
@@ -391,6 +393,7 @@ public class QuestionAPI extends APIBase {
      * 根据一条评论的id获取评论内容，主要应用于消息通知
      *
      * @param id 评论id
+     *
      * @return resultObject resultObject.result是UComment
      */
     public static ResultObject<QuestionAnswer> getSingleAnswerByID(String id) {
@@ -398,8 +401,8 @@ public class QuestionAPI extends APIBase {
         String url = "http://apis.guokr.com/ask/answer.json";
         //url还有另一种形式，http://apis.guokr.com/ask/answer/999999.json
         //这样后面就不必带answer_id参数了
-        ArrayList<NameValuePair> pairs = new ArrayList<>();
-        pairs.add(new BasicNameValuePair("answer_id", id));
+        HashMap<String, String> pairs = new HashMap<>();
+        pairs.put("answer_id", id);
         try {
             String result = HttpFetcher.get(url, pairs).toString();
             JSONArray answerArray = getUniversalJsonArray(result, resultObject);
@@ -467,6 +470,7 @@ public class QuestionAPI extends APIBase {
      *
      * @param id     问题id
      * @param offset 从第几个开始加载
+     *
      * @return ResultObject
      */
     public static ResultObject<ArrayList<UComment>> getQuestionComments(String id, int offset) {
@@ -474,11 +478,11 @@ public class QuestionAPI extends APIBase {
         try {
             ArrayList<UComment> list = new ArrayList<>();
             String url = "http://www.guokr.com/apis/ask/question_reply.json";
-            ArrayList<NameValuePair> pairs = new ArrayList<>();
-            pairs.add(new BasicNameValuePair("retrieve_type", "by_question"));
-            pairs.add(new BasicNameValuePair("question_id", id));
-            pairs.add(new BasicNameValuePair("limit", "20"));
-            pairs.add(new BasicNameValuePair("offset", offset + ""));
+            HashMap<String, String> pairs = new HashMap<>();
+            pairs.put("retrieve_type", "by_question");
+            pairs.put("question_id", id);
+            pairs.put("limit", "20");
+            pairs.put("offset", offset + "");
             String jString = HttpFetcher.get(url, pairs).toString();
             JSONArray comments = getUniversalJsonArray(jString, resultObject);
             if (comments != null) {
@@ -486,10 +490,8 @@ public class QuestionAPI extends APIBase {
                     JSONObject jsonObject = comments.getJSONObject(i);
                     UComment comment = new UComment();
                     comment.setAuthor(jsonObject.getJSONObject("author").getString("nickname"));
-                    comment.setAuthorID(jsonObject.getJSONObject("author").getString("url")
-                            .replaceAll("\\D+", ""));
-                    comment.setAuthorAvatarUrl(jsonObject.getJSONObject("author")
-                            .getJSONObject("avatar").getString("large").replaceAll("\\?.*$", ""));
+                    comment.setAuthorID(jsonObject.getJSONObject("author").getString("url").replaceAll("\\D+", ""));
+                    comment.setAuthorAvatarUrl(jsonObject.getJSONObject("author").getJSONObject("avatar").getString("large").replaceAll("\\?.*$", ""));
                     comment.setContent(getJsonString(jsonObject, "text"));
                     comment.setDate(parseDate(getJsonString(jsonObject, "date_created")));
                     comment.setID(getJsonString(jsonObject, "id"));
@@ -511,6 +513,7 @@ public class QuestionAPI extends APIBase {
      *
      * @param id     答案id
      * @param offset 从第几个开始加载
+     *
      * @return ResultObject
      */
     public static ResultObject<ArrayList<UComment>> getAnswerComments(String id, int offset) {
@@ -518,11 +521,11 @@ public class QuestionAPI extends APIBase {
         try {
             ArrayList<UComment> list = new ArrayList<>();
             String url = "http://www.guokr.com/apis/ask/answer_reply.json";
-            ArrayList<NameValuePair> pairs = new ArrayList<>();
-            pairs.add(new BasicNameValuePair("retrieve_type", "by_answer"));
-            pairs.add(new BasicNameValuePair("answer_id", id));
-            pairs.add(new BasicNameValuePair("limit", "20"));
-            pairs.add(new BasicNameValuePair("offset", offset + ""));
+            HashMap<String, String> pairs = new HashMap<>();
+            pairs.put("retrieve_type", "by_answer");
+            pairs.put("answer_id", id);
+            pairs.put("limit", "20");
+            pairs.put("offset", offset + "");
             String jString = HttpFetcher.get(url, pairs).toString();
             JSONArray comments = getUniversalJsonArray(jString, resultObject);
             if (comments != null) {
@@ -535,10 +538,8 @@ public class QuestionAPI extends APIBase {
                     comment.setAuthorExists(exists);
                     if (exists) {
                         comment.setAuthor(getJsonString(authorObject, "nickname"));
-                        comment.setAuthorID(getJsonString(authorObject, "url")
-                                .replaceAll("\\D+", ""));
-                        comment.setAuthorAvatarUrl(getJsonObject(authorObject, "avatar")
-                                .getString("large").replaceAll("\\?.*$", ""));
+                        comment.setAuthorID(getJsonString(authorObject, "url").replaceAll("\\D+", ""));
+                        comment.setAuthorAvatarUrl(getJsonObject(authorObject, "avatar").getString("large").replaceAll("\\?.*$", ""));
                     } else {
                         comment.setAuthor("此用户不存在");
                     }
@@ -563,15 +564,16 @@ public class QuestionAPI extends APIBase {
      *
      * @param id      问题id
      * @param content 答案内容
+     *
      * @return ResultObject.result is the reply_id if ok;
      */
     public static ResultObject<String> answerQuestion(String id, String content) {
         ResultObject<String> resultObject = new ResultObject<>();
         try {
             String url = "http://apis.guokr.com/ask/answer.json";
-            ArrayList<NameValuePair> pairs = new ArrayList<>();
-            pairs.add(new BasicNameValuePair("question_id", id));
-            pairs.add(new BasicNameValuePair("content", content));
+            HashMap<String, String> pairs = new HashMap<>();
+            pairs.put("question_id", id);
+            pairs.put("content", content);
             String result = HttpFetcher.post(url, pairs).toString();
             JSONObject resultJson = getUniversalJsonObject(result, resultObject);
             if (resultJson != null) {
@@ -589,6 +591,7 @@ public class QuestionAPI extends APIBase {
      * 支持答案
      *
      * @param id 答案id
+     *
      * @return ResultObject
      */
     public static ResultObject supportAnswer(String id) {
@@ -599,6 +602,7 @@ public class QuestionAPI extends APIBase {
      * 反对答案
      *
      * @param id 答案id
+     *
      * @return ResultObject
      */
     public static ResultObject opposeAnswer(String id) {
@@ -610,15 +614,16 @@ public class QuestionAPI extends APIBase {
      *
      * @param id      答案id
      * @param opinion 反对或者赞同，参数
+     *
      * @return ResultObject
      */
     private static ResultObject supportOrOpposeAnswer(String id, String opinion) {
         String url = "http://www.guokr.com/apis/ask/answer_polling.json";
         ResultObject resultObject = new ResultObject();
         try {
-            ArrayList<NameValuePair> pairs = new ArrayList<>();
-            pairs.add(new BasicNameValuePair("answer_id", id));
-            pairs.add(new BasicNameValuePair("opinion", opinion));
+            HashMap<String, String> pairs = new HashMap<>();
+            pairs.put("answer_id", id);
+            pairs.put("opinion", opinion);
             String result = HttpFetcher.post(url, pairs).toString();
             if (getUniversalJsonSimpleBoolean(result, resultObject)) {
                 resultObject.ok = true;
@@ -633,15 +638,16 @@ public class QuestionAPI extends APIBase {
      * 感谢答案
      *
      * @param id 答案id
+     *
      * @return ResultObject
      */
     public static ResultObject thankAnswer(String id) {
         String url = "http://www.guokr.com/apis/ask/answer_thanking.json";
         ResultObject resultObject = new ResultObject();
         try {
-            ArrayList<NameValuePair> pairs = new ArrayList<>();
-            pairs.add(new BasicNameValuePair("v", System.currentTimeMillis() + ""));
-            pairs.add(new BasicNameValuePair("answer_id", id));
+            HashMap<String, String> pairs = new HashMap<>();
+            pairs.put("v", System.currentTimeMillis() + "");
+            pairs.put("answer_id", id);
             String result = HttpFetcher.post(url, pairs).toString();
             if (getUniversalJsonSimpleBoolean(result, resultObject)) {
                 resultObject.ok = true;
@@ -656,15 +662,16 @@ public class QuestionAPI extends APIBase {
      * 不是答案
      *
      * @param id 答案id
+     *
      * @return ResultObject
      */
     public static ResultObject buryAnswer(String id) {
         String url = "http://www.guokr.com/apis/ask/answer_burying.json";
         ResultObject resultObject = new ResultObject();
         try {
-            ArrayList<NameValuePair> pairs = new ArrayList<>();
-            pairs.add(new BasicNameValuePair("v", System.currentTimeMillis() + ""));
-            pairs.add(new BasicNameValuePair("answer_id", id));
+            HashMap<String, String> pairs = new HashMap<>();
+            pairs.put("v", System.currentTimeMillis() + "");
+            pairs.put("answer_id", id);
             String result = HttpFetcher.post(url, pairs).toString();
             if (getUniversalJsonSimpleBoolean(result, resultObject)) {
                 resultObject.ok = true;
@@ -679,14 +686,15 @@ public class QuestionAPI extends APIBase {
      * 取消不是答案
      *
      * @param id 答案id
+     *
      * @return ResultObject
      */
     public static ResultObject unBuryAnswer(String id) {
         String url = "http://www.guokr.com/apis/ask/answer_burying.json";
         ResultObject resultObject = new ResultObject();
         try {
-            ArrayList<NameValuePair> pairs = new ArrayList<>();
-            pairs.add(new BasicNameValuePair("answer_id", id));
+            HashMap<String, String> pairs = new HashMap<>();
+            pairs.put("answer_id", id);
             String result = HttpFetcher.delete(url, pairs).toString();
             if (getUniversalJsonSimpleBoolean(result, resultObject)) {
                 resultObject.ok = true;
@@ -704,6 +712,7 @@ public class QuestionAPI extends APIBase {
      * @param title      问题标题
      * @param summary    问题summary
      * @param comment    推荐评语
+     *
      * @return ResultObject
      */
     public static ResultObject recommendQuestion(String questionID, String title, String summary, String comment) {
@@ -715,14 +724,15 @@ public class QuestionAPI extends APIBase {
      * 关注问题
      *
      * @param questionID 问题id
+     *
      * @return ResultObject
      */
     public static ResultObject followQuestion(String questionID) {
         ResultObject resultObject = new ResultObject();
         String url = "http://www.guokr.com/apis/ask/question_follower.json";
-        ArrayList<NameValuePair> pairs = new ArrayList<>();
-        pairs.add(new BasicNameValuePair("question_id", questionID));
-        pairs.add(new BasicNameValuePair("retrieve_type", "by_question"));
+        HashMap<String, String> pairs = new HashMap<>();
+        pairs.put("question_id", questionID);
+        pairs.put("retrieve_type", "by_question");
         try {
             String result = HttpFetcher.post(url, pairs).toString();
             if (getUniversalJsonSimpleBoolean(result, resultObject)) {
@@ -738,14 +748,15 @@ public class QuestionAPI extends APIBase {
      * 取消关注问题
      *
      * @param questionID 问题id
+     *
      * @return ResultObject
      */
     public static ResultObject unfollowQuestion(String questionID) {
         ResultObject resultObject = new ResultObject();
         String url = "http://www.guokr.com/apis/ask/question_follower.json";
-        ArrayList<NameValuePair> pairs = new ArrayList<>();
-        pairs.add(new BasicNameValuePair("question_id", questionID));
-        pairs.add(new BasicNameValuePair("retrieve_type", "by_question"));
+        HashMap<String, String> pairs = new HashMap<>();
+        pairs.put("question_id", questionID);
+        pairs.put("retrieve_type", "by_question");
         try {
             String result = HttpFetcher.delete(url, pairs).toString();
             if (getUniversalJsonSimpleBoolean(result, resultObject)) {
@@ -763,25 +774,24 @@ public class QuestionAPI extends APIBase {
      *
      * @param questionID 问题id
      * @param comment    评论内容
+     *
      * @return ResultObject
      */
     public static ResultObject<UComment> commentOnQuestion(String questionID, String comment) {
         String url = "http://www.guokr.com/apis/ask/question_reply.json";
         ResultObject<UComment> resultObject = new ResultObject<>();
         try {
-            ArrayList<NameValuePair> pairs = new ArrayList<>();
-            pairs.add(new BasicNameValuePair("question_id", questionID));
-            pairs.add(new BasicNameValuePair("content", comment));
-            pairs.add(new BasicNameValuePair("retrieve_type", "by_question"));
+            HashMap<String, String> pairs = new HashMap<>();
+            pairs.put("question_id", questionID);
+            pairs.put("content", comment);
+            pairs.put("retrieve_type", "by_question");
             String result = HttpFetcher.post(url, pairs).toString();
             JSONObject jsonObject = getUniversalJsonObject(result, resultObject);
             if (jsonObject != null) {
                 UComment uComment = new UComment();
                 uComment.setAuthor(jsonObject.getJSONObject("author").getString("nickname"));
-                uComment.setAuthorID(jsonObject.getJSONObject("author").getString("url")
-                        .replaceAll("\\D+", ""));
-                uComment.setAuthorAvatarUrl(jsonObject.getJSONObject("author")
-                        .getJSONObject("avatar").getString("large").replaceAll("\\?.*$", ""));
+                uComment.setAuthorID(jsonObject.getJSONObject("author").getString("url").replaceAll("\\D+", ""));
+                uComment.setAuthorAvatarUrl(jsonObject.getJSONObject("author").getJSONObject("avatar").getString("large").replaceAll("\\?.*$", ""));
                 uComment.setContent(getJsonString(jsonObject, "text"));
                 uComment.setDate(parseDate(getJsonString(jsonObject, "date_created")));
                 uComment.setID(getJsonString(jsonObject, "id"));
@@ -799,12 +809,13 @@ public class QuestionAPI extends APIBase {
      * 删除我的答案
      *
      * @param id 答案id
+     *
      * @return ResultObject
      */
     public static ResultObject deleteMyComment(String id) {
         ResultObject resultObject = new ResultObject();
         String url = "http://www.guokr.com/apis/ask/answer/" + id + ".json";
-        ArrayList<NameValuePair> pairs = new ArrayList<>();
+        HashMap<String, String> pairs = new HashMap<>();
         try {
             String result = HttpFetcher.delete(url, pairs).toString();
             resultObject.ok = getUniversalJsonSimpleBoolean(result, resultObject);
@@ -819,25 +830,24 @@ public class QuestionAPI extends APIBase {
      *
      * @param answerID 答案id
      * @param comment  评论内容
+     *
      * @return ResultObject
      */
     public static ResultObject<UComment> commentOnAnswer(String answerID, String comment) {
         String url = "http://www.guokr.com/apis/ask/answer_reply.json";
         ResultObject<UComment> resultObject = new ResultObject<>();
         try {
-            ArrayList<NameValuePair> pairs = new ArrayList<>();
-            pairs.add(new BasicNameValuePair("answer_id", answerID));
-            pairs.add(new BasicNameValuePair("content", comment));
-            pairs.add(new BasicNameValuePair("retrieve_type", "by_answer"));
+            HashMap<String, String> pairs = new HashMap<>();
+            pairs.put("answer_id", answerID);
+            pairs.put("content", comment);
+            pairs.put("retrieve_type", "by_answer");
             String result = HttpFetcher.post(url, pairs).toString();
             JSONObject jsonObject = getUniversalJsonObject(result, resultObject);
             if (jsonObject != null) {
                 UComment uComment = new UComment();
                 uComment.setAuthor(jsonObject.getJSONObject("author").getString("nickname"));
-                uComment.setAuthorID(jsonObject.getJSONObject("author").getString("url")
-                        .replaceAll("\\D+", ""));
-                uComment.setAuthorAvatarUrl(jsonObject.getJSONObject("author")
-                        .getJSONObject("avatar").getString("large").replaceAll("\\?.*$", ""));
+                uComment.setAuthorID(jsonObject.getJSONObject("author").getString("url").replaceAll("\\D+", ""));
+                uComment.setAuthorAvatarUrl(jsonObject.getJSONObject("author").getJSONObject("avatar").getString("large").replaceAll("\\?.*$", ""));
                 uComment.setContent(getJsonString(jsonObject, "text"));
                 uComment.setDate(parseDate(getJsonString(jsonObject, "date_created")));
                 uComment.setID(getJsonString(jsonObject, "id"));
@@ -884,7 +894,9 @@ public class QuestionAPI extends APIBase {
      * @param question   标题
      * @param annotation 补充
      * @param tags       标签
+     *
      * @return ResultObject
+     *
      * @deprecated
      */
     public static ResultObject<String> publishQuestion(String csrf, String question, String annotation, String[] tags) {
@@ -892,24 +904,24 @@ public class QuestionAPI extends APIBase {
         String url = "http://www.guokr.com/questions/new/";
         try {
             ResultObject<String> mdResult = MDUtil.parseMarkdownByGitHub(annotation);
-            String htmlDesc = "";
+            String htmlDesc;
             if (mdResult.ok) {
                 htmlDesc = mdResult.result;
             } else {
                 htmlDesc = MDUtil.Markdown2HtmlDumb(annotation);
             }
             htmlDesc += Config.getComplexReplyTail();
-            ArrayList<NameValuePair> pairs = new ArrayList<>();
-            pairs.add(new BasicNameValuePair("csrf_token", csrf));
-            pairs.add(new BasicNameValuePair("question", question));
-            pairs.add(new BasicNameValuePair("annotation", htmlDesc));
+            HashMap<String, String> pairs = new HashMap<>();
+            pairs.put("csrf_token", csrf);
+            pairs.put("question", question);
+            pairs.put("annotation", htmlDesc);
             for (String tag1 : tags) {
                 String tag = tag1.trim();
                 if (!TextUtils.isEmpty(tag)) {
-                    pairs.add(new BasicNameValuePair("tags", tag));
+                    pairs.put("tags", tag);
                 }
             }
-            pairs.add(new BasicNameValuePair("captcha", ""));
+            pairs.put("captcha", "");
 
             ResultObject result = HttpFetcher.post(url, pairs, false);
             if (result.statusCode == 302 && testPublishResult(result.toString())) {
@@ -926,6 +938,7 @@ public class QuestionAPI extends APIBase {
      * 解析页面结果，看看是不是发表成功了
      *
      * @param res 发表问题返回的结果
+     *
      * @return 是否成功
      */
     private static boolean testPublishResult(String res) {

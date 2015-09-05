@@ -7,6 +7,12 @@ import android.graphics.Matrix;
 import android.os.Environment;
 import android.text.TextUtils;
 
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.MultipartBuilder;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.Response;
+
 import net.nashlegend.sourcewall.AppApplication;
 import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Article;
@@ -17,19 +23,6 @@ import net.nashlegend.sourcewall.request.ResultObject;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.FileUtil;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.HttpVersion;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.params.CoreProtocolPNames;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -68,7 +61,9 @@ public class APIBase {
      * 压缩图片，jpg格式差不多可以压缩到100k左右
      *
      * @param path 要压缩的图片路径
+     *
      * @return 是否成功压缩
+     *
      * @throws IOException
      */
     public static String compressImage(String path) throws IOException {
@@ -124,6 +119,7 @@ public class APIBase {
      *
      * @param path      要上传图片的路径
      * @param watermark 是否打水印
+     *
      * @return 返回ResultObject，resultObject.result是上传后的图片地址，果壳并不会对图片进行压缩
      */
     public static ResultObject<String> uploadImage(String path, boolean watermark) {
@@ -135,22 +131,12 @@ public class APIBase {
                 if (!tmpFile.equals(file)) {
                     file = tmpFile;
                 }
-                HttpClient httpClient = HttpFetcher.getDefaultUploadHttpClient();
-                httpClient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION,
-                        HttpVersion.HTTP_1_1);
-                HttpPost httpPost = new HttpPost(
-                        "http://www.guokr.com/apis/image.json?enable_watermark=" + (watermark ? "true" : "false"));
-                MultipartEntity multipartEntity = new MultipartEntity();
-                multipartEntity.addPart("upload_file", new FileBody(file));
-                multipartEntity.addPart("access_token", new StringBody(UserAPI.getToken()));
-                httpPost.setEntity(multipartEntity);
-                HttpResponse response;
-                String result = "";
-                response = httpClient.execute(httpPost);
-                HttpEntity resEntity = response.getEntity();
-                if (resEntity != null) {
-                    result = EntityUtils.toString(resEntity, HTTP.UTF_8);
-                    JSONObject object = getUniversalJsonObject(result, resultObject);
+                String uploadUrl = "http://www.guokr.com/apis/image.json?enable_watermark=" + String.valueOf(watermark);
+                RequestBody requestBody = new MultipartBuilder().type(MultipartBuilder.FORM).addFormDataPart("access_token", UserAPI.getToken()).addFormDataPart("upload_file", file.getName(), RequestBody.create(MediaType.parse("image/*"), file)).build();
+                Request request = new Request.Builder().url(uploadUrl).post(requestBody).build();
+                Response response = HttpFetcher.getDefaultUploadHttpClient().newCall(request).execute();
+                if (response.isSuccessful()) {
+                    JSONObject object = getUniversalJsonObject(response.body().string(), resultObject);
                     if (object != null) {
                         String url = getJsonString(object, "url");
                         resultObject.ok = true;
@@ -168,6 +154,7 @@ public class APIBase {
      * 使用github的接口转换markdown为html
      *
      * @param text 要转换的文本内容
+     *
      * @return ResultObject
      */
     public static ResultObject<String> parseMarkdownByGitHub(String text) {
@@ -179,22 +166,15 @@ public class APIBase {
         } else {
             String url = "https://api.github.com/markdown";
             try {
-                HttpClient httpClient = HttpFetcher.getDefaultHttpClient();
-                httpClient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION,
-                        HttpVersion.HTTP_1_1);
-                HttpPost httpPost = new HttpPost(url);
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("text", text);
                 jsonObject.put("mode", "gfm");
-                StringEntity entity = new StringEntity(jsonObject.toString(), HTTP.UTF_8);
-                httpPost.setEntity(entity);
-                HttpResponse response;
-
-                response = httpClient.execute(httpPost);
-                HttpEntity resEntity = response.getEntity();
-
-                if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK && resEntity != null) {
-                    String result = EntityUtils.toString(resEntity, HTTP.UTF_8);
+                MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+                RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+                Request request = new Request.Builder().post(body).url(url).build();
+                Response response = HttpFetcher.getDefaultHttpClient().newCall(request).execute();
+                if (response.isSuccessful()) {
+                    String result = response.body().string();
                     resultObject.ok = true;
                     resultObject.result = result;
                 }
@@ -254,7 +234,9 @@ public class APIBase {
      * 这里还可以做一些token过期失败问题的处理，省得在每个地方都判断了。
      *
      * @param json 要进行json解析的文本内容
+     *
      * @return JSONObject
+     *
      * @throws JSONException
      */
     public static JSONObject getUniversalJsonObject(String json, ResultObject resultObject) throws JSONException {
@@ -273,7 +255,9 @@ public class APIBase {
      * 这里还可以做一些token过期失败问题的处理，省得在每个地方都判断了。
      *
      * @param json 要进行json解析的文本内容
+     *
      * @return JSONArray
+     *
      * @throws JSONException
      */
     public static JSONArray getUniversalJsonArray(String json, ResultObject resultObject) throws JSONException {
@@ -293,7 +277,9 @@ public class APIBase {
      * 这里还可以做一些token过期失败问题的处理，省得在每个地方都判断了。
      *
      * @param json 要进行json解析的文本内容
+     *
      * @return 是否为true
+     *
      * @throws JSONException
      */
     public static boolean getUniversalJsonSimpleBoolean(String json, ResultObject resultObject) throws JSONException {
@@ -312,6 +298,7 @@ public class APIBase {
      *
      * @param object
      * @param resultObject
+     *
      * @throws JSONException
      */
     public static void handleBadJson(JSONObject object, ResultObject resultObject) throws JSONException {
@@ -360,6 +347,7 @@ public class APIBase {
      * 将时间转换成可见的。话说果壳返回的时间格式是什么标准
      *
      * @param dateString 传入的时间字符串
+     *
      * @return 解析后的时间 yyyy-mm-dd hh:mm:ss
      */
     @SuppressLint("SimpleDateFormat")

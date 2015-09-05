@@ -1,10 +1,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?attr/color_clear_page_background"
-    tools:context="net.nashlegend.sourcewall.ReplyActivity">
+                xmlns:tools="http://schemas.android.com/tools"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?attr/color_clear_page_background"
+                tools:context="net.nashlegend.sourcewall.ReplyActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/action_bar"
@@ -12,7 +12,7 @@
         app:popupTheme="?attr/toolbarPopTheme"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary" />
+        android:background="?attr/colorPrimary"/>
 
     <LinearLayout
         android:id="@+id/layout_reply"
@@ -35,7 +35,7 @@
             android:text="@string/sample_title"
             android:textColor="?attr/color_reply_quote_text"
             android:textSize="16sp"
-            android:visibility="gone" />
+            android:visibility="gone"/>
 
         <EditText
             android:id="@+id/text_reply"
@@ -49,7 +49,7 @@
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="8dp"
             android:textColor="?attr/color_reply_input_text"
-            android:textColorHint="?attr/color_reply_hint" />
+            android:textColorHint="?attr/color_reply_hint"/>
 
         <LinearLayout
             android:id="@+id/layout_reply_action"
@@ -75,7 +75,7 @@
                     android:layout_height="wrap_content"
 
                     android:background="?attr/background_selectable_borderless"
-                    android:src="@drawable/image_browse" />
+                    android:src="@drawable/image_browse"/>
 
                 <LinearLayout
                     android:id="@+id/prg_uploading_img"
@@ -88,12 +88,12 @@
 
                     <ProgressBar
                         android:layout_width="24dp"
-                        android:layout_height="24dp" />
+                        android:layout_height="24dp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/uploading" />
+                        android:text="@string/uploading"/>
                 </LinearLayout>
 
                 <ImageButton
@@ -102,7 +102,7 @@
                     android:layout_height="wrap_content"
                     android:background="?attr/background_selectable_borderless"
                     android:src="@drawable/insert_image"
-                    android:visibility="gone" />
+                    android:visibility="gone"/>
             </RelativeLayout>
 
             <ImageButton
@@ -111,7 +111,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="?attr/background_selectable_borderless"
-                android:src="@drawable/link" />
+                android:src="@drawable/link"/>
 
             <RelativeLayout
                 android:layout_width="0dp"
@@ -127,7 +127,7 @@
                     android:background="?attr/background_selectable_borderless"
                     android:paddingLeft="13dp"
                     android:paddingRight="13dp"
-                    android:src="@drawable/send" />
+                    android:src="@drawable/send"/>
             </RelativeLayout>
 
         </LinearLayout>

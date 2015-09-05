@@ -81,8 +81,7 @@ public class RequestCache {
                     }
                     if (getUsableSpace(diskCacheDir) > mCacheParams.diskCacheSize) {
                         try {
-                            mDiskLruCache = DiskLruCache.open(
-                                    diskCacheDir, 1, 1, mCacheParams.diskCacheSize);
+                            mDiskLruCache = DiskLruCache.open(diskCacheDir, 1, 1, mCacheParams.diskCacheSize);
                         } catch (final IOException e) {
                             mCacheParams.diskCacheDir = null;
                         }
@@ -316,8 +315,7 @@ public class RequestCache {
 
         public void setMemCacheSizePercent(float percent) {
             if (percent < 0.01f || percent > 0.8f) {
-                throw new IllegalArgumentException("setMemCacheSizePercent - percent must be "
-                        + "between 0.01 and 0.8 (inclusive)");
+                throw new IllegalArgumentException("setMemCacheSizePercent - percent must be " + "between 0.01 and 0.8 (inclusive)");
             }
             memCacheSize = Math.round(percent * Runtime.getRuntime().maxMemory() / 1024);
         }
@@ -378,6 +376,7 @@ public class RequestCache {
      * Get the external app cache directory.
      *
      * @param context The context to use
+     *
      * @return The external cache dir
      */
     @TargetApi(Build.VERSION_CODES.FROYO)
@@ -394,6 +393,7 @@ public class RequestCache {
      * Check how much usable space is available at a given path.
      *
      * @param path The path to check
+     *
      * @return The space available in bytes
      */
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)

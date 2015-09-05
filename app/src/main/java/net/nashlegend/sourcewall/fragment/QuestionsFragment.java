@@ -205,14 +205,12 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
         if (!SharedPreferencesUtil.readBoolean(Consts.Key_User_Has_Learned_Load_My_Tags, false)) {
             SharedPreferencesUtil.saveBoolean(Consts.Key_User_Has_Learned_Load_My_Tags, true);
             User_Has_Learned_Load_My_Tags = true;
-            AlertDialog dialog = new AlertDialog.Builder(getActivity()).setTitle(R.string.hint)
-                    .setMessage(R.string.hint_of_load_my_tags)
-                    .setPositiveButton(R.string.ok_i_know, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    }).create();
+            AlertDialog dialog = new AlertDialog.Builder(getActivity()).setTitle(R.string.hint).setMessage(R.string.hint_of_load_my_tags).setPositiveButton(R.string.ok_i_know, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            }).create();
             dialog.show();
         }
     }
@@ -338,33 +336,31 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
                         manageButton.setVisibility(View.VISIBLE);
                     } else {
                         manageButton.setVisibility(View.INVISIBLE);
-                        AlertDialog dialog = new AlertDialog.Builder(getActivity()).setTitle(R.string.hint)
-                                .setMessage(R.string.ok_to_load_tags)
-                                .setPositiveButton(R.string.confirm_to_load_my_tags, new DialogInterface.OnClickListener() {
+                        AlertDialog dialog = new AlertDialog.Builder(getActivity()).setTitle(R.string.hint).setMessage(R.string.ok_to_load_tags).setPositiveButton(R.string.confirm_to_load_my_tags, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                hideMoreSections();
+                                new Handler().postDelayed(new Runnable() {
                                     @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        hideMoreSections();
-                                        new Handler().postDelayed(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                Intent intent = new Intent(getActivity(), ShuffleTagActivity.class);
-                                                intent.putExtra(Consts.Extra_Should_Load_Before_Shuffle, true);
-                                                startActivityForResult(intent, Consts.Code_Start_Shuffle_Ask_Tags);
-                                                getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
-                                            }
-                                        }, 320);
+                                    public void run() {
+                                        Intent intent = new Intent(getActivity(), ShuffleTagActivity.class);
+                                        intent.putExtra(Consts.Extra_Should_Load_Before_Shuffle, true);
+                                        startActivityForResult(intent, Consts.Code_Start_Shuffle_Ask_Tags);
+                                        getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
                                     }
-                                }).setNegativeButton(R.string.use_default_tags, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        hideMoreSections();
-                                    }
-                                }).setOnCancelListener(new DialogInterface.OnCancelListener() {
-                                    @Override
-                                    public void onCancel(DialogInterface dialog) {
-                                        hideMoreSections();
-                                    }
-                                }).create();
+                                }, 320);
+                            }
+                        }).setNegativeButton(R.string.use_default_tags, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                hideMoreSections();
+                            }
+                        }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                            @Override
+                            public void onCancel(DialogInterface dialog) {
+                                hideMoreSections();
+                            }
+                        }).create();
                         dialog.show();
                     }
                 }

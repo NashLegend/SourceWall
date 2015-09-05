@@ -64,10 +64,7 @@ public class SubItem extends AceModel implements Serializable {
     public boolean equals(Object o) {
         if (o instanceof SubItem) {
             SubItem sb = (SubItem) o;
-            return sb.getName().equals(getName())
-                    && sb.getSection() == getSection()
-                    && sb.getType() == getType()
-                    && sb.getValue().equals(getValue());
+            return sb.getName().equals(getName()) && sb.getSection() == getSection() && sb.getType() == getType() && sb.getValue().equals(getValue());
         }
         return false;
     }

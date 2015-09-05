@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <net.nashlegend.sourcewall.commonview.LListView
         android:id="@+id/list_questions"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@null" />
+        android:divider="@null"/>
 
     <ProgressBar
         android:id="@+id/questions_loading"
@@ -18,13 +18,13 @@
         android:layout_marginTop="8dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
     <net.nashlegend.sourcewall.commonview.LoadingView
         android:id="@+id/question_progress_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
     <FrameLayout
         android:id="@+id/layout_more_sections"
@@ -37,6 +37,6 @@
         <ScrollView
             android:id="@+id/plastic_scroller"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"/>
     </FrameLayout>
 </RelativeLayout>

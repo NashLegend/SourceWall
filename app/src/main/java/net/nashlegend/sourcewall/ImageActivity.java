@@ -14,8 +14,6 @@ import com.squareup.picasso.Picasso;
 import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.adapters.ImageAdapter;
-import net.nashlegend.sourcewall.commonview.AAsyncTask;
-import net.nashlegend.sourcewall.commonview.IStackedAsyncTaskInterface;
 import net.nashlegend.sourcewall.request.RequestCache;
 import net.nashlegend.sourcewall.request.ResultObject;
 import net.nashlegend.sourcewall.util.Consts;

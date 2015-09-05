@@ -1,8 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?attr/color_drawer_background"
-    android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="?attr/color_drawer_background"
+              android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/layout_user"
@@ -20,7 +20,7 @@
             android:layout_width="@dimen/list_standard_comment_avatar_dimen"
             android:layout_height="@dimen/list_standard_comment_avatar_dimen"
             android:layout_weight="0"
-            android:src="@drawable/default_avatar" />
+            android:src="@drawable/default_avatar"/>
 
         <TextView
             android:id="@+id/text_name"
@@ -30,7 +30,7 @@
             android:layout_weight="1"
             android:text="@string/click_to_login"
             android:textColor="?attr/color_drawer_author"
-            android:textSize="16sp" />
+            android:textSize="16sp"/>
 
         <ImageView
             android:id="@+id/image_notice"
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:src="@drawable/lightbulb"
-            android:visibility="gone" />
+            android:visibility="gone"/>
 
     </LinearLayout>
 
@@ -46,7 +46,7 @@
         android:layout_width="match_parent"
         android:layout_height="0.4dp"
         android:layout_weight="0"
-        android:background="@android:color/darker_gray" />
+        android:background="@android:color/darker_gray"/>
 
     <ExpandableListView
         android:id="@+id/list_channel"
@@ -55,13 +55,13 @@
         android:layout_weight="1"
         android:childDivider="@null"
         android:choiceMode="singleChoice"
-        android:divider="@null" />
+        android:divider="@null"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.4dp"
         android:layout_weight="0"
-        android:background="@android:color/darker_gray" />
+        android:background="@android:color/darker_gray"/>
 
     <LinearLayout
         android:id="@+id/view_switch_to_day"
@@ -78,7 +78,7 @@
         <ImageView
             android:layout_width="28dp"
             android:layout_height="28dp"
-            android:src="@drawable/day_mode" />
+            android:src="@drawable/day_mode"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -86,7 +86,7 @@
             android:layout_marginLeft="10dp"
             android:text="@string/switch_to_normal_mode"
             android:textColor="?attr/color_drawer_button_text"
-            android:textSize="16sp" />
+            android:textSize="16sp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -103,7 +103,7 @@
         <ImageView
             android:layout_width="28dp"
             android:layout_height="28dp"
-            android:src="@drawable/night_mode" />
+            android:src="@drawable/night_mode"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -111,7 +111,7 @@
             android:layout_marginLeft="10dp"
             android:text="@string/switch_to_night_mode"
             android:textColor="?attr/color_drawer_button_text"
-            android:textSize="16sp" />
+            android:textSize="16sp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -128,7 +128,7 @@
         <ImageView
             android:layout_width="28dp"
             android:layout_height="28dp"
-            android:src="@drawable/settings" />
+            android:src="@drawable/settings"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -136,6 +136,6 @@
             android:layout_marginLeft="10dp"
             android:text="@string/action_settings"
             android:textColor="?attr/color_drawer_button_text"
-            android:textSize="16sp" />
+            android:textSize="16sp"/>
     </LinearLayout>
 </LinearLayout>

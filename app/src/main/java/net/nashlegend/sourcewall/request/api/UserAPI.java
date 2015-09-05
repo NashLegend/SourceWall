@@ -17,12 +17,11 @@ import net.nashlegend.sourcewall.request.ResultObject;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by NashLegend on 2014/11/25 0025
@@ -55,6 +54,7 @@ public class UserAPI extends APIBase {
      * 通过用户的ukey获取用户的详细信息
      *
      * @param ukey 用户ukey
+     *
      * @return ResultObject
      */
     public static ResultObject<UserInfo> getUserInfoByUkey(String ukey) {
@@ -71,8 +71,7 @@ public class UserAPI extends APIBase {
                 info.setUkey(getJsonString(subObject, "ukey"));
                 info.setUrl(getJsonString(subObject, "url"));
                 info.setId(info.getUrl().replaceAll("^\\D+(\\d+)\\D*", "$1"));
-                info.setAvatar(subObject.getJSONObject("avatar")
-                        .getString("large").replaceAll("\\?.*$", ""));
+                info.setAvatar(subObject.getJSONObject("avatar").getString("large").replaceAll("\\?.*$", ""));
                 resultObject.result = info;
                 resultObject.ok = true;
             }
@@ -86,6 +85,7 @@ public class UserAPI extends APIBase {
      * 通过用户id获取用户信息
      *
      * @param id 用户id
+     *
      * @return ResultObject
      */
     public static ResultObject<UserInfo> getUserInfoByID(String id) {
@@ -120,8 +120,8 @@ public class UserAPI extends APIBase {
         ResultObject<ReminderNoticeNum> resultObject = new ResultObject<>();
         try {
             String url = "http://www.guokr.com/apis/community/rn_num.json";
-            ArrayList<NameValuePair> pairs = new ArrayList<>();
-            pairs.add(new BasicNameValuePair("_", System.currentTimeMillis() + ""));
+            HashMap<String, String> pairs = new HashMap<>();
+            pairs.put("_", System.currentTimeMillis() + "");
             String result = HttpFetcher.get(url, pairs).toString();
             JSONObject object = getUniversalJsonObject(result, resultObject);
             if (object != null) {
@@ -146,10 +146,10 @@ public class UserAPI extends APIBase {
         ResultObject<ArrayList<Reminder>> resultObject = new ResultObject<>();
         try {
             String url = "http://www.guokr.com/apis/community/reminder.json";
-            ArrayList<NameValuePair> pairs = new ArrayList<>();
-            pairs.add(new BasicNameValuePair("_", System.currentTimeMillis() + ""));
-            pairs.add(new BasicNameValuePair("limit", "20"));
-            pairs.add(new BasicNameValuePair("offset", offset + ""));
+            HashMap<String, String> pairs = new HashMap<>();
+            pairs.put("_", System.currentTimeMillis() + "");
+            pairs.put("limit", "20");
+            pairs.put("offset", offset + "");
             String result = HttpFetcher.get(url, pairs).toString();
             JSONArray reminders = getUniversalJsonArray(result, resultObject);
             if (reminders != null) {
@@ -183,10 +183,10 @@ public class UserAPI extends APIBase {
         ResultObject<ArrayList<Notice>> resultObject = new ResultObject<>();
         try {
             String url = "http://www.guokr.com/apis/community/notice.json";
-            ArrayList<NameValuePair> pairs = new ArrayList<>();
-            pairs.add(new BasicNameValuePair("_", System.currentTimeMillis() + ""));
-//            pairs.add(new BasicNameValuePair("limit", "20"));
-//            pairs.add(new BasicNameValuePair("offset", offset + ""));
+            HashMap<String, String> pairs = new HashMap<>();
+            pairs.put("_", System.currentTimeMillis() + "");
+            pairs.put("limit", "1024");
+            pairs.put("offset", "0");
             String result = HttpFetcher.get(url, pairs).toString();
             JSONArray notices = getUniversalJsonArray(result, resultObject);
             if (notices != null) {
@@ -220,7 +220,7 @@ public class UserAPI extends APIBase {
         ResultObject resultObject = new ResultObject();
         try {
             String url = "http://www.guokr.com/apis/community/notice_ignore.json";
-            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            HashMap<String, String> pairs = new HashMap<>();
             String result = HttpFetcher.put(url, pairs).toString();
             resultObject.ok = getUniversalJsonSimpleBoolean(result, resultObject);
         } catch (Exception e) {
@@ -238,9 +238,9 @@ public class UserAPI extends APIBase {
         ResultObject<ArrayList<Notice>> resultObject = new ResultObject<>();
         try {
             String url = "http://www.guokr.com/apis/community/notice_ignore.json";
-            ArrayList<NameValuePair> pairs = new ArrayList<>();
-            pairs.add(new BasicNameValuePair("nid", noticeID));
-            pairs.add(new BasicNameValuePair("_", System.currentTimeMillis() + ""));
+            HashMap<String, String> pairs = new HashMap<>();
+            pairs.put("nid", noticeID);
+            pairs.put("_", System.currentTimeMillis() + "");
             String result = HttpFetcher.put(url, pairs).toString();
             JSONObject nObject = getUniversalJsonObject(result, resultObject);
             if (nObject != null) {
@@ -275,9 +275,9 @@ public class UserAPI extends APIBase {
         ResultObject<ArrayList<Message>> resultObject = new ResultObject<>();
         try {
             String url = "http://www.guokr.com/apis/community/user/message.json";
-            ArrayList<NameValuePair> pairs = new ArrayList<>();
-            pairs.add(new BasicNameValuePair("limit", "20"));
-            pairs.add(new BasicNameValuePair("offset", offset + ""));
+            HashMap<String, String> pairs = new HashMap<>();
+            pairs.put("limit", "20");
+            pairs.put("offset", offset + "");
             String result = HttpFetcher.get(url, pairs).toString();
             JSONArray notices = getUniversalJsonArray(result, resultObject);
             if (notices != null) {
@@ -314,7 +314,7 @@ public class UserAPI extends APIBase {
         ResultObject<Message> resultObject = new ResultObject<>();
         try {
             String url = "http://www.guokr.com/apis/community/user/message/" + id + ".json";
-            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            HashMap<String, String> pairs = new HashMap<>();
             String result = HttpFetcher.get(url, pairs).toString();
             JSONObject noticesObject = getUniversalJsonObject(result, resultObject);
             if (noticesObject != null) {
@@ -341,16 +341,17 @@ public class UserAPI extends APIBase {
      * @param link     链接地址
      * @param title    链接标题
      * @param basketID 收藏果篮的id
+     *
      * @return ResultObject
      */
     public static ResultObject favorLink(String link, String title, String basketID) {
         ResultObject resultObject = new ResultObject();
         try {
             String url = "http://www.guokr.com/apis/favorite/link.json";
-            ArrayList<NameValuePair> params = new ArrayList<>();
-            params.add(new BasicNameValuePair("basket_id", basketID));
-            params.add(new BasicNameValuePair("url", link));
-            params.add(new BasicNameValuePair("title", title));
+            HashMap<String, String> params = new HashMap<>();
+            params.put("basket_id", basketID);
+            params.put("url", link);
+            params.put("title", title);
             String result = HttpFetcher.post(url, params).toString();
             if (getUniversalJsonSimpleBoolean(result, resultObject)) {
                 resultObject.ok = true;
@@ -368,6 +369,7 @@ public class UserAPI extends APIBase {
      * @param title   链接标题
      * @param summary 内容概述
      * @param comment 评语
+     *
      * @return ResultObject
      */
     public static ResultObject recommendLink(String link, String title, String summary, String comment) {
@@ -377,12 +379,12 @@ public class UserAPI extends APIBase {
             summary = title;
         }
         try {
-            ArrayList<NameValuePair> pairs = new ArrayList<>();
-            pairs.add(new BasicNameValuePair("title", title));
-            pairs.add(new BasicNameValuePair("url", link));
-            pairs.add(new BasicNameValuePair("summary", summary));
-            pairs.add(new BasicNameValuePair("comment", comment));
-            pairs.add(new BasicNameValuePair("target", "activity"));
+            HashMap<String, String> pairs = new HashMap<>();
+            pairs.put("title", title);
+            pairs.put("url", link);
+            pairs.put("summary", summary);
+            pairs.put("comment", comment);
+            pairs.put("target", "activity");
             String result = HttpFetcher.post(url, pairs).toString();
             if (getUniversalJsonSimpleBoolean(result, resultObject)) {
                 resultObject.ok = true;
@@ -402,11 +404,11 @@ public class UserAPI extends APIBase {
         ResultObject<ArrayList<Basket>> resultObject = new ResultObject<>();
         String url = "http://www.guokr.com/apis/favorite/basket.json";
         try {
-            ArrayList<NameValuePair> pairs = new ArrayList<>();
-            pairs.add(new BasicNameValuePair("t", System.currentTimeMillis() + ""));
-            pairs.add(new BasicNameValuePair("retrieve_type", "by_ukey"));
-            pairs.add(new BasicNameValuePair("ukey", getUkey()));
-            pairs.add(new BasicNameValuePair("limit", "100"));
+            HashMap<String, String> pairs = new HashMap<>();
+            pairs.put("t", System.currentTimeMillis() + "");
+            pairs.put("retrieve_type", "by_ukey");
+            pairs.put("ukey", getUkey());
+            pairs.put("limit", "100");
             String result = HttpFetcher.get(url, pairs).toString();
             JSONArray jsonArray = getUniversalJsonArray(result, resultObject);
             if (jsonArray != null) {
@@ -441,16 +443,17 @@ public class UserAPI extends APIBase {
      * @param title        果篮名
      * @param introduction 果篮介绍
      * @param category_id  category
+     *
      * @return ResultObject.result is Basket
      */
     public static ResultObject<Basket> createBasket(String title, String introduction, String category_id) {
         ResultObject<Basket> resultObject = new ResultObject<>();
         try {
             String url = "http://www.guokr.com/apis/favorite/basket.json";
-            ArrayList<NameValuePair> params = new ArrayList<>();
-            params.add(new BasicNameValuePair("title", title));
-            params.add(new BasicNameValuePair("introduction", introduction));
-            params.add(new BasicNameValuePair("category_id", category_id));
+            HashMap<String, String> params = new HashMap<>();
+            params.put("title", title);
+            params.put("introduction", introduction);
+            params.put("category_id", category_id);
             String result = HttpFetcher.post(url, params).toString();
             JSONObject subObject = getUniversalJsonObject(result, resultObject);
             if (subObject != null) {
@@ -484,7 +487,7 @@ public class UserAPI extends APIBase {
         ResultObject<ArrayList<Category>> resultObject = new ResultObject<>();
         try {
             String url = "http://www.guokr.com/apis/favorite/category.json";
-            ArrayList<NameValuePair> pairs = new ArrayList<>();
+            HashMap<String, String> pairs = new HashMap<>();
             String result = HttpFetcher.get(url, pairs).toString();
             JSONArray jsonArray = getUniversalJsonArray(result, resultObject);
             if (jsonArray != null) {
@@ -508,6 +511,7 @@ public class UserAPI extends APIBase {
     /**
      * 退出登录、清除过期数据
      */
+    @SuppressWarnings("deprecation")
     public static void clearMyInfo() {
         SharedPreferencesUtil.remove(Consts.Key_Access_Token);
         SharedPreferencesUtil.remove(Consts.Key_Ukey);
@@ -520,8 +524,9 @@ public class UserAPI extends APIBase {
         cookieManager.hasCookies();
         cookieManager.removeSessionCookie();
         CookieSyncManager.getInstance().sync();
-        HttpFetcher.getDefaultHttpClient().getCookieStore().clear();
-        HttpFetcher.getDefaultUploadHttpClient().getCookieStore().clear();
+        //直接置为null不就得了……
+        HttpFetcher.clearCookiesForOkHttp(HttpFetcher.getDefaultUploadHttpClient());
+        HttpFetcher.clearCookiesForOkHttp(HttpFetcher.getDefaultUploadHttpClient());
     }
 
     /**

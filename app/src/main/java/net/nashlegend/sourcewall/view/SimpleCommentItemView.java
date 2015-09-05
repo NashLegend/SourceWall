@@ -50,9 +50,7 @@ public class SimpleCommentItemView extends AceView<UComment> {
         dateView.setText(comment.getDate());
         contentView.setText(comment.getContent());
         if (Config.shouldLoadImage()) {
-            Picasso.with(getContext()).load(comment.getAuthorAvatarUrl())
-                    .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen).placeholder(R.drawable.default_avatar)
-                    .transform(new RoundTransformation(Color.parseColor("#00000000"), 0, true)).into(avatarImage);
+            Picasso.with(getContext()).load(comment.getAuthorAvatarUrl()).resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen).placeholder(R.drawable.default_avatar).transform(new RoundTransformation(Color.parseColor("#00000000"), 0, true)).into(avatarImage);
         } else {
             avatarImage.setImageResource(R.drawable.default_avatar);
         }

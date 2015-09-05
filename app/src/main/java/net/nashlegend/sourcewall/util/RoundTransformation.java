@@ -1,4 +1,3 @@
-
 package net.nashlegend.sourcewall.util;
 
 import android.graphics.Bitmap;

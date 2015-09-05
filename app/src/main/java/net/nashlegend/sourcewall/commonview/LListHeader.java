@@ -38,7 +38,6 @@ public class LListHeader extends FrameLayout {
         if (dist < 0 && !isVisible()) {
             return false;
         }
-
         if (currentState != LListView.State_Refreshing) {
             // 这时只有两种可能的状态State_Release_To_Refresh和State_Pull_To_Refresh
             // 或许可以做更多
@@ -183,8 +182,7 @@ public class LListHeader extends FrameLayout {
     }
 
     @Override
-    protected void onLayout(boolean changed, int left, int top, int right,
-                            int bottom) {
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         if (!layouted) {
             layouted = true;
@@ -237,7 +235,7 @@ public class LListHeader extends FrameLayout {
             }
             ViewGroup.LayoutParams params = getLayoutParams();
             if (params != null) {
-                params.height = 0;
+                params.height = height;
                 setLayoutParams(params);
             }
         }
