@@ -808,7 +808,8 @@ public class PostAPI extends APIBase {
             pairs.put("share_opts", "activity");
 
             ResultObject result = HttpFetcher.post(url, pairs, false);
-            if (result.statusCode == 302) {
+            //这里已经将302手动设置为了200，所以
+            if (result.statusCode == 200) {
                 try {
                     String replyRedirectResult = result.toString();
                     Document document = Jsoup.parse(replyRedirectResult);

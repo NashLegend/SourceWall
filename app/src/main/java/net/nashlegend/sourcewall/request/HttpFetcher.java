@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.net.HttpURLConnection;
@@ -210,7 +211,7 @@ public class HttpFetcher {
         Map<String, List<String>> cookies = new HashMap<>();
         cookies.put("Set-Cookie", values);
         try {
-            client.getCookieHandler().put(new URI("guokr.com"), cookies);
+            client.getCookieHandler().put(new URI("http://.guokr.com"), cookies);
         } catch (Exception e) {
             e.printStackTrace();
         }
