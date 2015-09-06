@@ -46,6 +46,7 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'org.jsoup:jsoup:1.8.3'
     compile 'com.squareup.okhttp:okhttp:2.5.0'
     compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'com.android.support:support-v4:23.0.1'
