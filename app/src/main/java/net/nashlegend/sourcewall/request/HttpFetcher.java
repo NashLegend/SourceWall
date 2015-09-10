@@ -194,7 +194,7 @@ public class HttpFetcher {
             uploadHttpClient = new OkHttpClient();
             CookieManager cookieManager = new CookieManager();
             cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
-            defaultHttpClient.setCookieHandler(cookieManager);
+            uploadHttpClient.setCookieHandler(cookieManager);
             uploadHttpClient.setConnectTimeout(CONNECTION_TIMEOUT, TimeUnit.MILLISECONDS);
             uploadHttpClient.setReadTimeout(SO_TIMEOUT, TimeUnit.MILLISECONDS);
             uploadHttpClient.setWriteTimeout(UPLOAD_SO_TIMEOUT, TimeUnit.MILLISECONDS);
