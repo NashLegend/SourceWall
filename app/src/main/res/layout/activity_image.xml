@@ -1,14 +1,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@android:color/black"
-                tools:context="net.nashlegend.sourcewall.ImageActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black"
+    tools:context="net.nashlegend.sourcewall.ImageActivity">
 
-    <android.support.v4.view.ViewPager
+    <net.nashlegend.sourcewall.commonview.AdaptivePager
         android:id="@+id/image_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
     <LinearLayout
         android:id="@+id/layoutHead"
@@ -30,12 +30,12 @@
             android:text="0/0"
             android:textColor="#FFFFFF"
             android:textIsSelectable="true"
-            android:textSize="20sp"/>
+            android:textSize="20sp" />
 
         <View
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
 
         <ImageButton
@@ -44,7 +44,7 @@
             android:layout_height="35dp"
             android:layout_weight="0"
             android:background="@android:color/transparent"
-            android:src="@drawable/ic_download"/>
+            android:src="@drawable/ic_download" />
 
     </LinearLayout>
 </RelativeLayout>
