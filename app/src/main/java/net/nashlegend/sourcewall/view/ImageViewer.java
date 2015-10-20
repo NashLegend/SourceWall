@@ -15,6 +15,7 @@ import com.squareup.picasso.Picasso;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.commonview.LoadingView;
+import net.nashlegend.sourcewall.commonview.ScalingImage;
 import net.nashlegend.sourcewall.request.RequestCache;
 import net.nashlegend.sourcewall.request.ResultObject;
 import net.nashlegend.sourcewall.util.DisplayUtil;
@@ -28,7 +29,7 @@ import pl.droidsonroids.gif.GifImageView;
  * Created by NashLegend on 2015/3/31 0031
  */
 public class ImageViewer extends FrameLayout implements LoadingView.ReloadListener {
-    SubsamplingScaleImageView imageView;
+    ScalingImage imageView;
     GifImageView gifImageView;
     LoadingView loadingView;
     LoaderTask task;
@@ -38,7 +39,7 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
         super(context);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_image_viewer, this);
-        imageView = (SubsamplingScaleImageView) findViewById(R.id.zoom_image);
+        imageView = (ScalingImage) findViewById(R.id.zoom_image);
         gifImageView = (GifImageView) findViewById(R.id.gifImage);
         gifImageView.setVisibility(VISIBLE);
         imageView.setVisibility(GONE);
