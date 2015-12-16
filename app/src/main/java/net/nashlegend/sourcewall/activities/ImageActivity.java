@@ -1,4 +1,4 @@
-package net.nashlegend.sourcewall;
+package net.nashlegend.sourcewall.activities;
 
 import android.media.MediaScannerConnection;
 import android.os.AsyncTask;
@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.umeng.analytics.MobclickAgent;
 
+import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.ImageAdapter;
 import net.nashlegend.sourcewall.request.RequestCache;
 import net.nashlegend.sourcewall.request.ResultObject;

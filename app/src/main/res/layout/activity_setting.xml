@@ -5,7 +5,7 @@
               android:layout_height="match_parent"
               android:background="?attr/color_clear_page_background"
               android:orientation="vertical"
-              tools:context="net.nashlegend.sourcewall.SettingActivity">
+              tools:context=".activities.SettingActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/action_bar"

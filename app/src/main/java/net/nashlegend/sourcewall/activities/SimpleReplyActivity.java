@@ -1,4 +1,4 @@
-package net.nashlegend.sourcewall;
+package net.nashlegend.sourcewall.activities;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -17,6 +17,7 @@ import android.widget.ImageButton;
 
 import com.umeng.analytics.MobclickAgent;
 
+import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.SimpleCommentAdapter;
 import net.nashlegend.sourcewall.commonview.AAsyncTask;
 import net.nashlegend.sourcewall.commonview.IStackedAsyncTaskInterface;

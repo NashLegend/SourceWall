@@ -14,8 +14,8 @@ import android.widget.AdapterView;
 import android.widget.ProgressBar;
 
 import net.nashlegend.sourcewall.AppApplication;
-import net.nashlegend.sourcewall.ArticleActivity;
-import net.nashlegend.sourcewall.MainActivity;
+import net.nashlegend.sourcewall.activities.ArticleActivity;
+import net.nashlegend.sourcewall.activities.MainActivity;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.ArticleAdapter;
 import net.nashlegend.sourcewall.commonview.AAsyncTask;

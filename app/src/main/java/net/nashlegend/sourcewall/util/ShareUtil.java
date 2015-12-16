@@ -14,7 +14,7 @@ import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 import net.nashlegend.sourcewall.BuildConfig;
 import net.nashlegend.sourcewall.R;
-import net.nashlegend.sourcewall.WeiboShareActivity;
+import net.nashlegend.sourcewall.activities.WeiboShareActivity;
 
 import java.io.ByteArrayOutputStream;
 

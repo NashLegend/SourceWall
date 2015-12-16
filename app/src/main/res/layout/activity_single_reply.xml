@@ -6,7 +6,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="?attr/color_webview_background"
-                tools:context="net.nashlegend.sourcewall.AnswerActivity">
+                tools:context=".activities.AnswerActivity">
 
     <net.nashlegend.sourcewall.commonview.SScrollView
         android:id="@+id/scrollView"

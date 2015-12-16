@@ -1,4 +1,4 @@
-package net.nashlegend.sourcewall;
+package net.nashlegend.sourcewall.activities;
 
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
@@ -19,6 +19,7 @@ import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 
+import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.DisplayUtil;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;

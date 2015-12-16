@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.R;
-import net.nashlegend.sourcewall.SimpleReplyActivity;
+import net.nashlegend.sourcewall.activities.SimpleReplyActivity;
 import net.nashlegend.sourcewall.commonview.TTextView;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.util.Consts;

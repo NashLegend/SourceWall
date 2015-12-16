@@ -6,7 +6,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.MenuState"      
-        className = "net.nashlegend.sourcewall.ReplyActivity"/>
+        className = "net.nashlegend.sourcewall.activities.ReplyActivity"/>
       <point      
         x = "1768"      
         y = "1480"/>
@@ -14,7 +14,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "net.nashlegend.sourcewall.ReplyActivity"/>
+        className = "net.nashlegend.sourcewall.activities.ReplyActivity"/>
       <point      
         x = "500"      
         y = "1480"/>
@@ -22,7 +22,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.MenuState"      
-        className = "net.nashlegend.sourcewall.SingleReplyActivity"/>
+        className = "net.nashlegend.sourcewall.activities.SingleReplyActivity"/>
       <point      
         x = "1768"      
         y = "4240"/>
@@ -30,7 +30,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "net.nashlegend.sourcewall.SingleReplyActivity"/>
+        className = "net.nashlegend.sourcewall.activities.SingleReplyActivity"/>
       <point      
         x = "500"      
         y = "4240"/>
@@ -38,7 +38,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.MenuState"      
-        className = "net.nashlegend.sourcewall.ImageActivity"/>
+        className = "net.nashlegend.sourcewall.activities.ImageActivity"/>
       <point      
         x = "1768"      
         y = "2860"/>
@@ -46,7 +46,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "net.nashlegend.sourcewall.ImageActivity"/>
+        className = "net.nashlegend.sourcewall.activities.ImageActivity"/>
       <point      
         x = "500"      
         y = "2860"/>
@@ -54,7 +54,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.MenuState"      
-        className = "net.nashlegend.sourcewall.PostActivity"/>
+        className = "net.nashlegend.sourcewall.activities.PostActivity"/>
       <point      
         x = "1768"      
         y = "7000"/>
@@ -62,7 +62,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "net.nashlegend.sourcewall.PostActivity"/>
+        className = "net.nashlegend.sourcewall.activities.PostActivity"/>
       <point      
         x = "500"      
         y = "7000"/>
@@ -70,7 +70,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "net.nashlegend.sourcewall.PublishPostActivity"/>
+        className = "net.nashlegend.sourcewall.activities.PublishPostActivity"/>
       <point      
         x = "500"      
         y = "8380"/>
@@ -78,7 +78,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.MenuState"      
-        className = "net.nashlegend.sourcewall.PublishPostActivity"/>
+        className = "net.nashlegend.sourcewall.activities.PublishPostActivity"/>
       <point      
         x = "1768"      
         y = "8380"/>
@@ -94,7 +94,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.MenuState"      
-        className = "net.nashlegend.sourcewall.MessageCenterActivity"/>
+        className = "net.nashlegend.sourcewall.activities.MessageCenterActivity"/>
       <point      
         x = "1768"      
         y = "100"/>
@@ -102,7 +102,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "net.nashlegend.sourcewall.MessageCenterActivity"/>
+        className = "net.nashlegend.sourcewall.activities.MessageCenterActivity"/>
       <point      
         x = "500"      
         y = "100"/>
@@ -110,7 +110,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "net.nashlegend.sourcewall.SettingActivity"/>
+        className = "net.nashlegend.sourcewall.activities.SettingActivity"/>
       <point      
         x = "700"      
         y = "18240"/>
@@ -118,7 +118,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "net.nashlegend.sourcewall.AnswerActivity"/>
+        className = "net.nashlegend.sourcewall.activities.AnswerActivity"/>
       <point      
         x = "500"      
         y = "15280"/>
@@ -126,7 +126,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.MenuState"      
-        className = "net.nashlegend.sourcewall.AnswerActivity"/>
+        className = "net.nashlegend.sourcewall.activities.AnswerActivity"/>
       <point      
         x = "1768"      
         y = "15280"/>
@@ -134,7 +134,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "net.nashlegend.sourcewall.LoginActivity"/>
+        className = "net.nashlegend.sourcewall.activities.LoginActivity"/>
       <point      
         x = "748"      
         y = "18288"/>
@@ -142,7 +142,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.MenuState"      
-        className = "net.nashlegend.sourcewall.QuestionActivity"/>
+        className = "net.nashlegend.sourcewall.activities.QuestionActivity"/>
       <point      
         x = "1768"      
         y = "16660"/>
@@ -150,7 +150,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "net.nashlegend.sourcewall.QuestionActivity"/>
+        className = "net.nashlegend.sourcewall.activities.QuestionActivity"/>
       <point      
         x = "500"      
         y = "16660"/>
@@ -166,7 +166,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.MenuState"      
-        className = "net.nashlegend.sourcewall.MainActivity"/>
+        className = "net.nashlegend.sourcewall.activities.MainActivity"/>
       <point      
         x = "1768"      
         y = "5620"/>
@@ -174,7 +174,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "net.nashlegend.sourcewall.MainActivity"/>
+        className = "net.nashlegend.sourcewall.activities.MainActivity"/>
       <point      
         x = "500"      
         y = "5620"/>
@@ -182,7 +182,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "net.nashlegend.sourcewall.TestActivity"/>
+        className = "net.nashlegend.sourcewall.activities.TestActivity"/>
       <point      
         x = "548"      
         y = "18088"/>
@@ -190,7 +190,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "net.nashlegend.sourcewall.ShuffleTagActivity"/>
+        className = "net.nashlegend.sourcewall.activities.ShuffleTagActivity"/>
       <point      
         x = "500"      
         y = "9760"/>
@@ -198,7 +198,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.MenuState"      
-        className = "net.nashlegend.sourcewall.ShuffleTagActivity"/>
+        className = "net.nashlegend.sourcewall.activities.ShuffleTagActivity"/>
       <point      
         x = "1768"      
         y = "9760"/>
@@ -206,7 +206,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "net.nashlegend.sourcewall.ShuffleGroupActivity"/>
+        className = "net.nashlegend.sourcewall.activities.ShuffleGroupActivity"/>
       <point      
         x = "500"      
         y = "11140"/>
@@ -214,7 +214,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.MenuState"      
-        className = "net.nashlegend.sourcewall.ShuffleGroupActivity"/>
+        className = "net.nashlegend.sourcewall.activities.ShuffleGroupActivity"/>
       <point      
         x = "1768"      
         y = "11140"/>
@@ -222,7 +222,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "net.nashlegend.sourcewall.WeiboShareActivity"/>
+        className = "net.nashlegend.sourcewall.activities.WeiboShareActivity"/>
       <point      
         x = "650"      
         y = "18190"/>
@@ -230,7 +230,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "net.nashlegend.sourcewall.SimpleReplyActivity"/>
+        className = "net.nashlegend.sourcewall.activities.SimpleReplyActivity"/>
       <point      
         x = "500"      
         y = "12520"/>
@@ -238,7 +238,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.MenuState"      
-        className = "net.nashlegend.sourcewall.SimpleReplyActivity"/>
+        className = "net.nashlegend.sourcewall.activities.SimpleReplyActivity"/>
       <point      
         x = "1768"      
         y = "12520"/>
@@ -246,7 +246,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "net.nashlegend.sourcewall.ArticleActivity"/>
+        className = "net.nashlegend.sourcewall.activities.ArticleActivity"/>
       <point      
         x = "500"      
         y = "13900"/>
@@ -254,7 +254,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.MenuState"      
-        className = "net.nashlegend.sourcewall.ArticleActivity"/>
+        className = "net.nashlegend.sourcewall.activities.ArticleActivity"/>
       <point      
         x = "1768"      
         y = "13900"/>

@@ -1,4 +1,4 @@
-package net.nashlegend.sourcewall;
+package net.nashlegend.sourcewall.activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.umeng.analytics.MobclickAgent;
 
+import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;

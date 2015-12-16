@@ -5,7 +5,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="?attr/color_page_background"
-                tools:context="net.nashlegend.sourcewall.PostListActivity">
+                tools:context=".activities.PostListActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/action_bar"

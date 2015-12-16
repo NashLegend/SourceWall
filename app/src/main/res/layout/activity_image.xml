@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/black"
-    tools:context="net.nashlegend.sourcewall.ImageActivity">
+    tools:context=".activities.ImageActivity">
 
     <net.nashlegend.sourcewall.commonview.AdaptivePager
         android:id="@+id/image_pager"

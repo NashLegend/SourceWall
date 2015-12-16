@@ -30,12 +30,12 @@ import android.widget.TextView;
 
 import com.umeng.analytics.MobclickAgent;
 
-import net.nashlegend.sourcewall.BaseActivity;
-import net.nashlegend.sourcewall.MainActivity;
-import net.nashlegend.sourcewall.PublishPostActivity;
-import net.nashlegend.sourcewall.QuestionActivity;
+import net.nashlegend.sourcewall.activities.BaseActivity;
+import net.nashlegend.sourcewall.activities.MainActivity;
+import net.nashlegend.sourcewall.activities.PublishPostActivity;
+import net.nashlegend.sourcewall.activities.QuestionActivity;
 import net.nashlegend.sourcewall.R;
-import net.nashlegend.sourcewall.ShuffleTagActivity;
+import net.nashlegend.sourcewall.activities.ShuffleTagActivity;
 import net.nashlegend.sourcewall.adapters.QuestionAdapter;
 import net.nashlegend.sourcewall.commonview.AAsyncTask;
 import net.nashlegend.sourcewall.commonview.IStackedAsyncTaskInterface;

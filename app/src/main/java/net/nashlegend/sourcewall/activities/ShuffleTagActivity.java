@@ -1,9 +1,11 @@
-package net.nashlegend.sourcewall;
+package net.nashlegend.sourcewall.activities;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,17 +14,17 @@ import android.widget.TextView;
 
 import com.umeng.analytics.MobclickAgent;
 
+import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.commonview.AAsyncTask;
 import net.nashlegend.sourcewall.commonview.IStackedAsyncTaskInterface;
-import net.nashlegend.sourcewall.commonview.shuffle.GroupMovableButton;
+import net.nashlegend.sourcewall.commonview.shuffle.AskTagMovableButton;
 import net.nashlegend.sourcewall.commonview.shuffle.MovableButton;
 import net.nashlegend.sourcewall.commonview.shuffle.ShuffleDesk;
-import net.nashlegend.sourcewall.db.GroupHelper;
-import net.nashlegend.sourcewall.db.gen.MyGroup;
+import net.nashlegend.sourcewall.db.AskTagHelper;
+import net.nashlegend.sourcewall.db.gen.AskTag;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.ResultObject;
-import net.nashlegend.sourcewall.request.ResultObject.ResultCode;
-import net.nashlegend.sourcewall.request.api.PostAPI;
+import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
@@ -34,14 +36,14 @@ import java.util.List;
 /**
  * @author NashLegend
  */
-public class ShuffleGroupActivity extends SwipeActivity {
+public class ShuffleTagActivity extends SwipeActivity {
 
     private ShuffleDesk desk;
     LoaderFromDBTask dbTask;
     LoaderFromNetTask netTask;
     Toolbar toolbar;
     ProgressDialog progressDialog;
-    final int defaultGroupsNumber = 12;
+    final int defaultTagsNumber = 9;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +52,6 @@ public class ShuffleGroupActivity extends SwipeActivity {
         toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         desk = (ShuffleDesk) findViewById(R.id.shuffle_desk);
-        ((TextView) desk.findViewById(R.id.text_main_sections)).setText(R.string.selected_groups);
-        ((TextView) desk.findViewById(R.id.text_other_sections)).setText(R.string.more_unselected_groups);
         desk.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
 
             @Override
@@ -60,32 +60,33 @@ public class ShuffleGroupActivity extends SwipeActivity {
                 initView();
             }
         });
-
+        ((TextView) desk.findViewById(R.id.text_main_sections)).setText(R.string.selected_tags);
+        ((TextView) desk.findViewById(R.id.text_other_sections)).setText(R.string.more_unselected_tags);
         if (getIntent().getBooleanExtra(Consts.Extra_Should_Load_Before_Shuffle, false)) {
             netTask = new LoaderFromNetTask(this);
-            netTask.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR);
+            netTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
             dbTask = new LoaderFromDBTask(this);
-            dbTask.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR);
+            dbTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.shuffle_groups, menu);
+        getMenuInflater().inflate(R.menu.shuffle_tag, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_reload_my_groups) {
+        if (id == R.id.action_reload_my_tags) {
             commitChanges();
             if (netTask != null && netTask.getStatus() == AAsyncTask.Status.RUNNING) {
                 netTask.cancel(false);
             }
             netTask = new LoaderFromNetTask(this);
-            netTask.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR);
+            netTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -103,16 +104,16 @@ public class ShuffleGroupActivity extends SwipeActivity {
     private void commitChanges() {
         if (desk.getSenator().getList() != null && desk.getSenator().getList().size() > 0) {
             ArrayList<MovableButton> buttons = desk.getButtons();
-            ArrayList<MyGroup> sections = new ArrayList<>();
+            ArrayList<AskTag> sections = new ArrayList<>();
             for (int i = 0; i < buttons.size(); i++) {
-                MyGroup myGroup = (MyGroup) buttons.get(i).getSection();
-                if (!myGroup.getSelected()) {
-                    myGroup.setOrder(1024 + myGroup.getOrder());
+                AskTag askTag = (AskTag) buttons.get(i).getSection();
+                if (!askTag.getSelected()) {
+                    askTag.setOrder(1024 + askTag.getOrder());
                 }
-                sections.add(myGroup);
+                sections.add(askTag);
             }
             if (sections.size() > 0) {
-                GroupHelper.putAllMyGroups(sections);
+                AskTagHelper.putAllMyTags(sections);
             }
             setResult(RESULT_OK);
         }
@@ -136,21 +137,21 @@ public class ShuffleGroupActivity extends SwipeActivity {
 
     public void getButtons() {
 
-        List<MyGroup> selectedSections = GroupHelper.getSelectedGroups();
-        List<MyGroup> unselectedSections = GroupHelper.getUnselectedGroups();
+        List<AskTag> selectedSections = AskTagHelper.getSelectedTags();
+        List<AskTag> unselectedSections = AskTagHelper.getUnselectedTags();
 
         ArrayList<MovableButton> selectedButtons = new ArrayList<>();
         for (int i = 0; i < selectedSections.size(); i++) {
-            MyGroup section = selectedSections.get(i);
-            GroupMovableButton button = new GroupMovableButton(this);
+            AskTag section = selectedSections.get(i);
+            AskTagMovableButton button = new AskTagMovableButton(this);
             button.setSection(section);
             selectedButtons.add(button);
         }
 
         ArrayList<MovableButton> unselectedButtons = new ArrayList<>();
         for (int i = 0; i < unselectedSections.size(); i++) {
-            MyGroup section = unselectedSections.get(i);
-            GroupMovableButton button = new GroupMovableButton(this);
+            AskTag section = unselectedSections.get(i);
+            AskTagMovableButton button = new AskTagMovableButton(this);
             button.setSection(section);
             unselectedButtons.add(button);
         }
@@ -158,24 +159,23 @@ public class ShuffleGroupActivity extends SwipeActivity {
         desk.setUnselectedButtons(unselectedButtons);
     }
 
-
-    private void mergeMyGroups(ArrayList<MyGroup> myGroups) {
-        if (GroupHelper.getMyGroupsNumber() > 0) {
-            List<MyGroup> selectedGroups = GroupHelper.getSelectedGroups();
-            for (int i = 0; i < myGroups.size(); i++) {
-                MyGroup tmpGroup = myGroups.get(i);
+    private void mergeMyGroups(ArrayList<AskTag> myTags) {
+        if (AskTagHelper.getAskTagsNumber() > 0) {
+            List<AskTag> selectedGroups = AskTagHelper.getSelectedTags();
+            for (int i = 0; i < myTags.size(); i++) {
+                AskTag tmpTag = myTags.get(i);
                 boolean selected = false;
                 for (int j = 0; j < selectedGroups.size(); j++) {
-                    if (selectedGroups.get(j).getValue().equals(tmpGroup.getValue())) {
+                    if (selectedGroups.get(j).getValue().equals(tmpTag.getValue())) {
                         selected = true;
                         break;
                     }
                 }
-                tmpGroup.setSelected(selected);
+                tmpTag.setSelected(selected);
                 if (selected) {
-                    tmpGroup.setOrder(i);
+                    tmpTag.setOrder(i);
                 } else {
-                    tmpGroup.setOrder(1024 + i);
+                    tmpTag.setOrder(1024 + i);
                 }
             }
         }
@@ -207,10 +207,9 @@ public class ShuffleGroupActivity extends SwipeActivity {
 
         @Override
         protected void onPreExecute() {
-            MobclickAgent.onEvent(ShuffleGroupActivity.this, Mob.Event_Load_My_Groups);
-            progressDialog = new ProgressDialog(ShuffleGroupActivity.this);
+            progressDialog = new ProgressDialog(ShuffleTagActivity.this);
             progressDialog.setCanceledOnTouchOutside(false);
-            progressDialog.setMessage(getString(R.string.message_loading_my_groups));
+            progressDialog.setMessage(getString(R.string.message_wait_a_minute));
             progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialog) {
@@ -222,43 +221,45 @@ public class ShuffleGroupActivity extends SwipeActivity {
 
         @Override
         protected ResultObject doInBackground(String[] params) {
-            ResultObject<ArrayList<SubItem>> result = PostAPI.getAllMyGroups();
-            if (result.ok) {
+            ResultObject<ArrayList<SubItem>> result = QuestionAPI.getAllMyTags();
+            if (TextUtils.isEmpty(UserAPI.getUserID())) {
+                result.error_message = "无法获得用户id";
+                result.code = ResultObject.ResultCode.CODE_NO_USER_ID;
+            } else if (result.ok) {
                 ArrayList<SubItem> subItems = result.result;
-                ArrayList<MyGroup> myGroups = new ArrayList<>();
+                ArrayList<AskTag> myTags = new ArrayList<>();
                 for (int i = 0; i < subItems.size(); i++) {
                     SubItem item = subItems.get(i);
-                    MyGroup mygroup = new MyGroup();
-                    mygroup.setName(item.getName());
-                    mygroup.setValue(item.getValue());
-                    mygroup.setType(item.getType());
-                    mygroup.setSection(item.getSection());
-                    mygroup.setSelected(i < defaultGroupsNumber);
-                    mygroup.setOrder(i);
-                    myGroups.add(mygroup);
+                    AskTag myTag = new AskTag();
+                    myTag.setName(item.getName());
+                    myTag.setValue(item.getValue());
+                    myTag.setType(item.getType());
+                    myTag.setSection(item.getSection());
+                    myTag.setSelected(i < defaultTagsNumber);
+                    myTag.setOrder(i);
+                    myTags.add(myTag);
                 }
-                mergeMyGroups(myGroups);
-                GroupHelper.putAllMyGroups(myGroups);
+                mergeMyGroups(myTags);
+                AskTagHelper.putAllMyTags(myTags);
                 getButtons();
             }
             return result;
         }
 
         @Override
-        protected void onPostExecute(ResultObject resultObject) {
+        protected void onPostExecute(ResultObject result) {
             progressDialog.dismiss();
-            if (resultObject.ok) {
-                MobclickAgent.onEvent(ShuffleGroupActivity.this, Mob.Event_Load_My_Groups_OK);
+            if (result.ok) {
+                MobclickAgent.onEvent(ShuffleTagActivity.this, Mob.Event_Load_My_Tags_OK);
                 initView();
             } else {
-                MobclickAgent.onEvent(ShuffleGroupActivity.this, Mob.Event_Load_My_Groups_Failed);
-                MobclickAgent.reportError(ShuffleGroupActivity.this, "Loading my Groups failed \n Is WIFI:" + Config.isWifi() + "\n" + UserAPI.getUserInfoString() + resultObject.error_message);
-                if (resultObject.code == ResultCode.CODE_NO_USER_ID) {
+                MobclickAgent.onEvent(ShuffleTagActivity.this, Mob.Event_Load_My_Tags_Failed);
+                MobclickAgent.reportError(ShuffleTagActivity.this, "加载标签失败\n是否WIFI：" + Config.isWifi() + "\n" + UserAPI.getUserInfoString() + result.error_message);
+                if (result.code == ResultObject.ResultCode.CODE_NO_USER_ID) {
                     toast("未获得用户ID，无法加载");
                 } else {
-                    toast("加载我的小组失败");
+                    toast("加载标签失败");
                 }
-
             }
         }
     }

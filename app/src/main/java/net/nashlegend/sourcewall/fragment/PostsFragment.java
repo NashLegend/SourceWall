@@ -29,12 +29,12 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import net.nashlegend.sourcewall.BaseActivity;
-import net.nashlegend.sourcewall.MainActivity;
-import net.nashlegend.sourcewall.PostActivity;
-import net.nashlegend.sourcewall.PublishPostActivity;
+import net.nashlegend.sourcewall.activities.BaseActivity;
+import net.nashlegend.sourcewall.activities.MainActivity;
+import net.nashlegend.sourcewall.activities.PostActivity;
+import net.nashlegend.sourcewall.activities.PublishPostActivity;
 import net.nashlegend.sourcewall.R;
-import net.nashlegend.sourcewall.ShuffleGroupActivity;
+import net.nashlegend.sourcewall.activities.ShuffleGroupActivity;
 import net.nashlegend.sourcewall.adapters.PostAdapter;
 import net.nashlegend.sourcewall.commonview.AAsyncTask;
 import net.nashlegend.sourcewall.commonview.IStackedAsyncTaskInterface;

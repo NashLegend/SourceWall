@@ -1,4 +1,4 @@
-package net.nashlegend.sourcewall;
+package net.nashlegend.sourcewall.activities;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -19,6 +19,8 @@ import android.webkit.WebViewClient;
 
 import com.umeng.analytics.MobclickAgent;
 
+import net.nashlegend.sourcewall.AppApplication;
+import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.request.HttpFetcher;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Mob;

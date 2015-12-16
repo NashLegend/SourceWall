@@ -1,4 +1,4 @@
-package net.nashlegend.sourcewall;
+package net.nashlegend.sourcewall.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -23,6 +23,7 @@ import com.sina.weibo.sdk.constant.WBConstants;
 import com.sina.weibo.sdk.exception.WeiboException;
 import com.sina.weibo.sdk.utils.Utility;
 
+import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.util.AccessTokenKeeper;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.ShareUtil;

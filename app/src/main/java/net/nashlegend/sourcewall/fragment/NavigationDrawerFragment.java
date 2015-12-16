@@ -29,10 +29,10 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.umeng.analytics.MobclickAgent;
 
-import net.nashlegend.sourcewall.LoginActivity;
-import net.nashlegend.sourcewall.MessageCenterActivity;
+import net.nashlegend.sourcewall.activities.LoginActivity;
+import net.nashlegend.sourcewall.activities.MessageCenterActivity;
 import net.nashlegend.sourcewall.R;
-import net.nashlegend.sourcewall.SettingActivity;
+import net.nashlegend.sourcewall.activities.SettingActivity;
 import net.nashlegend.sourcewall.adapters.ChannelsAdapter;
 import net.nashlegend.sourcewall.db.AskTagHelper;
 import net.nashlegend.sourcewall.db.GroupHelper;

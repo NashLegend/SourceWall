@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
-      tools:context="net.nashlegend.sourcewall.MessageCenterActivity">
+      tools:context=".activities.MessageCenterActivity">
     <item
         android:id="@+id/action_ignore_all"
         android:orderInCategory="100"

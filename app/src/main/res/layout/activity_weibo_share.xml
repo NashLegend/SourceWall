@@ -5,4 +5,4 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:clickable="true"
-                tools:context="net.nashlegend.sourcewall.WeiboShareActivity"/>
+                tools:context=".activities.WeiboShareActivity"/>

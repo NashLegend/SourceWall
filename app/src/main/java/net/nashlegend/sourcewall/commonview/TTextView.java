@@ -37,7 +37,7 @@ import com.squareup.picasso.Picasso;
 import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.AppApplication;
-import net.nashlegend.sourcewall.ImageActivity;
+import net.nashlegend.sourcewall.activities.ImageActivity;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;

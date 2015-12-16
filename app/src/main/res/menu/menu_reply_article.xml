@@ -1,2 +1,2 @@
 <menu xmlns:tools="http://schemas.android.com/tools"
-      tools:context="net.nashlegend.sourcewall.ReplyActivity"></menu>
+      tools:context=".activities.ReplyActivity"></menu>

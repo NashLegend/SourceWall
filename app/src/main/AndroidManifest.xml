@@ -17,7 +17,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/BottomTheme" >
@@ -28,70 +28,70 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SettingActivity"
+            android:name=".activities.SettingActivity"
             android:label="@string/title_activity_setting"
             android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="net.nashlegend.sourcewall.SettingActivity" />
+                android:value=".activities.SettingActivity" />
         </activity>
         <activity
-            android:name=".ShuffleGroupActivity"
+            android:name=".activities.ShuffleGroupActivity"
             android:label="@string/shuffle_groups"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ShuffleTagActivity"
+            android:name=".activities.ShuffleTagActivity"
             android:label="@string/shuffle_tags"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ArticleActivity"
+            android:name=".activities.ArticleActivity"
             android:label="@string/article"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".PostActivity"
+            android:name=".activities.PostActivity"
             android:label="@string/post"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".QuestionActivity"
+            android:name=".activities.QuestionActivity"
             android:label="@string/question"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.LoginActivity"
             android:label="@string/title_activity_login"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ReplyActivity"
+            android:name=".activities.ReplyActivity"
             android:label="@string/title_activity_reply_article"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".AnswerActivity"
+            android:name=".activities.AnswerActivity"
             android:label="@string/title_activity_answer"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".SimpleReplyActivity"
+            android:name=".activities.SimpleReplyActivity"
             android:label="@string/title_activity_simple_reply"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".PublishPostActivity"
+            android:name=".activities.PublishPostActivity"
             android:label="@string/title_activity_publish_post"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".SingleReplyActivity"
+            android:name=".activities.SingleReplyActivity"
             android:label="@string/title_activity_single_reply"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".MessageCenterActivity"
+            android:name=".activities.MessageCenterActivity"
             android:label="@string/title_activity_message_center"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ImageActivity"
+            android:name=".activities.ImageActivity"
             android:label="@string/title_activity_image"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".TestActivity"
+            android:name=".activities.TestActivity"
             android:label="@string/title_activity_test"
             android:screenOrientation="portrait" />
         <activity
@@ -100,7 +100,7 @@
             android:label="@string/title_activity_wxentry"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".WeiboShareActivity"
+            android:name=".activities.WeiboShareActivity"
             android:exported="true"
             android:label="@string/title_activity_weibo_share"
             android:screenOrientation="portrait" >
@@ -125,7 +125,7 @@
             android:value="${CHANNEL_NAME}" />
 
         <activity
-            android:name=".PostListActivity"
+            android:name=".activities.PostListActivity"
             android:label="@string/title_activity_post_list" >
         </activity>
     </application>
