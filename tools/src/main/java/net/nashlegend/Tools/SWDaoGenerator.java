@@ -1,4 +1,4 @@
-package net.nashlegend.sourcewall.db;
+package net.nashlegend.Tools;
 
 import de.greenrobot.daogenerator.DaoGenerator;
 import de.greenrobot.daogenerator.Entity;
