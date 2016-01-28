@@ -39,7 +39,7 @@ import net.nashlegend.sourcewall.commonview.IStackedAsyncTaskInterface;
 import net.nashlegend.sourcewall.dialogs.InputDialog;
 import net.nashlegend.sourcewall.model.PrepareData;
 import net.nashlegend.sourcewall.model.SubItem;
-import net.nashlegend.sourcewall.request.ResultObject;
+import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.request.api.APIBase;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
@@ -497,7 +497,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         }
     }
 
-    class PublishTask extends AsyncTask<String, Integer, ResultObject> {
+    class PublishTask extends AsyncTask<String, Integer, ResponseObject> {
 
         @Override
         protected void onPreExecute() {
@@ -514,7 +514,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         }
 
         @Override
-        protected ResultObject doInBackground(String... params) {
+        protected ResponseObject doInBackground(String... params) {
             String group_id = params[0];
             String csrf = params[1];
             String title = params[2];
@@ -529,7 +529,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         }
 
         @Override
-        protected void onPostExecute(ResultObject resultObject) {
+        protected void onPostExecute(ResponseObject resultObject) {
             progressDialog.dismiss();
             if (resultObject.ok) {
                 MobclickAgent.onEvent(PublishPostActivity.this, Mob.Event_Publish_Post_OK);
@@ -564,14 +564,14 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         uploadingProgress.setVisibility(View.GONE);
     }
 
-    class PrepareTask extends AAsyncTask<String, Integer, ResultObject<PrepareData>> {
+    class PrepareTask extends AAsyncTask<String, Integer, ResponseObject<PrepareData>> {
 
         public PrepareTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
             super(iStackedAsyncTaskInterface);
         }
 
         @Override
-        protected ResultObject<PrepareData> doInBackground(String... params) {
+        protected ResponseObject<PrepareData> doInBackground(String... params) {
             String group_id = params[0];
             if (isPost()) {
                 return PostAPI.getPostPrepareData(group_id);
@@ -581,7 +581,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         }
 
         @Override
-        protected void onPostExecute(ResultObject<PrepareData> result) {
+        protected void onPostExecute(ResponseObject<PrepareData> result) {
             if (result.ok) {
                 toast(getString(R.string.get_csrf_ok));
                 PrepareData prepareData = result.result;
@@ -596,7 +596,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         }
     }
 
-    class ImageUploadTask extends AAsyncTask<String, Integer, ResultObject<String>> {
+    class ImageUploadTask extends AAsyncTask<String, Integer, ResponseObject<String>> {
 
         ImageUploadTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
             super(iStackedAsyncTaskInterface);
@@ -616,13 +616,13 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         }
 
         @Override
-        protected ResultObject<String> doInBackground(String... params) {
+        protected ResponseObject<String> doInBackground(String... params) {
             String path = params[0];
             return APIBase.uploadImage(path, true);
         }
 
         @Override
-        protected void onPostExecute(ResultObject<String> result) {
+        protected void onPostExecute(ResponseObject<String> result) {
             if (result.ok) {
                 toast(R.string.hint_click_to_add_image_to_editor);
                 doneUploadingImage(result.result);

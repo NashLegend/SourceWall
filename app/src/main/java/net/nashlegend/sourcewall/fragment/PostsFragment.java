@@ -47,7 +47,7 @@ import net.nashlegend.sourcewall.db.GroupHelper;
 import net.nashlegend.sourcewall.db.gen.MyGroup;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.SubItem;
-import net.nashlegend.sourcewall.request.ResultObject;
+import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Consts;
@@ -600,7 +600,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     /**
      * 这几个Task都长得很像，可以封装起来
      */
-    class LoaderTask extends AAsyncTask<Integer, ResultObject<ArrayList<Post>>, ResultObject<ArrayList<Post>>> {
+    class LoaderTask extends AAsyncTask<Integer, ResponseObject<ArrayList<Post>>, ResponseObject<ArrayList<Post>>> {
 
         LoaderTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
             super(iStackedAsyncTaskInterface);
@@ -609,24 +609,24 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         int loadedPage;
 
         @Override
-        protected ResultObject<ArrayList<Post>> doInBackground(Integer... datas) {
+        protected ResponseObject<ArrayList<Post>> doInBackground(Integer... datas) {
             loadedPage = datas[0];
             String key = String.valueOf(subItem.getSection()) + subItem.getType() + subItem.getName() + subItem.getValue();
             if (loadedPage == 0 && adapter.getCount() == 0) {
-                ResultObject<ArrayList<Post>> cachedResultObject = PostAPI.getCachedPostList(subItem);
-                if (cachedResultObject.ok) {
+                ResponseObject<ArrayList<Post>> cachedResponseObject = PostAPI.getCachedPostList(subItem);
+                if (cachedResponseObject.ok) {
                     long lastLoad = SharedPreferencesUtil.readLong(key, 0l) / 1000;
                     long crtLoad = System.currentTimeMillis() / 1000;
                     if (subItem.getType() == SubItem.Type_Private_Channel || crtLoad - lastLoad > cacheDuration) {
                         //我的小组，更新较快，不缓存
-                        publishProgress(cachedResultObject);
+                        publishProgress(cachedResponseObject);
                     } else {
-                        return cachedResultObject;
+                        return cachedResponseObject;
                     }
                 }
             }
 
-            ResultObject<ArrayList<Post>> resultObject = new ResultObject<>();
+            ResponseObject<ArrayList<Post>> resultObject = new ResponseObject<>();
             //解析html的page是从1开始的，所以offset要+1
             if (subItem.getType() == SubItem.Type_Collections) {
                 resultObject = PostAPI.getGroupHotPostListByJson(loadedPage * 20);// not featured
@@ -650,8 +650,8 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
          */
         @SafeVarargs
         @Override
-        protected final void onProgressUpdate(ResultObject<ArrayList<Post>>... values) {
-            ResultObject<ArrayList<Post>> result = values[0];
+        protected final void onProgressUpdate(ResponseObject<ArrayList<Post>>... values) {
+            ResponseObject<ArrayList<Post>> result = values[0];
             ArrayList<Post> ars = result.result;
             if (ars.size() > 0) {
                 progressBar.setVisibility(View.VISIBLE);
@@ -662,7 +662,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         }
 
         @Override
-        protected void onPostExecute(ResultObject<ArrayList<Post>> result) {
+        protected void onPostExecute(ResponseObject<ArrayList<Post>> result) {
             listView.doneOperation();
             progressBar.setVisibility(View.GONE);
             if (result.ok) {

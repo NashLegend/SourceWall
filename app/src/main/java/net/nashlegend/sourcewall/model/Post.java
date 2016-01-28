@@ -2,6 +2,15 @@ package net.nashlegend.sourcewall.model;
 
 import android.text.TextUtils;
 
+import net.nashlegend.sourcewall.request.api.APIBase;
+import net.nashlegend.sourcewall.swrequest.JsonHandler;
+
+import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.util.ArrayList;
 
 public class Post extends AceModel {
@@ -27,8 +36,65 @@ public class Post extends AceModel {
     private ArrayList<UComment> hotComments = new ArrayList<>();
     private ArrayList<UComment> comments = new ArrayList<>();
 
-    public Post() {
+    public static Post fromJson(JSONObject postResult) throws Exception {
+        Post detail = new Post();
+        String postID = postResult.getString("id");
+        String title = postResult.getString("title");
+        String date = postResult.optString("date_created");
+        String content = "<div id=\"postContent\" class=\"html-text-mixin gbbcode-content\">" + postResult.optString("html") + "</div>";
+        //int likeNum = getJsonInt(postResult, "");//取不到like数量
+        int recommendNum = postResult.optInt("recommends_count");
+        int reply_num = postResult.optInt("replies_count");
+        JSONObject authorObject = JsonHandler.getJsonObject(postResult, "author");
+        String authorAvatarUrl = JsonHandler.getJsonObject(authorObject, "avatar").getString("large").replaceAll("\\?.*$", "");
+        String author = authorObject.optString("nickname");
+        String authorID = authorObject.optString("url").replaceAll("\\D+", "");
+        JSONObject groupObject = JsonHandler.getJsonObject(postResult, "group");
+        String groupName = groupObject.optString("name");
+        String groupID = postResult.optString("group_id");
+        detail.setGroupID(groupID);
+        detail.setGroupName(groupName);
+        detail.setAuthor(author);
+        detail.setAuthorAvatarUrl(authorAvatarUrl);
+        detail.setAuthorID(authorID);
+        detail.setId(postID);
+        detail.setTitle(title);
+        detail.setDate(APIBase.parseDate(date));
+        detail.setContent(content);
+        detail.setReplyNum(reply_num);
+        return detail;
+    }
 
+    public static ArrayList<Post> fromHtmlList(String html) throws Exception {
+        ArrayList<Post> list = new ArrayList<>();
+        Document doc = Jsoup.parse(html);
+        Elements elements = doc.getElementsByClass("post-list");
+        if (elements.size() == 1) {
+            Elements postlist = elements.get(0).getElementsByTag("li");
+            for (Element aPostlist : postlist) {
+                Post item = new Post();
+                Element link = aPostlist.getElementsByClass("post").get(0);
+                String postTitle = link.getElementsByTag("h4").get(0).text();
+                String postUrl = link.attr("href");
+                String postImageUrl = "";
+                String postAuthor = "";//没有Author名……
+                String postGroup = aPostlist.getElementsByClass("post-author").get(0).text();//没错，post-author是小组名……
+                Elements children = aPostlist.getElementsByClass("post-info-right").get(0).children();
+                int postLike = Integer.valueOf(children.get(0).text().replaceAll("\\D*", ""));
+                int postComm = Integer.valueOf(children.get(1).text().replaceAll("\\D*", ""));
+                item.setTitle(postTitle);
+                item.setUrl(postUrl);
+                item.setId(postUrl.replaceAll("\\?.*$", "").replaceAll("\\D+", ""));
+                item.setTitleImageUrl(postImageUrl);
+                item.setAuthor(postAuthor);
+                item.setGroupName(postGroup);
+                item.setLikeNum(postLike);
+                item.setReplyNum(postComm);
+                item.setFeatured(false);
+                list.add(item);
+            }
+        }
+        return list;
     }
 
     public String getId() {

@@ -41,7 +41,7 @@ import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.model.UComment;
-import net.nashlegend.sourcewall.request.ResultObject;
+import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.request.api.APIBase;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.FileUtil;
@@ -303,7 +303,7 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
         }
     }
 
-    class PublishReplyTask extends AsyncTask<String, Integer, ResultObject> {
+    class PublishReplyTask extends AsyncTask<String, Integer, ResponseObject> {
 
         @Override
         protected void onPreExecute() {
@@ -329,14 +329,14 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
         }
 
         @Override
-        protected ResultObject doInBackground(String... params) {
+        protected ResponseObject doInBackground(String... params) {
             String header = params[0];
             String content = params[1];
             return APIBase.reply(aceModel, header + content);
         }
 
         @Override
-        protected void onPostExecute(ResultObject resultObject) {
+        protected void onPostExecute(ResponseObject resultObject) {
             progressDialog.dismiss();
             if (resultObject.ok) {
                 toast(R.string.reply_ok);
@@ -506,7 +506,7 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
         uploadingProgress.setVisibility(View.GONE);
     }
 
-    class ImageUploadTask extends AAsyncTask<String, Integer, ResultObject<String>> {
+    class ImageUploadTask extends AAsyncTask<String, Integer, ResponseObject<String>> {
 
         ImageUploadTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
             super(iStackedAsyncTaskInterface);
@@ -526,13 +526,13 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
         }
 
         @Override
-        protected ResultObject<String> doInBackground(String... params) {
+        protected ResponseObject<String> doInBackground(String... params) {
             String path = params[0];
             return APIBase.uploadImage(path, true);
         }
 
         @Override
-        protected void onPostExecute(ResultObject<String> result) {
+        protected void onPostExecute(ResponseObject<String> result) {
             if (result.ok) {
                 // tap to insert image
                 toast(getString(R.string.hint_click_to_add_image_to_editor));

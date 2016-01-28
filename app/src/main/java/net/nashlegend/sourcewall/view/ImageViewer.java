@@ -17,7 +17,7 @@ import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.commonview.LoadingView;
 import net.nashlegend.sourcewall.commonview.ScalingImage;
 import net.nashlegend.sourcewall.request.RequestCache;
-import net.nashlegend.sourcewall.request.ResultObject;
+import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.util.DisplayUtil;
 
 import java.net.URLDecoder;
@@ -81,11 +81,11 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
         load(url);
     }
 
-    class LoaderTask extends AsyncTask<String, Integer, ResultObject<String>> {
+    class LoaderTask extends AsyncTask<String, Integer, ResponseObject<String>> {
 
         @Override
-        protected ResultObject<String> doInBackground(String... params) {
-            ResultObject<String> resultObject = new ResultObject<>();
+        protected ResponseObject<String> doInBackground(String... params) {
+            ResponseObject<String> resultObject = new ResponseObject<>();
             try {
                 String url = params[0];
                 String filePath = RequestCache.getInstance().getCachedFile(url);
@@ -107,7 +107,7 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
         }
 
         @Override
-        protected void onPostExecute(ResultObject<String> result) {
+        protected void onPostExecute(ResponseObject<String> result) {
             if (result.ok) {
                 loadingView.onLoadSuccess();
                 String realLink = url.replaceAll("\\?.*$", "");

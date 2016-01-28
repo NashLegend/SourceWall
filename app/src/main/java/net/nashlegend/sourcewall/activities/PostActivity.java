@@ -33,7 +33,8 @@ import net.nashlegend.sourcewall.dialogs.FavorDialog;
 import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.UComment;
-import net.nashlegend.sourcewall.request.ResultObject;
+import net.nashlegend.sourcewall.swrequest.ResponseError;
+import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.AutoHideUtil;
@@ -309,7 +310,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         }
     }
 
-    class LoaderTask extends AAsyncTask<Integer, ResultObject<Post>, ResultObject<ArrayList<AceModel>>> {
+    class LoaderTask extends AAsyncTask<Integer, ResponseObject<Post>, ResponseObject<ArrayList<AceModel>>> {
 
         int offset;
 
@@ -318,7 +319,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         }
 
         @Override
-        protected ResultObject<ArrayList<AceModel>> doInBackground(Integer... params) {
+        protected ResponseObject<ArrayList<AceModel>> doInBackground(Integer... params) {
             if (!TextUtils.isEmpty(notice_id)) {
                 UserAPI.ignoreOneNotice(notice_id);
                 notice_id = null;
@@ -327,11 +328,11 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
             int limit = 20;
             if (offset < 0) {
                 offset = 0;
-                ResultObject<Post> postResult = PostAPI.getPostDetailByIDFromJsonUrl(post.getId());//得不到回复数量
+                ResponseObject<Post> postResult = PostAPI.getPostDetailByIDFromJsonUrl(post.getId());//得不到回复数量
                 if (postResult.ok) {
                     publishProgress(postResult);
                 } else {
-                    return new ResultObject<>();
+                    return new ResponseObject<>();
                 }
             }
             if (loadDesc) {
@@ -345,7 +346,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
                 }
                 offset = tmpOffset;
             }
-            ResultObject<ArrayList<AceModel>> resultObject = PostAPI.getPostCommentsFromJsonUrl(post.getId(), offset, limit);
+            ResponseObject<ArrayList<AceModel>> resultObject = PostAPI.getPostCommentsFromJsonUrl(post.getId(), offset, limit);
             if (!resultObject.ok) {
                 hasLoadAll = false;
             }
@@ -354,12 +355,12 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
 
         @SafeVarargs
         @Override
-        protected final void onProgressUpdate(ResultObject<Post>... values) {
+        protected final void onProgressUpdate(ResponseObject<Post>... values) {
             //在这里取到正文，正文的结果一定是正确的
             progressBar.setVisibility(View.VISIBLE);
             floatingActionsMenu.setVisibility(View.VISIBLE);
             loadingView.onLoadSuccess();
-            ResultObject<Post> result = values[0];
+            ResponseObject<Post> result = values[0];
             post = result.result;
             post.setDesc(loadDesc);
             adapter.add(0, post);
@@ -367,7 +368,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         }
 
         @Override
-        protected void onPostExecute(ResultObject<ArrayList<AceModel>> result) {
+        protected void onPostExecute(ResponseObject<ArrayList<AceModel>> result) {
             progressBar.setVisibility(View.GONE);
             if (result.ok) {
                 loadingView.onLoadSuccess();
@@ -499,7 +500,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
     }
 
 
-    class LikePostTask extends AAsyncTask<Post, Integer, ResultObject> {
+    class LikePostTask extends AAsyncTask<Post, Integer, ResponseObject> {
         Post post;
 
         public LikePostTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
@@ -507,13 +508,13 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         }
 
         @Override
-        protected ResultObject doInBackground(Post... params) {
+        protected ResponseObject doInBackground(Post... params) {
             post = params[0];
             return PostAPI.likePost(post.getId());
         }
 
         @Override
-        protected void onPostExecute(ResultObject resultObject) {
+        protected void onPostExecute(ResponseObject resultObject) {
             if (resultObject.ok) {
                 post.setLikeNum(post.getLikeNum() + 1);
                 adapter.notifyDataSetChanged();
@@ -522,7 +523,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         }
     }
 
-    class LikeCommentTask extends AAsyncTask<MediumListItemView, Integer, ResultObject> {
+    class LikeCommentTask extends AAsyncTask<MediumListItemView, Integer, ResponseObject> {
 
         UComment comment;
         MediumListItemView mediumListItemView;
@@ -532,14 +533,14 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         }
 
         @Override
-        protected ResultObject doInBackground(MediumListItemView... params) {
+        protected ResponseObject doInBackground(MediumListItemView... params) {
             mediumListItemView = params[0];
             comment = mediumListItemView.getData();
             return PostAPI.likeComment(comment.getID());
         }
 
         @Override
-        protected void onPostExecute(ResultObject resultObject) {
+        protected void onPostExecute(ResponseObject resultObject) {
             if (resultObject.ok) {
                 comment.setHasLiked(true);
                 comment.setLikeNum(comment.getLikeNum() + 1);
@@ -547,14 +548,14 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
                     mediumListItemView.plusOneLike();
                 }
             } else {
-                if (resultObject.code == ResultObject.ResultCode.CODE_ALREADY_LIKED) {
+                if (resultObject.error == ResponseError.ALREADY_LIKED) {
                     comment.setHasLiked(true);
                 }
             }
         }
     }
 
-    class DeleteCommentTask extends AAsyncTask<UComment, Integer, ResultObject> {
+    class DeleteCommentTask extends AAsyncTask<UComment, Integer, ResponseObject> {
 
         UComment comment;
 
@@ -563,13 +564,13 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         }
 
         @Override
-        protected ResultObject doInBackground(UComment... params) {
+        protected ResponseObject doInBackground(UComment... params) {
             comment = params[0];
             return PostAPI.deleteMyComment(comment.getID());
         }
 
         @Override
-        protected void onPostExecute(ResultObject resultObject) {
+        protected void onPostExecute(ResponseObject resultObject) {
             if (resultObject.ok) {
                 if (post.getReplyNum() > 0) {
                     post.setReplyNum(post.getReplyNum() - 1);

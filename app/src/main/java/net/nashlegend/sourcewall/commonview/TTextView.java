@@ -36,7 +36,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.umeng.analytics.MobclickAgent;
 
-import net.nashlegend.sourcewall.AppApplication;
+import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.activities.ImageActivity;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.util.Config;
@@ -184,7 +184,7 @@ public class TTextView extends TextView {
         public Drawable getDrawable(String source) {
             //这是图片格式
             //http://2.im.guokr.com/xxx.jpg?imageView2/1/w/480/h/329
-            float stretch = DisplayUtil.getPixelDensity(AppApplication.getApplication());
+            float stretch = DisplayUtil.getPixelDensity(App.getApp());
             maxWidth = getMaxImageWidth();
             Drawable drawable = null;
             if (Config.shouldLoadImage() && source.startsWith("http")) {
@@ -232,7 +232,7 @@ public class TTextView extends TextView {
     Html.ImageGetter imageGetter = new Html.ImageGetter() {
         @Override
         public Drawable getDrawable(String source) {
-            float stretch = DisplayUtil.getPixelDensity(AppApplication.getApplication());
+            float stretch = DisplayUtil.getPixelDensity(App.getApp());
             maxWidth = getMaxImageWidth();
             Drawable drawable = null;
             try {
@@ -361,11 +361,11 @@ public class TTextView extends TextView {
                     MobclickAgent.onEvent(context, Mob.Event_Open_Image_From_TextView);
                     if (context != null && context instanceof Activity) {
                         intent.setClass(context, ImageActivity.class);
-                        ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(AppApplication.getApplication(), R.anim.scale_in_center, 0);
+                        ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(App.getApp(), R.anim.scale_in_center, 0);
                         ActivityCompat.startActivity((Activity) context, intent, options.toBundle());
                     } else {
-                        intent.setClass(AppApplication.getApplication(), ImageActivity.class);
-                        AppApplication.getApplication().startActivity(intent);
+                        intent.setClass(App.getApp(), ImageActivity.class);
+                        App.getApp().startActivity(intent);
                     }
                 }
 

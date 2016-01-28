@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ProgressBar;
 
-import net.nashlegend.sourcewall.AppApplication;
+import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.activities.ArticleActivity;
 import net.nashlegend.sourcewall.activities.MainActivity;
 import net.nashlegend.sourcewall.R;
@@ -24,7 +24,7 @@ import net.nashlegend.sourcewall.commonview.LListView;
 import net.nashlegend.sourcewall.commonview.LoadingView;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.SubItem;
-import net.nashlegend.sourcewall.request.ResultObject;
+import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.request.api.ArticleAPI;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
@@ -68,7 +68,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 if (view instanceof ArticleListItemView) {
                     Intent intent = new Intent();
-                    intent.setClass(AppApplication.getApplication(), ArticleActivity.class);
+                    intent.setClass(App.getApp(), ArticleActivity.class);
                     intent.putExtra(Consts.Extra_Article, ((ArticleListItemView) view).getData());
                     startActivity(intent);
                     getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
@@ -193,7 +193,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
         loadData(0);
     }
 
-    class LoaderTask extends AAsyncTask<Integer, ResultObject<ArrayList<Article>>, ResultObject<ArrayList<Article>>> {
+    class LoaderTask extends AAsyncTask<Integer, ResponseObject<ArrayList<Article>>, ResponseObject<ArrayList<Article>>> {
 
         int offset;
 
@@ -202,24 +202,24 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
         }
 
         @Override
-        protected ResultObject<ArrayList<Article>> doInBackground(Integer... datas) {
+        protected ResponseObject<ArrayList<Article>> doInBackground(Integer... datas) {
             offset = datas[0];
             String key = String.valueOf(subItem.getSection()) + subItem.getType() + subItem.getName() + subItem.getValue();
 
             if (offset == 0 && adapter.getCount() == 0) {
-                ResultObject<ArrayList<Article>> cachedResultObject = ArticleAPI.getCachedArticleList(subItem);
-                if (cachedResultObject.ok) {
+                ResponseObject<ArrayList<Article>> cachedResponseObject = ArticleAPI.getCachedArticleList(subItem);
+                if (cachedResponseObject.ok) {
                     long lastLoad = SharedPreferencesUtil.readLong(key, 0l) / 1000;
                     long crtLoad = System.currentTimeMillis() / 1000;
                     if (crtLoad - lastLoad > cacheDuration) {
-                        publishProgress(cachedResultObject);
+                        publishProgress(cachedResponseObject);
                     } else {
-                        return cachedResultObject;
+                        return cachedResponseObject;
                     }
                 }
             }
 
-            ResultObject<ArrayList<Article>> resultObject = new ResultObject<>();
+            ResponseObject<ArrayList<Article>> resultObject = new ResponseObject<>();
             if (subItem.getType() == SubItem.Type_Collections) {
                 resultObject = ArticleAPI.getArticleListIndexPage(offset);
             } else if (subItem.getType() == SubItem.Type_Single_Channel) {
@@ -242,8 +242,8 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
          */
         @SafeVarargs
         @Override
-        protected final void onProgressUpdate(ResultObject<ArrayList<Article>>... values) {
-            ResultObject<ArrayList<Article>> result = values[0];
+        protected final void onProgressUpdate(ResponseObject<ArrayList<Article>>... values) {
+            ResponseObject<ArrayList<Article>> result = values[0];
             ArrayList<Article> ars = result.result;
             if (ars.size() > 0) {
                 progressBar.setVisibility(View.VISIBLE);
@@ -254,7 +254,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
         }
 
         @Override
-        protected void onPostExecute(ResultObject<ArrayList<Article>> result) {
+        protected void onPostExecute(ResponseObject<ArrayList<Article>> result) {
             listView.doneOperation();
             progressBar.setVisibility(View.GONE);
             if (result.ok) {

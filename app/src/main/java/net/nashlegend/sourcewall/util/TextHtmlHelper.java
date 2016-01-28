@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import net.nashlegend.sourcewall.AppApplication;
+import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
 
 import java.util.regex.Matcher;
@@ -79,7 +79,7 @@ public class TextHtmlHelper {
         public Drawable getDrawable(String source) {
             //这是图片格式
             //http://2.im.guokr.com/xxx.jpg?imageView2/1/w/480/h/329
-            float stretch = DisplayUtil.getPixelDensity(AppApplication.getApplication());
+            float stretch = DisplayUtil.getPixelDensity(App.getApp());
             maxWidth = getMaxWidth();
             Drawable drawable = null;
             if (Config.shouldLoadImage()) {
@@ -120,7 +120,7 @@ public class TextHtmlHelper {
     Html.ImageGetter imageGetter = new Html.ImageGetter() {
         @Override
         public Drawable getDrawable(String source) {
-            float stretch = DisplayUtil.getPixelDensity(AppApplication.getApplication());
+            float stretch = DisplayUtil.getPixelDensity(App.getApp());
             maxWidth = getMaxWidth();
             Drawable drawable = null;
             try {

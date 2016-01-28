@@ -22,7 +22,7 @@ import net.nashlegend.sourcewall.commonview.LListView;
 import net.nashlegend.sourcewall.commonview.LoadingView;
 import net.nashlegend.sourcewall.model.Notice;
 import net.nashlegend.sourcewall.model.SubItem;
-import net.nashlegend.sourcewall.request.ResultObject;
+import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;
@@ -168,19 +168,19 @@ public class NoticesFragment extends ChannelsFragment implements LListView.OnRef
         listView.setSelection(0);
     }
 
-    class LoaderTask extends AAsyncTask<Integer, Integer, ResultObject<ArrayList<Notice>>> {
+    class LoaderTask extends AAsyncTask<Integer, Integer, ResponseObject<ArrayList<Notice>>> {
 
         LoaderTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
             super(iStackedAsyncTaskInterface);
         }
 
         @Override
-        protected ResultObject<ArrayList<Notice>> doInBackground(Integer... params) {
+        protected ResponseObject<ArrayList<Notice>> doInBackground(Integer... params) {
             return UserAPI.getNoticeList();
         }
 
         @Override
-        protected void onPostExecute(ResultObject<ArrayList<Notice>> result) {
+        protected void onPostExecute(ResponseObject<ArrayList<Notice>> result) {
             if (result.ok) {
                 loadingView.onLoadSuccess();
                 ArrayList<Notice> ars = result.result;
@@ -198,15 +198,15 @@ public class NoticesFragment extends ChannelsFragment implements LListView.OnRef
         }
     }
 
-    class IgnoreOneTask extends AsyncTask<String, Integer, ResultObject> {
+    class IgnoreOneTask extends AsyncTask<String, Integer, ResponseObject> {
         @Override
-        protected ResultObject doInBackground(String... params) {
+        protected ResponseObject doInBackground(String... params) {
             String id = params[0];
             return UserAPI.ignoreOneNotice(id);
         }
     }
 
-    class IgnoreTask extends AsyncTask<String, Integer, ResultObject> {
+    class IgnoreTask extends AsyncTask<String, Integer, ResponseObject> {
 
         @Override
         protected void onPreExecute() {
@@ -223,12 +223,12 @@ public class NoticesFragment extends ChannelsFragment implements LListView.OnRef
         }
 
         @Override
-        protected ResultObject doInBackground(String... params) {
+        protected ResponseObject doInBackground(String... params) {
             return UserAPI.ignoreAllNotice();
         }
 
         @Override
-        protected void onPostExecute(ResultObject resultObject) {
+        protected void onPostExecute(ResponseObject resultObject) {
             if (progressDialog.isShowing()) {
                 progressDialog.cancel();
             }

@@ -10,6 +10,8 @@ import com.umeng.analytics.MobclickAgent;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.commonview.AAsyncTask;
 import net.nashlegend.sourcewall.commonview.IStackedAsyncTaskInterface;
+import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 import net.nashlegend.sourcewall.util.ToastUtil;
 
 import java.util.ArrayList;
@@ -21,6 +23,20 @@ public abstract class BaseActivity extends AppCompatActivity implements IStacked
 
     private final ArrayList<AAsyncTask> stackedTasks = new ArrayList<>();
     private boolean isActive = false;
+
+    @Override
+    public void setTheme(int resid) {
+        if (SharedPreferencesUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
+            resid = R.style.AppThemeNight;
+        } else {
+            resid = R.style.AppTheme;
+        }
+        super.setTheme(resid);
+    }
+
+    public void directlySetTheme(int resid) {
+        super.setTheme(resid);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

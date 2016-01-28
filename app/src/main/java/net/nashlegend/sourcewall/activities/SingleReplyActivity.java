@@ -38,7 +38,7 @@ import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.model.UComment;
-import net.nashlegend.sourcewall.request.ResultObject;
+import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.request.api.ArticleAPI;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
@@ -383,7 +383,7 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
         loadDataByUri();
     }
 
-    class LoaderTask extends AAsyncTask<Uri, Integer, ResultObject<UComment>> {
+    class LoaderTask extends AAsyncTask<Uri, Integer, ResponseObject<UComment>> {
 
         public LoaderTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
             super(iStackedAsyncTaskInterface);
@@ -395,8 +395,8 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
         }
 
         @Override
-        protected ResultObject<UComment> doInBackground(Uri... params) {
-            ResultObject<UComment> resultObject = new ResultObject<>();
+        protected ResponseObject<UComment> doInBackground(Uri... params) {
+            ResponseObject<UComment> resultObject = new ResponseObject<>();
             if (TextUtils.isEmpty(notice_id)) {
                 switch (hostSection) {
                     case SubItem.Section_Article:
@@ -421,7 +421,7 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
         }
 
         @Override
-        protected void onPostExecute(ResultObject<UComment> result) {
+        protected void onPostExecute(ResponseObject<UComment> result) {
             if (result.ok) {
                 floatingActionsMenu.setVisibility(View.VISIBLE);
                 loadingView.onLoadSuccess();
@@ -451,15 +451,15 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
         }
     }
 
-    class LikeTask extends AAsyncTask<Void, Integer, ResultObject> {
+    class LikeTask extends AAsyncTask<Void, Integer, ResponseObject> {
 
         public LikeTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
             super(iStackedAsyncTaskInterface);
         }
 
         @Override
-        protected ResultObject doInBackground(Void... params) {
-            ResultObject resultObject = new ResultObject();
+        protected ResponseObject doInBackground(Void... params) {
+            ResponseObject resultObject = new ResponseObject();
             switch (hostSection) {
                 case SubItem.Section_Article:
                     resultObject = ArticleAPI.likeComment(data.getID());
@@ -472,7 +472,7 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
         }
 
         @Override
-        protected void onPostExecute(ResultObject resultObject) {
+        protected void onPostExecute(ResponseObject resultObject) {
             if (resultObject.ok) {
                 data.setHasLiked(true);
                 data.setLikeNum(data.getLikeNum() + 1);
@@ -485,15 +485,15 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
         }
     }
 
-    class DeleteTask extends AAsyncTask<Boolean, Integer, ResultObject> {
+    class DeleteTask extends AAsyncTask<Boolean, Integer, ResponseObject> {
 
         public DeleteTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
             super(iStackedAsyncTaskInterface);
         }
 
         @Override
-        protected ResultObject doInBackground(Boolean... params) {
-            ResultObject resultObject = new ResultObject();
+        protected ResponseObject doInBackground(Boolean... params) {
+            ResponseObject resultObject = new ResponseObject();
             switch (hostSection) {
                 case SubItem.Section_Article:
                     resultObject = ArticleAPI.deleteMyComment(data.getID());
@@ -506,7 +506,7 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
         }
 
         @Override
-        protected void onPostExecute(ResultObject resultObject) {
+        protected void onPostExecute(ResponseObject resultObject) {
             if (resultObject.ok) {
                 finish();
             } else {

@@ -1,7 +1,7 @@
 package net.nashlegend.sourcewall.util;
 
-import net.nashlegend.sourcewall.request.ResultObject;
 import net.nashlegend.sourcewall.request.api.APIBase;
+import net.nashlegend.sourcewall.swrequest.ResponseObject;
 
 /**
  * Created by NashLegend on 2014/12/5 0005
@@ -11,7 +11,7 @@ public class MDUtil {
     /**
      * 通过github接口转换markdown，一小时只能60次
      */
-    public static ResultObject<String> parseMarkdownByGitHub(String text) {
+    public static ResponseObject<String> parseMarkdownByGitHub(String text) {
         return APIBase.parseMarkdownByGitHub(text);
     }
 

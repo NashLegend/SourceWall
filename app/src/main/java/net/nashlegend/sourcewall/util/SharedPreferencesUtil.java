@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
-import net.nashlegend.sourcewall.AppApplication;
+import net.nashlegend.sourcewall.App;
 
 /**
  * Created by NashLegend on 2014/11/25 0025
@@ -19,7 +19,7 @@ public class SharedPreferencesUtil {
 
     public static SharedPreferences getSharedPreferences() {
         if (mSharedPreferences == null) {
-            mSharedPreferences = AppApplication.getApplication().getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
+            mSharedPreferences = App.getApp().getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
         }
         return mSharedPreferences;
     }

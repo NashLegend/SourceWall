@@ -19,7 +19,7 @@ import android.webkit.WebViewClient;
 
 import com.umeng.analytics.MobclickAgent;
 
-import net.nashlegend.sourcewall.AppApplication;
+import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.request.HttpFetcher;
 import net.nashlegend.sourcewall.util.Consts;
@@ -46,7 +46,7 @@ public class LoginActivity extends SwipeActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
 
-        CookieSyncManager.createInstance(AppApplication.getApplication());
+        CookieSyncManager.createInstance(App.getApp());
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.removeAllCookie();
         cookieManager.hasCookies();

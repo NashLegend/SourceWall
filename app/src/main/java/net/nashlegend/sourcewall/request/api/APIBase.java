@@ -13,13 +13,15 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
-import net.nashlegend.sourcewall.AppApplication;
+import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.request.HttpFetcher;
-import net.nashlegend.sourcewall.request.ResultObject;
+import net.nashlegend.sourcewall.swrequest.ResponseCode;
+import net.nashlegend.sourcewall.swrequest.ResponseError;
+import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.FileUtil;
 
@@ -43,10 +45,27 @@ public class APIBase {
     /**
      * 统一回复，回复主题站、帖子、问题
      *
-     * @return ResultObject
+     * @return ResponseObject
      */
-    public static ResultObject reply(AceModel data, String content) {
-        ResultObject resultObject = new ResultObject();
+    public static ResponseObject reply(AceModel data, String content) {
+        ResponseObject resultObject = new ResponseObject();
+        if (data instanceof Article) {
+            return ArticleAPI.replyArticle(((Article) data).getId(), content + Config.getSimpleReplyTail());
+        } else if (data instanceof Post) {
+            return PostAPI.replyPost(((Post) data).getId(), content + Config.getSimpleReplyTail());
+        } else if (data instanceof Question) {
+            return QuestionAPI.answerQuestion(((Question) data).getId(), content + Config.getSimpleReplyTail());
+        }
+        return resultObject;
+    }
+
+    /**
+     * 统一回复，回复主题站、帖子、问题
+     *
+     * @return ResponseObject
+     */
+    public static ResponseObject reply_sw(AceModel data, String content) {
+        ResponseObject resultObject = new ResponseObject();
         if (data instanceof Article) {
             return ArticleAPI.replyArticle(((Article) data).getId(), content + Config.getSimpleReplyTail());
         } else if (data instanceof Post) {
@@ -96,10 +115,10 @@ public class APIBase {
             String parentPath;
             File pFile = null;
             if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                pFile = AppApplication.getApplication().getExternalCacheDir();
+                pFile = App.getApp().getExternalCacheDir();
             }
             if (pFile == null) {
-                pFile = AppApplication.getApplication().getCacheDir();
+                pFile = App.getApp().getCacheDir();
             }
             parentPath = pFile.getAbsolutePath();
             String cachePath = new File(parentPath, System.currentTimeMillis() + ".jpg").getAbsolutePath();
@@ -120,10 +139,10 @@ public class APIBase {
      * @param path      要上传图片的路径
      * @param watermark 是否打水印
      *
-     * @return 返回ResultObject，resultObject.result是上传后的图片地址，果壳并不会对图片进行压缩
+     * @return 返回ResponseObject，resultObject.result是上传后的图片地址，果壳并不会对图片进行压缩
      */
-    public static ResultObject<String> uploadImage(String path, boolean watermark) {
-        ResultObject<String> resultObject = new ResultObject<>();
+    public static ResponseObject<String> uploadImage(String path, boolean watermark) {
+        ResponseObject<String> resultObject = new ResponseObject<>();
         File file = new File(path);
         if (file.exists() && !file.isDirectory() && file.length() >= 0) {
             try {
@@ -138,7 +157,7 @@ public class APIBase {
                 if (response.isSuccessful()) {
                     JSONObject object = getUniversalJsonObject(response.body().string(), resultObject);
                     if (object != null) {
-                        String url = getJsonString(object, "url");
+                        String url = object.optString("url","");
                         resultObject.ok = true;
                         resultObject.result = url;
                     }
@@ -155,11 +174,11 @@ public class APIBase {
      *
      * @param text 要转换的文本内容
      *
-     * @return ResultObject
+     * @return ResponseObject
      */
-    public static ResultObject<String> parseMarkdownByGitHub(String text) {
+    public static ResponseObject<String> parseMarkdownByGitHub(String text) {
 
-        ResultObject<String> resultObject = new ResultObject<>();
+        ResponseObject<String> resultObject = new ResponseObject<>();
         if (TextUtils.isEmpty(text)) {
             resultObject.ok = true;
             resultObject.result = "";
@@ -183,34 +202,6 @@ public class APIBase {
             }
         }
         return resultObject;
-    }
-
-    public static int getJsonInt(JSONObject jsonObject, String key) throws JSONException {
-        if ((jsonObject.has(key)) && (!jsonObject.isNull(key))) {
-            return jsonObject.getInt(key);
-        } else {
-            return 0;
-        }
-    }
-
-    public static long getJsonLong(JSONObject jsonObject, String key) throws JSONException {
-        if ((jsonObject.has(key)) && (!jsonObject.isNull(key))) {
-            return jsonObject.getLong(key);
-        } else {
-            return 0l;
-        }
-    }
-
-    public static boolean getJsonBoolean(JSONObject jsonObject, String key) throws JSONException {
-        return (jsonObject.has(key)) && (!jsonObject.isNull(key)) && jsonObject.getBoolean(key);
-    }
-
-    public static String getJsonString(JSONObject jsonObject, String key) throws JSONException {
-        if ((jsonObject.has(key)) && (!jsonObject.isNull(key))) {
-            return jsonObject.getString(key);
-        } else {
-            return "";
-        }
     }
 
     public static JSONObject getJsonObject(JSONObject jsonObject, String key) throws JSONException {
@@ -239,10 +230,10 @@ public class APIBase {
      *
      * @throws JSONException
      */
-    public static JSONObject getUniversalJsonObject(String json, ResultObject resultObject) throws JSONException {
+    public static JSONObject getUniversalJsonObject(String json, ResponseObject resultObject) throws JSONException {
         JSONObject object = new JSONObject(json);
-        if (getJsonBoolean(object, "ok")) {
-            return getJsonObject(object, "result");
+        if (object.optBoolean("ok",false)) {
+            return object.optJSONObject("result");
         } else {
             resultObject.ok = false;
             handleBadJson(object, resultObject);
@@ -260,11 +251,11 @@ public class APIBase {
      *
      * @throws JSONException
      */
-    public static JSONArray getUniversalJsonArray(String json, ResultObject resultObject) throws JSONException {
+    public static JSONArray getUniversalJsonArray(String json, ResponseObject resultObject) throws JSONException {
         JSONObject object = new JSONObject(json);
-        if (getJsonBoolean(object, "ok")) {
+        if (object.optBoolean("ok",false)) {
             //这里不处理resultObject.ok，因为返回后，其他地方可能报错
-            return getJsonArray(object, "result");
+            return object.optJSONArray("result");
         } else {
             resultObject.ok = false;
             handleBadJson(object, resultObject);
@@ -282,9 +273,9 @@ public class APIBase {
      *
      * @throws JSONException
      */
-    public static boolean getUniversalJsonSimpleBoolean(String json, ResultObject resultObject) throws JSONException {
+    public static boolean getUniversalJsonSimpleBoolean(String json, ResponseObject resultObject) throws JSONException {
         JSONObject object = new JSONObject(json);
-        if (getJsonBoolean(object, "ok")) {
+        if (object.optBoolean("ok",false)) {
             resultObject.ok = true;
             return true;
         } else {
@@ -301,25 +292,26 @@ public class APIBase {
      *
      * @throws JSONException
      */
-    public static void handleBadJson(JSONObject object, ResultObject resultObject) throws JSONException {
-        int error_code = getJsonInt(object, "error_code");
-        resultObject.message = getJsonString(object, "error");
+    public static void handleBadJson(JSONObject object, ResponseObject resultObject) throws JSONException {
+        int error_code = object.optInt("error_code", ResponseCode.CODE_UNKNOWN);
+        resultObject.code = ResponseCode.CODE_NONE;
+        resultObject.message = object.optString("error","");
         switch (error_code) {
             case 200004:
-                resultObject.code = ResultObject.ResultCode.CODE_TOKEN_INVALID;
+                resultObject.error = ResponseError.TOKEN_INVALID;
                 UserAPI.clearMyInfo();
                 break;
             case 240004:
-                resultObject.code = ResultObject.ResultCode.CODE_ALREADY_LIKED;
+                resultObject.error = ResponseError.ALREADY_LIKED;
                 break;
             case 242033:
-                resultObject.code = ResultObject.ResultCode.CODE_ALREADY_THANKED;
+                resultObject.error = ResponseError.ALREADY_THANKED;
                 break;
             case 242013:
-                resultObject.code = ResultObject.ResultCode.CODE_ALREADY_BURIED;
+                resultObject.error = ResponseError.ALREADY_BURIED;
                 break;
             default:
-                resultObject.code = ResultObject.ResultCode.CODE_UNKNOWN;
+                resultObject.error = ResponseError.UNKNOWN;
                 break;
         }
     }
@@ -328,18 +320,18 @@ public class APIBase {
      * 处理所有请求的错误信息
      *
      * @param e            要处理的错误信息
-     * @param resultObject ResultObject
+     * @param resultObject ResponseObject
      */
-    public static void handleRequestException(Exception e, ResultObject resultObject) {
+    public static void handleRequestException(Exception e, ResponseObject resultObject) {
         e.printStackTrace();
         resultObject.ok = false;
         resultObject.error_message = e.getMessage();
         if (e instanceof IOException) {
-            resultObject.code = ResultObject.ResultCode.CODE_NETWORK_ERROR;
+            resultObject.error = ResponseError.NETWORK_ERROR;
         } else if (e instanceof JSONException) {
-            resultObject.code = ResultObject.ResultCode.CODE_JSON_ERROR;
+            resultObject.error = ResponseError.JSON_ERROR;
         } else {
-            resultObject.code = ResultObject.ResultCode.CODE_UNKNOWN;
+            resultObject.error = ResponseError.UNKNOWN;
         }
     }
 

@@ -6,7 +6,7 @@ import android.provider.Browser;
 import android.text.TextUtils;
 
 import net.nashlegend.sourcewall.activities.AnswerActivity;
-import net.nashlegend.sourcewall.AppApplication;
+import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.activities.ArticleActivity;
 import net.nashlegend.sourcewall.activities.PostActivity;
 import net.nashlegend.sourcewall.activities.QuestionActivity;
@@ -82,25 +82,25 @@ public class UrlCheckUtil {
                                 String reply_id = matcher.group(3);
                                 //http://www.guokr.com/article/reply/2907293/
                                 Uri replyUri = Uri.parse("http://www.guokr.com/article/reply/" + reply_id + "/");
-                                intent.setClass(AppApplication.getApplication(), SingleReplyActivity.class);
+                                intent.setClass(App.getApp(), SingleReplyActivity.class);
                                 intent.setData(replyUri);
-                                AppApplication.getApplication().startActivity(intent);
+                                App.getApp().startActivity(intent);
                             }
                         } else if (url.matches("^http://(www|m).guokr.com/article/\\d+.*")) {
                             //url.matches("^http://(www|m).guokr.com/article/\\d+[/]?$",http://www.guokr.com/article/123456/
                             //url.matches("^http://(www|m).guokr.com/article/\\d+.*"),http://www.guokr.com/article/438683/#comments
-                            intent.setClass(AppApplication.getApplication(), ArticleActivity.class);
+                            intent.setClass(App.getApp(), ArticleActivity.class);
                             Article article = new Article();
                             article.setId(secondSegment);
                             intent.putExtra(Consts.Extra_Article, article);
-                            AppApplication.getApplication().startActivity(intent);
+                            App.getApp().startActivity(intent);
                         }
                     } else if (segments.size() == 3) {
                         //跳转.http://www.guokr.com/article/reply/123456
                         if (url.matches("^http://(www|m).guokr.com/article/reply/\\d+[/]?$")) {
-                            intent.setClass(AppApplication.getApplication(), SingleReplyActivity.class);
+                            intent.setClass(App.getApp(), SingleReplyActivity.class);
                             intent.setData(uri);
-                            AppApplication.getApplication().startActivity(intent);
+                            App.getApp().startActivity(intent);
                         }
                     }
                     break;
@@ -112,32 +112,32 @@ public class UrlCheckUtil {
                             if (matcher.find()) {
                                 String reply_id = matcher.group(3);
                                 Uri replyUri = Uri.parse("http://www.guokr.com/post/reply/" + reply_id + "/");
-                                intent.setClass(AppApplication.getApplication(), SingleReplyActivity.class);
+                                intent.setClass(App.getApp(), SingleReplyActivity.class);
                                 intent.setData(replyUri);
-                                AppApplication.getApplication().startActivity(intent);
+                                App.getApp().startActivity(intent);
                             }
                         } else if (url.matches("^http://(www|m).guokr.com/post/\\d+.*")) {
                             //http://www.guokr.com/post/123456/
-                            intent.setClass(AppApplication.getApplication(), PostActivity.class);
+                            intent.setClass(App.getApp(), PostActivity.class);
                             Post post = new Post();
                             post.setId(secondSegment);
                             intent.putExtra(Consts.Extra_Post, post);
-                            AppApplication.getApplication().startActivity(intent);
+                            App.getApp().startActivity(intent);
                         }
                     } else if (segments.size() == 3) {
                         //跳转
                         if (url.matches("^http://(www|m).guokr.com/post/reply/\\d+[/]?$")) {
-                            intent.setClass(AppApplication.getApplication(), SingleReplyActivity.class);
+                            intent.setClass(App.getApp(), SingleReplyActivity.class);
                             intent.setData(uri);
-                            AppApplication.getApplication().startActivity(intent);
+                            App.getApp().startActivity(intent);
                         }
                     } else if (segments.size() == 4) {
                         //跳转
                         //http://www.guokr.com/post/666281/reply/6224695/
                         if (url.matches("^http://(www|m).guokr.com/post/\\d+/reply/\\d+/?$")) {
-                            intent.setClass(AppApplication.getApplication(), SingleReplyActivity.class);
+                            intent.setClass(App.getApp(), SingleReplyActivity.class);
                             intent.setData(uri);
-                            AppApplication.getApplication().startActivity(intent);
+                            App.getApp().startActivity(intent);
                         }
                     }
                     break;
@@ -149,17 +149,17 @@ public class UrlCheckUtil {
                             if (matcher.find()) {
                                 String answer_id = matcher.group(3);
                                 Uri answerUri = Uri.parse("http://www.guokr.com/answer/" + answer_id + "/redirect/");
-                                intent.setClass(AppApplication.getApplication(), AnswerActivity.class);
+                                intent.setClass(App.getApp(), AnswerActivity.class);
                                 intent.setData(answerUri);
-                                AppApplication.getApplication().startActivity(intent);
+                                App.getApp().startActivity(intent);
                             }
                         } else if (url.matches("^http://(www|m).guokr.com/question/\\d+.*$")) {
                             //http://www.guokr.com/question/123456
-                            intent.setClass(AppApplication.getApplication(), QuestionActivity.class);
+                            intent.setClass(App.getApp(), QuestionActivity.class);
                             Question question = new Question();
                             question.setId(secondSegment);
                             intent.putExtra(Consts.Extra_Question, question);
-                            AppApplication.getApplication().startActivity(intent);
+                            App.getApp().startActivity(intent);
                         }
                     }
                 case "answer":
@@ -168,16 +168,16 @@ public class UrlCheckUtil {
                         //跳转
                         //这个应该是跳转到AnswerActivity
                         if (url.matches("^http://(www|m).guokr.com/answer/\\d+/redirect[/]?$")) {
-                            intent.setClass(AppApplication.getApplication(), AnswerActivity.class);
+                            intent.setClass(App.getApp(), AnswerActivity.class);
                             intent.setData(uri);
-                            AppApplication.getApplication().startActivity(intent);
+                            App.getApp().startActivity(intent);
                         }
                     } else if (segments.size() == 2) {
                         //http://www.guokr.com/answer/654321/
                         if (url.matches("^http://(www|m).guokr.com/answer/\\d+[/]?$")) {
-                            intent.setClass(AppApplication.getApplication(), AnswerActivity.class);
+                            intent.setClass(App.getApp(), AnswerActivity.class);
                             intent.setData(uri);
-                            AppApplication.getApplication().startActivity(intent);
+                            App.getApp().startActivity(intent);
                         }
                     }
                     break;
@@ -200,11 +200,11 @@ public class UrlCheckUtil {
     public static void openWithBrowser(Uri uri) {
         try {
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            intent.putExtra(Browser.EXTRA_APPLICATION_ID, AppApplication.getApplication().getPackageName());
+            intent.putExtra(Browser.EXTRA_APPLICATION_ID, App.getApp().getPackageName());
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            AppApplication.getApplication().startActivity(intent);
+            App.getApp().startActivity(intent);
         } catch (Exception e) {
-            ToastUtil.toastSingleton(AppApplication.getApplication().getString(R.string.maybe_you_have_no_browsers));
+            ToastUtil.toastSingleton(App.getApp().getString(R.string.maybe_you_have_no_browsers));
         }
     }
 }

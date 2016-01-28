@@ -8,7 +8,7 @@ import android.os.Environment;
 import android.os.StatFs;
 import android.support.v4.util.LruCache;
 
-import net.nashlegend.sourcewall.AppApplication;
+import net.nashlegend.sourcewall.App;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,7 +42,7 @@ public class RequestCache {
 
     synchronized public static RequestCache getInstance() {
         if (requestCache == null) {
-            requestCache = new RequestCache(new RequestCacheParams(AppApplication.getApplication(), "request.cache"));
+            requestCache = new RequestCache(new RequestCacheParams(App.getApp(), "request.cache"));
             requestCache.initDiskCache();
         }
         return requestCache;
@@ -132,7 +132,7 @@ public class RequestCache {
     }
 
     public String getCachedFile(String data) {
-        File file = new File(getDiskCacheDir(AppApplication.getApplication(), "request.cache"), hashKeyForDisk(data) + ".0");
+        File file = new File(getDiskCacheDir(App.getApp(), "request.cache"), hashKeyForDisk(data) + ".0");
         if (file.exists()) {
             return file.getAbsolutePath();
         } else {

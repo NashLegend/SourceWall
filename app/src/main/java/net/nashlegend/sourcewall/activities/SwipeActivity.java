@@ -1,10 +1,10 @@
 package net.nashlegend.sourcewall.activities;
 
 import android.animation.Animator;
-import android.animation.Animator.AnimatorListener;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -21,7 +21,6 @@ import android.widget.FrameLayout;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.util.Consts;
-import net.nashlegend.sourcewall.util.DisplayUtil;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 
 public class SwipeActivity extends BaseActivity {
@@ -38,20 +37,6 @@ public class SwipeActivity extends BaseActivity {
      */
     protected boolean swipeAnyWhere = false;
 
-    @Override
-    public void setTheme(int resid) {
-        if (SharedPreferencesUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
-            resid = R.style.AppThemeNight;
-        } else {
-            resid = R.style.AppTheme;
-        }
-        super.setTheme(resid);
-    }
-
-    public void directlySetTheme(int resid) {
-        super.setTheme(resid);
-    }
-
     public SwipeActivity() {
 
     }
@@ -60,17 +45,6 @@ public class SwipeActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         swipeLayout = new SwipeLayout(this);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        swipeLayout.replaceLayer(this);
     }
 
     public void setSwipeAnyWhere(boolean swipeAnyWhere) {
@@ -89,6 +63,18 @@ public class SwipeActivity extends BaseActivity {
         return swipeEnabled;
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        swipeLayout.replaceLayer(this);
+    }
+
     public static int getScreenWidth(Context context) {
         DisplayMetrics metrics = new DisplayMetrics();
         WindowManager manager = (WindowManager) context.getSystemService(WINDOW_SERVICE);
@@ -101,13 +87,42 @@ public class SwipeActivity extends BaseActivity {
     @Override
     public void finish() {
         if (swipeFinished) {
+            finish(0, 0);
+        } else {
+            swipeLayout.cancelPotentialAnimation();
+            finish(0, R.anim.slide_out_right);
+        }
+    }
+
+    public void finish(int enterAnim, int exitAnim) {
+        if (swipeFinished) {
             super.finish();
-            overridePendingTransition(0, 0);
+            overridePendingTransition(enterAnim, exitAnim);
         } else {
             swipeLayout.cancelPotentialAnimation();
             super.finish();
-            overridePendingTransition(0, R.anim.slide_out_right);
+            overridePendingTransition(enterAnim, exitAnim);
         }
+    }
+
+    @Override
+    public void startActivity(Intent intent) {
+        startActivity(intent, R.anim.slide_in_right, 0);
+    }
+
+    public void startActivity(Intent intent, int enterAnim, int exitAnim) {
+        super.startActivity(intent);
+        overridePendingTransition(enterAnim, exitAnim);
+    }
+
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode) {
+        startActivityForResult(intent, requestCode, R.anim.slide_in_right, 0);
+    }
+
+    public void startActivityForResult(Intent intent, int requestCode, int enterAnim, int exitAnim) {
+        super.startActivityForResult(intent, requestCode);
+        overridePendingTransition(enterAnim, exitAnim);
     }
 
     class SwipeLayout extends FrameLayout {
@@ -127,27 +142,19 @@ public class SwipeActivity extends BaseActivity {
             super(context, attrs, defStyleAttr);
         }
 
+        @SuppressWarnings("deprecation")
         public void replaceLayer(Activity activity) {
             leftShadow = activity.getResources().getDrawable(R.drawable.left_shadow);
-            touchSlop = DisplayUtil.dip2px(touchSlopDP, activity);
+            touchSlop = (int) (touchSlopDP * activity.getResources().getDisplayMetrics().density);
             sideWidth = (int) (sideWidthInDP * activity.getResources().getDisplayMetrics().density);
             mActivity = activity;
             screenWidth = getScreenWidth(activity);
             setClickable(true);
-            //            backgroundLayer = new View(activity);
-            //            backgroundLayer.setBackgroundColor(Color.parseColor("#88000000"));
             final ViewGroup root = (ViewGroup) activity.getWindow().getDecorView();
             content = root.getChildAt(0);
-            //在Android5.0上，content的高度不再是屏幕高度，而是变成了Activity高度，比屏幕高度低一些，
-            //如果this.addView(content),就会使用以前的params，这样content会像root一样比content高出一部分，导致底部空出一部分
-            //在装有Android 5.0的Nexus5上，root,SwipeLayout和content的高度分别是1920、1776、1632，144的等差数列……
-            //在装有Android4.4.3的HTC One M7上，root,SwipeLayout和content的高度分别相同，都是1920
-            //所以我们要做的就是给content一个新的LayoutParams，Match_Parent那种，也就是下面的-1
             ViewGroup.LayoutParams params = content.getLayoutParams();
             ViewGroup.LayoutParams params2 = new ViewGroup.LayoutParams(-1, -1);
-            //            ViewGroup.LayoutParams params3 = new ViewGroup.LayoutParams(-1, -1);
             root.removeView(content);
-            //            this.addView(backgroundLayer, params3);
             this.addView(content, params2);
             root.addView(this, params);
         }
@@ -163,6 +170,9 @@ public class SwipeActivity extends BaseActivity {
         }
 
         boolean canSwipe = false;
+        /**
+         * 超过了touchslop仍然没有达到没有条件，则忽略以后的动作
+         */
         boolean ignoreSwipe = false;
         View content;
         Activity mActivity;
@@ -177,12 +187,11 @@ public class SwipeActivity extends BaseActivity {
         float currentX;
         float currentY;
 
-
-        int touchSlopDP = 30;
+        int touchSlopDP = 20;
         int touchSlop = 60;
 
         @Override
-        public boolean dispatchTouchEvent(MotionEvent ev) {
+        public boolean dispatchTouchEvent(@NonNull MotionEvent ev) {
             if (swipeEnabled && !canSwipe && !ignoreSwipe) {
                 if (swipeAnyWhere) {
                     switch (ev.getAction()) {
@@ -265,11 +274,11 @@ public class SwipeActivity extends BaseActivity {
                         tracker.computeCurrentVelocity(1000, 20000);
                         canSwipe = false;
                         hasIgnoreFirstMove = false;
-                        int mv = screenWidth / 200 * 1000;
+                        int mv = screenWidth * 3;
                         if (Math.abs(tracker.getXVelocity()) > mv) {
                             animateFromVelocity(tracker.getXVelocity());
                         } else {
-                            if (getContentX() > screenWidth / 2) {
+                            if (getContentX() > screenWidth / 3) {
                                 animateFinish(false);
                             } else {
                                 animateBack(false);
@@ -297,9 +306,6 @@ public class SwipeActivity extends BaseActivity {
             int ix = (int) x;
             content.setX(ix);
             invalidate();
-            //            if (backgroundLayer != null) {
-            //                backgroundLayer.setAlpha(1 - x / getWidth());
-            //            }
         }
 
         public float getContentX() {
@@ -333,7 +339,7 @@ public class SwipeActivity extends BaseActivity {
             }
             animator.setDuration(tmpDuration);
             animator.setInterpolator(new DecelerateInterpolator());
-            animator.addListener(new AnimatorListener() {
+            animator.addListener(new Animator.AnimatorListener() {
 
                 @Override
                 public void onAnimationStart(Animator animation) {
@@ -365,13 +371,13 @@ public class SwipeActivity extends BaseActivity {
 
         private void animateFromVelocity(float v) {
             if (v > 0) {
-                if (getContentX() < screenWidth / 2 && v * duration / 1000 + getContentX() < screenWidth / 2) {
+                if (getContentX() < screenWidth / 3 && v * duration / 1000 + getContentX() < screenWidth / 3) {
                     animateBack(false);
                 } else {
                     animateFinish(true);
                 }
             } else {
-                if (getContentX() > screenWidth / 2 && v * duration / 1000 + getContentX() > screenWidth / 2) {
+                if (getContentX() > screenWidth / 3 && v * duration / 1000 + getContentX() > screenWidth / 3) {
                     animateFinish(false);
                 } else {
                     animateBack(true);

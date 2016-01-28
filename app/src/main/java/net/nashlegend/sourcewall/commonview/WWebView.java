@@ -16,7 +16,7 @@ import android.webkit.WebViewClient;
 
 import com.umeng.analytics.MobclickAgent;
 
-import net.nashlegend.sourcewall.AppApplication;
+import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.activities.ImageActivity;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.util.Config;
@@ -168,11 +168,11 @@ public class WWebView extends WebView {
         MobclickAgent.onEvent(context, Mob.Event_Open_Image_From_Browser);
         if (context != null && context instanceof Activity) {
             intent.setClass(context, ImageActivity.class);
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(AppApplication.getApplication(), R.anim.scale_in_center, 0);
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(App.getApp(), R.anim.scale_in_center, 0);
             ActivityCompat.startActivity((Activity) context, intent, options.toBundle());
         } else {
-            intent.setClass(AppApplication.getApplication(), ImageActivity.class);
-            AppApplication.getApplication().startActivity(intent);
+            intent.setClass(App.getApp(), ImageActivity.class);
+            App.getApp().startActivity(intent);
         }
     }
 

@@ -16,7 +16,7 @@ import com.umeng.analytics.MobclickAgent;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.ImageAdapter;
 import net.nashlegend.sourcewall.request.RequestCache;
-import net.nashlegend.sourcewall.request.ResultObject;
+import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Mob;
 
@@ -42,7 +42,7 @@ public class ImageActivity extends BaseActivity {
 
     @Override
     public void setTheme(int resId) {
-        super.setTheme(R.style.ImageThemeNight);
+        directlySetTheme(R.style.ImageThemeNight);
     }
 
     @Override
@@ -105,11 +105,11 @@ public class ImageActivity extends BaseActivity {
         overridePendingTransition(0, R.anim.scale_out_center);
     }
 
-    class DownloadTask extends AsyncTask<String, Integer, ResultObject<String>> {
+    class DownloadTask extends AsyncTask<String, Integer, ResponseObject<String>> {
 
         @Override
-        protected ResultObject<String> doInBackground(String... params) {
-            ResultObject<String> resultObject = new ResultObject<>();
+        protected ResponseObject<String> doInBackground(String... params) {
+            ResponseObject<String> resultObject = new ResponseObject<>();
             if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
                 File folder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), getString(R.string.app_name));
                 if ((folder.exists() || !folder.exists() && folder.mkdirs())) {
@@ -161,7 +161,7 @@ public class ImageActivity extends BaseActivity {
         }
 
         @Override
-        protected void onPostExecute(ResultObject<String> result) {
+        protected void onPostExecute(ResponseObject<String> result) {
             if (result.ok) {
                 MediaScannerConnection.scanFile(ImageActivity.this, new String[]{result.result}, null, null);
                 toastSingleton(getString(R.string.hint_download_successfully_to) + new File(result.result).getParent());

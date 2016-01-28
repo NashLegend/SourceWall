@@ -48,7 +48,7 @@ import net.nashlegend.sourcewall.db.AskTagHelper;
 import net.nashlegend.sourcewall.db.gen.AskTag;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.model.SubItem;
-import net.nashlegend.sourcewall.request.ResultObject;
+import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Consts;
@@ -573,7 +573,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
         loadData(0);
     }
 
-    class LoaderTask extends AAsyncTask<Integer, ResultObject<ArrayList<Question>>, ResultObject<ArrayList<Question>>> {
+    class LoaderTask extends AAsyncTask<Integer, ResponseObject<ArrayList<Question>>, ResponseObject<ArrayList<Question>>> {
 
         int loadedPage;
 
@@ -582,24 +582,24 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
         }
 
         @Override
-        protected ResultObject<ArrayList<Question>> doInBackground(Integer... datas) {
+        protected ResponseObject<ArrayList<Question>> doInBackground(Integer... datas) {
             loadedPage = datas[0];
             String key = String.valueOf(subItem.getSection()) + subItem.getType() + subItem.getName() + subItem.getValue();
             if (loadedPage == 0 && adapter.getCount() == 0) {
-                ResultObject<ArrayList<Question>> cachedResultObject = QuestionAPI.getCachedQuestionList(subItem);
-                if (cachedResultObject.ok) {
+                ResponseObject<ArrayList<Question>> cachedResponseObject = QuestionAPI.getCachedQuestionList(subItem);
+                if (cachedResponseObject.ok) {
                     long lastLoad = SharedPreferencesUtil.readLong(key, 0l) / 1000;
                     long crtLoad = System.currentTimeMillis() / 1000;
                     if (crtLoad - lastLoad > cacheDuration) {
-                        publishProgress(cachedResultObject);
+                        publishProgress(cachedResponseObject);
                     } else {
-                        return cachedResultObject;
+                        return cachedResponseObject;
                     }
                 }
 
             }
 
-            ResultObject<ArrayList<Question>> resultObject = new ResultObject<>();
+            ResponseObject<ArrayList<Question>> resultObject = new ResponseObject<>();
             if (subItem.getType() == SubItem.Type_Collections) {
                 if (HOTTEST.equals(subItem.getValue())) {
                     resultObject = QuestionAPI.getHotQuestions(loadedPage + 1);
@@ -629,8 +629,8 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
          */
         @SafeVarargs
         @Override
-        protected final void onProgressUpdate(ResultObject<ArrayList<Question>>... values) {
-            ResultObject<ArrayList<Question>> result = values[0];
+        protected final void onProgressUpdate(ResponseObject<ArrayList<Question>>... values) {
+            ResponseObject<ArrayList<Question>> result = values[0];
             ArrayList<Question> ars = result.result;
             if (ars.size() > 0) {
                 progressBar.setVisibility(View.VISIBLE);
@@ -641,7 +641,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
         }
 
         @Override
-        protected void onPostExecute(ResultObject<ArrayList<Question>> result) {
+        protected void onPostExecute(ResponseObject<ArrayList<Question>> result) {
             listView.doneOperation();
             progressBar.setVisibility(View.GONE);
             if (result.ok) {

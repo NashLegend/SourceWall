@@ -1,5 +1,10 @@
 package net.nashlegend.sourcewall.model;
 
+import net.nashlegend.sourcewall.request.api.APIBase;
+import net.nashlegend.sourcewall.swrequest.JsonHandler;
+
+import org.json.JSONObject;
+
 /**
  * Created by NashLegend on 2014/9/16 0016
  */
@@ -19,6 +24,116 @@ public class UComment extends AceModel {
     private int likeNum = 0;
 
     private boolean hasLiked = false;
+
+    public static UComment fromArticleJson(String article_id, String article_title, JSONObject replyObject) throws Exception {
+        UComment comment = new UComment();
+        assert replyObject != null;
+        String id = replyObject.optString("id");
+        boolean hasLiked = replyObject.optBoolean("current_user_has_liked");
+        String date = APIBase.parseDate(replyObject.optString("date_created"));
+        int likeNum = replyObject.optInt("likings_count");
+        String content = replyObject.optString("html");
+        JSONObject authorObject = APIBase.getJsonObject(replyObject, "author");
+        boolean is_exists = authorObject.optBoolean("is_exists");
+        if (is_exists) {
+            String author = authorObject.optString("nickname");
+            String authorID = authorObject.optString("url").replaceAll("\\D+", "");
+            String authorTitle = authorObject.optString("title");
+            JSONObject avatarObject = APIBase.getJsonObject(authorObject, "avatar");
+            String avatarUrl = avatarObject.optString("large").replaceAll("\\?.*$", "");
+            comment.setAuthor(author);
+            comment.setAuthorTitle(authorTitle);
+            comment.setAuthorID(authorID);
+            comment.setAuthorAvatarUrl(avatarUrl);
+        } else {
+            comment.setAuthor("此用户不存在");
+        }
+        comment.setHostID(article_id);
+        comment.setHostTitle(article_title);
+        comment.setDate(date);
+        comment.setHasLiked(hasLiked);
+        comment.setLikeNum(likeNum);
+        comment.setContent(content);
+        comment.setID(id);
+        return comment;
+    }
+
+    public static UComment fromPostJson(JSONObject replyObject) throws Exception {
+        UComment comment = new UComment();
+        String rid = replyObject.getString("id");
+        JSONObject postObject = APIBase.getJsonObject(replyObject, "post");
+        String hostTitle = postObject.getString("title");
+        String hostID = postObject.getString("id");
+        boolean hasLiked = replyObject.optBoolean("current_user_has_liked");
+        String floor = replyObject.getString("level");
+        String date = APIBase.parseDate(replyObject.getString("date_created"));
+        int likeNum = replyObject.optInt("likings_count");
+        String content = replyObject.optString("html");
+
+        JSONObject authorObject = APIBase.getJsonObject(replyObject, "author");
+        boolean is_exists = authorObject.optBoolean("is_exists");
+        if (is_exists) {
+            String author = authorObject.optString("nickname");
+            String authorID = authorObject.optString("url").replaceAll("\\D+", "");
+            String authorTitle = authorObject.optString("title");
+            JSONObject avatarObject = APIBase.getJsonObject(authorObject, "avatar");
+            String avatarUrl = avatarObject.optString("large").replaceAll("\\?.*$", "");
+
+            comment.setAuthor(author);
+            comment.setAuthorTitle(authorTitle);
+            comment.setAuthorID(authorID);
+            comment.setAuthorAvatarUrl(avatarUrl);
+        } else {
+            comment.setAuthor("此用户不存在");
+        }
+
+        comment.setHostTitle(hostTitle);
+        comment.setHostID(hostID);
+        comment.setHasLiked(hasLiked);
+        comment.setFloor(floor + "楼");
+        comment.setDate(date);
+        comment.setLikeNum(likeNum);
+        comment.setContent(content);
+        comment.setID(rid);
+        return comment;
+    }
+
+    public static UComment fromAnswerJson(JSONObject jsonObject)throws Exception{
+        UComment comment = new UComment();
+        JSONObject authorObject = JsonHandler.getJsonObject(jsonObject, "author");
+        boolean exists = authorObject.optBoolean("is_exists");
+        comment.setAuthorExists(exists);
+        if (exists) {
+            comment.setAuthor(authorObject.optString("nickname"));
+            comment.setAuthorID(authorObject.optString("url").replaceAll("\\D+", ""));
+            comment.setAuthorAvatarUrl(JsonHandler.getJsonObject(authorObject, "avatar").getString("large").replaceAll("\\?.*$", ""));
+        } else {
+            comment.setAuthor("此用户不存在");
+        }
+        comment.setContent(jsonObject.optString("text"));
+        comment.setDate(APIBase.parseDate(jsonObject.optString("date_created")));
+        comment.setID(jsonObject.optString("id"));
+        comment.setHostID(jsonObject.optString("answer_id"));
+        return comment;
+    }
+    public static UComment fromQuestionJson(JSONObject jsonObject)throws Exception{
+        UComment comment = new UComment();
+        JSONObject authorObject = JsonHandler.getJsonObject(jsonObject, "author");
+        boolean exists = authorObject.optBoolean("is_exists");
+        comment.setAuthorExists(exists);
+        if (exists) {
+            comment.setAuthor(authorObject.optString("nickname"));
+            comment.setAuthorID(authorObject.optString("url").replaceAll("\\D+", ""));
+            comment.setAuthorAvatarUrl(JsonHandler.getJsonObject(authorObject, "avatar").getString("large").replaceAll("\\?.*$", ""));
+        } else {
+            comment.setAuthor("此用户不存在");
+        }
+        comment.setContent(jsonObject.optString("text"));
+        comment.setDate(APIBase.parseDate(jsonObject.optString("date_created")));
+        comment.setID(jsonObject.optString("id"));
+        comment.setHostID(jsonObject.optString("question_id"));
+        return comment;
+    }
 
     public String getContent() {
         return content;

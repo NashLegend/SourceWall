@@ -21,8 +21,8 @@ import net.nashlegend.sourcewall.commonview.shuffle.ShuffleDesk;
 import net.nashlegend.sourcewall.db.GroupHelper;
 import net.nashlegend.sourcewall.db.gen.MyGroup;
 import net.nashlegend.sourcewall.model.SubItem;
-import net.nashlegend.sourcewall.request.ResultObject;
-import net.nashlegend.sourcewall.request.ResultObject.ResultCode;
+import net.nashlegend.sourcewall.swrequest.ResponseError;
+import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Config;
@@ -200,7 +200,7 @@ public class ShuffleGroupActivity extends SwipeActivity {
         }
     }
 
-    class LoaderFromNetTask extends AAsyncTask<String, Integer, ResultObject> {
+    class LoaderFromNetTask extends AAsyncTask<String, Integer, ResponseObject> {
 
         public LoaderFromNetTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
             super(iStackedAsyncTaskInterface);
@@ -222,8 +222,8 @@ public class ShuffleGroupActivity extends SwipeActivity {
         }
 
         @Override
-        protected ResultObject doInBackground(String[] params) {
-            ResultObject<ArrayList<SubItem>> result = PostAPI.getAllMyGroups();
+        protected ResponseObject doInBackground(String[] params) {
+            ResponseObject<ArrayList<SubItem>> result = PostAPI.getAllMyGroups();
             if (result.ok) {
                 ArrayList<SubItem> subItems = result.result;
                 ArrayList<MyGroup> myGroups = new ArrayList<>();
@@ -246,7 +246,7 @@ public class ShuffleGroupActivity extends SwipeActivity {
         }
 
         @Override
-        protected void onPostExecute(ResultObject resultObject) {
+        protected void onPostExecute(ResponseObject resultObject) {
             progressDialog.dismiss();
             if (resultObject.ok) {
                 MobclickAgent.onEvent(ShuffleGroupActivity.this, Mob.Event_Load_My_Groups_OK);
@@ -254,7 +254,7 @@ public class ShuffleGroupActivity extends SwipeActivity {
             } else {
                 MobclickAgent.onEvent(ShuffleGroupActivity.this, Mob.Event_Load_My_Groups_Failed);
                 MobclickAgent.reportError(ShuffleGroupActivity.this, "Loading my Groups failed \n Is WIFI:" + Config.isWifi() + "\n" + UserAPI.getUserInfoString() + resultObject.error_message);
-                if (resultObject.code == ResultCode.CODE_NO_USER_ID) {
+                if (resultObject.error == ResponseError.NO_USER_ID) {
                     toast("未获得用户ID，无法加载");
                 } else {
                     toast("加载我的小组失败");

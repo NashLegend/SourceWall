@@ -1,6 +1,6 @@
 package net.nashlegend.sourcewall.util;
 
-import net.nashlegend.sourcewall.AppApplication;
+import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.model.SubItem;
 
@@ -14,7 +14,7 @@ import java.util.Collections;
 public class ChannelHelper {
 
     public static ArrayList<SubItem> getSections() {
-        SubItem[] items = {new SubItem(SubItem.Section_Article, SubItem.Type_Collections, AppApplication.getApplication().getResources().getString(R.string.article), "Article"), new SubItem(SubItem.Section_Post, SubItem.Type_Collections, AppApplication.getApplication().getResources().getString(R.string.post), "Post"), new SubItem(SubItem.Section_Question, SubItem.Type_Collections, AppApplication.getApplication().getResources().getString(R.string.question), "Question")};
+        SubItem[] items = {new SubItem(SubItem.Section_Article, SubItem.Type_Collections, App.getApp().getResources().getString(R.string.article), "Article"), new SubItem(SubItem.Section_Post, SubItem.Type_Collections, App.getApp().getResources().getString(R.string.post), "Post"), new SubItem(SubItem.Section_Question, SubItem.Type_Collections, App.getApp().getResources().getString(R.string.question), "Question")};
         ArrayList<SubItem> subItems = new ArrayList<>();
         Collections.addAll(subItems, items);
         return subItems;

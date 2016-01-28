@@ -39,7 +39,8 @@ import net.nashlegend.sourcewall.db.GroupHelper;
 import net.nashlegend.sourcewall.model.ReminderNoticeNum;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.model.UserInfo;
-import net.nashlegend.sourcewall.request.ResultObject;
+import net.nashlegend.sourcewall.swrequest.ResponseError;
+import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.ChannelHelper;
 import net.nashlegend.sourcewall.util.Config;
@@ -526,15 +527,15 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
         messageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    class MessageTask extends AsyncTask<Void, Integer, ResultObject<ReminderNoticeNum>> {
+    class MessageTask extends AsyncTask<Void, Integer, ResponseObject<ReminderNoticeNum>> {
 
         @Override
-        protected ResultObject<ReminderNoticeNum> doInBackground(Void... params) {
+        protected ResponseObject<ReminderNoticeNum> doInBackground(Void... params) {
             return UserAPI.getReminderAndNoticeNum();
         }
 
         @Override
-        protected void onPostExecute(ResultObject<ReminderNoticeNum> result) {
+        protected void onPostExecute(ResponseObject<ReminderNoticeNum> result) {
             if (result.ok) {
                 ReminderNoticeNum num = result.result;
                 if (num.getNotice_num() > 0) {
@@ -548,10 +549,10 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
         }
     }
 
-    class TestLoginTask extends AsyncTask<Void, Integer, ResultObject> {
+    class TestLoginTask extends AsyncTask<Void, Integer, ResponseObject> {
 
         @Override
-        protected ResultObject doInBackground(Void... params) {
+        protected ResponseObject doInBackground(Void... params) {
             return UserAPI.testLogin();
         }
 
@@ -566,31 +567,31 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
          * @param resultObject 返回结果
          */
         @Override
-        protected void onPostExecute(ResultObject resultObject) {
+        protected void onPostExecute(ResponseObject resultObject) {
             boolean shouldMarkAsFailed = true;//是否视为登录失败
             if (resultObject.ok) {
                 shouldMarkAsFailed = false;
             } else {
                 int errorID = 0;
-                switch (resultObject.code) {
-                    case CODE_LOGIN_FAILED:
+                switch (resultObject.error) {
+                    case LOGIN_FAILED:
                         errorID = R.string.login_failed_for_other_reason;
                         break;
-                    case CODE_NETWORK_ERROR:
+                    case NETWORK_ERROR:
                         errorID = R.string.network_error;
                         shouldMarkAsFailed = false;
                         break;
-                    case CODE_JSON_ERROR:
+                    case JSON_ERROR:
                         errorID = R.string.json_error;
                         shouldMarkAsFailed = false;
                         break;
-                    case CODE_UNKNOWN:
+                    case UNKNOWN:
                         errorID = R.string.unknown_error;
                         break;
-                    case CODE_TOKEN_INVALID:
+                    case TOKEN_INVALID:
                         errorID = R.string.token_invalid;
                         break;
-                    case CODE_NO_TOKEN:
+                    case NO_TOKEN:
                         errorID = R.string.have_not_login;
                         break;
                 }
@@ -609,7 +610,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
         }
     }
 
-    class UserInfoTask extends AsyncTask<String, Intent, ResultObject<UserInfo>> {
+    class UserInfoTask extends AsyncTask<String, Intent, ResponseObject<UserInfo>> {
 
         @Override
         protected void onPreExecute() {
@@ -620,12 +621,12 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
         }
 
         @Override
-        protected ResultObject<UserInfo> doInBackground(String... params) {
+        protected ResponseObject<UserInfo> doInBackground(String... params) {
             return UserAPI.getUserInfoByUkey(UserAPI.getUkey());
         }
 
         @Override
-        protected void onPostExecute(ResultObject<UserInfo> result) {
+        protected void onPostExecute(ResponseObject<UserInfo> result) {
             if (result.ok) {
                 setupUserInfo(result.result);
             } else {

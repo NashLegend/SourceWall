@@ -46,16 +46,6 @@ public class MainActivity extends BaseActivity {
     public ChannelsFragment currentFragment;
 
     @Override
-    public void setTheme(int resId) {
-        if (SharedPreferencesUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
-            resId = R.style.BottomThemeNight;
-        } else {
-            resId = R.style.BottomTheme;
-        }
-        super.setTheme(resId);
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);

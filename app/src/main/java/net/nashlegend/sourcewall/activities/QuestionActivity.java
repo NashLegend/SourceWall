@@ -27,7 +27,7 @@ import net.nashlegend.sourcewall.dialogs.FavorDialog;
 import net.nashlegend.sourcewall.dialogs.InputDialog;
 import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Question;
-import net.nashlegend.sourcewall.request.ResultObject;
+import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.AutoHideUtil;
@@ -265,7 +265,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         loadData(-1);
     }
 
-    class LoaderTask extends AAsyncTask<Integer, ResultObject<Question>, ResultObject<ArrayList<AceModel>>> {
+    class LoaderTask extends AAsyncTask<Integer, ResponseObject<Question>, ResponseObject<ArrayList<AceModel>>> {
         int offset;
 
         LoaderTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
@@ -273,19 +273,19 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         }
 
         @Override
-        protected ResultObject<ArrayList<AceModel>> doInBackground(Integer... params) {
+        protected ResponseObject<ArrayList<AceModel>> doInBackground(Integer... params) {
             if (!TextUtils.isEmpty(notice_id)) {
                 UserAPI.ignoreOneNotice(notice_id);
                 notice_id = null;
             }
             offset = params[0];
             if (offset < 0) {
-                ResultObject<Question> questionResult = QuestionAPI.getQuestionDetailByID(question.getId());
+                ResponseObject<Question> questionResult = QuestionAPI.getQuestionDetailByID(question.getId());
                 if (questionResult.ok) {
                     publishProgress(questionResult);
                     return QuestionAPI.getQuestionAnswers(question.getId(), 0);
                 } else {
-                    return new ResultObject<>();
+                    return new ResponseObject<>();
                 }
             } else {
                 return QuestionAPI.getQuestionAnswers(question.getId(), offset);
@@ -294,19 +294,19 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
 
         @SafeVarargs
         @Override
-        protected final void onProgressUpdate(ResultObject<Question>... values) {
+        protected final void onProgressUpdate(ResponseObject<Question>... values) {
             //在这里取到正文，正文的结果一定是正确的
             progressBar.setVisibility(View.VISIBLE);
             floatingActionsMenu.setVisibility(View.VISIBLE);
             loadingView.onLoadSuccess();
-            ResultObject<Question> result = values[0];
+            ResponseObject<Question> result = values[0];
             question = result.result;
             adapter.add(0, question);
             adapter.notifyDataSetChanged();
         }
 
         @Override
-        protected void onPostExecute(ResultObject<ArrayList<AceModel>> result) {
+        protected void onPostExecute(ResponseObject<ArrayList<AceModel>> result) {
             progressBar.setVisibility(View.GONE);
             if (result.ok) {
                 loadingView.onLoadSuccess();
@@ -333,10 +333,10 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         }
     }
 
-    class RecommendTask extends AsyncTask<String, Integer, ResultObject> {
+    class RecommendTask extends AsyncTask<String, Integer, ResponseObject> {
 
         @Override
-        protected ResultObject doInBackground(String... params) {
+        protected ResponseObject doInBackground(String... params) {
             String questionID = params[0];
             String title = params[1];
             String summary = params[2];
@@ -345,7 +345,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         }
 
         @Override
-        protected void onPostExecute(ResultObject resultObject) {
+        protected void onPostExecute(ResponseObject resultObject) {
             if (resultObject.ok) {
                 toast(R.string.recommend_ok);
             } else {
@@ -373,7 +373,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         unfollowTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, question.getId());
     }
 
-    class FollowTask extends AsyncTask<String, Integer, ResultObject> {
+    class FollowTask extends AsyncTask<String, Integer, ResponseObject> {
 
         @Override
         protected void onPreExecute() {
@@ -381,13 +381,13 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         }
 
         @Override
-        protected ResultObject doInBackground(String... params) {
+        protected ResponseObject doInBackground(String... params) {
             String questionID = params[0];
             return QuestionAPI.followQuestion(questionID);
         }
 
         @Override
-        protected void onPostExecute(ResultObject resultObject) {
+        protected void onPostExecute(ResponseObject resultObject) {
             if (resultObject.ok) {
                 toast(R.string.follow_ok);
             } else {
@@ -396,7 +396,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         }
     }
 
-    class UnfollowTask extends AsyncTask<String, Integer, ResultObject> {
+    class UnfollowTask extends AsyncTask<String, Integer, ResponseObject> {
 
         @Override
         protected void onPreExecute() {
@@ -404,13 +404,13 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         }
 
         @Override
-        protected ResultObject doInBackground(String... params) {
+        protected ResponseObject doInBackground(String... params) {
             String questionID = params[0];
             return QuestionAPI.unfollowQuestion(questionID);
         }
 
         @Override
-        protected void onPostExecute(ResultObject resultObject) {
+        protected void onPostExecute(ResponseObject resultObject) {
             if (resultObject.ok) {
                 toast(R.string.unfollow_ok);
             } else {

@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.model.Basket;
-import net.nashlegend.sourcewall.request.ResultObject;
+import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 
 /**
@@ -84,7 +84,7 @@ public class FavorItemView extends AceView<Basket> implements View.OnClickListen
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, link, title, basket.getId());
     }
 
-    class FavorTask extends AsyncTask<String, Integer, ResultObject> {
+    class FavorTask extends AsyncTask<String, Integer, ResponseObject> {
 
         Basket baskit;
 
@@ -102,7 +102,7 @@ public class FavorItemView extends AceView<Basket> implements View.OnClickListen
         }
 
         @Override
-        protected ResultObject doInBackground(String... params) {
+        protected ResponseObject doInBackground(String... params) {
             String link = params[0];
             String title = params[1];
             String basketID = params[2];
@@ -110,7 +110,7 @@ public class FavorItemView extends AceView<Basket> implements View.OnClickListen
         }
 
         @Override
-        protected void onPostExecute(ResultObject resultObject) {
+        protected void onPostExecute(ResponseObject resultObject) {
             baskit.setFavoring(false);
             if (resultObject.ok) {
                 baskit.setHasFavored(true);

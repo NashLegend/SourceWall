@@ -23,7 +23,8 @@ import net.nashlegend.sourcewall.commonview.shuffle.ShuffleDesk;
 import net.nashlegend.sourcewall.db.AskTagHelper;
 import net.nashlegend.sourcewall.db.gen.AskTag;
 import net.nashlegend.sourcewall.model.SubItem;
-import net.nashlegend.sourcewall.request.ResultObject;
+import net.nashlegend.sourcewall.swrequest.ResponseError;
+import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Config;
@@ -199,7 +200,7 @@ public class ShuffleTagActivity extends SwipeActivity {
         }
     }
 
-    class LoaderFromNetTask extends AAsyncTask<String, Integer, ResultObject> {
+    class LoaderFromNetTask extends AAsyncTask<String, Integer, ResponseObject> {
 
         public LoaderFromNetTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
             super(iStackedAsyncTaskInterface);
@@ -220,11 +221,11 @@ public class ShuffleTagActivity extends SwipeActivity {
         }
 
         @Override
-        protected ResultObject doInBackground(String[] params) {
-            ResultObject<ArrayList<SubItem>> result = QuestionAPI.getAllMyTags();
+        protected ResponseObject doInBackground(String[] params) {
+            ResponseObject<ArrayList<SubItem>> result = QuestionAPI.getAllMyTags();
             if (TextUtils.isEmpty(UserAPI.getUserID())) {
                 result.error_message = "无法获得用户id";
-                result.code = ResultObject.ResultCode.CODE_NO_USER_ID;
+                result.error = ResponseError.NO_USER_ID;
             } else if (result.ok) {
                 ArrayList<SubItem> subItems = result.result;
                 ArrayList<AskTag> myTags = new ArrayList<>();
@@ -247,7 +248,7 @@ public class ShuffleTagActivity extends SwipeActivity {
         }
 
         @Override
-        protected void onPostExecute(ResultObject result) {
+        protected void onPostExecute(ResponseObject result) {
             progressDialog.dismiss();
             if (result.ok) {
                 MobclickAgent.onEvent(ShuffleTagActivity.this, Mob.Event_Load_My_Tags_OK);
@@ -255,7 +256,7 @@ public class ShuffleTagActivity extends SwipeActivity {
             } else {
                 MobclickAgent.onEvent(ShuffleTagActivity.this, Mob.Event_Load_My_Tags_Failed);
                 MobclickAgent.reportError(ShuffleTagActivity.this, "加载标签失败\n是否WIFI：" + Config.isWifi() + "\n" + UserAPI.getUserInfoString() + result.error_message);
-                if (result.code == ResultObject.ResultCode.CODE_NO_USER_ID) {
+                if (result.error == ResponseError.NO_USER_ID) {
                     toast("未获得用户ID，无法加载");
                 } else {
                     toast("加载标签失败");

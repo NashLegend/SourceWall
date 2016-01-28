@@ -4,7 +4,7 @@ import android.text.TextUtils;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
-import net.nashlegend.sourcewall.AppApplication;
+import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.model.Basket;
 import net.nashlegend.sourcewall.model.Category;
 import net.nashlegend.sourcewall.model.Message;
@@ -13,7 +13,11 @@ import net.nashlegend.sourcewall.model.Reminder;
 import net.nashlegend.sourcewall.model.ReminderNoticeNum;
 import net.nashlegend.sourcewall.model.UserInfo;
 import net.nashlegend.sourcewall.request.HttpFetcher;
-import net.nashlegend.sourcewall.request.ResultObject;
+import net.nashlegend.sourcewall.swrequest.RequestBuilder;
+import net.nashlegend.sourcewall.swrequest.RequestObject;
+import net.nashlegend.sourcewall.swrequest.ResponseCode;
+import net.nashlegend.sourcewall.swrequest.ResponseObject;
+import net.nashlegend.sourcewall.swrequest.parsers.BooleanParser;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 
@@ -54,22 +58,21 @@ public class UserAPI extends APIBase {
      * 通过用户的ukey获取用户的详细信息
      *
      * @param ukey 用户ukey
-     *
-     * @return ResultObject
+     * @return ResponseObject
      */
-    public static ResultObject<UserInfo> getUserInfoByUkey(String ukey) {
-        ResultObject<UserInfo> resultObject = new ResultObject<>();
+    public static ResponseObject<UserInfo> getUserInfoByUkey(String ukey) {
+        ResponseObject<UserInfo> resultObject = new ResponseObject<>();
         try {
             String result = HttpFetcher.get("http://apis.guokr.com/community/user/" + ukey + ".json").toString();
             JSONObject subObject = getUniversalJsonObject(result, resultObject);
             if (subObject != null) {
                 UserInfo info = new UserInfo();
-                info.setDate_created(getJsonString(subObject, "date_created"));
-                info.setIntroduction(getJsonString(subObject, "introduction"));
-                info.setNickname(getJsonString(subObject, "nickname"));
-                info.setTitle(getJsonString(subObject, "title"));
-                info.setUkey(getJsonString(subObject, "ukey"));
-                info.setUrl(getJsonString(subObject, "url"));
+                info.setDate_created(subObject.optString("date_created"));
+                info.setIntroduction(subObject.optString("introduction"));
+                info.setNickname(subObject.optString("nickname"));
+                info.setTitle(subObject.optString("title"));
+                info.setUkey(subObject.optString("ukey"));
+                info.setUrl(subObject.optString("url"));
                 info.setId(info.getUrl().replaceAll("^\\D+(\\d+)\\D*", "$1"));
                 info.setAvatar(subObject.getJSONObject("avatar").getString("large").replaceAll("\\?.*$", ""));
                 resultObject.result = info;
@@ -85,20 +88,19 @@ public class UserAPI extends APIBase {
      * 通过用户id获取用户信息
      *
      * @param id 用户id
-     *
-     * @return ResultObject
+     * @return ResponseObject
      */
-    public static ResultObject<UserInfo> getUserInfoByID(String id) {
+    public static ResponseObject<UserInfo> getUserInfoByID(String id) {
         return getUserInfoByUkey(base36Encode(Long.valueOf(id)));
     }
 
     /**
      * 通过获取消息提醒的方式测试是否登录或者登录是否有效
      *
-     * @return ResultObject
+     * @return ResponseObject
      */
-    public static ResultObject<ReminderNoticeNum> testLogin() {
-        ResultObject<ReminderNoticeNum> resultObject = new ResultObject<>();
+    public static ResponseObject<ReminderNoticeNum> testLogin() {
+        ResponseObject<ReminderNoticeNum> resultObject = new ResponseObject<>();
         String token = getToken();
         String ukey = getUkey();
         //先判断有没有token，没有就是未登录，有的话检测一下是否过期
@@ -106,7 +108,7 @@ public class UserAPI extends APIBase {
             resultObject = getReminderAndNoticeNum();
         } else {
             clearMyInfo();
-            resultObject.code = ResultObject.ResultCode.CODE_NO_TOKEN;
+            resultObject.code = ResponseCode.CODE_TOKEN_INVALID;
         }
         return resultObject;
     }
@@ -114,10 +116,10 @@ public class UserAPI extends APIBase {
     /**
      * 获取通知和站内信数量
      *
-     * @return ResultObject.result是ReminderNoticeNum
+     * @return ResponseObject.result是ReminderNoticeNum
      */
-    public static ResultObject<ReminderNoticeNum> getReminderAndNoticeNum() {
-        ResultObject<ReminderNoticeNum> resultObject = new ResultObject<>();
+    public static ResponseObject<ReminderNoticeNum> getReminderAndNoticeNum() {
+        ResponseObject<ReminderNoticeNum> resultObject = new ResponseObject<>();
         try {
             String url = "http://www.guokr.com/apis/community/rn_num.json";
             HashMap<String, String> pairs = new HashMap<>();
@@ -126,8 +128,8 @@ public class UserAPI extends APIBase {
             JSONObject object = getUniversalJsonObject(result, resultObject);
             if (object != null) {
                 ReminderNoticeNum num = new ReminderNoticeNum();
-                num.setNotice_num(getJsonInt(object, "n"));//通知数量
-                num.setReminder_num(getJsonInt(object, "r"));//站内信数量
+                num.setNotice_num(object.optInt("n"));//通知数量
+                num.setReminder_num(object.optInt("r"));//站内信数量
                 resultObject.ok = true;
                 resultObject.result = num;
             }
@@ -140,10 +142,10 @@ public class UserAPI extends APIBase {
     /**
      * 获取提醒列表
      *
-     * @return ResultObject
+     * @return ResponseObject
      */
-    public static ResultObject<ArrayList<Reminder>> getReminderList(int offset) {
-        ResultObject<ArrayList<Reminder>> resultObject = new ResultObject<>();
+    public static ResponseObject<ArrayList<Reminder>> getReminderList(int offset) {
+        ResponseObject<ArrayList<Reminder>> resultObject = new ResponseObject<>();
         try {
             String url = "http://www.guokr.com/apis/community/reminder.json";
             HashMap<String, String> pairs = new HashMap<>();
@@ -157,12 +159,12 @@ public class UserAPI extends APIBase {
                 for (int i = 0; i < reminders.length(); i++) {
                     JSONObject reminderObject = reminders.getJSONObject(i);
                     Reminder notice = new Reminder();
-                    notice.setContent(getJsonString(reminderObject, "content"));
-                    notice.setUrl(getJsonString(reminderObject, "url"));
-                    notice.setUkey(getJsonString(reminderObject, "ukey"));
-                    notice.setDateCreated(getJsonLong(reminderObject, "date_created"));
-                    notice.setId(getJsonString(reminderObject, "id"));
-                    notice.setGroup(getJsonString(reminderObject, "group"));
+                    notice.setContent(reminderObject.optString("content"));
+                    notice.setUrl(reminderObject.optString("url"));
+                    notice.setUkey(reminderObject.optString("ukey"));
+                    notice.setDateCreated(reminderObject.optLong("date_created"));
+                    notice.setId(reminderObject.optString("id"));
+                    notice.setGroup(reminderObject.optString("group"));
                     noticeList.add(notice);
                 }
                 resultObject.ok = true;
@@ -177,10 +179,10 @@ public class UserAPI extends APIBase {
     /**
      * 获取通知详情列表，一次性取得全部
      *
-     * @return ResultObject
+     * @return ResponseObject
      */
-    public static ResultObject<ArrayList<Notice>> getNoticeList() {
-        ResultObject<ArrayList<Notice>> resultObject = new ResultObject<>();
+    public static ResponseObject<ArrayList<Notice>> getNoticeList() {
+        ResponseObject<ArrayList<Notice>> resultObject = new ResponseObject<>();
         try {
             String url = "http://www.guokr.com/apis/community/notice.json";
             HashMap<String, String> pairs = new HashMap<>();
@@ -194,12 +196,12 @@ public class UserAPI extends APIBase {
                 for (int i = 0; i < notices.length(); i++) {
                     JSONObject noticesObject = notices.getJSONObject(i);
                     Notice notice = new Notice();
-                    notice.setContent(getJsonString(noticesObject, "content"));
-                    notice.setUrl(getJsonString(noticesObject, "url"));
-                    notice.setUkey(getJsonString(noticesObject, "ukey"));
-                    notice.setDate_last_updated(getJsonLong(noticesObject, "date_last_updated"));
-                    notice.setId(getJsonString(noticesObject, "id"));
-                    notice.setIs_read(getJsonBoolean(noticesObject, "is_read"));
+                    notice.setContent(noticesObject.optString("content"));
+                    notice.setUrl(noticesObject.optString("url"));
+                    notice.setUkey(noticesObject.optString("ukey"));
+                    notice.setDate_last_updated(noticesObject.optLong("date_last_updated"));
+                    notice.setId(noticesObject.optString("id"));
+                    notice.setIs_read(noticesObject.optBoolean("is_read"));
                     noticeList.add(notice);
                 }
                 resultObject.ok = true;
@@ -214,10 +216,10 @@ public class UserAPI extends APIBase {
     /**
      * 忽略所有消息，相当于ignoreOneNotice("")
      *
-     * @return ResultObject，仅仅有ok，result是空
+     * @return ResponseObject，仅仅有ok，result是空
      */
-    public static ResultObject ignoreAllNotice() {
-        ResultObject resultObject = new ResultObject();
+    public static ResponseObject ignoreAllNotice() {
+        ResponseObject resultObject = new ResponseObject();
         try {
             String url = "http://www.guokr.com/apis/community/notice_ignore.json";
             HashMap<String, String> pairs = new HashMap<>();
@@ -232,10 +234,10 @@ public class UserAPI extends APIBase {
     /**
      * 忽略一条通知消息，返回的是剩余的通知详情列表
      *
-     * @return ResultObject resultObject.result是剩余的NoticeList
+     * @return ResponseObject resultObject.result是剩余的NoticeList
      */
-    public static ResultObject<ArrayList<Notice>> ignoreOneNotice(String noticeID) {
-        ResultObject<ArrayList<Notice>> resultObject = new ResultObject<>();
+    public static ResponseObject<ArrayList<Notice>> ignoreOneNotice(String noticeID) {
+        ResponseObject<ArrayList<Notice>> resultObject = new ResponseObject<>();
         try {
             String url = "http://www.guokr.com/apis/community/notice_ignore.json";
             HashMap<String, String> pairs = new HashMap<>();
@@ -249,12 +251,12 @@ public class UserAPI extends APIBase {
                 for (int i = 0; i < notices.length(); i++) {
                     JSONObject noticeObject = notices.getJSONObject(i);
                     Notice notice = new Notice();
-                    notice.setContent(getJsonString(noticeObject, "content"));
-                    notice.setUrl(getJsonString(noticeObject, "url"));
-                    notice.setUkey(getJsonString(noticeObject, "ukey"));
-                    notice.setDate_last_updated(getJsonLong(noticeObject, "date_last_updated"));
-                    notice.setId(getJsonString(noticeObject, "id"));
-                    notice.setIs_read(getJsonBoolean(noticeObject, "is_read"));
+                    notice.setContent(noticeObject.optString("content"));
+                    notice.setUrl(noticeObject.optString("url"));
+                    notice.setUkey(noticeObject.optString("ukey"));
+                    notice.setDate_last_updated(noticeObject.optLong("date_last_updated"));
+                    notice.setId(noticeObject.optString("id"));
+                    notice.setIs_read(noticeObject.optBoolean("is_read"));
                     noticeList.add(notice);
                 }
                 resultObject.ok = true;
@@ -269,10 +271,10 @@ public class UserAPI extends APIBase {
     /**
      * 获取站内信详情列表，与某人的对话只显示最近一条。目前还不知道获取对话接口
      *
-     * @return ResultObject
+     * @return ResponseObject
      */
-    public static ResultObject<ArrayList<Message>> getMessageList(int offset) {
-        ResultObject<ArrayList<Message>> resultObject = new ResultObject<>();
+    public static ResponseObject<ArrayList<Message>> getMessageList(int offset) {
+        ResponseObject<ArrayList<Message>> resultObject = new ResponseObject<>();
         try {
             String url = "http://www.guokr.com/apis/community/user/message.json";
             HashMap<String, String> pairs = new HashMap<>();
@@ -285,15 +287,15 @@ public class UserAPI extends APIBase {
                 for (int i = 0; i < notices.length(); i++) {
                     JSONObject noticesObject = notices.getJSONObject(i);
                     Message message = new Message();
-                    message.setContent(getJsonString(noticesObject, "content"));
-                    message.setDirection(getJsonString(noticesObject, "direction"));
-                    message.setUkey(getJsonString(noticesObject, "5p6t9t"));
-                    message.setAnother_ukey(getJsonString(noticesObject, "ukey_another"));
-                    message.setDateCreated(getJsonString(noticesObject, "date_created"));
-                    message.setId(getJsonString(noticesObject, "id"));
-                    message.setIs_read(getJsonBoolean(noticesObject, "is_read"));
-                    message.setTotal(getJsonInt(noticesObject, "total"));
-                    message.setUnread_count(getJsonInt(noticesObject, "unread_count"));
+                    message.setContent(noticesObject.optString("content"));
+                    message.setDirection(noticesObject.optString("direction"));
+                    message.setUkey(noticesObject.optString("5p6t9t"));
+                    message.setAnother_ukey(noticesObject.optString("ukey_another"));
+                    message.setDateCreated(noticesObject.optString("date_created"));
+                    message.setId(noticesObject.optString("id"));
+                    message.setIs_read(noticesObject.optBoolean("is_read"));
+                    message.setTotal(noticesObject.optInt("total"));
+                    message.setUnread_count(noticesObject.optInt("unread_count"));
                     noticeList.add(message);
                 }
                 resultObject.ok = true;
@@ -308,10 +310,10 @@ public class UserAPI extends APIBase {
     /**
      * 根据id获取一条站内信
      *
-     * @return ResultObject
+     * @return ResponseObject
      */
-    public static ResultObject<Message> getOneMessage(String id) {
-        ResultObject<Message> resultObject = new ResultObject<>();
+    public static ResponseObject<Message> getOneMessage(String id) {
+        ResponseObject<Message> resultObject = new ResponseObject<>();
         try {
             String url = "http://www.guokr.com/apis/community/user/message/" + id + ".json";
             HashMap<String, String> pairs = new HashMap<>();
@@ -319,13 +321,13 @@ public class UserAPI extends APIBase {
             JSONObject noticesObject = getUniversalJsonObject(result, resultObject);
             if (noticesObject != null) {
                 Message message = new Message();
-                message.setContent(getJsonString(noticesObject, "content"));
-                message.setDirection(getJsonString(noticesObject, "direction"));
-                message.setUkey(getJsonString(noticesObject, "5p6t9t"));
-                message.setAnother_ukey(getJsonString(noticesObject, "ukey_another"));
-                message.setDateCreated(getJsonString(noticesObject, "date_created"));
-                message.setId(getJsonString(noticesObject, "id"));
-                message.setIs_read(getJsonBoolean(noticesObject, "is_read"));
+                message.setContent(noticesObject.optString("content"));
+                message.setDirection(noticesObject.optString("direction"));
+                message.setUkey(noticesObject.optString("5p6t9t"));
+                message.setAnother_ukey(noticesObject.optString("ukey_another"));
+                message.setDateCreated(noticesObject.optString("date_created"));
+                message.setId(noticesObject.optString("id"));
+                message.setIs_read(noticesObject.optBoolean("is_read"));
                 resultObject.ok = true;
                 resultObject.result = message;
             }
@@ -341,11 +343,10 @@ public class UserAPI extends APIBase {
      * @param link     链接地址
      * @param title    链接标题
      * @param basketID 收藏果篮的id
-     *
-     * @return ResultObject
+     * @return ResponseObject
      */
-    public static ResultObject favorLink(String link, String title, String basketID) {
-        ResultObject resultObject = new ResultObject();
+    public static ResponseObject favorLink(String link, String title, String basketID) {
+        ResponseObject resultObject = new ResponseObject();
         try {
             String url = "http://www.guokr.com/apis/favorite/link.json";
             HashMap<String, String> params = new HashMap<>();
@@ -369,12 +370,11 @@ public class UserAPI extends APIBase {
      * @param title   链接标题
      * @param summary 内容概述
      * @param comment 评语
-     *
-     * @return ResultObject
+     * @return ResponseObject
      */
-    public static ResultObject recommendLink(String link, String title, String summary, String comment) {
+    public static ResponseObject recommendLink(String link, String title, String summary, String comment) {
         String url = "http://www.guokr.com/apis/community/user/recommend.json";
-        ResultObject resultObject = new ResultObject();
+        ResponseObject resultObject = new ResponseObject();
         if (TextUtils.isEmpty(summary)) {
             summary = title;
         }
@@ -396,12 +396,41 @@ public class UserAPI extends APIBase {
     }
 
     /**
+     * 推荐一个链接
+     *
+     * @param link    链接地址
+     * @param title   链接标题
+     * @param summary 内容概述
+     * @param comment 评语
+     * @return ResponseObject
+     */
+    public static void recommendLink(String link, String title, String summary, String comment, RequestObject.CallBack<Boolean> callBack) {
+        String url = "http://www.guokr.com/apis/community/user/recommend.json";
+        if (TextUtils.isEmpty(summary)) {
+            summary = title;
+        }
+        HashMap<String, String> pairs = new HashMap<>();
+        pairs.put("title", title);
+        pairs.put("url", link);
+        pairs.put("summary", summary);
+        pairs.put("comment", comment);
+        pairs.put("target", "activity");
+        new RequestBuilder<Boolean>()
+                .setUrl(url)
+                .setParser(new BooleanParser())
+                .setRequestCallBack(callBack)
+                .setParams(pairs)
+                .post()
+                .requestAsync();
+    }
+
+    /**
      * 获取用户的果篮信息
      *
-     * @return ResultObject.result is ArrayList[Basket]
+     * @return ResponseObject.result is ArrayList[Basket]
      */
-    public static ResultObject<ArrayList<Basket>> getBaskets() {
-        ResultObject<ArrayList<Basket>> resultObject = new ResultObject<>();
+    public static ResponseObject<ArrayList<Basket>> getBaskets() {
+        ResponseObject<ArrayList<Basket>> resultObject = new ResponseObject<>();
         String url = "http://www.guokr.com/apis/favorite/basket.json";
         try {
             HashMap<String, String> pairs = new HashMap<>();
@@ -416,14 +445,14 @@ public class UserAPI extends APIBase {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject subObject = jsonArray.getJSONObject(i);
                     Basket basket = new Basket();
-                    basket.setId(getJsonString(subObject, "id"));
-                    basket.setIntroduction(getJsonString(subObject, "introduction"));
-                    basket.setLinks_count(getJsonInt(subObject, "links_count"));
-                    basket.setName(getJsonString(subObject, "title"));
+                    basket.setId(subObject.optString("id"));
+                    basket.setIntroduction(subObject.optString("introduction"));
+                    basket.setLinks_count(subObject.optInt("links_count"));
+                    basket.setName(subObject.optString("title"));
                     JSONObject category = getJsonObject(subObject, "category");
                     if (category != null) {
-                        basket.setCategory_id(getJsonString(category, "id"));
-                        basket.setCategory_name(getJsonString(category, "name"));
+                        basket.setCategory_id(category.optString("id"));
+                        basket.setCategory_name(category.optString("name"));
                     }
                     baskets.add(basket);
                 }
@@ -443,11 +472,10 @@ public class UserAPI extends APIBase {
      * @param title        果篮名
      * @param introduction 果篮介绍
      * @param category_id  category
-     *
-     * @return ResultObject.result is Basket
+     * @return ResponseObject.result is Basket
      */
-    public static ResultObject<Basket> createBasket(String title, String introduction, String category_id) {
-        ResultObject<Basket> resultObject = new ResultObject<>();
+    public static ResponseObject<Basket> createBasket(String title, String introduction, String category_id) {
+        ResponseObject<Basket> resultObject = new ResponseObject<>();
         try {
             String url = "http://www.guokr.com/apis/favorite/basket.json";
             HashMap<String, String> params = new HashMap<>();
@@ -458,14 +486,14 @@ public class UserAPI extends APIBase {
             JSONObject subObject = getUniversalJsonObject(result, resultObject);
             if (subObject != null) {
                 Basket basket = new Basket();
-                basket.setId(getJsonString(subObject, "id"));
-                basket.setIntroduction(getJsonString(subObject, "introduction"));
+                basket.setId(subObject.optString("id"));
+                basket.setIntroduction(subObject.optString("introduction"));
                 basket.setLinks_count(0);
-                basket.setName(getJsonString(subObject, "title"));
+                basket.setName(subObject.optString("title"));
                 JSONObject category = getJsonObject(subObject, "category");
                 if (category != null) {
-                    basket.setCategory_id(getJsonString(category, "id"));
-                    basket.setCategory_name(getJsonString(category, "name"));
+                    basket.setCategory_id(category.optString("id"));
+                    basket.setCategory_name(category.optString("name"));
                 }
                 resultObject.ok = true;
                 resultObject.result = basket;
@@ -481,10 +509,10 @@ public class UserAPI extends APIBase {
     /**
      * 获取分类 ，创建果篮有关
      *
-     * @return ResultObject
+     * @return ResponseObject
      */
-    public static ResultObject<ArrayList<Category>> getCategoryList() {
-        ResultObject<ArrayList<Category>> resultObject = new ResultObject<>();
+    public static ResponseObject<ArrayList<Category>> getCategoryList() {
+        ResponseObject<ArrayList<Category>> resultObject = new ResponseObject<>();
         try {
             String url = "http://www.guokr.com/apis/favorite/category.json";
             HashMap<String, String> pairs = new HashMap<>();
@@ -495,8 +523,8 @@ public class UserAPI extends APIBase {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject subObject = jsonArray.getJSONObject(i);
                     Category category = new Category();
-                    category.setId(getJsonString(subObject, "id"));
-                    category.setName(getJsonString(subObject, "name"));
+                    category.setId(subObject.optString("id"));
+                    category.setName(subObject.optString("name"));
                     categories.add(category);
                 }
                 resultObject.ok = true;
@@ -518,7 +546,7 @@ public class UserAPI extends APIBase {
         SharedPreferencesUtil.remove(Consts.Key_User_Avatar);
         SharedPreferencesUtil.remove(Consts.Key_User_ID);
         SharedPreferencesUtil.remove(Consts.Key_User_Name);
-        CookieSyncManager.createInstance(AppApplication.getApplication());
+        CookieSyncManager.createInstance(App.getApp());
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.removeAllCookie();
         cookieManager.hasCookies();

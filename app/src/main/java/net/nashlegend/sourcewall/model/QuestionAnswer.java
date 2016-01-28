@@ -1,5 +1,12 @@
 package net.nashlegend.sourcewall.model;
 
+import android.text.TextUtils;
+
+import net.nashlegend.sourcewall.request.api.APIBase;
+import net.nashlegend.sourcewall.swrequest.JsonHandler;
+
+import org.json.JSONObject;
+
 /**
  * Created by NashLegend on 2014/9/16 0016
  */
@@ -24,6 +31,66 @@ public class QuestionAnswer extends AceModel {
     private boolean hasBuried = false;
     private boolean hasThanked = false;
     private boolean isContentComplex = false;
+
+    private static int maxImageWidth = 240;
+    private static String prefix = "<div class=\"ZoomBox\"><div class=\"content-zoom ZoomIn\">";
+    private static String suffix = "</div></div>";
+
+    public static QuestionAnswer fromJson(JSONObject answerObject)throws Exception{
+        JSONObject questionObject = APIBase.getJsonObject(answerObject, "question");
+        String hostTitle = questionObject.optString("question");
+        String hostID = questionObject.optString("id");
+        if (TextUtils.isEmpty(hostID)){
+            hostID = answerObject.optString("question_id");
+        }
+
+        String id = answerObject.optString("id");
+
+        boolean current_user_has_supported = answerObject.optBoolean("current_user_has_supported");
+        boolean current_user_has_buried = answerObject.optBoolean("current_user_has_buried");
+        boolean current_user_has_thanked = answerObject.optBoolean("current_user_has_thanked");
+        boolean current_user_has_opposed = answerObject.optBoolean("current_user_has_opposed");
+
+        JSONObject authorObject = JsonHandler.getJsonObject(answerObject, "author");
+        String author = authorObject.optString("nickname");
+        String authorTitle = authorObject.optString("title");
+        String authorID = authorObject.optString("url").replaceAll("\\D+", "");
+        boolean is_exists = authorObject.optBoolean("is_exists");
+        JSONObject avatarObject = JsonHandler.getJsonObject(authorObject, "avatar");
+        String avatarUrl = authorObject.optString("large").replaceAll("\\?.*$", "");
+
+        String date_created = APIBase.parseDate(answerObject.optString("date_created"));
+        String date_modified = APIBase.parseDate(answerObject.optString("date_modified"));
+        int replies_count = answerObject.optInt("replies_count");
+        int supportings_count = answerObject.optInt("supportings_count");
+        int opposings_count = answerObject.optInt("opposings_count");
+        String content = answerObject.optString("html");
+
+        QuestionAnswer answer = new QuestionAnswer();
+        answer.setAuthorExists(is_exists);
+        if (is_exists) {
+            answer.setAuthor(author);
+            answer.setAuthorTitle(authorTitle);
+            answer.setAuthorID(authorID);
+            answer.setAuthorAvatarUrl(avatarUrl);
+        } else {
+            answer.setAuthor("此用户不存在");
+        }
+        answer.setCommentNum(replies_count);
+        answer.setContent(content.replaceAll("<img .*?/>", prefix + "$0" + suffix).replaceAll("style=\"max-width: \\d+px\"", "style=\"max-width: " + maxImageWidth + "px\""));
+        answer.setDate_created(date_created);
+        answer.setDate_modified(date_modified);
+        answer.setHasDownVoted(current_user_has_opposed);
+        answer.setHasBuried(current_user_has_buried);
+        answer.setHasUpVoted(current_user_has_supported);
+        answer.setHasThanked(current_user_has_thanked);
+        answer.setID(id);
+        answer.setQuestionID(hostID);
+        answer.setQuestion(hostTitle);
+        answer.setUpvoteNum(supportings_count);
+        answer.setDownvoteNum(opposings_count);
+        return answer;
+    }
 
     public String getContent() {
         return content;

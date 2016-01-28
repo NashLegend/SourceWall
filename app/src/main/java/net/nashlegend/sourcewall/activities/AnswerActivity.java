@@ -37,9 +37,10 @@ import net.nashlegend.sourcewall.commonview.SScrollView;
 import net.nashlegend.sourcewall.commonview.WWebView;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.model.QuestionAnswer;
-import net.nashlegend.sourcewall.request.ResultObject;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
+import net.nashlegend.sourcewall.swrequest.ResponseError;
+import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Mob;
@@ -392,7 +393,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         loadDataByUri();
     }
 
-    class LoaderTask extends AAsyncTask<Uri, Integer, ResultObject<QuestionAnswer>> {
+    class LoaderTask extends AAsyncTask<Uri, Integer, ResponseObject<QuestionAnswer>> {
 
         public LoaderTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
             super(iStackedAsyncTaskInterface);
@@ -404,13 +405,13 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         }
 
         @Override
-        protected ResultObject<QuestionAnswer> doInBackground(Uri... params) {
+        protected ResponseObject<QuestionAnswer> doInBackground(Uri... params) {
             UserAPI.ignoreOneNotice(notice_id);
             return QuestionAPI.getSingleAnswerFromRedirectUrl(redirectUri.toString());
         }
 
         @Override
-        protected void onPostExecute(ResultObject<QuestionAnswer> result) {
+        protected void onPostExecute(ResponseObject<QuestionAnswer> result) {
             if (result.ok) {
                 floatingActionsMenu.setVisibility(View.VISIBLE);
                 loadingView.onLoadSuccess();
@@ -425,7 +426,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         }
     }
 
-    class OpinionTask extends AAsyncTask<Boolean, Integer, ResultObject> {
+    class OpinionTask extends AAsyncTask<Boolean, Integer, ResponseObject> {
 
         boolean isSupport;
 
@@ -434,7 +435,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         }
 
         @Override
-        protected ResultObject doInBackground(Boolean... params) {
+        protected ResponseObject doInBackground(Boolean... params) {
             isSupport = params[0];
             if (isSupport) {
                 MobclickAgent.onEvent(AnswerActivity.this, Mob.Event_Support_Answer);
@@ -446,7 +447,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         }
 
         @Override
-        protected void onPostExecute(ResultObject resultObject) {
+        protected void onPostExecute(ResponseObject resultObject) {
             if (resultObject.ok) {
                 answer.setUpvoteNum(answer.getUpvoteNum() + 1);
                 supportText.setText(answer.getUpvoteNum() + "");
@@ -459,7 +460,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         }
     }
 
-    class BuryTask extends AAsyncTask<Boolean, Integer, ResultObject> {
+    class BuryTask extends AAsyncTask<Boolean, Integer, ResponseObject> {
         boolean bury = true;
 
         public BuryTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
@@ -472,7 +473,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         }
 
         @Override
-        protected ResultObject doInBackground(Boolean... params) {
+        protected ResponseObject doInBackground(Boolean... params) {
             bury = !answer.isHasBuried();
             if (bury) {
                 return QuestionAPI.buryAnswer(answer.getID());
@@ -483,7 +484,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         }
 
         @Override
-        protected void onPostExecute(ResultObject resultObject) {
+        protected void onPostExecute(ResponseObject resultObject) {
             if (resultObject.ok) {
                 if (bury) {
                     toast("已标记为\"不是答案\"");
@@ -495,7 +496,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
                     notAnButton.setIcon(R.drawable.dustbin_outline);
                 }
             } else {
-                if (bury && resultObject.code == ResultObject.ResultCode.CODE_ALREADY_BURIED) {
+                if (bury && resultObject.error == ResponseError.ALREADY_BURIED) {
                     toastSingleton("已经标记过了");
                 } else {
                     toastSingleton("操作失败");
@@ -505,7 +506,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         }
     }
 
-    class ThankTask extends AAsyncTask<String, Integer, ResultObject> {
+    class ThankTask extends AAsyncTask<String, Integer, ResponseObject> {
 
         public ThankTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
             super(iStackedAsyncTaskInterface);
@@ -517,18 +518,18 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         }
 
         @Override
-        protected ResultObject doInBackground(String... params) {
+        protected ResponseObject doInBackground(String... params) {
             return QuestionAPI.thankAnswer(answer.getID());
         }
 
         @Override
-        protected void onPostExecute(ResultObject resultObject) {
+        protected void onPostExecute(ResponseObject resultObject) {
             if (resultObject.ok) {
                 toast("感谢成功");
                 answer.setHasThanked(true);
                 thankButton.setIcon(R.drawable.heart);
             } else {
-                if (resultObject.code == ResultObject.ResultCode.CODE_ALREADY_THANKED) {
+                if (resultObject.error == ResponseError.ALREADY_THANKED) {
                     toast("已经感谢过了");
                     answer.setHasThanked(true);
                     thankButton.setIcon(R.drawable.heart);

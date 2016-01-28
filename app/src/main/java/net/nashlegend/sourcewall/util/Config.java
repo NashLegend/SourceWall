@@ -5,7 +5,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.text.TextUtils;
 
-import net.nashlegend.sourcewall.AppApplication;
+import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
 
 /**
@@ -42,7 +42,7 @@ public class Config {
     }
 
     public static boolean isWifi() {
-        ConnectivityManager manager = (ConnectivityManager) AppApplication.getApplication().getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager manager = (ConnectivityManager) App.getApp().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         return info != null && info.getState() == NetworkInfo.State.CONNECTED;
     }
@@ -96,7 +96,7 @@ public class Config {
      * @return 手机尾巴
      */
     private static String getPhoneComplexTail() {
-        String mTypeString = android.os.Build.MODEL == null ? AppApplication.getApplication().getString(R.string.unknown_phone) : android.os.Build.MODEL;
+        String mTypeString = android.os.Build.MODEL == null ? App.getApp().getString(R.string.unknown_phone) : android.os.Build.MODEL;
         return "<p></p><p>来自 <a href=\"" + getUrl() + "\" target=\"_blank\">" + mTypeString + "</a></p>";
     }
 
@@ -141,7 +141,7 @@ public class Config {
      * @return 手机尾巴
      */
     private static String getPhoneSimpleTail() {
-        String mTypeString = android.os.Build.MODEL == null ? AppApplication.getApplication().getString(R.string.unknown_phone) : android.os.Build.MODEL;
+        String mTypeString = android.os.Build.MODEL == null ? App.getApp().getString(R.string.unknown_phone) : android.os.Build.MODEL;
         return "\n\n[blockquote]来自 [url=" + getUrl() + "]" + mTypeString + "[/url][/blockquote]";
     }
 
@@ -172,7 +172,7 @@ public class Config {
     }
 
     public static String getPhonePlainTail() {
-        String mTypeString = android.os.Build.MODEL == null ? AppApplication.getApplication().getString(R.string.unknown_phone) : android.os.Build.MODEL;
+        String mTypeString = android.os.Build.MODEL == null ? App.getApp().getString(R.string.unknown_phone) : android.os.Build.MODEL;
         return "来自 " + mTypeString;
     }
 

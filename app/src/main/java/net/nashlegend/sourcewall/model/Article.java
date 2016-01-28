@@ -2,6 +2,14 @@ package net.nashlegend.sourcewall.model;
 
 import android.text.TextUtils;
 
+import net.nashlegend.sourcewall.request.api.APIBase;
+
+import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.util.ArrayList;
 
 /**
@@ -26,6 +34,59 @@ public class Article extends AceModel {
     private ArrayList<UComment> hotComments = new ArrayList<UComment>();
     private ArrayList<UComment> comments = new ArrayList<UComment>();
     private boolean desc = false;
+
+    public static Article fromJsonSimple(JSONObject jo) throws Exception {
+        Article article = new Article();
+        article.setId(jo.optString("id"));
+        article.setCommentNum(jo.optInt("replies_count"));
+        article.setAuthor(APIBase.getJsonObject(jo, "author").optString("nickname"));
+        article.setAuthorID(APIBase.getJsonObject(jo, "author").optString("url").replaceAll("\\D+", ""));
+        article.setAuthorAvatarUrl(jo.getJSONObject("author").getJSONObject("avatar").optString("large").replaceAll("\\?.*$", ""));
+        article.setDate(APIBase.parseDate(jo.optString("date_published")));
+        article.setSubjectName(APIBase.getJsonObject(jo, "subject").optString("name"));
+        article.setSubjectKey(APIBase.getJsonObject(jo, "subject").optString("key"));
+        article.setUrl(jo.optString("url"));
+        article.setImageUrl(jo.optString("small_image"));
+        article.setSummary(jo.optString("summary"));
+        article.setTitle(jo.optString("title"));
+        return article;
+    }
+
+    public static Article fromHtmlDetail(String id, String html) throws Exception {
+        Article article = new Article();
+        Document doc = Jsoup.parse(html);
+        //replaceAll("line-height: normal;","");只是简单的处理，以防止Article样式不正确，字体过于紧凑
+        //可能还有其他样式没有被我发现，所以加一个 TODO
+        String articleContent = doc.getElementById("articleContent").outerHtml().replaceAll("line-height: normal;", "");
+        String copyright = doc.getElementsByClass("copyright").outerHtml();
+        article.setContent(articleContent + copyright);
+        int likeNum = Integer.valueOf(doc.getElementsByClass("recom-num").get(0).text().replaceAll("\\D+", ""));
+        // 其他数据已经在列表取得，按理说这里只要合过去就行了，
+        // 但是因为有可能从其他地方进入这个页面，所以下面的数据还是要取
+        // 但是可以尽量少取，因为很多数据基本已经用不到了
+        article.setId(id);
+        Elements infos = doc.getElementsByClass("content-th-info");
+        if (infos != null && infos.size() == 1) {
+            Element info = infos.get(0);
+            Elements infoSubs = info.getElementsByTag("a");//记得见过不是a的
+            if (infoSubs != null && infoSubs.size() > 0) {
+                //                    String authorId = info.getElementsByTag("a").attr("href").replaceAll("\\D+", "");
+                String author = info.getElementsByTag("a").text();
+                article.setAuthor(author);
+                //                    article.setAuthorID(authorId);
+            }
+            Elements meta = info.getElementsByTag("meta");
+            if (meta != null && meta.size() > 0) {
+                String date = APIBase.parseDate(info.getElementsByTag("meta").attr("content"));
+                article.setDate(date);
+            }
+        }
+        //            String num = doc.select(".cmts-title").select(".cmts-hide").get(0).getElementsByClass("gfl").get(0).text().replaceAll("\\D+", "");
+        //            article.setCommentNum(Integer.valueOf(num));
+        article.setTitle(doc.getElementById("articleTitle").text());
+        //            article.setLikeNum(likeNum);
+        return article;
+    }
 
     public String getId() {
         return id;

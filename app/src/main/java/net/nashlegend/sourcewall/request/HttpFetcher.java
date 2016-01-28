@@ -10,6 +10,7 @@ import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
 import net.nashlegend.sourcewall.request.api.UserAPI;
+import net.nashlegend.sourcewall.swrequest.ResponseObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -40,19 +41,19 @@ public class HttpFetcher {
     private final static int SO_TIMEOUT = 60000;
     private final static int UPLOAD_SO_TIMEOUT = 300000;//300秒的上传时间
 
-    public static ResultObject<String> get(String url) throws Exception {
-        ResultObject<String> resultObject = new ResultObject<>();
+    public static ResponseObject<String> get(String url) throws Exception {
+        ResponseObject<String> ResponseObject = new ResponseObject<>();
         Request request = new Request.Builder().get().url(url).build();
         Response response = getDefaultHttpClient().newCall(request).execute();
         int statusCode = response.code();
         String result = response.body().string();
-        resultObject.statusCode = statusCode;
-        resultObject.result = result;
-        return resultObject;
+        ResponseObject.statusCode = statusCode;
+        ResponseObject.result = result;
+        return ResponseObject;
     }
 
 
-    public static ResultObject<String> get(String url, HashMap<String, String> params, boolean needToken) throws Exception {
+    public static ResponseObject<String> get(String url, HashMap<String, String> params, boolean needToken) throws Exception {
         StringBuilder paramString = new StringBuilder("");
         String token = UserAPI.getToken();
         if (params == null) {
@@ -71,12 +72,12 @@ public class HttpFetcher {
         return get(url + paramString.toString());
     }
 
-    public static ResultObject<String> get(String url, HashMap<String, String> params) throws Exception {
+    public static ResponseObject<String> get(String url, HashMap<String, String> params) throws Exception {
         return get(url, params, true);
     }
 
-    public static ResultObject<String> post(String url, HashMap<String, String> params, boolean needToken) throws Exception {
-        ResultObject<String> resultObject = new ResultObject<>();
+    public static ResponseObject<String> post(String url, HashMap<String, String> params, boolean needToken) throws Exception {
+        ResponseObject<String> ResponseObject = new ResponseObject<>();
         String token = UserAPI.getToken();
         if (params == null) {
             params = new HashMap<>();
@@ -95,17 +96,17 @@ public class HttpFetcher {
         Response response = getDefaultHttpClient().newCall(request).execute();
         int statusCode = response.code();
         String result = response.body().string();
-        resultObject.statusCode = statusCode;
-        resultObject.result = result;
-        return resultObject;
+        ResponseObject.statusCode = statusCode;
+        ResponseObject.result = result;
+        return ResponseObject;
     }
 
-    public static ResultObject<String> post(String url, HashMap<String, String> params) throws Exception {
+    public static ResponseObject<String> post(String url, HashMap<String, String> params) throws Exception {
         return post(url, params, true);
     }
 
-    public static ResultObject<String> put(String url, HashMap<String, String> params, boolean needToken) throws Exception {
-        ResultObject<String> resultObject = new ResultObject<>();
+    public static ResponseObject<String> put(String url, HashMap<String, String> params, boolean needToken) throws Exception {
+        ResponseObject<String> ResponseObject = new ResponseObject<>();
         String token = UserAPI.getToken();
         if (params == null) {
             params = new HashMap<>();
@@ -124,38 +125,38 @@ public class HttpFetcher {
         Response response = getDefaultHttpClient().newCall(request).execute();
         int statusCode = response.code();
         String result = response.body().string();
-        resultObject.statusCode = statusCode;
-        resultObject.result = result;
-        return resultObject;
+        ResponseObject.statusCode = statusCode;
+        ResponseObject.result = result;
+        return ResponseObject;
     }
 
-    public static ResultObject<String> put(String url) throws Exception {
+    public static ResponseObject<String> put(String url) throws Exception {
         return put(url, null, true);
     }
 
-    public static ResultObject<String> put(String url, HashMap<String, String> params) throws Exception {
+    public static ResponseObject<String> put(String url, HashMap<String, String> params) throws Exception {
         return put(url, params, true);
     }
 
     /**
      * Delete 也是需要RequestBody的，然而这里并没有……
      */
-    public static ResultObject<String> delete(String url) throws Exception {
-        ResultObject<String> resultObject = new ResultObject<>();
+    public static ResponseObject<String> delete(String url) throws Exception {
+        ResponseObject<String> ResponseObject = new ResponseObject<>();
         Request request = new Request.Builder().delete().url(url).build();
         Response response = getDefaultHttpClient().newCall(request).execute();
         int statusCode = response.code();
         String result = response.body().string();
-        resultObject.statusCode = statusCode;
-        resultObject.result = result;
-        return resultObject;
+        ResponseObject.statusCode = statusCode;
+        ResponseObject.result = result;
+        return ResponseObject;
     }
 
-    public static ResultObject<String> delete(String url, HashMap<String, String> params) throws Exception {
+    public static ResponseObject<String> delete(String url, HashMap<String, String> params) throws Exception {
         return delete(url, params, true);
     }
 
-    public static ResultObject<String> delete(String url, HashMap<String, String> params, boolean needToken) throws Exception {
+    public static ResponseObject<String> delete(String url, HashMap<String, String> params, boolean needToken) throws Exception {
         StringBuilder paramString = new StringBuilder("");
         String token = UserAPI.getToken();
         if (params == null) {

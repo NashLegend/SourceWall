@@ -27,7 +27,7 @@ import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.model.QuestionAnswer;
 import net.nashlegend.sourcewall.model.UComment;
-import net.nashlegend.sourcewall.request.ResultObject;
+import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Consts;
@@ -211,7 +211,7 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
         loadData(0);
     }
 
-    class ReplyTask extends AsyncTask<String, Integer, ResultObject<UComment>> {
+    class ReplyTask extends AsyncTask<String, Integer, ResponseObject<UComment>> {
 
         @Override
         protected void onPreExecute() {
@@ -233,9 +233,9 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
         }
 
         @Override
-        protected ResultObject<UComment> doInBackground(String... params) {
+        protected ResponseObject<UComment> doInBackground(String... params) {
             String content = params[0];
-            ResultObject<UComment> resultObject = new ResultObject<>();
+            ResponseObject<UComment> resultObject = new ResponseObject<>();
             if (aceModel instanceof Question) {
                 resultObject = QuestionAPI.commentOnQuestion(((Question) aceModel).getId(), content);
             } else if (aceModel instanceof QuestionAnswer) {
@@ -245,7 +245,7 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
         }
 
         @Override
-        protected void onPostExecute(ResultObject<UComment> result) {
+        protected void onPostExecute(ResponseObject<UComment> result) {
             progressDialog.dismiss();
             if (result.ok) {
                 mMenu.findItem(R.id.action_cancel_simple_reply).setVisible(false);
@@ -264,7 +264,7 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
         }
     }
 
-    class LoaderTask extends AAsyncTask<Integer, Integer, ResultObject<ArrayList<UComment>>> {
+    class LoaderTask extends AAsyncTask<Integer, Integer, ResponseObject<ArrayList<UComment>>> {
         int offset;
 
         LoaderTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
@@ -272,8 +272,8 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
         }
 
         @Override
-        protected ResultObject<ArrayList<UComment>> doInBackground(Integer... params) {
-            ResultObject<ArrayList<UComment>> resultObject = new ResultObject<>();
+        protected ResponseObject<ArrayList<UComment>> doInBackground(Integer... params) {
+            ResponseObject<ArrayList<UComment>> resultObject = new ResponseObject<>();
             offset = params[0];
             if (aceModel instanceof Question) {
                 resultObject = QuestionAPI.getQuestionComments(((Question) aceModel).getId(), offset);
@@ -285,7 +285,7 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
         }
 
         @Override
-        protected void onPostExecute(ResultObject<ArrayList<UComment>> result) {
+        protected void onPostExecute(ResponseObject<ArrayList<UComment>> result) {
             if (result.ok) {
                 loadingView.onLoadSuccess();
                 ArrayList<UComment> ars = result.result;

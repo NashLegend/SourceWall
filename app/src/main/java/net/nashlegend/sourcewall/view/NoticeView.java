@@ -13,7 +13,7 @@ import com.umeng.analytics.MobclickAgent;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.NoticeAdapter;
 import net.nashlegend.sourcewall.model.Notice;
-import net.nashlegend.sourcewall.request.ResultObject;
+import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Mob;
 
@@ -82,18 +82,18 @@ public class NoticeView extends AceView<Notice> implements View.OnClickListener 
         }
     }
 
-    class IgnoreTask extends AsyncTask<Notice, Integer, ResultObject> {
+    class IgnoreTask extends AsyncTask<Notice, Integer, ResponseObject> {
 
         Notice notice;
 
         @Override
-        protected ResultObject doInBackground(Notice... params) {
+        protected ResponseObject doInBackground(Notice... params) {
             notice = params[0];
             return UserAPI.ignoreOneNotice(notice.getId());
         }
 
         @Override
-        protected void onPostExecute(ResultObject resultObject) {
+        protected void onPostExecute(ResponseObject resultObject) {
             if (resultObject.ok) {
                 if (noticeAdapter != null && noticeAdapter.getList().remove(notice)) {
                     noticeAdapter.notifyDataSetChanged();

@@ -34,7 +34,7 @@ import net.nashlegend.sourcewall.dialogs.InputDialog;
 import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.UComment;
-import net.nashlegend.sourcewall.request.ResultObject;
+import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.request.api.ArticleAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.AutoHideUtil;
@@ -362,14 +362,14 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         loadData(-1);
     }
 
-    private class RecommendTask extends AAsyncTask<String, Integer, ResultObject> {
+    private class RecommendTask extends AAsyncTask<String, Integer, ResponseObject> {
 
         public RecommendTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
             super(iStackedAsyncTaskInterface);
         }
 
         @Override
-        protected ResultObject doInBackground(String... params) {
+        protected ResponseObject doInBackground(String... params) {
             String articleID = params[0];
             String title = params[1];
             String summary = params[2];
@@ -378,7 +378,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         }
 
         @Override
-        protected void onPostExecute(ResultObject resultObject) {
+        protected void onPostExecute(ResponseObject resultObject) {
             if (resultObject.ok) {
                 toast(R.string.recommend_ok);
             } else {
@@ -441,7 +441,6 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         adapter.notifyDataSetChanged();
     }
 
-
     private void setMenuVisibility() {
         if (menu != null) {
             if (loadDesc) {
@@ -454,7 +453,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         }
     }
 
-    class LoaderTask extends AAsyncTask<Integer, ResultObject<Article>, ResultObject<ArrayList<AceModel>>> {
+    class LoaderTask extends AAsyncTask<Integer, ResponseObject<Article>, ResponseObject<ArrayList<AceModel>>> {
         int offset;
 
         LoaderTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
@@ -462,7 +461,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         }
 
         @Override
-        protected ResultObject<ArrayList<AceModel>> doInBackground(Integer... params) {
+        protected ResponseObject<ArrayList<AceModel>> doInBackground(Integer... params) {
             if (!TextUtils.isEmpty(notice_id)) {
                 UserAPI.ignoreOneNotice(notice_id);
                 notice_id = null;
@@ -471,11 +470,11 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
             int limit = 20;
             if (offset < 0) {
                 offset = 0;
-                ResultObject<Article> articleResult = ArticleAPI.getArticleDetailByID(article.getId());//得不到回复数量
+                ResponseObject<Article> articleResult = ArticleAPI.getArticleDetailByID(article.getId());//得不到回复数量
                 if (articleResult.ok) {
                     publishProgress(articleResult);
                 } else {
-                    return new ResultObject<>();
+                    return new ResponseObject<>();
                 }
             }
             if (loadDesc) {
@@ -496,7 +495,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
                     offset = tmpOffset;
                 }
             }
-            ResultObject<ArrayList<AceModel>> resultObject = ArticleAPI.getArticleComments(article.getId(), offset, limit);
+            ResponseObject<ArrayList<AceModel>> resultObject = ArticleAPI.getArticleComments(article.getId(), offset, limit);
             if (!resultObject.ok && loadDesc) {
                 hasLoadAll = false;
             }
@@ -505,12 +504,12 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
 
         @SafeVarargs
         @Override
-        protected final void onProgressUpdate(ResultObject<Article>... values) {
+        protected final void onProgressUpdate(ResponseObject<Article>... values) {
             //在这里取到正文，正文的结果一定是正确的
             progressBar.setVisibility(View.VISIBLE);
             floatingActionsMenu.setVisibility(View.VISIBLE);
             loadingView.onLoadSuccess();
-            ResultObject<Article> result = values[0];
+            ResponseObject<Article> result = values[0];
             Article tmpArticle = result.result;
             tmpArticle.setUrl(article.getUrl());
             tmpArticle.setSummary(article.getSummary());
@@ -521,7 +520,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         }
 
         @Override
-        protected void onPostExecute(ResultObject<ArrayList<AceModel>> result) {
+        protected void onPostExecute(ResponseObject<ArrayList<AceModel>> result) {
             progressBar.setVisibility(View.GONE);
             if (result.ok) {
                 loadingView.onLoadSuccess();
@@ -556,7 +555,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         }
     }
 
-    class LikeCommentTask extends AAsyncTask<MediumListItemView, Integer, ResultObject> {
+    class LikeCommentTask extends AAsyncTask<MediumListItemView, Integer, ResponseObject> {
 
         UComment comment;
         MediumListItemView mediumListItemView;
@@ -566,14 +565,14 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         }
 
         @Override
-        protected ResultObject doInBackground(MediumListItemView... params) {
+        protected ResponseObject doInBackground(MediumListItemView... params) {
             mediumListItemView = params[0];
             comment = mediumListItemView.getData();
             return ArticleAPI.likeComment(comment.getID());
         }
 
         @Override
-        protected void onPostExecute(ResultObject resultObject) {
+        protected void onPostExecute(ResponseObject resultObject) {
             if (resultObject.ok) {
                 comment.setHasLiked(true);
                 comment.setLikeNum(comment.getLikeNum() + 1);
@@ -586,7 +585,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         }
     }
 
-    class DeleteCommentTask extends AAsyncTask<UComment, Integer, ResultObject> {
+    class DeleteCommentTask extends AAsyncTask<UComment, Integer, ResponseObject> {
 
         UComment comment;
 
@@ -595,13 +594,13 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         }
 
         @Override
-        protected ResultObject doInBackground(UComment... params) {
+        protected ResponseObject doInBackground(UComment... params) {
             comment = params[0];
             return ArticleAPI.deleteMyComment(comment.getID());
         }
 
         @Override
-        protected void onPostExecute(ResultObject resultObject) {
+        protected void onPostExecute(ResponseObject resultObject) {
             if (resultObject.ok) {
                 if (article.getCommentNum() > 0) {
                     article.setCommentNum(article.getCommentNum() - 1);

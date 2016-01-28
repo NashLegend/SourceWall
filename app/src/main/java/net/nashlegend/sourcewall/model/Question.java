@@ -2,6 +2,16 @@ package net.nashlegend.sourcewall.model;
 
 import android.text.TextUtils;
 
+import net.nashlegend.sourcewall.request.api.APIBase;
+
+import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.util.ArrayList;
+
 /**
  * Created by NashLegend on 2014/9/16 0016
  */
@@ -23,6 +33,56 @@ public class Question extends AceModel {
     private int recommendNum = 0;
     private int followNum = 0;
     private int answerNum = 0;
+
+    private static int maxImageWidth = 240;
+    private static String prefix = "<div class=\"ZoomBox\"><div class=\"content-zoom ZoomIn\">";
+    private static String suffix = "</div></div>";
+
+    public static Question fromJson(JSONObject result)throws Exception{
+        Question question = new Question();
+        question.setAnswerable(result.optBoolean("is_answerable",true));//难道意味着已经回答了
+        question.setAnswerNum(result.optInt("answers_count"));
+        question.setCommentNum(result.optInt("replies_count"));
+        question.setAuthor(result.getJSONObject("author").getString("nickname"));
+        question.setAuthorID(result.getJSONObject("author").getString("url").replaceAll("\\D+", ""));
+        question.setAuthorAvatarUrl(result.getJSONObject("author").getJSONObject("avatar").getString("large").replaceAll("\\?.*$", ""));
+        question.setContent(result.optString("annotation_html").replaceAll("<img .*?/>", prefix + "$0" + suffix).replaceAll("style=\"max-width: \\d+px\"", "style=\"max-width: " + maxImageWidth + "px\""));
+        question.setDate(APIBase.parseDate(result.optString("date_created")));
+        question.setFollowNum(result.optInt("followers_count"));
+        question.setId(result.getString("id"));
+        question.setRecommendNum(result.optInt("recommends_count"));
+        question.setTitle(result.optString("question"));
+        question.setUrl(result.optString("url"));
+        question.setSummary(result.optString("summary"));
+        return question;
+    }
+
+    public static ArrayList<Question> fromHtmlList(String html)throws Exception{
+        ArrayList<Question> questions = new ArrayList<>();
+        Document doc = Jsoup.parse(html);
+        Elements elements = doc.getElementsByClass("ask-list");
+        if (elements.size() == 1) {
+            Elements questioList = elements.get(0).getElementsByTag("li");
+            for (int i = 0; i < questioList.size(); i++) {
+                Question item = new Question();
+                Element element = questioList.get(i);
+                Element link = element.getElementsByTag("a").get(0);
+                String title = link.getElementsByTag("h4").text();
+                String id = link.attr("href").replaceAll("\\D+", "");
+                String summary = link.getElementsByTag("p").text();
+                String l = link.getElementsByClass("ask-descrip").text().replaceAll("\\D+", "");
+                if (!TextUtils.isEmpty(l)) {
+                    item.setRecommendNum(Integer.valueOf(l));
+                }
+                item.setTitle(title);
+                item.setId(id);
+                item.setSummary(summary);
+                item.setFeatured(true);
+                questions.add(item);
+            }
+        }
+        return questions;
+    }
 
     public String getId() {
         return id;

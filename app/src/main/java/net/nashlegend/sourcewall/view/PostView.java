@@ -14,14 +14,14 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import net.nashlegend.sourcewall.AppApplication;
+import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.PostDetailAdapter;
 import net.nashlegend.sourcewall.commonview.AAsyncTask;
 import net.nashlegend.sourcewall.commonview.WWebView;
 import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Post;
-import net.nashlegend.sourcewall.request.ResultObject;
+import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
@@ -131,24 +131,24 @@ public class PostView extends AceView<Post> {
         this.adapter = adapter;
     }
 
-    class LoaderTask extends AAsyncTask<Integer, ResultObject, ResultObject<ArrayList<AceModel>>> {
+    class LoaderTask extends AAsyncTask<Integer, ResponseObject, ResponseObject<ArrayList<AceModel>>> {
 
         @Override
         protected void onPreExecute() {
             Intent intent = new Intent();
             intent.setAction(Consts.Action_Start_Loading_Latest);
-            AppApplication.getApplication().sendBroadcast(intent);
+            App.getApp().sendBroadcast(intent);
             loadDesc.findViewById(R.id.text_header_load_hint).setVisibility(View.INVISIBLE);
             loadDesc.findViewById(R.id.progress_header_loading).setVisibility(View.VISIBLE);
         }
 
         @Override
-        protected ResultObject<ArrayList<AceModel>> doInBackground(Integer... params) {
+        protected ResponseObject<ArrayList<AceModel>> doInBackground(Integer... params) {
             return PostAPI.getPostCommentsFromJsonUrl(post.getId(), post.getReplyNum(), 1000);//1000足够了
         }
 
         @Override
-        protected void onPostExecute(ResultObject<ArrayList<AceModel>> result) {
+        protected void onPostExecute(ResponseObject<ArrayList<AceModel>> result) {
             loadDesc.findViewById(R.id.text_header_load_hint).setVisibility(View.VISIBLE);
             loadDesc.findViewById(R.id.progress_header_loading).setVisibility(View.INVISIBLE);
             if (result.ok) {
@@ -162,7 +162,7 @@ public class PostView extends AceView<Post> {
             Intent intent = new Intent();
             intent.setAction(Consts.Action_Finish_Loading_Latest);
             intent.putExtra(Consts.Extra_Activity_Hashcode, getContext().hashCode());
-            AppApplication.getApplication().sendBroadcast(intent);
+            App.getApp().sendBroadcast(intent);
         }
     }
 
