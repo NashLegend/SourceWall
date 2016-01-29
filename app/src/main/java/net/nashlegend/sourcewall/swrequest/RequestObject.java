@@ -264,10 +264,7 @@ public class RequestObject<T> {
      * @param result
      */
     private void onRequestFailure(final Exception e, final ResponseObject<T> result) {
-        if (call != null
-                && !call.isCanceled()
-                && requestType == RequestType.PLAIN
-                && shouldHandNotifier(e, result)) {
+        if (call != null && requestType == RequestType.PLAIN && shouldHandNotifier(e, result)) {
             if (interval > 0) {
                 if (Thread.currentThread().getId() == 1) {
                     //如果在主线程
