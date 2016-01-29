@@ -16,6 +16,7 @@ import net.nashlegend.sourcewall.swrequest.parsers.Parser;
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -37,7 +38,11 @@ public class RequestObject<T> {
 
     private ResponseObject<T> responseObject = new ResponseObject<>();
 
-    private boolean isReactable = false;
+    private int crtTime = 0;//当前重试次数
+
+    public int maxRetryTimes = 0;//最大重试次数
+
+    public int interval = 0;//重试间隔
 
     public int requestType = RequestType.PLAIN;
 
@@ -56,8 +61,6 @@ public class RequestObject<T> {
     public String uploadParamKey = "file";
 
     public MediaType mediaType = null;
-
-    public RetryHandler retryHandler;
 
     public String cache;// TODO: 2015/10/20 0020
 
@@ -114,50 +117,59 @@ public class RequestObject<T> {
      *
      * @return
      */
-    private Response requestSync() throws Exception {
-        Response response;
+    private Call requestSync() throws Exception {
+        Call call;
         switch (method) {
             case Method.GET:
-                response = HttpUtil.get(url, params, tag);
+                call = HttpUtil.get(url, params, tag);
                 break;
             case Method.PUT:
-                response = HttpUtil.put(url, params, tag);
+                call = HttpUtil.put(url, params, tag);
                 break;
             case Method.DELETE:
-                response = HttpUtil.delete(url, params, tag);
+                call = HttpUtil.delete(url, params, tag);
                 break;
             default:
-                response = HttpUtil.post(url, params, tag);
+                call = HttpUtil.post(url, params, tag);
                 break;
         }
-        return response;
+        return call;
     }
 
     /**
      * 异步请求，并不立即执行，仅仅返回Observable
      */
     public Observable<ResponseObject<T>> requestObservable() {
-        isReactable = true;
-        // TODO: 16/1/28 Retry以后再说
         return Observable
                 .create(new Observable.OnSubscribe<String>() {
                     @Override
                     public void call(Subscriber<? super String> subscriber) {
                         try {
-                            Response response = requestSync();
-                            responseObject.statusCode = response.code();
+                            call = requestSync();
+                            Response response = call.execute();
                             String result = response.body().string();
-                            subscriber.onNext(result);
-                            subscriber.onCompleted();
+                            responseObject.statusCode = response.code();
+                            responseObject.body = result;
+                            if (response.isSuccessful()) {
+                                subscriber.onNext(result);
+                                subscriber.onCompleted();
+                            } else {
+                                subscriber.onError(new IllegalStateException("Not A Successful Response"));
+                            }
                         } catch (Exception e) {
+                            if (call.isCanceled()) {
+                                responseObject.isCancelled = true;
+                            }
                             subscriber.onError(e);
                         }
                     }
                 })
                 .subscribeOn(Schedulers.io())
+                .retryWhen(new RxRetryHandler())
                 .onErrorResumeNext(new Func1<Throwable, Observable<? extends String>>() {
                     @Override
                     public Observable<? extends String> call(Throwable throwable) {
+                        JsonHandler.handleRequestException(throwable, responseObject);
                         return Observable.just("Error!");
                     }
                 })
@@ -167,8 +179,8 @@ public class RequestObject<T> {
                         if (parser != null) {
                             try {
                                 responseObject.result = parser.parse(string, responseObject);
-                            } catch (Exception ignored) {
-
+                            } catch (Exception e) {
+                                JsonHandler.handleRequestException(e, responseObject);
                             }
                         }
                         return responseObject;
@@ -255,10 +267,8 @@ public class RequestObject<T> {
         if (call != null
                 && !call.isCanceled()
                 && requestType == RequestType.PLAIN
-                && retryHandler != null
-                && !retryHandler.isTerminated()
-                && retryHandler.shouldHandNotifier(e, result)) {
-            if (retryHandler.span > 0) {
+                && shouldHandNotifier(e, result)) {
+            if (interval > 0) {
                 if (Thread.currentThread().getId() == 1) {
                     //如果在主线程
                     new Handler().postDelayed(new Runnable() {
@@ -266,10 +276,10 @@ public class RequestObject<T> {
                         public void run() {
                             requestAsync();
                         }
-                    }, retryHandler.span);
+                    }, interval);
                 } else {
                     try {
-                        Thread.sleep(retryHandler.span);
+                        Thread.sleep(interval);
                     } catch (InterruptedException e1) {
                         e1.printStackTrace();
                     } finally {
@@ -279,14 +289,12 @@ public class RequestObject<T> {
             } else {
                 requestAsync();
             }
-            retryHandler.notifyAction();
+            notifyAction();
         } else {
             if (call != null && call.isCanceled()) {
                 result.error = ResponseError.CANCELLED;
                 result.isCancelled = true;
             }
-            // TODO: 16/1/28
-//            CommonUtil.reportRequestError(e, result);
             if (callBack != null) {
                 if (handler != null) {
                     handler.post(new Runnable() {
@@ -357,52 +365,34 @@ public class RequestObject<T> {
         void onResponse(@NonNull ResponseObject<T> result);
     }
 
-    private static void requestVolley() {
-        Thread.setDefaultUncaughtExceptionHandler(null);
-        throw new IllegalStateException("Base context already set");
+    public boolean shouldHandNotifier(Throwable exception, ResponseObject responseObject) {
+        return responseObject.code != ResponseCode.CODE_TOKEN_INVALID
+                && !call.isCanceled()
+                && crtTime < maxRetryTimes
+                && !(exception instanceof InterruptedIOException)
+                && (responseObject.statusCode < 300 || responseObject.statusCode >= 500);
     }
 
-    public static class RetryHandler {
-        int maxTimes = 0;//最大重试次数
-        int span = 0;//重试间隔
-        int crtTime = 0;//当前重试次数
-        boolean terminated;
-
-        public RetryHandler(int maxTimes, int span) {
-            this.maxTimes = maxTimes;
-            this.span = span;
-        }
-
-        public boolean shouldHandNotifier(Exception exception, ResponseObject responseObject) {
-            return responseObject.code != ResponseCode.CODE_TOKEN_INVALID
-                    && crtTime < maxTimes
-                    && !(exception instanceof InterruptedIOException)
-                    && (responseObject.statusCode < 300 || responseObject.statusCode >= 500)
-                    && !terminated;
-        }
-
-        public void notifyAction() {
-            crtTime++;
-            if (crtTime >= maxTimes) {
-                terminate();
-            }
-        }
-
-        public void terminate() {
-            terminated = true;
-        }
-
-        public boolean isTerminated() {
-            return terminated;
-        }
+    public void notifyAction() {
+        crtTime++;
     }
 
-    // TODO: 16/1/28
     public class RxRetryHandler implements Func1<Observable<? extends Throwable>, Observable<?>> {
 
         @Override
         public Observable<?> call(Observable<? extends Throwable> observable) {
-            return null;
+            return observable
+                    .flatMap(new Func1<Throwable, Observable<?>>() {
+                        @Override
+                        public Observable<?> call(Throwable throwable) {
+                            if (shouldHandNotifier(throwable, responseObject)) {
+                                notifyAction();
+                                return Observable.timer(maxRetryTimes, TimeUnit.MILLISECONDS);
+                            } else {
+                                return Observable.error(throwable);
+                            }
+                        }
+                    });
         }
     }
 }

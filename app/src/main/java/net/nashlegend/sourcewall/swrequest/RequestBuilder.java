@@ -154,7 +154,8 @@ public class RequestBuilder<T> {
      */
     public RequestBuilder<T> setRetry(int maxTimes, int interval) {
         if (maxTimes > 0) {
-            rbRequest.retryHandler = new RequestObject.RetryHandler(maxTimes, interval);
+            rbRequest.maxRetryTimes = maxTimes;
+            rbRequest.interval = interval;
         }
         return this;
     }

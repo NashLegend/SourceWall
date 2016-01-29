@@ -16,7 +16,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.net.HttpURLConnection;
@@ -36,7 +35,6 @@ public class HttpFetcher {
 
     private static OkHttpClient defaultHttpClient;
     private static OkHttpClient uploadHttpClient;
-    private static final int MAX_EXECUTION_COUNT = 2;
     private final static int CONNECTION_TIMEOUT = 30000;//网络状况差的时候这个时间可能很长
     private final static int SO_TIMEOUT = 60000;
     private final static int UPLOAD_SO_TIMEOUT = 300000;//300秒的上传时间

@@ -11,6 +11,8 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
+import net.nashlegend.sourcewall.request.api.UserAPI;
+
 import org.json.JSONObject;
 
 import java.io.File;
@@ -51,12 +53,12 @@ public class HttpUtil {
         getDefaultHttpClient().cancel(tag);
     }
 
-    public static Response get(String url, Object tag) throws Exception {
+    public static Call get(String url, Object tag) throws Exception {
         Request request = new Request.Builder().get().url(url).tag(tag).build();
-        return getDefaultHttpClient().newCall(request).execute();
+        return getDefaultHttpClient().newCall(request);
     }
 
-    public static Response get(String url, HashMap<String, String> params, Object
+    public static Call get(String url, HashMap<String, String> params, Object
             tag) throws Exception {
         StringBuilder paramString = new StringBuilder("");
         if (params == null) {
@@ -72,7 +74,7 @@ public class HttpUtil {
         return get(url + paramString.toString(), tag);
     }
 
-    public static Response post(String url, HashMap<String, String> params, Object
+    public static Call post(String url, HashMap<String, String> params, Object
             tag) throws Exception {
         if (params == null) {
             params = new HashMap<>();
@@ -85,10 +87,10 @@ public class HttpUtil {
         }
         RequestBody formBody = builder.build();
         Request request = new Request.Builder().post(formBody).url(url).tag(tag).build();
-        return getDefaultHttpClient().newCall(request).execute();
+        return getDefaultHttpClient().newCall(request);
     }
 
-    public static Response put(String url, HashMap<String, String> params, Object
+    public static Call put(String url, HashMap<String, String> params, Object
             tag) throws Exception {
         if (params == null) {
             params = new HashMap<>();
@@ -101,22 +103,22 @@ public class HttpUtil {
         }
         RequestBody formBody = builder.build();
         Request request = new Request.Builder().post(formBody).url(url).tag(tag).build();
-        return getDefaultHttpClient().newCall(request).execute();
+        return getDefaultHttpClient().newCall(request);
     }
 
-    public static Response put(String url, Object tag) throws Exception {
+    public static Call put(String url, Object tag) throws Exception {
         return put(url, null, tag);
     }
 
     /**
      * Delete 也是需要RequestBody的，然而这里并没有……
      */
-    public static Response delete(String url, Object tag) throws Exception {
+    public static Call delete(String url, Object tag) throws Exception {
         Request request = new Request.Builder().delete().url(url).tag(tag).build();
-        return getDefaultHttpClient().newCall(request).execute();
+        return getDefaultHttpClient().newCall(request);
     }
 
-    public static Response delete(String url, HashMap<String, String> params,
+    public static Call delete(String url, HashMap<String, String> params,
                                                 Object tag) throws Exception {
         StringBuilder paramString = new StringBuilder("");
         if (params == null) {
@@ -222,9 +224,11 @@ public class HttpUtil {
             CookieManager cookieManager = new CookieManager();
             cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
             defaultHttpClient.setCookieHandler(cookieManager);
+            defaultHttpClient.networkInterceptors().add(new RedirectInterceptor());
             defaultHttpClient.setConnectTimeout(CONNECTION_TIMEOUT, TimeUnit.MILLISECONDS);
             defaultHttpClient.setReadTimeout(SO_TIMEOUT, TimeUnit.MILLISECONDS);
             defaultHttpClient.setWriteTimeout(UPLOAD_SO_TIMEOUT, TimeUnit.MILLISECONDS);
+            setCookie(defaultHttpClient);
         }
         return defaultHttpClient;
     }
@@ -235,9 +239,10 @@ public class HttpUtil {
             CookieManager cookieManager = new CookieManager();
             cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
             uploadHttpClient.setCookieHandler(cookieManager);
-            uploadHttpClient.setConnectTimeout(CONNECTION_TIMEOUT * 5, TimeUnit.MILLISECONDS);
-            uploadHttpClient.setReadTimeout(SO_TIMEOUT * 5, TimeUnit.MILLISECONDS);
+            uploadHttpClient.setConnectTimeout(CONNECTION_TIMEOUT, TimeUnit.MILLISECONDS);
+            uploadHttpClient.setReadTimeout(SO_TIMEOUT, TimeUnit.MILLISECONDS);
             uploadHttpClient.setWriteTimeout(UPLOAD_SO_TIMEOUT, TimeUnit.MILLISECONDS);
+            setCookie(uploadHttpClient);
         }
         return uploadHttpClient;
     }
@@ -246,8 +251,7 @@ public class HttpUtil {
      * @param client
      */
     synchronized public static void setCookie(OkHttpClient client) {
-        // TODO: 16/1/28
-        List<String> values = new ArrayList<>(Arrays.asList("_32353_access_token=" + "UserAPI.getToken()", "_32353_ukey=" + "UserAPI.getUkey()"));
+        List<String> values = new ArrayList<>(Arrays.asList("_32353_access_token=" + UserAPI.getToken(), "_32353_ukey=" + UserAPI.getUkey()));
         Map<String, List<String>> cookies = new HashMap<>();
         cookies.put("Set-Cookie", values);
         try {

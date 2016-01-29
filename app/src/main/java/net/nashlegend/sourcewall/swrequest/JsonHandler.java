@@ -174,7 +174,7 @@ public class JsonHandler {
      * @param e              要处理的错误信息
      * @param responseObject ResponseObject
      */
-    public static void handleRequestException(Exception e, ResponseObject responseObject) {
+    public static void handleRequestException(Throwable e, ResponseObject responseObject) {
         responseObject.ok = false;
         if (e == null) {
             responseObject.error_message = "unknown";
