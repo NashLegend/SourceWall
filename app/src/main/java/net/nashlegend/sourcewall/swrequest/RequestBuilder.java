@@ -13,6 +13,8 @@ import net.nashlegend.sourcewall.swrequest.parsers.Parser;
 
 import java.util.HashMap;
 
+import rx.Observable;
+
 /**
  * Created by NashLegend on 2015/9/22 0022.
  * 默认callback执行在主线程上
@@ -293,6 +295,17 @@ public class RequestBuilder<T> {
         rbRequest.requestType = RequestObject.RequestType.PLAIN;
         rbRequest.requestAsync();
     }
+
+    /**
+     * 异步请求
+     */
+    public Observable<ResponseObject<T>> requestObservable() {
+        addToken();
+        rbRequest.requestType = RequestObject.RequestType.PLAIN;
+        return rbRequest.requestObservable();
+    }
+
+
     public void uploadAsync(String filePath) {
         addToken();
         rbRequest.filePath = filePath;
