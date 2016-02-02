@@ -712,6 +712,10 @@ public class PostAPI extends APIBase {
 
     /**
      * 发帖
+     * TODO
+     * 有Json方式的发删贴，有空加上。
+     * http://www.guokr.com/apis/group/post.json?reason={}&post_id={}&access_token={}  //
+     * request method = delete/put
      *
      * @param group_id 小组id
      * @param csrf     csrf_token
