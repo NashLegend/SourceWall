@@ -11,6 +11,7 @@ public class ResponseObject<T> {
     public RequestObject<T> requestObject;
     public boolean ok = false;
     public int statusCode = -1;//http code，200，201，302，304，404，500等
+    public Throwable throwable;
     public ResponseError error = ResponseError.UNKNOWN;//请求错误，断网，服务器错误等等
     public String error_message = "";//其他错误的error_message，如NPE
     public int code = ResponseCode.CODE_NONE;//json中返回的code

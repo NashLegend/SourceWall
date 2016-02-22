@@ -203,4 +203,7 @@
     <string name="validate_failed_try_again">验证失败，请点击右上角“重新验证”，提示成功后再点击发贴……</string>
     <string name="title_activity_post_list">PostListActivity</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

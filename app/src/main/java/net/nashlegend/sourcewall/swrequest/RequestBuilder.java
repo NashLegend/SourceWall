@@ -274,7 +274,7 @@ public class RequestBuilder<T> {
         return this;
     }
 
-    private void addToken() {
+    private void addExtras() {
         if (useToken) {
             if (rbRequest.params == null) {
                 rbRequest.params = new HashMap<>();
@@ -287,11 +287,17 @@ public class RequestBuilder<T> {
         }
     }
 
+    public RequestObject<T> buildPlainRequest(){
+        addExtras();
+        rbRequest.requestType = RequestObject.RequestType.PLAIN;
+        return rbRequest;
+    }
+
     /**
      * 异步请求
      */
     public void requestAsync() {
-        addToken();
+        addExtras();
         rbRequest.requestType = RequestObject.RequestType.PLAIN;
         rbRequest.requestAsync();
     }
@@ -300,14 +306,14 @@ public class RequestBuilder<T> {
      * 异步请求
      */
     public Observable<ResponseObject<T>> requestObservable() {
-        addToken();
+        addExtras();
         rbRequest.requestType = RequestObject.RequestType.PLAIN;
         return rbRequest.requestObservable();
     }
 
 
     public void uploadAsync(String filePath) {
-        addToken();
+        addExtras();
         rbRequest.filePath = filePath;
         rbRequest.requestType = RequestObject.RequestType.UPLOAD;
         rbRequest.uploadAsync();

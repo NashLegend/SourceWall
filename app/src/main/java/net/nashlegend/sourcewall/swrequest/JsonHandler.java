@@ -176,6 +176,7 @@ public class JsonHandler {
      */
     public static void handleRequestException(Throwable e, ResponseObject responseObject) {
         responseObject.ok = false;
+        responseObject.throwable = e;
         if (e == null) {
             responseObject.error_message = "unknown";
             responseObject.error = ResponseError.UNKNOWN;

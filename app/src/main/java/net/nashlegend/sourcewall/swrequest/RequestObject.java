@@ -176,7 +176,7 @@ public class RequestObject<T> {
                 .map(new Func1<String, ResponseObject<T>>() {
                     @Override
                     public ResponseObject<T> call(String string) {
-                        if (parser != null) {
+                        if (responseObject.throwable == null && parser != null) {
                             try {
                                 responseObject.result = parser.parse(string, responseObject);
                             } catch (Exception e) {
