@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-                                    xmlns:app="http://schemas.android.com/apk/res-auto"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:foreground="@drawable/selectable_item_background"
-                                    app:cardBackgroundColor="?attr/cardBackgroundColor"
-                                    app:cardUseCompatPadding="true">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:foreground="@drawable/selectable_item_background"
+    app:cardBackgroundColor="?attr/cardBackgroundColor"
+    app:cardUseCompatPadding="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,7 +28,7 @@
                 android:id="@+id/image_avatar"
                 android:layout_width="@dimen/list_standard_comment_avatar_dimen"
                 android:layout_height="@dimen/list_standard_comment_avatar_dimen"
-                android:src="@drawable/default_avatar"/>
+                android:src="@drawable/default_avatar" />
 
             <TextView
                 android:id="@+id/text_num_support"
@@ -38,7 +38,7 @@
                 android:gravity="center"
                 android:text="@string/sample_support_number"
                 android:textColor="?attr/color_author_color"
-                android:textSize="12sp"/>
+                android:textSize="12sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -58,7 +58,7 @@
                     android:layout_height="wrap_content"
                     android:singleLine="true"
                     android:text="@string/sample_author"
-                    android:textColor="?attr/color_author_color"/>
+                    android:textColor="?attr/color_author_color" />
 
                 <TextView
                     android:id="@+id/text_author_title"
@@ -67,7 +67,7 @@
                     android:layout_marginLeft="@dimen/list_standard_item_text_text_gap"
                     android:singleLine="true"
                     android:text="@string/sample_author_title"
-                    android:textColor="?attr/color_author_color"/>
+                    android:textColor="?attr/color_author_color" />
             </LinearLayout>
 
             <TextView
@@ -75,7 +75,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/sample_date"
-                android:textColor="?attr/color_author_color"/>
+                android:textColor="?attr/color_author_color" />
 
             <TextView
                 android:id="@+id/web_content"
@@ -85,7 +85,7 @@
                 android:maxLines="3"
                 android:text="@string/sample_summary"
                 android:textColor="?attr/color_list_summary"
-                android:textSize="@dimen/list_standard_summary_font_size"/>
+                android:textSize="@dimen/list_standard_summary_font_size" />
         </LinearLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="@dimen/basket_item_height"
-              android:descendantFocusability="blocksDescendants"
-              android:gravity="center_vertical"
-              android:orientation="horizontal"
-              android:paddingLeft="@dimen/abc_dropdownitem_text_padding_left"
-              android:paddingRight="@dimen/abc_dropdownitem_text_padding_right">
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/basket_item_height"
+    android:descendantFocusability="blocksDescendants"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingLeft="@dimen/abc_dropdownitem_text_padding_left"
+    android:paddingRight="@dimen/abc_dropdownitem_text_padding_right">
 
     <TextView
         android:id="@+id/text_basket_name"
@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="@string/sample_title"
-        android:textColor="?attr/color_dialog_list_text"/>
+        android:textColor="?attr/color_dialog_list_text" />
 
     <RelativeLayout
         android:layout_width="@dimen/basket_item_height"
@@ -26,14 +26,14 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:visibility="gone"
-            android:background="@android:color/transparent"/>
+            android:background="@android:color/transparent" />
 
         <ImageButton
             android:id="@+id/button_add_2_favor"
             android:layout_width="@dimen/basket_item_height"
             android:layout_height="@dimen/basket_item_height"
             android:background="@android:color/transparent"
-            android:src="@drawable/plus"/>
+            android:src="@drawable/plus" />
     </RelativeLayout>
 
 </LinearLayout>

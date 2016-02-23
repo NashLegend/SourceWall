@@ -1,10 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto"
-      xmlns:tools="http://schemas.android.com/tools"
-      tools:context=".activities.PublishPostActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activities.PublishPostActivity">
     <item
         android:id="@+id/action_reload_csrf"
         android:title="@string/reload_csrf_token"
         android:orderInCategory="100"
-        app:showAsAction="always"/>
+        app:showAsAction="always" />
 </menu>

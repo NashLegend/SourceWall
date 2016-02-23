@@ -1,41 +1,41 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto"
-      xmlns:tools="http://schemas.android.com/tools"
-      tools:context=".activities.ArticleActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activities.ArticleActivity">
     <item
         android:id="@+id/action_share_to_wechat_circle"
         android:icon="@drawable/weixin_circle_logo"
         android:orderInCategory="100"
         android:title="@string/action_share_to_wechat_circle"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_share_to_wechat_friends"
         android:icon="@drawable/weixin_chat_logo"
         android:orderInCategory="101"
         android:title="@string/action_share_to_wechat_friends"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_share_to_weibo"
         android:icon="@drawable/weibo_logo"
         android:orderInCategory="102"
         android:title="@string/action_share_to_weibo"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_load_desc"
         android:icon="?attr/arrow_up_icon"
         android:orderInCategory="103"
         android:title="@string/action_load_desc"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_load_acs"
         android:icon="?attr/arrow_down_icon"
         android:orderInCategory="104"
         android:title="@string/action_load_acs"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_open_in_browser"
         android:icon="?attr/browser_icon"
         android:orderInCategory="105"
         android:title="@string/open_in_browser"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
 </menu>

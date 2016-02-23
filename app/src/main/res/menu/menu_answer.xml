@@ -1,2 +1,2 @@
 <menu xmlns:tools="http://schemas.android.com/tools"
-      tools:context=".activities.AnswerActivity"></menu>
+    tools:context=".activities.AnswerActivity"></menu>

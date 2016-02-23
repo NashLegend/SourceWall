@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:foreground="@drawable/selectable_item_background"
         app:cardBackgroundColor="?attr/cardBackgroundColor"
-        app:cardUseCompatPadding="false">
+        app:cardUseCompatPadding="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -26,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/sample_title"
                 android:textColor="?attr/color_article_title"
-                android:textSize="@dimen/Text_title_size_dimen"/>
+                android:textSize="@dimen/Text_title_size_dimen" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -40,7 +41,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/sample_author"
                     android:textColor="?attr/color_author_color"
-                    android:textSize="@dimen/text_author_view_font_size_dimen"/>
+                    android:textSize="@dimen/text_author_view_font_size_dimen" />
 
                 <TextView
                     android:id="@id/text_date"
@@ -49,14 +50,14 @@
                     android:layout_marginLeft="@dimen/list_standard_item_text_text_gap"
                     android:text="@string/sample_date"
                     android:textColor="?attr/color_author_color"
-                    android:textSize="@dimen/text_author_view_font_size_dimen"/>
+                    android:textSize="@dimen/text_author_view_font_size_dimen" />
             </LinearLayout>
 
             <net.nashlegend.sourcewall.commonview.WWebView
                 android:id="@+id/web_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_content_font_size_dimen"/>
+                android:textSize="@dimen/text_content_font_size_dimen" />
 
         </LinearLayout>
     </android.support.v7.widget.CardView>
@@ -75,13 +76,13 @@
             android:layout_centerInParent="true"
             android:layout_margin="15dp"
             android:text="@string/click_to_load_latest_replies"
-            android:textColor="?attr/color_drawer_button_text"/>
+            android:textColor="?attr/color_drawer_button_text" />
 
         <ProgressBar
             android:id="@+id/progress_header_loading"
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_centerInParent="true"
-            android:visibility="invisible"/>
+            android:visibility="invisible" />
     </RelativeLayout>
 </LinearLayout>

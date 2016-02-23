@@ -1,11 +1,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="?attr/color_clear_page_background"
-              android:orientation="vertical"
-              tools:context=".activities.SettingActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/color_clear_page_background"
+    android:orientation="vertical"
+    tools:context=".activities.SettingActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/action_bar"
@@ -13,7 +13,7 @@
         app:popupTheme="?attr/toolbarPopTheme"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"/>
+        android:background="?attr/colorPrimary" />
 
     <RelativeLayout
         android:id="@+id/layout_image_mode"
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:text="@string/image_load_mode"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/text_image_mode"
@@ -42,7 +42,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"
             android:layout_toRightOf="@id/text_image_mode_view"
-            android:textSize="12sp"/>
+            android:textSize="12sp" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -50,7 +50,7 @@
             android:id="@+id/image_mode_arrow"
             android:layout_alignParentRight="true"
             android:layout_marginRight="16dp"
-            android:background="@drawable/chevron_right"/>
+            android:background="@drawable/chevron_right" />
     </RelativeLayout>
 
     <LinearLayout
@@ -70,21 +70,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
-                android:text="@string/mode_always_load"/>
+                android:text="@string/mode_always_load" />
 
             <RadioButton
                 android:id="@+id/button_never_load"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
-                android:text="@string/mode_never_load"/>
+                android:text="@string/mode_never_load" />
 
             <RadioButton
                 android:id="@+id/button_wifi_only"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
-                android:text="@string/mode_load_load_when_wifi"/>
+                android:text="@string/mode_load_load_when_wifi" />
         </RadioGroup>
 
         <CheckBox
@@ -92,14 +92,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/no_load_homepage_image"
-            android:singleLine="true"/>
+            android:singleLine="true" />
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.4dp"
         android:layout_weight="0"
-        android:background="@android:color/darker_gray"/>
+        android:background="@android:color/darker_gray" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -122,7 +122,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:text="@string/custom_tail"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
 
             <ImageView
                 android:id="@+id/image_tail_arrow"
@@ -130,7 +130,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="16dp"
-                android:background="@drawable/chevron_right"/>
+                android:background="@drawable/chevron_right" />
         </RelativeLayout>
 
         <LinearLayout
@@ -150,28 +150,28 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
-                    android:text="@string/use_default_tail"/>
+                    android:text="@string/use_default_tail" />
 
                 <RadioButton
                     android:id="@+id/button_use_phone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
-                    android:text="@string/use_phone_as_tail"/>
+                    android:text="@string/use_phone_as_tail" />
 
                 <RadioButton
                     android:id="@+id/button_use_custom"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
-                    android:text="@string/use_custom_tail"/>
+                    android:text="@string/use_custom_tail" />
             </RadioGroup>
 
             <EditText
                 android:id="@+id/text_tail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/hint_input_your_tail"/>
+                android:hint="@string/hint_input_your_tail" />
         </LinearLayout>
     </LinearLayout>
 
@@ -180,7 +180,7 @@
         android:layout_width="match_parent"
         android:layout_height="0.4dp"
         android:layout_weight="0"
-        android:background="@android:color/darker_gray"/>
+        android:background="@android:color/darker_gray" />
 
     <RelativeLayout
         android:id="@+id/layout_about_app"
@@ -200,21 +200,21 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:text="@string/about_app"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginRight="16dp"
-            android:background="@drawable/chevron_right"/>
+            android:background="@drawable/chevron_right" />
     </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.4dp"
         android:layout_weight="0"
-        android:background="@android:color/darker_gray"/>
+        android:background="@android:color/darker_gray" />
 
     <RelativeLayout
         android:id="@+id/layout_log_in_out"
@@ -234,21 +234,21 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:text="@string/log_out"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginRight="16dp"
-            android:background="@drawable/chevron_right"/>
+            android:background="@drawable/chevron_right" />
     </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.4dp"
         android:layout_weight="0"
-        android:background="@android:color/darker_gray"/>
+        android:background="@android:color/darker_gray" />
 
 
 </LinearLayout>

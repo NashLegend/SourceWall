@@ -57,7 +57,7 @@ public class MediumListItemView extends AceView<UComment> {
     }
 
     public void plusOneLike() {
-        likesView.setText(comment.getLikeNum() + "");
+        likesView.setText(String.valueOf(comment.getLikeNum()));
     }
 
     @Override
@@ -68,7 +68,7 @@ public class MediumListItemView extends AceView<UComment> {
         comment = model;
         authorView.setText(comment.getAuthor());
         dateView.setText(comment.getDate());
-        likesView.setText(comment.getLikeNum() + "");
+        likesView.setText(String.valueOf(comment.getLikeNum() + ""));
         floorView.setText(comment.getFloor());
         contentView.loadHtml(comment.getContent());
         if (Config.shouldLoadImage()) {

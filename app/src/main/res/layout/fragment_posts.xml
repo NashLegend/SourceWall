@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <net.nashlegend.sourcewall.commonview.LListView
         android:id="@+id/list_posts"
@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:background="?attr/color_list_background"
         android:footerDividersEnabled="false"
-        android:headerDividersEnabled="false"/>
+        android:headerDividersEnabled="false" />
 
     <ProgressBar
         android:id="@+id/posts_loading"
@@ -19,13 +19,13 @@
         android:layout_marginTop="8dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <net.nashlegend.sourcewall.commonview.LoadingView
         android:id="@+id/post_progress_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 
     <FrameLayout
@@ -39,6 +39,6 @@
         <ScrollView
             android:id="@+id/plastic_scroller"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
     </FrameLayout>
 </RelativeLayout>

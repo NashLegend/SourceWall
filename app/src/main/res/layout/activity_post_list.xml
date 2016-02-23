@@ -1,11 +1,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:fab="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="?attr/color_page_background"
-                tools:context=".activities.PostListActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/color_page_background"
+    tools:context=".activities.PostListActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/action_bar"
@@ -13,7 +13,7 @@
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:theme="?attr/toolbarTheme"
-        app:popupTheme="?attr/toolbarPopTheme"/>
+        app:popupTheme="?attr/toolbarPopTheme" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -26,13 +26,13 @@
             android:layout_height="match_parent"
             android:background="?attr/color_list_background"
             android:footerDividersEnabled="false"
-            android:headerDividersEnabled="false"/>
+            android:headerDividersEnabled="false" />
 
         <net.nashlegend.sourcewall.commonview.LoadingView
             android:id="@+id/post_progress_loading"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/button_reply"
@@ -43,7 +43,7 @@
             android:layout_alignParentRight="true"
             fab:fab_colorNormal="?attr/colorPrimaryBright"
             fab:fab_colorPressed="?attr/colorPrimaryDark"
-            fab:fab_icon="@drawable/pencil"/>
+            fab:fab_icon="@drawable/pencil" />
 
     </RelativeLayout>
 

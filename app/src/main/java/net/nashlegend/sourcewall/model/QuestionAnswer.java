@@ -57,7 +57,7 @@ public class QuestionAnswer extends AceModel {
         String authorID = authorObject.optString("url").replaceAll("\\D+", "");
         boolean is_exists = authorObject.optBoolean("is_exists");
         JSONObject avatarObject = JsonHandler.getJsonObject(authorObject, "avatar");
-        String avatarUrl = authorObject.optString("large").replaceAll("\\?.*$", "");
+        String avatarUrl = avatarObject.optString("large").replaceAll("\\?.*$", "");
 
         String date_created = APIBase.parseDate(answerObject.optString("date_created"));
         String date_modified = APIBase.parseDate(answerObject.optString("date_modified"));

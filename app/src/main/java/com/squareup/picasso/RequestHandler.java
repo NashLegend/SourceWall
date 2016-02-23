@@ -21,6 +21,8 @@ import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory.Options;
 import android.net.NetworkInfo;
 
+import net.nashlegend.sourcewall.util.ImageSizeMap;
+
 import java.io.IOException;
 
 abstract class RequestHandler {
@@ -110,6 +112,7 @@ abstract class RequestHandler {
     }
 
     static void calculateInSampleSize(int reqWidth, int reqHeight, Options options, Request request) {
+        ImageSizeMap.put(request.uri.toString(), options.outWidth, options.outHeight);
         if (reqHeight <= 0) {
             request.targetHeight = reqWidth * options.outHeight / options.outWidth;
             reqHeight = request.targetHeight;

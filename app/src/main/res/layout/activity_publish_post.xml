@@ -1,10 +1,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="?attr/color_page_background"
-                tools:context=".activities.PublishPostActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/color_page_background"
+    tools:context=".activities.PublishPostActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/action_bar"
@@ -12,7 +12,7 @@
         app:popupTheme="?attr/toolbarPopTheme"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"/>
+        android:background="?attr/colorPrimary" />
 
     <LinearLayout
         android:id="@+id/layout_reply"
@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0"
-            android:hint="@string/hint_input_post_title"/>
+            android:hint="@string/hint_input_post_title" />
 
         <EditText
             android:id="@+id/text_question_tag"
@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:hint="@string/hint_input_question_tag"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <Spinner
             android:id="@+id/spinner_post_topic"
@@ -44,7 +44,7 @@
             android:layout_margin="3dp"
             android:layout_weight="0"
             android:spinnerMode="dialog"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <EditText
             android:id="@+id/text_post_body"
@@ -56,7 +56,7 @@
             android:gravity="top"
             android:hint="@string/hint_input_post_content"
             android:textColor="?attr/color_reply_input_text"
-            android:textColorHint="?attr/color_reply_hint"/>
+            android:textColorHint="?attr/color_reply_hint" />
 
         <LinearLayout
             android:id="@+id/layout_reply_action"
@@ -81,7 +81,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="?attr/background_selectable_borderless"
-                    android:src="@drawable/image_browse"/>
+                    android:src="@drawable/image_browse" />
 
                 <LinearLayout
                     android:id="@+id/prg_uploading_img"
@@ -94,12 +94,12 @@
 
                     <ProgressBar
                         android:layout_width="24dp"
-                        android:layout_height="24dp"/>
+                        android:layout_height="24dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/uploading"/>
+                        android:text="@string/uploading" />
                 </LinearLayout>
 
                 <ImageButton
@@ -108,7 +108,7 @@
                     android:layout_height="wrap_content"
                     android:background="?attr/background_selectable_borderless"
                     android:src="@drawable/insert_image"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
             </RelativeLayout>
 
             <ImageButton
@@ -117,7 +117,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="?attr/background_selectable_borderless"
-                android:src="@drawable/link"/>
+                android:src="@drawable/link" />
 
             <RelativeLayout
                 android:layout_width="0dp"
@@ -133,7 +133,7 @@
                     android:background="?attr/background_selectable_borderless"
                     android:paddingLeft="13dp"
                     android:paddingRight="13dp"
-                    android:src="@drawable/send"/>
+                    android:src="@drawable/send" />
             </RelativeLayout>
 
         </LinearLayout>

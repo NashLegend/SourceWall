@@ -1,41 +1,41 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto"
-      xmlns:tools="http://schemas.android.com/tools"
-      tools:context=".activities.QuestionActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activities.QuestionActivity">
     <item
         android:id="@+id/action_share_to_wechat_circle"
         android:title="@string/action_share_to_wechat_circle"
         android:orderInCategory="102"
         android:icon="@drawable/weixin_circle_logo"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_share_to_wechat_friends"
         android:title="@string/action_share_to_wechat_friends"
         android:orderInCategory="103"
         android:icon="@drawable/weixin_chat_logo"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_share_to_weibo"
         android:title="@string/action_share_to_weibo"
         android:orderInCategory="104"
         android:icon="@drawable/weibo_logo"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_follow_question"
         android:orderInCategory="105"
         android:title="@string/action_follow_question"
         android:icon="?attr/eye_open_icon"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_unfollow_question"
         android:orderInCategory="106"
         android:title="@string/action_unfollow_question"
         android:icon="?attr/eye_closed_icon"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_open_in_browser"
         android:title="@string/open_in_browser"
         android:orderInCategory="107"
         android:icon="?attr/browser_icon"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
 </menu>

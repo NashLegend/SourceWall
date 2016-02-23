@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/favor_dialog_height"
-                android:paddingLeft="@dimen/list_standard_item_padding_horizontal"
-                android:paddingRight="@dimen/list_standard_item_padding_horizontal">
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/favor_dialog_height"
+    android:paddingLeft="@dimen/list_standard_item_padding_horizontal"
+    android:paddingRight="@dimen/list_standard_item_padding_horizontal">
 
     <LinearLayout
         android:id="@+id/layout_favor_dialog_list"
@@ -22,14 +22,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:visibility="invisible"/>
+                android:visibility="invisible" />
 
             <ListView
                 android:id="@+id/list_favor_dialog"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="top"
-                android:minHeight="@dimen/input_dialog_input_height"/>
+                android:minHeight="@dimen/input_dialog_input_height" />
         </RelativeLayout>
 
         <LinearLayout
@@ -46,7 +46,7 @@
                 android:layout_height="48dp"
                 android:background="?attr/color_dialog_button_background"
                 android:text="@string/action_invoke_create_basket"
-                android:textColor="?attr/drawable_dialog_button_text"/>
+                android:textColor="?attr/drawable_dialog_button_text" />
 
             <Button
                 android:id="@+id/button_favor_dialog_ok"
@@ -55,7 +55,7 @@
                 android:layout_height="48dp"
                 android:background="?attr/color_dialog_button_background"
                 android:text="@string/action_done"
-                android:textColor="?attr/drawable_dialog_button_text"/>
+                android:textColor="?attr/drawable_dialog_button_text" />
         </LinearLayout>
     </LinearLayout>
 
@@ -78,14 +78,14 @@
             android:singleLine="true"
             android:textColor="?attr/color_reply_input_text"
             android:textColorHint="?attr/color_reply_hint"
-            android:textSize="@dimen/abc_text_size_small_material"/>
+            android:textSize="@dimen/abc_text_size_small_material" />
 
         <Spinner
             android:id="@+id/spinner_categories"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="3dp"
-            android:spinnerMode="dialog"/>
+            android:spinnerMode="dialog" />
 
         <EditText
             android:id="@+id/text_create_basket_introduction"
@@ -99,7 +99,7 @@
             android:minHeight="@dimen/input_dialog_input_height"
             android:textColor="?attr/color_reply_input_text"
             android:textColorHint="?attr/color_reply_hint"
-            android:textSize="@dimen/abc_text_size_small_material"/>
+            android:textSize="@dimen/abc_text_size_small_material" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -115,7 +115,7 @@
                 android:layout_height="48dp"
                 android:background="?attr/color_dialog_button_background"
                 android:text="@string/cancel"
-                android:textColor="?attr/drawable_dialog_button_text"/>
+                android:textColor="?attr/drawable_dialog_button_text" />
 
             <Button
                 android:id="@+id/button_create_basket"
@@ -124,7 +124,7 @@
                 android:layout_height="48dp"
                 android:background="?attr/color_dialog_button_background"
                 android:text="@string/action_create_basket"
-                android:textColor="?attr/drawable_dialog_button_text"/>
+                android:textColor="?attr/drawable_dialog_button_text" />
         </LinearLayout>
     </LinearLayout>
 
