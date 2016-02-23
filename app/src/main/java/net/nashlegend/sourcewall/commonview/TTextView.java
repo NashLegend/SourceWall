@@ -237,6 +237,7 @@ public class TTextView extends TextView {
             Drawable drawable = null;
             try {
                 if (source.startsWith("http")) {
+                    // FIXME: 16/2/24 改为ImageLoader
                     Bitmap bitmap = Picasso.with(getContext()).load(source).resize((int) maxWidth, 0).setTargetSizeAsMax(true).get();
                     if (bitmap != null) {
                         String reg = ".+/w/(\\d+)/h/(\\d+)";

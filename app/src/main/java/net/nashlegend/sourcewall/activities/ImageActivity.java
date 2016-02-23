@@ -117,6 +117,7 @@ public class ImageActivity extends BaseActivity {
                     if (url.startsWith("http")) {
                         String filePath = RequestCache.getInstance().getCachedFile(url);
                         if (filePath == null || !new File(filePath).exists()) {
+                            // FIXME: 16/2/24 改为ImageLoader的
                             Picasso.with(ImageActivity.this).load(url).download();
                             filePath = RequestCache.getInstance().getCachedFile(url);
                         }

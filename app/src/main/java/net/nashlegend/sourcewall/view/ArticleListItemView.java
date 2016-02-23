@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.model.Article;
@@ -17,6 +17,7 @@ import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.DisplayUtil;
 import net.nashlegend.sourcewall.util.ImageSizeMap;
+import net.nashlegend.sourcewall.util.ImageUtils;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 
 /**
@@ -72,9 +73,7 @@ public class ArticleListItemView extends AceView<Article> {
             if (!TextUtils.isEmpty(article.getImageUrl()) && Config.shouldLoadImage() && Config.shouldLoadHomepageImage()) {
                 Point point = ImageSizeMap.get(article.getImageUrl());
                 if (point != null) {
-                    int width = (int) (DisplayUtil.getScreenWidth(getContext())
-                            - getResources().getDimension(R.dimen.list_standard_padding_horizontal) * 2
-                            - getResources().getDimension(R.dimen.list_standard_item_padding_horizontal) * 2);
+                    int width = (int) (DisplayUtil.getScreenWidth(getContext()) - getResources().getDimension(R.dimen.list_standard_padding_horizontal) * 2 - getResources().getDimension(R.dimen.list_standard_item_padding_horizontal) * 2);
                     int height = width * point.y / point.x;
                     ViewGroup.LayoutParams params = titleImage.getLayoutParams();
                     if (params != null) {
@@ -83,7 +82,9 @@ public class ArticleListItemView extends AceView<Article> {
                     }
                 }
                 titleImage.setVisibility(VISIBLE);
-                Picasso.with(getContext()).load(article.getImageUrl()).noFade().resize(DisplayUtil.getScreenWidth(getContext()), -1).into(titleImage);
+                ImageLoader.getInstance().displayImage(article.getImageUrl(), titleImage, ImageUtils.articleTitleImageOptions);
+//                Picasso.with(getContext()).load(article.getImageUrl()).noFade()
+//                        .resize(DisplayUtil.getScreenWidth(getContext()), -1).into(titleImage);
             } else {
                 titleImage.setVisibility(GONE);
                 titleImage.setImageBitmap(null);

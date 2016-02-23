@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -12,7 +11,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
@@ -21,11 +20,11 @@ import net.nashlegend.sourcewall.commonview.AAsyncTask;
 import net.nashlegend.sourcewall.commonview.WWebView;
 import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Post;
-import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.request.api.PostAPI;
+import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
-import net.nashlegend.sourcewall.util.RoundTransformation;
+import net.nashlegend.sourcewall.util.ImageUtils;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 import net.nashlegend.sourcewall.util.StyleChecker;
 
@@ -87,7 +86,7 @@ public class PostView extends AceView<Post> {
             contentView.setPrimarySource(post.getContent());
             contentView.loadDataWithBaseURL(Consts.Base_Url, html, "text/html", "charset=UTF-8", null);
             if (Config.shouldLoadImage()) {
-                Picasso.with(getContext()).load(post.getAuthor().getAvatar()).resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen).placeholder(R.drawable.default_avatar).transform(new RoundTransformation(Color.parseColor("#00000000"), 0, true)).into(avatarImage);
+                ImageLoader.getInstance().displayImage(post.getAuthor().getAvatar(), avatarImage, ImageUtils.avatarOptions);
             } else {
                 avatarImage.setImageResource(R.drawable.default_avatar);
             }

@@ -9,7 +9,35 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.display.CircleBitmapDisplayer;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
+
+import net.nashlegend.sourcewall.R;
+
 public class ImageUtils {
+
+    public static DisplayImageOptions defaultImageOptions = new DisplayImageOptions.Builder()
+            .cacheInMemory(true)
+            .cacheOnDisk(true)
+            .bitmapConfig(Bitmap.Config.RGB_565)
+            .build();
+
+    public static DisplayImageOptions articleTitleImageOptions = new DisplayImageOptions.Builder()
+            .cacheInMemory(true)
+            .cacheOnDisk(true)
+            .bitmapConfig(Bitmap.Config.RGB_565)
+            .build();
+
+    public static DisplayImageOptions avatarOptions = new DisplayImageOptions.Builder()
+            .showImageOnLoading(R.drawable.default_avatar)
+            .showImageForEmptyUri(R.drawable.default_avatar)
+            .showImageOnFail(R.drawable.default_avatar)
+            .cacheInMemory(true)
+            .cacheOnDisk(true)
+            .displayer(new CircleBitmapDisplayer())//是否设置为圆角，弧度为多少
+            .bitmapConfig(Bitmap.Config.RGB_565)
+            .build();
 
     /**
      * 将图片转换为圆角, 当radiusRat为半径时为圆形.

@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.picasso.Picasso;
 
 import net.nashlegend.sourcewall.R;
@@ -44,6 +45,7 @@ import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.ImageUtils;
 import net.nashlegend.sourcewall.util.RoundTransformation;
 import net.nashlegend.sourcewall.util.StyleChecker;
 
@@ -172,7 +174,7 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
             likeButton.setIcon(R.drawable.heart_outline);
         }
         if (Config.shouldLoadImage()) {
-            Picasso.with(this).load(data.getAuthor().getAvatar()).placeholder(R.drawable.default_avatar).resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen).transform(new RoundTransformation(Color.parseColor("#00000000"), 0, true)).into(avatar);
+            ImageLoader.getInstance().displayImage(data.getAuthor().getAvatar(),avatar, ImageUtils.avatarOptions);
         } else {
             avatar.setImageResource(R.drawable.default_avatar);
         }

@@ -1,18 +1,17 @@
 package net.nashlegend.sourcewall.view;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.util.Config;
-import net.nashlegend.sourcewall.util.RoundTransformation;
+import net.nashlegend.sourcewall.util.ImageUtils;
 
 /**
  * Created by NashLegend on 2014/9/18 0018.
@@ -50,12 +49,7 @@ public class SimpleCommentItemView extends AceView<UComment> {
         dateView.setText(comment.getDate());
         contentView.setText(comment.getContent());
         if (Config.shouldLoadImage()) {
-            Picasso.with(getContext())
-                    .load(comment.getAuthor().getAvatar())
-                    .resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen)
-                    .placeholder(R.drawable.default_avatar)
-                    .transform(new RoundTransformation(Color.parseColor("#00000000"), 0, true))
-                    .into(avatarImage);
+            ImageLoader.getInstance().displayImage(comment.getAuthor().getAvatar(), avatarImage, ImageUtils.avatarOptions);
         } else {
             avatarImage.setImageResource(R.drawable.default_avatar);
         }

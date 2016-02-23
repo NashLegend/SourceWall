@@ -13,6 +13,7 @@ import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.squareup.picasso.Picasso;
 
+import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.commonview.LoadingView;
 import net.nashlegend.sourcewall.commonview.ScalingImage;
@@ -93,7 +94,7 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
                     resultObject.ok = true;
                     resultObject.result = filePath;
                 } else {
-                    Picasso.with(getContext()).load(url).download();
+                    Picasso.with(App.getApp()).load(url).download();
                     filePath = RequestCache.getInstance().getCachedFile(url);
                     if (filePath != null) {
                         resultObject.ok = true;

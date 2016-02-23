@@ -7,12 +7,14 @@ import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.picasso.Picasso;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.model.QuestionAnswer;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.ImageUtils;
 import net.nashlegend.sourcewall.util.RegUtil;
 import net.nashlegend.sourcewall.util.RoundTransformation;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
@@ -62,7 +64,7 @@ public class AnswerListItemView extends AceView<QuestionAnswer> {
         authorTitleView.setText(answer.getAuthor().getTitle());
         dateView.setText(answer.getDate_created());
         if (Config.shouldLoadImage()) {
-            Picasso.with(getContext()).load(answer.getAuthor().getAvatar()).resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen).placeholder(R.drawable.default_avatar).transform(new RoundTransformation(Color.parseColor("#00000000"), 0, true)).into(avatar);
+            ImageLoader.getInstance().displayImage(answer.getAuthor().getAvatar(),avatar, ImageUtils.avatarOptions);
         } else {
             avatar.setImageResource(R.drawable.default_avatar);
         }

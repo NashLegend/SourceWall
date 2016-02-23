@@ -1,20 +1,19 @@
 package net.nashlegend.sourcewall.view;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.commonview.TTextView;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
-import net.nashlegend.sourcewall.util.RoundTransformation;
+import net.nashlegend.sourcewall.util.ImageUtils;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 
 /**
@@ -72,7 +71,7 @@ public class MediumListItemView extends AceView<UComment> {
         floorView.setText(comment.getFloor());
         contentView.loadHtml(comment.getContent());
         if (Config.shouldLoadImage()) {
-            Picasso.with(getContext()).load(comment.getAuthor().getAvatar()).resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen).placeholder(R.drawable.default_avatar).transform(new RoundTransformation(Color.parseColor("#00000000"), 0, true)).into(avatarImage);
+            ImageLoader.getInstance().displayImage(comment.getAuthor().getAvatar(), avatarImage, ImageUtils.avatarOptions);
         } else {
             avatarImage.setImageResource(R.drawable.default_avatar);
         }

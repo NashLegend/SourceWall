@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.picasso.Picasso;
 import com.umeng.analytics.MobclickAgent;
 
@@ -43,6 +44,7 @@ import net.nashlegend.sourcewall.swrequest.ResponseError;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.ImageUtils;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.RoundTransformation;
 import net.nashlegend.sourcewall.util.StyleChecker;
@@ -159,7 +161,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
             thankButton.setIcon(R.drawable.heart_outline);
         }
         if (Config.shouldLoadImage()) {
-            Picasso.with(this).load(answer.getAuthor().getAvatar()).placeholder(R.drawable.default_avatar).resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen).transform(new RoundTransformation(Color.parseColor("#00000000"), 0, true)).into(avatar);
+            ImageLoader.getInstance().displayImage(answer.getAuthor().getAvatar(),avatar, ImageUtils.avatarOptions);
         } else {
             avatar.setImageResource(R.drawable.default_avatar);
         }
