@@ -157,10 +157,10 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
         } else if (host instanceof Article) {
             hostTitle.setText(((Article) host).getTitle());
         }
-        supportText.setText(data.getLikeNum() + "");
-        authorName.setText(data.getAuthor());
-        authorTitle.setText(data.getAuthorTitle());
-        if (data.getAuthorID().equals(UserAPI.getUserID())) {
+        supportText.setText(String.valueOf(data.getLikeNum()));
+        authorName.setText(data.getAuthor().getName());
+        authorTitle.setText(data.getAuthor().getTitle());
+        if (data.getAuthor().getId().equals(UserAPI.getUserID())) {
             deleteButton.setIcon(R.drawable.dustbin);
         } else {
             deleteButton.setIcon(R.drawable.dustbin_outline);
@@ -172,7 +172,7 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
             likeButton.setIcon(R.drawable.heart_outline);
         }
         if (Config.shouldLoadImage()) {
-            Picasso.with(this).load(data.getAuthorAvatarUrl()).placeholder(R.drawable.default_avatar).resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen).transform(new RoundTransformation(Color.parseColor("#00000000"), 0, true)).into(avatar);
+            Picasso.with(this).load(data.getAuthor().getAvatar()).placeholder(R.drawable.default_avatar).resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen).transform(new RoundTransformation(Color.parseColor("#00000000"), 0, true)).into(avatar);
         } else {
             avatar.setImageResource(R.drawable.default_avatar);
         }
@@ -426,7 +426,7 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
                 floatingActionsMenu.setVisibility(View.VISIBLE);
                 loadingView.onLoadSuccess();
                 data = result.result;
-                if (UserAPI.getUserID().equals(data.getAuthorID())) {
+                if (UserAPI.getUserID().equals(data.getAuthor().getId())) {
                     deleteButton.setVisibility(View.VISIBLE);
                 } else {
                     deleteButton.setVisibility(View.GONE);

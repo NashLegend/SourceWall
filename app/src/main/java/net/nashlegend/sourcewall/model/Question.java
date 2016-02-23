@@ -1,5 +1,6 @@
 package net.nashlegend.sourcewall.model;
 
+import android.os.Parcel;
 import android.text.TextUtils;
 
 import net.nashlegend.sourcewall.request.api.APIBase;
@@ -20,9 +21,7 @@ public class Question extends AceModel {
     private String id = "";
     private String title = "";
     private String url = "";
-    private String authorAvatarUrl = "";
-    private String author = "";
-    private String authorID = "";
+    private Author author;
     private String tag = "";
     private String content = "";
     private String date = "";
@@ -38,14 +37,12 @@ public class Question extends AceModel {
     private static String prefix = "<div class=\"ZoomBox\"><div class=\"content-zoom ZoomIn\">";
     private static String suffix = "</div></div>";
 
-    public static Question fromJson(JSONObject result)throws Exception{
+    public static Question fromJson(JSONObject result) throws Exception {
         Question question = new Question();
-        question.setAnswerable(result.optBoolean("is_answerable",true));//难道意味着已经回答了
+        question.setAnswerable(result.optBoolean("is_answerable", true));//难道意味着已经回答了
         question.setAnswerNum(result.optInt("answers_count"));
         question.setCommentNum(result.optInt("replies_count"));
-        question.setAuthor(result.getJSONObject("author").getString("nickname"));
-        question.setAuthorID(result.getJSONObject("author").getString("url").replaceAll("\\D+", ""));
-        question.setAuthorAvatarUrl(result.getJSONObject("author").getJSONObject("avatar").getString("large").replaceAll("\\?.*$", ""));
+        question.setAuthor(Author.fromJson(result.optJSONObject("author")));
         question.setContent(result.optString("annotation_html").replaceAll("<img .*?/>", prefix + "$0" + suffix).replaceAll("style=\"max-width: \\d+px\"", "style=\"max-width: " + maxImageWidth + "px\""));
         question.setDate(APIBase.parseDate(result.optString("date_created")));
         question.setFollowNum(result.optInt("followers_count"));
@@ -57,7 +54,7 @@ public class Question extends AceModel {
         return question;
     }
 
-    public static ArrayList<Question> fromHtmlList(String html)throws Exception{
+    public static ArrayList<Question> fromHtmlList(String html) throws Exception {
         ArrayList<Question> questions = new ArrayList<>();
         Document doc = Jsoup.parse(html);
         Elements elements = doc.getElementsByClass("ask-list");
@@ -117,28 +114,15 @@ public class Question extends AceModel {
         this.url = url;
     }
 
-    public String getAuthorAvatarUrl() {
-        return authorAvatarUrl;
-    }
-
-    public void setAuthorAvatarUrl(String authorAvatarUrl) {
-        this.authorAvatarUrl = authorAvatarUrl;
-    }
-
-    public String getAuthor() {
+    public Author getAuthor() {
+        if (author == null) {
+            author = new Author();
+        }
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(Author author) {
         this.author = author;
-    }
-
-    public String getAuthorID() {
-        return authorID;
-    }
-
-    public void setAuthorID(String authorID) {
-        this.authorID = authorID;
     }
 
     public String getTag() {
@@ -223,4 +207,57 @@ public class Question extends AceModel {
     public void setFeatured(boolean featured) {
         this.featured = featured;
     }
+
+    public Question() {
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.id);
+        dest.writeString(this.title);
+        dest.writeString(this.url);
+        dest.writeParcelable(this.author, 0);
+        dest.writeString(this.tag);
+        dest.writeString(this.content);
+        dest.writeString(this.date);
+        dest.writeString(this.summary);
+        dest.writeByte(answerable ? (byte) 1 : (byte) 0);
+        dest.writeByte(featured ? (byte) 1 : (byte) 0);
+        dest.writeInt(this.commentNum);
+        dest.writeInt(this.recommendNum);
+        dest.writeInt(this.followNum);
+        dest.writeInt(this.answerNum);
+    }
+
+    protected Question(Parcel in) {
+        this.id = in.readString();
+        this.title = in.readString();
+        this.url = in.readString();
+        this.author = in.readParcelable(Author.class.getClassLoader());
+        this.tag = in.readString();
+        this.content = in.readString();
+        this.date = in.readString();
+        this.summary = in.readString();
+        this.answerable = in.readByte() != 0;
+        this.featured = in.readByte() != 0;
+        this.commentNum = in.readInt();
+        this.recommendNum = in.readInt();
+        this.followNum = in.readInt();
+        this.answerNum = in.readInt();
+    }
+
+    public static final Creator<Question> CREATOR = new Creator<Question>() {
+        public Question createFromParcel(Parcel source) {
+            return new Question(source);
+        }
+
+        public Question[] newArray(int size) {
+            return new Question[size];
+        }
+    };
 }

@@ -1,5 +1,7 @@
 package net.nashlegend.sourcewall.model;
 
+import android.os.Parcel;
+
 /**
  * Created by NashLegend on 2014/12/23 0023
  */
@@ -78,4 +80,44 @@ public class UserInfo extends AceModel {
         this.url = url;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.id);
+        dest.writeString(this.ukey);
+        dest.writeString(this.title);
+        dest.writeString(this.nickname);
+        dest.writeString(this.introduction);
+        dest.writeString(this.avatar);
+        dest.writeString(this.date_created);
+        dest.writeString(this.url);
+    }
+
+    public UserInfo() {
+    }
+
+    protected UserInfo(Parcel in) {
+        this.id = in.readString();
+        this.ukey = in.readString();
+        this.title = in.readString();
+        this.nickname = in.readString();
+        this.introduction = in.readString();
+        this.avatar = in.readString();
+        this.date_created = in.readString();
+        this.url = in.readString();
+    }
+
+    public static final Creator<UserInfo> CREATOR = new Creator<UserInfo>() {
+        public UserInfo createFromParcel(Parcel source) {
+            return new UserInfo(source);
+        }
+
+        public UserInfo[] newArray(int size) {
+            return new UserInfo[size];
+        }
+    };
 }

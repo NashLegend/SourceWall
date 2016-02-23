@@ -114,8 +114,8 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         if (getIntent().hasExtra(Consts.Extra_Answer)) {
             fromHost = true;
             loadingView.setVisibility(View.GONE);
-            answer = (QuestionAnswer) getIntent().getSerializableExtra(Consts.Extra_Answer);
-            question = (Question) getIntent().getSerializableExtra(Consts.Extra_Question);
+            answer = getIntent().getParcelableExtra(Consts.Extra_Answer);
+            question = getIntent().getParcelableExtra(Consts.Extra_Question);
             initData();
         } else {
             //来自其他地方的跳转
@@ -146,8 +146,8 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
     private void initData() {
         questionText.setText(question.getTitle());
         supportText.setText(answer.getUpvoteNum() + "");
-        authorName.setText(answer.getAuthor());
-        authorTitle.setText(answer.getAuthorTitle());
+        authorName.setText(answer.getAuthor().getName());
+        authorTitle.setText(answer.getAuthor().getTitle());
         if (answer.isHasBuried()) {
             notAnButton.setIcon(R.drawable.dustbin);
         } else {
@@ -159,7 +159,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
             thankButton.setIcon(R.drawable.heart_outline);
         }
         if (Config.shouldLoadImage()) {
-            Picasso.with(this).load(answer.getAuthorAvatarUrl()).placeholder(R.drawable.default_avatar).resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen).transform(new RoundTransformation(Color.parseColor("#00000000"), 0, true)).into(avatar);
+            Picasso.with(this).load(answer.getAuthor().getAvatar()).placeholder(R.drawable.default_avatar).resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen).transform(new RoundTransformation(Color.parseColor("#00000000"), 0, true)).into(avatar);
         } else {
             avatar.setImageResource(R.drawable.default_avatar);
         }

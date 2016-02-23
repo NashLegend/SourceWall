@@ -86,7 +86,7 @@ public class ArticleView extends AceView<Article> {
         if (article == null) {
             article = model;
             titleView.setText(article.getTitle());
-            authorView.setText(article.getAuthor());
+            authorView.setText(article.getAuthor().getName());
             dateView.setText(article.getDate());
             String html = StyleChecker.getArticleHtml(article.getContent());
             contentView.setPrimarySource(article.getContent());

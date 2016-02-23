@@ -3,6 +3,7 @@ package net.nashlegend.sourcewall.request.api;
 import android.text.TextUtils;
 
 import net.nashlegend.sourcewall.model.AceModel;
+import net.nashlegend.sourcewall.model.Author;
 import net.nashlegend.sourcewall.model.PrepareData;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.model.QuestionAnswer;
@@ -721,9 +722,7 @@ public class QuestionAPI extends APIBase {
             JSONObject jsonObject = getUniversalJsonObject(result, resultObject);
             if (jsonObject != null) {
                 UComment uComment = new UComment();
-                uComment.setAuthor(jsonObject.getJSONObject("author").getString("nickname"));
-                uComment.setAuthorID(jsonObject.getJSONObject("author").getString("url").replaceAll("\\D+", ""));
-                uComment.setAuthorAvatarUrl(jsonObject.getJSONObject("author").getJSONObject("avatar").getString("large").replaceAll("\\?.*$", ""));
+                uComment.setAuthor(Author.fromJson(jsonObject.optJSONObject("author")));
                 uComment.setContent(jsonObject.optString("text"));
                 uComment.setDate(parseDate(jsonObject.optString("date_created")));
                 uComment.setID(jsonObject.optString("id"));
@@ -786,9 +785,7 @@ public class QuestionAPI extends APIBase {
             JSONObject jsonObject = getUniversalJsonObject(result, resultObject);
             if (jsonObject != null) {
                 UComment uComment = new UComment();
-                uComment.setAuthor(jsonObject.getJSONObject("author").getString("nickname"));
-                uComment.setAuthorID(jsonObject.getJSONObject("author").getString("url").replaceAll("\\D+", ""));
-                uComment.setAuthorAvatarUrl(jsonObject.getJSONObject("author").getJSONObject("avatar").getString("large").replaceAll("\\?.*$", ""));
+                uComment.setAuthor(Author.fromJson(jsonObject.optJSONObject("author")));
                 uComment.setContent(jsonObject.optString("text"));
                 uComment.setDate(parseDate(jsonObject.optString("date_created")));
                 uComment.setID(jsonObject.optString("id"));

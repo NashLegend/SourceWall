@@ -1,5 +1,6 @@
 package net.nashlegend.sourcewall.model;
 
+import android.os.Parcel;
 import android.text.TextUtils;
 
 import net.nashlegend.sourcewall.request.api.APIBase;
@@ -19,10 +20,7 @@ public class Post extends AceModel {
     private String title = "";
     private String url = "";
     private String titleImageUrl = "";
-    private boolean authorExists = true;
-    private String authorAvatarUrl = "";
-    private String author = "";
-    private String authorID = "";
+    private Author author;
     private String groupName = "";
     private String groupID = "";
     private String tag = "";
@@ -45,18 +43,13 @@ public class Post extends AceModel {
         //int likeNum = getJsonInt(postResult, "");//取不到like数量
         int recommendNum = postResult.optInt("recommends_count");
         int reply_num = postResult.optInt("replies_count");
-        JSONObject authorObject = JsonHandler.getJsonObject(postResult, "author");
-        String authorAvatarUrl = JsonHandler.getJsonObject(authorObject, "avatar").getString("large").replaceAll("\\?.*$", "");
-        String author = authorObject.optString("nickname");
-        String authorID = authorObject.optString("url").replaceAll("\\D+", "");
+        Author author = Author.fromJson(postResult.optJSONObject("author"));
         JSONObject groupObject = JsonHandler.getJsonObject(postResult, "group");
         String groupName = groupObject.optString("name");
         String groupID = postResult.optString("group_id");
         detail.setGroupID(groupID);
         detail.setGroupName(groupName);
         detail.setAuthor(author);
-        detail.setAuthorAvatarUrl(authorAvatarUrl);
-        detail.setAuthorID(authorID);
         detail.setId(postID);
         detail.setTitle(title);
         detail.setDate(APIBase.parseDate(date));
@@ -77,7 +70,6 @@ public class Post extends AceModel {
                 String postTitle = link.getElementsByTag("h4").get(0).text();
                 String postUrl = link.attr("href");
                 String postImageUrl = "";
-                String postAuthor = "";//没有Author名……
                 String postGroup = aPostlist.getElementsByClass("post-author").get(0).text();//没错，post-author是小组名……
                 Elements children = aPostlist.getElementsByClass("post-info-right").get(0).children();
                 int postLike = Integer.valueOf(children.get(0).text().replaceAll("\\D*", ""));
@@ -86,7 +78,6 @@ public class Post extends AceModel {
                 item.setUrl(postUrl);
                 item.setId(postUrl.replaceAll("\\?.*$", "").replaceAll("\\D+", ""));
                 item.setTitleImageUrl(postImageUrl);
-                item.setAuthor(postAuthor);
                 item.setGroupName(postGroup);
                 item.setLikeNum(postLike);
                 item.setReplyNum(postComm);
@@ -130,36 +121,20 @@ public class Post extends AceModel {
         this.url = url;
     }
 
+    public Author getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Author author) {
+        this.author = author;
+    }
+
     public String getTitleImageUrl() {
         return titleImageUrl;
     }
 
     public void setTitleImageUrl(String titleImageUrl) {
         this.titleImageUrl = titleImageUrl;
-    }
-
-    public String getAuthorAvatarUrl() {
-        return authorAvatarUrl;
-    }
-
-    public void setAuthorAvatarUrl(String authorAvatarUrl) {
-        this.authorAvatarUrl = authorAvatarUrl;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public String getAuthorID() {
-        return authorID;
-    }
-
-    public void setAuthorID(String authorID) {
-        this.authorID = authorID;
     }
 
     public String getGroupName() {
@@ -242,14 +217,6 @@ public class Post extends AceModel {
         this.featured = featured;
     }
 
-    public boolean isAuthorExists() {
-        return authorExists;
-    }
-
-    public void setAuthorExists(boolean authorExists) {
-        this.authorExists = authorExists;
-    }
-
     public boolean isDesc() {
         return desc;
     }
@@ -257,4 +224,61 @@ public class Post extends AceModel {
     public void setDesc(boolean desc) {
         this.desc = desc;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.id);
+        dest.writeString(this.title);
+        dest.writeString(this.url);
+        dest.writeString(this.titleImageUrl);
+        dest.writeParcelable(this.author, 0);
+        dest.writeString(this.groupName);
+        dest.writeString(this.groupID);
+        dest.writeString(this.tag);
+        dest.writeInt(this.likeNum);
+        dest.writeInt(this.replyNum);
+        dest.writeString(this.content);
+        dest.writeString(this.date);
+        dest.writeByte(featured ? (byte) 1 : (byte) 0);
+        dest.writeByte(desc ? (byte) 1 : (byte) 0);
+        dest.writeTypedList(hotComments);
+        dest.writeTypedList(comments);
+    }
+
+    public Post() {
+    }
+
+    protected Post(Parcel in) {
+        this.id = in.readString();
+        this.title = in.readString();
+        this.url = in.readString();
+        this.titleImageUrl = in.readString();
+        this.author = in.readParcelable(Author.class.getClassLoader());
+        this.groupName = in.readString();
+        this.groupID = in.readString();
+        this.tag = in.readString();
+        this.likeNum = in.readInt();
+        this.replyNum = in.readInt();
+        this.content = in.readString();
+        this.date = in.readString();
+        this.featured = in.readByte() != 0;
+        this.desc = in.readByte() != 0;
+        this.hotComments = in.createTypedArrayList(UComment.CREATOR);
+        this.comments = in.createTypedArrayList(UComment.CREATOR);
+    }
+
+    public static final Creator<Post> CREATOR = new Creator<Post>() {
+        public Post createFromParcel(Parcel source) {
+            return new Post(source);
+        }
+
+        public Post[] newArray(int size) {
+            return new Post[size];
+        }
+    };
 }

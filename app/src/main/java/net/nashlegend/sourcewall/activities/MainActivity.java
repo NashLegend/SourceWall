@@ -154,7 +154,7 @@ public class MainActivity extends BaseActivity {
             invalidateOptionsMenu();
         } else {
             Bundle bundle = new Bundle();
-            bundle.putSerializable(Consts.Extra_SubItem, subItem);
+            bundle.putParcelable(Consts.Extra_SubItem, subItem);
             fragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commitAllowingStateLoss();
             currentFragment = fragment;
@@ -171,7 +171,7 @@ public class MainActivity extends BaseActivity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            SubItem subItem = (SubItem) intent.getSerializableExtra(Consts.Extra_SubItem);
+            SubItem subItem = intent.getParcelableExtra(Consts.Extra_SubItem);
             if (subItem == null) {
                 subItem = new SubItem(SubItem.Section_Article, SubItem.Type_Collections, "科学人", "");
             }

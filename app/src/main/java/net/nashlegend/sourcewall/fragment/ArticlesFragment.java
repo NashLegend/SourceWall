@@ -56,7 +56,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
         View view = inflater.inflate(R.layout.fragment_articles, container, false);
         loadingView = (LoadingView) view.findViewById(R.id.article_progress_loading);
         loadingView.setReloadListener(this);
-        subItem = (SubItem) getArguments().getSerializable(Consts.Extra_SubItem);
+        subItem = getArguments().getParcelable(Consts.Extra_SubItem);
         listView = (LListView) view.findViewById(R.id.list_articles);
         adapter = new ArticleAdapter(getActivity());
         listView.setCanPullToRefresh(false);
@@ -84,7 +84,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
 
     @Override
     public void onCreateViewAgain(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        SubItem mSubItem = (SubItem) getArguments().getSerializable(Consts.Extra_SubItem);
+        SubItem mSubItem = getArguments().getParcelable(Consts.Extra_SubItem);
         resetData(mSubItem);
     }
 

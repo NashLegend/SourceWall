@@ -81,13 +81,13 @@ public class PostView extends AceView<Post> {
         if (post == null) {
             post = model;
             titleView.setText(post.getTitle());
-            authorView.setText(post.getAuthor());
+            authorView.setText(post.getAuthor().getName());
             dateView.setText(post.getDate());
             String html = StyleChecker.getPostHtml(post.getContent());
             contentView.setPrimarySource(post.getContent());
             contentView.loadDataWithBaseURL(Consts.Base_Url, html, "text/html", "charset=UTF-8", null);
             if (Config.shouldLoadImage()) {
-                Picasso.with(getContext()).load(post.getAuthorAvatarUrl()).resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen).placeholder(R.drawable.default_avatar).transform(new RoundTransformation(Color.parseColor("#00000000"), 0, true)).into(avatarImage);
+                Picasso.with(getContext()).load(post.getAuthor().getAvatar()).resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen).placeholder(R.drawable.default_avatar).transform(new RoundTransformation(Color.parseColor("#00000000"), 0, true)).into(avatarImage);
             } else {
                 avatarImage.setImageResource(R.drawable.default_avatar);
             }

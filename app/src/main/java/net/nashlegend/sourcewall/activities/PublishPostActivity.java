@@ -93,7 +93,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         insertButton = (ImageButton) findViewById(R.id.btn_insert_img);
         ImageButton linkButton = (ImageButton) findViewById(R.id.btn_link);
         uploadingProgress = findViewById(R.id.prg_uploading_img);
-        subItem = (SubItem) getIntent().getSerializableExtra(Consts.Extra_SubItem);
+        subItem = getIntent().getParcelableExtra(Consts.Extra_SubItem);
         if (subItem != null) {
             if (subItem.getSection() == SubItem.Section_Post) {
                 String group_name = subItem.getName();

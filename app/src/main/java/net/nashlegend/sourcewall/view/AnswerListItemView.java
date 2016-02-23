@@ -57,12 +57,12 @@ public class AnswerListItemView extends AceView<QuestionAnswer> {
     @Override
     public void setData(QuestionAnswer model) {
         answer = model;
-        supportView.setText(answer.getUpvoteNum() + "");
-        authorView.setText(answer.getAuthor());
-        authorTitleView.setText(answer.getAuthorTitle());
+        supportView.setText(String.valueOf(answer.getUpvoteNum()));
+        authorView.setText(answer.getAuthor().getName());
+        authorTitleView.setText(answer.getAuthor().getTitle());
         dateView.setText(answer.getDate_created());
         if (Config.shouldLoadImage()) {
-            Picasso.with(getContext()).load(answer.getAuthorAvatarUrl()).resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen).placeholder(R.drawable.default_avatar).transform(new RoundTransformation(Color.parseColor("#00000000"), 0, true)).into(avatar);
+            Picasso.with(getContext()).load(answer.getAuthor().getAvatar()).resizeDimen(R.dimen.list_standard_comment_avatar_dimen, R.dimen.list_standard_comment_avatar_dimen).placeholder(R.drawable.default_avatar).transform(new RoundTransformation(Color.parseColor("#00000000"), 0, true)).into(avatar);
         } else {
             avatar.setImageResource(R.drawable.default_avatar);
         }

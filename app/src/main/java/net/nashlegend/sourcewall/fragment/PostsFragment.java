@@ -89,7 +89,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     @Override
     public View onCreateLayoutView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_posts, container, false);
-        subItem = (SubItem) getArguments().getSerializable(Consts.Extra_SubItem);
+        subItem = getArguments().getParcelable(Consts.Extra_SubItem);
         headerView = inflater.inflate(R.layout.layout_header_load_pre_page, null, false);
         loadingView = (LoadingView) view.findViewById(R.id.post_progress_loading);
         loadingView.setReloadListener(this);
@@ -239,7 +239,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
 
     @Override
     public void onCreateViewAgain(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        SubItem mSubItem = (SubItem) getArguments().getSerializable(Consts.Extra_SubItem);
+        SubItem mSubItem = getArguments().getParcelable(Consts.Extra_SubItem);
         resetData(mSubItem);
     }
 

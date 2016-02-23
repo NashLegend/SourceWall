@@ -1,9 +1,9 @@
 package net.nashlegend.sourcewall.model;
 
+import android.os.Parcel;
 import android.text.TextUtils;
 
 import net.nashlegend.sourcewall.request.api.APIBase;
-import net.nashlegend.sourcewall.swrequest.JsonHandler;
 
 import org.json.JSONObject;
 
@@ -15,11 +15,7 @@ public class QuestionAnswer extends AceModel {
     private String content = "";
     private String date_created = "";
     private String date_modified = "";
-    private boolean authorExists = true;
-    private String author = "";
-    private String authorAvatarUrl = "";
-    private String authorID = "";
-    private String authorTitle = "";
+    private Author author;
     private String ID = "";
     private String questionID = "";
     private String question = "";
@@ -36,11 +32,11 @@ public class QuestionAnswer extends AceModel {
     private static String prefix = "<div class=\"ZoomBox\"><div class=\"content-zoom ZoomIn\">";
     private static String suffix = "</div></div>";
 
-    public static QuestionAnswer fromJson(JSONObject answerObject)throws Exception{
+    public static QuestionAnswer fromJson(JSONObject answerObject) throws Exception {
         JSONObject questionObject = APIBase.getJsonObject(answerObject, "question");
         String hostTitle = questionObject.optString("question");
         String hostID = questionObject.optString("id");
-        if (TextUtils.isEmpty(hostID)){
+        if (TextUtils.isEmpty(hostID)) {
             hostID = answerObject.optString("question_id");
         }
 
@@ -50,15 +46,7 @@ public class QuestionAnswer extends AceModel {
         boolean current_user_has_buried = answerObject.optBoolean("current_user_has_buried");
         boolean current_user_has_thanked = answerObject.optBoolean("current_user_has_thanked");
         boolean current_user_has_opposed = answerObject.optBoolean("current_user_has_opposed");
-
-        JSONObject authorObject = JsonHandler.getJsonObject(answerObject, "author");
-        String author = authorObject.optString("nickname");
-        String authorTitle = authorObject.optString("title");
-        String authorID = authorObject.optString("url").replaceAll("\\D+", "");
-        boolean is_exists = authorObject.optBoolean("is_exists");
-        JSONObject avatarObject = JsonHandler.getJsonObject(authorObject, "avatar");
-        String avatarUrl = avatarObject.optString("large").replaceAll("\\?.*$", "");
-
+        JSONObject authorObject = answerObject.optJSONObject("author");
         String date_created = APIBase.parseDate(answerObject.optString("date_created"));
         String date_modified = APIBase.parseDate(answerObject.optString("date_modified"));
         int replies_count = answerObject.optInt("replies_count");
@@ -67,15 +55,7 @@ public class QuestionAnswer extends AceModel {
         String content = answerObject.optString("html");
 
         QuestionAnswer answer = new QuestionAnswer();
-        answer.setAuthorExists(is_exists);
-        if (is_exists) {
-            answer.setAuthor(author);
-            answer.setAuthorTitle(authorTitle);
-            answer.setAuthorID(authorID);
-            answer.setAuthorAvatarUrl(avatarUrl);
-        } else {
-            answer.setAuthor("此用户不存在");
-        }
+        answer.setAuthor(Author.fromJson(authorObject));
         answer.setCommentNum(replies_count);
         answer.setContent(content.replaceAll("<img .*?/>", prefix + "$0" + suffix).replaceAll("style=\"max-width: \\d+px\"", "style=\"max-width: " + maxImageWidth + "px\""));
         answer.setDate_created(date_created);
@@ -116,36 +96,15 @@ public class QuestionAnswer extends AceModel {
         this.date_modified = date_modified;
     }
 
-    public String getAuthor() {
+    public Author getAuthor() {
+        if (author == null) {
+            author = new Author();
+        }
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(Author author) {
         this.author = author;
-    }
-
-    public String getAuthorAvatarUrl() {
-        return authorAvatarUrl;
-    }
-
-    public void setAuthorAvatarUrl(String authorAvatarUrl) {
-        this.authorAvatarUrl = authorAvatarUrl;
-    }
-
-    public String getAuthorID() {
-        return authorID;
-    }
-
-    public void setAuthorID(String authorID) {
-        this.authorID = authorID;
-    }
-
-    public String getAuthorTitle() {
-        return authorTitle;
-    }
-
-    public void setAuthorTitle(String authorTitle) {
-        this.authorTitle = authorTitle;
     }
 
     public String getID() {
@@ -220,14 +179,6 @@ public class QuestionAnswer extends AceModel {
         this.isContentComplex = isContentComplex;
     }
 
-    public boolean isAuthorExists() {
-        return authorExists;
-    }
-
-    public void setAuthorExists(boolean authorExists) {
-        this.authorExists = authorExists;
-    }
-
     public int getDownvoteNum() {
         return downvoteNum;
     }
@@ -243,4 +194,59 @@ public class QuestionAnswer extends AceModel {
     public void setQuestion(String question) {
         this.question = question;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.content);
+        dest.writeString(this.date_created);
+        dest.writeString(this.date_modified);
+        dest.writeParcelable(this.author, 0);
+        dest.writeString(this.ID);
+        dest.writeString(this.questionID);
+        dest.writeString(this.question);
+        dest.writeInt(this.commentNum);
+        dest.writeInt(this.upvoteNum);
+        dest.writeInt(this.downvoteNum);
+        dest.writeByte(hasUpVoted ? (byte) 1 : (byte) 0);
+        dest.writeByte(hasDownVoted ? (byte) 1 : (byte) 0);
+        dest.writeByte(hasBuried ? (byte) 1 : (byte) 0);
+        dest.writeByte(hasThanked ? (byte) 1 : (byte) 0);
+        dest.writeByte(isContentComplex ? (byte) 1 : (byte) 0);
+    }
+
+    public QuestionAnswer() {
+    }
+
+    protected QuestionAnswer(Parcel in) {
+        this.content = in.readString();
+        this.date_created = in.readString();
+        this.date_modified = in.readString();
+        this.author = in.readParcelable(Author.class.getClassLoader());
+        this.ID = in.readString();
+        this.questionID = in.readString();
+        this.question = in.readString();
+        this.commentNum = in.readInt();
+        this.upvoteNum = in.readInt();
+        this.downvoteNum = in.readInt();
+        this.hasUpVoted = in.readByte() != 0;
+        this.hasDownVoted = in.readByte() != 0;
+        this.hasBuried = in.readByte() != 0;
+        this.hasThanked = in.readByte() != 0;
+        this.isContentComplex = in.readByte() != 0;
+    }
+
+    public static final Creator<QuestionAnswer> CREATOR = new Creator<QuestionAnswer>() {
+        public QuestionAnswer createFromParcel(Parcel source) {
+            return new QuestionAnswer(source);
+        }
+
+        public QuestionAnswer[] newArray(int size) {
+            return new QuestionAnswer[size];
+        }
+    };
 }

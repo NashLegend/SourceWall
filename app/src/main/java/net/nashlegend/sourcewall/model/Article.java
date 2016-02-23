@@ -1,5 +1,6 @@
 package net.nashlegend.sourcewall.model;
 
+import android.os.Parcel;
 import android.text.TextUtils;
 
 import net.nashlegend.sourcewall.request.api.APIBase;
@@ -21,9 +22,7 @@ public class Article extends AceModel {
     private String title = "";
     private String url = "";
     private String imageUrl = "";
-    private String author = "";
-    private String authorID = "";
-    private String authorAvatarUrl = "";
+    private Author author;
     private String subjectName = "";
     private String subjectKey = "";
     private String date = "";
@@ -39,9 +38,7 @@ public class Article extends AceModel {
         Article article = new Article();
         article.setId(jo.optString("id"));
         article.setCommentNum(jo.optInt("replies_count"));
-        article.setAuthor(APIBase.getJsonObject(jo, "author").optString("nickname"));
-        article.setAuthorID(APIBase.getJsonObject(jo, "author").optString("url").replaceAll("\\D+", ""));
-        article.setAuthorAvatarUrl(jo.getJSONObject("author").getJSONObject("avatar").optString("large").replaceAll("\\?.*$", ""));
+        article.setAuthor(Author.fromJson(jo.optJSONObject("author")));
         article.setDate(APIBase.parseDate(jo.optString("date_published")));
         article.setSubjectName(APIBase.getJsonObject(jo, "subject").optString("name"));
         article.setSubjectKey(APIBase.getJsonObject(jo, "subject").optString("key"));
@@ -70,10 +67,12 @@ public class Article extends AceModel {
             Element info = infos.get(0);
             Elements infoSubs = info.getElementsByTag("a");//记得见过不是a的
             if (infoSubs != null && infoSubs.size() > 0) {
-                //                    String authorId = info.getElementsByTag("a").attr("href").replaceAll("\\D+", "");
-                String author = info.getElementsByTag("a").text();
+                Author author = new Author();
+                author.setName(info.getElementsByTag("a").text());
+                //href有可能为空且id在article里面没有什么用，所以不解析了
+                //String authorId = info.getElementsByTag("a").attr("href").replaceAll("\\D+", "");
+                //article.setAuthorID(authorId);
                 article.setAuthor(author);
-                //                    article.setAuthorID(authorId);
             }
             Elements meta = info.getElementsByTag("meta");
             if (meta != null && meta.size() > 0) {
@@ -81,8 +80,8 @@ public class Article extends AceModel {
                 article.setDate(date);
             }
         }
-        //            String num = doc.select(".cmts-title").select(".cmts-hide").get(0).getElementsByClass("gfl").get(0).text().replaceAll("\\D+", "");
-        //            article.setCommentNum(Integer.valueOf(num));
+        // String num = doc.select(".cmts-title").select(".cmts-hide").get(0).getElementsByClass("gfl").get(0).text().replaceAll("\\D+", "");
+        // article.setCommentNum(Integer.valueOf(num));
         article.setTitle(doc.getElementById("articleTitle").text());
         //            article.setLikeNum(likeNum);
         return article;
@@ -126,20 +125,15 @@ public class Article extends AceModel {
         this.imageUrl = imageUrl;
     }
 
-    public String getAuthor() {
+    public Author getAuthor() {
+        if (author == null) {
+            author = new Author();
+        }
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(Author author) {
         this.author = author;
-    }
-
-    public String getAuthorID() {
-        return authorID;
-    }
-
-    public void setAuthorID(String authorID) {
-        this.authorID = authorID;
     }
 
     public String getSubjectName() {
@@ -209,14 +203,6 @@ public class Article extends AceModel {
         this.comments = comments;
     }
 
-    public String getAuthorAvatarUrl() {
-        return authorAvatarUrl;
-    }
-
-    public void setAuthorAvatarUrl(String authorAvatarUrl) {
-        this.authorAvatarUrl = authorAvatarUrl;
-    }
-
     public int getLikeNum() {
         return likeNum;
     }
@@ -232,4 +218,59 @@ public class Article extends AceModel {
     public void setDesc(boolean desc) {
         this.desc = desc;
     }
+
+    public Article() {
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.id);
+        dest.writeString(this.title);
+        dest.writeString(this.url);
+        dest.writeString(this.imageUrl);
+        dest.writeParcelable(this.author, 0);
+        dest.writeString(this.subjectName);
+        dest.writeString(this.subjectKey);
+        dest.writeString(this.date);
+        dest.writeInt(this.commentNum);
+        dest.writeInt(this.likeNum);
+        dest.writeString(this.summary);
+        dest.writeString(this.content);
+        dest.writeTypedList(hotComments);
+        dest.writeTypedList(comments);
+        dest.writeByte(desc ? (byte) 1 : (byte) 0);
+    }
+
+    protected Article(Parcel in) {
+        this.id = in.readString();
+        this.title = in.readString();
+        this.url = in.readString();
+        this.imageUrl = in.readString();
+        this.author = in.readParcelable(Author.class.getClassLoader());
+        this.subjectName = in.readString();
+        this.subjectKey = in.readString();
+        this.date = in.readString();
+        this.commentNum = in.readInt();
+        this.likeNum = in.readInt();
+        this.summary = in.readString();
+        this.content = in.readString();
+        this.hotComments = in.createTypedArrayList(UComment.CREATOR);
+        this.comments = in.createTypedArrayList(UComment.CREATOR);
+        this.desc = in.readByte() != 0;
+    }
+
+    public static final Creator<Article> CREATOR = new Creator<Article>() {
+        public Article createFromParcel(Parcel source) {
+            return new Article(source);
+        }
+
+        public Article[] newArray(int size) {
+            return new Article[size];
+        }
+    };
 }

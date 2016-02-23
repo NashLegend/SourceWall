@@ -1,7 +1,8 @@
 package net.nashlegend.sourcewall.model;
 
+import android.os.Parcel;
+
 import net.nashlegend.sourcewall.request.api.APIBase;
-import net.nashlegend.sourcewall.swrequest.JsonHandler;
 
 import org.json.JSONObject;
 
@@ -12,12 +13,8 @@ public class UComment extends AceModel {
 
     private String content = "";
     private String date = "";
-    private String author = "";
-    private boolean authorExists = true;
-    private String authorAvatarUrl = "";
-    private String authorTitle = "";
+    private Author author;
     private String floor = "";// 楼层
-    private String authorID = "";
     private String ID = "";
     private String hostID = "";
     private String hostTitle = "";
@@ -33,21 +30,7 @@ public class UComment extends AceModel {
         String date = APIBase.parseDate(replyObject.optString("date_created"));
         int likeNum = replyObject.optInt("likings_count");
         String content = replyObject.optString("html");
-        JSONObject authorObject = APIBase.getJsonObject(replyObject, "author");
-        boolean is_exists = authorObject.optBoolean("is_exists");
-        if (is_exists) {
-            String author = authorObject.optString("nickname");
-            String authorID = authorObject.optString("url").replaceAll("\\D+", "");
-            String authorTitle = authorObject.optString("title");
-            JSONObject avatarObject = APIBase.getJsonObject(authorObject, "avatar");
-            String avatarUrl = avatarObject.optString("large").replaceAll("\\?.*$", "");
-            comment.setAuthor(author);
-            comment.setAuthorTitle(authorTitle);
-            comment.setAuthorID(authorID);
-            comment.setAuthorAvatarUrl(avatarUrl);
-        } else {
-            comment.setAuthor("此用户不存在");
-        }
+        comment.setAuthor(Author.fromJson(replyObject.optJSONObject("author")));
         comment.setHostID(article_id);
         comment.setHostTitle(article_title);
         comment.setDate(date);
@@ -69,24 +52,7 @@ public class UComment extends AceModel {
         String date = APIBase.parseDate(replyObject.getString("date_created"));
         int likeNum = replyObject.optInt("likings_count");
         String content = replyObject.optString("html");
-
-        JSONObject authorObject = APIBase.getJsonObject(replyObject, "author");
-        boolean is_exists = authorObject.optBoolean("is_exists");
-        if (is_exists) {
-            String author = authorObject.optString("nickname");
-            String authorID = authorObject.optString("url").replaceAll("\\D+", "");
-            String authorTitle = authorObject.optString("title");
-            JSONObject avatarObject = APIBase.getJsonObject(authorObject, "avatar");
-            String avatarUrl = avatarObject.optString("large").replaceAll("\\?.*$", "");
-
-            comment.setAuthor(author);
-            comment.setAuthorTitle(authorTitle);
-            comment.setAuthorID(authorID);
-            comment.setAuthorAvatarUrl(avatarUrl);
-        } else {
-            comment.setAuthor("此用户不存在");
-        }
-
+        comment.setAuthor(Author.fromJson(replyObject.optJSONObject("author")));
         comment.setHostTitle(hostTitle);
         comment.setHostID(hostID);
         comment.setHasLiked(hasLiked);
@@ -98,36 +64,19 @@ public class UComment extends AceModel {
         return comment;
     }
 
-    public static UComment fromAnswerJson(JSONObject jsonObject)throws Exception{
+    public static UComment fromAnswerJson(JSONObject jsonObject) throws Exception {
         UComment comment = new UComment();
-        JSONObject authorObject = JsonHandler.getJsonObject(jsonObject, "author");
-        boolean exists = authorObject.optBoolean("is_exists");
-        comment.setAuthorExists(exists);
-        if (exists) {
-            comment.setAuthor(authorObject.optString("nickname"));
-            comment.setAuthorID(authorObject.optString("url").replaceAll("\\D+", ""));
-            comment.setAuthorAvatarUrl(JsonHandler.getJsonObject(authorObject, "avatar").getString("large").replaceAll("\\?.*$", ""));
-        } else {
-            comment.setAuthor("此用户不存在");
-        }
+        comment.setAuthor(Author.fromJson(jsonObject.optJSONObject("author")));
         comment.setContent(jsonObject.optString("text"));
         comment.setDate(APIBase.parseDate(jsonObject.optString("date_created")));
         comment.setID(jsonObject.optString("id"));
         comment.setHostID(jsonObject.optString("answer_id"));
         return comment;
     }
-    public static UComment fromQuestionJson(JSONObject jsonObject)throws Exception{
+
+    public static UComment fromQuestionJson(JSONObject jsonObject) throws Exception {
         UComment comment = new UComment();
-        JSONObject authorObject = JsonHandler.getJsonObject(jsonObject, "author");
-        boolean exists = authorObject.optBoolean("is_exists");
-        comment.setAuthorExists(exists);
-        if (exists) {
-            comment.setAuthor(authorObject.optString("nickname"));
-            comment.setAuthorID(authorObject.optString("url").replaceAll("\\D+", ""));
-            comment.setAuthorAvatarUrl(JsonHandler.getJsonObject(authorObject, "avatar").getString("large").replaceAll("\\?.*$", ""));
-        } else {
-            comment.setAuthor("此用户不存在");
-        }
+        comment.setAuthor(Author.fromJson(jsonObject.optJSONObject("author")));
         comment.setContent(jsonObject.optString("text"));
         comment.setDate(APIBase.parseDate(jsonObject.optString("date_created")));
         comment.setID(jsonObject.optString("id"));
@@ -151,28 +100,15 @@ public class UComment extends AceModel {
         this.date = date;
     }
 
-    public String getAuthor() {
+    public Author getAuthor() {
+        if (author == null) {
+            author = new Author();
+        }
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(Author author) {
         this.author = author;
-    }
-
-    public String getAuthorAvatarUrl() {
-        return authorAvatarUrl;
-    }
-
-    public void setAuthorAvatarUrl(String authorAvatarUrl) {
-        this.authorAvatarUrl = authorAvatarUrl;
-    }
-
-    public String getAuthorTitle() {
-        return authorTitle;
-    }
-
-    public void setAuthorTitle(String authorTitle) {
-        this.authorTitle = authorTitle;
     }
 
     public String getFloor() {
@@ -181,14 +117,6 @@ public class UComment extends AceModel {
 
     public void setFloor(String floor) {
         this.floor = floor;
-    }
-
-    public String getAuthorID() {
-        return authorID;
-    }
-
-    public void setAuthorID(String authorID) {
-        this.authorID = authorID;
     }
 
     public String getID() {
@@ -223,14 +151,6 @@ public class UComment extends AceModel {
         this.hasLiked = hasLiked;
     }
 
-    public boolean isAuthorExists() {
-        return authorExists;
-    }
-
-    public void setAuthorExists(boolean authorExists) {
-        this.authorExists = authorExists;
-    }
-
     public String getHostTitle() {
         return hostTitle;
     }
@@ -238,4 +158,47 @@ public class UComment extends AceModel {
     public void setHostTitle(String hostTitle) {
         this.hostTitle = hostTitle;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.content);
+        dest.writeString(this.date);
+        dest.writeParcelable(this.author, 0);
+        dest.writeString(this.floor);
+        dest.writeString(this.ID);
+        dest.writeString(this.hostID);
+        dest.writeString(this.hostTitle);
+        dest.writeInt(this.likeNum);
+        dest.writeByte(hasLiked ? (byte) 1 : (byte) 0);
+    }
+
+    public UComment() {
+    }
+
+    protected UComment(Parcel in) {
+        this.content = in.readString();
+        this.date = in.readString();
+        this.author = in.readParcelable(Author.class.getClassLoader());
+        this.floor = in.readString();
+        this.ID = in.readString();
+        this.hostID = in.readString();
+        this.hostTitle = in.readString();
+        this.likeNum = in.readInt();
+        this.hasLiked = in.readByte() != 0;
+    }
+
+    public static final Creator<UComment> CREATOR = new Creator<UComment>() {
+        public UComment createFromParcel(Parcel source) {
+            return new UComment(source);
+        }
+
+        public UComment[] newArray(int size) {
+            return new UComment[size];
+        }
+    };
 }

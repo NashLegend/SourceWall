@@ -1,5 +1,7 @@
 package net.nashlegend.sourcewall.model;
 
+import android.os.Parcel;
+
 /**
  * Created by NashLegend on 2015/2/2 0002
  * 站内信
@@ -92,4 +94,47 @@ public class Message extends AceModel {
     public void setUkey(String ukey) {
         this.ukey = ukey;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.id);
+        dest.writeString(this.content);
+        dest.writeString(this.direction);
+        dest.writeByte(is_read ? (byte) 1 : (byte) 0);
+        dest.writeString(this.dateCreated);
+        dest.writeString(this.ukey);
+        dest.writeString(this.another_ukey);
+        dest.writeInt(this.unread_count);
+        dest.writeInt(this.total);
+    }
+
+    public Message() {
+    }
+
+    protected Message(Parcel in) {
+        this.id = in.readString();
+        this.content = in.readString();
+        this.direction = in.readString();
+        this.is_read = in.readByte() != 0;
+        this.dateCreated = in.readString();
+        this.ukey = in.readString();
+        this.another_ukey = in.readString();
+        this.unread_count = in.readInt();
+        this.total = in.readInt();
+    }
+
+    public static final Creator<Message> CREATOR = new Creator<Message>() {
+        public Message createFromParcel(Parcel source) {
+            return new Message(source);
+        }
+
+        public Message[] newArray(int size) {
+            return new Message[size];
+        }
+    };
 }

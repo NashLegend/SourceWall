@@ -1,5 +1,7 @@
 package net.nashlegend.sourcewall.swrequest;
 
+import net.nashlegend.sourcewall.request.api.UserAPI;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,34 +13,6 @@ import java.net.SocketTimeoutException;
  * Created by NashLegend on 2015/9/23 0023.
  */
 public class JsonHandler {
-
-    public static int getJsonInt(JSONObject jsonObject, String key) throws JSONException {
-        if ((jsonObject.has(key)) && (!jsonObject.isNull(key))) {
-            return jsonObject.getInt(key);
-        } else {
-            return 0;
-        }
-    }
-
-    public static long getJsonLong(JSONObject jsonObject, String key) throws JSONException {
-        if ((jsonObject.has(key)) && (!jsonObject.isNull(key))) {
-            return jsonObject.getLong(key);
-        } else {
-            return 0L;
-        }
-    }
-
-    public static boolean getJsonBoolean(JSONObject jsonObject, String key) throws JSONException {
-        return (jsonObject.has(key)) && (!jsonObject.isNull(key)) && jsonObject.getBoolean(key);
-    }
-
-    public static String getJsonString(JSONObject jsonObject, String key) throws JSONException {
-        if ((jsonObject.has(key)) && (!jsonObject.isNull(key))) {
-            return jsonObject.getString(key);
-        } else {
-            return "";
-        }
-    }
 
     public static JSONObject getJsonObject(JSONObject jsonObject, String key) throws JSONException {
         if ((jsonObject.has(key)) && (!jsonObject.isNull(key))) {
@@ -66,7 +40,7 @@ public class JsonHandler {
      */
     public static JSONObject getUniversalJsonObject(String json, ResponseObject responseObject) throws JSONException {
         JSONObject object = new JSONObject(json);
-        if (getJsonBoolean(object, "ok")) {
+        if (object.optBoolean("ok")) {
             responseObject.ok = true;
             return getJsonObject(object, "result");
         } else {
@@ -85,7 +59,7 @@ public class JsonHandler {
      */
     public static JSONArray getUniversalJsonArray(String json, ResponseObject responseObject) throws JSONException {
         JSONObject object = new JSONObject(json);
-        if (getJsonBoolean(object, "ok")) {
+        if (object.optBoolean("ok")) {
             responseObject.ok = true;
             return getJsonArray(object, "result");
         } else {
@@ -104,7 +78,7 @@ public class JsonHandler {
      */
     public static boolean getUniversalJsonSimpleBoolean(String json, ResponseObject responseObject) throws JSONException {
         JSONObject object = new JSONObject(json);
-        if (getJsonBoolean(object, "ok")) {
+        if (object.optBoolean("ok")) {
             responseObject.ok = true;
             return true;
         } else {
@@ -126,7 +100,7 @@ public class JsonHandler {
     public static String getUniversalJsonSimpleString(String json, ResponseObject
             responseObject) throws JSONException {
         JSONObject object = new JSONObject(json);
-        if (getJsonBoolean(object, "ok")) {
+        if (object.optBoolean("ok")) {
             responseObject.ok = true;
             return object.getString("content");
         } else {
@@ -145,13 +119,12 @@ public class JsonHandler {
      */
     public static void handleBadJson(JSONObject object, ResponseObject responseObject) throws JSONException {
         responseObject.ok = false;
-        int error_code = getJsonInt(object, "error_code");
-        responseObject.message = getJsonString(object, "error");
+        int error_code = object.optInt("error_code");
+        responseObject.message = object.optString("error");
         switch (error_code) {
             case 200004:
                 responseObject.code = ResponseCode.CODE_TOKEN_INVALID;
-                // TODO: 16/1/28
-//                UserAPI.clearMyInfo();
+                UserAPI.clearMyInfo();
                 break;
             case 240004:
                 responseObject.code = ResponseCode.CODE_ALREADY_LIKED;

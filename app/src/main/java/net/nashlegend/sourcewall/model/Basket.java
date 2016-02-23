@@ -1,9 +1,23 @@
 package net.nashlegend.sourcewall.model;
 
+import android.os.Parcel;
+
 /**
  * Created by NashLegend on 2014/12/2 0002
  */
 public class Basket extends AceModel {
+    private String category_id = "";
+    private String category_name = "";
+    private String id = "";
+    private String name = "";
+    private String introduction = "";
+    private int links_count = 0;
+    private boolean hasFavored = false;
+    private boolean isFavoring = false;
+
+    public Basket() {
+    }
+
     public String getCategory_id() {
         return category_id;
     }
@@ -52,15 +66,6 @@ public class Basket extends AceModel {
         this.links_count = links_count;
     }
 
-    private String category_id = "";
-    private String category_name = "";
-    private String id = "";
-    private String name = "";
-    private String introduction = "";
-    private int links_count = 0;
-    private boolean hasFavored = false;
-    private boolean isFavoring = false;
-
     public boolean isHasFavored() {
         return hasFavored;
     }
@@ -76,4 +81,42 @@ public class Basket extends AceModel {
     public void setFavoring(boolean isFavoring) {
         this.isFavoring = isFavoring;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.category_id);
+        dest.writeString(this.category_name);
+        dest.writeString(this.id);
+        dest.writeString(this.name);
+        dest.writeString(this.introduction);
+        dest.writeInt(this.links_count);
+        dest.writeByte(hasFavored ? (byte) 1 : (byte) 0);
+        dest.writeByte(isFavoring ? (byte) 1 : (byte) 0);
+    }
+
+    protected Basket(Parcel in) {
+        this.category_id = in.readString();
+        this.category_name = in.readString();
+        this.id = in.readString();
+        this.name = in.readString();
+        this.introduction = in.readString();
+        this.links_count = in.readInt();
+        this.hasFavored = in.readByte() != 0;
+        this.isFavoring = in.readByte() != 0;
+    }
+
+    public static final Creator<Basket> CREATOR = new Creator<Basket>() {
+        public Basket createFromParcel(Parcel source) {
+            return new Basket(source);
+        }
+
+        public Basket[] newArray(int size) {
+            return new Basket[size];
+        }
+    };
 }

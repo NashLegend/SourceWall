@@ -46,11 +46,11 @@ public class PostListItemView extends AceView<Post> {
     public void setData(Post model) {
         mPost = model;
         titleView.setText(mPost.getTitle());
-        authorView.setText(mPost.getAuthor());
+        authorView.setText(mPost.getAuthor().getName());
         dateView.setText(mPost.getDate());
-        replyView.setText(mPost.getReplyNum() + "");
-        likesView.setText(mPost.getLikeNum() + "");
-        if (TextUtils.isEmpty(mPost.getAuthor())) {
+        replyView.setText(String.valueOf(mPost.getReplyNum()));
+        likesView.setText(String.valueOf(mPost.getLikeNum()));
+        if (TextUtils.isEmpty(mPost.getAuthor().getName())) {
             authorView.setVisibility(GONE);
         } else {
             authorView.setVisibility(VISIBLE);

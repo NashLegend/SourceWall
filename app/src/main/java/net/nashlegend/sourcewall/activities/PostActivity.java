@@ -106,7 +106,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
             }
         });
         View headView = findViewById(R.id.head_view);
-        post = (Post) getIntent().getSerializableExtra(Consts.Extra_Post);
+        post = getIntent().getParcelableExtra(Consts.Extra_Post);
         notice_id = getIntent().getStringExtra(Consts.Extra_Notice_Id);
         if (!TextUtils.isEmpty(post.getGroupName())) {
             setTitle(post.getGroupName() + " -- 小组");
@@ -470,7 +470,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
             if (!comment.isHasLiked()) {
                 ops.add(getString(R.string.action_like));
             }
-            if (comment.getAuthorID().equals(UserAPI.getUserID())) {
+            if (comment.getAuthor().getId().equals(UserAPI.getUserID())) {
                 ops.add(getString(R.string.action_delete));
             }
             String[] operations = new String[ops.size()];

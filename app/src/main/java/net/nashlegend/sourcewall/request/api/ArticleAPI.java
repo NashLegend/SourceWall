@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Article;
+import net.nashlegend.sourcewall.model.Author;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.HttpFetcher;
@@ -236,23 +237,21 @@ public class ArticleAPI extends APIBase {
                 UComment comment = new UComment();
                 String id = element.id().replace("reply", "");
                 Element tmp = element.select(".cmt-img").select(".cmtImg").select(".pt-pic").get(0);
-
-                String authorID = tmp.getElementsByTag("a").get(0).attr("href").replaceAll("\\D+", "");
-                String authorAvatarUrl = tmp.getElementsByTag("img").get(0).attr("src").replaceAll("\\?.*$", "");
-                String author = tmp.getElementsByTag("a").get(0).attr("title");
+                Author author = new Author();
+                author.setName(tmp.getElementsByTag("a").get(0).attr("title"));
+                author.setId(tmp.getElementsByTag("a").get(0).attr("href").replaceAll("\\D+", ""));
+                author.setAvatar(tmp.getElementsByTag("img").get(0).attr("src").replaceAll("\\?.*$", ""));
                 String likeNum = element.getElementsByClass("cmt-do-num").get(0).text();
                 String date = element.getElementsByClass("cmt-info").get(0).text();
                 String content = element.select(".cmt-content").select(".gbbcode-content").select(".cmtContent").get(0).outerHtml();
                 Elements tmpElements = element.getElementsByClass("cmt-auth");
                 if (tmpElements != null && tmpElements.size() > 0) {
-                    String authorTitle = element.getElementsByClass("cmt-auth").get(0).attr("title");
-                    comment.setAuthorTitle(authorTitle);
+                    author.setTitle(element.getElementsByClass("cmt-auth").get(0).attr("title"));
                 }
+
                 comment.setID(id);
                 comment.setLikeNum(Integer.valueOf(likeNum));
                 comment.setAuthor(author);
-                comment.setAuthorID(authorID);
-                comment.setAuthorAvatarUrl(authorAvatarUrl);
                 comment.setDate(date);
                 comment.setContent(content);
                 comment.setHostID(aid);

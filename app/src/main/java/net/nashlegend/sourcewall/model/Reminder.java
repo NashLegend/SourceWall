@@ -1,5 +1,7 @@
 package net.nashlegend.sourcewall.model;
 
+import android.os.Parcel;
+
 /**
  * Created by NashLegend on 2015/2/2 0002
  * 私信，貌似不仅仅是私信还有草稿，不知道还有多少
@@ -62,4 +64,41 @@ public class Reminder extends AceModel {
     public void setGroup(String group) {
         this.group = group;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.content);
+        dest.writeLong(this.date_created);
+        dest.writeString(this.id);
+        dest.writeString(this.group);
+        dest.writeString(this.ukey);
+        dest.writeString(this.url);
+    }
+
+    public Reminder() {
+    }
+
+    protected Reminder(Parcel in) {
+        this.content = in.readString();
+        this.date_created = in.readLong();
+        this.id = in.readString();
+        this.group = in.readString();
+        this.ukey = in.readString();
+        this.url = in.readString();
+    }
+
+    public static final Creator<Reminder> CREATOR = new Creator<Reminder>() {
+        public Reminder createFromParcel(Parcel source) {
+            return new Reminder(source);
+        }
+
+        public Reminder[] newArray(int size) {
+            return new Reminder[size];
+        }
+    };
 }

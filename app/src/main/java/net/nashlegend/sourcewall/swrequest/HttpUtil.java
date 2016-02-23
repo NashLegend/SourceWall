@@ -356,7 +356,7 @@ public class HttpUtil {
                 if (response.isSuccessful()) {
                     JSONObject object = JsonHandler.getUniversalJsonObject(response.body().string(), responseObject);
                     if (object != null) {
-                        String url = JsonHandler.getJsonString(object, "url");
+                        String url = object.optString("url");
                         responseObject.ok = true;
                         responseObject.result = url;
                     }

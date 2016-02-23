@@ -93,7 +93,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
         View view = inflater.inflate(R.layout.fragment_questions, container, false);
         loadingView = (LoadingView) view.findViewById(R.id.question_progress_loading);
         loadingView.setReloadListener(this);
-        subItem = (SubItem) getArguments().getSerializable(Consts.Extra_SubItem);
+        subItem = getArguments().getParcelable(Consts.Extra_SubItem);
         headerView = inflater.inflate(R.layout.layout_header_load_pre_page, null, false);
         listView = (LListView) view.findViewById(R.id.list_questions);
         adapter = new QuestionAdapter(getActivity());
@@ -399,7 +399,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
 
     @Override
     public void onCreateViewAgain(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        SubItem mSubItem = (SubItem) getArguments().getSerializable(Consts.Extra_SubItem);
+        SubItem mSubItem = getArguments().getParcelable(Consts.Extra_SubItem);
         resetData(mSubItem);
     }
 

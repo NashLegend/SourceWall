@@ -82,7 +82,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
             }
         });
         View headView = findViewById(R.id.head_view);
-        question = (Question) getIntent().getSerializableExtra(Consts.Extra_Question);
+        question = getIntent().getParcelableExtra(Consts.Extra_Question);
         notice_id = getIntent().getStringExtra(Consts.Extra_Notice_Id);
         listView = (LListView) findViewById(R.id.list_detail);
         adapter = new QuestionDetailAdapter(this);

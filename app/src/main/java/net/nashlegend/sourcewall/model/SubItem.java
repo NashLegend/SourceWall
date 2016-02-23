@@ -1,11 +1,11 @@
 package net.nashlegend.sourcewall.model;
 
-import java.io.Serializable;
+import android.os.Parcel;
 
 /**
  * Created by NashLegend on 2014/10/31 0031
  */
-public class SubItem extends AceModel implements Serializable {
+public class SubItem extends AceModel {
 
     public static final int Type_Collections = 0;//集合，如科学人、热贴、精彩问答、热门问答
     public static final int Type_Single_Channel = 1;//单项
@@ -68,4 +68,34 @@ public class SubItem extends AceModel implements Serializable {
         }
         return false;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.section);
+        dest.writeInt(this.type);
+        dest.writeString(this.name);
+        dest.writeString(this.value);
+    }
+
+    protected SubItem(Parcel in) {
+        this.section = in.readInt();
+        this.type = in.readInt();
+        this.name = in.readString();
+        this.value = in.readString();
+    }
+
+    public static final Creator<SubItem> CREATOR = new Creator<SubItem>() {
+        public SubItem createFromParcel(Parcel source) {
+            return new SubItem(source);
+        }
+
+        public SubItem[] newArray(int size) {
+            return new SubItem[size];
+        }
+    };
 }

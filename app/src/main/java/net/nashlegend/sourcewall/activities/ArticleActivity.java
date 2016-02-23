@@ -106,7 +106,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
             }
         });
         View headView = findViewById(R.id.head_view);
-        article = (Article) getIntent().getSerializableExtra(Consts.Extra_Article);
+        article = getIntent().getParcelableExtra(Consts.Extra_Article);
         notice_id = getIntent().getStringExtra(Consts.Extra_Notice_Id);
         if (!TextUtils.isEmpty(article.getSubjectName())) {
             setTitle(article.getSubjectName() + " -- 科学人");
@@ -311,7 +311,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
             if (!comment.isHasLiked()) {
                 ops.add(getString(R.string.action_like));
             }
-            if (comment.getAuthorID().equals(UserAPI.getUserID())) {
+            if (comment.getAuthor().getId().equals(UserAPI.getUserID())) {
                 ops.add(getString(R.string.action_delete));
             }
             String[] operations = new String[ops.size()];

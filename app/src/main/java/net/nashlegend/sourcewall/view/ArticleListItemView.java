@@ -62,7 +62,7 @@ public class ArticleListItemView extends AceView<Article> {
         article = model;
         titleView.setText(article.getTitle());
         contentView.setText(article.getSummary());
-        authorView.setText(article.getAuthor());
+        authorView.setText(article.getAuthor().getName());
         dateView.setText(article.getDate());
         replyView.setText(String.valueOf(article.getCommentNum()));
         if (TextUtils.isEmpty(article.getImageUrl())) {

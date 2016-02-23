@@ -77,8 +77,8 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
         setContentView(R.layout.activity_reply);
         Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
-        aceModel = (AceModel) getIntent().getSerializableExtra(Consts.Extra_Ace_Model);
-        comment = (UComment) getIntent().getSerializableExtra(Consts.Extra_Simple_Comment);
+        aceModel = getIntent().getParcelableExtra(Consts.Extra_Ace_Model);
+        comment = getIntent().getParcelableExtra(Consts.Extra_Simple_Comment);
         editText = (EditText) findViewById(R.id.text_reply);
         hostText = (TextView) findViewById(R.id.text_reply_host);
         if (comment != null) {
@@ -87,7 +87,7 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
             if (cont.length() > 100) {
                 cont = cont.substring(0, 100) + "...";
             }
-            hostText.setText("引用@" + comment.getAuthor() + " 的话：" + cont);
+            hostText.setText(String.format("引用@%s 的话：%s", comment.getAuthor(), cont));
         }
         if (aceModel instanceof Question) {
             setTitle("回答问题");

@@ -69,9 +69,9 @@ public class QuestionView extends AceView<Question> {
     public void setData(Question model) {
         if (question == null) {
             question = model;
-            commentNumView.setText(question.getCommentNum() + "");
+            commentNumView.setText(String.valueOf(question.getCommentNum()));
             titleView.setText(question.getTitle());
-            authorView.setText(question.getAuthor());
+            authorView.setText(question.getAuthor().getName());
             dateView.setText(question.getDate());
             contentView.loadHtml(question.getContent());
         }
