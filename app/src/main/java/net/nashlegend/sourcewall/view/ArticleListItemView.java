@@ -1,12 +1,9 @@
 package net.nashlegend.sourcewall.view;
 
 import android.content.Context;
-import android.graphics.Point;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -16,7 +13,6 @@ import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.DisplayUtil;
-import net.nashlegend.sourcewall.util.ImageSizeMap;
 import net.nashlegend.sourcewall.util.ImageUtils;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 
@@ -30,7 +26,7 @@ public class ArticleListItemView extends AceView<Article> {
     private TextView authorView;
     private TextView dateView;
     private TextView replyView;
-    private ImageView titleImage;
+    private ArticleImage titleImage;
     private Article article;
 
     public ArticleListItemView(Context context) {
@@ -47,7 +43,7 @@ public class ArticleListItemView extends AceView<Article> {
         authorView = (TextView) findViewById(R.id.text_author);
         dateView = (TextView) findViewById(R.id.text_date);
         replyView = (TextView) findViewById(R.id.text_replies_num);
-        titleImage = (ImageView) findViewById(R.id.image_title);
+        titleImage = (ArticleImage) findViewById(R.id.image_title);
     }
 
     public ArticleListItemView(Context context, AttributeSet attrs) {
@@ -71,20 +67,10 @@ public class ArticleListItemView extends AceView<Article> {
             titleImage.setImageBitmap(null);
         } else {
             if (!TextUtils.isEmpty(article.getImageUrl()) && Config.shouldLoadImage() && Config.shouldLoadHomepageImage()) {
-                Point point = ImageSizeMap.get(article.getImageUrl());
-                if (point != null) {
-                    int width = (int) (DisplayUtil.getScreenWidth(getContext()) - getResources().getDimension(R.dimen.list_standard_padding_horizontal) * 2 - getResources().getDimension(R.dimen.list_standard_item_padding_horizontal) * 2);
-                    int height = width * point.y / point.x;
-                    ViewGroup.LayoutParams params = titleImage.getLayoutParams();
-                    if (params != null) {
-                        params.height = height;
-                        titleImage.setLayoutParams(params);
-                    }
-                }
+                int width = (int) (DisplayUtil.getScreenWidth(getContext()) - getResources().getDimension(R.dimen.list_standard_padding_horizontal) * 2 - getResources().getDimension(R.dimen.list_standard_item_padding_horizontal) * 2);
+                titleImage.setFixedWidth(width);
                 titleImage.setVisibility(VISIBLE);
                 ImageLoader.getInstance().displayImage(article.getImageUrl(), titleImage, ImageUtils.articleTitleImageOptions);
-//                Picasso.with(getContext()).load(article.getImageUrl()).noFade()
-//                        .resize(DisplayUtil.getScreenWidth(getContext()), -1).into(titleImage);
             } else {
                 titleImage.setVisibility(GONE);
                 titleImage.setImageBitmap(null);

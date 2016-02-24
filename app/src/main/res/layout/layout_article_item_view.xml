@@ -74,7 +74,7 @@
                 android:textSize="12sp" />
         </LinearLayout>
 
-        <ImageView
+        <net.nashlegend.sourcewall.view.ArticleImage
             android:id="@+id/image_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
