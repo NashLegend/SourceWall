@@ -8,6 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?attr/color_list_background"
+        android:divider="@null"
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="false" />
 
@@ -15,10 +16,10 @@
         android:id="@+id/posts_loading"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
         android:visibility="gone" />
 
     <net.nashlegend.sourcewall.commonview.LoadingView

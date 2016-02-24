@@ -511,6 +511,11 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Consts.Code_Login && resultCode == Activity.RESULT_OK) {
+            /**
+             * TODO
+             * 以后可能会在其他地方添加登录入口，比如回复时提示登录，这个地方会加入登录按钮，
+             * 这时候此处需要主动登录，而不是等待一个onActivityResult了
+             */
             loadUserInfo();
         }
     }

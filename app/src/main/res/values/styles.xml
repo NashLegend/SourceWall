@@ -135,6 +135,7 @@
         <item name="drawable_shuffle_movable_button_background">@drawable/bg_movable_button</item>
 
         <!--LListView-->
+        <item name="divider_color">@color/divider_color</item>
         <item name="color_llist_foot_head_text">@color/llist_foot_head_text</item>
         <item name="drawable_llist_header_button_background">@drawable/bg_header_button</item>
     </style>
@@ -299,6 +300,7 @@
         </item>
 
         <!--LListView-->
+        <item name="divider_color">@color/divider_color_night</item>
         <item name="color_llist_foot_head_text">@color/llist_foot_head_text_night</item>
         <item name="drawable_llist_header_button_background">@drawable/bg_header_button_night</item>
     </style>
