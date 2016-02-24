@@ -39,6 +39,11 @@ public class ImageUtils {
             .bitmapConfig(Bitmap.Config.RGB_565)
             .build();
 
+    public static DisplayImageOptions downloadOptions = new DisplayImageOptions.Builder()
+            .cacheInMemory(false)
+            .cacheOnDisk(true)
+            .build();
+
     /**
      * 将图片转换为圆角, 当radiusRat为半径时为圆形.
      *

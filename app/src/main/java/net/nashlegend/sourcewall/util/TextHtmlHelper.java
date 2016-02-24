@@ -16,6 +16,8 @@ import android.text.Spanned;
 import android.text.style.URLSpan;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.squareup.picasso.Picasso;
 
 import net.nashlegend.sourcewall.App;
@@ -33,6 +35,7 @@ public class TextHtmlHelper {
     private double maxWidth;
     private Context context;
     private HtmlLoaderTask htmlTask;
+    private static final float ImageDensity = 2.0f;//图片显示的像素密度
 
     public TextHtmlHelper(Context context) {
         this.context = context;
@@ -125,7 +128,13 @@ public class TextHtmlHelper {
             Drawable drawable = null;
             try {
                 if (source.startsWith("http")) {
-                    Bitmap bitmap = Picasso.with(context).load(source).resize((int) maxWidth, 0).setTargetSizeAsMax(true).get();
+                    Point point = ImageSizeMap.get(source);
+                    Bitmap bitmap;
+                    if (point != null && point.x > 0 && point.y > 0) {
+                        bitmap = ImageLoader.getInstance().loadImageSync(source, new ImageSize(point.x, point.y));
+                    } else {
+                        bitmap = ImageLoader.getInstance().loadImageSync(source, new ImageSize((int) maxWidth, 2046));
+                    }
                     if (bitmap != null) {
                         String reg = ".+/w/(\\d+)/h/(\\d+)";
                         Matcher matcher = Pattern.compile(reg).matcher(source);
@@ -193,6 +202,10 @@ public class TextHtmlHelper {
             }
         } else {
             result = DisplayUtil.getScreenWidth(context) * 0.8;
+        }
+        float density = DisplayUtil.getPixelDensity(App.getApp());
+        if (density > ImageDensity) {
+            result = result * ImageDensity / density;
         }
         return result;
     }

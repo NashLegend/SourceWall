@@ -33,12 +33,13 @@ import android.util.Base64;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.App;
-import net.nashlegend.sourcewall.activities.ImageActivity;
 import net.nashlegend.sourcewall.R;
+import net.nashlegend.sourcewall.activities.ImageActivity;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.DisplayUtil;
@@ -65,6 +66,7 @@ public class TTextView extends TextView {
     boolean linkHit;
     private double maxWidth;
     private HtmlLoaderTask htmlTask;
+    private static final float ImageDensity = 2.0f;//图片显示的像素密度
     String html = "";
 
     public TTextView(Context context) {
@@ -135,7 +137,6 @@ public class TTextView extends TextView {
      * 消除Html尾部空白
      *
      * @param s 要处理的html span
-     *
      * @return 处理过的span
      */
     public static CharSequence trimEnd(CharSequence s) {
@@ -151,7 +152,6 @@ public class TTextView extends TextView {
      * 解决相对路径的问题
      *
      * @param spannedText 要处理的span
-     *
      * @return 处理过的span
      */
     public static Spanned correctLinkPaths(Spanned spannedText) {
@@ -237,8 +237,13 @@ public class TTextView extends TextView {
             Drawable drawable = null;
             try {
                 if (source.startsWith("http")) {
-                    // FIXME: 16/2/24 改为ImageLoader
-                    Bitmap bitmap = Picasso.with(getContext()).load(source).resize((int) maxWidth, 0).setTargetSizeAsMax(true).get();
+                    Point point = ImageSizeMap.get(source);
+                    Bitmap bitmap;
+                    if (point != null && point.x > 0 && point.y > 0) {
+                        bitmap = ImageLoader.getInstance().loadImageSync(source, new ImageSize(point.x, point.y));
+                    } else {
+                        bitmap = ImageLoader.getInstance().loadImageSync(source, new ImageSize((int) maxWidth, 2046));
+                    }
                     if (bitmap != null) {
                         String reg = ".+/w/(\\d+)/h/(\\d+)";
                         Matcher matcher = Pattern.compile(reg).matcher(source);
@@ -327,6 +332,10 @@ public class TTextView extends TextView {
         } else {
             result = DisplayUtil.getScreenWidth(getContext()) * 0.8;
         }
+        float density = DisplayUtil.getPixelDensity(App.getApp());
+        if (density > ImageDensity) {
+            result = result * ImageDensity / density;
+        }
         return result;
     }
 
@@ -369,7 +378,6 @@ public class TTextView extends TextView {
                         App.getApp().startActivity(intent);
                     }
                 }
-
             }
         }
     }

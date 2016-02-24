@@ -16,7 +16,6 @@ import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
-import net.nashlegend.sourcewall.util.TextHtmlHelper;
 
 /**
  * Created by NashLegend on 2014/9/18 0018
@@ -28,7 +27,6 @@ public class QuestionView extends AceView<Question> {
     private TextView dateView;
     private TTextView contentView;
     private TextView commentNumView;
-    private TextHtmlHelper htmlHelper;
 
     public QuestionView(Context context) {
         super(context);
@@ -39,7 +37,6 @@ public class QuestionView extends AceView<Question> {
         }
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_question_view, this);
-        htmlHelper = new TextHtmlHelper(context);
         titleView = (TextView) findViewById(R.id.text_title);
         authorView = (TextView) findViewById(R.id.text_author);
         dateView = (TextView) findViewById(R.id.text_date);

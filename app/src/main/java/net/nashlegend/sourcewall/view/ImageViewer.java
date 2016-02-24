@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Base64;
 import android.view.LayoutInflater;
@@ -12,16 +13,16 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
-import com.squareup.picasso.Picasso;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
-import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.commonview.LoadingView;
 import net.nashlegend.sourcewall.commonview.ScalingImage;
-import net.nashlegend.sourcewall.request.RequestCache;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.util.DisplayUtil;
+import net.nashlegend.sourcewall.util.ImageUtils;
 
+import java.io.File;
 import java.net.URLDecoder;
 
 import pl.droidsonroids.gif.GifDrawable;
@@ -52,9 +53,9 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
         gifImageView.setOnClickListener(this);
     }
 
-    public void load(String u) {
+    public void load(String imageUrl) {
         loadingView.startLoading();
-        url = u;
+        url = imageUrl;
         if (url.startsWith("http")) {
             task = new LoaderTask();
             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
@@ -95,23 +96,23 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
         }
     }
 
-    class LoaderTask extends AsyncTask<String, Integer, ResponseObject<String>> {
+    class LoaderTask extends AsyncTask<String, Integer, ResponseObject<File>> {
 
         @Override
-        protected ResponseObject<String> doInBackground(String... params) {
-            ResponseObject<String> resultObject = new ResponseObject<>();
+        protected ResponseObject<File> doInBackground(String... params) {
+            ResponseObject<File> resultObject = new ResponseObject<>();
             try {
                 String url = params[0];
-                String filePath = RequestCache.getInstance().getCachedFile(url);
-                if (filePath != null) {
+                File tmpFile = ImageLoader.getInstance().getDiskCache().get(url);
+                if (tmpFile != null && tmpFile.exists()) {
                     resultObject.ok = true;
-                    resultObject.result = filePath;
+                    resultObject.result = tmpFile;
                 } else {
-                    Picasso.with(App.getApp()).load(url).download();
-                    filePath = RequestCache.getInstance().getCachedFile(url);
-                    if (filePath != null) {
+                    ImageLoader.getInstance().loadImageSync(url, ImageUtils.downloadOptions);
+                    tmpFile = ImageLoader.getInstance().getDiskCache().get(url);
+                    if (tmpFile != null && tmpFile.exists()) {
                         resultObject.ok = true;
-                        resultObject.result = filePath;
+                        resultObject.result = tmpFile;
                     }
                 }
             } catch (Exception ignored) {
@@ -121,7 +122,7 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
         }
 
         @Override
-        protected void onPostExecute(ResponseObject<String> result) {
+        protected void onPostExecute(ResponseObject<File> result) {
             if (result.ok) {
                 loadingView.onLoadSuccess();
                 String realLink = url.replaceAll("\\?.*$", "");
@@ -158,7 +159,7 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
                 } else {
                     gifImageView.setVisibility(GONE);
                     imageView.setVisibility(VISIBLE);
-                    imageView.setImage(ImageSource.uri(result.result));
+                    imageView.setImage(ImageSource.uri(Uri.fromFile(result.result)));
                 }
             } else {
                 loadingView.onLoadFailed();

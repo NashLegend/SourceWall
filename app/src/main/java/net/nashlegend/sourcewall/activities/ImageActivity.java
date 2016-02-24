@@ -10,14 +10,14 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.ImageAdapter;
-import net.nashlegend.sourcewall.request.RequestCache;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.ImageUtils;
 import net.nashlegend.sourcewall.util.Mob;
 
 import java.io.BufferedInputStream;
@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.net.URLDecoder;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -66,7 +67,7 @@ public class ImageActivity extends BaseActivity {
             } else {
                 position = 0;
             }
-            indicator.setText((position + 1) + "/" + imageCount);
+            indicator.setText(MessageFormat.format("{0}/{1}", position + 1, imageCount));
         }
 
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -77,7 +78,7 @@ public class ImageActivity extends BaseActivity {
 
             @Override
             public void onPageSelected(int position) {
-                indicator.setText((position + 1) + "/" + imageCount);
+                indicator.setText(MessageFormat.format("{0}/{1}", position + 1, imageCount));
             }
 
             @Override
@@ -115,13 +116,14 @@ public class ImageActivity extends BaseActivity {
                 if ((folder.exists() || !folder.exists() && folder.mkdirs())) {
                     String url = params[0];
                     if (url.startsWith("http")) {
-                        String filePath = RequestCache.getInstance().getCachedFile(url);
-                        if (filePath == null || !new File(filePath).exists()) {
-                            // FIXME: 16/2/24 改为ImageLoader的
-                            Picasso.with(ImageActivity.this).load(url).download();
-                            filePath = RequestCache.getInstance().getCachedFile(url);
+
+                        File srcFile = ImageLoader.getInstance().getDiskCache().get(url);
+                        if (srcFile == null || !srcFile.exists()) {
+                            ImageLoader.getInstance().loadImageSync(url, ImageUtils.downloadOptions);
+                            srcFile = ImageLoader.getInstance().getDiskCache().get(url);
                         }
-                        if (filePath != null && new File(filePath).exists()) {
+
+                        if (srcFile != null && srcFile.exists()) {
                             String trimmedUrl = url.replaceAll("\\?.+", "");
                             String suffix = ".jpg";
                             if (trimmedUrl.lastIndexOf(".") > 0) {
@@ -130,7 +132,6 @@ public class ImageActivity extends BaseActivity {
                                     suffix = ".jpg";
                                 }
                             }
-                            File srcFile = new File(filePath);
                             File destFile = new File(folder, srcFile.getName() + suffix);
                             resultObject.ok = copy2SingleFile(srcFile, destFile);
                             resultObject.result = destFile.getAbsolutePath();
