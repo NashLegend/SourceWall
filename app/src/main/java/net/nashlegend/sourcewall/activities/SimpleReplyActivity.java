@@ -140,7 +140,7 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
 
     private void onReplyItemClick(final View view) {
         if (view instanceof SimpleCommentItemView) {
-            textReply.setHint("回复@" + ((SimpleCommentItemView) view).getData().getAuthor() + "：");
+            textReply.setHint("回复@" + ((SimpleCommentItemView) view).getData().getAuthor().getName() + "：");
             mMenu.findItem(R.id.action_cancel_simple_reply).setVisible(true);
         }
     }

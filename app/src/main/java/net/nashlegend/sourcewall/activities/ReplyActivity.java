@@ -87,7 +87,7 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
             if (cont.length() > 100) {
                 cont = cont.substring(0, 100) + "...";
             }
-            hostText.setText(String.format("引用@%s 的话：%s", comment.getAuthor(), cont));
+            hostText.setText(String.format("引用@%s 的话：%s", comment.getAuthor().getName(), cont));
         }
         if (aceModel instanceof Question) {
             setTitle("回答问题");

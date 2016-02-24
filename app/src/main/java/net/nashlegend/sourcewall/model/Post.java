@@ -122,6 +122,9 @@ public class Post extends AceModel {
     }
 
     public Author getAuthor() {
+        if (author == null) {
+            author = new Author();
+        }
         return author;
     }
 
