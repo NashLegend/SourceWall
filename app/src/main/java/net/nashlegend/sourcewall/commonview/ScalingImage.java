@@ -1,6 +1,7 @@
 package net.nashlegend.sourcewall.commonview;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
@@ -19,7 +20,7 @@ public class ScalingImage extends SubsamplingScaleImageView {
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
+    public boolean onTouchEvent(@NonNull MotionEvent event) {
         try {
             return super.onTouchEvent(event);
         } catch (Exception e) {

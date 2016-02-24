@@ -1,16 +1,17 @@
 package net.nashlegend.sourcewall.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Base64;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
-import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.squareup.picasso.Picasso;
 
 import net.nashlegend.sourcewall.App;
@@ -29,14 +30,14 @@ import pl.droidsonroids.gif.GifImageView;
 /**
  * Created by NashLegend on 2015/3/31 0031
  */
-public class ImageViewer extends FrameLayout implements LoadingView.ReloadListener {
+public class ImageViewer extends FrameLayout implements LoadingView.ReloadListener, View.OnClickListener {
     ScalingImage imageView;
     GifImageView gifImageView;
     LoadingView loadingView;
     LoaderTask task;
     String url = "";
 
-    public ImageViewer(Context context) {
+    public ImageViewer(final Context context) {
         super(context);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_image_viewer, this);
@@ -47,6 +48,8 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
         imageView.setMinimumDpi(96);
         imageView.setDoubleTapZoomDpi(96);
         loadingView = (LoadingView) findViewById(R.id.image_loading);
+        imageView.setOnClickListener(this);
+        gifImageView.setOnClickListener(this);
     }
 
     public void load(String u) {
@@ -80,6 +83,16 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
     @Override
     public void reload() {
         load(url);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.zoom_image || v.getId() == R.id.gifImage) {
+            Context ctx = getContext();
+            if (ctx instanceof Activity) {
+                ((Activity) ctx).finish();
+            }
+        }
     }
 
     class LoaderTask extends AsyncTask<String, Integer, ResponseObject<String>> {
