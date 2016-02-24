@@ -55,9 +55,9 @@
     <color name="answer_author_text_night">#d0d0d0</color>
     <color name="answer_author_sub_text">#555555</color>
     <color name="answer_author_sub_text_night">#cccccc</color>
-    <color name="answer_question_title_background">#eeeeee</color>
+    <color name="answer_question_title_background">#e8e8e8</color>
     <color name="answer_question_title_background_night">#3e3e3e</color>
-    <color name="answer_question_title_background_pressed">#cccccc</color>
+    <color name="answer_question_title_background_pressed">#dddddd</color>
     <color name="answer_question_title_background_pressed_night">#656565</color>
     <color name="answer_question_title_text">#222222</color>
     <color name="answer_question_title_text_night">#e0e0e0</color>
