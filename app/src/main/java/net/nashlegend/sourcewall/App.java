@@ -32,7 +32,7 @@ public class App extends Application {
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
                 .denyCacheImageMultipleSizesInMemory()
                 .defaultDisplayImageOptions(ImageUtils.defaultImageOptions)
-                .memoryCacheSizePercentage(40)
+                .memoryCacheSizePercentage(33)
                 .threadPoolSize(Runtime.getRuntime().availableProcessors() * 2 + 1)
                 .build();
         ImageLoader.getInstance().init(config);

@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
-import com.squareup.picasso.Picasso;
 
 import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;

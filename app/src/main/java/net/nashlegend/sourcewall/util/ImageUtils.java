@@ -35,7 +35,7 @@ public class ImageUtils {
             .showImageOnFail(R.drawable.default_avatar)
             .cacheInMemory(true)
             .cacheOnDisk(true)
-            .displayer(new CircleBitmapDisplayer())//是否设置为圆角，弧度为多少
+            .displayer(new CircleBitmapDisplayer())
             .bitmapConfig(Bitmap.Config.RGB_565)
             .build();
 

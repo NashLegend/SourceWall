@@ -1,14 +1,12 @@
 package net.nashlegend.sourcewall.view;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.squareup.picasso.Picasso;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.model.QuestionAnswer;
@@ -16,7 +14,6 @@ import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.ImageUtils;
 import net.nashlegend.sourcewall.util.RegUtil;
-import net.nashlegend.sourcewall.util.RoundTransformation;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 
 /**
@@ -64,7 +61,7 @@ public class AnswerListItemView extends AceView<QuestionAnswer> {
         authorTitleView.setText(answer.getAuthor().getTitle());
         dateView.setText(answer.getDate_created());
         if (Config.shouldLoadImage()) {
-            ImageLoader.getInstance().displayImage(answer.getAuthor().getAvatar(),avatar, ImageUtils.avatarOptions);
+            ImageLoader.getInstance().displayImage(answer.getAuthor().getAvatar(), avatar, ImageUtils.avatarOptions);
         } else {
             avatar.setImageResource(R.drawable.default_avatar);
         }

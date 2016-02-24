@@ -26,7 +26,6 @@ import android.widget.TextView;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.squareup.picasso.Picasso;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.commonview.AAsyncTask;
@@ -46,7 +45,6 @@ import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.ImageUtils;
-import net.nashlegend.sourcewall.util.RoundTransformation;
 import net.nashlegend.sourcewall.util.StyleChecker;
 
 import java.util.ArrayList;

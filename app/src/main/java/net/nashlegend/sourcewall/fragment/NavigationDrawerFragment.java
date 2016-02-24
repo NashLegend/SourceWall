@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -27,12 +26,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.squareup.picasso.Picasso;
 import com.umeng.analytics.MobclickAgent;
 
+import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.LoginActivity;
 import net.nashlegend.sourcewall.activities.MessageCenterActivity;
-import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.SettingActivity;
 import net.nashlegend.sourcewall.adapters.ChannelsAdapter;
 import net.nashlegend.sourcewall.db.AskTagHelper;
@@ -40,15 +38,13 @@ import net.nashlegend.sourcewall.db.GroupHelper;
 import net.nashlegend.sourcewall.model.ReminderNoticeNum;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.model.UserInfo;
-import net.nashlegend.sourcewall.swrequest.ResponseError;
-import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.request.api.UserAPI;
+import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.util.ChannelHelper;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.ImageUtils;
 import net.nashlegend.sourcewall.util.Mob;
-import net.nashlegend.sourcewall.util.RoundTransformation;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 import net.nashlegend.sourcewall.view.SubItemView;
 
@@ -384,7 +380,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
                 String avatarString = SharedPreferencesUtil.readString(Consts.Key_User_Avatar, "");
                 if (!TextUtils.isEmpty(avatarString)) {
                     if (Config.shouldLoadImage()) {
-                        ImageLoader.getInstance().displayImage(avatarString,avatarView, ImageUtils.avatarOptions);
+                        ImageLoader.getInstance().displayImage(avatarString, avatarView, ImageUtils.avatarOptions);
                     } else {
                         avatarView.setImageResource(R.drawable.default_avatar);
                     }
@@ -406,7 +402,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
                         String avatarString = SharedPreferencesUtil.readString(Consts.Key_User_Avatar, "");
                         if (!TextUtils.isEmpty(avatarString)) {
                             if (Config.shouldLoadImage()) {
-                                ImageLoader.getInstance().displayImage(avatarString,avatarView, ImageUtils.avatarOptions);
+                                ImageLoader.getInstance().displayImage(avatarString, avatarView, ImageUtils.avatarOptions);
                             } else {
                                 avatarView.setImageResource(R.drawable.default_avatar);
                             }
@@ -645,7 +641,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
         SharedPreferencesUtil.saveString(Consts.Key_User_ID, info.getId());
         SharedPreferencesUtil.saveString(Consts.Key_User_Avatar, info.getAvatar());
         if (Config.shouldLoadImage()) {
-            ImageLoader.getInstance().displayImage(info.getAvatar(),avatarView, ImageUtils.avatarOptions);
+            ImageLoader.getInstance().displayImage(info.getAvatar(), avatarView, ImageUtils.avatarOptions);
         } else {
             avatarView.setImageResource(R.drawable.default_avatar);
         }

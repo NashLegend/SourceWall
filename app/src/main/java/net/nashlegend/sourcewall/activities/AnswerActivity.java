@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -27,7 +26,6 @@ import android.widget.TextView;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.squareup.picasso.Picasso;
 import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.R;
@@ -46,7 +44,6 @@ import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.ImageUtils;
 import net.nashlegend.sourcewall.util.Mob;
-import net.nashlegend.sourcewall.util.RoundTransformation;
 import net.nashlegend.sourcewall.util.StyleChecker;
 
 import java.util.ArrayList;
@@ -161,7 +158,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
             thankButton.setIcon(R.drawable.heart_outline);
         }
         if (Config.shouldLoadImage()) {
-            ImageLoader.getInstance().displayImage(answer.getAuthor().getAvatar(),avatar, ImageUtils.avatarOptions);
+            ImageLoader.getInstance().displayImage(answer.getAuthor().getAvatar(), avatar, ImageUtils.avatarOptions);
         } else {
             avatar.setImageResource(R.drawable.default_avatar);
         }
