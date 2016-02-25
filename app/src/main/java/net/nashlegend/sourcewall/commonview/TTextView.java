@@ -233,16 +233,16 @@ public class TTextView extends TextView {
         @Override
         public Drawable getDrawable(String source) {
             float stretch = DisplayUtil.getPixelDensity(App.getApp());
-            maxWidth = getMaxImageWidth();
             Drawable drawable = null;
             try {
                 if (source.startsWith("http")) {
                     Point point = ImageSizeMap.get(source);
                     Bitmap bitmap;
+                    maxWidth = getMaxImageWidth();
                     if (point != null && point.x > 0 && point.y > 0) {
                         bitmap = ImageLoader.getInstance().loadImageSync(source, new ImageSize(point.x, point.y));
                     } else {
-                        bitmap = ImageLoader.getInstance().loadImageSync(source, new ImageSize((int) maxWidth, 2046));
+                        bitmap = ImageLoader.getInstance().loadImageSync(source, new ImageSize((int) Math.min(maxWidth, maxWidth * ImageDensity / stretch), 4096));
                     }
                     if (bitmap != null) {
                         String reg = ".+/w/(\\d+)/h/(\\d+)";
@@ -332,9 +332,8 @@ public class TTextView extends TextView {
         } else {
             result = DisplayUtil.getScreenWidth(getContext()) * 0.8;
         }
-        float density = DisplayUtil.getPixelDensity(App.getApp());
-        if (density > ImageDensity) {
-            result = result * ImageDensity / density;
+        if (result > 4096) {
+            result = 4096;
         }
         return result;
     }
