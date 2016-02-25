@@ -98,6 +98,7 @@ public class TTextView extends TextView {
         CharSequence charSequence = trimEnd(spanned);
         setText(charSequence);
         if (Config.shouldLoadImage() && content.contains("<img")) {
+            // TODO: 16/2/25 此处应该删除Config.shouldLoadImage()判断，转而放在imageGetter里面判断
             htmlTask = new HtmlLoaderTask();
             htmlTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, content);
         }
@@ -121,15 +122,30 @@ public class TTextView extends TextView {
 
     class HtmlLoaderTask extends AsyncTask<String, Integer, CharSequence> {
 
+        boolean someImageLoaded = false;//是否有图片加载出来
+
+        @Override
+        protected void onPreExecute() {
+            someImageLoaded = false;
+        }
+
         @Override
         protected CharSequence doInBackground(String... params) {
             Spanned spanned = Html.fromHtml(params[0], imageGetter, null);
-            return trimEnd(spanned);
+            CharSequence result = trimEnd(spanned);
+            if (!Config.shouldLoadImage() && !someImageLoaded) {
+                //如果为无图模式，并且没有图加载了出来（缓存中没有或者加载失败）那么就将result设为null
+                //如果为null，那么将不会setText。
+                result = null;
+            }
+            return result;
         }
 
         @Override
         protected void onPostExecute(CharSequence spanned) {
-            setText(spanned);
+            if (spanned != null) {
+                setText(spanned);
+            }
         }
     }
 
@@ -178,6 +194,7 @@ public class TTextView extends TextView {
 
     /**
      * 空emptyImageGetter，用于获取图片前的尺寸准备或者无图模式下返回一个图标
+     * // TODO: 16/2/25 Base64的图片也应该给一个占位
      */
     Html.ImageGetter emptyImageGetter = new Html.ImageGetter() {
         @Override
@@ -232,6 +249,7 @@ public class TTextView extends TextView {
     Html.ImageGetter imageGetter = new Html.ImageGetter() {
         @Override
         public Drawable getDrawable(String source) {
+            // TODO imageGetter在无图模式下尝试加载缓存中的图片，如果成功将someImageLoaded设为true，加载失败将不显示失败的占位符，而是像emptyGetter一样给个普通占位符
             float stretch = DisplayUtil.getPixelDensity(App.getApp());
             Drawable drawable = null;
             try {
