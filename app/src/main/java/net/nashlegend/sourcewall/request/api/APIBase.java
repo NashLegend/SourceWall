@@ -34,7 +34,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class APIBase {
 
@@ -80,9 +82,7 @@ public class APIBase {
      * 压缩图片，jpg格式差不多可以压缩到100k左右
      *
      * @param path 要压缩的图片路径
-     *
      * @return 是否成功压缩
-     *
      * @throws IOException
      */
     public static String compressImage(String path) throws IOException {
@@ -138,7 +138,6 @@ public class APIBase {
      *
      * @param path      要上传图片的路径
      * @param watermark 是否打水印
-     *
      * @return 返回ResponseObject，resultObject.result是上传后的图片地址，果壳并不会对图片进行压缩
      */
     public static ResponseObject<String> uploadImage(String path, boolean watermark) {
@@ -157,7 +156,7 @@ public class APIBase {
                 if (response.isSuccessful()) {
                     JSONObject object = getUniversalJsonObject(response.body().string(), resultObject);
                     if (object != null) {
-                        String url = object.optString("url","");
+                        String url = object.optString("url", "");
                         resultObject.ok = true;
                         resultObject.result = url;
                     }
@@ -173,7 +172,6 @@ public class APIBase {
      * 使用github的接口转换markdown为html
      *
      * @param text 要转换的文本内容
-     *
      * @return ResponseObject
      */
     public static ResponseObject<String> parseMarkdownByGitHub(String text) {
@@ -225,14 +223,12 @@ public class APIBase {
      * 这里还可以做一些token过期失败问题的处理，省得在每个地方都判断了。
      *
      * @param json 要进行json解析的文本内容
-     *
      * @return JSONObject
-     *
      * @throws JSONException
      */
     public static JSONObject getUniversalJsonObject(String json, ResponseObject resultObject) throws JSONException {
         JSONObject object = new JSONObject(json);
-        if (object.optBoolean("ok",false)) {
+        if (object.optBoolean("ok", false)) {
             return object.optJSONObject("result");
         } else {
             resultObject.ok = false;
@@ -246,14 +242,12 @@ public class APIBase {
      * 这里还可以做一些token过期失败问题的处理，省得在每个地方都判断了。
      *
      * @param json 要进行json解析的文本内容
-     *
      * @return JSONArray
-     *
      * @throws JSONException
      */
     public static JSONArray getUniversalJsonArray(String json, ResponseObject resultObject) throws JSONException {
         JSONObject object = new JSONObject(json);
-        if (object.optBoolean("ok",false)) {
+        if (object.optBoolean("ok", false)) {
             //这里不处理resultObject.ok，因为返回后，其他地方可能报错
             return object.optJSONArray("result");
         } else {
@@ -268,14 +262,12 @@ public class APIBase {
      * 这里还可以做一些token过期失败问题的处理，省得在每个地方都判断了。
      *
      * @param json 要进行json解析的文本内容
-     *
      * @return 是否为true
-     *
      * @throws JSONException
      */
     public static boolean getUniversalJsonSimpleBoolean(String json, ResponseObject resultObject) throws JSONException {
         JSONObject object = new JSONObject(json);
-        if (object.optBoolean("ok",false)) {
+        if (object.optBoolean("ok", false)) {
             resultObject.ok = true;
             return true;
         } else {
@@ -289,13 +281,12 @@ public class APIBase {
      *
      * @param object
      * @param resultObject
-     *
      * @throws JSONException
      */
     public static void handleBadJson(JSONObject object, ResponseObject resultObject) throws JSONException {
         int error_code = object.optInt("error_code", ResponseCode.CODE_UNKNOWN);
         resultObject.code = ResponseCode.CODE_NONE;
-        resultObject.message = object.optString("error","");
+        resultObject.message = object.optString("error", "");
         switch (error_code) {
             case 200004:
                 resultObject.error = ResponseError.TOKEN_INVALID;
@@ -339,7 +330,6 @@ public class APIBase {
      * 将时间转换成可见的。话说果壳返回的时间格式是什么标准
      *
      * @param dateString 传入的时间字符串
-     *
      * @return 解析后的时间 yyyy-mm-dd hh:mm:ss
      */
     @SuppressLint("SimpleDateFormat")
@@ -348,16 +338,30 @@ public class APIBase {
         String time = dateString.replace("T", " ").replaceAll("[\\+\\.]\\S+$", "");
         try {
             Date date = sdf.parse(time);
-            long mills = date.getTime();
-            long gap = System.currentTimeMillis() / 86400000 - mills / 86400000;
-            if (gap == 0) {
-                sdf = new SimpleDateFormat("今天HH:mm");
+            GregorianCalendar calendar = new GregorianCalendar();
+            calendar.setTime(date);
+            GregorianCalendar now = new GregorianCalendar();
+            int diff;
+            if (now.get(Calendar.YEAR) == calendar.get(Calendar.YEAR)) {
+                diff = calendar.get(Calendar.DAY_OF_YEAR) - now.get(Calendar.DAY_OF_YEAR);
             } else {
-                if (gap == 1) {
-                    sdf = new SimpleDateFormat("昨天HH:mm");
+                int yearDiff = calendar.get(Calendar.YEAR) - now.get(Calendar.YEAR);
+                if (yearDiff == 1) {
+                    int max = now.isLeapYear(now.get(Calendar.YEAR)) ? 366 : 365;
+                    diff = calendar.get(Calendar.DAY_OF_YEAR) + max - now.get(Calendar.DAY_OF_YEAR);
+                } else if (yearDiff == -1) {
+                    int max = calendar.isLeapYear(calendar.get(Calendar.YEAR)) ? 366 : 365;
+                    diff = calendar.get(Calendar.DAY_OF_YEAR) - max - now.get(Calendar.DAY_OF_YEAR);
                 } else {
-                    sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                    diff = (int) (calendar.getTimeInMillis() / 86400000 - new GregorianCalendar().getTimeInMillis() / 86400000);
                 }
+            }
+            if (diff < -1 || diff > 0) {
+                sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            } else if (diff == -1) {
+                sdf = new SimpleDateFormat("昨天HH:mm");
+            } else if (diff == 0) {
+                sdf = new SimpleDateFormat("今天HH:mm");
             }
             time = sdf.format(date.getTime());
         } catch (ParseException e) {
