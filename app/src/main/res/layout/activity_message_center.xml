@@ -1,19 +1,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/color_clear_page_background"
     android:orientation="vertical"
     tools:context=".activities.MessageCenterActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/action_bar"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:theme="?attr/toolbarTheme"
-        app:popupTheme="?attr/toolbarPopTheme"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary" />
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/action_bar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:theme="?attr/toolbarTheme"
+            app:popupTheme="?attr/toolbarPopTheme" />
+    </android.support.design.widget.AppBarLayout>
+
 
     <FrameLayout
         android:id="@+id/message_container"

@@ -7,18 +7,24 @@
     android:background="?attr/color_page_background"
     tools:context=".activities.PostListActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/action_bar"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:theme="?attr/toolbarTheme"
-        app:popupTheme="?attr/toolbarPopTheme" />
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/action_bar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:theme="?attr/toolbarTheme"
+            app:popupTheme="?attr/toolbarPopTheme" />
+    </android.support.design.widget.AppBarLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/action_bar">
+        android:layout_below="@id/app_bar">
 
         <net.nashlegend.sourcewall.commonview.LListView
             android:id="@+id/list_posts"

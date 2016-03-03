@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -52,7 +53,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
 
     private View rootView;
     private View authorLayout;
-    private Toolbar toolbar;
+    private AppBarLayout appbar;
     private SScrollView scrollView;
     private View headerHolder;
     private WWebView webView;
@@ -83,7 +84,8 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         MobclickAgent.onEvent(this, Mob.Event_Open_Answer);
         handler = new Handler();
         rootView = findViewById(R.id.rootView);
-        toolbar = (Toolbar) findViewById(R.id.action_bar);
+        appbar = (AppBarLayout) findViewById(R.id.app_bar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         authorLayout = findViewById(R.id.layout_author);
         scrollView = (SScrollView) findViewById(R.id.scrollView);
@@ -144,7 +146,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
 
     private void initData() {
         questionText.setText(question.getTitle());
-        supportText.setText(answer.getUpvoteNum() + "");
+        supportText.setText(String.valueOf(answer.getUpvoteNum()));
         authorName.setText(answer.getAuthor().getName());
         authorTitle.setText(answer.getAuthor().getTitle());
         if (answer.isHasBuried()) {
@@ -167,7 +169,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
             public void onGlobalLayout() {
                 if (authorLayout.getHeight() > 0) {
                     rootView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                    topBarHeight = toolbar.getHeight() + questionText.getHeight();
+                    topBarHeight = appbar.getHeight() + questionText.getHeight();
                     headerHeight = topBarHeight + authorLayout.getHeight();
                     ViewGroup.LayoutParams params = headerHolder.getLayoutParams();
                     params.height = headerHeight;
@@ -234,7 +236,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
             }
             if (backAnimatorSet == null || !backAnimatorSet.isRunning()) {
                 backAnimatorSet = new AnimatorSet();
-                ObjectAnimator toolBarAnimator = ObjectAnimator.ofFloat(toolbar, "translationY", toolbar.getTranslationY(), 0f);
+                ObjectAnimator toolBarAnimator = ObjectAnimator.ofFloat(appbar, "translationY", appbar.getTranslationY(), 0f);
                 ObjectAnimator titleAnimator = ObjectAnimator.ofFloat(questionText, "translationY", questionText.getTranslationY(), 0f);
                 ObjectAnimator authorAnimator = ObjectAnimator.ofFloat(authorLayout, "translationY", authorLayout.getTranslationY(), 0f);
                 ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(floatingActionsMenu, "translationY", floatingActionsMenu.getTranslationY(), 0f);
@@ -279,7 +281,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
             }
             if (hideAnimatorSet == null || !hideAnimatorSet.isRunning()) {
                 hideAnimatorSet = new AnimatorSet();
-                ObjectAnimator toolBarAnimator = ObjectAnimator.ofFloat(toolbar, "translationY", toolbar.getTranslationY(), -toolbar.getBottom());
+                ObjectAnimator toolBarAnimator = ObjectAnimator.ofFloat(appbar, "translationY", appbar.getTranslationY(), -appbar.getBottom());
                 ObjectAnimator titleAnimator = ObjectAnimator.ofFloat(questionText, "translationY", questionText.getTranslationY(), -questionText.getBottom());
                 ObjectAnimator authorAnimator = ObjectAnimator.ofFloat(authorLayout, "translationY", authorLayout.getTranslationY(), -authorLayout.getTop());
                 ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(floatingActionsMenu, "translationY", floatingActionsMenu.getTranslationY(), floatingActionsMenu.getHeight());

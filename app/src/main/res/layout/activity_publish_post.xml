@@ -6,21 +6,27 @@
     android:background="?attr/color_page_background"
     tools:context=".activities.PublishPostActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/action_bar"
-        android:theme="?attr/toolbarTheme"
-        app:popupTheme="?attr/toolbarPopTheme"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary" />
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/action_bar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:theme="?attr/toolbarTheme"
+            app:popupTheme="?attr/toolbarPopTheme" />
+    </android.support.design.widget.AppBarLayout>
 
     <LinearLayout
         android:id="@+id/layout_reply"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/action_bar"
+        android:layout_below="@id/app_bar"
         android:orientation="vertical"
-        android:paddingTop="@dimen/abc_action_bar_subtitle_bottom_margin_material">
+        android:paddingTop="5dp">
 
         <EditText
             android:id="@+id/text_post_title"

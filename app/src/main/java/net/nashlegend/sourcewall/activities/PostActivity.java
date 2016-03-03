@@ -1,5 +1,8 @@
 package net.nashlegend.sourcewall.activities;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
@@ -11,6 +14,7 @@ import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -38,6 +42,7 @@ import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.AutoHideUtil;
+import net.nashlegend.sourcewall.util.AutoHideUtil.AutoHideListener;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.RegUtil;
@@ -60,6 +65,8 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
     private boolean loadDesc = false;
     private Menu menu;
     private Receiver receiver;
+    private AppBarLayout appbar;
+    private int headerHeight = 112;
     /**
      * 是否倒序加载已经加载完成了所有的回帖
      */
@@ -84,6 +91,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         loadingView = (LoadingView) findViewById(R.id.post_progress_loading);
         loadingView.setReloadListener(this);
         progressBar = (ProgressBar) findViewById(R.id.post_loading);
+        appbar = (AppBarLayout) findViewById(R.id.app_bar);
         Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         toolbar.setOnClickListener(new View.OnClickListener() {
@@ -105,7 +113,6 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
                 }
             }
         });
-        View headView = findViewById(R.id.head_view);
         post = getIntent().getParcelableExtra(Consts.Extra_Post);
         notice_id = getIntent().getStringExtra(Consts.Extra_Notice_Id);
         if (!TextUtils.isEmpty(post.getGroupName())) {
@@ -127,7 +134,8 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         recomButton.setOnClickListener(this);
         favorButton.setOnClickListener(this);
 
-        AutoHideUtil.applyListViewAutoHide(this, listView, headView, floatingActionsMenu, (int) getResources().getDimension(R.dimen.abc_action_bar_default_height_material));
+        headerHeight = (int) getResources().getDimension(R.dimen.actionbar_height);
+        AutoHideUtil.applyListViewAutoHide(this, listView, (int) getResources().getDimension(R.dimen.actionbar_height), autoHideListener);
         floatingActionsMenu.setVisibility(View.GONE);
         loadData(-1);
 
@@ -601,6 +609,51 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         }
         setMenuVisibility();
     }
+
+    private AutoHideListener autoHideListener = new AutoHideListener() {
+        AnimatorSet backAnimatorSet;
+        AnimatorSet hideAnimatorSet;
+
+        @Override
+        public void animateHide() {
+            if (backAnimatorSet != null && backAnimatorSet.isRunning()) {
+                backAnimatorSet.cancel();
+            }
+            if (hideAnimatorSet == null || !hideAnimatorSet.isRunning()) {
+                hideAnimatorSet = new AnimatorSet();
+                ObjectAnimator headerAnimator = ObjectAnimator.ofFloat(appbar, "translationY", appbar.getTranslationY(), -headerHeight);
+                ObjectAnimator header2Animator = ObjectAnimator.ofFloat(progressBar, "translationY", progressBar.getTranslationY(), -headerHeight);
+                ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(floatingActionsMenu, "translationY", floatingActionsMenu.getTranslationY(), floatingActionsMenu.getHeight());
+                ArrayList<Animator> animators = new ArrayList<>();
+                animators.add(headerAnimator);
+                animators.add(header2Animator);
+                animators.add(footerAnimator);
+                hideAnimatorSet.setDuration(300);
+                hideAnimatorSet.playTogether(animators);
+                hideAnimatorSet.start();
+            }
+        }
+
+        @Override
+        public void animateBack() {
+            if (hideAnimatorSet != null && hideAnimatorSet.isRunning()) {
+                hideAnimatorSet.cancel();
+            }
+            if (backAnimatorSet == null || !backAnimatorSet.isRunning()) {
+                backAnimatorSet = new AnimatorSet();
+                ObjectAnimator headerAnimator = ObjectAnimator.ofFloat(appbar, "translationY", appbar.getTranslationY(), 0f);
+                ObjectAnimator header2Animator = ObjectAnimator.ofFloat(progressBar, "translationY", progressBar.getTranslationY(), 0f);
+                ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(floatingActionsMenu, "translationY", floatingActionsMenu.getTranslationY(), 0f);
+                ArrayList<Animator> animators = new ArrayList<>();
+                animators.add(headerAnimator);
+                animators.add(header2Animator);
+                animators.add(footerAnimator);
+                backAnimatorSet.setDuration(300);
+                backAnimatorSet.playTogether(animators);
+                backAnimatorSet.start();
+            }
+        }
+    };
 
     class Receiver extends BroadcastReceiver {
 

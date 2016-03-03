@@ -6,11 +6,11 @@ import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -54,7 +54,7 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
 
     private View rootView;
     private View authorLayout;
-    private Toolbar toolbar;
+    private AppBarLayout appbar;
     private SScrollView scrollView;
     private View headerHolder;
     private WWebView webView;
@@ -84,7 +84,8 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
         setContentView(R.layout.activity_single_reply);
         handler = new Handler();
         rootView = findViewById(R.id.rootView);
-        toolbar = (Toolbar) findViewById(R.id.action_bar);
+        appbar = (AppBarLayout) findViewById(R.id.app_bar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         authorLayout = findViewById(R.id.layout_author);
         scrollView = (SScrollView) findViewById(R.id.scrollView);
@@ -181,7 +182,7 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
             public void onGlobalLayout() {
                 if (authorLayout.getHeight() > 0) {
                     rootView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                    topBarHeight = toolbar.getHeight() + hostTitle.getHeight();
+                    topBarHeight = appbar.getHeight() + hostTitle.getHeight();
                     headerHeight = topBarHeight + authorLayout.getHeight();
                     ViewGroup.LayoutParams params = headerHolder.getLayoutParams();
                     params.height = headerHeight;
@@ -246,7 +247,7 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
             }
             if (backAnimatorSet == null || !backAnimatorSet.isRunning()) {
                 backAnimatorSet = new AnimatorSet();
-                ObjectAnimator toolBarAnimator = ObjectAnimator.ofFloat(toolbar, "translationY", toolbar.getTranslationY(), 0f);
+                ObjectAnimator toolBarAnimator = ObjectAnimator.ofFloat(appbar, "translationY", appbar.getTranslationY(), 0f);
                 ObjectAnimator titleAnimator = ObjectAnimator.ofFloat(hostTitle, "translationY", hostTitle.getTranslationY(), 0f);
                 ObjectAnimator authorAnimator = ObjectAnimator.ofFloat(authorLayout, "translationY", authorLayout.getTranslationY(), 0f);
                 ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(floatingActionsMenu, "translationY", floatingActionsMenu.getTranslationY(), 0f);
@@ -291,7 +292,7 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
             }
             if (hideAnimatorSet == null || !hideAnimatorSet.isRunning()) {
                 hideAnimatorSet = new AnimatorSet();
-                ObjectAnimator toolBarAnimator = ObjectAnimator.ofFloat(toolbar, "translationY", toolbar.getTranslationY(), -toolbar.getBottom());
+                ObjectAnimator toolBarAnimator = ObjectAnimator.ofFloat(appbar, "translationY", appbar.getTranslationY(), -appbar.getBottom());
                 ObjectAnimator titleAnimator = ObjectAnimator.ofFloat(hostTitle, "translationY", hostTitle.getTranslationY(), -hostTitle.getBottom());
                 ObjectAnimator authorAnimator = ObjectAnimator.ofFloat(authorLayout, "translationY", authorLayout.getTranslationY(), -authorLayout.getTop());
                 ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(floatingActionsMenu, "translationY", floatingActionsMenu.getTranslationY(), floatingActionsMenu.getHeight());
