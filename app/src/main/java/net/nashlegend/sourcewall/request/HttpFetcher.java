@@ -119,7 +119,7 @@ public class HttpFetcher {
             }
         }
         RequestBody formBody = builder.build();
-        Request request = new Request.Builder().post(formBody).url(url).build();
+        Request request = new Request.Builder().put(formBody).url(url).build();
         Response response = getDefaultHttpClient().newCall(request).execute();
         int statusCode = response.code();
         String result = response.body().string();
