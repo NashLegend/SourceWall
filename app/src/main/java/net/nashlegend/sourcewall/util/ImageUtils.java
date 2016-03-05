@@ -1,19 +1,23 @@
 package net.nashlegend.sourcewall.util;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
+import android.graphics.Point;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.support.annotation.Nullable;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.display.CircleBitmapDisplayer;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 import net.nashlegend.sourcewall.R;
+
+import java.io.File;
 
 public class ImageUtils {
 
@@ -51,7 +55,6 @@ public class ImageUtils {
      * @param strokeColor 边框颜色
      * @param strokeWidth 边框宽度
      * @param isCircle    是否圆形
-     *
      * @return 转换后的bitmap
      */
     public static Bitmap convertImgRound(Bitmap bitmap, int strokeColor, float strokeWidth, boolean isCircle) {
@@ -95,5 +98,17 @@ public class ImageUtils {
 
         }
         return roundBitmap;
+    }
+
+    @Nullable
+    public static Point getImageFileScale(File imageFile) {
+        try {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(imageFile.getAbsolutePath(), options);
+            return new Point(options.outWidth, options.outHeight);
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

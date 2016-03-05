@@ -24,6 +24,6 @@ public class SampleActivity extends BaseActivity<SamplePresenter> implements Sam
 
     @Override
     public void doSomething() {
-        System.out.println("do something");
+
     }
 }

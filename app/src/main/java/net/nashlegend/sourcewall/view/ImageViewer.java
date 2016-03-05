@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Base64;
@@ -19,6 +20,7 @@ import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.commonview.LoadingView;
 import net.nashlegend.sourcewall.commonview.ScalingImage;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
+import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.DisplayUtil;
 import net.nashlegend.sourcewall.util.ImageUtils;
 
@@ -37,6 +39,7 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
     LoadingView loadingView;
     LoaderTask task;
     String url = "";
+    int doubleTapZoomDpi = 96;
 
     public ImageViewer(final Context context) {
         super(context);
@@ -46,11 +49,12 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
         gifImageView = (GifImageView) findViewById(R.id.gifImage);
         gifImageView.setVisibility(VISIBLE);
         imageView.setVisibility(GONE);
-        imageView.setMinimumDpi(96);
-        imageView.setDoubleTapZoomDpi(96);
+        imageView.setMinimumDpi(doubleTapZoomDpi);
+        imageView.setDoubleTapZoomDpi(doubleTapZoomDpi);
         loadingView = (LoadingView) findViewById(R.id.image_loading);
         imageView.setOnClickListener(this);
         gifImageView.setOnClickListener(this);
+        this.setOnClickListener(this);
     }
 
     public void load(String imageUrl) {
@@ -68,6 +72,7 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
                 gifImageView.setVisibility(GONE);
                 imageView.setVisibility(VISIBLE);
                 imageView.setImage(ImageSource.bitmap(bitmap));
+                properScale(bitmap);
                 loadingView.onLoadSuccess();
             } catch (Exception e) {
                 loadingView.onLoadFailed();
@@ -94,6 +99,33 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
                 ((Activity) ctx).finish();
             }
         }
+    }
+
+    private void properScale(Bitmap bitmap) {
+        properScale(bitmap.getWidth(), bitmap.getHeight());
+    }
+
+    private void properScale(File imageFile) {
+        Point point = ImageUtils.getImageFileScale(imageFile);
+        if (point != null) {
+            properScale(point.x, point.y);
+        } else {
+            imageView.setDoubleTapZoomDpi(doubleTapZoomDpi);
+        }
+    }
+
+    private void properScale(int width, int height) {
+        if (width > 0 && height > 0 && (height + 0.0) / width > Config.longImageRatio) {
+            int sw = DisplayUtil.getScreenWidth(getContext());
+            float density = DisplayUtil.getPixelDensity(getContext());
+            float minDensity = doubleTapZoomDpi / 160;
+            if (sw <= width * density / minDensity) {
+                //如果默认情况下图片双击会超过屏幕，那么就不让他超过
+                imageView.setDoubleTapZoomScale(sw / width);
+                return;
+            }
+        }
+        imageView.setDoubleTapZoomDpi(doubleTapZoomDpi);
     }
 
     class LoaderTask extends AsyncTask<String, Integer, ResponseObject<File>> {
@@ -160,6 +192,7 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
                     gifImageView.setVisibility(GONE);
                     imageView.setVisibility(VISIBLE);
                     imageView.setImage(ImageSource.uri(Uri.fromFile(result.result)));
+                    properScale(result.result);
                 }
             } else {
                 loadingView.onLoadFailed();

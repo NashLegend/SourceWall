@@ -99,7 +99,6 @@ public class TTextView extends TextView {
         CharSequence charSequence = trimEnd(spanned);
         setText(charSequence);
         if (content.contains("<img")) {
-            // TODO: 16/2/25 此处应该删除Config.shouldLoadImage()判断，转而放在imageGetter里面判断
             htmlTask = new HtmlLoaderTask();
             htmlTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, content);
         }
