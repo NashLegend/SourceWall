@@ -52,6 +52,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.File;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -97,7 +98,7 @@ public class TTextView extends TextView {
         Spanned spanned = correctLinkPaths(Html.fromHtml(content, emptyImageGetter, null));
         CharSequence charSequence = trimEnd(spanned);
         setText(charSequence);
-        if (Config.shouldLoadImage() && content.contains("<img")) {
+        if (content.contains("<img")) {
             // TODO: 16/2/25 此处应该删除Config.shouldLoadImage()判断，转而放在imageGetter里面判断
             htmlTask = new HtmlLoaderTask();
             htmlTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, content);
@@ -147,109 +148,27 @@ public class TTextView extends TextView {
                 setText(spanned);
             }
         }
-    }
 
-    /**
-     * 消除Html尾部空白
-     *
-     * @param s 要处理的html span
-     * @return 处理过的span
-     */
-    public static CharSequence trimEnd(CharSequence s) {
-        int start = 0;
-        int end = s.length();
-        while (end > start && Character.isWhitespace(s.charAt(end - 1))) {
-            end--;
-        }
-        return s.subSequence(start, end);
-    }
-
-    /**
-     * 解决相对路径的问题
-     *
-     * @param spannedText 要处理的span
-     * @return 处理过的span
-     */
-    public static Spanned correctLinkPaths(Spanned spannedText) {
-        Object[] spans = spannedText.getSpans(0, spannedText.length(), Object.class);
-        for (Object span : spans) {
-            int start = spannedText.getSpanStart(span);
-            int end = spannedText.getSpanEnd(span);
-            int flags = spannedText.getSpanFlags(span);
-            if (span instanceof URLSpan) {
-                URLSpan urlSpan = (URLSpan) span;
-                if (!urlSpan.getURL().startsWith("http")) {
-                    if (urlSpan.getURL().startsWith("/")) {
-                        urlSpan = new URLSpan("http://www.guokr.com" + urlSpan.getURL());
-                    } else {
-                        urlSpan = new URLSpan("http://www.guokr.com/" + urlSpan.getURL());
-                    }
-                }
-                ((Spannable) spannedText).removeSpan(span);
-                ((Spannable) spannedText).setSpan(urlSpan, start, end, flags);
-            }
-        }
-        return spannedText;
-    }
-
-    /**
-     * 空emptyImageGetter，用于获取图片前的尺寸准备或者无图模式下返回一个图标
-     * // TODO: 16/2/25 Base64的图片也应该给一个占位
-     */
-    Html.ImageGetter emptyImageGetter = new Html.ImageGetter() {
-        @Override
-        public Drawable getDrawable(String source) {
-            //这是图片格式
-            //http://2.im.guokr.com/xxx.jpg?imageView2/1/w/480/h/329
-            float stretch = DisplayUtil.getPixelDensity(App.getApp());
-            maxWidth = getMaxImageWidth();
-            Drawable drawable = null;
-            if (Config.shouldLoadImage() && source.startsWith("http")) {
-                int width = 0;
-                int height = 0;
-                String reg = ".+/w/(\\d+)/h/(\\d+)";
-                Matcher matcher = Pattern.compile(reg).matcher(source);
-                if (matcher.find()) {
-                    width = (int) (Integer.valueOf(matcher.group(1)) * stretch);
-                    height = (int) (Integer.valueOf(matcher.group(2)) * stretch);
+        Html.ImageGetter imageGetter = new Html.ImageGetter() {
+            @Override
+            public Drawable getDrawable(String source) {
+                if (Config.shouldLoadImage()) {
+                    return getOnlineOrCachedDrawable(source);
                 } else {
-                    Point point = ImageSizeMap.get(source);
-                    if (point != null) {
-                        width = point.x;
-                        height = point.y;
-                    }
-                }
-                if (width > 0 && height > 0) {
-                    if (width > maxWidth) {
-                        height *= (maxWidth / width);
-                        width = (int) maxWidth;
-                    }
-                    drawable = new ColorDrawable(Color.parseColor("#dbdbdb"));//透明
-                    drawable.setBounds(0, 0, width, height);
-                } else {
-                    drawable = getContext().getResources().getDrawable(R.drawable.default_image);
-                    if (drawable != null) {
-                        width = drawable.getIntrinsicWidth();
-                        height = drawable.getIntrinsicHeight();
-                        drawable.setBounds(0, 0, width, height);
-                    }
-                }
-            } else {
-                drawable = getContext().getResources().getDrawable(R.drawable.default_image);
-                if (drawable != null) {
-                    int width = drawable.getIntrinsicWidth();
-                    int height = drawable.getIntrinsicHeight();
-                    drawable.setBounds(0, 0, width, height);
+                    //无图模式下要这样的话，如果完全没有图，那么也会加载两遍
+                    return getEmptyOrCachedDrawable(source);
                 }
             }
-            return drawable;
-        }
-    };
+        };
 
-    Html.ImageGetter imageGetter = new Html.ImageGetter() {
-        @Override
-        public Drawable getDrawable(String source) {
-            // TODO imageGetter在无图模式下尝试加载缓存中的图片，如果成功将someImageLoaded设为true，加载失败将不显示失败的占位符，而是像emptyGetter一样给个普通占位符
+        /**
+         * 获取在线或者缓存的图片，有图模式用
+         *
+         * @param source
+         * @return
+         */
+        private Drawable getOnlineOrCachedDrawable(String source) {
+            someImageLoaded = true;
             float stretch = DisplayUtil.getPixelDensity(App.getApp());
             Drawable drawable = null;
             try {
@@ -338,7 +257,140 @@ public class TTextView extends TextView {
             }
             return drawable;
         }
+
+        /**
+         * 获取空白的或者缓存的图片，在无图模式中使用
+         *
+         * @param source
+         * @return
+         */
+        private Drawable getEmptyOrCachedDrawable(String source) {
+            //是否有缓存
+            if (source.startsWith("http")) {
+                File schrodingerFile = ImageLoader.getInstance().getDiskCache().get(source);
+                if (schrodingerFile != null && schrodingerFile.exists()) {
+                    //有缓存
+                    return getOnlineOrCachedDrawable(source);
+                } else {
+                    //无缓存
+                    return getEmptyDrawable(source);
+                }
+            } else if (source.startsWith("data:image/")) {
+                //无图模式下，base64的图片还是要显示的，毕竟加载都加载了
+                return getOnlineOrCachedDrawable(source);
+            } else {
+                return getEmptyDrawable(source);
+            }
+
+        }
+    }
+
+    /**
+     * 消除Html尾部空白
+     *
+     * @param s 要处理的html span
+     * @return 处理过的span
+     */
+    public static CharSequence trimEnd(CharSequence s) {
+        int start = 0;
+        int end = s.length();
+        while (end > start && Character.isWhitespace(s.charAt(end - 1))) {
+            end--;
+        }
+        return s.subSequence(start, end);
+    }
+
+    /**
+     * 解决相对路径的问题
+     *
+     * @param spannedText 要处理的span
+     * @return 处理过的span
+     */
+    public static Spanned correctLinkPaths(Spanned spannedText) {
+        Object[] spans = spannedText.getSpans(0, spannedText.length(), Object.class);
+        for (Object span : spans) {
+            int start = spannedText.getSpanStart(span);
+            int end = spannedText.getSpanEnd(span);
+            int flags = spannedText.getSpanFlags(span);
+            if (span instanceof URLSpan) {
+                URLSpan urlSpan = (URLSpan) span;
+                if (!urlSpan.getURL().startsWith("http")) {
+                    if (urlSpan.getURL().startsWith("/")) {
+                        urlSpan = new URLSpan("http://www.guokr.com" + urlSpan.getURL());
+                    } else {
+                        urlSpan = new URLSpan("http://www.guokr.com/" + urlSpan.getURL());
+                    }
+                }
+                ((Spannable) spannedText).removeSpan(span);
+                ((Spannable) spannedText).setSpan(urlSpan, start, end, flags);
+            }
+        }
+        return spannedText;
+    }
+
+    /**
+     * 空emptyImageGetter，用于获取图片前的尺寸准备或者无图模式下返回一个图标
+     */
+    Html.ImageGetter emptyImageGetter = new Html.ImageGetter() {
+        @Override
+        public Drawable getDrawable(String source) {
+            //这是图片格式
+            return getEmptyDrawable(source);
+        }
     };
+
+    /**
+     * 获取空白的图片，在图片加载完成前或者无图模式下用
+     *
+     * @param source
+     * @return
+     */
+    private Drawable getEmptyDrawable(String source) {
+        //这是图片格式
+        //http://2.im.guokr.com/xxx.jpg?imageView2/1/w/480/h/329
+        float stretch = DisplayUtil.getPixelDensity(App.getApp());
+        maxWidth = getMaxImageWidth();
+        Drawable drawable;
+        if (source.startsWith("http")) {
+            int width = 0;
+            int height = 0;
+            String reg = ".+/w/(\\d+)/h/(\\d+)";
+            Matcher matcher = Pattern.compile(reg).matcher(source);
+            if (matcher.find()) {
+                width = (int) (Integer.valueOf(matcher.group(1)) * stretch);
+                height = (int) (Integer.valueOf(matcher.group(2)) * stretch);
+            } else {
+                Point point = ImageSizeMap.get(source);
+                if (point != null) {
+                    width = point.x;
+                    height = point.y;
+                }
+            }
+            if (width > 0 && height > 0) {
+                if (width > maxWidth) {
+                    height *= (maxWidth / width);
+                    width = (int) maxWidth;
+                }
+                drawable = new ColorDrawable(Color.parseColor("#dbdbdb"));//透明
+                drawable.setBounds(0, 0, width, height);
+            } else {
+                drawable = getContext().getResources().getDrawable(R.drawable.default_image);
+                if (drawable != null) {
+                    width = drawable.getIntrinsicWidth();
+                    height = drawable.getIntrinsicHeight();
+                    drawable.setBounds(0, 0, width, height);
+                }
+            }
+        } else {
+            drawable = getContext().getResources().getDrawable(R.drawable.default_image);
+            if (drawable != null) {
+                int width = drawable.getIntrinsicWidth();
+                int height = drawable.getIntrinsicHeight();
+                drawable.setBounds(0, 0, width, height);
+            }
+        }
+        return drawable;
+    }
 
     private double getMaxImageWidth() {
         int w = getWidth() - getPaddingLeft() - getPaddingRight();
