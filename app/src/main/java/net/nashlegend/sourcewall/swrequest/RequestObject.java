@@ -46,38 +46,44 @@ public class RequestObject<T> {
 
     private int crtTime = 0;//当前重试次数
 
-    public int maxRetryTimes = 0;//最大重试次数
+    protected int maxRetryTimes = 0;//最大重试次数
 
-    public int interval = 0;//重试间隔
+    protected int interval = 0;//重试间隔
 
-    public int requestType = RequestType.PLAIN;
+    protected int requestType = RequestType.PLAIN;
 
-    public int method = Method.POST;
+    protected int method = Method.POST;
 
-    public HashMap<String, String> params = new HashMap<>();
+    protected HashMap<String, String> params = new HashMap<>();
 
-    public String url = "";
+    protected String url = "";
 
-    public CallBack<T> callBack = null;
+    protected CallBack<T> callBack = null;
 
-    public Parser<T> parser;
+    protected Parser<T> parser;
 
-    public Object tag = DefaultTag;
+    protected Object tag = DefaultTag;
 
-    public String uploadParamKey = "file";
+    protected String uploadParamKey = "file";
 
-    public MediaType mediaType = null;
+    protected MediaType mediaType = null;
 
     /**
      * 请求失败时是否使用缓存，如果为true，那么将使用缓存，请求成功的话也会将成功的数据缓存下来
      */
-    public boolean useCachedIfFailed = false;
+    protected boolean useCachedIfFailed = false;
 
-    public String filePath = "";
+    /**
+     * 是否优先使用缓存，如果useCachedFirst为true，那么useCachedIfFailed就为false了
+     * 仅仅在使用Rx时有效，与useCacheIfFailed互斥
+     */
+    protected boolean useCachedFirst = false;
 
-    public boolean ignoreHandler = false;
+    protected String filePath = "";
 
-    public Handler handler;
+    protected boolean ignoreHandler = false;
+
+    protected Handler handler;
 
     private Call call = null;
 
@@ -134,7 +140,13 @@ public class RequestObject<T> {
      * @return
      */
     private void saveToCache(String data) {
-        RequestCache.getInstance().addStringToCacheForceUpdate(getCachedKey(), data);
+        if (shouldCache()) {
+            RequestCache.getInstance().addStringToCacheForceUpdate(getCachedKey(), data);
+        }
+    }
+
+    private boolean shouldCache() {
+        return useCachedIfFailed || useCachedFirst;
     }
 
     @SuppressWarnings("unchecked")
@@ -200,6 +212,32 @@ public class RequestObject<T> {
     }
 
     /**
+     * 通过RxJava的方式招待请求，与requestAsync一样……
+     */
+    public void requestRx() {
+        requestObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<ResponseObject<T>>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (callBack != null) {
+                    callBack.onFailure(e, responseObject);
+                }
+            }
+
+            @Override
+            public void onNext(ResponseObject<T> tResponseObject) {
+                if (callBack != null) {
+                    callBack.onResponse(tResponseObject);
+                }
+            }
+        });
+    }
+
+    /**
      * 异步请求，并不立即执行，仅仅返回Observable
      */
     public Observable<ResponseObject<T>> requestObservable() {
@@ -208,6 +246,16 @@ public class RequestObject<T> {
                     @Override
                     public void call(Subscriber<? super String> subscriber) {
                         try {
+                            if (useCachedFirst) {
+                                String cachedResult = readFromCache();
+                                if (cachedResult != null) {
+                                    responseObject.isCached = true;
+                                    responseObject.body = cachedResult;
+                                    subscriber.onNext(cachedResult);
+                                    subscriber.onCompleted();
+                                    return;
+                                }
+                            }
                             call = requestSync();
                             Response response = call.execute();
                             String result = response.body().string();
@@ -220,7 +268,7 @@ public class RequestObject<T> {
                                 subscriber.onError(new IllegalStateException("Not A Successful Response"));
                             }
                         } catch (Exception e) {
-                            if (call.isCanceled()) {
+                            if (call != null && call.isCanceled()) {
                                 responseObject.isCancelled = true;
                             }
                             subscriber.onError(e);
@@ -252,10 +300,7 @@ public class RequestObject<T> {
                         if (responseObject.throwable == null && parser != null) {
                             try {
                                 responseObject.result = parser.parse(string, responseObject);
-                                if (responseObject.ok && useCachedIfFailed && !responseObject.isCached) {
-                                    //如果responseObject.ok说明数据正确
-                                    //如果!responseObject.isCached说明不是读的缓存
-                                    //当然要保存到缓存啦
+                                if (responseObject.ok && !responseObject.isCached) {
                                     saveToCache(string);
                                 }
                             } catch (Exception e) {
@@ -308,7 +353,7 @@ public class RequestObject<T> {
                         responseObject.body = result;
                         if (response.isSuccessful()) {
                             responseObject.result = parser.parse(result, responseObject);
-                            if (responseObject.ok && useCachedIfFailed) {
+                            if (responseObject.ok) {
                                 //如果请求成功且允许缓存，那么将此次请求的数据保存到缓存中
                                 saveToCache(result);
                             }
@@ -446,7 +491,7 @@ public class RequestObject<T> {
          * @param e
          * @param result
          */
-        void onFailure(@Nullable Exception e, @NonNull ResponseObject<T> result);
+        void onFailure(@Nullable Throwable e, @NonNull ResponseObject<T> result);
 
         /**
          * 如果执行到此处，必然code==0,ok必然为true
@@ -458,6 +503,7 @@ public class RequestObject<T> {
 
     public boolean shouldHandNotifier(Throwable exception, ResponseObject responseObject) {
         return responseObject.code != ResponseCode.CODE_TOKEN_INVALID
+                && call != null
                 && !call.isCanceled()
                 && crtTime < maxRetryTimes
                 && !(exception instanceof InterruptedIOException)

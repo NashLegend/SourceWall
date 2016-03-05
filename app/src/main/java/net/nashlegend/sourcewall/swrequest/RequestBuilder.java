@@ -225,6 +225,24 @@ public class RequestBuilder<T> {
      */
     public RequestBuilder<T> useCacheIfFailed(boolean useCache) {
         rbRequest.useCachedIfFailed = useCache;
+        if (useCache) {
+            rbRequest.useCachedFirst = false;
+        }
+        return this;
+    }
+
+    /**
+     * 是否优先使用缓存，如果缓存使用失败才加载网络数据
+     * 仅在使用Rx时有效，与useCacheIfFailed互斥
+     *
+     * @param useCache
+     * @return
+     */
+    public RequestBuilder<T> useCacheFirst(boolean useCache) {
+        rbRequest.useCachedFirst = useCache;
+        if (useCache) {
+            rbRequest.useCachedIfFailed = false;
+        }
         return this;
     }
 
@@ -314,9 +332,18 @@ public class RequestBuilder<T> {
     }
 
     /**
-     * 异步请求
+     * 异步请求，返回的是一个Observable，但是并没有执行，需要手动subscribe
      */
     public Observable<ResponseObject<T>> requestObservable() {
+        addExtras();
+        rbRequest.requestType = RequestObject.RequestType.PLAIN;
+        return rbRequest.requestObservable();
+    }
+
+    /**
+     * 异步请求，返回的是一个Observable，但是并没有执行，需要手动subscribe
+     */
+    public Observable<ResponseObject<T>> requestRx() {
         addExtras();
         rbRequest.requestType = RequestObject.RequestType.PLAIN;
         return rbRequest.requestObservable();
