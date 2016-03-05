@@ -27,7 +27,6 @@ import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.RequestCache;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
-import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 
 public class MainActivity extends BaseActivity {
 
@@ -51,7 +50,6 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         MobclickAgent.setDebugMode(BuildConfig.DEBUG);
         AnalyticsConfig.enableEncrypt(true);
-        MobclickAgent.updateOnlineConfig(this);
         receiver = new Receiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction(Consts.Action_Open_Content_Fragment);
@@ -100,7 +98,7 @@ public class MainActivity extends BaseActivity {
 
     public void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        assert actionBar != null;
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(getTitle());
     }
@@ -112,6 +110,12 @@ public class MainActivity extends BaseActivity {
         if (currentFragment != null && currentFragment.takeOverBackPressed()) {
             return;
         }
+
+        if (isDrawerOpen()) {
+            mNavigationDrawerFragment.closeDrawer();
+            return;
+        }
+
         if (preparingToExit) {
             super.onBackPressed();
         } else {
@@ -144,7 +148,9 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return currentFragment != null && currentFragment.takeOverOptionsItemSelect(item) || super.onOptionsItemSelected(item);
+        return currentFragment != null
+                && currentFragment.takeOverOptionsItemSelect(item)
+                || super.onOptionsItemSelected(item);
     }
 
 
