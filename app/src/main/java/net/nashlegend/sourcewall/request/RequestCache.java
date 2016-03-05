@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
+import android.support.annotation.Nullable;
 import android.support.v4.util.LruCache;
 
 import net.nashlegend.sourcewall.App;
@@ -131,6 +132,7 @@ public class RequestCache {
         }
     }
 
+    @Nullable
     public String getCachedFile(String data) {
         File file = new File(getDiskCacheDir(App.getApp(), "request.cache"), hashKeyForDisk(data) + ".0");
         if (file.exists()) {
@@ -214,6 +216,7 @@ public class RequestCache {
         }
     }
 
+    @Nullable
     public String getStringFromCache(String data) {
         if (mMemoryCache != null) {
             String memValue = mMemoryCache.get(data);

@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
@@ -11,11 +12,16 @@ import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
+import net.nashlegend.sourcewall.request.RequestCache;
 import net.nashlegend.sourcewall.swrequest.parsers.Parser;
 
 import java.io.IOException;
 import java.io.InterruptedIOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
@@ -62,18 +68,74 @@ public class RequestObject<T> {
 
     public MediaType mediaType = null;
 
-    // TODO: 16/3/5，如果使用缓存的话，那么需要一套机制来保存不同请求方法的key
+    /**
+     * 请求失败时是否使用缓存，如果为true，那么将使用缓存，请求成功的话也会将成功的数据缓存下来
+     */
     public boolean useCachedIfFailed = false;
 
     public String filePath = "";
-
-    public Callback callback;
 
     public boolean ignoreHandler = false;
 
     public Handler handler;
 
     private Call call = null;
+
+    /**
+     * 生成此次请求的缓存key，
+     * key的格式为：Method/{URL}/Params —— Params为a=b&c=d这样，按key排序
+     *
+     * @return
+     */
+    private String getCachedKey() {
+        StringBuilder keyBuilder = new StringBuilder("");
+        keyBuilder.append(method).append("/{").append(url).append("}/");
+        if (params == null) {
+            params = new HashMap<>();
+        }
+        if (params.size() > 0) {
+            ArrayList<Map.Entry<String, String>> entryArrayList = new ArrayList<>();
+            for (HashMap.Entry<String, String> entry : params.entrySet()) {
+                if (TextUtils.isEmpty(entry.getKey())) {
+                    continue;
+                }
+                entryArrayList.add(entry);
+            }
+            Collections.sort(entryArrayList, new Comparator<Map.Entry<String, String>>() {
+                @Override
+                public int compare(Map.Entry<String, String> lhs, Map.Entry<String, String> rhs) {
+                    return lhs.getKey().compareTo(rhs.getKey());
+                }
+            });
+            if (entryArrayList.size() > 0) {
+                keyBuilder.append("?");
+                for (int i = 0; i < entryArrayList.size(); i++) {
+                    HashMap.Entry<String, String> entry = entryArrayList.get(i);
+                    keyBuilder.append(entry.getKey()).append("=").append(entry.getValue()).append("&");
+                }
+                keyBuilder.deleteCharAt(keyBuilder.length() - 1);
+            }
+        }
+        return keyBuilder.toString();
+    }
+
+    /**
+     * 在缓存中读取数据
+     *
+     * @return
+     */
+    private String readFromCache() {
+        return RequestCache.getInstance().getStringFromCache(getCachedKey());
+    }
+
+    /**
+     * 将数据存入缓存
+     *
+     * @return
+     */
+    private void saveToCache(String data) {
+        RequestCache.getInstance().addStringToCacheForceUpdate(getCachedKey(), data);
+    }
 
     @SuppressWarnings("unchecked")
     public void copyPartFrom(@NonNull RequestObject object) {
@@ -170,8 +232,18 @@ public class RequestObject<T> {
                 .onErrorResumeNext(new Func1<Throwable, Observable<? extends String>>() {
                     @Override
                     public Observable<? extends String> call(Throwable throwable) {
+                        if ((call == null || !call.isCanceled()) && useCachedIfFailed) {
+                            //如果请求失败并且可以使用缓存，那么使用缓存
+                            //只要不是取消掉的才会读取缓存，如果是取消掉的，读啥缓存啊，请求都没有了
+                            String cachedResult = readFromCache();
+                            if (cachedResult != null) {
+                                responseObject.isCached = true;
+                                responseObject.body = cachedResult;
+                                return Observable.just(cachedResult);
+                            }
+                        }
                         JsonHandler.handleRequestException(throwable, responseObject);
-                        return Observable.just("Error!");
+                        return Observable.just("Error Occurred!");
                     }
                 })
                 .map(new Func1<String, ResponseObject<T>>() {
@@ -180,6 +252,12 @@ public class RequestObject<T> {
                         if (responseObject.throwable == null && parser != null) {
                             try {
                                 responseObject.result = parser.parse(string, responseObject);
+                                if (responseObject.ok && useCachedIfFailed && !responseObject.isCached) {
+                                    //如果responseObject.ok说明数据正确
+                                    //如果!responseObject.isCached说明不是读的缓存
+                                    //当然要保存到缓存啦
+                                    saveToCache(string);
+                                }
                             } catch (Exception e) {
                                 JsonHandler.handleRequestException(e, responseObject);
                             }
@@ -230,6 +308,21 @@ public class RequestObject<T> {
                         responseObject.body = result;
                         if (response.isSuccessful()) {
                             responseObject.result = parser.parse(result, responseObject);
+                            if (responseObject.ok && useCachedIfFailed) {
+                                //如果请求成功且允许缓存，那么将此次请求的数据保存到缓存中
+                                saveToCache(result);
+                            }
+                        } else {
+                            if ((call == null || !call.isCanceled()) && useCachedIfFailed) {
+                                //如果请求失败并且可以使用缓存，那么使用缓存
+                                //只要不是取消掉的才会读取缓存，如果是取消掉的，读啥缓存啊，请求都没有了
+                                String cachedResult = readFromCache();
+                                if (cachedResult != null) {
+                                    responseObject.isCached = true;
+                                    responseObject.body = result;
+                                    responseObject.result = parser.parse(cachedResult, responseObject);
+                                }
+                            }
                         }
                         if (handler != null) {
                             handler.post(new Runnable() {
