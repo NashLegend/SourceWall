@@ -19,6 +19,7 @@ public class ResponseObject<T> {
     public T result;//网络请求返回的结果(已经parse过的)
     public String body = "";//网络返回的结果，String
     public boolean isCancelled = false;//是否已经被取消，在ok==false的时候可以判断是否是由取消请求引起的
+    public boolean isCached = false;//是否响应是通过缓存读取的
 
     /**
      * 从一个ResponseObject中复制一部分，类型可能不一样，但是其他参数一样，用于ResponseObject类型转换

@@ -62,7 +62,8 @@ public class RequestObject<T> {
 
     public MediaType mediaType = null;
 
-    public String cache;// TODO: 2015/10/20 0020
+    // TODO: 16/3/5，如果使用缓存的话，那么需要一套机制来保存不同请求方法的key
+    public boolean useCachedIfFailed = false;
 
     public String filePath = "";
 

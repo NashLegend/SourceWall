@@ -218,6 +218,17 @@ public class RequestBuilder<T> {
     }
 
     /**
+     * 如果加载失败，是否使用缓存，默认为false，不使用缓存
+     *
+     * @param useCache
+     * @return
+     */
+    public RequestBuilder<T> useCacheIfFailed(boolean useCache) {
+        rbRequest.useCachedIfFailed = useCache;
+        return this;
+    }
+
+    /**
      * 设置请求成功或者失败后的回调，如果没有parser，将不会回调
      *
      * @param callBack
@@ -287,7 +298,7 @@ public class RequestBuilder<T> {
         }
     }
 
-    public RequestObject<T> buildPlainRequest(){
+    public RequestObject<T> buildPlainRequest() {
         addExtras();
         rbRequest.requestType = RequestObject.RequestType.PLAIN;
         return rbRequest;
