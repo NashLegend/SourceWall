@@ -315,3 +315,24 @@ Params:`answer_id=761928&access_token={token}`
 Http Code:
 > 201 ok
 > 400 already buried
+
+
+//TODO
+--------------------------------------------------------------
+获取用户关注的小组
+=========
+GET:http://apis.guokr.com/group/member.json?retrieve_type=by_user&ukey={ukey}&limit=3000&offset=0
+
+--------------------------------------------------------------
+获取小组热贴
+=========
+GET:http://apis.guokr.com/group/post.json?retrieve_type=hot_post&limit=3000&offset=0
+
+--------------------------------------------------------------
+获取热门问题
+=========
+GET:http://apis.guokr.com/ask/question.json?retrieve_type=hot_question&limit=3&offset=1
+
+获取果篮里的文章
+==========
+GET http://apis.guokr.com/favorite/link.json?retrieve_type=by_basket&basket_id=18786&limit=10&offset=10
