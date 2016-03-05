@@ -190,6 +190,37 @@ public class ArticleAPI extends APIBase {
      * @param id article ID
      * @return ResponseObject
      */
+    public static ResponseObject<Article> getCachedArticleDetailByID(String id) {
+        return getCachedArticleDetailByUrl("http://www.guokr.com/article/" + id + "/");
+    }
+
+    /**
+     * 直接解析页面获得文章内容
+     * resultObject.result是Article
+     *
+     * @param url article页面地址
+     */
+    public static ResponseObject<Article> getCachedArticleDetailByUrl(String url) {
+        ResponseObject<Article> resultObject = new ResponseObject<>();
+        try {
+            String articleId = url.replaceAll("\\?.*$", "").replaceAll("\\D+", "");
+            String html = RequestCache.getInstance().getStringFromCache(url);
+            Article article = Article.fromHtmlDetail(articleId, html);
+            resultObject.ok = true;
+            resultObject.result = article;
+        } catch (Exception e) {
+            handleRequestException(e, resultObject);
+        }
+        return resultObject;
+    }
+
+    /**
+     * 根据文章id，解析页面获得文章内容
+     * resultObject.result是Article
+     *
+     * @param id article ID
+     * @return ResponseObject
+     */
     public static ResponseObject<Article> getArticleDetailByID(String id) {
         return getArticleDetailByUrl("http://www.guokr.com/article/" + id + "/");
     }
@@ -213,6 +244,7 @@ public class ArticleAPI extends APIBase {
             Article article = Article.fromHtmlDetail(aid, html);
             resultObject.ok = true;
             resultObject.result = article;
+            RequestCache.getInstance().addStringToCacheForceUpdate(url, html);
         } catch (Exception e) {
             handleRequestException(e, resultObject);
         }

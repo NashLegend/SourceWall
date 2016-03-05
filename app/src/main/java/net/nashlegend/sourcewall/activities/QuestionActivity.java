@@ -31,9 +31,9 @@ import net.nashlegend.sourcewall.dialogs.FavorDialog;
 import net.nashlegend.sourcewall.dialogs.InputDialog;
 import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Question;
-import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
+import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.util.AutoHideUtil;
 import net.nashlegend.sourcewall.util.AutoHideUtil.AutoHideListener;
 import net.nashlegend.sourcewall.util.Consts;
@@ -291,10 +291,15 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
                 ResponseObject<Question> questionResult = QuestionAPI.getQuestionDetailByID(question.getId());
                 if (questionResult.ok) {
                     publishProgress(questionResult);
-                    return QuestionAPI.getQuestionAnswers(question.getId(), 0);
                 } else {
-                    return new ResponseObject<>();
+                    ResponseObject<Question> cachedQuestionResult = QuestionAPI.getCachedQuestionDetailByID(question.getId());
+                    if (cachedQuestionResult.ok) {
+                        publishProgress(cachedQuestionResult);
+                    } else {
+                        return new ResponseObject<>();
+                    }
                 }
+                return QuestionAPI.getQuestionAnswers(question.getId(), 0);
             } else {
                 return QuestionAPI.getQuestionAnswers(question.getId(), offset);
             }

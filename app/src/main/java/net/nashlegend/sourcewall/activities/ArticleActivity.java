@@ -482,7 +482,12 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
                 if (articleResult.ok) {
                     publishProgress(articleResult);
                 } else {
-                    return new ResponseObject<>();
+                    ResponseObject<Article> cachedArticleResult = ArticleAPI.getCachedArticleDetailByID(article.getId());
+                    if (cachedArticleResult.ok) {
+                        publishProgress(cachedArticleResult);
+                    } else {
+                        return new ResponseObject<>();
+                    }
                 }
             }
             if (loadDesc) {
@@ -547,7 +552,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
                     finish();
                 } else {
                     toastSingleton(getString(R.string.load_failed));
-                    loadingView.onLoadSuccess();
+                    loadingView.onLoadFailed();
                 }
             }
             if (adapter.getCount() > 0) {

@@ -233,6 +233,43 @@ public class QuestionAPI extends APIBase {
      * @param id 问题ID
      * @return ResponseObject
      */
+    public static ResponseObject<Question> getCachedQuestionDetailByID(String id) {
+        String url = "http://apis.guokr.com/ask/question/" + id + ".json";
+        return getCachedQuestionDetailFromJsonUrl(url);
+    }
+
+
+    /**
+     * 返回问题内容
+     * resultObject.result是Question
+     *
+     * @param url 返回问题内容,json格式
+     * @return ResponseObject
+     */
+    public static ResponseObject<Question> getCachedQuestionDetailFromJsonUrl(String url) {
+        ResponseObject<Question> resultObject = new ResponseObject<>();
+        try {
+            Question question;
+            String jString = RequestCache.getInstance().getStringFromCache(url);
+            JSONObject result = getUniversalJsonObject(jString, resultObject);
+            if (result != null) {
+                question = Question.fromJson(result);
+                resultObject.ok = true;
+                resultObject.result = question;
+            }
+        } catch (Exception e) {
+            handleRequestException(e, resultObject);
+        }
+
+        return resultObject;
+    }
+
+    /**
+     * 返回问题内容,json格式
+     *
+     * @param id 问题ID
+     * @return ResponseObject
+     */
     public static ResponseObject<Question> getQuestionDetailByID(String id) {
         String url = "http://apis.guokr.com/ask/question/" + id + ".json";
         return getQuestionDetailFromJsonUrl(url);
@@ -260,6 +297,7 @@ public class QuestionAPI extends APIBase {
                 question = Question.fromJson(result);
                 resultObject.ok = true;
                 resultObject.result = question;
+                RequestCache.getInstance().addStringToCacheForceUpdate(url, jString);
             }
         } catch (Exception e) {
             handleRequestException(e, resultObject);

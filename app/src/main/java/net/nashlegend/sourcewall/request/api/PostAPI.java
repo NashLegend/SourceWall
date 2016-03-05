@@ -399,6 +399,27 @@ public class PostAPI extends APIBase {
      * @param id，帖子id
      * @return resultObject
      */
+    public static ResponseObject<Post> getCachedPostDetailByIDFromJsonUrl(String id) {
+        ResponseObject<Post> resultObject = new ResponseObject<>();
+        String url = "http://apis.guokr.com/group/post/" + id + ".json";
+        try {
+            String json = RequestCache.getInstance().getStringFromCache(url);
+            JSONObject postResult = getUniversalJsonObject(json, resultObject);
+            Post detail = Post.fromJson(postResult);
+            resultObject.ok = true;
+            resultObject.result = detail;
+        } catch (Exception e) {
+            handleRequestException(e, resultObject);
+        }
+        return resultObject;
+    }
+
+    /**
+     * 根据帖子id获取帖子内容，json格式
+     *
+     * @param id，帖子id
+     * @return resultObject
+     */
     public static ResponseObject<Post> getPostDetailByIDFromJsonUrl(String id) {
         ResponseObject<Post> resultObject = new ResponseObject<>();
         String url = "http://apis.guokr.com/group/post/" + id + ".json";
@@ -413,6 +434,7 @@ public class PostAPI extends APIBase {
             Post detail = Post.fromJson(postResult);
             resultObject.ok = true;
             resultObject.result = detail;
+            RequestCache.getInstance().addStringToCacheForceUpdate(url, json);
         } catch (Exception e) {
             handleRequestException(e, resultObject);
         }

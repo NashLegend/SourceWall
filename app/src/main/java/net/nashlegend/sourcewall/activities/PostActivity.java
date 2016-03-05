@@ -340,7 +340,12 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
                 if (postResult.ok) {
                     publishProgress(postResult);
                 } else {
-                    return new ResponseObject<>();
+                    ResponseObject<Post> cachedPostResult = PostAPI.getCachedPostDetailByIDFromJsonUrl(post.getId());
+                    if (cachedPostResult.ok) {
+                        publishProgress(cachedPostResult);
+                    } else {
+                        return new ResponseObject<>();
+                    }
                 }
             }
             if (loadDesc) {
