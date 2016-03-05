@@ -93,11 +93,9 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.zoom_image || v.getId() == R.id.gifImage) {
-            Context ctx = getContext();
-            if (ctx instanceof Activity) {
-                ((Activity) ctx).finish();
-            }
+        Context ctx = getContext();
+        if (ctx instanceof Activity) {
+            ((Activity) ctx).finish();
         }
     }
 
