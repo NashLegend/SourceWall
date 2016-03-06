@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
@@ -68,8 +69,11 @@ public class RequestObject<T> {
 
     protected MediaType mediaType = null;
 
+    /*果壳貌似本身并没有Cache-Control，或者Cache-Control的max-age=0 所以这里的缓存是本地缓存*/
+
     /**
-     * 请求失败时是否使用缓存，如果为true，那么将使用缓存，请求成功的话也会将成功的数据缓存下来
+     * 请求失败时是否使用缓存，如果为true，那么将使用缓存，请求成功的话也会将成功的数据缓存下来,
+     * 与useCachedFirst互斥
      */
     protected boolean useCachedIfFailed = false;
 
@@ -147,6 +151,15 @@ public class RequestObject<T> {
 
     private boolean shouldCache() {
         return useCachedIfFailed || useCachedFirst;
+    }
+
+    /**
+     * 获取一个OkHttpClient的clone以做更多定制功能。
+     * @return
+     */
+    @NonNull
+    private OkHttpClient getClonedClient(){
+        return HttpUtil.getDefaultHttpClient().clone();
     }
 
     @SuppressWarnings("unchecked")

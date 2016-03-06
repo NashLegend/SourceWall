@@ -22,7 +22,7 @@ public class RequestCache {
 
     private static final int DEFAULT_MEM_CACHE_SIZE = 1024 * 5; // 5MB
 
-    private static final int DEFAULT_DISK_CACHE_SIZE = 1024 * 1024 * 20; // 10MB
+    private static final int DEFAULT_DISK_CACHE_SIZE = 1024 * 1024 * 50; // 50MB
 
     private static final int DISK_CACHE_INDEX = 0;
 
@@ -78,6 +78,7 @@ public class RequestCache {
                 File diskCacheDir = mCacheParams.diskCacheDir;
                 if (mCacheParams.diskCacheEnabled && diskCacheDir != null) {
                     if (!diskCacheDir.exists()) {
+                        //noinspection ResultOfMethodCallIgnored
                         diskCacheDir.mkdirs();
                     }
                     if (getUsableSpace(diskCacheDir) > mCacheParams.diskCacheSize) {
@@ -132,6 +133,12 @@ public class RequestCache {
         }
     }
 
+    /**
+     * 返回缓存的文件地址
+     *
+     * @param data
+     * @return
+     */
     @Nullable
     public String getCachedFile(String data) {
         File file = new File(getDiskCacheDir(App.getApp(), "request.cache"), hashKeyForDisk(data) + ".0");
@@ -379,7 +386,6 @@ public class RequestCache {
      * Get the external app cache directory.
      *
      * @param context The context to use
-     *
      * @return The external cache dir
      */
     @TargetApi(Build.VERSION_CODES.FROYO)
@@ -396,7 +402,6 @@ public class RequestCache {
      * Check how much usable space is available at a given path.
      *
      * @param path The path to check
-     *
      * @return The space available in bytes
      */
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)

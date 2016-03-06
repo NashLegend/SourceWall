@@ -1,5 +1,6 @@
 package net.nashlegend.sourcewall.swrequest;
 
+import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.FormEncodingBuilder;
@@ -11,6 +12,8 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
+import net.nashlegend.sourcewall.App;
+import net.nashlegend.sourcewall.request.RequestCache;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 
 import org.json.JSONObject;
@@ -37,6 +40,7 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings("ResultOfMethodCallIgnored")
 public class HttpUtil {
 
+    private final static int HTTP_RESPONSE_DISK_CACHE_MAX_SIZE = 20 * 1024 * 1024;//Cache的最大体积,20M
     private final static int CONNECTION_TIMEOUT = 30000;//网络状况差的时候这个时间可能很长
     private final static int SO_TIMEOUT = 60000;
     private final static int UPLOAD_SO_TIMEOUT = 300000;//300秒的上传时间
@@ -102,7 +106,7 @@ public class HttpUtil {
             }
         }
         RequestBody formBody = builder.build();
-        Request request = new Request.Builder().post(formBody).url(url).tag(tag).build();
+        Request request = new Request.Builder().put(formBody).url(url).tag(tag).build();
         return getDefaultHttpClient().newCall(request);
     }
 
@@ -119,7 +123,7 @@ public class HttpUtil {
     }
 
     public static Call delete(String url, HashMap<String, String> params,
-                                                Object tag) throws Exception {
+                              Object tag) throws Exception {
         StringBuilder paramString = new StringBuilder("");
         if (params == null) {
             params = new HashMap<>();
@@ -183,7 +187,7 @@ public class HttpUtil {
             }
         }
         RequestBody formBody = builder.build();
-        Request request = new Request.Builder().post(formBody).url(url).tag(tag).build();
+        Request request = new Request.Builder().put(formBody).url(url).tag(tag).build();
         Call call = getDefaultHttpClient().newCall(request);
         call.enqueue(defCallBack);
         return call;
@@ -221,6 +225,8 @@ public class HttpUtil {
     synchronized public static OkHttpClient getDefaultHttpClient() {
         if (defaultHttpClient == null) {
             defaultHttpClient = new OkHttpClient();
+            final File cacheDir = RequestCache.getDiskCacheDir(App.getApp(), "OkHttp.cache");
+            defaultHttpClient.setCache(new Cache(cacheDir, HTTP_RESPONSE_DISK_CACHE_MAX_SIZE));
             CookieManager cookieManager = new CookieManager();
             cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
             defaultHttpClient.setCookieHandler(cookieManager);
