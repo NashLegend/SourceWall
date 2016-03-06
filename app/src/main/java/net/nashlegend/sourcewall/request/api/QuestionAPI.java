@@ -15,6 +15,7 @@ import net.nashlegend.sourcewall.swrequest.RequestBuilder;
 import net.nashlegend.sourcewall.swrequest.RequestObject;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.swrequest.parsers.BooleanParser;
+import net.nashlegend.sourcewall.swrequest.parsers.ContentValueForKeyParser;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.MDUtil;
 
@@ -459,6 +460,7 @@ public class QuestionAPI extends APIBase {
      * @param content 答案内容
      * @return ResponseObject.result is the reply_id if ok;
      */
+    @Deprecated
     public static ResponseObject<String> answerQuestion(String id, String content) {
         ResponseObject<String> resultObject = new ResponseObject<>();
         try {
@@ -477,6 +479,27 @@ public class QuestionAPI extends APIBase {
             handleRequestException(e, resultObject);
         }
         return resultObject;
+    }
+
+    /**
+     * 使用json请求回答问题
+     *
+     * @param id      帖子id
+     * @param content 回复内容
+     * @return ResponseObject.result is the reply_id if ok;
+     */
+    public static RequestObject<String> answerQuestion(String id, String content, RequestObject.CallBack<String> callBack) {
+        String url = "http://apis.guokr.com/ask/answer.json";
+        HashMap<String, String> pairs = new HashMap<>();
+        pairs.put("question_id", id);
+        pairs.put("content", content);
+        return new RequestBuilder<String>()
+                .setUrl(url)
+                .setParser(new ContentValueForKeyParser("id"))
+                .setRequestCallBack(callBack)
+                .setParams(pairs)
+                .post()
+                .requestAsync();
     }
 
     /**

@@ -15,6 +15,7 @@ import net.nashlegend.sourcewall.swrequest.RequestObject;
 import net.nashlegend.sourcewall.swrequest.ResponseError;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.swrequest.parsers.BooleanParser;
+import net.nashlegend.sourcewall.swrequest.parsers.ContentValueForKeyParser;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.MDUtil;
 
@@ -507,6 +508,7 @@ public class PostAPI extends APIBase {
      * @param content 回复内容
      * @return ResponseObject.result is the reply_id if ok;
      */
+    @Deprecated
     public static ResponseObject<String> replyPost(String id, String content) {
         ResponseObject<String> resultObject = new ResponseObject<>();
         try {
@@ -517,7 +519,7 @@ public class PostAPI extends APIBase {
             String result = HttpFetcher.post(url, pairs).toString();
             JSONObject resultJson = getUniversalJsonObject(result, resultObject);
             if (resultJson != null) {
-                String replyID = resultJson.getString("id");
+                String replyID = resultJson.optString("id");
                 resultObject.ok = true;
                 resultObject.result = replyID;
             }
@@ -525,6 +527,27 @@ public class PostAPI extends APIBase {
             handleRequestException(e, resultObject);
         }
         return resultObject;
+    }
+
+    /**
+     * 使用json请求回复帖子
+     *
+     * @param id      帖子id
+     * @param content 回复内容
+     * @return ResponseObject.result is the reply_id if ok;
+     */
+    public static RequestObject<String>  replyPost(String id, String content, RequestObject.CallBack<String> callBack) {
+        String url = "http://apis.guokr.com/group/post_reply.json";
+        HashMap<String, String> pairs = new HashMap<>();
+        pairs.put("post_id", id);
+        pairs.put("content", content);
+        return new RequestBuilder<String>()
+                .setUrl(url)
+                .setParser(new ContentValueForKeyParser("id"))
+                .setRequestCallBack(callBack)
+                .setParams(pairs)
+                .post()
+                .requestAsync();
     }
 
     /**

@@ -89,7 +89,17 @@ public class RequestObject<T> {
 
     protected Handler handler;
 
+    private boolean softCancelled = false;//取消掉一个请求，但是并不中断请求，只是不再执行CallBack,请求完成后无任何动作
+
     private Call call = null;
+
+    public void softCancel() {
+        this.softCancelled = true;
+    }
+
+    public boolean isSoftCancelled() {
+        return softCancelled;
+    }
 
     /**
      * 生成此次请求的缓存key，
@@ -155,10 +165,11 @@ public class RequestObject<T> {
 
     /**
      * 获取一个OkHttpClient的clone以做更多定制功能。
+     *
      * @return
      */
     @NonNull
-    private OkHttpClient getClonedClient(){
+    private OkHttpClient getClonedClient() {
         return HttpUtil.getDefaultHttpClient().clone();
     }
 
@@ -224,6 +235,18 @@ public class RequestObject<T> {
         return call;
     }
 
+    private void callResponse(@NonNull ResponseObject<T> responseObject) {
+        if (!softCancelled && callBack != null) {
+            callBack.onResponse(responseObject);
+        }
+    }
+
+    private void callFailure(@Nullable Throwable e, @NonNull ResponseObject<T> responseObject) {
+        if (!softCancelled && callBack != null) {
+            callBack.onFailure(e, responseObject);
+        }
+    }
+
     /**
      * 通过RxJava的方式招待请求，与requestAsync一样……
      */
@@ -236,16 +259,12 @@ public class RequestObject<T> {
 
             @Override
             public void onError(Throwable e) {
-                if (callBack != null) {
-                    callBack.onFailure(e, responseObject);
-                }
+                callFailure(e, responseObject);
             }
 
             @Override
             public void onNext(ResponseObject<T> tResponseObject) {
-                if (callBack != null) {
-                    callBack.onResponse(tResponseObject);
-                }
+                callResponse(tResponseObject);
             }
         });
     }
@@ -387,7 +406,7 @@ public class RequestObject<T> {
                                 @Override
                                 public void run() {
                                     if (responseObject.ok) {
-                                        callBack.onResponse(responseObject);
+                                        callResponse(responseObject);
                                     } else {
                                         onRequestFailure(null, responseObject);
                                     }
@@ -395,7 +414,7 @@ public class RequestObject<T> {
                             });
                         } else {
                             if (responseObject.ok) {
-                                callBack.onResponse(responseObject);
+                                callResponse(responseObject);
                             } else {
                                 onRequestFailure(null, responseObject);
                             }
@@ -449,11 +468,11 @@ public class RequestObject<T> {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            callBack.onFailure(e, result);
+                            callFailure(e, result);
                         }
                     });
                 } else {
-                    callBack.onFailure(e, result);
+                    callFailure(e, result);
                 }
             }
         }

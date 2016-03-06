@@ -8,6 +8,7 @@ import android.text.TextUtils;
 
 import com.squareup.okhttp.MediaType;
 
+import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.swrequest.parsers.DirectlyStringParser;
 import net.nashlegend.sourcewall.swrequest.parsers.Parser;
 
@@ -308,8 +309,7 @@ public class RequestBuilder<T> {
             if (rbRequest.params == null) {
                 rbRequest.params = new HashMap<>();
             }
-            // TODO: 16/1/28
-            String token = "";
+            String token = UserAPI.getToken();
             if (!TextUtils.isEmpty(token)) {
                 rbRequest.params.put("access_token", token);
             }
@@ -325,10 +325,11 @@ public class RequestBuilder<T> {
     /**
      * 异步请求
      */
-    public void requestAsync() {
+    public RequestObject<T> requestAsync() {
         addExtras();
         rbRequest.requestType = RequestObject.RequestType.PLAIN;
         rbRequest.requestAsync();
+        return rbRequest;
     }
 
     /**
@@ -343,10 +344,11 @@ public class RequestBuilder<T> {
     /**
      * 异步请求，返回的是一个Observable，但是并没有执行，需要手动subscribe
      */
-    public Observable<ResponseObject<T>> requestRx() {
+    public RequestObject<T> requestRx() {
         addExtras();
         rbRequest.requestType = RequestObject.RequestType.PLAIN;
-        return rbRequest.requestObservable();
+        rbRequest.requestRx();
+        return rbRequest;
     }
 
 

@@ -13,10 +13,11 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -41,8 +42,10 @@ import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.model.UComment;
-import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.request.api.APIBase;
+import net.nashlegend.sourcewall.swrequest.RequestObject;
+import net.nashlegend.sourcewall.swrequest.ResponseObject;
+import net.nashlegend.sourcewall.util.CommonUtil;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.FileUtil;
 import net.nashlegend.sourcewall.util.Mob;
@@ -262,12 +265,50 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
     }
 
     private void publishReply(String rep) {
-        PublishReplyTask task = new PublishReplyTask();
+        if (aceModel instanceof Article) {
+            MobclickAgent.onEvent(ReplyActivity.this, Mob.Event_Reply_Article);
+        } else if (aceModel instanceof Post) {
+            MobclickAgent.onEvent(ReplyActivity.this, Mob.Event_Reply_Post);
+        } else if (aceModel instanceof Question) {
+            MobclickAgent.onEvent(ReplyActivity.this, Mob.Event_Answer_Question);
+        }
         String header = "";
         if (comment != null) {
             header = "[blockquote]" + hostText.getText() + "[/blockquote]";
         }
-        task.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR, header, rep);
+        final RequestObject<String> requestObject = APIBase.reply(aceModel, header + rep, new RequestObject.CallBack<String>() {
+            @Override
+            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<String> result) {
+                CommonUtil.dismissDialog(progressDialog);
+                toast(R.string.reply_failed);
+            }
+
+            @Override
+            public void onResponse(@NonNull ResponseObject<String> result) {
+                CommonUtil.dismissDialog(progressDialog);
+                if (result.ok) {
+                    toast(R.string.reply_ok);
+                    setResult(RESULT_OK);
+                    replyOK = true;
+                    tryClearSketch();
+                    finish();
+                } else {
+                    toast(R.string.reply_failed);
+                }
+            }
+        });
+        progressDialog = new ProgressDialog(ReplyActivity.this);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setMessage(getString(R.string.message_wait_a_minute));
+        progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                if (requestObject != null) {
+                    requestObject.softCancel();
+                }
+            }
+        });
+        progressDialog.show();
     }
 
     private void hideInput() {
@@ -300,53 +341,6 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
             case R.id.btn_link:
                 insertLink();
                 break;
-        }
-    }
-
-    class PublishReplyTask extends AsyncTask<String, Integer, ResponseObject> {
-
-        @Override
-        protected void onPreExecute() {
-
-            if (aceModel instanceof Article) {
-                MobclickAgent.onEvent(ReplyActivity.this, Mob.Event_Reply_Article);
-            } else if (aceModel instanceof Post) {
-                MobclickAgent.onEvent(ReplyActivity.this, Mob.Event_Reply_Post);
-            } else if (aceModel instanceof Question) {
-                MobclickAgent.onEvent(ReplyActivity.this, Mob.Event_Answer_Question);
-            }
-
-            progressDialog = new ProgressDialog(ReplyActivity.this);
-            progressDialog.setCanceledOnTouchOutside(false);
-            progressDialog.setMessage(getString(R.string.message_wait_a_minute));
-            progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialog) {
-                    PublishReplyTask.this.cancel(true);
-                }
-            });
-            progressDialog.show();
-        }
-
-        @Override
-        protected ResponseObject doInBackground(String... params) {
-            String header = params[0];
-            String content = params[1];
-            return APIBase.reply(aceModel, header + content);
-        }
-
-        @Override
-        protected void onPostExecute(ResponseObject resultObject) {
-            progressDialog.dismiss();
-            if (resultObject.ok) {
-                toast(R.string.reply_ok);
-                setResult(RESULT_OK);
-                replyOK = true;
-                tryClearSketch();
-                finish();
-            } else {
-                toast(R.string.reply_failed);
-            }
         }
     }
 

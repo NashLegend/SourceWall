@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.Environment;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.squareup.okhttp.MediaType;
@@ -19,6 +20,8 @@ import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.request.HttpFetcher;
+import net.nashlegend.sourcewall.swrequest.RequestObject;
+import net.nashlegend.sourcewall.swrequest.RequestObject.CallBack;
 import net.nashlegend.sourcewall.swrequest.ResponseCode;
 import net.nashlegend.sourcewall.swrequest.ResponseError;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
@@ -49,6 +52,7 @@ public class APIBase {
      *
      * @return ResponseObject
      */
+    @Deprecated
     public static ResponseObject reply(AceModel data, String content) {
         ResponseObject resultObject = new ResponseObject();
         if (data instanceof Article) {
@@ -66,16 +70,17 @@ public class APIBase {
      *
      * @return ResponseObject
      */
-    public static ResponseObject reply_sw(AceModel data, String content) {
-        ResponseObject resultObject = new ResponseObject();
+    @Nullable
+    public static RequestObject<String> reply(AceModel data, String content, CallBack<String> callBack) {
         if (data instanceof Article) {
-            return ArticleAPI.replyArticle(((Article) data).getId(), content + Config.getSimpleReplyTail());
+            return ArticleAPI.replyArticle(((Article) data).getId(), content + Config.getSimpleReplyTail(), callBack);
         } else if (data instanceof Post) {
-            return PostAPI.replyPost(((Post) data).getId(), content + Config.getSimpleReplyTail());
+            return PostAPI.replyPost(((Post) data).getId(), content + Config.getSimpleReplyTail(), callBack);
         } else if (data instanceof Question) {
-            return QuestionAPI.answerQuestion(((Question) data).getId(), content + Config.getSimpleReplyTail());
+            return QuestionAPI.answerQuestion(((Question) data).getId(), content + Config.getSimpleReplyTail(), callBack);
+        } else {
+            return null;
         }
-        return resultObject;
     }
 
     /**

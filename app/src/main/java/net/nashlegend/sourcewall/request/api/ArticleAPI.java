@@ -11,6 +11,7 @@ import net.nashlegend.sourcewall.request.HttpFetcher;
 import net.nashlegend.sourcewall.request.RequestCache;
 import net.nashlegend.sourcewall.swrequest.RequestBuilder;
 import net.nashlegend.sourcewall.swrequest.RequestObject;
+import net.nashlegend.sourcewall.swrequest.RequestObject.CallBack;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.swrequest.parsers.BooleanParser;
 import net.nashlegend.sourcewall.swrequest.parsers.ContentValueForKeyParser;
@@ -489,7 +490,7 @@ public class ArticleAPI extends APIBase {
      * @param comment   推荐评语
      * @return ResponseObject
      */
-    public static void recommendArticle(String articleID, String title, String summary, String comment, RequestObject.CallBack<Boolean> callBack) {
+    public static void recommendArticle(String articleID, String title, String summary, String comment, CallBack<Boolean> callBack) {
         String articleUrl = "http://www.guokr.com/article/" + articleID + "/";
         UserAPI.recommendLink(articleUrl, title, summary, comment, callBack);
     }
@@ -522,7 +523,7 @@ public class ArticleAPI extends APIBase {
      * @param id 文章id
      * @return ResponseObject
      */
-    public static void likeComment(String id, RequestObject.CallBack<Boolean> callBack) {
+    public static void likeComment(String id, CallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/minisite/article_reply_liking.json";
         HashMap<String, String> pairs = new HashMap<>();
         pairs.put("reply_id", id);
@@ -561,7 +562,7 @@ public class ArticleAPI extends APIBase {
      * @param id 评论id
      * @return ResponseObject
      */
-    public static void deleteMyComment(String id, RequestObject.CallBack<Boolean> callBack) {
+    public static void deleteMyComment(String id, CallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/minisite/article_reply.json";
         HashMap<String, String> pairs = new HashMap<>();
         pairs.put("reply_id", id);
@@ -581,6 +582,7 @@ public class ArticleAPI extends APIBase {
      * @param content 回复内容
      * @return ResponseObject.result is the reply_id if ok;
      */
+    @Deprecated
     public static ResponseObject replyArticle(String id, String content) {
         ResponseObject resultObject = new ResponseObject();
         try {
@@ -608,12 +610,12 @@ public class ArticleAPI extends APIBase {
      * @param content 回复内容
      * @return ResponseObject.result is the reply_id if ok;
      */
-    public static void replyArticle(String id, String content, RequestObject.CallBack<String> callBack) {
+    public static RequestObject<String> replyArticle(String id, String content, CallBack<String> callBack) {
         String url = "http://apis.guokr.com/minisite/article_reply.json";
         HashMap<String, String> pairs = new HashMap<>();
         pairs.put("article_id", id);
         pairs.put("content", content);
-        new RequestBuilder<String>()
+        return new RequestBuilder<String>()
                 .setUrl(url)
                 .setParser(new ContentValueForKeyParser("id"))
                 .setRequestCallBack(callBack)
