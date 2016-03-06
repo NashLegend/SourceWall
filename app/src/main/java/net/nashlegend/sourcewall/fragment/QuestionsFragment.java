@@ -30,11 +30,11 @@ import android.widget.TextView;
 
 import com.umeng.analytics.MobclickAgent;
 
+import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.BaseActivity;
 import net.nashlegend.sourcewall.activities.MainActivity;
 import net.nashlegend.sourcewall.activities.PublishPostActivity;
 import net.nashlegend.sourcewall.activities.QuestionActivity;
-import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.ShuffleTagActivity;
 import net.nashlegend.sourcewall.adapters.QuestionAdapter;
 import net.nashlegend.sourcewall.commonview.AAsyncTask;
@@ -48,9 +48,9 @@ import net.nashlegend.sourcewall.db.AskTagHelper;
 import net.nashlegend.sourcewall.db.gen.AskTag;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.model.SubItem;
-import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
+import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
@@ -588,7 +588,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
             if (loadedPage == 0 && adapter.getCount() == 0) {
                 ResponseObject<ArrayList<Question>> cachedResponseObject = QuestionAPI.getCachedQuestionList(subItem);
                 if (cachedResponseObject.ok) {
-                    long lastLoad = SharedPreferencesUtil.readLong(key, 0l) / 1000;
+                    long lastLoad = SharedPreferencesUtil.readLong(key, 0L) / 1000;
                     long crtLoad = System.currentTimeMillis() / 1000;
                     if (crtLoad - lastLoad > cacheDuration) {
                         publishProgress(cachedResponseObject);
@@ -596,13 +596,12 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
                         return cachedResponseObject;
                     }
                 }
-
             }
 
             ResponseObject<ArrayList<Question>> resultObject = new ResponseObject<>();
             if (subItem.getType() == SubItem.Type_Collections) {
                 if (HOTTEST.equals(subItem.getValue())) {
-                    resultObject = QuestionAPI.getHotQuestions(loadedPage + 1);
+                    resultObject = QuestionAPI.getHotQuestionsFromJsonUrl(loadedPage * 20);
                 } else {
                     resultObject = QuestionAPI.getHighlightQuestions(loadedPage + 1);
                 }

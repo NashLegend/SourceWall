@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -33,6 +35,7 @@ import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
+import net.nashlegend.sourcewall.swrequest.RequestObject;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.util.AutoHideUtil;
 import net.nashlegend.sourcewall.util.AutoHideUtil.AutoHideListener;
@@ -246,15 +249,31 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
                 public void onClick(DialogInterface dialog, int which) {
                     if (which == DialogInterface.BUTTON_POSITIVE) {
                         InputDialog d = (InputDialog) dialog;
-                        String text = d.InputString;
-                        RecommendTask recommendTask = new RecommendTask();
-                        recommendTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, question.getId(), question.getTitle(), question.getSummary(), text);
+                        confirmRecommend(d.InputString);
                     }
                 }
             });
             InputDialog inputDialog = builder.create();
             inputDialog.show();
         }
+    }
+
+    private void confirmRecommend(String comment) {
+        QuestionAPI.recommendQuestion(question.getId(), question.getTitle(), question.getSummary(), comment, new RequestObject.CallBack<Boolean>() {
+            @Override
+            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
+                toast(R.string.recommend_failed);
+            }
+
+            @Override
+            public void onResponse(@NonNull ResponseObject<Boolean> result) {
+                if (result.ok) {
+                    toast(R.string.recommend_ok);
+                } else {
+                    toast(R.string.recommend_failed);
+                }
+            }
+        });
     }
 
     private void answerQuestion() {
@@ -346,67 +365,41 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         }
     }
 
-    class RecommendTask extends AsyncTask<String, Integer, ResponseObject> {
-
-        @Override
-        protected ResponseObject doInBackground(String... params) {
-            String questionID = params[0];
-            String title = params[1];
-            String summary = params[2];
-            String comment = params[3];
-            return QuestionAPI.recommendQuestion(questionID, title, summary, comment);
-        }
-
-        @Override
-        protected void onPostExecute(ResponseObject resultObject) {
-            if (resultObject.ok) {
-                toast(R.string.recommend_ok);
-            } else {
-                toast(R.string.recommend_failed);
-            }
-        }
-    }
-
-    FollowTask followTask;
-    UnfollowTask unfollowTask;
-
     private void followQuestion() {
-        if (followTask != null && followTask.getStatus() == AsyncTask.Status.RUNNING) {
-            followTask.cancel(true);
-        }
-        followTask = new FollowTask();
-        followTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, question.getId());
+        QuestionAPI.followQuestion(question.getId(), new RequestObject.CallBack<Boolean>() {
+            @Override
+            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
+                toast(R.string.follow_failed);
+            }
+
+            @Override
+            public void onResponse(@NonNull ResponseObject<Boolean> result) {
+                if (result.ok) {
+                    toast(R.string.follow_ok);
+                } else {
+                    toast(R.string.follow_failed);
+                }
+            }
+        });
     }
 
     private void unfollowQuestion() {
-        if (unfollowTask != null && unfollowTask.getStatus() == AsyncTask.Status.RUNNING) {
-            unfollowTask.cancel(true);
-        }
-        unfollowTask = new UnfollowTask();
-        unfollowTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, question.getId());
-    }
-
-    class FollowTask extends AsyncTask<String, Integer, ResponseObject> {
-
-        @Override
-        protected void onPreExecute() {
-            MobclickAgent.onEvent(QuestionActivity.this, Mob.Event_Follow_Question);
-        }
-
-        @Override
-        protected ResponseObject doInBackground(String... params) {
-            String questionID = params[0];
-            return QuestionAPI.followQuestion(questionID);
-        }
-
-        @Override
-        protected void onPostExecute(ResponseObject resultObject) {
-            if (resultObject.ok) {
-                toast(R.string.follow_ok);
-            } else {
-                toast(R.string.follow_failed);
+        MobclickAgent.onEvent(QuestionActivity.this, Mob.Event_Unfollow_Question);
+        QuestionAPI.unfollowQuestion(question.getId(), new RequestObject.CallBack<Boolean>() {
+            @Override
+            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
+                toast(R.string.unfollow_failed);
             }
-        }
+
+            @Override
+            public void onResponse(@NonNull ResponseObject<Boolean> result) {
+                if (result.ok) {
+                    toast(R.string.unfollow_ok);
+                } else {
+                    toast(R.string.unfollow_failed);
+                }
+            }
+        });
     }
 
     private AutoHideListener autoHideListener = new AutoHideListener() {
@@ -453,27 +446,4 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
             }
         }
     };
-
-    class UnfollowTask extends AsyncTask<String, Integer, ResponseObject> {
-
-        @Override
-        protected void onPreExecute() {
-            MobclickAgent.onEvent(QuestionActivity.this, Mob.Event_Unfollow_Question);
-        }
-
-        @Override
-        protected ResponseObject doInBackground(String... params) {
-            String questionID = params[0];
-            return QuestionAPI.unfollowQuestion(questionID);
-        }
-
-        @Override
-        protected void onPostExecute(ResponseObject resultObject) {
-            if (resultObject.ok) {
-                toast(R.string.unfollow_ok);
-            } else {
-                toast(R.string.unfollow_failed);
-            }
-        }
-    }
 }

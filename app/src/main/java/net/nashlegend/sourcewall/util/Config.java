@@ -13,7 +13,7 @@ import net.nashlegend.sourcewall.R;
  */
 public class Config {
 
-    public final static float longImageRatio = 3f;//长宽比超过此值，则认为是超长图
+    public final static float longImageRatio = 2f;//长宽比超过此值，则认为是超长图
     public final static int ExitTapsGap = 1200;
     public final static String defaultDisplayName = "果壳的壳";
     public final static String defaultUrl = "https://github.com/NashLegend/SourceWall/blob/master/README.md";

@@ -52,24 +52,6 @@ public class APIBase {
      *
      * @return ResponseObject
      */
-    @Deprecated
-    public static ResponseObject reply(AceModel data, String content) {
-        ResponseObject resultObject = new ResponseObject();
-        if (data instanceof Article) {
-            return ArticleAPI.replyArticle(((Article) data).getId(), content + Config.getSimpleReplyTail());
-        } else if (data instanceof Post) {
-            return PostAPI.replyPost(((Post) data).getId(), content + Config.getSimpleReplyTail());
-        } else if (data instanceof Question) {
-            return QuestionAPI.answerQuestion(((Question) data).getId(), content + Config.getSimpleReplyTail());
-        }
-        return resultObject;
-    }
-
-    /**
-     * 统一回复，回复主题站、帖子、问题
-     *
-     * @return ResponseObject
-     */
     @Nullable
     public static RequestObject<String> reply(AceModel data, String content, CallBack<String> callBack) {
         if (data instanceof Article) {
@@ -140,11 +122,13 @@ public class APIBase {
 
     /**
      * 上传图片
+     * TODO 目前RequestBuilder尚未搞上传下载
      *
      * @param path      要上传图片的路径
      * @param watermark 是否打水印
      * @return 返回ResponseObject，resultObject.result是上传后的图片地址，果壳并不会对图片进行压缩
      */
+    @Deprecated
     public static ResponseObject<String> uploadImage(String path, boolean watermark) {
         ResponseObject<String> resultObject = new ResponseObject<>();
         File file = new File(path);
@@ -174,11 +158,13 @@ public class APIBase {
     }
 
     /**
-     * 使用github的接口转换markdown为html
+     * 使用github的接口转换markdown为html.
+     * TODO 目前RequestBuilder尚未搞RequestBody
      *
      * @param text 要转换的文本内容
      * @return ResponseObject
      */
+    @Deprecated
     public static ResponseObject<String> parseMarkdownByGitHub(String text) {
 
         ResponseObject<String> resultObject = new ResponseObject<>();

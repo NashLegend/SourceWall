@@ -297,18 +297,18 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
                 }
             }
         });
-        progressDialog = new ProgressDialog(ReplyActivity.this);
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.setMessage(getString(R.string.message_wait_a_minute));
-        progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                if (requestObject != null) {
+        if (requestObject != null) {
+            progressDialog = new ProgressDialog(ReplyActivity.this);
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.setMessage(getString(R.string.message_wait_a_minute));
+            progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
                     requestObject.softCancel();
                 }
-            }
-        });
-        progressDialog.show();
+            });
+            progressDialog.show();
+        }
     }
 
     private void hideInput() {

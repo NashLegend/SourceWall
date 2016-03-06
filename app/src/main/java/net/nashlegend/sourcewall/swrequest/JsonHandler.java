@@ -90,7 +90,7 @@ public class JsonHandler {
     /**
      * json返回的格式是固定的，这个可以先判断是否成功并剥离出有用信息。
      * 这里还可以做一些token过期失败问题的处理，省得在每个地方都判断了。
-     * <p/>
+     * <p>
      * 直接返回
      *
      * @param json 要进行json解析的文本内容
@@ -118,6 +118,7 @@ public class JsonHandler {
      * @throws JSONException
      */
     public static void handleBadJson(JSONObject object, ResponseObject responseObject) throws JSONException {
+        //TODO 老版本是error，新版本是code，不再有error，以后再改，此处TODO
         responseObject.ok = false;
         int error_code = object.optInt("error_code");
         responseObject.message = object.optString("error");
@@ -152,7 +153,6 @@ public class JsonHandler {
         responseObject.throwable = e;
         if (e == null) {
             responseObject.error_message = "unknown";
-            responseObject.error = ResponseError.UNKNOWN;
         } else {
             e.printStackTrace();
             responseObject.error_message = e.getMessage();

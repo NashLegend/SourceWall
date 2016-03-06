@@ -10,6 +10,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -38,10 +40,11 @@ import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.model.UComment;
-import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.request.api.ArticleAPI;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
+import net.nashlegend.sourcewall.swrequest.RequestObject;
+import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.ImageUtils;
@@ -173,7 +176,7 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
             likeButton.setIcon(R.drawable.heart_outline);
         }
         if (Config.shouldLoadImage()) {
-            ImageLoader.getInstance().displayImage(data.getAuthor().getAvatar(),avatar, ImageUtils.avatarOptions);
+            ImageLoader.getInstance().displayImage(data.getAuthor().getAvatar(), avatar, ImageUtils.avatarOptions);
         } else {
             avatar.setImageResource(R.drawable.default_avatar);
         }
@@ -360,23 +363,70 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
     private void likeThis() {
         if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
-        } else {
-            if (data.isHasLiked()) {
-                toastSingleton(R.string.has_liked_this);
-            } else {
-                LikeTask task = new LikeTask(this);
-                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            return;
+        }
+        if (data.isHasLiked()) {
+            toastSingleton(R.string.has_liked_this);
+            return;
+        }
+        RequestObject.CallBack<Boolean> callBack = new RequestObject.CallBack<Boolean>() {
+            @Override
+            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
+                toast("点赞未遂");
             }
+
+            @Override
+            public void onResponse(@NonNull ResponseObject<Boolean> result) {
+                if (result.ok) {
+                    data.setHasLiked(true);
+                    data.setLikeNum(data.getLikeNum() + 1);
+                    supportText.setText(String.valueOf(data.getLikeNum()));
+                    likeButton.setIcon(R.drawable.heart);
+                    toast("点赞成功");
+                } else {
+                    toast("点赞未遂");
+                }
+            }
+        };
+        switch (hostSection) {
+            case SubItem.Section_Article:
+                ArticleAPI.likeComment(data.getID(), callBack);
+                break;
+            case SubItem.Section_Post:
+                PostAPI.likeComment(data.getID(), callBack);
+                break;
         }
     }
 
     private void deleteThis() {
         if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
-        } else {
-            DeleteTask task = new DeleteTask(this);
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            return;
         }
+        RequestObject.CallBack<Boolean> callBack = new RequestObject.CallBack<Boolean>() {
+            @Override
+            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
+                toastSingleton("未能删除");
+            }
+
+            @Override
+            public void onResponse(@NonNull ResponseObject<Boolean> result) {
+                if (result.ok) {
+                    finish();
+                } else {
+                    toastSingleton("未能删除");
+                }
+            }
+        };
+        switch (hostSection) {
+            case SubItem.Section_Article:
+                ArticleAPI.deleteMyComment(data.getID(), callBack);
+                break;
+            case SubItem.Section_Post:
+                PostAPI.deleteMyComment(data.getID(), callBack);
+                break;
+        }
+
     }
 
     @Override
@@ -449,71 +499,6 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
             } else {
                 loadingView.onLoadFailed();
             }
-        }
-    }
-
-    class LikeTask extends AAsyncTask<Void, Integer, ResponseObject> {
-
-        public LikeTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
-            super(iStackedAsyncTaskInterface);
-        }
-
-        @Override
-        protected ResponseObject doInBackground(Void... params) {
-            ResponseObject resultObject = new ResponseObject();
-            switch (hostSection) {
-                case SubItem.Section_Article:
-                    resultObject = ArticleAPI.likeComment(data.getID());
-                    break;
-                case SubItem.Section_Post:
-                    resultObject = PostAPI.likeComment(data.getID());
-                    break;
-            }
-            return resultObject;
-        }
-
-        @Override
-        protected void onPostExecute(ResponseObject resultObject) {
-            if (resultObject.ok) {
-                data.setHasLiked(true);
-                data.setLikeNum(data.getLikeNum() + 1);
-                supportText.setText(data.getLikeNum() + "");
-                likeButton.setIcon(R.drawable.heart);
-                toast("点赞成功");
-            } else {
-                toast("点赞未遂");
-            }
-        }
-    }
-
-    class DeleteTask extends AAsyncTask<Boolean, Integer, ResponseObject> {
-
-        public DeleteTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
-            super(iStackedAsyncTaskInterface);
-        }
-
-        @Override
-        protected ResponseObject doInBackground(Boolean... params) {
-            ResponseObject resultObject = new ResponseObject();
-            switch (hostSection) {
-                case SubItem.Section_Article:
-                    resultObject = ArticleAPI.deleteMyComment(data.getID());
-                    break;
-                case SubItem.Section_Post:
-                    resultObject = PostAPI.deleteMyComment(data.getID());
-                    break;
-            }
-            return resultObject;
-        }
-
-        @Override
-        protected void onPostExecute(ResponseObject resultObject) {
-            if (resultObject.ok) {
-                finish();
-            } else {
-                toastSingleton("操作失败");
-            }
-
         }
     }
 }

@@ -12,6 +12,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -39,6 +41,8 @@ import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.model.QuestionAnswer;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
+import net.nashlegend.sourcewall.swrequest.RequestObject.CallBack;
+import net.nashlegend.sourcewall.swrequest.ResponseCode;
 import net.nashlegend.sourcewall.swrequest.ResponseError;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.util.Config;
@@ -370,23 +374,87 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
     private void buryAnswer() {
         if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
+            return;
+        }
+        MobclickAgent.onEvent(AnswerActivity.this, Mob.Event_Bury_Answer);
+        final boolean bury = !answer.isHasBuried();
+        CallBack<Boolean> callBack = new CallBack<Boolean>() {
+            @Override
+            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
+                if (bury && result.code == ResponseCode.CODE_ALREADY_BURIED) {
+                    toastSingleton("已经标记过了");
+                } else {
+                    toastSingleton("操作失败");
+                }
+            }
+
+            @Override
+            public void onResponse(@NonNull ResponseObject<Boolean> result) {
+                if (result.ok) {
+                    if (bury) {
+                        toast("已标记为\"不是答案\"");
+                        answer.setHasBuried(true);
+                        notAnButton.setIcon(R.drawable.dustbin);
+                    } else {
+                        toastSingleton("取消\"不是答案\"标记");
+                        answer.setHasBuried(false);
+                        notAnButton.setIcon(R.drawable.dustbin_outline);
+                    }
+                } else {
+                    if (bury && result.code == ResponseCode.CODE_ALREADY_BURIED) {
+                        toastSingleton("已经标记过了");
+                    } else {
+                        toastSingleton("操作失败");
+                    }
+                }
+            }
+        };
+        if (bury) {
+            QuestionAPI.buryAnswer(answer.getID(), callBack);
         } else {
-            BuryTask task = new BuryTask(this);
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            QuestionAPI.unBuryAnswer(answer.getID(), callBack);
         }
     }
 
     private void thankAnswer() {
         if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
-        } else {
-            if (answer.isHasThanked()) {
-                toastSingleton("已经感谢过");
-            } else {
-                ThankTask task = new ThankTask(this);
-                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            }
+            return;
         }
+        if (answer.isHasThanked()) {
+            toastSingleton("已经感谢过");
+            return;
+        }
+        MobclickAgent.onEvent(AnswerActivity.this, Mob.Event_Thank_Answer);
+        QuestionAPI.thankAnswer(answer.getID(), new CallBack<Boolean>() {
+            @Override
+            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
+                if (result.code == ResponseCode.CODE_ALREADY_THANKED) {
+                    toast("已经感谢过了");
+                    answer.setHasThanked(true);
+                    thankButton.setIcon(R.drawable.heart);
+                } else {
+                    toast("感谢未遂");
+                }
+            }
+
+            @Override
+            public void onResponse(@NonNull ResponseObject<Boolean> result) {
+                if (result.ok) {
+                    toast("感谢成功");
+                    answer.setHasThanked(true);
+                    thankButton.setIcon(R.drawable.heart);
+                } else {
+                    if (result.code == ResponseCode.CODE_ALREADY_THANKED) {
+                        toast("已经感谢过了");
+                        answer.setHasThanked(true);
+                        thankButton.setIcon(R.drawable.heart);
+                    } else {
+                        toast("感谢未遂");
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -457,86 +525,6 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
                 toast((isSupport ? "赞同" : "反对") + "成功");
             } else {
                 toast((isSupport ? "赞同" : "反对") + "未遂");
-            }
-        }
-    }
-
-    class BuryTask extends AAsyncTask<Boolean, Integer, ResponseObject> {
-        boolean bury = true;
-
-        public BuryTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
-            super(iStackedAsyncTaskInterface);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            MobclickAgent.onEvent(AnswerActivity.this, Mob.Event_Bury_Answer);
-        }
-
-        @Override
-        protected ResponseObject doInBackground(Boolean... params) {
-            bury = !answer.isHasBuried();
-            if (bury) {
-                return QuestionAPI.buryAnswer(answer.getID());
-            } else {
-                return QuestionAPI.unBuryAnswer(answer.getID());
-            }
-
-        }
-
-        @Override
-        protected void onPostExecute(ResponseObject resultObject) {
-            if (resultObject.ok) {
-                if (bury) {
-                    toast("已标记为\"不是答案\"");
-                    answer.setHasBuried(true);
-                    notAnButton.setIcon(R.drawable.dustbin);
-                } else {
-                    toastSingleton("取消\"不是答案\"标记");
-                    answer.setHasBuried(false);
-                    notAnButton.setIcon(R.drawable.dustbin_outline);
-                }
-            } else {
-                if (bury && resultObject.error == ResponseError.ALREADY_BURIED) {
-                    toastSingleton("已经标记过了");
-                } else {
-                    toastSingleton("操作失败");
-                }
-            }
-
-        }
-    }
-
-    class ThankTask extends AAsyncTask<String, Integer, ResponseObject> {
-
-        public ThankTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
-            super(iStackedAsyncTaskInterface);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            MobclickAgent.onEvent(AnswerActivity.this, Mob.Event_Thank_Answer);
-        }
-
-        @Override
-        protected ResponseObject doInBackground(String... params) {
-            return QuestionAPI.thankAnswer(answer.getID());
-        }
-
-        @Override
-        protected void onPostExecute(ResponseObject resultObject) {
-            if (resultObject.ok) {
-                toast("感谢成功");
-                answer.setHasThanked(true);
-                thankButton.setIcon(R.drawable.heart);
-            } else {
-                if (resultObject.error == ResponseError.ALREADY_THANKED) {
-                    toast("已经感谢过了");
-                    answer.setHasThanked(true);
-                    thankButton.setIcon(R.drawable.heart);
-                } else {
-                    toast("感谢未遂");
-                }
             }
         }
     }

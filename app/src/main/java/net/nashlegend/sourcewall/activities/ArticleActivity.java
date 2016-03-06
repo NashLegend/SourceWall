@@ -14,6 +14,8 @@ import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -40,6 +42,7 @@ import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.api.ArticleAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
+import net.nashlegend.sourcewall.swrequest.RequestObject;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.util.AutoHideUtil;
 import net.nashlegend.sourcewall.util.AutoHideUtil.AutoHideListener;
@@ -211,15 +214,31 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
                 public void onClick(DialogInterface dialog, int which) {
                     if (which == DialogInterface.BUTTON_POSITIVE) {
                         InputDialog d = (InputDialog) dialog;
-                        String text = d.InputString;
-                        RecommendTask recommendTask = new RecommendTask(ArticleActivity.this);
-                        recommendTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, article.getId(), article.getTitle(), article.getSummary(), text);
+                        confirmRecommend(d.InputString);
                     }
                 }
             });
             InputDialog inputDialog = builder.create();
             inputDialog.show();
         }
+    }
+
+    private void confirmRecommend(String comment) {
+        ArticleAPI.recommendArticle(article.getId(), article.getTitle(), article.getSummary(), comment, new RequestObject.CallBack<Boolean>() {
+            @Override
+            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
+                toast(R.string.recommend_failed);
+            }
+
+            @Override
+            public void onResponse(@NonNull ResponseObject<Boolean> result) {
+                if (result.ok) {
+                    toast(R.string.recommend_ok);
+                } else {
+                    toast(R.string.recommend_failed);
+                }
+            }
+        });
     }
 
     private void favor() {
@@ -283,26 +302,61 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         replyArticle(comment);
     }
 
-    private void likeComment(MediumListItemView mediumListItemView) {
+    private void likeComment(final MediumListItemView mediumListItemView) {
         if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
-        } else {
-            if (mediumListItemView.getData().isHasLiked()) {
-                toastSingleton(getString(R.string.has_liked_this));
-            } else {
-                LikeCommentTask likeCommentTask = new LikeCommentTask(ArticleActivity.this);
-                likeCommentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediumListItemView);
-            }
+            return;
         }
+        if (mediumListItemView.getData().isHasLiked()) {
+            toastSingleton(getString(R.string.has_liked_this));
+            return;
+        }
+        final UComment comment = mediumListItemView.getData();
+        ArticleAPI.likeComment(comment.getID(), new RequestObject.CallBack<Boolean>() {
+            @Override
+            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
+
+            }
+
+            @Override
+            public void onResponse(@NonNull ResponseObject<Boolean> result) {
+                if (result.ok) {
+                    comment.setHasLiked(true);
+                    comment.setLikeNum(comment.getLikeNum() + 1);
+                    if (mediumListItemView.getData() == comment) {
+                        mediumListItemView.plusOneLike();
+                    }
+                }
+            }
+        });
+
+
     }
 
-    private void deleteComment(UComment comment) {
+    private void deleteComment(final UComment comment) {
         if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
-        } else {
-            DeleteCommentTask deleteCommentTask = new DeleteCommentTask(this);
-            deleteCommentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, comment);
+            return;
         }
+        ArticleAPI.deleteMyComment(comment.getID(), new RequestObject.CallBack<Boolean>() {
+            @Override
+            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
+                toastSingleton("删除失败~");
+            }
+
+            @Override
+            public void onResponse(@NonNull ResponseObject<Boolean> result) {
+                if (result.ok) {
+                    if (article.getCommentNum() > 0) {
+                        article.setCommentNum(article.getCommentNum() - 1);
+                    }
+                    adapter.remove(comment);
+                    adapter.notifyDataSetChanged();
+                } else {
+                    toastSingleton("删除失败~");
+                }
+            }
+        });
     }
 
     private void copyComment(UComment comment) {
@@ -368,31 +422,6 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
     public void reload() {
         adapter.clear();
         loadData(-1);
-    }
-
-    private class RecommendTask extends AAsyncTask<String, Integer, ResponseObject> {
-
-        public RecommendTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
-            super(iStackedAsyncTaskInterface);
-        }
-
-        @Override
-        protected ResponseObject doInBackground(String... params) {
-            String articleID = params[0];
-            String title = params[1];
-            String summary = params[2];
-            String comment = params[3];
-            return ArticleAPI.recommendArticle(articleID, title, summary, comment);
-        }
-
-        @Override
-        protected void onPostExecute(ResponseObject resultObject) {
-            if (resultObject.ok) {
-                toast(R.string.recommend_ok);
-            } else {
-                toast(R.string.recommend_failed);
-            }
-        }
     }
 
     @Override
@@ -461,6 +490,10 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         }
     }
 
+    /**
+     * 替换的话，此处要使用Rx了
+     * TODO
+     */
     class LoaderTask extends AAsyncTask<Integer, ResponseObject<Article>, ResponseObject<ArrayList<AceModel>>> {
         int offset;
 
@@ -565,64 +598,6 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
                 listView.setCanPullToLoadMore(false);
             }
             listView.doneOperation();
-        }
-    }
-
-    class LikeCommentTask extends AAsyncTask<MediumListItemView, Integer, ResponseObject> {
-
-        UComment comment;
-        MediumListItemView mediumListItemView;
-
-        public LikeCommentTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
-            super(iStackedAsyncTaskInterface);
-        }
-
-        @Override
-        protected ResponseObject doInBackground(MediumListItemView... params) {
-            mediumListItemView = params[0];
-            comment = mediumListItemView.getData();
-            return ArticleAPI.likeComment(comment.getID());
-        }
-
-        @Override
-        protected void onPostExecute(ResponseObject resultObject) {
-            if (resultObject.ok) {
-                comment.setHasLiked(true);
-                comment.setLikeNum(comment.getLikeNum() + 1);
-                if (mediumListItemView.getData() == comment) {
-                    mediumListItemView.plusOneLike();
-                }
-            } else {
-                //do nothing
-            }
-        }
-    }
-
-    class DeleteCommentTask extends AAsyncTask<UComment, Integer, ResponseObject> {
-
-        UComment comment;
-
-        public DeleteCommentTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
-            super(iStackedAsyncTaskInterface);
-        }
-
-        @Override
-        protected ResponseObject doInBackground(UComment... params) {
-            comment = params[0];
-            return ArticleAPI.deleteMyComment(comment.getID());
-        }
-
-        @Override
-        protected void onPostExecute(ResponseObject resultObject) {
-            if (resultObject.ok) {
-                if (article.getCommentNum() > 0) {
-                    article.setCommentNum(article.getCommentNum() - 1);
-                }
-                adapter.remove(comment);
-                adapter.notifyDataSetChanged();
-            } else {
-                toastSingleton("删除失败~");
-            }
         }
     }
 

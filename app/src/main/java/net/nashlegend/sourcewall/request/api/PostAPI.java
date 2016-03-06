@@ -12,10 +12,12 @@ import net.nashlegend.sourcewall.request.HttpFetcher;
 import net.nashlegend.sourcewall.request.RequestCache;
 import net.nashlegend.sourcewall.swrequest.RequestBuilder;
 import net.nashlegend.sourcewall.swrequest.RequestObject;
+import net.nashlegend.sourcewall.swrequest.RequestObject.CallBack;
 import net.nashlegend.sourcewall.swrequest.ResponseError;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.swrequest.parsers.BooleanParser;
 import net.nashlegend.sourcewall.swrequest.parsers.ContentValueForKeyParser;
+import net.nashlegend.sourcewall.swrequest.parsers.Parser;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.MDUtil;
 
@@ -88,7 +90,7 @@ public class PostAPI extends APIBase {
      * @param id 小组id
      * @return resultObject
      */
-    public static void joinGroup(String id, RequestObject.CallBack<Boolean> callBack) {
+    public static void joinGroup(String id, CallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/group/member.json";
         HashMap<String, String> pairs = new HashMap<>();
         pairs.put("group_id", id);
@@ -107,26 +109,7 @@ public class PostAPI extends APIBase {
      * @param id 小组id
      * @return resultObject
      */
-    public static ResponseObject quitGroup(String id) {
-        ResponseObject resultObject = new ResponseObject();
-        String url = "http://www.guokr.com/apis/group/member.json";
-        HashMap<String, String> pairs = new HashMap<>();
-        pairs.put("group_id", id);
-        try {
-            String result = HttpFetcher.delete(url, pairs).toString();
-            resultObject.ok = getUniversalJsonSimpleBoolean(result, resultObject);
-        } catch (Exception e) {
-            handleRequestException(e, resultObject);
-        }
-        return resultObject;
-    }
-    /**
-     * 退出小组
-     *
-     * @param id 小组id
-     * @return resultObject
-     */
-    public static void quitGroup(String id, RequestObject.CallBack<Boolean> callBack) {
+    public static void quitGroup(String id, CallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/group/member.json";
         HashMap<String, String> pairs = new HashMap<>();
         pairs.put("group_id", id);
@@ -232,7 +215,7 @@ public class PostAPI extends APIBase {
         try {
             String html = RequestCache.getInstance().getStringFromCache(Key_Post_My_Recent_Replies);
             if (html != null) {
-                resultObject = parseMyGroupPostList(html);
+                resultObject = parsePostListJson(html);
             }
         } catch (Exception e) {
             handleRequestException(e, resultObject);
@@ -241,12 +224,15 @@ public class PostAPI extends APIBase {
     }
 
     /**
+     * 通过解析Html获取小组帖子
+     *
      * @param html 解析我的小组的帖子
      */
+    @Deprecated
     private static ResponseObject<ArrayList<Post>> parseMyGroupPostList(String html) {
         ResponseObject<ArrayList<Post>> resultObject = new ResponseObject<>();
         try {
-            ArrayList<Post> list = Post.fromHtmlList(html);
+            ArrayList<Post> list = parseHtmlList(html);
             resultObject.ok = true;
             resultObject.result = list;
         } catch (Exception e) {
@@ -256,7 +242,45 @@ public class PostAPI extends APIBase {
     }
 
     /**
-     * 返回《我的小组》最新回复的主题列表，解析html获得
+     * 已经可以完全使用Json了，不再使用html解析
+     *
+     * @param html
+     * @return
+     * @throws Exception
+     */
+    @Deprecated
+    public static ArrayList<Post> parseHtmlList(String html) throws Exception {
+        ArrayList<Post> list = new ArrayList<>();
+        Document doc = Jsoup.parse(html);
+        Elements elements = doc.getElementsByClass("post-list");
+        if (elements.size() == 1) {
+            Elements postlist = elements.get(0).getElementsByTag("li");
+            for (Element aPostlist : postlist) {
+                Post item = new Post();
+                Element link = aPostlist.getElementsByClass("post").get(0);
+                String postTitle = link.getElementsByTag("h4").get(0).text();
+                String postUrl = link.attr("href");
+                String postImageUrl = "";
+                String postGroup = aPostlist.getElementsByClass("post-author").get(0).text();//没错，post-author是小组名……
+                Elements children = aPostlist.getElementsByClass("post-info-right").get(0).children();
+                int postLike = Integer.valueOf(children.get(0).text().replaceAll("\\D*", ""));
+                int postComm = Integer.valueOf(children.get(1).text().replaceAll("\\D*", ""));
+                item.setTitle(postTitle);
+                item.setUrl(postUrl);
+                item.setId(postUrl.replaceAll("\\?.*$", "").replaceAll("\\D+", ""));
+                item.setTitleImageUrl(postImageUrl);
+                item.setGroupName(postGroup);
+                item.setLikeNum(postLike);
+                item.setReplyNum(postComm);
+                item.setFeatured(false);
+                list.add(item);
+            }
+        }
+        return list;
+    }
+
+    /**
+     * 返回《我的小组》最新回复的主题列表，解析json获得
      *
      * @param offset offset
      * @return resultObject
@@ -268,11 +292,11 @@ public class PostAPI extends APIBase {
             HashMap<String, String> pairs = new HashMap<>();
             pairs.put("retrieve_type", "recent_replies");
             pairs.put("limit", "20");
-            pairs.put("offset", offset + "");
-            String html = HttpFetcher.get(url, pairs, true).toString();
-            resultObject = parsePostListJson(html);
+            pairs.put("offset", String.valueOf(offset));
+            String json = HttpFetcher.get(url, pairs, true).toString();
+            resultObject = parsePostListJson(json);
             if (resultObject.ok && offset == 0) {
-                RequestCache.getInstance().addStringToCacheForceUpdate(Key_Post_My_Recent_Replies, html);
+                RequestCache.getInstance().addStringToCacheForceUpdate(Key_Post_My_Recent_Replies, json);
             }
         } catch (Exception e) {
             handleRequestException(e, resultObject);
@@ -293,7 +317,7 @@ public class PostAPI extends APIBase {
             HashMap<String, String> pairs = new HashMap<>();
             pairs.put("retrieve_type", "hot_post");
             pairs.put("limit", "20");
-            pairs.put("offset", offset + "");
+            pairs.put("offset", String.valueOf(offset));
             String json = HttpFetcher.get(url, pairs, true).toString();
             resultObject = parsePostListJson(json);
             if (resultObject.ok && offset == 0) {
@@ -338,7 +362,7 @@ public class PostAPI extends APIBase {
             pairs.put("retrieve_type", "by_group");
             pairs.put("group_id", id);
             pairs.put("limit", "20");
-            pairs.put("offset", offset + "");
+            pairs.put("offset", String.valueOf(offset));
             String jString = HttpFetcher.get(url, pairs).toString();
             resultObject = parsePostListJson(jString);
             if (resultObject.ok && offset == 0) {
@@ -460,7 +484,7 @@ public class PostAPI extends APIBase {
             pairs.put("retrieve_type", "by_post");
             pairs.put("post_id", id);
             pairs.put("limit", limit + "");
-            pairs.put("offset", offset + "");
+            pairs.put("offset", String.valueOf(offset));
             String jString = HttpFetcher.get(url, pairs).toString();
             JSONArray comments = getUniversalJsonArray(jString, resultObject);
             if (comments != null) {
@@ -484,20 +508,17 @@ public class PostAPI extends APIBase {
      * @param postID 帖子id
      * @return resultObject
      */
-    public static ResponseObject likePost(String postID) {
+    public static RequestObject<Boolean> likePost(String postID, CallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/group/post_liking.json";
-        ResponseObject resultObject = new ResponseObject();
-        try {
-            HashMap<String, String> pairs = new HashMap<>();
-            pairs.put("post_id", postID);
-            String result = HttpFetcher.post(url, pairs).toString();
-            if (getUniversalJsonSimpleBoolean(result, resultObject)) {
-                resultObject.ok = true;
-            }
-        } catch (Exception e) {
-            handleRequestException(e, resultObject);
-        }
-        return resultObject;
+        HashMap<String, String> pairs = new HashMap<>();
+        pairs.put("post_id", postID);
+        return new RequestBuilder<Boolean>()
+                .setUrl(url)
+                .setParser(new BooleanParser())
+                .post()
+                .setRequestCallBack(callBack)
+                .setParams(pairs)
+                .requestAsync();
     }
 
     /**
@@ -508,35 +529,7 @@ public class PostAPI extends APIBase {
      * @param content 回复内容
      * @return ResponseObject.result is the reply_id if ok;
      */
-    @Deprecated
-    public static ResponseObject<String> replyPost(String id, String content) {
-        ResponseObject<String> resultObject = new ResponseObject<>();
-        try {
-            String url = "http://apis.guokr.com/group/post_reply.json";
-            HashMap<String, String> pairs = new HashMap<>();
-            pairs.put("post_id", id);
-            pairs.put("content", content);
-            String result = HttpFetcher.post(url, pairs).toString();
-            JSONObject resultJson = getUniversalJsonObject(result, resultObject);
-            if (resultJson != null) {
-                String replyID = resultJson.optString("id");
-                resultObject.ok = true;
-                resultObject.result = replyID;
-            }
-        } catch (Exception e) {
-            handleRequestException(e, resultObject);
-        }
-        return resultObject;
-    }
-
-    /**
-     * 使用json请求回复帖子
-     *
-     * @param id      帖子id
-     * @param content 回复内容
-     * @return ResponseObject.result is the reply_id if ok;
-     */
-    public static RequestObject<String>  replyPost(String id, String content, RequestObject.CallBack<String> callBack) {
+    public static RequestObject<String> replyPost(String id, String content, CallBack<String> callBack) {
         String url = "http://apis.guokr.com/group/post_reply.json";
         HashMap<String, String> pairs = new HashMap<>();
         pairs.put("post_id", id);
@@ -594,7 +587,6 @@ public class PostAPI extends APIBase {
     public static ResponseObject<UComment> getSingleCommentFromRedirectUrl(String url) {
         //url sample：http://www.guokr.com/post/reply/6224695/
         //uri http://www.guokr.com/post/666281/reply/6224695/
-        //TODO
         Uri uri = Uri.parse(url);
         List<String> segments = uri.getPathSegments();
         String id = "-1";
@@ -636,35 +628,15 @@ public class PostAPI extends APIBase {
      * @param id 评论id
      * @return resultObject
      */
-    public static ResponseObject deleteMyComment(String id) {
-        ResponseObject resultObject = new ResponseObject();
+    public static RequestObject<Boolean> deleteMyComment(String id, CallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/group/post_reply.json";
         HashMap<String, String> pairs = new HashMap<>();
         pairs.put("reply_id", id);
         pairs.put("reason", id);
-        try {
-            String result = HttpFetcher.delete(url, pairs).toString();
-            resultObject.ok = getUniversalJsonSimpleBoolean(result, resultObject);
-        } catch (Exception e) {
-            handleRequestException(e, resultObject);
-        }
-        return resultObject;
-    }
-
-    /**
-     * 删除我的评论
-     *
-     * @param id 评论id
-     * @return resultObject
-     */
-    public static void deleteMyComment(String id, RequestObject.CallBack<Boolean> callBack) {
-        String url = "http://www.guokr.com/apis/group/post_reply.json";
-        HashMap<String, String> pairs = new HashMap<>();
-        pairs.put("reply_id", id);
-        pairs.put("reason", id);
-        new RequestBuilder<Boolean>()
+        return new RequestBuilder<Boolean>()
                 .setUrl(url)
-                .post()
+                .setParser(new BooleanParser())
+                .delete()
                 .setRequestCallBack(callBack)
                 .setParams(pairs)
                 .requestAsync();
@@ -676,35 +648,14 @@ public class PostAPI extends APIBase {
      * @param id 评论id
      * @return resultObject
      */
-    public static ResponseObject likeComment(String id) {
-        String url = "http://www.guokr.com/apis/group/post_reply_liking.json";
-        ResponseObject resultObject = new ResponseObject();
-        try {
-            HashMap<String, String> pairs = new HashMap<>();
-            pairs.put("reply_id", id);
-            String result = HttpFetcher.post(url, pairs).toString();
-            if (getUniversalJsonSimpleBoolean(result, resultObject)) {
-                resultObject.ok = true;
-            }
-        } catch (Exception e) {
-            handleRequestException(e, resultObject);
-        }
-        return resultObject;
-    }
-
-    /**
-     * 赞一个评论
-     *
-     * @param id 评论id
-     * @return resultObject
-     */
-    public static void likeComment(String id, RequestObject.CallBack<Boolean> callBack) {
+    public static RequestObject<Boolean> likeComment(String id, CallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/group/post_reply_liking.json";
         HashMap<String, String> pairs = new HashMap<>();
         pairs.put("reply_id", id);
-        new RequestBuilder<Boolean>()
+        return new RequestBuilder<Boolean>()
                 .setUrl(url)
                 .post()
+                .setParser(new BooleanParser())
                 .setRequestCallBack(callBack)
                 .setParams(pairs)
                 .requestAsync();
@@ -717,6 +668,7 @@ public class PostAPI extends APIBase {
      * @param group_id 小组id
      * @return resultObject
      */
+    //TODO Rx
     public static ResponseObject<PrepareData> getPostPrepareData(String group_id) {
         ResponseObject<PrepareData> resultObject = new ResponseObject<>();
         try {
@@ -756,9 +708,54 @@ public class PostAPI extends APIBase {
     }
 
     /**
+     * 获取发帖所需的csrf和topic列表
+     * resultObject.result是PostPrepareData
+     *
+     * @param group_id 小组id
+     * @return resultObject
+     */
+    public static RequestObject<PrepareData> getPostPrepareData(String group_id, CallBack<PrepareData> callBack) {
+        String url = "http://www.guokr.com/group/" + group_id + "/post/edit/";
+        return new RequestBuilder<PrepareData>()
+                .setUrl(url)
+                .get()
+                .setParser(new Parser<PrepareData>() {
+                    @Override
+                    public PrepareData parse(String str, ResponseObject<PrepareData> responseObject) throws Exception {
+                        Document doc = Jsoup.parse(str);
+                        Element selects = doc.getElementById("topic");
+                        ArrayList<BasicNameValuePair> pairs = new ArrayList<>();
+                        String csrf = doc.getElementById("csrf_token").attr("value");
+                        if (selects != null) {
+                            Elements elements = selects.getElementsByTag("option");
+                            if (elements != null && elements.size() > 0) {
+                                for (int i = 0; i < elements.size(); i++) {
+                                    Element topic = elements.get(i);
+                                    String name = topic.text();
+                                    String value = topic.attr("value");
+                                    if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(value)) {
+                                        pairs.add(new BasicNameValuePair(name, value));
+                                    }
+                                }
+                            }
+                        }
+                        PrepareData prepareData = new PrepareData();
+                        responseObject.ok = !TextUtils.isEmpty(csrf);
+                        if (!TextUtils.isEmpty(csrf)) {
+                            prepareData.setCsrf(csrf);
+                            prepareData.setPairs(pairs);
+                        }
+                        return prepareData;
+                    }
+                })
+                .setRequestCallBack(callBack)
+                .requestAsync();
+    }
+
+    /**
      * 发帖
      * TODO
-     * 有Json方式的发删贴，有空加上。
+     * 有Json方式的删贴，有空加上。
      * http://www.guokr.com/apis/group/post.json?reason={}&post_id={}&access_token={}  //
      * request method = delete/put
      *

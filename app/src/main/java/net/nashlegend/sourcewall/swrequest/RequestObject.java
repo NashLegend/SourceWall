@@ -383,13 +383,14 @@ public class RequestObject<T> {
                         String result = response.body().string();
                         responseObject.statusCode = statusCode;
                         responseObject.body = result;
-                        if (response.isSuccessful()) {
-                            responseObject.result = parser.parse(result, responseObject);
-                            if (responseObject.ok) {
-                                //如果请求成功且允许缓存，那么将此次请求的数据保存到缓存中
-                                saveToCache(result);
-                            }
-                        } else {
+
+                        responseObject.result = parser.parse(result, responseObject);
+                        if (responseObject.ok) {
+                            //如果请求成功且允许缓存，那么将此次请求的数据保存到缓存中
+                            saveToCache(result);
+                        }
+                        //有时候请求成功的，isSuccessful竟然是false
+                        if (!responseObject.ok && !response.isSuccessful()) {
                             if ((call == null || !call.isCanceled()) && useCachedIfFailed) {
                                 //如果请求失败并且可以使用缓存，那么使用缓存
                                 //只要不是取消掉的才会读取缓存，如果是取消掉的，读啥缓存啊，请求都没有了

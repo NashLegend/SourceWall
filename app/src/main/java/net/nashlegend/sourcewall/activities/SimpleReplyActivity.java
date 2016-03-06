@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -27,9 +29,12 @@ import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.model.QuestionAnswer;
 import net.nashlegend.sourcewall.model.UComment;
+import net.nashlegend.sourcewall.request.api.APIBase;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
+import net.nashlegend.sourcewall.swrequest.RequestObject;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
+import net.nashlegend.sourcewall.util.CommonUtil;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.view.SimpleCommentItemView;
@@ -178,8 +183,60 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
                 } else {
                     content = textReply.getHint().toString() + textReply.getText().toString();
                 }
-                ReplyTask replyTask = new ReplyTask();
-                replyTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, content);
+
+                if (aceModel instanceof Question) {
+                    MobclickAgent.onEvent(SimpleReplyActivity.this, Mob.Event_Comment_On_Question);
+                } else if (aceModel instanceof QuestionAnswer) {
+                    MobclickAgent.onEvent(SimpleReplyActivity.this, Mob.Event_Comment_On_Answer);
+                }
+
+                RequestObject.CallBack<UComment> callBack = new RequestObject.CallBack<UComment>() {
+                    @Override
+                    public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<UComment> result) {
+                        CommonUtil.dismissDialog(progressDialog);
+                        toast("回复失败");
+                    }
+
+                    @Override
+                    public void onResponse(@NonNull ResponseObject<UComment> result) {
+                        CommonUtil.dismissDialog(progressDialog);
+                        if (result.ok) {
+                            mMenu.findItem(R.id.action_cancel_simple_reply).setVisible(false);
+                            textReply.setHint(R.string.hint_reply);
+                            textReply.setText("");
+                            hideInput();
+                            if (task == null || task.getStatus() != AAsyncTask.Status.RUNNING) {
+                                UComment uComment = result.result;
+                                adapter.add(0, uComment);
+                                adapter.notifyDataSetChanged();
+                            }
+                            toast("回复成功");
+                        } else {
+                            toast("回复失败");
+                        }
+                    }
+                };
+
+                RequestObject<UComment> requestObject = null;
+                if (aceModel instanceof Question) {
+                    requestObject = QuestionAPI.commentOnQuestion(((Question) aceModel).getId(), content, callBack);
+                } else if (aceModel instanceof QuestionAnswer) {
+                    requestObject = QuestionAPI.commentOnAnswer(((QuestionAnswer) aceModel).getID(), content, callBack);
+                }
+
+                if (requestObject != null) {
+                    progressDialog = new ProgressDialog(SimpleReplyActivity.this);
+                    progressDialog.setCanceledOnTouchOutside(false);
+                    progressDialog.setMessage(getString(R.string.message_wait_a_minute));
+                    final RequestObject<UComment> finalRequestObject = requestObject;
+                    progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialog) {
+                            finalRequestObject.softCancel();
+                        }
+                    });
+                    progressDialog.show();
+                }
             }
         }
     }
@@ -209,59 +266,6 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
     @Override
     public void reload() {
         loadData(0);
-    }
-
-    class ReplyTask extends AsyncTask<String, Integer, ResponseObject<UComment>> {
-
-        @Override
-        protected void onPreExecute() {
-            if (aceModel instanceof Question) {
-                MobclickAgent.onEvent(SimpleReplyActivity.this, Mob.Event_Comment_On_Question);
-            } else if (aceModel instanceof QuestionAnswer) {
-                MobclickAgent.onEvent(SimpleReplyActivity.this, Mob.Event_Comment_On_Answer);
-            }
-            progressDialog = new ProgressDialog(SimpleReplyActivity.this);
-            progressDialog.setCanceledOnTouchOutside(false);
-            progressDialog.setMessage(getString(R.string.message_wait_a_minute));
-            progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialog) {
-                    ReplyTask.this.cancel(true);
-                }
-            });
-            progressDialog.show();
-        }
-
-        @Override
-        protected ResponseObject<UComment> doInBackground(String... params) {
-            String content = params[0];
-            ResponseObject<UComment> resultObject = new ResponseObject<>();
-            if (aceModel instanceof Question) {
-                resultObject = QuestionAPI.commentOnQuestion(((Question) aceModel).getId(), content);
-            } else if (aceModel instanceof QuestionAnswer) {
-                resultObject = QuestionAPI.commentOnAnswer(((QuestionAnswer) aceModel).getID(), content);
-            }
-            return resultObject;
-        }
-
-        @Override
-        protected void onPostExecute(ResponseObject<UComment> result) {
-            progressDialog.dismiss();
-            if (result.ok) {
-                mMenu.findItem(R.id.action_cancel_simple_reply).setVisible(false);
-                textReply.setHint(R.string.hint_reply);
-                textReply.setText("");
-                hideInput();
-                if (task == null || task.getStatus() != AAsyncTask.Status.RUNNING) {
-                    UComment uComment = result.result;
-                    adapter.add(0, uComment);
-                    adapter.notifyDataSetChanged();
-                }
-                toast("回复成功");
-            } else {
-                toast("回复失败");
-            }
-        }
     }
 
     class LoaderTask extends AAsyncTask<Integer, Integer, ResponseObject<ArrayList<UComment>>> {

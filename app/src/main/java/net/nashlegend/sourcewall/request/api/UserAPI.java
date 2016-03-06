@@ -15,6 +15,7 @@ import net.nashlegend.sourcewall.model.UserInfo;
 import net.nashlegend.sourcewall.request.HttpFetcher;
 import net.nashlegend.sourcewall.swrequest.RequestBuilder;
 import net.nashlegend.sourcewall.swrequest.RequestObject;
+import net.nashlegend.sourcewall.swrequest.RequestObject.CallBack;
 import net.nashlegend.sourcewall.swrequest.ResponseCode;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.swrequest.parsers.BooleanParser;
@@ -151,7 +152,7 @@ public class UserAPI extends APIBase {
             HashMap<String, String> pairs = new HashMap<>();
             pairs.put("_", System.currentTimeMillis() + "");
             pairs.put("limit", "20");
-            pairs.put("offset", offset + "");
+            pairs.put("offset", String.valueOf(offset));
             String result = HttpFetcher.get(url, pairs).toString();
             JSONArray reminders = getUniversalJsonArray(result, resultObject);
             if (reminders != null) {
@@ -279,7 +280,7 @@ public class UserAPI extends APIBase {
             String url = "http://www.guokr.com/apis/community/user/message.json";
             HashMap<String, String> pairs = new HashMap<>();
             pairs.put("limit", "20");
-            pairs.put("offset", offset + "");
+            pairs.put("offset", String.valueOf(offset));
             String result = HttpFetcher.get(url, pairs).toString();
             JSONArray notices = getUniversalJsonArray(result, resultObject);
             if (notices != null) {
@@ -372,39 +373,7 @@ public class UserAPI extends APIBase {
      * @param comment 评语
      * @return ResponseObject
      */
-    public static ResponseObject recommendLink(String link, String title, String summary, String comment) {
-        String url = "http://www.guokr.com/apis/community/user/recommend.json";
-        ResponseObject resultObject = new ResponseObject();
-        if (TextUtils.isEmpty(summary)) {
-            summary = title;
-        }
-        try {
-            HashMap<String, String> pairs = new HashMap<>();
-            pairs.put("title", title);
-            pairs.put("url", link);
-            pairs.put("summary", summary);
-            pairs.put("comment", comment);
-            pairs.put("target", "activity");
-            String result = HttpFetcher.post(url, pairs).toString();
-            if (getUniversalJsonSimpleBoolean(result, resultObject)) {
-                resultObject.ok = true;
-            }
-        } catch (Exception e) {
-            handleRequestException(e, resultObject);
-        }
-        return resultObject;
-    }
-
-    /**
-     * 推荐一个链接
-     *
-     * @param link    链接地址
-     * @param title   链接标题
-     * @param summary 内容概述
-     * @param comment 评语
-     * @return ResponseObject
-     */
-    public static void recommendLink(String link, String title, String summary, String comment, RequestObject.CallBack<Boolean> callBack) {
+    public static RequestObject<Boolean> recommendLink(String link, String title, String summary, String comment, CallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/community/user/recommend.json";
         if (TextUtils.isEmpty(summary)) {
             summary = title;
@@ -415,7 +384,7 @@ public class UserAPI extends APIBase {
         pairs.put("summary", summary);
         pairs.put("comment", comment);
         pairs.put("target", "activity");
-        new RequestBuilder<Boolean>()
+        return new RequestBuilder<Boolean>()
                 .setUrl(url)
                 .setParser(new BooleanParser())
                 .setRequestCallBack(callBack)

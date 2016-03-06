@@ -14,6 +14,8 @@ import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -37,10 +39,12 @@ import net.nashlegend.sourcewall.dialogs.FavorDialog;
 import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.UComment;
-import net.nashlegend.sourcewall.swrequest.ResponseError;
-import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
+import net.nashlegend.sourcewall.swrequest.RequestObject;
+import net.nashlegend.sourcewall.swrequest.ResponseCode;
+import net.nashlegend.sourcewall.swrequest.ResponseError;
+import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.util.AutoHideUtil;
 import net.nashlegend.sourcewall.util.AutoHideUtil.AutoHideListener;
 import net.nashlegend.sourcewall.util.Consts;
@@ -227,8 +231,21 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
             notifyNeedLog();
         } else {
             MobclickAgent.onEvent(this, Mob.Event_Like_Post);
-            LikePostTask likePostTask = new LikePostTask(this);
-            likePostTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, post);
+            PostAPI.likePost(post.getId(), new RequestObject.CallBack<Boolean>() {
+                @Override
+                public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
+
+                }
+
+                @Override
+                public void onResponse(@NonNull ResponseObject<Boolean> result) {
+                    if (result.ok) {
+                        post.setLikeNum(post.getLikeNum() + 1);
+                        adapter.notifyDataSetChanged();
+                        toastSingleton("已赞");
+                    }
+                }
+            });
         }
     }
 
@@ -446,25 +463,62 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         replyPost(comment);
     }
 
-    private void likeComment(MediumListItemView mediumListItemView) {
+    private void likeComment(final MediumListItemView mediumListItemView) {
         if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
-        } else {
-            if (mediumListItemView.getData().isHasLiked()) {
-                toastSingleton("已经赞过了");
-            } else {
-                LikeCommentTask likeCommentTask = new LikeCommentTask(this);
-                likeCommentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mediumListItemView);
-            }
+            return;
         }
+        if (mediumListItemView.getData().isHasLiked()) {
+            toastSingleton("已经赞过了");
+            return;
+        }
+        final UComment comment = mediumListItemView.getData();
+        PostAPI.likeComment(comment.getID(), new RequestObject.CallBack<Boolean>() {
+            @Override
+            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
+
+            }
+
+            @Override
+            public void onResponse(@NonNull ResponseObject<Boolean> result) {
+                if (result.ok) {
+                    comment.setHasLiked(true);
+                    comment.setLikeNum(comment.getLikeNum() + 1);
+                    if (mediumListItemView.getData() == comment) {
+                        mediumListItemView.plusOneLike();
+                    }
+                } else {
+                    if (result.code == ResponseCode.CODE_ALREADY_LIKED) {
+                        comment.setHasLiked(true);
+                    }
+                }
+            }
+        });
     }
 
-    private void deleteComment(UComment comment) {
+    private void deleteComment(final UComment comment) {
         if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
         } else {
-            DeleteCommentTask deleteCommentTask = new DeleteCommentTask(this);
-            deleteCommentTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, comment);
+            PostAPI.deleteMyComment(comment.getID(), new RequestObject.CallBack<Boolean>() {
+                @Override
+                public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
+                    toastSingleton(getString(R.string.delete_failed));
+                }
+
+                @Override
+                public void onResponse(@NonNull ResponseObject<Boolean> result) {
+                    if (result.ok) {
+                        if (post.getReplyNum() > 0) {
+                            post.setReplyNum(post.getReplyNum() - 1);
+                        }
+                        adapter.remove(comment);
+                        adapter.notifyDataSetChanged();
+                    } else {
+                        toastSingleton(getString(R.string.delete_failed));
+                    }
+                }
+            });
         }
     }
 
@@ -509,90 +563,6 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
                     }
                 }
             }).create().show();
-        }
-    }
-
-
-    class LikePostTask extends AAsyncTask<Post, Integer, ResponseObject> {
-        Post post;
-
-        public LikePostTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
-            super(iStackedAsyncTaskInterface);
-        }
-
-        @Override
-        protected ResponseObject doInBackground(Post... params) {
-            post = params[0];
-            return PostAPI.likePost(post.getId());
-        }
-
-        @Override
-        protected void onPostExecute(ResponseObject resultObject) {
-            if (resultObject.ok) {
-                post.setLikeNum(post.getLikeNum() + 1);
-                adapter.notifyDataSetChanged();
-                toastSingleton("已赞");
-            }
-        }
-    }
-
-    class LikeCommentTask extends AAsyncTask<MediumListItemView, Integer, ResponseObject> {
-
-        UComment comment;
-        MediumListItemView mediumListItemView;
-
-        public LikeCommentTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
-            super(iStackedAsyncTaskInterface);
-        }
-
-        @Override
-        protected ResponseObject doInBackground(MediumListItemView... params) {
-            mediumListItemView = params[0];
-            comment = mediumListItemView.getData();
-            return PostAPI.likeComment(comment.getID());
-        }
-
-        @Override
-        protected void onPostExecute(ResponseObject resultObject) {
-            if (resultObject.ok) {
-                comment.setHasLiked(true);
-                comment.setLikeNum(comment.getLikeNum() + 1);
-                if (mediumListItemView.getData() == comment) {
-                    mediumListItemView.plusOneLike();
-                }
-            } else {
-                if (resultObject.error == ResponseError.ALREADY_LIKED) {
-                    comment.setHasLiked(true);
-                }
-            }
-        }
-    }
-
-    class DeleteCommentTask extends AAsyncTask<UComment, Integer, ResponseObject> {
-
-        UComment comment;
-
-        public DeleteCommentTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
-            super(iStackedAsyncTaskInterface);
-        }
-
-        @Override
-        protected ResponseObject doInBackground(UComment... params) {
-            comment = params[0];
-            return PostAPI.deleteMyComment(comment.getID());
-        }
-
-        @Override
-        protected void onPostExecute(ResponseObject resultObject) {
-            if (resultObject.ok) {
-                if (post.getReplyNum() > 0) {
-                    post.setReplyNum(post.getReplyNum() - 1);
-                }
-                adapter.remove(comment);
-                adapter.notifyDataSetChanged();
-            } else {
-                toastSingleton(getString(R.string.delete_failed));
-            }
         }
     }
 

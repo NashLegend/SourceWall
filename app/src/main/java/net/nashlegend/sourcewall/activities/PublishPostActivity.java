@@ -17,6 +17,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -39,10 +41,11 @@ import net.nashlegend.sourcewall.commonview.IStackedAsyncTaskInterface;
 import net.nashlegend.sourcewall.dialogs.InputDialog;
 import net.nashlegend.sourcewall.model.PrepareData;
 import net.nashlegend.sourcewall.model.SubItem;
-import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.request.api.APIBase;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
+import net.nashlegend.sourcewall.swrequest.RequestObject.CallBack;
+import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.FileUtil;
 import net.nashlegend.sourcewall.util.Mob;
@@ -75,7 +78,6 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
     private String csrf = "";
     private String topic = "";
     private ArrayList<BasicNameValuePair> topics = new ArrayList<>();
-    private PrepareTask prepareTask;
     private boolean replyOK;
 
     @Override
@@ -255,9 +257,37 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
     }
 
     private void prepare() {
-        cancelPotentialTask();
-        prepareTask = new PrepareTask(this);
-        prepareTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, group_id);
+        CallBack<PrepareData> callBack = new CallBack<PrepareData>() {
+            @Override
+            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<PrepareData> result) {
+                onPrepareFailed(result);
+            }
+
+            @Override
+            public void onResponse(@NonNull ResponseObject<PrepareData> result) {
+                if (result.ok) {
+                    toast(getString(R.string.get_csrf_ok));
+                    PrepareData prepareData = result.result;
+                    onReceivePreparedData(prepareData);
+                } else {
+                    onPrepareFailed(result);
+                }
+            }
+        };
+        if (isPost()) {
+            PostAPI.getPostPrepareData(group_id, callBack);
+        }
+//        else {
+//            //TODO 提问的PrepareData，现在未完成
+//        }
+    }
+
+    private void onPrepareFailed(@NonNull ResponseObject<PrepareData> result) {
+        if (result.statusCode == 403) {
+            new AlertDialog.Builder(PublishPostActivity.this).setTitle(R.string.hint).setMessage(getString(R.string.have_not_join_this_group)).setPositiveButton(R.string.ok, null).create().show();
+        } else {
+            new AlertDialog.Builder(PublishPostActivity.this).setTitle(getString(R.string.get_csrf_failed)).setMessage(getString(R.string.hint_reload_csrf)).setPositiveButton(R.string.ok, null).create().show();
+        }
     }
 
     private void onReceivePreparedData(PrepareData prepareData) {
@@ -272,12 +302,6 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
             spinner.setAdapter(arrayAdapter);
         }
 
-    }
-
-    private void cancelPotentialTask() {
-        if (prepareTask != null && prepareTask.getStatus() == AAsyncTask.Status.RUNNING) {
-            prepareTask.cancel(true);
-        }
     }
 
     private void invokeImageDialog() {
@@ -562,38 +586,6 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         insertButton.setVisibility(View.VISIBLE);
         imgButton.setVisibility(View.GONE);
         uploadingProgress.setVisibility(View.GONE);
-    }
-
-    class PrepareTask extends AAsyncTask<String, Integer, ResponseObject<PrepareData>> {
-
-        public PrepareTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
-            super(iStackedAsyncTaskInterface);
-        }
-
-        @Override
-        protected ResponseObject<PrepareData> doInBackground(String... params) {
-            String group_id = params[0];
-            if (isPost()) {
-                return PostAPI.getPostPrepareData(group_id);
-            } else {
-                return QuestionAPI.getQuestionPrepareData();
-            }
-        }
-
-        @Override
-        protected void onPostExecute(ResponseObject<PrepareData> result) {
-            if (result.ok) {
-                toast(getString(R.string.get_csrf_ok));
-                PrepareData prepareData = result.result;
-                onReceivePreparedData(prepareData);
-            } else {
-                if (result.statusCode == 403) {
-                    new AlertDialog.Builder(PublishPostActivity.this).setTitle(R.string.hint).setMessage(getString(R.string.have_not_join_this_group)).setPositiveButton(R.string.ok, null).create().show();
-                } else {
-                    new AlertDialog.Builder(PublishPostActivity.this).setTitle(getString(R.string.get_csrf_failed)).setMessage(getString(R.string.hint_reload_csrf)).setPositiveButton(R.string.ok, null).create().show();
-                }
-            }
-        }
     }
 
     class ImageUploadTask extends AAsyncTask<String, Integer, ResponseObject<String>> {
