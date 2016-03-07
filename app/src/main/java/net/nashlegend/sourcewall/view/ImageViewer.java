@@ -8,7 +8,11 @@ import android.graphics.Point;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Base64;
+import android.view.GestureDetector;
+import android.view.GestureDetector.OnGestureListener;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -40,11 +44,28 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
     LoaderTask task;
     String url = "";
     int doubleTapZoomDpi = 96;
+    GestureDetector gestureDetector;
+    private SimpleOnGestureListener gestureListener = new SimpleOnGestureListener() {
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            tapFinish();
+            return true;
+        }
+    };
+
+    private OnTouchListener touchListener = new OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            gestureDetector.onTouchEvent(event);
+            return true;
+        }
+    };
 
     public ImageViewer(final Context context) {
         super(context);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_image_viewer, this);
+        gestureDetector = new GestureDetector(getContext(),gestureListener);
         imageView = (ScalingImage) findViewById(R.id.zoom_image);
         gifImageView = (GifImageView) findViewById(R.id.gifImage);
         gifImageView.setVisibility(VISIBLE);
@@ -53,8 +74,8 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
         imageView.setDoubleTapZoomDpi(doubleTapZoomDpi);
         loadingView = (LoadingView) findViewById(R.id.image_loading);
         imageView.setOnClickListener(this);
-        gifImageView.setOnClickListener(this);
-        this.setOnClickListener(this);
+        gifImageView.setOnTouchListener(touchListener);
+        this.setOnTouchListener(touchListener);
     }
 
     public void load(String imageUrl) {
@@ -93,6 +114,10 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
 
     @Override
     public void onClick(View v) {
+        tapFinish();
+    }
+
+    private void tapFinish(){
         Context ctx = getContext();
         if (ctx instanceof Activity) {
             ((Activity) ctx).finish();
