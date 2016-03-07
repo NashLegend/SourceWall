@@ -14,6 +14,7 @@
         <item name="windowActionModeOverlay">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsTranslucent">true</item>
+        <item name="actionBarSize">@dimen/actionbar_height</item>
     </style>
 
     <style name="ToolbarTextAppearance" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
