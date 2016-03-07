@@ -204,7 +204,7 @@ public class RequestObject<T> {
     }
 
     /**
-     * 通过RxJava的方式招待请求，与requestAsync一样……
+     * 通过RxJava的方式执行请求，与requestAsync一样，CallBack执行在主线程上
      */
     public void requestRx() {
         requestObservable()
@@ -217,6 +217,7 @@ public class RequestObject<T> {
 
                     @Override
                     public void onError(Throwable e) {
+                        //requestObservable很难走到onError，因为都已经封好了，否则第二个参数不太好传给别人
                         if (!softCancelled && callBack != null) {
                             callBack.onFailure(null, responseObject);
                         }
