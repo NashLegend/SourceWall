@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
+import rx.Observer;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -86,21 +87,9 @@ public class RequestObject<T> {
 
     protected String filePath = "";
 
-    protected boolean ignoreHandler = false;
-
-    protected Handler handler;
-
     private boolean softCancelled = false;//取消掉一个请求，但是并不中断请求，只是不再执行CallBack,请求完成后无任何动作
 
     private Call call = null;
-
-    public void softCancel() {
-        this.softCancelled = true;
-    }
-
-    public boolean isSoftCancelled() {
-        return softCancelled;
-    }
 
     /**
      * 生成此次请求的缓存key，
@@ -191,28 +180,6 @@ public class RequestObject<T> {
     }
 
     /**
-     * 异步请求，如果在enqueue执行之前就执行了cancel，那么将不会有callback执行，用户将不知道已经取消了请求。
-     * 我们在请求中已经添加了synchronized，所以不考虑这种情况了
-     */
-    public void requestAsync() {
-        handleHandler();
-        switch (method) {
-            case Method.GET:
-                call = HttpUtil.getAsync(url, params, getInnerCallback(), tag);
-                break;
-            case Method.PUT:
-                call = HttpUtil.putAsync(url, params, getInnerCallback(), tag);
-                break;
-            case Method.DELETE:
-                call = HttpUtil.deleteAsync(url, params, getInnerCallback(), tag);
-                break;
-            default:
-                call = HttpUtil.postAsync(url, params, getInnerCallback(), tag);
-                break;
-        }
-    }
-
-    /**
      * 同步请求
      *
      * @return
@@ -236,60 +203,36 @@ public class RequestObject<T> {
         return call;
     }
 
-    private void callSuccess(@NonNull final ResponseObject<T> responseObject) {
-        if (!softCancelled && callBack != null) {
-            if (handler != null) {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        callBack.onSuccess(responseObject);
-                    }
-                });
-            } else {
-                callBack.onSuccess(responseObject);
-            }
-        }
-    }
-
-    private void callFailure(@Nullable final Throwable e, @NonNull final ResponseObject<T> responseObject) {
-        if (!softCancelled && callBack != null) {
-            if (handler != null) {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        callBack.onFailure(e, responseObject);
-                    }
-                });
-            } else {
-                callBack.onFailure(e, responseObject);
-            }
-        }
-    }
-
     /**
      * 通过RxJava的方式招待请求，与requestAsync一样……
      */
     public void requestRx() {
-        requestObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<ResponseObject<T>>() {
-            @Override
-            public void onCompleted() {
+        requestObservable()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ResponseObject<T>>() {
+                    @Override
+                    public void onCompleted() {
 
-            }
+                    }
 
-            @Override
-            public void onError(Throwable e) {
-                callFailure(e, responseObject);
-            }
+                    @Override
+                    public void onError(Throwable e) {
+                        if (!softCancelled && callBack != null) {
+                            callBack.onFailure(null, responseObject);
+                        }
+                    }
 
-            @Override
-            public void onNext(ResponseObject<T> tResponseObject) {
-                if (tResponseObject.ok) {
-                    callSuccess(tResponseObject);
-                } else {
-                    callFailure(null, responseObject);
-                }
-            }
-        });
+                    @Override
+                    public void onNext(ResponseObject<T> tResponseObject) {
+                        if (!softCancelled && callBack != null) {
+                            if (tResponseObject.ok) {
+                                callBack.onSuccess(tResponseObject);
+                            } else {
+                                callBack.onFailure(null, tResponseObject);
+                            }
+                        }
+                    }
+                });
     }
 
     /**
@@ -316,12 +259,8 @@ public class RequestObject<T> {
                             String result = response.body().string();
                             responseObject.statusCode = response.code();
                             responseObject.body = result;
-                            if (response.isSuccessful()) {
-                                subscriber.onNext(result);
-                                subscriber.onCompleted();
-                            } else {
-                                subscriber.onError(new IllegalStateException("Not A Successful Response"));
-                            }
+                            subscriber.onNext(result);
+                            subscriber.onCompleted();
                         } catch (Exception e) {
                             if (call != null && call.isCanceled()) {
                                 responseObject.isCancelled = true;
@@ -372,11 +311,143 @@ public class RequestObject<T> {
         return requestObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(subscriber);
     }
 
+    public void softCancel() {
+        this.softCancelled = true;
+    }
+
+    public boolean isSoftCancelled() {
+        return softCancelled;
+    }
+
+    @SuppressWarnings("StringBufferReplaceableByString")
+    public String dump() {
+        StringBuilder err = new StringBuilder();
+        err.append("    ").append("params").append(":").append(params).append("\n");
+        err.append("    ").append("method").append(":").append(method).append("\n");
+        err.append("    ").append("url").append(":").append(url).append("\n");
+        err.append("    ").append("tag").append(":").append(tag).append("\n");
+        if (requestType == RequestType.UPLOAD) {
+            err.append("    ").append("uploadParamKey").append(":").append(uploadParamKey).append("\n");
+            err.append("    ").append("mediaType").append(":").append(mediaType).append("\n");
+        }
+        return err.toString();
+    }
+
+    /**
+     * http 请求方法
+     */
+    public interface Method {
+        int GET = 0;
+        int POST = 1;
+        int PUT = 2;
+        int DELETE = 3;
+    }
+
+    /**
+     * http 请求方法
+     */
+    public interface RequestType {
+        int PLAIN = 0;
+        int UPLOAD = 1;
+        int DOWNLOAD = 2;
+    }
+
+    /**
+     * http 请求回调
+     *
+     * @param <T>
+     */
+    public interface CallBack<T> {
+        /**
+         * ok必须为false
+         *
+         * @param e
+         * @param result
+         */
+        void onFailure(@Nullable Throwable e, @NonNull ResponseObject<T> result);
+
+        /**
+         * 如果执行到此处，ok必然为true
+         *
+         * @param result
+         */
+        void onSuccess(@NonNull ResponseObject<T> result);
+    }
+
+    public boolean shouldHandNotifier(Throwable exception, ResponseObject responseObject) {
+        return responseObject.code != ResponseCode.CODE_TOKEN_INVALID
+                && call != null
+                && !call.isCanceled()
+                && crtTime < maxRetryTimes
+                && !(exception instanceof InterruptedIOException)
+                && (responseObject.statusCode < 300 || responseObject.statusCode >= 500);
+    }
+
+    public void notifyAction() {
+        crtTime++;
+    }
+
+    public class RxRetryHandler implements Func1<Observable<? extends Throwable>, Observable<?>> {
+
+        @Override
+        public Observable<?> call(Observable<? extends Throwable> observable) {
+            return observable
+                    .flatMap(new Func1<Throwable, Observable<?>>() {
+                        @Override
+                        public Observable<?> call(Throwable throwable) {
+                            if (shouldHandNotifier(throwable, responseObject)) {
+                                notifyAction();
+                                return Observable.timer(maxRetryTimes, TimeUnit.MILLISECONDS);
+                            } else {
+                                return Observable.error(throwable);
+                            }
+                        }
+                    });
+        }
+    }
+
+    /**
+     * 下面部分均标为过时，请求逐步改为上面的Rx请求方式
+     */
+    ////////////////////////////////////////////////////////////////////////////
+
+
+    @Deprecated
+    protected boolean ignoreHandler = false;
+
+    @Deprecated
+    protected Handler handler;
+
+    /**
+     * 异步请求，如果在enqueue执行之前就执行了cancel，那么将不会有callback执行，用户将不知道已经取消了请求。
+     * 我们在请求中已经添加了synchronized，所以不考虑这种情况了
+     */
+    @Deprecated
+    public void requestAsync() {
+        handleHandler();
+        switch (method) {
+            case Method.GET:
+                call = HttpUtil.getAsync(url, params, getInnerCallback(), tag);
+                break;
+            case Method.PUT:
+                call = HttpUtil.putAsync(url, params, getInnerCallback(), tag);
+                break;
+            case Method.DELETE:
+                call = HttpUtil.deleteAsync(url, params, getInnerCallback(), tag);
+                break;
+            default:
+                call = HttpUtil.postAsync(url, params, getInnerCallback(), tag);
+                break;
+        }
+    }
+
+    @Deprecated
     public void uploadAsync() {
         handleHandler();
         HttpUtil.uploadAsync(url, params, uploadParamKey, mediaType, filePath, getInnerCallback());
     }
 
+    @Deprecated
     private void handleHandler() {
         if (Thread.currentThread().getId() == 1) {
             //是果是在主线程请求,且handler为null，则将其置为在主线程执行callback
@@ -386,6 +457,7 @@ public class RequestObject<T> {
         }
     }
 
+    @Deprecated
     private Callback getInnerCallback() {
         return new Callback() {
             @Override
@@ -449,6 +521,7 @@ public class RequestObject<T> {
      * @param result
      */
     @WorkerThread
+    @Deprecated
     private void onRequestFailure(final Throwable e, final ResponseObject<T> result) {
         if (call != null && requestType == RequestType.PLAIN && shouldHandNotifier(e, result)) {
             try {
@@ -468,90 +541,36 @@ public class RequestObject<T> {
         }
     }
 
-    @SuppressWarnings("StringBufferReplaceableByString")
-    public String dump() {
-        StringBuilder err = new StringBuilder();
-        err.append("    ").append("params").append(":").append(params).append("\n");
-        err.append("    ").append("method").append(":").append(method).append("\n");
-        err.append("    ").append("url").append(":").append(url).append("\n");
-        err.append("    ").append("tag").append(":").append(tag).append("\n");
-        if (requestType == RequestType.UPLOAD) {
-            err.append("    ").append("uploadParamKey").append(":").append(uploadParamKey).append("\n");
-            err.append("    ").append("mediaType").append(":").append(mediaType).append("\n");
+
+    @Deprecated
+    private void callSuccess(@NonNull final ResponseObject<T> responseObject) {
+        if (!softCancelled && callBack != null) {
+            if (handler != null) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        callBack.onSuccess(responseObject);
+                    }
+                });
+            } else {
+                callBack.onSuccess(responseObject);
+            }
         }
-        return err.toString();
     }
 
-    /**
-     * http 请求方法
-     */
-    public interface Method {
-        int GET = 0;
-        int POST = 1;
-        int PUT = 2;
-        int DELETE = 3;
-    }
-
-    /**
-     * http 请求方法
-     */
-    public interface RequestType {
-        int PLAIN = 0;
-        int UPLOAD = 1;
-        int DOWNLOAD = 2;
-    }
-
-    /**
-     * http 请求回调
-     *
-     * @param <T>
-     */
-    public interface CallBack<T> {
-        /**
-         * result不可能为空
-         *
-         * @param e
-         * @param result
-         */
-        void onFailure(@Nullable Throwable e, @NonNull ResponseObject<T> result);
-
-        /**
-         * 如果执行到此处，必然code==0,ok必然为true
-         *
-         * @param result
-         */
-        void onSuccess(@NonNull ResponseObject<T> result);
-    }
-
-    public boolean shouldHandNotifier(Throwable exception, ResponseObject responseObject) {
-        return responseObject.code != ResponseCode.CODE_TOKEN_INVALID
-                && call != null
-                && !call.isCanceled()
-                && crtTime < maxRetryTimes
-                && !(exception instanceof InterruptedIOException)
-                && (responseObject.statusCode < 300 || responseObject.statusCode >= 500);
-    }
-
-    public void notifyAction() {
-        crtTime++;
-    }
-
-    public class RxRetryHandler implements Func1<Observable<? extends Throwable>, Observable<?>> {
-
-        @Override
-        public Observable<?> call(Observable<? extends Throwable> observable) {
-            return observable
-                    .flatMap(new Func1<Throwable, Observable<?>>() {
-                        @Override
-                        public Observable<?> call(Throwable throwable) {
-                            if (shouldHandNotifier(throwable, responseObject)) {
-                                notifyAction();
-                                return Observable.timer(maxRetryTimes, TimeUnit.MILLISECONDS);
-                            } else {
-                                return Observable.error(throwable);
-                            }
-                        }
-                    });
+    @Deprecated
+    private void callFailure(@Nullable final Throwable e, @NonNull final ResponseObject<T> responseObject) {
+        if (!softCancelled && callBack != null) {
+            if (handler != null) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        callBack.onFailure(e, responseObject);
+                    }
+                });
+            } else {
+                callBack.onFailure(e, responseObject);
+            }
         }
     }
 }

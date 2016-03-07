@@ -275,6 +275,7 @@ public class RequestBuilder<T> {
      *
      * @return
      */
+    @Deprecated
     public RequestBuilder<T> runCallbackOnMainThread() {
         rbRequest.ignoreHandler = false;
         rbRequest.handler = new Handler(Looper.getMainLooper());
@@ -287,6 +288,7 @@ public class RequestBuilder<T> {
      * @param looper
      * @return
      */
+    @Deprecated
     public RequestBuilder<T> runCallbackOn(Looper looper) {
         rbRequest.ignoreHandler = false;
         rbRequest.handler = new Handler(looper);
@@ -298,6 +300,7 @@ public class RequestBuilder<T> {
      *
      * @return
      */
+    @Deprecated
     public RequestBuilder<T> runCallbackWhatever() {
         rbRequest.ignoreHandler = true;
         rbRequest.handler = null;
@@ -325,6 +328,7 @@ public class RequestBuilder<T> {
     /**
      * 异步请求
      */
+    @Deprecated
     public RequestObject<T> requestAsync() {
         addExtras();
         rbRequest.requestType = RequestObject.RequestType.PLAIN;
@@ -351,7 +355,7 @@ public class RequestBuilder<T> {
         return rbRequest;
     }
 
-
+    @Deprecated
     public void uploadAsync(String filePath) {
         addExtras();
         rbRequest.filePath = filePath;
