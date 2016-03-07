@@ -63,6 +63,9 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
         loadingView.setReloadListener(this);
         toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         toolbar.setOnClickListener(new View.OnClickListener() {
 
             boolean preparingToScrollToHead = false;
@@ -132,6 +135,9 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
             mMenu.findItem(R.id.action_cancel_simple_reply).setVisible(false);
             textReply.setHint(R.string.hint_reply);
             return true;
+        }
+        if (item.getItemId() == android.R.id.home) {
+            finish();
         }
         return super.onOptionsItemSelected(item);
     }

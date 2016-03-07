@@ -43,7 +43,6 @@ import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.swrequest.RequestObject.CallBack;
 import net.nashlegend.sourcewall.swrequest.ResponseCode;
-import net.nashlegend.sourcewall.swrequest.ResponseError;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
@@ -91,6 +90,9 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         appbar = (AppBarLayout) findViewById(R.id.app_bar);
         Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         authorLayout = findViewById(R.id.layout_author);
         scrollView = (SScrollView) findViewById(R.id.scrollView);
         headerHolder = findViewById(R.id.headerHolder);
@@ -224,6 +226,10 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+        switch (id) {
+            case android.R.id.home:
+                finish();
+        }
         return super.onOptionsItemSelected(item);
     }
 

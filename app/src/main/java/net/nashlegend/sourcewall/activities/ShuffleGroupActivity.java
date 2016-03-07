@@ -50,6 +50,9 @@ public class ShuffleGroupActivity extends SwipeActivity {
         setContentView(R.layout.activity_shuffle);
         toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         desk = (ShuffleDesk) findViewById(R.id.shuffle_desk);
         ((TextView) desk.findViewById(R.id.text_main_sections)).setText(R.string.selected_groups);
         ((TextView) desk.findViewById(R.id.text_other_sections)).setText(R.string.more_unselected_groups);
@@ -89,16 +92,23 @@ public class ShuffleGroupActivity extends SwipeActivity {
             netTask.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR);
             return true;
         }
+        if (item.getItemId() == android.R.id.home) {
+            processFinish();
+        }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            commitChanges();
-            finish();
+            processFinish();
         }
         return false;
+    }
+
+    private void processFinish(){
+        commitChanges();
+        finish();
     }
 
     private void commitChanges() {

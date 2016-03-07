@@ -73,6 +73,9 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         appbar = (AppBarLayout) findViewById(R.id.app_bar);
         Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         toolbar.setOnClickListener(new View.OnClickListener() {
 
             boolean preparingToScrollToHead = false;
@@ -155,6 +158,9 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         switch (id) {
+            case android.R.id.home:
+                finish();
+                break;
             case R.id.action_follow_question:
                 followQuestion();
                 break;

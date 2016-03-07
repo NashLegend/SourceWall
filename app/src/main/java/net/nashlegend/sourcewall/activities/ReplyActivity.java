@@ -80,6 +80,9 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
         setContentView(R.layout.activity_reply);
         Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         aceModel = getIntent().getParcelableExtra(Consts.Extra_Ace_Model);
         comment = getIntent().getParcelableExtra(Consts.Extra_Simple_Comment);
         editText = (EditText) findViewById(R.id.text_reply);
@@ -578,6 +581,9 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
         return super.onOptionsItemSelected(item);
     }
 

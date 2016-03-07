@@ -86,6 +86,9 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         setContentView(R.layout.activity_publish_post);
         Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         titleEditText = (EditText) findViewById(R.id.text_post_title);
         tagEditText = (EditText) findViewById(R.id.text_question_tag);
         bodyEditText = (EditText) findViewById(R.id.text_post_body);
@@ -665,9 +668,13 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_reload_csrf) {
-            prepare();
-            return true;
+        switch (id){
+            case android.R.id.home:
+                finish();
+                break;
+            case R.id.action_reload_csrf:
+                prepare();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

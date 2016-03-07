@@ -52,6 +52,9 @@ public class ShuffleTagActivity extends SwipeActivity {
         setContentView(R.layout.activity_shuffle);
         toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         desk = (ShuffleDesk) findViewById(R.id.shuffle_desk);
         desk.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
 
@@ -90,16 +93,23 @@ public class ShuffleTagActivity extends SwipeActivity {
             netTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             return true;
         }
+        if (item.getItemId() == android.R.id.home) {
+            processFinish();
+        }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            commitChanges();
-            finish();
+            processFinish();
         }
         return false;
+    }
+
+    private void processFinish(){
+        commitChanges();
+        finish();
     }
 
     private void commitChanges() {

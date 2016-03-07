@@ -22,6 +22,9 @@ public class MessageCenterActivity extends SwipeActivity {
         MobclickAgent.onEvent(this, Mob.Event_Check_Notice);
         Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         noticesFragment = new NoticesFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.message_container, noticesFragment).commitAllowingStateLoss();
     }
@@ -37,6 +40,11 @@ public class MessageCenterActivity extends SwipeActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return noticesFragment != null && noticesFragment.takeOverOptionsItemSelect(item) || super.onOptionsItemSelected(item);
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return super.onOptionsItemSelected(item);
+        } else {
+            return noticesFragment != null && noticesFragment.takeOverOptionsItemSelect(item) || super.onOptionsItemSelected(item);
+        }
     }
 }

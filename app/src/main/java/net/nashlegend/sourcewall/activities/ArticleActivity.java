@@ -97,6 +97,9 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         appbar = (AppBarLayout) findViewById(R.id.app_bar);
         Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         toolbar.setOnClickListener(new View.OnClickListener() {
 
             boolean preparingToScrollToHead = false;
@@ -270,6 +273,8 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
+            case android.R.id.home:
+                finish();
             case R.id.action_load_acs:
                 startLoadAcs();
                 break;

@@ -90,6 +90,9 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
         appbar = (AppBarLayout) findViewById(R.id.app_bar);
         Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         authorLayout = findViewById(R.id.layout_author);
         scrollView = (SScrollView) findViewById(R.id.scrollView);
         headerHolder = findViewById(R.id.headerHolder);
@@ -234,6 +237,9 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
         return super.onOptionsItemSelected(item);
     }
 
