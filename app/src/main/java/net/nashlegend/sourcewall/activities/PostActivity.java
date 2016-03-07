@@ -243,12 +243,10 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
                 }
 
                 @Override
-                public void onResponse(@NonNull ResponseObject<Boolean> result) {
-                    if (result.ok) {
-                        post.setLikeNum(post.getLikeNum() + 1);
-                        adapter.notifyDataSetChanged();
-                        toastSingleton("已赞");
-                    }
+                public void onSuccess(@NonNull ResponseObject<Boolean> result) {
+                    post.setLikeNum(post.getLikeNum() + 1);
+                    adapter.notifyDataSetChanged();
+                    toastSingleton("已赞");
                 }
             });
         }
@@ -481,21 +479,17 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         PostAPI.likeComment(comment.getID(), new RequestObject.CallBack<Boolean>() {
             @Override
             public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
-
+                if (result.code == ResponseCode.CODE_ALREADY_LIKED) {
+                    comment.setHasLiked(true);
+                }
             }
 
             @Override
-            public void onResponse(@NonNull ResponseObject<Boolean> result) {
-                if (result.ok) {
-                    comment.setHasLiked(true);
-                    comment.setLikeNum(comment.getLikeNum() + 1);
-                    if (mediumListItemView.getData() == comment) {
-                        mediumListItemView.plusOneLike();
-                    }
-                } else {
-                    if (result.code == ResponseCode.CODE_ALREADY_LIKED) {
-                        comment.setHasLiked(true);
-                    }
+            public void onSuccess(@NonNull ResponseObject<Boolean> result) {
+                comment.setHasLiked(true);
+                comment.setLikeNum(comment.getLikeNum() + 1);
+                if (mediumListItemView.getData() == comment) {
+                    mediumListItemView.plusOneLike();
                 }
             }
         });
@@ -512,16 +506,12 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
                 }
 
                 @Override
-                public void onResponse(@NonNull ResponseObject<Boolean> result) {
-                    if (result.ok) {
-                        if (post.getReplyNum() > 0) {
-                            post.setReplyNum(post.getReplyNum() - 1);
-                        }
-                        adapter.remove(comment);
-                        adapter.notifyDataSetChanged();
-                    } else {
-                        toastSingleton(getString(R.string.delete_failed));
+                public void onSuccess(@NonNull ResponseObject<Boolean> result) {
+                    if (post.getReplyNum() > 0) {
+                        post.setReplyNum(post.getReplyNum() - 1);
                     }
+                    adapter.remove(comment);
+                    adapter.notifyDataSetChanged();
                 }
             });
         }

@@ -287,17 +287,13 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
             }
 
             @Override
-            public void onResponse(@NonNull ResponseObject<String> result) {
+            public void onSuccess(@NonNull ResponseObject<String> result) {
                 CommonUtil.dismissDialog(progressDialog);
-                if (result.ok) {
-                    toast(R.string.reply_ok);
-                    setResult(RESULT_OK);
-                    replyOK = true;
-                    tryClearSketch();
-                    finish();
-                } else {
-                    toast(R.string.reply_failed);
-                }
+                toast(R.string.reply_ok);
+                setResult(RESULT_OK);
+                replyOK = true;
+                tryClearSketch();
+                finish();
             }
         });
         if (requestObject != null) {

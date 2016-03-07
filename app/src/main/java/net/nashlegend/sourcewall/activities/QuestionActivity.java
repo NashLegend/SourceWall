@@ -272,12 +272,8 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
             }
 
             @Override
-            public void onResponse(@NonNull ResponseObject<Boolean> result) {
-                if (result.ok) {
-                    toast(R.string.recommend_ok);
-                } else {
-                    toast(R.string.recommend_failed);
-                }
+            public void onSuccess(@NonNull ResponseObject<Boolean> result) {
+                toast(R.string.recommend_ok);
             }
         });
     }
@@ -379,12 +375,8 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
             }
 
             @Override
-            public void onResponse(@NonNull ResponseObject<Boolean> result) {
-                if (result.ok) {
-                    toast(R.string.follow_ok);
-                } else {
-                    toast(R.string.follow_failed);
-                }
+            public void onSuccess(@NonNull ResponseObject<Boolean> result) {
+                toast(R.string.follow_ok);
             }
         });
     }
@@ -398,12 +390,8 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
             }
 
             @Override
-            public void onResponse(@NonNull ResponseObject<Boolean> result) {
-                if (result.ok) {
-                    toast(R.string.unfollow_ok);
-                } else {
-                    toast(R.string.unfollow_failed);
-                }
+            public void onSuccess(@NonNull ResponseObject<Boolean> result) {
+                toast(R.string.unfollow_ok);
             }
         });
     }

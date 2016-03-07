@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
 
 import com.squareup.okhttp.Call;
@@ -235,15 +236,33 @@ public class RequestObject<T> {
         return call;
     }
 
-    private void callResponse(@NonNull ResponseObject<T> responseObject) {
+    private void callSuccess(@NonNull final ResponseObject<T> responseObject) {
         if (!softCancelled && callBack != null) {
-            callBack.onResponse(responseObject);
+            if (handler != null) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        callBack.onSuccess(responseObject);
+                    }
+                });
+            } else {
+                callBack.onSuccess(responseObject);
+            }
         }
     }
 
-    private void callFailure(@Nullable Throwable e, @NonNull ResponseObject<T> responseObject) {
+    private void callFailure(@Nullable final Throwable e, @NonNull final ResponseObject<T> responseObject) {
         if (!softCancelled && callBack != null) {
-            callBack.onFailure(e, responseObject);
+            if (handler != null) {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        callBack.onFailure(e, responseObject);
+                    }
+                });
+            } else {
+                callBack.onFailure(e, responseObject);
+            }
         }
     }
 
@@ -264,7 +283,11 @@ public class RequestObject<T> {
 
             @Override
             public void onNext(ResponseObject<T> tResponseObject) {
-                callResponse(tResponseObject);
+                if (tResponseObject.ok) {
+                    callSuccess(tResponseObject);
+                } else {
+                    callFailure(null, responseObject);
+                }
             }
         });
     }
@@ -370,7 +393,24 @@ public class RequestObject<T> {
                 final ResponseObject<T> responseObject = new ResponseObject<>();
                 responseObject.requestObject = RequestObject.this;
                 JsonHandler.handleRequestException(e, responseObject);
-                onRequestFailure(e, responseObject);
+                if ((call == null || !call.isCanceled()) && useCachedIfFailed) {
+                    //只有在此处才可，其他地方有可能只是别的错误而非请求错误
+                    try {
+                        String cachedResult = readFromCache();
+                        if (cachedResult != null) {
+                            responseObject.isCached = true;
+                            responseObject.body = cachedResult;
+                            responseObject.result = parser.parse(cachedResult, responseObject);
+                        } else {
+                            onRequestFailure(e, responseObject);
+                        }
+                    } catch (Exception ignored) {
+                        //缓存过的数据是不会出错的，除非是改版后parser发生了改变，一般这里走不到
+                        onRequestFailure(e, responseObject);
+                    }
+                } else {
+                    onRequestFailure(e, responseObject);
+                }
             }
 
             @Override
@@ -378,51 +418,24 @@ public class RequestObject<T> {
                 final ResponseObject<T> responseObject = new ResponseObject<>();
                 responseObject.requestObject = RequestObject.this;
                 if (callBack != null && parser != null) {
+                    Throwable throwable = null;
                     try {
                         int statusCode = response.code();
                         String result = response.body().string();
                         responseObject.statusCode = statusCode;
                         responseObject.body = result;
-
                         responseObject.result = parser.parse(result, responseObject);
-                        if (responseObject.ok) {
-                            //如果请求成功且允许缓存，那么将此次请求的数据保存到缓存中
+                        if (responseObject.ok && response.isSuccessful()) {
                             saveToCache(result);
-                        }
-                        //有时候请求成功的，isSuccessful竟然是false
-                        if (!responseObject.ok && !response.isSuccessful()) {
-                            if ((call == null || !call.isCanceled()) && useCachedIfFailed) {
-                                //如果请求失败并且可以使用缓存，那么使用缓存
-                                //只要不是取消掉的才会读取缓存，如果是取消掉的，读啥缓存啊，请求都没有了
-                                String cachedResult = readFromCache();
-                                if (cachedResult != null) {
-                                    responseObject.isCached = true;
-                                    responseObject.body = result;
-                                    responseObject.result = parser.parse(cachedResult, responseObject);
-                                }
-                            }
-                        }
-                        if (handler != null) {
-                            handler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (responseObject.ok) {
-                                        callResponse(responseObject);
-                                    } else {
-                                        onRequestFailure(null, responseObject);
-                                    }
-                                }
-                            });
-                        } else {
-                            if (responseObject.ok) {
-                                callResponse(responseObject);
-                            } else {
-                                onRequestFailure(null, responseObject);
-                            }
                         }
                     } catch (final Exception e) {
                         JsonHandler.handleRequestException(e, responseObject);
-                        onRequestFailure(e, responseObject);
+                        throwable = e;
+                    }
+                    if (responseObject.ok) {
+                        callSuccess(responseObject);
+                    } else {
+                        onRequestFailure(throwable, responseObject);
                     }
                 }
             }
@@ -435,27 +448,14 @@ public class RequestObject<T> {
      * @param e
      * @param result
      */
-    private void onRequestFailure(final Exception e, final ResponseObject<T> result) {
+    @WorkerThread
+    private void onRequestFailure(final Throwable e, final ResponseObject<T> result) {
         if (call != null && requestType == RequestType.PLAIN && shouldHandNotifier(e, result)) {
-            if (interval > 0) {
-                if (Thread.currentThread().getId() == 1) {
-                    //如果在主线程
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            requestAsync();
-                        }
-                    }, interval);
-                } else {
-                    try {
-                        Thread.sleep(interval);
-                    } catch (InterruptedException e1) {
-                        e1.printStackTrace();
-                    } finally {
-                        requestAsync();
-                    }
-                }
-            } else {
+            try {
+                Thread.sleep(interval);
+            } catch (InterruptedException e1) {
+                e1.printStackTrace();
+            } finally {
                 requestAsync();
             }
             notifyAction();
@@ -464,18 +464,7 @@ public class RequestObject<T> {
                 result.error = ResponseError.CANCELLED;
                 result.isCancelled = true;
             }
-            if (callBack != null) {
-                if (handler != null) {
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            callFailure(e, result);
-                        }
-                    });
-                } else {
-                    callFailure(e, result);
-                }
-            }
+            callFailure(e, result);
         }
     }
 
@@ -531,7 +520,7 @@ public class RequestObject<T> {
          *
          * @param result
          */
-        void onResponse(@NonNull ResponseObject<T> result);
+        void onSuccess(@NonNull ResponseObject<T> result);
     }
 
     public boolean shouldHandNotifier(Throwable exception, ResponseObject responseObject) {

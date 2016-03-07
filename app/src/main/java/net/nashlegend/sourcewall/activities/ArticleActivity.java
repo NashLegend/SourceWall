@@ -234,12 +234,8 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
             }
 
             @Override
-            public void onResponse(@NonNull ResponseObject<Boolean> result) {
-                if (result.ok) {
-                    toast(R.string.recommend_ok);
-                } else {
-                    toast(R.string.recommend_failed);
-                }
+            public void onSuccess(@NonNull ResponseObject<Boolean> result) {
+                toast(R.string.recommend_ok);
             }
         });
     }
@@ -324,13 +320,11 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
             }
 
             @Override
-            public void onResponse(@NonNull ResponseObject<Boolean> result) {
-                if (result.ok) {
-                    comment.setHasLiked(true);
-                    comment.setLikeNum(comment.getLikeNum() + 1);
-                    if (mediumListItemView.getData() == comment) {
-                        mediumListItemView.plusOneLike();
-                    }
+            public void onSuccess(@NonNull ResponseObject<Boolean> result) {
+                comment.setHasLiked(true);
+                comment.setLikeNum(comment.getLikeNum() + 1);
+                if (mediumListItemView.getData() == comment) {
+                    mediumListItemView.plusOneLike();
                 }
             }
         });
@@ -350,16 +344,12 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
             }
 
             @Override
-            public void onResponse(@NonNull ResponseObject<Boolean> result) {
-                if (result.ok) {
-                    if (article.getCommentNum() > 0) {
-                        article.setCommentNum(article.getCommentNum() - 1);
-                    }
-                    adapter.remove(comment);
-                    adapter.notifyDataSetChanged();
-                } else {
-                    toastSingleton("删除失败~");
+            public void onSuccess(@NonNull ResponseObject<Boolean> result) {
+                if (article.getCommentNum() > 0) {
+                    article.setCommentNum(article.getCommentNum() - 1);
                 }
+                adapter.remove(comment);
+                adapter.notifyDataSetChanged();
             }
         });
     }

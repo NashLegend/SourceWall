@@ -395,23 +395,15 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
             }
 
             @Override
-            public void onResponse(@NonNull ResponseObject<Boolean> result) {
-                if (result.ok) {
-                    if (bury) {
-                        toast("已标记为\"不是答案\"");
-                        answer.setHasBuried(true);
-                        notAnButton.setIcon(R.drawable.dustbin);
-                    } else {
-                        toastSingleton("取消\"不是答案\"标记");
-                        answer.setHasBuried(false);
-                        notAnButton.setIcon(R.drawable.dustbin_outline);
-                    }
+            public void onSuccess(@NonNull ResponseObject<Boolean> result) {
+                if (bury) {
+                    toast("已标记为\"不是答案\"");
+                    answer.setHasBuried(true);
+                    notAnButton.setIcon(R.drawable.dustbin);
                 } else {
-                    if (bury && result.code == ResponseCode.CODE_ALREADY_BURIED) {
-                        toastSingleton("已经标记过了");
-                    } else {
-                        toastSingleton("操作失败");
-                    }
+                    toastSingleton("取消\"不是答案\"标记");
+                    answer.setHasBuried(false);
+                    notAnButton.setIcon(R.drawable.dustbin_outline);
                 }
             }
         };
@@ -445,20 +437,10 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
             }
 
             @Override
-            public void onResponse(@NonNull ResponseObject<Boolean> result) {
-                if (result.ok) {
-                    toast("感谢成功");
-                    answer.setHasThanked(true);
-                    thankButton.setIcon(R.drawable.heart);
-                } else {
-                    if (result.code == ResponseCode.CODE_ALREADY_THANKED) {
-                        toast("已经感谢过了");
-                        answer.setHasThanked(true);
-                        thankButton.setIcon(R.drawable.heart);
-                    } else {
-                        toast("感谢未遂");
-                    }
-                }
+            public void onSuccess(@NonNull ResponseObject<Boolean> result) {
+                toast("感谢成功");
+                answer.setHasThanked(true);
+                thankButton.setIcon(R.drawable.heart);
             }
         });
     }

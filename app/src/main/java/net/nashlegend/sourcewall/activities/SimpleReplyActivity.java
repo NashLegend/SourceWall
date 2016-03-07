@@ -29,7 +29,6 @@ import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.model.QuestionAnswer;
 import net.nashlegend.sourcewall.model.UComment;
-import net.nashlegend.sourcewall.request.api.APIBase;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.swrequest.RequestObject;
@@ -204,22 +203,18 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
                     }
 
                     @Override
-                    public void onResponse(@NonNull ResponseObject<UComment> result) {
+                    public void onSuccess(@NonNull ResponseObject<UComment> result) {
                         CommonUtil.dismissDialog(progressDialog);
-                        if (result.ok) {
-                            mMenu.findItem(R.id.action_cancel_simple_reply).setVisible(false);
-                            textReply.setHint(R.string.hint_reply);
-                            textReply.setText("");
-                            hideInput();
-                            if (task == null || task.getStatus() != AAsyncTask.Status.RUNNING) {
-                                UComment uComment = result.result;
-                                adapter.add(0, uComment);
-                                adapter.notifyDataSetChanged();
-                            }
-                            toast("回复成功");
-                        } else {
-                            toast("回复失败");
+                        mMenu.findItem(R.id.action_cancel_simple_reply).setVisible(false);
+                        textReply.setHint(R.string.hint_reply);
+                        textReply.setText("");
+                        hideInput();
+                        if (task == null || task.getStatus() != AAsyncTask.Status.RUNNING) {
+                            UComment uComment = result.result;
+                            adapter.add(0, uComment);
+                            adapter.notifyDataSetChanged();
                         }
+                        toast("回复成功");
                     }
                 };
 

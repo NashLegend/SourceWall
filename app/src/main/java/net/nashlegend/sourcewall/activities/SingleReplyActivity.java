@@ -382,16 +382,12 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
             }
 
             @Override
-            public void onResponse(@NonNull ResponseObject<Boolean> result) {
-                if (result.ok) {
-                    data.setHasLiked(true);
-                    data.setLikeNum(data.getLikeNum() + 1);
-                    supportText.setText(String.valueOf(data.getLikeNum()));
-                    likeButton.setIcon(R.drawable.heart);
-                    toast("点赞成功");
-                } else {
-                    toast("点赞未遂");
-                }
+            public void onSuccess(@NonNull ResponseObject<Boolean> result) {
+                data.setHasLiked(true);
+                data.setLikeNum(data.getLikeNum() + 1);
+                supportText.setText(String.valueOf(data.getLikeNum()));
+                likeButton.setIcon(R.drawable.heart);
+                toast("点赞成功");
             }
         };
         switch (hostSection) {
@@ -416,12 +412,8 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
             }
 
             @Override
-            public void onResponse(@NonNull ResponseObject<Boolean> result) {
-                if (result.ok) {
-                    finish();
-                } else {
-                    toastSingleton("未能删除");
-                }
+            public void onSuccess(@NonNull ResponseObject<Boolean> result) {
+                finish();
             }
         };
         switch (hostSection) {

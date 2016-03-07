@@ -263,18 +263,18 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         CallBack<PrepareData> callBack = new CallBack<PrepareData>() {
             @Override
             public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<PrepareData> result) {
-                onPrepareFailed(result);
+                if (result.statusCode == 403) {
+                    new AlertDialog.Builder(PublishPostActivity.this).setTitle(R.string.hint).setMessage(getString(R.string.have_not_join_this_group)).setPositiveButton(R.string.ok, null).create().show();
+                } else {
+                    new AlertDialog.Builder(PublishPostActivity.this).setTitle(getString(R.string.get_csrf_failed)).setMessage(getString(R.string.hint_reload_csrf)).setPositiveButton(R.string.ok, null).create().show();
+                }
             }
 
             @Override
-            public void onResponse(@NonNull ResponseObject<PrepareData> result) {
-                if (result.ok) {
-                    toast(getString(R.string.get_csrf_ok));
-                    PrepareData prepareData = result.result;
-                    onReceivePreparedData(prepareData);
-                } else {
-                    onPrepareFailed(result);
-                }
+            public void onSuccess(@NonNull ResponseObject<PrepareData> result) {
+                toast(getString(R.string.get_csrf_ok));
+                PrepareData prepareData = result.result;
+                onReceivePreparedData(prepareData);
             }
         };
         if (isPost()) {
@@ -283,14 +283,6 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
 //        else {
 //            //TODO 提问的PrepareData，现在未完成
 //        }
-    }
-
-    private void onPrepareFailed(@NonNull ResponseObject<PrepareData> result) {
-        if (result.statusCode == 403) {
-            new AlertDialog.Builder(PublishPostActivity.this).setTitle(R.string.hint).setMessage(getString(R.string.have_not_join_this_group)).setPositiveButton(R.string.ok, null).create().show();
-        } else {
-            new AlertDialog.Builder(PublishPostActivity.this).setTitle(getString(R.string.get_csrf_failed)).setMessage(getString(R.string.hint_reload_csrf)).setPositiveButton(R.string.ok, null).create().show();
-        }
     }
 
     private void onReceivePreparedData(PrepareData prepareData) {
@@ -668,7 +660,7 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch (id){
+        switch (id) {
             case android.R.id.home:
                 finish();
                 break;
