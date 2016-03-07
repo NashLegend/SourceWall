@@ -20,8 +20,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 
 import net.nashlegend.sourcewall.R;
-import net.nashlegend.sourcewall.util.Consts;
-import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
+import net.nashlegend.sourcewall.util.DisplayUtil;
 
 public class SwipeActivity extends BaseActivity {
 
@@ -221,7 +220,9 @@ public class SwipeActivity extends BaseActivity {
                             }
                             break;
                     }
-                } else if (ev.getAction() == MotionEvent.ACTION_DOWN && ev.getX() < sideWidth) {
+                } else if (ev.getAction() == MotionEvent.ACTION_DOWN
+                        && ev.getX() < sideWidth
+                        && ev.getY() > DisplayUtil.getStatusBarHeight(SwipeActivity.this) + getResources().getDimension(R.dimen.actionbar_height)) {
                     canSwipe = true;
                     tracker = VelocityTracker.obtain();
                     return true;
