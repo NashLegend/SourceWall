@@ -83,7 +83,7 @@ public class RequestObject<T> {
      * 是否优先使用缓存，如果useCachedFirst为true，那么useCachedIfFailed就为false了
      * 仅仅在使用Rx时有效，与useCacheIfFailed互斥
      */
-    protected boolean useCachedFirst = false;
+    protected boolean useCachedFirst = false;//TODO 未搞
 
     protected String filePath = "";
 
@@ -149,6 +149,15 @@ public class RequestObject<T> {
         }
     }
 
+    /**
+     * 将数据存入缓存
+     *
+     * @return
+     */
+    private void removeCache() {
+        RequestCache.getInstance().removeCache(getCachedKey());//TODO 待测试
+    }
+
     private boolean shouldCache() {
         return useCachedIfFailed || useCachedFirst;
     }
@@ -204,6 +213,94 @@ public class RequestObject<T> {
     }
 
     /**
+     * 只请求缓存数据
+     */
+    public void requestCachedRx() {
+        requestCachedObservable()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ResponseObject<T>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        //requestObservable很难走到onError，因为都已经封好了，否则第二个参数不太好传给别人
+                        if (!softCancelled && callBack != null) {
+                            callBack.onFailure(e, responseObject);
+                        }
+                    }
+
+                    @Override
+                    public void onNext(ResponseObject<T> tResponseObject) {
+                        if (!softCancelled && callBack != null) {
+                            if (tResponseObject.ok) {
+                                callBack.onSuccess(tResponseObject);
+                            } else {
+                                callBack.onFailure(tResponseObject.throwable, tResponseObject);
+                            }
+                        }
+                    }
+                });
+    }
+
+    /**
+     * 请求缓存数据，如果已经有了缓存，然而还是解析失败了，只可能是版本升级中parser发生了变化
+     * TODO 优先使用缓存useCachedFirst，不应该放在requestObservable里面，这算是两个请求嘛,实际使用中可以组合两个请求
+     * 不太会Rx啊，还得学……
+     *
+     * @return
+     */
+    @NonNull
+    public Observable<ResponseObject<T>> requestCachedObservable() {
+        return Observable
+                .create(new Observable.OnSubscribe<String>() {
+                    @Override
+                    public void call(Subscriber<? super String> subscriber) {
+                        try {
+                            String cachedResult = readFromCache();
+                            if (cachedResult != null) {
+                                responseObject.isCached = true;
+                                responseObject.body = cachedResult;
+                                subscriber.onNext(cachedResult);
+                                subscriber.onCompleted();
+                            } else {
+                                subscriber.onError(new IllegalStateException("No Cached Data!"));
+                            }
+                        } catch (Exception e) {
+                            subscriber.onError(e);
+                        }
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .onErrorResumeNext(new Func1<Throwable, Observable<? extends String>>() {
+                    @Override
+                    public Observable<? extends String> call(Throwable throwable) {
+                        JsonHandler.handleRequestException(throwable, responseObject);
+                        return Observable.just("Error Occurred!");
+                    }
+                })
+                .map(new Func1<String, ResponseObject<T>>() {
+                    @Override
+                    public ResponseObject<T> call(String string) {
+                        if (responseObject.throwable == null && parser != null) {
+                            try {
+                                responseObject.result = parser.parse(string, responseObject);
+                            } catch (Exception e) {
+                                JsonHandler.handleRequestException(e, responseObject);
+                            }
+                        }
+                        if (!responseObject.ok) {
+                            removeCache();
+                        }
+                        return responseObject;
+                    }
+                })
+                .subscribeOn(Schedulers.computation());
+    }
+
+    /**
      * 通过RxJava的方式执行请求，与requestAsync一样，CallBack执行在主线程上
      */
     public void requestRx() {
@@ -245,16 +342,6 @@ public class RequestObject<T> {
                     @Override
                     public void call(Subscriber<? super String> subscriber) {
                         try {
-                            if (useCachedFirst) {
-                                String cachedResult = readFromCache();
-                                if (cachedResult != null) {
-                                    responseObject.isCached = true;
-                                    responseObject.body = cachedResult;
-                                    subscriber.onNext(cachedResult);
-                                    subscriber.onCompleted();
-                                    return;
-                                }
-                            }
                             call = requestSync();
                             Response response = call.execute();
                             String result = response.body().string();
@@ -301,6 +388,9 @@ public class RequestObject<T> {
                             } catch (Exception e) {
                                 JsonHandler.handleRequestException(e, responseObject);
                             }
+                        }
+                        if (!responseObject.ok && responseObject.isCached) {
+                            removeCache();
                         }
                         return responseObject;
                     }

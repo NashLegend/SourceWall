@@ -255,6 +255,18 @@ public class RequestCache {
         }
     }
 
+    public void removeCache(String data) {
+        synchronized (mDiskCacheLock) {
+            try {
+                if (mDiskLruCache != null) {
+                    mDiskLruCache.remove(hashKeyForDisk(data));
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void clear() {
         if (mMemoryCache != null) {
             mMemoryCache.evictAll();
