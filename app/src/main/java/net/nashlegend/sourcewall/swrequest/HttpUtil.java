@@ -13,8 +13,8 @@ import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
 import net.nashlegend.sourcewall.App;
-import net.nashlegend.sourcewall.request.RequestCache;
 import net.nashlegend.sourcewall.request.api.UserAPI;
+import net.nashlegend.sourcewall.swrequest.cache.RequestCache;
 
 import org.json.JSONObject;
 

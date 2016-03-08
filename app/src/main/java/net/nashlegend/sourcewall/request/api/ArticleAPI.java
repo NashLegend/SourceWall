@@ -8,7 +8,7 @@ import net.nashlegend.sourcewall.model.Author;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.HttpFetcher;
-import net.nashlegend.sourcewall.request.RequestCache;
+import net.nashlegend.sourcewall.swrequest.cache.RequestCache;
 import net.nashlegend.sourcewall.swrequest.JsonHandler;
 import net.nashlegend.sourcewall.swrequest.RequestBuilder;
 import net.nashlegend.sourcewall.swrequest.RequestObject;

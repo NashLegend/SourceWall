@@ -14,7 +14,7 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
-import net.nashlegend.sourcewall.request.RequestCache;
+import net.nashlegend.sourcewall.swrequest.cache.RequestCache;
 import net.nashlegend.sourcewall.swrequest.parsers.Parser;
 
 import java.io.IOException;

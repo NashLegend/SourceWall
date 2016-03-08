@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.nashlegend.sourcewall.request;
+package net.nashlegend.sourcewall.swrequest.cache;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
