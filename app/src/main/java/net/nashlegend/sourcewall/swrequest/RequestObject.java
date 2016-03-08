@@ -219,7 +219,7 @@ public class RequestObject<T> {
                     public void onError(Throwable e) {
                         //requestObservable很难走到onError，因为都已经封好了，否则第二个参数不太好传给别人
                         if (!softCancelled && callBack != null) {
-                            callBack.onFailure(null, responseObject);
+                            callBack.onFailure(e, responseObject);
                         }
                     }
 
@@ -229,7 +229,7 @@ public class RequestObject<T> {
                             if (tResponseObject.ok) {
                                 callBack.onSuccess(tResponseObject);
                             } else {
-                                callBack.onFailure(null, tResponseObject);
+                                callBack.onFailure(tResponseObject.throwable, tResponseObject);
                             }
                         }
                     }
