@@ -24,12 +24,14 @@ public class ImageUtils {
     public static DisplayImageOptions defaultImageOptions = new DisplayImageOptions.Builder()
             .cacheInMemory(true)
             .cacheOnDisk(true)
+            .resetViewBeforeLoading(true)
             .bitmapConfig(Bitmap.Config.RGB_565)
             .build();
 
     public static DisplayImageOptions articleTitleImageOptions = new DisplayImageOptions.Builder()
             .cacheInMemory(true)
             .cacheOnDisk(true)
+            .resetViewBeforeLoading(true)
             .bitmapConfig(Bitmap.Config.RGB_565)
             .build();
 

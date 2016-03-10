@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.util.LruCache;
 
 import net.nashlegend.sourcewall.App;
+import net.nashlegend.sourcewall.swrequest.cache.DiskLruCache;
 
 import java.io.File;
 import java.io.IOException;
