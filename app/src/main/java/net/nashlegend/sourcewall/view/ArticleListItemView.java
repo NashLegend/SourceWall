@@ -56,6 +56,14 @@ public class ArticleListItemView extends AceView<Article> {
 
     @Override
     public void setData(Article model) {
+        if (model != null && model.getId() != null
+                && article != null && article.getId() != null
+                && model.getId().equals(article.getId())) {
+            return;
+        }
+        if (model==null){
+            return;
+        }
         article = model;
         titleView.setText(article.getTitle());
         contentView.setText(article.getSummary());
