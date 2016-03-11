@@ -9,10 +9,11 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Base64;
 import android.view.GestureDetector;
-import android.view.GestureDetector.OnGestureListener;
 import android.view.GestureDetector.SimpleOnGestureListener;
+import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.SoundEffectConstants;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -48,6 +49,7 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
     private SimpleOnGestureListener gestureListener = new SimpleOnGestureListener() {
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
+            playSoundEffect(SoundEffectConstants.CLICK);
             tapFinish();
             return true;
         }
@@ -65,7 +67,7 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
         super(context);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_image_viewer, this);
-        gestureDetector = new GestureDetector(getContext(),gestureListener);
+        gestureDetector = new GestureDetector(getContext(), gestureListener);
         imageView = (ScalingImage) findViewById(R.id.zoom_image);
         gifImageView = (GifImageView) findViewById(R.id.gifImage);
         gifImageView.setVisibility(VISIBLE);
@@ -117,7 +119,7 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
         tapFinish();
     }
 
-    private void tapFinish(){
+    private void tapFinish() {
         Context ctx = getContext();
         if (ctx instanceof Activity) {
             ((Activity) ctx).finish();
