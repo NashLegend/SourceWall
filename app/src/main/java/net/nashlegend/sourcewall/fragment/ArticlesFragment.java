@@ -14,9 +14,9 @@ import android.widget.AdapterView;
 import android.widget.ProgressBar;
 
 import net.nashlegend.sourcewall.App;
+import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.ArticleActivity;
 import net.nashlegend.sourcewall.activities.MainActivity;
-import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.ArticleAdapter;
 import net.nashlegend.sourcewall.commonview.AAsyncTask;
 import net.nashlegend.sourcewall.commonview.IStackedAsyncTaskInterface;
@@ -24,8 +24,9 @@ import net.nashlegend.sourcewall.commonview.LListView;
 import net.nashlegend.sourcewall.commonview.LoadingView;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.SubItem;
-import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.request.api.ArticleAPI;
+import net.nashlegend.sourcewall.swrequest.ResponseObject;
+import net.nashlegend.sourcewall.util.CommonUtil;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 import net.nashlegend.sourcewall.view.ArticleListItemView;
@@ -66,6 +67,9 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if (CommonUtil.shouldThrottle()) {
+                    return;
+                }
                 if (view instanceof ArticleListItemView) {
                     Intent intent = new Intent();
                     intent.setClass(App.getApp(), ArticleActivity.class);

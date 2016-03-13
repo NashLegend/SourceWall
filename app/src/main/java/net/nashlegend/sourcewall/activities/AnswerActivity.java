@@ -44,6 +44,7 @@ import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.swrequest.RequestObject.CallBack;
 import net.nashlegend.sourcewall.swrequest.ResponseCode;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
+import net.nashlegend.sourcewall.util.CommonUtil;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.ImageUtils;
@@ -309,6 +310,9 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
+        if (CommonUtil.shouldThrottle()){
+            return;
+        }
         switch (v.getId()) {
             case R.id.text_title:
                 if (fromHost) {

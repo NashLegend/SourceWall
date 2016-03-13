@@ -40,6 +40,7 @@ import com.umeng.analytics.MobclickAgent;
 import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.ImageActivity;
+import net.nashlegend.sourcewall.util.CommonUtil;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.DisplayUtil;
@@ -412,6 +413,9 @@ public class TTextView extends TextView {
     }
 
     private static void handleImageSpanClick(TextView textView, ImageSpan imageSpan) {
+        if (CommonUtil.shouldThrottle()){
+            return;
+        }
         if (textView instanceof TTextView) {
             String html = ((TTextView) textView).html;
             String clickedUrl = imageSpan.getSource();

@@ -51,6 +51,7 @@ import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
+import net.nashlegend.sourcewall.util.CommonUtil;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
@@ -104,6 +105,9 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if (CommonUtil.shouldThrottle()){
+                    return;
+                }
                 if (view instanceof QuestionListItemView) {
                     Intent intent = new Intent();
                     intent.setClass(getActivity(), QuestionActivity.class);

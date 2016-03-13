@@ -22,8 +22,9 @@ import net.nashlegend.sourcewall.commonview.LListView;
 import net.nashlegend.sourcewall.commonview.LoadingView;
 import net.nashlegend.sourcewall.model.Notice;
 import net.nashlegend.sourcewall.model.SubItem;
-import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.request.api.UserAPI;
+import net.nashlegend.sourcewall.swrequest.ResponseObject;
+import net.nashlegend.sourcewall.util.CommonUtil;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;
 import net.nashlegend.sourcewall.view.NoticeView;
@@ -56,6 +57,9 @@ public class NoticesFragment extends ChannelsFragment implements LListView.OnRef
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if (CommonUtil.shouldThrottle()) {
+                    return;
+                }
                 if (view instanceof NoticeView) {
                     //这里要做两个请求，但是可以直接请求notice地址，让系统主动删除请求 TODO
                     MobclickAgent.onEvent(getActivity(), Mob.Event_Open_One_Notice);

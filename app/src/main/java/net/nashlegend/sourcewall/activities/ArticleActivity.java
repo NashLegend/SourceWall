@@ -46,6 +46,7 @@ import net.nashlegend.sourcewall.swrequest.RequestObject;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.util.AutoHideUtil;
 import net.nashlegend.sourcewall.util.AutoHideUtil.AutoHideListener;
+import net.nashlegend.sourcewall.util.CommonUtil;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.RegUtil;
@@ -400,6 +401,9 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
 
     @Override
     public void onClick(View v) {
+        if (CommonUtil.shouldThrottle()){
+            return;
+        }
         switch (v.getId()) {
             case R.id.button_reply:
                 replyArticle();

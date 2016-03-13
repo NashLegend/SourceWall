@@ -39,6 +39,7 @@ import net.nashlegend.sourcewall.swrequest.RequestObject;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.util.AutoHideUtil;
 import net.nashlegend.sourcewall.util.AutoHideUtil.AutoHideListener;
+import net.nashlegend.sourcewall.util.CommonUtil;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.ShareUtil;
@@ -207,6 +208,9 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
     };
 
     private void onReplyItemClick(final View view) {
+        if (CommonUtil.shouldThrottle()){
+            return;
+        }
         if (view instanceof AnswerListItemView) {
             Intent intent = new Intent(this, AnswerActivity.class);
             intent.putExtra(Consts.Extra_Answer, ((AnswerListItemView) view).getData());
@@ -218,6 +222,9 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
 
     @Override
     public void onClick(View v) {
+        if (CommonUtil.shouldThrottle()){
+            return;
+        }
         switch (v.getId()) {
             case R.id.button_reply:
                 answerQuestion();

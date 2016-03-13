@@ -50,6 +50,7 @@ import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
+import net.nashlegend.sourcewall.util.CommonUtil;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 import net.nashlegend.sourcewall.view.PostListItemView;
@@ -102,6 +103,9 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if (CommonUtil.shouldThrottle()){
+                    return;
+                }
                 if (view instanceof PostListItemView) {
                     Intent intent = new Intent();
                     intent.setClass(getActivity(), PostActivity.class);

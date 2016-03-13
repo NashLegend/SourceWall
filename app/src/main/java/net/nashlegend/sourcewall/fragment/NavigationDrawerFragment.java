@@ -41,6 +41,7 @@ import net.nashlegend.sourcewall.model.UserInfo;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.util.ChannelHelper;
+import net.nashlegend.sourcewall.util.CommonUtil;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.ImageUtils;
@@ -352,6 +353,9 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
 
     @Override
     public void onClick(View v) {
+        if (CommonUtil.shouldThrottle()){
+            return;
+        }
         switch (v.getId()) {
             case R.id.layout_user:
                 onUserViewClicked();
