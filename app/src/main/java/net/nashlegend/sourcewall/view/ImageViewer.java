@@ -49,8 +49,7 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
     private SimpleOnGestureListener gestureListener = new SimpleOnGestureListener() {
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
-            playSoundEffect(SoundEffectConstants.CLICK);
-            tapFinish();
+            performClick();
             return true;
         }
     };
@@ -78,6 +77,8 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
         imageView.setOnClickListener(this);
         gifImageView.setOnTouchListener(touchListener);
         this.setOnTouchListener(touchListener);
+        gifImageView.setOnClickListener(this);
+        setOnClickListener(this);
     }
 
     public void load(String imageUrl) {
