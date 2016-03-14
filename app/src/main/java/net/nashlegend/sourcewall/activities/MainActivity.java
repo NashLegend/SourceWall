@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -141,9 +143,40 @@ public class MainActivity extends BaseActivity {
                 getMenuInflater().inflate(R.menu.main, menu);
             }
             restoreActionBar();
+            initSearchView(menu);
             return true;
         }
         return super.onCreateOptionsMenu(menu);
+    }
+
+    private void initSearchView(final Menu menu) {
+        if (menu == null || menu.findItem(R.id.search) == null) {
+            return;
+        }
+        final MenuItem searchItem = menu.findItem(R.id.search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setIconifiedByDefault(true);
+        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                setItemsVisibility(menu, searchItem, false);
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                setItemsVisibility(menu, null, true);
+                invalidateOptionsMenu();
+                return true;
+            }
+        });
+    }
+
+    private void setItemsVisibility(Menu menu, MenuItem exception, boolean visible) {
+        for (int i = 0; i < menu.size(); ++i) {
+            MenuItem item = menu.getItem(i);
+            if (item != exception) item.setVisible(visible);
+        }
     }
 
     @Override
