@@ -3,6 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".activities.MainActivity">
     <item
+        android:id="@+id/search"
+        android:icon="@drawable/ic_search_white_24dp"
+        android:title="@string/search"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/action_write_post"
         android:icon="@drawable/pencil"
         android:orderInCategory="100"
