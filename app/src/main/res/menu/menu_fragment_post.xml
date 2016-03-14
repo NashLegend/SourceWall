@@ -1,13 +1,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".activities.MainActivity">
+    tools:context=".activities.MainActivity"
+    tools:ignore="AlwaysShowAction">
     <item
         android:id="@+id/search"
         android:icon="@drawable/ic_search_white_24dp"
         android:title="@string/search"
         app:actionViewClass="android.support.v7.widget.SearchView"
-        app:showAsAction="collapseActionView|ifRoom" />
+        app:showAsAction="collapseActionView|always" />
     <item
         android:id="@+id/action_write_post"
         android:icon="@drawable/pencil"
