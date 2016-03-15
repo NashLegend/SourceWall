@@ -2,6 +2,8 @@ package net.nashlegend.sourcewall.model;
 
 import android.os.Parcel;
 
+import org.json.JSONObject;
+
 /**
  * Created by NashLegend on 2015/2/2 0002
  * 通知
@@ -14,6 +16,17 @@ public class Notice extends AceModel {
     private boolean is_read = false;
     private String ukey = "";//永远是用户自己
     private String url = "";
+
+    public static Notice fromJson(JSONObject noticesObject) throws Exception{
+        Notice notice = new Notice();
+        notice.setContent(noticesObject.optString("content"));
+        notice.setUrl(noticesObject.optString("url"));
+        notice.setUkey(noticesObject.optString("ukey"));
+        notice.setDate_last_updated(noticesObject.optLong("date_last_updated"));
+        notice.setId(noticesObject.optString("id"));
+        notice.setIs_read(noticesObject.optBoolean("is_read"));
+        return notice;
+    }
 
     public String getContent() {
         return content;

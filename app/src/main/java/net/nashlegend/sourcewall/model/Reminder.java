@@ -2,6 +2,8 @@ package net.nashlegend.sourcewall.model;
 
 import android.os.Parcel;
 
+import org.json.JSONObject;
+
 /**
  * Created by NashLegend on 2015/2/2 0002
  * 私信，貌似不仅仅是私信还有草稿，不知道还有多少
@@ -15,6 +17,17 @@ public class Reminder extends AceModel {
     private String group = "message";
     private String ukey = "";//永远是用户自己
     private String url = "";
+
+    public static Reminder fromJson(JSONObject reminderObject) throws Exception {
+        Reminder reminder = new Reminder();
+        reminder.setContent(reminderObject.optString("content"));
+        reminder.setUrl(reminderObject.optString("url"));
+        reminder.setUkey(reminderObject.optString("ukey"));
+        reminder.setDateCreated(reminderObject.optLong("date_created"));
+        reminder.setId(reminderObject.optString("id"));
+        reminder.setGroup(reminderObject.optString("group"));
+        return reminder;
+    }
 
     public String getContent() {
         return content;

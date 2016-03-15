@@ -1,11 +1,11 @@
 package net.nashlegend.sourcewall.view;
 
 import android.content.Context;
-import android.os.AsyncTask;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.umeng.analytics.MobclickAgent;
@@ -14,9 +14,11 @@ import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.NoticeAdapter;
 import net.nashlegend.sourcewall.model.Notice;
 import net.nashlegend.sourcewall.request.api.MessageAPI;
+import net.nashlegend.sourcewall.swrequest.RequestObject;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
-import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Mob;
+
+import java.util.ArrayList;
 
 /**
  * Created by NashLegend on 2015/2/12 0012
@@ -25,7 +27,6 @@ public class NoticeView extends AceView<Notice> implements View.OnClickListener 
 
     private Notice data;
     private TextView noticeText;
-    private ImageButton ignoreButton;
     private NoticeAdapter noticeAdapter;
 
     public NoticeView(Context context) {
@@ -47,8 +48,7 @@ public class NoticeView extends AceView<Notice> implements View.OnClickListener 
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_notice_view, this);
         noticeText = (TextView) findViewById(R.id.text_notice);
-        ignoreButton = (ImageButton) findViewById(R.id.btn_ignore);
-        ignoreButton.setOnClickListener(this);
+        findViewById(R.id.btn_ignore).setOnClickListener(this);
     }
 
     public void setAdapter(NoticeAdapter adapter) {
@@ -68,38 +68,29 @@ public class NoticeView extends AceView<Notice> implements View.OnClickListener 
         return data;
     }
 
-    private void ignoreNotice() {
+    private void ignoreNotice(final Notice notice) {
         MobclickAgent.onEvent(getContext(), Mob.Event_Ignore_One_Notice);
-        IgnoreTask ignoreTask = new IgnoreTask();
-        ignoreTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, data);
+        MessageAPI.ignoreOneNotice(notice.getId(), new RequestObject.CallBack<ArrayList<Notice>>() {
+            @Override
+            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<ArrayList<Notice>> result) {
+
+            }
+
+            @Override
+            public void onSuccess(@NonNull ResponseObject<ArrayList<Notice>> result) {
+                if (noticeAdapter != null && noticeAdapter.getList().remove(notice)) {
+                    noticeAdapter.notifyDataSetChanged();
+                }
+            }
+        });
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_ignore:
-                ignoreNotice();
+                ignoreNotice(data);
                 break;
-        }
-    }
-
-    class IgnoreTask extends AsyncTask<Notice, Integer, ResponseObject> {
-
-        Notice notice;
-
-        @Override
-        protected ResponseObject doInBackground(Notice... params) {
-            notice = params[0];
-            return MessageAPI.ignoreOneNotice(notice.getId());
-        }
-
-        @Override
-        protected void onPostExecute(ResponseObject resultObject) {
-            if (resultObject.ok) {
-                if (noticeAdapter != null && noticeAdapter.getList().remove(notice)) {
-                    noticeAdapter.notifyDataSetChanged();
-                }
-            }
         }
     }
 }

@@ -2,8 +2,9 @@ package net.nashlegend.sourcewall.fragment;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,14 +17,12 @@ import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.NoticeAdapter;
-import net.nashlegend.sourcewall.commonview.AAsyncTask;
-import net.nashlegend.sourcewall.commonview.IStackedAsyncTaskInterface;
 import net.nashlegend.sourcewall.commonview.LListView;
 import net.nashlegend.sourcewall.commonview.LoadingView;
 import net.nashlegend.sourcewall.model.Notice;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.api.MessageAPI;
-import net.nashlegend.sourcewall.request.api.UserAPI;
+import net.nashlegend.sourcewall.swrequest.RequestObject;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.util.CommonUtil;
 import net.nashlegend.sourcewall.util.Mob;
@@ -40,8 +39,6 @@ public class NoticesFragment extends ChannelsFragment implements LListView.OnRef
     private NoticeAdapter adapter;
     private LListView listView;
     private LoadingView loadingView;
-    private LoaderTask task;
-    private IgnoreTask ignoreTask;
     private ProgressDialog progressDialog;
 
     @Override
@@ -66,7 +63,7 @@ public class NoticesFragment extends ChannelsFragment implements LListView.OnRef
                     MobclickAgent.onEvent(getActivity(), Mob.Event_Open_One_Notice);
                     Notice notice = ((NoticeView) view).getData();
                     if (!UrlCheckUtil.redirectRequest(notice.getUrl(), notice.getId())) {
-                        new IgnoreOneTask().execute(notice.getId());
+                        MessageAPI.ignoreOneNotice(notice.getId());
                     }
                 }
             }
@@ -85,15 +82,37 @@ public class NoticesFragment extends ChannelsFragment implements LListView.OnRef
         loadData();
     }
 
+    RequestObject requestObject;
+
     private void loadData() {
         cancelPotentialTask();
-        task = new LoaderTask(this);
-        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        requestObject = MessageAPI.getNoticeList(new RequestObject.CallBack<ArrayList<Notice>>() {
+            @Override
+            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<ArrayList<Notice>> result) {
+                loadingView.onLoadFailed();
+                toast(R.string.load_failed);
+                listView.setCanPullToRefresh(true);
+                listView.doneOperation();
+            }
+
+            @Override
+            public void onSuccess(@NonNull ResponseObject<ArrayList<Notice>> result) {
+                loadingView.onLoadSuccess();
+                ArrayList<Notice> ars = result.result;
+                if (ars.size() == 0) {
+                    toast(R.string.no_notice);
+                }
+                adapter.setList(ars);
+                adapter.notifyDataSetInvalidated();
+                listView.setCanPullToRefresh(true);
+                listView.doneOperation();
+            }
+        });
     }
 
     private void cancelPotentialTask() {
-        if (task != null && task.getStatus() == AAsyncTask.Status.RUNNING) {
-            task.cancel(true);
+        if (requestObject != null) {
+            requestObject.softCancel();
         }
         listView.doneOperation();
     }
@@ -137,15 +156,41 @@ public class NoticesFragment extends ChannelsFragment implements LListView.OnRef
                 if (adapter.getCount() > 0) {
                     MobclickAgent.onEvent(getActivity(), Mob.Event_Ignore_All_Notice);
                     cancelPotentialTask();
-                    if (ignoreTask != null && ignoreTask.getStatus() == AsyncTask.Status.RUNNING) {
-                        ignoreTask.cancel(true);
-                    }
-                    ignoreTask = new IgnoreTask();
-                    ignoreTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    ignoreAll();
                 }
                 break;
         }
         return true;
+    }
+
+    private void ignoreAll() {
+        final RequestObject requestObject = MessageAPI.ignoreAllNotice(new RequestObject.CallBack<Boolean>() {
+            @Override
+            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
+                CommonUtil.dismissDialog(progressDialog);
+                toast("忽略未遂");
+            }
+
+            @Override
+            public void onSuccess(@NonNull ResponseObject<Boolean> result) {
+                CommonUtil.dismissDialog(progressDialog);
+                listView.setCanPullToRefresh(true);
+                listView.doneOperation();
+                adapter.clear();
+                adapter.notifyDataSetInvalidated();
+            }
+        });
+
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setMessage(getString(R.string.message_wait_a_minute));
+        progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                requestObject.softCancel();
+            }
+        });
+        progressDialog.show();
     }
 
     @Override
@@ -171,82 +216,5 @@ public class NoticesFragment extends ChannelsFragment implements LListView.OnRef
     @Override
     public void scrollToHead() {
         listView.setSelection(0);
-    }
-
-    class LoaderTask extends AAsyncTask<Integer, Integer, ResponseObject<ArrayList<Notice>>> {
-
-        LoaderTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
-            super(iStackedAsyncTaskInterface);
-        }
-
-        @Override
-        protected ResponseObject<ArrayList<Notice>> doInBackground(Integer... params) {
-            return MessageAPI.getNoticeList();
-        }
-
-        @Override
-        protected void onPostExecute(ResponseObject<ArrayList<Notice>> result) {
-            if (result.ok) {
-                loadingView.onLoadSuccess();
-                ArrayList<Notice> ars = result.result;
-                if (ars.size() == 0) {
-                    toast(R.string.no_notice);
-                }
-                adapter.setList(ars);
-                adapter.notifyDataSetInvalidated();
-            } else {
-                loadingView.onLoadFailed();
-                toast(R.string.load_failed);
-            }
-            listView.setCanPullToRefresh(true);
-            listView.doneOperation();
-        }
-    }
-
-    class IgnoreOneTask extends AsyncTask<String, Integer, ResponseObject> {
-        @Override
-        protected ResponseObject doInBackground(String... params) {
-            String id = params[0];
-            return MessageAPI.ignoreOneNotice(id);
-        }
-    }
-
-    class IgnoreTask extends AsyncTask<String, Integer, ResponseObject> {
-
-        @Override
-        protected void onPreExecute() {
-            progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setCanceledOnTouchOutside(false);
-            progressDialog.setMessage(getString(R.string.message_wait_a_minute));
-            progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialog) {
-                    IgnoreTask.this.cancel(true);
-                }
-            });
-            progressDialog.show();
-        }
-
-        @Override
-        protected ResponseObject doInBackground(String... params) {
-            return MessageAPI.ignoreAllNotice();
-        }
-
-        @Override
-        protected void onPostExecute(ResponseObject resultObject) {
-            if (progressDialog.isShowing()) {
-                progressDialog.cancel();
-            }
-            if (isActive()) {
-                if (resultObject.ok) {
-                    listView.setCanPullToRefresh(true);
-                    listView.doneOperation();
-                    adapter.clear();
-                    adapter.notifyDataSetInvalidated();
-                } else {
-                    toast("忽略未遂");
-                }
-            }
-        }
     }
 }
