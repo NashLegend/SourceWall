@@ -1,7 +1,8 @@
 package net.nashlegend.sourcewall.view;
 
 import android.content.Context;
-import android.os.AsyncTask;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +12,11 @@ import android.widget.TextView;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.model.Basket;
+import net.nashlegend.sourcewall.request.api.FavorAPI;
+import net.nashlegend.sourcewall.swrequest.RequestObject;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
-import net.nashlegend.sourcewall.request.api.UserAPI;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by NashLegend on 2014/12/2 0002
@@ -24,6 +28,7 @@ public class FavorItemView extends AceView<Basket> implements View.OnClickListen
     Basket basket;
     String link = "";
     String title = "";
+    RequestObject<Boolean> requestObject;
 
     public FavorItemView(Context context) {
         super(context);
@@ -33,6 +38,29 @@ public class FavorItemView extends AceView<Basket> implements View.OnClickListen
         button = (ImageButton) findViewById(R.id.button_add_2_favor);
         progressBar = (ProgressBar) findViewById(R.id.progress_adding_favor);
         button.setOnClickListener(this);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        EventBus.getDefault().register(this);
+    }
+
+    public void onEventMainThread(Basket basket) {
+        if (equalBasket(basket)) {
+            setData(basket);
+        }
+    }
+
+    public boolean equalBasket(Basket bas) {
+        return bas != null && this.basket != null
+                && this.basket.getId().equals(bas.getId());
     }
 
     public FavorItemView(Context context, AttributeSet attrs) {
@@ -79,51 +107,31 @@ public class FavorItemView extends AceView<Basket> implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        FavorTask task = new FavorTask();
-        task.setBus(basket);
-        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, link, title, basket.getId());
+        favor(basket);
     }
 
-    class FavorTask extends AsyncTask<String, Integer, ResponseObject> {
-
-        Basket baskit;
-
-        public void setBus(Basket basket) {
-            this.baskit = basket;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            basket.setFavoring(true);
-            button.setEnabled(false);
-            button.setVisibility(GONE);
-            progressBar.setVisibility(VISIBLE);
-            super.onPreExecute();
-        }
-
-        @Override
-        protected ResponseObject doInBackground(String... params) {
-            String link = params[0];
-            String title = params[1];
-            String basketID = params[2];
-            return UserAPI.favorLink(link, title, basketID);
-        }
-
-        @Override
-        protected void onPostExecute(ResponseObject resultObject) {
-            baskit.setFavoring(false);
-            if (resultObject.ok) {
-                baskit.setHasFavored(true);
+    private void favor(final Basket bas) {
+        bas.setFavoring(true);
+        button.setEnabled(false);
+        button.setVisibility(GONE);
+        progressBar.setVisibility(VISIBLE);
+        requestObject = FavorAPI.favorLink(link, title, bas, new RequestObject.CallBack<Boolean>() {
+            @Override
+            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
+                bas.setFavoring(false);
+                postBasketChanged(bas);
             }
-            if (baskit.getId().equals(basket.getId())) {
-                progressBar.setVisibility(GONE);
-                button.setVisibility(VISIBLE);
-                if (resultObject.ok) {
-                    button.setImageResource(R.drawable.check_24dp);
-                } else {
-                    button.setEnabled(true);
-                }
+
+            @Override
+            public void onSuccess(@NonNull ResponseObject<Boolean> result) {
+                bas.setFavoring(false);
+                bas.setHasFavored(true);
+                postBasketChanged(bas);
             }
-        }
+        });
+    }
+
+    public void postBasketChanged(Basket basket) {
+        EventBus.getDefault().post(basket);
     }
 }

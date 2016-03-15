@@ -2,6 +2,8 @@ package net.nashlegend.sourcewall.model;
 
 import android.os.Parcel;
 
+import org.json.JSONObject;
+
 /**
  * Created by NashLegend on 2014/12/2 0002
  */
@@ -16,6 +18,20 @@ public class Basket extends AceModel {
     private boolean isFavoring = false;
 
     public Basket() {
+    }
+
+    public static Basket fromJson(JSONObject subObject) throws Exception {
+        Basket basket = new Basket();
+        basket.setId(subObject.optString("id"));
+        basket.setIntroduction(subObject.optString("introduction"));
+        basket.setLinks_count(subObject.optInt("links_count"));
+        basket.setName(subObject.optString("title"));
+        JSONObject category = subObject.optJSONObject("category");
+        if (category != null) {
+            basket.setCategory_id(category.optString("id"));
+            basket.setCategory_name(category.optString("name"));
+        }
+        return basket;
     }
 
     public String getCategory_id() {

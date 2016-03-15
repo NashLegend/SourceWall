@@ -1,7 +1,8 @@
 package net.nashlegend.sourcewall.view;
 
 import android.content.Context;
-import android.os.AsyncTask;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,8 +24,9 @@ import net.nashlegend.sourcewall.model.Basket;
 import net.nashlegend.sourcewall.model.Category;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.Question;
+import net.nashlegend.sourcewall.request.api.FavorAPI;
+import net.nashlegend.sourcewall.swrequest.RequestObject;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
-import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.ToastUtil;
 
 import java.util.ArrayList;
@@ -88,18 +90,66 @@ public class FavorView extends FrameLayout implements View.OnClickListener, ISta
     }
 
     private void loadBasket() {
-        LoadBasketTask task = new LoadBasketTask();
-        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        progressBaskets.setVisibility(VISIBLE);
+        listView.setVisibility(INVISIBLE);
+        FavorAPI.getBaskets(new RequestObject.CallBack<ArrayList<Basket>>() {
+            @Override
+            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<ArrayList<Basket>> result) {
+                progressBaskets.setVisibility(INVISIBLE);
+                listView.setVisibility(VISIBLE);
+                ToastUtil.toast("加载果篮失败");
+            }
+
+            @Override
+            public void onSuccess(@NonNull ResponseObject<ArrayList<Basket>> result) {
+                ArrayList<Basket> baskets = result.result;
+                adapter.clear();
+                if (baskets != null && baskets.size() > 0) {
+                    adapter.setList(baskets);
+                }
+                adapter.notifyDataSetChanged();
+                progressBaskets.setVisibility(INVISIBLE);
+                listView.setVisibility(VISIBLE);
+            }
+        });
     }
 
     private void createBasket(String title, String introduction, String category_id) {
-        CreateBasketTask task = new CreateBasketTask();
-        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, title, introduction, category_id);
+        FavorAPI.createBasket(title, introduction, category_id, new RequestObject.CallBack<Basket>() {
+            @Override
+            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Basket> result) {
+                ToastUtil.toast("创建失败");
+            }
+
+            @Override
+            public void onSuccess(@NonNull ResponseObject<Basket> result) {
+                ToastUtil.toast("创建成功");
+                Basket basket = result.result;
+                adapter.add(basket);
+                adapter.notifyDataSetChanged();
+                openBasketListView();
+            }
+        });
     }
 
     private void loadCategories() {
-        LoadCategoryTask task = new LoadCategoryTask();
-        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        FavorAPI.getCategoryList(new RequestObject.CallBack<ArrayList<Category>>() {
+            @Override
+            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<ArrayList<Category>> result) {
+                ToastUtil.toast("加载目录失败");
+            }
+
+            @Override
+            public void onSuccess(@NonNull ResponseObject<ArrayList<Category>> result) {
+                categories = result.result;
+                String[] items = new String[categories.size()];
+                for (int i = 0; i < categories.size(); i++) {
+                    items[i] = categories.get(i).getName();
+                }
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(), R.layout.simple_spinner_item, items);
+                spinner.setAdapter(arrayAdapter);
+            }
+        });
     }
 
     private void openCreateBasketView() {
@@ -170,83 +220,5 @@ public class FavorView extends FrameLayout implements View.OnClickListener, ISta
     protected void onDetachedFromWindow() {
         stopAllTasks();
         super.onDetachedFromWindow();
-    }
-
-    class LoadBasketTask extends AsyncTask<Void, Integer, ResponseObject<ArrayList<Basket>>> {
-
-        @Override
-        protected void onPreExecute() {
-            progressBaskets.setVisibility(VISIBLE);
-            listView.setVisibility(INVISIBLE);
-        }
-
-        @Override
-        protected ResponseObject<ArrayList<Basket>> doInBackground(Void... params) {
-            return UserAPI.getBaskets();
-        }
-
-        @Override
-        protected void onPostExecute(ResponseObject<ArrayList<Basket>> result) {
-            if (result.ok) {
-                ArrayList<Basket> baskets = result.result;
-                adapter.clear();
-                if (baskets != null && baskets.size() > 0) {
-                    adapter.setList(baskets);
-                }
-                adapter.notifyDataSetChanged();
-            } else {
-                ToastUtil.toast("加载果篮失败");
-            }
-            progressBaskets.setVisibility(INVISIBLE);
-            listView.setVisibility(VISIBLE);
-        }
-    }
-
-    class LoadCategoryTask extends AsyncTask<Void, Integer, ResponseObject<ArrayList<Category>>> {
-
-        @Override
-        protected ResponseObject<ArrayList<Category>> doInBackground(Void... params) {
-            return UserAPI.getCategoryList();
-        }
-
-        @Override
-        protected void onPostExecute(ResponseObject<ArrayList<Category>> result) {
-            if (result.ok) {
-                categories = result.result;
-                String[] items = new String[categories.size()];
-                for (int i = 0; i < categories.size(); i++) {
-                    items[i] = categories.get(i).getName();
-                }
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(), R.layout.simple_spinner_item, items);
-                spinner.setAdapter(arrayAdapter);
-            } else {
-                ToastUtil.toast("加载目录失败");
-            }
-        }
-    }
-
-
-    class CreateBasketTask extends AsyncTask<String, Integer, ResponseObject<Basket>> {
-
-        @Override
-        protected ResponseObject<Basket> doInBackground(String... params) {
-            String title = params[0];
-            String introduction = params[1];
-            String categoryID = params[2];
-            return UserAPI.createBasket(title, introduction, categoryID);
-        }
-
-        @Override
-        protected void onPostExecute(ResponseObject<Basket> result) {
-            if (result.ok) {
-                ToastUtil.toast("创建成功");
-                Basket basket = result.result;
-                adapter.add(basket);
-                adapter.notifyDataSetChanged();
-                openBasketListView();
-            } else {
-                ToastUtil.toast("创建失败");
-            }
-        }
     }
 }

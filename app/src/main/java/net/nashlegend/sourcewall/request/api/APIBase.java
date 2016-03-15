@@ -1,10 +1,6 @@
 package net.nashlegend.sourcewall.request.api;
 
 import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
@@ -14,7 +10,6 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
-import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.Post;
@@ -26,14 +21,13 @@ import net.nashlegend.sourcewall.swrequest.ResponseCode;
 import net.nashlegend.sourcewall.swrequest.ResponseError;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.util.Config;
-import net.nashlegend.sourcewall.util.FileUtil;
+import net.nashlegend.sourcewall.util.ImageUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -66,61 +60,6 @@ public class APIBase {
     }
 
     /**
-     * 压缩图片，jpg格式差不多可以压缩到100k左右
-     *
-     * @param path 要压缩的图片路径
-     * @return 是否成功压缩
-     * @throws IOException
-     */
-    public static String compressImage(String path) throws IOException {
-        if (FileUtil.getFileSuffix(new File(path)).equals("gif")) {
-            return path;
-        }
-        float maxSize = Config.getUploadImageSizeRestrict();//将其中一边至少压缩到maxSize，而不是两边都压缩到maxSize，否则有可能图片很不清楚
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(path, options);
-        final int outWidth = options.outWidth;
-        final int outHeight = options.outHeight;
-        final int halfHeight = outHeight / 2;
-        final int halfWidth = outWidth / 2;
-        int sample = 1;
-        while (halfWidth / sample > maxSize && halfHeight / sample > maxSize) {
-            sample *= 2;
-        }
-        if (outWidth > maxSize && outHeight > maxSize) {
-            options.inJustDecodeBounds = false;
-            options.inSampleSize = sample;
-            Bitmap finalBitmap = BitmapFactory.decodeFile(path, options);
-            int finalWidth = finalBitmap.getWidth();
-            int finalHeight = finalBitmap.getHeight();
-            float scale = (finalWidth < finalHeight) ? maxSize / finalWidth : maxSize / finalHeight;
-            Matrix matrix = new Matrix();
-            matrix.setScale(scale, scale);
-            Bitmap compressedBitmap = Bitmap.createBitmap(finalBitmap, 0, 0, finalWidth, finalHeight, matrix, false);
-
-            String parentPath;
-            File pFile = null;
-            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                pFile = App.getApp().getExternalCacheDir();
-            }
-            if (pFile == null) {
-                pFile = App.getApp().getCacheDir();
-            }
-            parentPath = pFile.getAbsolutePath();
-            String cachePath = new File(parentPath, System.currentTimeMillis() + ".jpg").getAbsolutePath();
-            FileOutputStream outputStream;
-            outputStream = new FileOutputStream(cachePath);
-            compressedBitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream);//jpg速度远快于png，并且体积要小
-            outputStream.flush();
-            outputStream.close();
-            return cachePath;
-        } else {
-            return path;
-        }
-    }
-
-    /**
      * 上传图片
      * TODO 目前RequestBuilder尚未搞上传下载
      *
@@ -134,7 +73,7 @@ public class APIBase {
         File file = new File(path);
         if (file.exists() && !file.isDirectory() && file.length() >= 0) {
             try {
-                File tmpFile = new File(compressImage(file.getAbsolutePath()));
+                File tmpFile = new File(ImageUtils.compressImage(file.getAbsolutePath()));
                 if (!tmpFile.equals(file)) {
                     file = tmpFile;
                 }
@@ -217,6 +156,7 @@ public class APIBase {
      * @return JSONObject
      * @throws JSONException
      */
+    @Deprecated
     public static JSONObject getUniversalJsonObject(String json, ResponseObject resultObject) throws JSONException {
         JSONObject object = new JSONObject(json);
         if (object.optBoolean("ok", false)) {
@@ -236,6 +176,7 @@ public class APIBase {
      * @return JSONArray
      * @throws JSONException
      */
+    @Deprecated
     public static JSONArray getUniversalJsonArray(String json, ResponseObject resultObject) throws JSONException {
         JSONObject object = new JSONObject(json);
         if (object.optBoolean("ok", false)) {

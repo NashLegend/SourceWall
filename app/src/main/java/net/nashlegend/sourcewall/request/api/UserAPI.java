@@ -5,8 +5,6 @@ import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
 import net.nashlegend.sourcewall.App;
-import net.nashlegend.sourcewall.model.Basket;
-import net.nashlegend.sourcewall.model.Category;
 import net.nashlegend.sourcewall.model.Message;
 import net.nashlegend.sourcewall.model.Notice;
 import net.nashlegend.sourcewall.model.Reminder;
@@ -32,8 +30,6 @@ import java.util.HashMap;
  * Created by NashLegend on 2014/11/25 0025
  */
 public class UserAPI extends APIBase {
-
-    private static ArrayList<Basket> myBaskets = new ArrayList<>();
 
     public static boolean isLoggedIn() {
         String token = getToken();
@@ -339,32 +335,6 @@ public class UserAPI extends APIBase {
     }
 
     /**
-     * 收藏一个链接，理论是任意链接都行，吧……
-     *
-     * @param link     链接地址
-     * @param title    链接标题
-     * @param basketID 收藏果篮的id
-     * @return ResponseObject
-     */
-    public static ResponseObject favorLink(String link, String title, String basketID) {
-        ResponseObject resultObject = new ResponseObject();
-        try {
-            String url = "http://www.guokr.com/apis/favorite/link.json";
-            HashMap<String, String> params = new HashMap<>();
-            params.put("basket_id", basketID);
-            params.put("url", link);
-            params.put("title", title);
-            String result = HttpFetcher.post(url, params).toString();
-            if (getUniversalJsonSimpleBoolean(result, resultObject)) {
-                resultObject.ok = true;
-            }
-        } catch (Exception e) {
-            handleRequestException(e, resultObject);
-        }
-        return resultObject;
-    }
-
-    /**
      * 推荐一个链接
      *
      * @param link    链接地址
@@ -391,118 +361,6 @@ public class UserAPI extends APIBase {
                 .setParams(pairs)
                 .post()
                 .requestAsync();
-    }
-
-    /**
-     * 获取用户的果篮信息
-     *
-     * @return ResponseObject.result is ArrayList[Basket]
-     */
-    public static ResponseObject<ArrayList<Basket>> getBaskets() {
-        ResponseObject<ArrayList<Basket>> resultObject = new ResponseObject<>();
-        String url = "http://www.guokr.com/apis/favorite/basket.json";
-        try {
-            HashMap<String, String> pairs = new HashMap<>();
-            pairs.put("t", System.currentTimeMillis() + "");
-            pairs.put("retrieve_type", "by_ukey");
-            pairs.put("ukey", getUkey());
-            pairs.put("limit", "100");
-            String result = HttpFetcher.get(url, pairs).toString();
-            JSONArray jsonArray = getUniversalJsonArray(result, resultObject);
-            if (jsonArray != null) {
-                ArrayList<Basket> baskets = new ArrayList<>();
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject subObject = jsonArray.getJSONObject(i);
-                    Basket basket = new Basket();
-                    basket.setId(subObject.optString("id"));
-                    basket.setIntroduction(subObject.optString("introduction"));
-                    basket.setLinks_count(subObject.optInt("links_count"));
-                    basket.setName(subObject.optString("title"));
-                    JSONObject category = getJsonObject(subObject, "category");
-                    if (category != null) {
-                        basket.setCategory_id(category.optString("id"));
-                        basket.setCategory_name(category.optString("name"));
-                    }
-                    baskets.add(basket);
-                }
-                resultObject.ok = true;
-                resultObject.result = baskets;
-                myBaskets = baskets;
-            }
-        } catch (Exception e) {
-            handleRequestException(e, resultObject);
-        }
-        return resultObject;
-    }
-
-    /**
-     * 创建一个果篮
-     *
-     * @param title        果篮名
-     * @param introduction 果篮介绍
-     * @param category_id  category
-     * @return ResponseObject.result is Basket
-     */
-    public static ResponseObject<Basket> createBasket(String title, String introduction, String category_id) {
-        ResponseObject<Basket> resultObject = new ResponseObject<>();
-        try {
-            String url = "http://www.guokr.com/apis/favorite/basket.json";
-            HashMap<String, String> params = new HashMap<>();
-            params.put("title", title);
-            params.put("introduction", introduction);
-            params.put("category_id", category_id);
-            String result = HttpFetcher.post(url, params).toString();
-            JSONObject subObject = getUniversalJsonObject(result, resultObject);
-            if (subObject != null) {
-                Basket basket = new Basket();
-                basket.setId(subObject.optString("id"));
-                basket.setIntroduction(subObject.optString("introduction"));
-                basket.setLinks_count(0);
-                basket.setName(subObject.optString("title"));
-                JSONObject category = getJsonObject(subObject, "category");
-                if (category != null) {
-                    basket.setCategory_id(category.optString("id"));
-                    basket.setCategory_name(category.optString("name"));
-                }
-                resultObject.ok = true;
-                resultObject.result = basket;
-                myBaskets.add(basket);
-
-            }
-        } catch (Exception e) {
-            handleRequestException(e, resultObject);
-        }
-        return resultObject;
-    }
-
-    /**
-     * 获取分类 ，创建果篮有关
-     *
-     * @return ResponseObject
-     */
-    public static ResponseObject<ArrayList<Category>> getCategoryList() {
-        ResponseObject<ArrayList<Category>> resultObject = new ResponseObject<>();
-        try {
-            String url = "http://www.guokr.com/apis/favorite/category.json";
-            HashMap<String, String> pairs = new HashMap<>();
-            String result = HttpFetcher.get(url, pairs).toString();
-            JSONArray jsonArray = getUniversalJsonArray(result, resultObject);
-            if (jsonArray != null) {
-                ArrayList<Category> categories = new ArrayList<>();
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject subObject = jsonArray.getJSONObject(i);
-                    Category category = new Category();
-                    category.setId(subObject.optString("id"));
-                    category.setName(subObject.optString("name"));
-                    categories.add(category);
-                }
-                resultObject.ok = true;
-                resultObject.result = categories;
-            }
-        } catch (Exception e) {
-            handleRequestException(e, resultObject);
-        }
-        return resultObject;
     }
 
     /**
