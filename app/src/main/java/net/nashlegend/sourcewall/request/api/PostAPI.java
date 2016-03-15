@@ -70,26 +70,6 @@ public class PostAPI extends APIBase {
      * @param id 小组id
      * @return resultObject
      */
-    public static ResponseObject joinGroup(String id) {
-        ResponseObject resultObject = new ResponseObject();
-        String url = "http://www.guokr.com/apis/group/member.json";
-        HashMap<String, String> pairs = new HashMap<>();
-        pairs.put("group_id", id);
-        try {
-            String result = HttpFetcher.post(url, pairs).toString();
-            resultObject.ok = getUniversalJsonSimpleBoolean(result, resultObject);
-        } catch (Exception e) {
-            handleRequestException(e, resultObject);
-        }
-        return resultObject;
-    }
-
-    /**
-     * 加入小组
-     *
-     * @param id 小组id
-     * @return resultObject
-     */
     public static void joinGroup(String id, CallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/group/member.json";
         HashMap<String, String> pairs = new HashMap<>();
@@ -213,70 +193,14 @@ public class PostAPI extends APIBase {
     private static ResponseObject<ArrayList<Post>> getCachedMyGroupRecentRepliesPosts() {
         ResponseObject<ArrayList<Post>> resultObject = new ResponseObject<>();
         try {
-            String html = RequestCache.getInstance().getStringFromCache(Key_Post_My_Recent_Replies);
-            if (html != null) {
-                resultObject = parsePostListJson(html);
+            String json = RequestCache.getInstance().getStringFromCache(Key_Post_My_Recent_Replies);
+            if (json != null) {
+                resultObject = parsePostListJson(json);
             }
         } catch (Exception e) {
             handleRequestException(e, resultObject);
         }
         return resultObject;
-    }
-
-    /**
-     * 通过解析Html获取小组帖子
-     *
-     * @param html 解析我的小组的帖子
-     */
-    @Deprecated
-    private static ResponseObject<ArrayList<Post>> parseMyGroupPostList(String html) {
-        ResponseObject<ArrayList<Post>> resultObject = new ResponseObject<>();
-        try {
-            ArrayList<Post> list = parseHtmlList(html);
-            resultObject.ok = true;
-            resultObject.result = list;
-        } catch (Exception e) {
-            handleRequestException(e, resultObject);
-        }
-        return resultObject;
-    }
-
-    /**
-     * 已经可以完全使用Json了，不再使用html解析
-     *
-     * @param html
-     * @return
-     * @throws Exception
-     */
-    @Deprecated
-    public static ArrayList<Post> parseHtmlList(String html) throws Exception {
-        ArrayList<Post> list = new ArrayList<>();
-        Document doc = Jsoup.parse(html);
-        Elements elements = doc.getElementsByClass("post-list");
-        if (elements.size() == 1) {
-            Elements postlist = elements.get(0).getElementsByTag("li");
-            for (Element aPostlist : postlist) {
-                Post item = new Post();
-                Element link = aPostlist.getElementsByClass("post").get(0);
-                String postTitle = link.getElementsByTag("h4").get(0).text();
-                String postUrl = link.attr("href");
-                String postImageUrl = "";
-                String postGroup = aPostlist.getElementsByClass("post-author").get(0).text();//没错，post-author是小组名……
-                Elements children = aPostlist.getElementsByClass("post-info-right").get(0).children();
-                int postLike = Integer.valueOf(children.get(0).text().replaceAll("\\D*", ""));
-                int postComm = Integer.valueOf(children.get(1).text().replaceAll("\\D*", ""));
-                item.setTitle(postTitle);
-                item.setUrl(postUrl);
-                item.setId(postUrl.replaceAll("\\?.*$", "").replaceAll("\\D+", ""));
-                item.setTitleImageUrl(postImageUrl);
-                item.setGroupName(postGroup);
-                item.setLikeNum(postLike);
-                item.setReplyNum(postComm);
-                item.setFeatured(false);
-                list.add(item);
-            }
-        }
-        return list;
     }
 
     /**
@@ -337,9 +261,9 @@ public class PostAPI extends APIBase {
     public static ResponseObject<ArrayList<Post>> getCachedGroupHotPostListFromMobileUrl() {
         ResponseObject<ArrayList<Post>> resultObject = new ResponseObject<>();
         try {
-            String html = RequestCache.getInstance().getStringFromCache(Key_Post_Hot_Posts);
-            if (html != null) {
-                resultObject = parsePostListJson(html);
+            String json = RequestCache.getInstance().getStringFromCache(Key_Post_Hot_Posts);
+            if (json != null) {
+                resultObject = parsePostListJson(json);
             }
         } catch (Exception e) {
             handleRequestException(e, resultObject);
@@ -659,52 +583,6 @@ public class PostAPI extends APIBase {
                 .setRequestCallBack(callBack)
                 .setParams(pairs)
                 .requestAsync();
-    }
-
-    /**
-     * 获取发帖所需的csrf和topic列表
-     * resultObject.result是PostPrepareData
-     *
-     * @param group_id 小组id
-     * @return resultObject
-     */
-    //TODO Rx
-    public static ResponseObject<PrepareData> getPostPrepareData(String group_id) {
-        ResponseObject<PrepareData> resultObject = new ResponseObject<>();
-        try {
-            String url = "http://www.guokr.com/group/" + group_id + "/post/edit/";
-            ResponseObject response = HttpFetcher.get(url);
-            resultObject.statusCode = response.statusCode;
-            String html = response.toString();
-            Document doc = Jsoup.parse(html);
-            Element selects = doc.getElementById("topic");
-            ArrayList<BasicNameValuePair> pairs = new ArrayList<>();
-            String csrf = doc.getElementById("csrf_token").attr("value");
-            if (selects != null) {
-                Elements elements = selects.getElementsByTag("option");
-                if (elements != null && elements.size() > 0) {
-                    for (int i = 0; i < elements.size(); i++) {
-                        Element topic = elements.get(i);
-                        String name = topic.text();
-                        String value = topic.attr("value");
-                        if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(value)) {
-                            pairs.add(new BasicNameValuePair(name, value));
-                        }
-                    }
-                }
-            }
-            if (!TextUtils.isEmpty(csrf)) {
-                PrepareData prepareData = new PrepareData();
-                prepareData.setCsrf(csrf);
-                prepareData.setPairs(pairs);
-                resultObject.ok = true;
-                resultObject.result = prepareData;
-            }
-
-        } catch (Exception e) {
-            handleRequestException(e, resultObject);
-        }
-        return resultObject;
     }
 
     /**
