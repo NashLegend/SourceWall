@@ -10,9 +10,9 @@ import android.support.annotation.Nullable;
  */
 public interface IActivityPresenter extends IPresenter {
 
-    void onCreate(Bundle savedInstanceState, PersistableBundle persistentState);
+    void onCreate(Intent intent, Bundle savedInstanceState, PersistableBundle persistentState);
 
-    void onCreate(@Nullable Bundle savedInstanceState);
+    void onCreate(Intent intent, @Nullable Bundle savedInstanceState);
 
     void onNewIntent(Intent intent);
 

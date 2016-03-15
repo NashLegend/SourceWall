@@ -1,5 +1,7 @@
-package net.nashlegend.mvp.sample;
+package net.nashlegend.mvp.sample.ActivitySample;
 
+import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
@@ -15,8 +17,14 @@ public abstract class BaseActivity<T extends IActivityPresenter>
         extends AppCompatActivity implements ActivityView {
     public T presenter;
 
+    @Override
+    public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
+        setPresenter();
+        super.onCreate(savedInstanceState, persistentState);
+    }
+
     public void setPresenter() {
-        presenter = initPresenter();
+        presenter = createPresenter();
     }
 
     /**
@@ -25,5 +33,5 @@ public abstract class BaseActivity<T extends IActivityPresenter>
      * @return
      */
     @NonNull
-    public abstract T initPresenter();
+    public abstract T createPresenter();
 }

@@ -13,16 +13,19 @@ import net.nashlegend.mvp.view.ActivityView;
  * 是类而不是接口
  */
 public class ActivityPresenter<T extends ActivityView> extends Presenter implements IActivityPresenter {
+    public ActivityPresenter(T view) {
+        this.view = view;
+    }
 
     public T view;
 
     @Override
-    public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
+    public void onCreate(Intent intent, Bundle savedInstanceState, PersistableBundle persistentState) {
 
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Intent intent, @Nullable Bundle savedInstanceState) {
 
     }
 

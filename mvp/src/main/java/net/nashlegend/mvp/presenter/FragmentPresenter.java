@@ -3,9 +3,6 @@ package net.nashlegend.mvp.presenter;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import net.nashlegend.mvp.presenter.interfaze.IFragmentPresenter;
 import net.nashlegend.mvp.view.FragmentView;
@@ -15,6 +12,12 @@ import net.nashlegend.mvp.view.FragmentView;
  */
 public class FragmentPresenter<T extends FragmentView>
         extends Presenter implements IFragmentPresenter {
+
+    public FragmentPresenter(T view) {
+        this.view = view;
+    }
+
+    public T view;
 
     @Override
     public void onAttach(Context context) {
@@ -26,10 +29,9 @@ public class FragmentPresenter<T extends FragmentView>
 
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return null;
+    public void onCreateView(@Nullable Bundle savedInstanceState) {
+
     }
 
     @Override

@@ -11,12 +11,12 @@ import android.view.ViewGroup;
  * Created by NashLegend on 16/1/30.
  */
 public interface IFragmentPresenter extends IPresenter {
+
     public void onAttach(Context context);
 
     public void onCreate(@Nullable Bundle savedInstanceState);
 
-    @Nullable
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState);
+    public void onCreateView(@Nullable Bundle savedInstanceState);
 
     public void onActivityCreated(@Nullable Bundle savedInstanceState);
 
