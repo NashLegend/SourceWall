@@ -39,6 +39,7 @@ import net.nashlegend.sourcewall.dialogs.FavorDialog;
 import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.UComment;
+import net.nashlegend.sourcewall.request.api.MessageAPI;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.swrequest.RequestObject;
@@ -353,7 +354,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         @Override
         protected ResponseObject<ArrayList<AceModel>> doInBackground(Integer... params) {
             if (!TextUtils.isEmpty(notice_id)) {
-                UserAPI.ignoreOneNotice(notice_id);
+                MessageAPI.ignoreOneNotice(notice_id);
                 notice_id = null;
             }
             offset = params[0];

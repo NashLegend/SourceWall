@@ -33,6 +33,7 @@ import net.nashlegend.sourcewall.dialogs.FavorDialog;
 import net.nashlegend.sourcewall.dialogs.InputDialog;
 import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Question;
+import net.nashlegend.sourcewall.request.api.MessageAPI;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.swrequest.RequestObject;
@@ -311,7 +312,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         @Override
         protected ResponseObject<ArrayList<AceModel>> doInBackground(Integer... params) {
             if (!TextUtils.isEmpty(notice_id)) {
-                UserAPI.ignoreOneNotice(notice_id);
+                MessageAPI.ignoreOneNotice(notice_id);
                 notice_id = null;
             }
             offset = params[0];

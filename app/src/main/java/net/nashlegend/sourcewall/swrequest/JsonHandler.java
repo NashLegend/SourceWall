@@ -1,6 +1,9 @@
 package net.nashlegend.sourcewall.swrequest;
 
+import net.nashlegend.sourcewall.R;
+import net.nashlegend.sourcewall.events.LoginStateChangedEvent;
 import net.nashlegend.sourcewall.request.api.UserAPI;
+import net.nashlegend.sourcewall.util.ToastUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -8,6 +11,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by NashLegend on 2015/9/23 0023.
@@ -90,7 +95,7 @@ public class JsonHandler {
     /**
      * json返回的格式是固定的，这个可以先判断是否成功并剥离出有用信息。
      * 这里还可以做一些token过期失败问题的处理，省得在每个地方都判断了。
-     * <p>
+     * <p/>
      * 直接返回
      *
      * @param json 要进行json解析的文本内容
@@ -120,21 +125,14 @@ public class JsonHandler {
     public static void handleBadJson(JSONObject object, ResponseObject responseObject) throws JSONException {
         //TODO 老版本是error，新版本是code，不再有error，以后再改，此处TODO
         responseObject.ok = false;
-        int error_code = object.optInt("error_code");
+        int error_code = object.optInt("error_code", ResponseCode.CODE_UNKNOWN);
         responseObject.message = object.optString("error");
-        switch (error_code) {
-            case 200004:
-                responseObject.code = ResponseCode.CODE_TOKEN_INVALID;
+        responseObject.code = error_code;
+        switch (responseObject.code) {
+            case ResponseCode.CODE_TOKEN_INVALID:
+                ToastUtil.toastSingleton(R.string.token_invalid);
                 UserAPI.clearMyInfo();
-                break;
-            case 240004:
-                responseObject.code = ResponseCode.CODE_ALREADY_LIKED;
-                break;
-            case 242033:
-                responseObject.code = ResponseCode.CODE_ALREADY_THANKED;
-                break;
-            case 242013:
-                responseObject.code = ResponseCode.CODE_ALREADY_BURIED;
+                EventBus.getDefault().post(new LoginStateChangedEvent());
                 break;
             default:
                 responseObject.code = ResponseCode.CODE_UNKNOWN;

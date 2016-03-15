@@ -22,6 +22,7 @@ import net.nashlegend.sourcewall.commonview.LListView;
 import net.nashlegend.sourcewall.commonview.LoadingView;
 import net.nashlegend.sourcewall.model.Notice;
 import net.nashlegend.sourcewall.model.SubItem;
+import net.nashlegend.sourcewall.request.api.MessageAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.util.CommonUtil;
@@ -180,7 +181,7 @@ public class NoticesFragment extends ChannelsFragment implements LListView.OnRef
 
         @Override
         protected ResponseObject<ArrayList<Notice>> doInBackground(Integer... params) {
-            return UserAPI.getNoticeList();
+            return MessageAPI.getNoticeList();
         }
 
         @Override
@@ -206,7 +207,7 @@ public class NoticesFragment extends ChannelsFragment implements LListView.OnRef
         @Override
         protected ResponseObject doInBackground(String... params) {
             String id = params[0];
-            return UserAPI.ignoreOneNotice(id);
+            return MessageAPI.ignoreOneNotice(id);
         }
     }
 
@@ -228,7 +229,7 @@ public class NoticesFragment extends ChannelsFragment implements LListView.OnRef
 
         @Override
         protected ResponseObject doInBackground(String... params) {
-            return UserAPI.ignoreAllNotice();
+            return MessageAPI.ignoreAllNotice();
         }
 
         @Override

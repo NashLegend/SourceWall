@@ -2,6 +2,8 @@ package net.nashlegend.sourcewall.model;
 
 import android.os.Parcel;
 
+import org.json.JSONObject;
+
 /**
  * Created by NashLegend on 2014/12/23 0023
  */
@@ -15,6 +17,22 @@ public class UserInfo extends AceModel {
     private String avatar = "";
     private String date_created = "";
     private String url = "";
+
+    public static UserInfo fromJson(JSONObject subObject) throws Exception {
+        UserInfo info = new UserInfo();
+        info.setDate_created(subObject.optString("date_created"));
+        info.setIntroduction(subObject.optString("introduction"));
+        info.setNickname(subObject.optString("nickname"));
+        info.setTitle(subObject.optString("title"));
+        info.setUkey(subObject.optString("ukey"));
+        info.setUrl(subObject.optString("url"));
+        info.setId(info.getUrl().replaceAll("^\\D+(\\d+)\\D*", "$1"));
+        JSONObject avatarObject = subObject.optJSONObject("avatar");
+        if (avatarObject != null) {
+            info.setAvatar(avatarObject.optString("large").replaceAll("\\?.*$", ""));
+        }
+        return info;
+    }
 
     public String getId() {
         return id;

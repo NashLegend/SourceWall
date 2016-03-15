@@ -13,6 +13,7 @@ import com.umeng.analytics.MobclickAgent;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.NoticeAdapter;
 import net.nashlegend.sourcewall.model.Notice;
+import net.nashlegend.sourcewall.request.api.MessageAPI;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Mob;
@@ -89,7 +90,7 @@ public class NoticeView extends AceView<Notice> implements View.OnClickListener 
         @Override
         protected ResponseObject doInBackground(Notice... params) {
             notice = params[0];
-            return UserAPI.ignoreOneNotice(notice.getId());
+            return MessageAPI.ignoreOneNotice(notice.getId());
         }
 
         @Override

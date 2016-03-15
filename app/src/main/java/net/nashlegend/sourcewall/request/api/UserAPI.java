@@ -5,25 +5,18 @@ import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
 import net.nashlegend.sourcewall.App;
-import net.nashlegend.sourcewall.model.Message;
-import net.nashlegend.sourcewall.model.Notice;
-import net.nashlegend.sourcewall.model.Reminder;
-import net.nashlegend.sourcewall.model.ReminderNoticeNum;
 import net.nashlegend.sourcewall.model.UserInfo;
 import net.nashlegend.sourcewall.request.HttpFetcher;
+import net.nashlegend.sourcewall.swrequest.JsonHandler;
 import net.nashlegend.sourcewall.swrequest.RequestBuilder;
 import net.nashlegend.sourcewall.swrequest.RequestObject;
 import net.nashlegend.sourcewall.swrequest.RequestObject.CallBack;
-import net.nashlegend.sourcewall.swrequest.ResponseCode;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.swrequest.parsers.BooleanParser;
+import net.nashlegend.sourcewall.swrequest.parsers.Parser;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -57,28 +50,19 @@ public class UserAPI extends APIBase {
      * @param ukey 用户ukey
      * @return ResponseObject
      */
-    public static ResponseObject<UserInfo> getUserInfoByUkey(String ukey) {
-        ResponseObject<UserInfo> resultObject = new ResponseObject<>();
-        try {
-            String result = HttpFetcher.get("http://apis.guokr.com/community/user/" + ukey + ".json").toString();
-            JSONObject subObject = getUniversalJsonObject(result, resultObject);
-            if (subObject != null) {
-                UserInfo info = new UserInfo();
-                info.setDate_created(subObject.optString("date_created"));
-                info.setIntroduction(subObject.optString("introduction"));
-                info.setNickname(subObject.optString("nickname"));
-                info.setTitle(subObject.optString("title"));
-                info.setUkey(subObject.optString("ukey"));
-                info.setUrl(subObject.optString("url"));
-                info.setId(info.getUrl().replaceAll("^\\D+(\\d+)\\D*", "$1"));
-                info.setAvatar(subObject.getJSONObject("avatar").getString("large").replaceAll("\\?.*$", ""));
-                resultObject.result = info;
-                resultObject.ok = true;
-            }
-        } catch (Exception e) {
-            handleRequestException(e, resultObject);
-        }
-        return resultObject;
+    public static RequestObject<UserInfo> getUserInfoByUkey(String ukey, CallBack<UserInfo> callBack) {
+        String url = "http://apis.guokr.com/community/user/" + ukey + ".json";
+        return new RequestBuilder<UserInfo>()
+                .setUrl(url)
+                .setParser(new Parser<UserInfo>() {
+                    @Override
+                    public UserInfo parse(String str, ResponseObject<UserInfo> responseObject) throws Exception {
+                        return UserInfo.fromJson(JsonHandler.getUniversalJsonObject(str, responseObject));
+                    }
+                })
+                .setRequestCallBack(callBack)
+                .get()
+                .requestAsync();
     }
 
     /**
@@ -87,251 +71,8 @@ public class UserAPI extends APIBase {
      * @param id 用户id
      * @return ResponseObject
      */
-    public static ResponseObject<UserInfo> getUserInfoByID(String id) {
-        return getUserInfoByUkey(base36Encode(Long.valueOf(id)));
-    }
-
-    /**
-     * 通过获取消息提醒的方式测试是否登录或者登录是否有效
-     *
-     * @return ResponseObject
-     */
-    public static ResponseObject<ReminderNoticeNum> testLogin() {
-        ResponseObject<ReminderNoticeNum> resultObject = new ResponseObject<>();
-        String token = getToken();
-        String ukey = getUkey();
-        //先判断有没有token，没有就是未登录，有的话检测一下是否过期
-        if (!TextUtils.isEmpty(ukey) && ukey.length() == 6 && !TextUtils.isEmpty(token) && token.length() == 64) {
-            resultObject = getReminderAndNoticeNum();
-        } else {
-            clearMyInfo();
-            resultObject.code = ResponseCode.CODE_TOKEN_INVALID;
-        }
-        return resultObject;
-    }
-
-    /**
-     * 获取通知和站内信数量
-     *
-     * @return ResponseObject.result是ReminderNoticeNum
-     */
-    public static ResponseObject<ReminderNoticeNum> getReminderAndNoticeNum() {
-        ResponseObject<ReminderNoticeNum> resultObject = new ResponseObject<>();
-        try {
-            String url = "http://www.guokr.com/apis/community/rn_num.json";
-            HashMap<String, String> pairs = new HashMap<>();
-            pairs.put("_", System.currentTimeMillis() + "");
-            String result = HttpFetcher.get(url, pairs).toString();
-            JSONObject object = getUniversalJsonObject(result, resultObject);
-            if (object != null) {
-                ReminderNoticeNum num = new ReminderNoticeNum();
-                num.setNotice_num(object.optInt("n"));//通知数量
-                num.setReminder_num(object.optInt("r"));//站内信数量
-                resultObject.ok = true;
-                resultObject.result = num;
-            }
-        } catch (Exception e) {
-            handleRequestException(e, resultObject);
-        }
-        return resultObject;
-    }
-
-    /**
-     * 获取提醒列表
-     *
-     * @return ResponseObject
-     */
-    public static ResponseObject<ArrayList<Reminder>> getReminderList(int offset) {
-        ResponseObject<ArrayList<Reminder>> resultObject = new ResponseObject<>();
-        try {
-            String url = "http://www.guokr.com/apis/community/reminder.json";
-            HashMap<String, String> pairs = new HashMap<>();
-            pairs.put("_", System.currentTimeMillis() + "");
-            pairs.put("limit", "20");
-            pairs.put("offset", String.valueOf(offset));
-            String result = HttpFetcher.get(url, pairs).toString();
-            JSONArray reminders = getUniversalJsonArray(result, resultObject);
-            if (reminders != null) {
-                ArrayList<Reminder> noticeList = new ArrayList<>();
-                for (int i = 0; i < reminders.length(); i++) {
-                    JSONObject reminderObject = reminders.getJSONObject(i);
-                    Reminder notice = new Reminder();
-                    notice.setContent(reminderObject.optString("content"));
-                    notice.setUrl(reminderObject.optString("url"));
-                    notice.setUkey(reminderObject.optString("ukey"));
-                    notice.setDateCreated(reminderObject.optLong("date_created"));
-                    notice.setId(reminderObject.optString("id"));
-                    notice.setGroup(reminderObject.optString("group"));
-                    noticeList.add(notice);
-                }
-                resultObject.ok = true;
-                resultObject.result = noticeList;
-            }
-        } catch (Exception e) {
-            handleRequestException(e, resultObject);
-        }
-        return resultObject;
-    }
-
-    /**
-     * 获取通知详情列表，一次性取得全部
-     *
-     * @return ResponseObject
-     */
-    public static ResponseObject<ArrayList<Notice>> getNoticeList() {
-        ResponseObject<ArrayList<Notice>> resultObject = new ResponseObject<>();
-        try {
-            String url = "http://www.guokr.com/apis/community/notice.json";
-            HashMap<String, String> pairs = new HashMap<>();
-            pairs.put("_", System.currentTimeMillis() + "");
-            pairs.put("limit", "1024");
-            pairs.put("offset", "0");
-            String result = HttpFetcher.get(url, pairs).toString();
-            JSONArray notices = getUniversalJsonArray(result, resultObject);
-            if (notices != null) {
-                ArrayList<Notice> noticeList = new ArrayList<>();
-                for (int i = 0; i < notices.length(); i++) {
-                    JSONObject noticesObject = notices.getJSONObject(i);
-                    Notice notice = new Notice();
-                    notice.setContent(noticesObject.optString("content"));
-                    notice.setUrl(noticesObject.optString("url"));
-                    notice.setUkey(noticesObject.optString("ukey"));
-                    notice.setDate_last_updated(noticesObject.optLong("date_last_updated"));
-                    notice.setId(noticesObject.optString("id"));
-                    notice.setIs_read(noticesObject.optBoolean("is_read"));
-                    noticeList.add(notice);
-                }
-                resultObject.ok = true;
-                resultObject.result = noticeList;
-            }
-        } catch (Exception e) {
-            handleRequestException(e, resultObject);
-        }
-        return resultObject;
-    }
-
-    /**
-     * 忽略所有消息，相当于ignoreOneNotice("")
-     *
-     * @return ResponseObject，仅仅有ok，result是空
-     */
-    public static ResponseObject ignoreAllNotice() {
-        ResponseObject resultObject = new ResponseObject();
-        try {
-            String url = "http://www.guokr.com/apis/community/notice_ignore.json";
-            HashMap<String, String> pairs = new HashMap<>();
-            String result = HttpFetcher.put(url, pairs).toString();
-            resultObject.ok = getUniversalJsonSimpleBoolean(result, resultObject);
-        } catch (Exception e) {
-            handleRequestException(e, resultObject);
-        }
-        return resultObject;
-    }
-
-    /**
-     * 忽略一条通知消息，返回的是剩余的通知详情列表
-     *
-     * @return ResponseObject resultObject.result是剩余的NoticeList
-     */
-    public static ResponseObject<ArrayList<Notice>> ignoreOneNotice(String noticeID) {
-        ResponseObject<ArrayList<Notice>> resultObject = new ResponseObject<>();
-        try {
-            String url = "http://www.guokr.com/apis/community/notice_ignore.json";
-            HashMap<String, String> pairs = new HashMap<>();
-            pairs.put("nid", noticeID);
-            pairs.put("_", System.currentTimeMillis() + "");
-            String result = HttpFetcher.put(url, pairs).toString();
-            JSONObject nObject = getUniversalJsonObject(result, resultObject);
-            if (nObject != null) {
-                JSONArray notices = getJsonArray(nObject, "list");
-                ArrayList<Notice> noticeList = new ArrayList<>();
-                for (int i = 0; i < notices.length(); i++) {
-                    JSONObject noticeObject = notices.getJSONObject(i);
-                    Notice notice = new Notice();
-                    notice.setContent(noticeObject.optString("content"));
-                    notice.setUrl(noticeObject.optString("url"));
-                    notice.setUkey(noticeObject.optString("ukey"));
-                    notice.setDate_last_updated(noticeObject.optLong("date_last_updated"));
-                    notice.setId(noticeObject.optString("id"));
-                    notice.setIs_read(noticeObject.optBoolean("is_read"));
-                    noticeList.add(notice);
-                }
-                resultObject.ok = true;
-                resultObject.result = noticeList;
-            }
-        } catch (Exception e) {
-            handleRequestException(e, resultObject);
-        }
-        return resultObject;
-    }
-
-    /**
-     * 获取站内信详情列表，与某人的对话只显示最近一条。目前还不知道获取对话接口
-     *
-     * @return ResponseObject
-     */
-    public static ResponseObject<ArrayList<Message>> getMessageList(int offset) {
-        ResponseObject<ArrayList<Message>> resultObject = new ResponseObject<>();
-        try {
-            String url = "http://www.guokr.com/apis/community/user/message.json";
-            HashMap<String, String> pairs = new HashMap<>();
-            pairs.put("limit", "20");
-            pairs.put("offset", String.valueOf(offset));
-            String result = HttpFetcher.get(url, pairs).toString();
-            JSONArray notices = getUniversalJsonArray(result, resultObject);
-            if (notices != null) {
-                ArrayList<Message> noticeList = new ArrayList<>();
-                for (int i = 0; i < notices.length(); i++) {
-                    JSONObject noticesObject = notices.getJSONObject(i);
-                    Message message = new Message();
-                    message.setContent(noticesObject.optString("content"));
-                    message.setDirection(noticesObject.optString("direction"));
-                    message.setUkey(noticesObject.optString("5p6t9t"));
-                    message.setAnother_ukey(noticesObject.optString("ukey_another"));
-                    message.setDateCreated(noticesObject.optString("date_created"));
-                    message.setId(noticesObject.optString("id"));
-                    message.setIs_read(noticesObject.optBoolean("is_read"));
-                    message.setTotal(noticesObject.optInt("total"));
-                    message.setUnread_count(noticesObject.optInt("unread_count"));
-                    noticeList.add(message);
-                }
-                resultObject.ok = true;
-                resultObject.result = noticeList;
-            }
-        } catch (Exception e) {
-            handleRequestException(e, resultObject);
-        }
-        return resultObject;
-    }
-
-    /**
-     * 根据id获取一条站内信
-     *
-     * @return ResponseObject
-     */
-    public static ResponseObject<Message> getOneMessage(String id) {
-        ResponseObject<Message> resultObject = new ResponseObject<>();
-        try {
-            String url = "http://www.guokr.com/apis/community/user/message/" + id + ".json";
-            HashMap<String, String> pairs = new HashMap<>();
-            String result = HttpFetcher.get(url, pairs).toString();
-            JSONObject noticesObject = getUniversalJsonObject(result, resultObject);
-            if (noticesObject != null) {
-                Message message = new Message();
-                message.setContent(noticesObject.optString("content"));
-                message.setDirection(noticesObject.optString("direction"));
-                message.setUkey(noticesObject.optString("5p6t9t"));
-                message.setAnother_ukey(noticesObject.optString("ukey_another"));
-                message.setDateCreated(noticesObject.optString("date_created"));
-                message.setId(noticesObject.optString("id"));
-                message.setIs_read(noticesObject.optBoolean("is_read"));
-                resultObject.ok = true;
-                resultObject.result = message;
-            }
-        } catch (Exception e) {
-            handleRequestException(e, resultObject);
-        }
-        return resultObject;
+    public static RequestObject<UserInfo> getUserInfoByID(String id, CallBack<UserInfo> callBack) {
+        return getUserInfoByUkey(base36Encode(Long.valueOf(id)), callBack);
     }
 
     /**

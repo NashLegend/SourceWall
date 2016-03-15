@@ -41,6 +41,7 @@ import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.api.ArticleAPI;
+import net.nashlegend.sourcewall.request.api.MessageAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.swrequest.RequestObject;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
@@ -503,7 +504,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         @Override
         protected ResponseObject<ArrayList<AceModel>> doInBackground(Integer... params) {
             if (!TextUtils.isEmpty(notice_id)) {
-                UserAPI.ignoreOneNotice(notice_id);
+                MessageAPI.ignoreOneNotice(notice_id);
                 notice_id = null;
             }
             offset = params[0];

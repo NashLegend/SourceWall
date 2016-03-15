@@ -5,9 +5,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -35,10 +36,13 @@ import net.nashlegend.sourcewall.activities.SettingActivity;
 import net.nashlegend.sourcewall.adapters.ChannelsAdapter;
 import net.nashlegend.sourcewall.db.AskTagHelper;
 import net.nashlegend.sourcewall.db.GroupHelper;
+import net.nashlegend.sourcewall.events.LoginStateChangedEvent;
 import net.nashlegend.sourcewall.model.ReminderNoticeNum;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.model.UserInfo;
+import net.nashlegend.sourcewall.request.api.MessageAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
+import net.nashlegend.sourcewall.swrequest.RequestObject;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.util.ChannelHelper;
 import net.nashlegend.sourcewall.util.CommonUtil;
@@ -51,12 +55,8 @@ import net.nashlegend.sourcewall.view.SubItemView;
 
 import java.util.ArrayList;
 
-/**
- * Fragment used for managing interactions for and presentation of a navigation drawer.
- * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
- * design guidelines</a> for a complete explanation of the behaviors implemented here.
- * Created by NashLegend on 2014/9/15 0015.
- */
+import de.greenrobot.event.EventBus;
+
 public class NavigationDrawerFragment extends BaseFragment implements View.OnClickListener {
 
     /**
@@ -119,6 +119,13 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        EventBus.getDefault().register(this);
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
@@ -197,7 +204,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
         return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mFragmentContainerView);
     }
 
-    public void closeDrawer(){
+    public void closeDrawer() {
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(mFragmentContainerView);
         }
@@ -279,6 +286,12 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
     }
 
     @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
     }
@@ -334,8 +347,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
             startActivityForResult(intent, Consts.Code_Login);
             getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
         } else {
-            String nameString = SharedPreferencesUtil.readString(Consts.Key_User_Name, "");
-            if (TextUtils.isEmpty(nameString)) {
+            if (TextUtils.isEmpty(UserAPI.getName())) {
                 loadUserInfo();
             } else {
                 Intent intent = new Intent(getActivity(), MessageCenterActivity.class);
@@ -353,7 +365,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
 
     @Override
     public void onClick(View v) {
-        if (CommonUtil.shouldThrottle()){
+        if (CommonUtil.shouldThrottle()) {
             return;
         }
         switch (v.getId()) {
@@ -374,6 +386,10 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
     long currentGroupDBVersion = -1;
     long currentTagDBVersion = -1;
 
+    public void onEventMainThread(LoginStateChangedEvent e) {
+        recheckData();
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -383,11 +399,11 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
     private void recheckData() {
         if (isFirstLoad) {
             if (UserAPI.isLoggedIn()) {
-                String nameString = SharedPreferencesUtil.readString(Consts.Key_User_Name, "");
+                String nameString = UserAPI.getName();
                 if (!TextUtils.isEmpty(nameString)) {
                     userName.setText(nameString);
                 }
-                String avatarString = SharedPreferencesUtil.readString(Consts.Key_User_Avatar, "");
+                String avatarString = UserAPI.getUserAvatar();
                 if (!TextUtils.isEmpty(avatarString)) {
                     if (Config.shouldLoadImage()) {
                         ImageLoader.getInstance().displayImage(avatarString, avatarView, ImageUtils.avatarOptions);
@@ -395,7 +411,6 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
                         avatarView.setImageResource(R.drawable.default_avatar);
                     }
                 }
-                testLogin();
             }
             isFirstLoad = false;
         } else {
@@ -408,8 +423,8 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
                 }
             } else {
                 if (UserAPI.isLoggedIn()) {
-                    if (userKey != null && userKey.equals(SharedPreferencesUtil.readString(Consts.Key_Ukey, ""))) {
-                        String avatarString = SharedPreferencesUtil.readString(Consts.Key_User_Avatar, "");
+                    if (userKey != null && userKey.equals(UserAPI.getUkey())) {
+                        String avatarString = UserAPI.getUserAvatar();
                         if (!TextUtils.isEmpty(avatarString)) {
                             if (Config.shouldLoadImage()) {
                                 ImageLoader.getInstance().displayImage(avatarString, avatarView, ImageUtils.avatarOptions);
@@ -459,7 +474,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
             }
         }
         loginState = UserAPI.isLoggedIn();
-        userKey = SharedPreferencesUtil.readString(Consts.Key_Ukey, "");
+        userKey = UserAPI.getUkey();
         if (loginState) {
             loadMessages();
         } else {
@@ -505,15 +520,26 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
         adapter.notifyDataSetInvalidated();
     }
 
-    private void testLogin() {
-        TestLoginTask testLoginTask = new TestLoginTask();
-        testLoginTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
     private void loadUserInfo() {
         if (UserAPI.isLoggedIn()) {
-            UserInfoTask task = new UserInfoTask();
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            String nameString = UserAPI.getName();
+            if (TextUtils.isEmpty(nameString)) {
+                userName.setText(R.string.loading);
+            }
+            UserAPI.getUserInfoByUkey(UserAPI.getUkey(), new RequestObject.CallBack<UserInfo>() {
+                @Override
+                public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<UserInfo> result) {
+                    String nameString = UserAPI.getName();
+                    if (TextUtils.isEmpty(nameString)) {
+                        userName.setText(R.string.click_to_reload);
+                    }
+                }
+
+                @Override
+                public void onSuccess(@NonNull ResponseObject<UserInfo> result) {
+                    setupUserInfo(result.result);
+                }
+            });
         }
     }
 
@@ -530,125 +556,23 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
         }
     }
 
-    MessageTask messageTask;
-
     private void loadMessages() {
-        if (messageTask != null && messageTask.getStatus() == AsyncTask.Status.RUNNING) {
-            messageTask.cancel(false);
-        }
-        messageTask = new MessageTask();
-        messageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
+        MessageAPI.getReminderAndNoticeNum(new RequestObject.CallBack<ReminderNoticeNum>() {
+            @Override
+            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<ReminderNoticeNum> result) {
+                noticeView.setVisibility(View.GONE);
+            }
 
-    class MessageTask extends AsyncTask<Void, Integer, ResponseObject<ReminderNoticeNum>> {
-
-        @Override
-        protected ResponseObject<ReminderNoticeNum> doInBackground(Void... params) {
-            return UserAPI.getReminderAndNoticeNum();
-        }
-
-        @Override
-        protected void onPostExecute(ResponseObject<ReminderNoticeNum> result) {
-            if (result.ok) {
+            @Override
+            public void onSuccess(@NonNull ResponseObject<ReminderNoticeNum> result) {
                 ReminderNoticeNum num = result.result;
                 if (num.getNotice_num() > 0) {
                     noticeView.setVisibility(View.VISIBLE);
                 } else {
                     noticeView.setVisibility(View.GONE);
                 }
-            } else {
-                noticeView.setVisibility(View.GONE);
             }
-        }
-    }
-
-    class TestLoginTask extends AsyncTask<Void, Integer, ResponseObject> {
-
-        @Override
-        protected ResponseObject doInBackground(Void... params) {
-            return UserAPI.testLogin();
-        }
-
-        /**
-         * 目前尚未添加详细的Error Code
-         * 这么写其实不合理，因为有可能TestLogin失败只是因为网络错误或者服务器错误。
-         * 只能有两种情况是失败的，一是token过期，另一种是没有token
-         * 仅仅以是否有token作为登录状态判断。
-         * 应该在某处添加方法，在发现Token过期后将清空token，
-         * 应该统一在HttpFetcher里面添加状态操作才对。TODO
-         *
-         * @param resultObject 返回结果
-         */
-        @Override
-        protected void onPostExecute(ResponseObject resultObject) {
-            boolean shouldMarkAsFailed = true;//是否视为登录失败
-            if (resultObject.ok) {
-                shouldMarkAsFailed = false;
-            } else {
-                int errorID = 0;
-                switch (resultObject.error) {
-                    case LOGIN_FAILED:
-                        errorID = R.string.login_failed_for_other_reason;
-                        break;
-                    case NETWORK_ERROR:
-                        errorID = R.string.network_error;
-                        shouldMarkAsFailed = false;
-                        break;
-                    case JSON_ERROR:
-                        errorID = R.string.json_error;
-                        shouldMarkAsFailed = false;
-                        break;
-                    case UNKNOWN:
-                        errorID = R.string.unknown_error;
-                        break;
-                    case TOKEN_INVALID:
-                        errorID = R.string.token_invalid;
-                        break;
-                    case NO_TOKEN:
-                        errorID = R.string.have_not_login;
-                        break;
-                }
-                toast(errorID);
-            }
-
-            if (!shouldMarkAsFailed) {
-                loadUserInfo();
-                loginState = true;
-            } else {
-                loginState = false;
-            }
-            if (!loginState) {
-                back2UnLogged();
-            }
-        }
-    }
-
-    class UserInfoTask extends AsyncTask<String, Intent, ResponseObject<UserInfo>> {
-
-        @Override
-        protected void onPreExecute() {
-            String nameString = SharedPreferencesUtil.readString(Consts.Key_User_Name, "");
-            if (TextUtils.isEmpty(nameString)) {
-                userName.setText(R.string.loading);
-            }
-        }
-
-        @Override
-        protected ResponseObject<UserInfo> doInBackground(String... params) {
-            return UserAPI.getUserInfoByUkey(UserAPI.getUkey());
-        }
-
-        @Override
-        protected void onPostExecute(ResponseObject<UserInfo> result) {
-            if (result.ok) {
-                setupUserInfo(result.result);
-            } else {
-                String nameString = SharedPreferencesUtil.readString(Consts.Key_User_Name, "");
-                if (TextUtils.isEmpty(nameString)) {
-                    userName.setText(R.string.click_to_reload);
-                }
-            }
-        }
+        });
     }
 
     private void setupUserInfo(UserInfo info) {

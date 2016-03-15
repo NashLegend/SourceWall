@@ -2,6 +2,8 @@ package net.nashlegend.sourcewall.model;
 
 import android.os.Parcel;
 
+import org.json.JSONObject;
+
 /**
  * Created by NashLegend on 2015/2/2 0002
  * 站内信
@@ -17,6 +19,21 @@ public class Message extends AceModel {
     private String another_ukey = "";
     private int unread_count = 0;//获取全部列表的时候才有这个属性
     private int total = 0;//获取全部列表的时候才有这个属性
+
+    public static Message fromJson(JSONObject messageObject) {
+        Message message = new Message();
+        message.setContent(messageObject.optString("content"));
+        message.setDirection(messageObject.optString("direction"));
+        message.setUkey(messageObject.optString("5p6t9t"));
+        message.setAnother_ukey(messageObject.optString("ukey_another"));
+        message.setDateCreated(messageObject.optString("date_created"));
+        message.setId(messageObject.optString("id"));
+        message.setIs_read(messageObject.optBoolean("is_read"));
+        //TODO
+        message.setTotal(messageObject.optInt("total"));
+        message.setUnread_count(messageObject.optInt("unread_count"));
+        return message;
+    }
 
     public String getId() {
         return id;

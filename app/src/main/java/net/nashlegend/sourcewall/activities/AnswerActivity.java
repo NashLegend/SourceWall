@@ -39,6 +39,7 @@ import net.nashlegend.sourcewall.commonview.SScrollView;
 import net.nashlegend.sourcewall.commonview.WWebView;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.model.QuestionAnswer;
+import net.nashlegend.sourcewall.request.api.MessageAPI;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.swrequest.RequestObject.CallBack;
@@ -467,7 +468,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
 
         @Override
         protected ResponseObject<QuestionAnswer> doInBackground(Uri... params) {
-            UserAPI.ignoreOneNotice(notice_id);
+            MessageAPI.ignoreOneNotice(notice_id);
             return QuestionAPI.getSingleAnswerFromRedirectUrl(redirectUri.toString());
         }
 
