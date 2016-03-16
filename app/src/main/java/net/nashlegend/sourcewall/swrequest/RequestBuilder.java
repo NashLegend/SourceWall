@@ -8,7 +8,7 @@ import android.text.TextUtils;
 
 import com.squareup.okhttp.MediaType;
 
-import net.nashlegend.sourcewall.request.api.UserAPI;
+import net.nashlegend.sourcewall.swrequest.api.UserAPI;
 import net.nashlegend.sourcewall.swrequest.parsers.DirectlyStringParser;
 import net.nashlegend.sourcewall.swrequest.parsers.Parser;
 

@@ -18,7 +18,7 @@ import net.nashlegend.sourcewall.commonview.WWebView;
 import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
-import net.nashlegend.sourcewall.request.api.ArticleAPI;
+import net.nashlegend.sourcewall.swrequest.api.ArticleAPI;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 import net.nashlegend.sourcewall.util.StyleChecker;

@@ -1,4 +1,4 @@
-package net.nashlegend.sourcewall.request.api;
+package net.nashlegend.sourcewall.swrequest.api;
 
 import android.text.TextUtils;
 

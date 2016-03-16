@@ -45,6 +45,7 @@ public class RequestObject<T> {
      */
     public static final String DefaultTag = "Default";
 
+    private RequestDelegate requestDelegate;
     private ResponseObject<T> responseObject = new ResponseObject<>();
 
     private int crtTime = 0;//当前重试次数
@@ -90,6 +91,19 @@ public class RequestObject<T> {
     private boolean softCancelled = false;//取消掉一个请求，但是并不中断请求，只是不再执行CallBack,请求完成后无任何动作
 
     private Call call = null;
+
+
+    synchronized public RequestDelegate getRequestDelegate() {
+        if (requestDelegate == null) {
+            requestDelegate = new RequestDelegate(getHttpClient());
+        }
+        return new RequestDelegate(getHttpClient());
+    }
+
+    public OkHttpClient getHttpClient() {
+        // TODO: 16/3/16 如有需要 可以更改返回值，比如请求gzip，默认单例OkHttp
+        return HttpUtil.getDefaultHttpClient();
+    }
 
     /**
      * 生成此次请求的缓存key，
@@ -162,16 +176,6 @@ public class RequestObject<T> {
         return useCachedIfFailed || useCachedFirst;
     }
 
-    /**
-     * 获取一个OkHttpClient的clone以做更多定制功能。
-     *
-     * @return
-     */
-    @NonNull
-    private OkHttpClient getClonedClient() {
-        return HttpUtil.getDefaultHttpClient().clone();
-    }
-
     @SuppressWarnings("unchecked")
     public void copyPartFrom(@NonNull RequestObject object) {
         try {
@@ -197,16 +201,16 @@ public class RequestObject<T> {
         Call call;
         switch (method) {
             case Method.GET:
-                call = HttpUtil.get(url, params, tag);
+                call = getRequestDelegate().get(url, params, tag);
                 break;
             case Method.PUT:
-                call = HttpUtil.put(url, params, tag);
+                call = getRequestDelegate().put(url, params, tag);
                 break;
             case Method.DELETE:
-                call = HttpUtil.delete(url, params, tag);
+                call = getRequestDelegate().delete(url, params, tag);
                 break;
             default:
-                call = HttpUtil.post(url, params, tag);
+                call = getRequestDelegate().post(url, params, tag);
                 break;
         }
         return call;
@@ -502,7 +506,6 @@ public class RequestObject<T> {
      */
     ////////////////////////////////////////////////////////////////////////////
 
-
     @Deprecated
     protected boolean ignoreHandler = false;
 
@@ -518,16 +521,16 @@ public class RequestObject<T> {
         handleHandler();
         switch (method) {
             case Method.GET:
-                call = HttpUtil.getAsync(url, params, getInnerCallback(), tag);
+                call = getRequestDelegate().getAsync(url, params, getInnerCallback(), tag);
                 break;
             case Method.PUT:
-                call = HttpUtil.putAsync(url, params, getInnerCallback(), tag);
+                call = getRequestDelegate().putAsync(url, params, getInnerCallback(), tag);
                 break;
             case Method.DELETE:
-                call = HttpUtil.deleteAsync(url, params, getInnerCallback(), tag);
+                call = getRequestDelegate().deleteAsync(url, params, getInnerCallback(), tag);
                 break;
             default:
-                call = HttpUtil.postAsync(url, params, getInnerCallback(), tag);
+                call = getRequestDelegate().postAsync(url, params, getInnerCallback(), tag);
                 break;
         }
     }

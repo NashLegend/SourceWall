@@ -3,14 +3,10 @@ package net.nashlegend.sourcewall.model;
 import android.os.Parcel;
 import android.text.TextUtils;
 
-import net.nashlegend.sourcewall.request.api.APIBase;
+import net.nashlegend.sourcewall.swrequest.api.APIBase;
 import net.nashlegend.sourcewall.swrequest.JsonHandler;
 
 import org.json.JSONObject;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 

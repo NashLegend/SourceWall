@@ -2,7 +2,7 @@ package net.nashlegend.sourcewall.swrequest;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.events.LoginStateChangedEvent;
-import net.nashlegend.sourcewall.request.api.UserAPI;
+import net.nashlegend.sourcewall.swrequest.api.UserAPI;
 import net.nashlegend.sourcewall.util.ToastUtil;
 
 import org.json.JSONArray;

@@ -20,7 +20,7 @@ import net.nashlegend.sourcewall.commonview.AAsyncTask;
 import net.nashlegend.sourcewall.commonview.WWebView;
 import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Post;
-import net.nashlegend.sourcewall.request.api.PostAPI;
+import net.nashlegend.sourcewall.swrequest.api.PostAPI;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;

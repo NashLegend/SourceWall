@@ -1,4 +1,4 @@
-package net.nashlegend.sourcewall.request.api;
+package net.nashlegend.sourcewall.swrequest.api;
 
 import net.nashlegend.sourcewall.model.Basket;
 import net.nashlegend.sourcewall.model.Category;

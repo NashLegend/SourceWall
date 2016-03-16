@@ -1,6 +1,6 @@
 package net.nashlegend.sourcewall.util;
 
-import net.nashlegend.sourcewall.request.api.APIBase;
+import net.nashlegend.sourcewall.swrequest.api.APIBase;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
 
 /**
