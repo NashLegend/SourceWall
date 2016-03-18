@@ -68,7 +68,8 @@
         android:paddingRight="10dp"
         android:paddingTop="10dp"
         android:text="@string/sample_title"
-        android:textColor="?attr/color_answer_question_title_text" />
+        android:textColor="?attr/color_answer_question_title_text"
+        android:textSize="@dimen/Text_title_size_dimen" />
 
     <LinearLayout
         android:id="@+id/layout_author"
