@@ -12,9 +12,9 @@ import android.widget.TextView;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.model.Basket;
-import net.nashlegend.sourcewall.swrequest.api.FavorAPI;
 import net.nashlegend.sourcewall.swrequest.RequestObject;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
+import net.nashlegend.sourcewall.swrequest.api.FavorAPI;
 
 import de.greenrobot.event.EventBus;
 
@@ -123,7 +123,7 @@ public class FavorItemView extends AceView<Basket> implements View.OnClickListen
             }
 
             @Override
-            public void onSuccess(@NonNull ResponseObject<Boolean> result) {
+            public void onSuccess(@NonNull Boolean result, @NonNull ResponseObject<Boolean> detailed) {
                 bas.setFavoring(false);
                 bas.setHasFavored(true);
                 postBasketChanged(bas);

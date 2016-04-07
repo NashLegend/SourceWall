@@ -40,11 +40,11 @@ import net.nashlegend.sourcewall.dialogs.InputDialog;
 import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.UComment;
+import net.nashlegend.sourcewall.swrequest.RequestObject;
+import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.swrequest.api.ArticleAPI;
 import net.nashlegend.sourcewall.swrequest.api.MessageAPI;
 import net.nashlegend.sourcewall.swrequest.api.UserAPI;
-import net.nashlegend.sourcewall.swrequest.RequestObject;
-import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.util.AutoHideUtil;
 import net.nashlegend.sourcewall.util.AutoHideUtil.AutoHideListener;
 import net.nashlegend.sourcewall.util.CommonUtil;
@@ -236,7 +236,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
             }
 
             @Override
-            public void onSuccess(@NonNull ResponseObject<Boolean> result) {
+            public void onSuccess(@NonNull Boolean result, @NonNull ResponseObject<Boolean> detailed) {
                 toast(R.string.recommend_ok);
             }
         });
@@ -322,7 +322,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
             }
 
             @Override
-            public void onSuccess(@NonNull ResponseObject<Boolean> result) {
+            public void onSuccess(@NonNull Boolean result, @NonNull ResponseObject<Boolean> detailed) {
                 comment.setHasLiked(true);
                 comment.setLikeNum(comment.getLikeNum() + 1);
                 if (mediumListItemView.getData() == comment) {
@@ -346,7 +346,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
             }
 
             @Override
-            public void onSuccess(@NonNull ResponseObject<Boolean> result) {
+            public void onSuccess(@NonNull Boolean result, @NonNull ResponseObject<Boolean> detailed) {
                 if (article.getCommentNum() > 0) {
                     article.setCommentNum(article.getCommentNum() - 1);
                 }
@@ -402,7 +402,7 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
 
     @Override
     public void onClick(View v) {
-        if (CommonUtil.shouldThrottle()){
+        if (CommonUtil.shouldThrottle()) {
             return;
         }
         switch (v.getId()) {

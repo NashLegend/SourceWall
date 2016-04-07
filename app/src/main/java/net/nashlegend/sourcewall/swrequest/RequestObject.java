@@ -9,16 +9,22 @@ import android.text.TextUtils;
 
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
+import com.squareup.okhttp.ResponseBody;
 
 import net.nashlegend.sourcewall.swrequest.cache.RequestCache;
 import net.nashlegend.sourcewall.swrequest.parsers.Parser;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InterruptedIOException;
+import java.net.ConnectException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -26,6 +32,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import okio.Buffer;
+import okio.BufferedSink;
+import okio.BufferedSource;
+import okio.ForwardingSink;
+import okio.ForwardingSource;
+import okio.GzipSink;
+import okio.Okio;
+import okio.Sink;
+import okio.Source;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
@@ -39,59 +54,84 @@ import rx.schedulers.Schedulers;
  * 网络请求的对象
  */
 public class RequestObject<T> {
-
     /**
      * 默认Tag
      */
     public static final String DefaultTag = "Default";
-
-    private RequestDelegate requestDelegate;
-    private ResponseObject<T> responseObject = new ResponseObject<>();
-
-    private int crtTime = 0;//当前重试次数
-
     protected int maxRetryTimes = 0;//最大重试次数
-
     protected int interval = 0;//重试间隔
-
     protected int requestType = RequestType.PLAIN;
-
     protected int method = Method.POST;
-
     protected HashMap<String, String> params = new HashMap<>();
-
     protected String url = "";
-
-    protected CallBack<T> callBack = null;
-
+    protected DetailedCallBack<T> callBack = null;
     protected Parser<T> parser;
-
     protected Object tag = DefaultTag;
-
     protected String uploadParamKey = "file";
-
     protected MediaType mediaType = null;
-
-    /*果壳貌似本身并没有Cache-Control，或者Cache-Control的max-age=0 所以这里的缓存是本地缓存*/
-
+    protected String uploadFilePath = "";
+    protected String downloadFilePath = "";
+    /**
+     * 是否优先使用缓存，如果useCachedFirst为true，那么useCachedIfFailed就为false了
+     * 仅仅在使用Rx时有效，与useCacheIfFailed互斥
+     */
+    protected boolean useCachedFirst = false;//TODO 未搞
     /**
      * 请求失败时是否使用缓存，如果为true，那么将使用缓存，请求成功的话也会将成功的数据缓存下来,
      * 与useCachedFirst互斥
      */
     protected boolean useCachedIfFailed = false;
 
+    /*果壳貌似本身并没有Cache-Control，或者Cache-Control的max-age=0 所以这里的缓存是本地缓存*/
     /**
-     * 是否优先使用缓存，如果useCachedFirst为true，那么useCachedIfFailed就为false了
-     * 仅仅在使用Rx时有效，与useCacheIfFailed互斥
+     * 下面部分均标为过时，请求逐步改为上面的Rx请求方式
      */
-    protected boolean useCachedFirst = false;//TODO 未搞
+    ////////////////////////////////////////////////////////////////////////////
 
-    protected String filePath = "";
-
+    @Deprecated
+    protected boolean ignoreHandler = false;
+    @Deprecated
+    protected Handler handler;
+    private RequestDelegate requestDelegate;
+    private OkHttpClient okHttpClient;
+    private ResponseObject<T> responseObject = new ResponseObject<>();
+    private int crtTime = 0;//当前重试次数
     private boolean softCancelled = false;//取消掉一个请求，但是并不中断请求，只是不再执行CallBack,请求完成后无任何动作
-
     private Call call = null;
 
+    public void setCallBack(final CallBack<T> call) {
+        if (call == null) {
+            return;
+        }
+        //noinspection StatementWithEmptyBody
+        if (call instanceof DetailedCallBack) {
+            //do nothing
+        } else {
+            this.callBack = new DetailedCallBack<T>() {
+                @Override
+                public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<T> result) {
+                    call.onFailure(e, result);
+                }
+
+                @Override
+                public void onSuccess(@NonNull T result, @NonNull ResponseObject<T> detailed) {
+                    call.onSuccess(result, detailed);
+                }
+
+                @Override
+                public void onRequestProgress(long current, long total) {
+                    //do nothing
+                    System.out.println(current + "_" + total);
+                }
+
+                @Override
+                public void onResponseProgress(long current, long total, boolean done) {
+                    //do nothing
+                    System.out.println("download " + current + "_" + total);
+                }
+            };
+        }
+    }
 
     synchronized public RequestDelegate getRequestDelegate() {
         if (requestDelegate == null) {
@@ -100,9 +140,39 @@ public class RequestObject<T> {
         return new RequestDelegate(getHttpClient());
     }
 
-    public OkHttpClient getHttpClient() {
-        // TODO: 16/3/16 如有需要 可以更改返回值，比如请求gzip，默认单例OkHttp
-        return HttpUtil.getDefaultHttpClient();
+    synchronized public OkHttpClient getHttpClient() {
+        if (okHttpClient == null) {
+            switch (requestType) {
+                case RequestType.PLAIN:
+                    okHttpClient = HttpUtil.getDefaultHttpClient();
+                    break;
+                case RequestType.UPLOAD:
+                    okHttpClient = HttpUtil.getDefaultUploadHttpClient();
+                    break;
+                case RequestType.DOWNLOAD:
+                    okHttpClient = HttpUtil.getDefaultUploadHttpClient();
+                    break;
+                default:
+                    okHttpClient = HttpUtil.getDefaultHttpClient();
+                    break;
+            }
+
+//            if (requestWithGzip) {
+//                okHttpClient = okHttpClient.clone();
+//                okHttpClient.networkInterceptors().add(new GzipRequestInterceptor());
+//            }
+
+            if (requestType == RequestType.UPLOAD) {
+                okHttpClient = okHttpClient.clone();
+                okHttpClient.networkInterceptors().add(new UploadProgressInterceptor());
+            }
+
+            if (requestType == RequestType.DOWNLOAD) {
+                okHttpClient = okHttpClient.clone();
+                okHttpClient.networkInterceptors().add(new DownloadProgressInterceptor());
+            }
+        }
+        return okHttpClient;
     }
 
     /**
@@ -240,7 +310,7 @@ public class RequestObject<T> {
                     public void onNext(ResponseObject<T> tResponseObject) {
                         if (!softCancelled && callBack != null) {
                             if (tResponseObject.ok) {
-                                callBack.onSuccess(tResponseObject);
+                                callBack.onSuccess(tResponseObject.result, tResponseObject);
                             } else {
                                 callBack.onFailure(tResponseObject.throwable, tResponseObject);
                             }
@@ -328,7 +398,7 @@ public class RequestObject<T> {
                     public void onNext(ResponseObject<T> tResponseObject) {
                         if (!softCancelled && callBack != null) {
                             if (tResponseObject.ok) {
-                                callBack.onSuccess(tResponseObject);
+                                callBack.onSuccess(tResponseObject.result, tResponseObject);
                             } else {
                                 callBack.onFailure(tResponseObject.throwable, tResponseObject);
                             }
@@ -428,47 +498,6 @@ public class RequestObject<T> {
         return err.toString();
     }
 
-    /**
-     * http 请求方法
-     */
-    public interface Method {
-        int GET = 0;
-        int POST = 1;
-        int PUT = 2;
-        int DELETE = 3;
-    }
-
-    /**
-     * http 请求方法
-     */
-    public interface RequestType {
-        int PLAIN = 0;
-        int UPLOAD = 1;
-        int DOWNLOAD = 2;
-    }
-
-    /**
-     * http 请求回调
-     *
-     * @param <T>
-     */
-    public interface CallBack<T> {
-        /**
-         * ok必须为false
-         *
-         * @param e
-         * @param result
-         */
-        void onFailure(@Nullable Throwable e, @NonNull ResponseObject<T> result);
-
-        /**
-         * 如果执行到此处，ok必然为true
-         *
-         * @param result
-         */
-        void onSuccess(@NonNull ResponseObject<T> result);
-    }
-
     public boolean shouldHandNotifier(Throwable exception, ResponseObject responseObject) {
         return responseObject.code != ResponseCode.CODE_TOKEN_INVALID
                 && call != null
@@ -482,35 +511,26 @@ public class RequestObject<T> {
         crtTime++;
     }
 
-    public class RxRetryHandler implements Func1<Observable<? extends Throwable>, Observable<?>> {
-
-        @Override
-        public Observable<?> call(Observable<? extends Throwable> observable) {
-            return observable
-                    .flatMap(new Func1<Throwable, Observable<?>>() {
-                        @Override
-                        public Observable<?> call(Throwable throwable) {
-                            if (shouldHandNotifier(throwable, responseObject)) {
-                                notifyAction();
-                                return Observable.timer(maxRetryTimes, TimeUnit.MILLISECONDS);
-                            } else {
-                                return Observable.error(throwable);
-                            }
-                        }
-                    });
+    /**
+     * 重新请求
+     */
+    @Deprecated
+    private void requestAgain() {
+        switch (requestType) {
+            case RequestType.PLAIN:
+                requestAsync();
+                break;
+            case RequestType.UPLOAD:
+                upload();
+                break;
+            case RequestType.DOWNLOAD:
+                download();
+                break;
+            default:
+                requestAsync();
+                break;
         }
     }
-
-    /**
-     * 下面部分均标为过时，请求逐步改为上面的Rx请求方式
-     */
-    ////////////////////////////////////////////////////////////////////////////
-
-    @Deprecated
-    protected boolean ignoreHandler = false;
-
-    @Deprecated
-    protected Handler handler;
 
     /**
      * 异步请求，如果在enqueue执行之前就执行了cancel，那么将不会有callback执行，用户将不知道已经取消了请求。
@@ -518,31 +538,52 @@ public class RequestObject<T> {
      */
     @Deprecated
     public void requestAsync() {
-        handleHandler();
+        requestAsync(getInnerCallback());
+    }
+
+    /**
+     * 异步请求，如果在enqueue执行之前就执行了cancel，那么将不会有callback执行，用户将不知道已经取消了请求。
+     * 我们在请求中已经添加了synchronized，所以不考虑这种情况了
+     */
+    @Deprecated
+    public void requestAsync(Callback callback) {
+        prepareHandler();
         switch (method) {
             case Method.GET:
-                call = getRequestDelegate().getAsync(url, params, getInnerCallback(), tag);
+                call = getRequestDelegate().getAsync(url, params, callback, tag);
                 break;
             case Method.PUT:
-                call = getRequestDelegate().putAsync(url, params, getInnerCallback(), tag);
+                call = getRequestDelegate().putAsync(url, params, callback, tag);
                 break;
             case Method.DELETE:
-                call = getRequestDelegate().deleteAsync(url, params, getInnerCallback(), tag);
+                call = getRequestDelegate().deleteAsync(url, params, callback, tag);
                 break;
             default:
-                call = getRequestDelegate().postAsync(url, params, getInnerCallback(), tag);
+                call = getRequestDelegate().postAsync(url, params, callback, tag);
                 break;
         }
     }
 
+    /**
+     * 异步上传
+     */
     @Deprecated
-    public void uploadAsync() {
-        handleHandler();
-        HttpUtil.uploadAsync(url, params, uploadParamKey, mediaType, filePath, getInnerCallback());
+    public void upload() {
+        prepareHandler();
+        getRequestDelegate().uploadAsync(url, params, uploadParamKey, mediaType, uploadFilePath, getInnerCallback());
+    }
+
+    /**
+     * 异步下载
+     */
+    @Deprecated
+    public void download() {
+        prepareHandler();
+        requestAsync(getInnerDownloadCallback());
     }
 
     @Deprecated
-    private void handleHandler() {
+    private void prepareHandler() {
         if (Thread.currentThread().getId() == 1) {
             //是果是在主线程请求,且handler为null，则将其置为在主线程执行callback
             if (!ignoreHandler && handler == null) {
@@ -608,6 +649,52 @@ public class RequestObject<T> {
         };
     }
 
+    @Deprecated
+    private Callback getInnerDownloadCallback() {
+        return new Callback() {
+            @Override
+            synchronized public void onFailure(Request request, final IOException e) {
+                final ResponseObject<T> responseObject = new ResponseObject<>();
+                responseObject.requestObject = RequestObject.this;
+                if (e != null && (e instanceof ConnectException || e instanceof UnknownHostException)) {
+                    responseObject.message = "无法连接到网络";
+                }
+                responseObject.ok = false;
+                responseObject.throwable = e;
+                onRequestFailure(e, responseObject);
+            }
+
+            @Override
+            synchronized public void onResponse(Response response) throws IOException {
+                final ResponseObject<T> responseObject = new ResponseObject<>();
+                responseObject.requestObject = RequestObject.this;
+                if (callBack != null) {
+                    Throwable throwable = null;
+                    File downloadedFile = new File(downloadFilePath);
+                    BufferedSink sink = null;
+                    try {
+                        sink = Okio.buffer(Okio.sink(downloadedFile));
+                        sink.writeAll(response.body().source());
+                        responseObject.ok = true;
+//                        responseObject.result = true;//此处Result不可为空啊，怎么办
+                    } catch (Exception e) {
+                        responseObject.ok = false;
+                        throwable = e;
+                    } finally {
+                        if (sink != null) {
+                            sink.close();
+                        }
+                    }
+                    if (responseObject.ok) {
+                        callSuccess(responseObject);
+                    } else {
+                        onRequestFailure(throwable, responseObject);
+                    }
+                }
+            }
+        };
+    }
+
     /**
      * 异步请求出错
      *
@@ -623,7 +710,7 @@ public class RequestObject<T> {
             } catch (InterruptedException e1) {
                 e1.printStackTrace();
             } finally {
-                requestAsync();
+                requestAgain();
             }
             notifyAction();
         } else {
@@ -635,7 +722,6 @@ public class RequestObject<T> {
         }
     }
 
-
     @Deprecated
     private void callSuccess(@NonNull final ResponseObject<T> responseObject) {
         if (!softCancelled && callBack != null) {
@@ -643,11 +729,11 @@ public class RequestObject<T> {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        callBack.onSuccess(responseObject);
+                        callBack.onSuccess(responseObject.result, responseObject);
                     }
                 });
             } else {
-                callBack.onSuccess(responseObject);
+                callBack.onSuccess(responseObject.result, responseObject);
             }
         }
     }
@@ -665,6 +751,379 @@ public class RequestObject<T> {
             } else {
                 callBack.onFailure(e, responseObject);
             }
+        }
+    }
+
+    /**
+     * http 请求方法
+     */
+    public interface Method {
+        int GET = 0;
+        int POST = 1;
+        int PUT = 2;
+        int DELETE = 3;
+    }
+
+    /**
+     * http 请求方法
+     */
+    public interface RequestType {
+        int PLAIN = 0;
+        int UPLOAD = 1;
+        int DOWNLOAD = 2;
+    }
+
+
+    /**
+     * http 请求回调
+     *
+     * @param <T>
+     */
+    public interface CallBack<T> {
+        /**
+         * ok必须为false
+         *
+         * @param e
+         * @param result
+         */
+        void onFailure(@Nullable Throwable e, @NonNull ResponseObject<T> result);
+
+        /**
+         * 如果执行到此处，ok必然为true,当然 如果是下载文件的话，此处result为null，运行到此处必然已经成功了
+         *
+         * @param result
+         */
+        void onSuccess(@NonNull T result, @NonNull ResponseObject<T> detailed);
+    }
+
+    /**
+     * http 请求的完整回调
+     *
+     * @param <T>
+     */
+    public interface DetailedCallBack<T> extends CallBack<T> {
+        /**
+         * result不可能为空
+         *
+         * @param e
+         * @param result
+         */
+        void onFailure(@Nullable Throwable e, @NonNull ResponseObject<T> result);
+
+        /**
+         * 如果执行到此处，ok必然为true,{@link ResponseObject#result}必然不为null
+         * <p/>
+         * 除了是下载文件的话，此处result为null，运行到此处必然已经成功了
+         *
+         * @param result
+         * @param detailed
+         */
+        void onSuccess(@NonNull T result, @NonNull ResponseObject<T> detailed);
+
+        /**
+         * 请求的进度,非UI线程
+         *
+         * @param current
+         * @param total
+         */
+        void onRequestProgress(long current, long total);
+
+        /**
+         * 响应的进度,非UI线程
+         *
+         * @param current
+         * @param total
+         */
+        void onResponseProgress(long current, long total, boolean done);
+    }
+
+    public class RxRetryHandler implements Func1<Observable<? extends Throwable>, Observable<?>> {
+
+        @Override
+        public Observable<?> call(Observable<? extends Throwable> observable) {
+            return observable
+                    .flatMap(new Func1<Throwable, Observable<?>>() {
+                        @Override
+                        public Observable<?> call(Throwable throwable) {
+                            if (shouldHandNotifier(throwable, responseObject)) {
+                                notifyAction();
+                                return Observable.timer(maxRetryTimes, TimeUnit.MILLISECONDS);
+                            } else {
+                                return Observable.error(throwable);
+                            }
+                        }
+                    });
+        }
+    }
+
+    /**
+     * 上传的Interceptor
+     */
+    class UploadProgressInterceptor implements Interceptor {
+
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            Request originalRequest = chain.request();
+            ProgressRequestBody progressRequestBody = new ProgressRequestBody(originalRequest.body(), callBack);
+            Request compressedRequest = originalRequest.newBuilder()
+                    .method(originalRequest.method(), progressRequestBody)
+                    .build();
+            return chain.proceed(compressedRequest);
+        }
+    }
+
+    /**
+     * 下载的Interceptor
+     */
+    class DownloadProgressInterceptor implements Interceptor {
+
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            Response originalResponse = chain.proceed(chain.request());
+            //包装响应体并返回
+            return originalResponse.newBuilder()
+                    .body(new ProgressResponseBody(originalResponse.body(), callBack))
+                    .build();
+        }
+    }
+
+    class GzipRequestInterceptor implements Interceptor {
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            Request originalRequest = chain.request();
+            if (originalRequest.body() == null || originalRequest.header("Content-Encoding") != null) {
+                return chain.proceed(originalRequest);
+            }
+
+            RequestBody body = forceContentLength(gzip(originalRequest.body()));
+
+            Request compressedRequest = originalRequest.newBuilder()
+                    .header("Content-Encoding", "gzip")
+                    .header("Content-Length", String.valueOf(body.contentLength()))
+                    .method(originalRequest.method(), body)
+                    .build();
+            return chain.proceed(compressedRequest);
+        }
+
+        /**
+         * https://github.com/square/okhttp/issues/350
+         */
+        private RequestBody forceContentLength(final RequestBody requestBody) throws IOException {
+            final Buffer buffer = new Buffer();
+            requestBody.writeTo(buffer);
+            return new RequestBody() {
+                @Override
+                public MediaType contentType() {
+                    return requestBody.contentType();
+                }
+
+                @Override
+                public long contentLength() {
+                    return buffer.size();
+                }
+
+                @Override
+                public void writeTo(BufferedSink sink) throws IOException {
+                    sink.write(buffer.snapshot());
+                }
+            };
+        }
+
+        private RequestBody gzip(final RequestBody body) {
+            return new RequestBody() {
+                @Override
+                public MediaType contentType() {
+                    return body.contentType();
+                }
+
+                @Override
+                public long contentLength() {
+                    return -1; // We don't know the compressed length in advance!
+                }
+
+                @Override
+                public void writeTo(BufferedSink sink) throws IOException {
+                    BufferedSink gzipSink = Okio.buffer(new GzipSink(sink));
+                    body.writeTo(gzipSink);
+                    gzipSink.close();
+                }
+            };
+        }
+    }
+
+    public class ProgressResponseBody extends ResponseBody {
+        //实际的待包装响应体
+        private final ResponseBody responseBody;
+        //进度回调接口
+        @Nullable
+        private final DetailedCallBack callBack;
+        //包装完成的BufferedSource
+        private BufferedSource bufferedSource;
+
+        /**
+         * 构造函数，赋值
+         *
+         * @param responseBody 待包装的响应体
+         * @param callBack
+         */
+        public ProgressResponseBody(ResponseBody responseBody, @Nullable DetailedCallBack callBack) {
+            this.responseBody = responseBody;
+            this.callBack = callBack;
+        }
+
+        /**
+         * 重写调用实际的响应体的contentType
+         *
+         * @return MediaType
+         */
+        @Override
+        public MediaType contentType() {
+            return responseBody.contentType();
+        }
+
+        /**
+         * 重写调用实际的响应体的contentLength
+         *
+         * @return contentLength
+         * @throws IOException 异常
+         */
+        @Override
+        public long contentLength() throws IOException {
+            return responseBody.contentLength();
+        }
+
+        /**
+         * 重写进行包装source
+         *
+         * @return BufferedSource
+         * @throws IOException 异常
+         */
+        @Override
+        public BufferedSource source() throws IOException {
+            if (bufferedSource == null) {
+                //包装
+                bufferedSource = Okio.buffer(source(responseBody.source()));
+            }
+            return bufferedSource;
+        }
+
+
+        /**
+         * 读取，回调进度接口
+         *
+         * @param source Source
+         * @return Source
+         */
+        private Source source(Source source) {
+
+            return new ForwardingSource(source) {
+                //当前读取字节数
+                long totalBytesRead = 0L;
+
+                @Override
+                public long read(Buffer sink, long byteCount) throws IOException {
+                    long bytesRead = super.read(sink, byteCount);
+                    //增加当前读取的字节数，如果读取完成了bytesRead会返回-1
+                    totalBytesRead += bytesRead != -1 ? bytesRead : 0;
+                    //回调，如果contentLength()不知道长度，会返回-1
+                    if (callBack != null) {
+                        callBack.onResponseProgress(totalBytesRead, responseBody.contentLength(), bytesRead == -1);
+                    }
+                    return bytesRead;
+                }
+            };
+        }
+    }
+
+    public class ProgressRequestBody extends RequestBody {
+        //实际的待包装请求体
+        private final RequestBody requestBody;
+        //进度回调接口
+        @Nullable
+        private final DetailedCallBack callBack;
+        //包装完成的BufferedSink
+        private BufferedSink bufferedSink;
+
+        /**
+         * 构造函数，赋值
+         *
+         * @param requestBody 待包装的请求体
+         * @param callBack
+         */
+        public ProgressRequestBody(RequestBody requestBody, @Nullable DetailedCallBack callBack) {
+            this.requestBody = requestBody;
+            this.callBack = callBack;
+        }
+
+        /**
+         * 重写调用实际的响应体的contentType
+         *
+         * @return MediaType
+         */
+        @Override
+        public MediaType contentType() {
+            return requestBody.contentType();
+        }
+
+        /**
+         * 重写调用实际的响应体的contentLength
+         *
+         * @return contentLength
+         * @throws IOException 异常
+         */
+        @Override
+        public long contentLength() throws IOException {
+            return requestBody.contentLength();
+        }
+
+        /**
+         * 重写进行写入
+         *
+         * @param sink BufferedSink
+         * @throws IOException 异常
+         */
+        @Override
+        public void writeTo(BufferedSink sink) throws IOException {
+            if (bufferedSink == null) {
+                //包装
+                bufferedSink = Okio.buffer(sink(sink));
+            }
+            //写入
+            requestBody.writeTo(bufferedSink);
+            //必须调用flush，否则最后一部分数据可能不会被写入
+            bufferedSink.flush();
+
+        }
+
+        /**
+         * 写入，回调进度接口
+         *
+         * @param sink Sink
+         * @return Sink
+         */
+        private Sink sink(Sink sink) {
+            return new ForwardingSink(sink) {
+                //当前写入字节数
+                long bytesWritten = 0L;
+                //总字节长度，避免多次调用contentLength()方法
+                long contentLength = 0L;
+
+                @Override
+                public void write(Buffer source, long byteCount) throws IOException {
+                    super.write(source, byteCount);
+                    if (contentLength == 0) {
+                        //获得contentLength的值，后续不再调用
+                        contentLength = contentLength();
+                    }
+                    //增加当前写入的字节数
+                    bytesWritten += byteCount;
+
+                    //回调
+                    if (callBack != null) {
+                        callBack.onRequestProgress(bytesWritten, contentLength);
+                    }
+                }
+            };
         }
     }
 }

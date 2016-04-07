@@ -47,7 +47,7 @@ public class QuestionView extends AceView<Question> {
         layoutComments.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (CommonUtil.shouldThrottle()){
+                if (CommonUtil.shouldThrottle()) {
                     return;
                 }
                 MobclickAgent.onEvent(getContext(), Mob.Event_Open_Question_Comment);

@@ -21,9 +21,9 @@ import net.nashlegend.sourcewall.commonview.LListView;
 import net.nashlegend.sourcewall.commonview.LoadingView;
 import net.nashlegend.sourcewall.model.Notice;
 import net.nashlegend.sourcewall.model.SubItem;
-import net.nashlegend.sourcewall.swrequest.api.MessageAPI;
 import net.nashlegend.sourcewall.swrequest.RequestObject;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
+import net.nashlegend.sourcewall.swrequest.api.MessageAPI;
 import net.nashlegend.sourcewall.util.CommonUtil;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;
@@ -96,13 +96,12 @@ public class NoticesFragment extends ChannelsFragment implements LListView.OnRef
             }
 
             @Override
-            public void onSuccess(@NonNull ResponseObject<ArrayList<Notice>> result) {
+            public void onSuccess(@NonNull ArrayList<Notice> result, @NonNull ResponseObject<ArrayList<Notice>> detailed) {
                 loadingView.onLoadSuccess();
-                ArrayList<Notice> ars = result.result;
-                if (ars.size() == 0) {
+                if (result.size() == 0) {
                     toast(R.string.no_notice);
                 }
-                adapter.setList(ars);
+                adapter.setList(result);
                 adapter.notifyDataSetInvalidated();
                 listView.setCanPullToRefresh(true);
                 listView.doneOperation();
@@ -172,7 +171,7 @@ public class NoticesFragment extends ChannelsFragment implements LListView.OnRef
             }
 
             @Override
-            public void onSuccess(@NonNull ResponseObject<Boolean> result) {
+            public void onSuccess(@NonNull Boolean result, @NonNull ResponseObject<Boolean> detailed) {
                 CommonUtil.dismissDialog(progressDialog);
                 listView.setCanPullToRefresh(true);
                 listView.doneOperation();

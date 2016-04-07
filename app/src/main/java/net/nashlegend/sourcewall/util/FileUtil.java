@@ -100,9 +100,7 @@ public class FileUtil {
 
     /**
      * @param uri The Uri to check.
-     *
      * @return Whether the Uri authority is ExternalStorageProvider.
-     *
      * @author paulburke
      */
     public static boolean isExternalStorageDocument(Uri uri) {
@@ -111,9 +109,7 @@ public class FileUtil {
 
     /**
      * @param uri The Uri to check.
-     *
      * @return Whether the Uri authority is DownloadsProvider.
-     *
      * @author paulburke
      */
     public static boolean isDownloadsDocument(Uri uri) {
@@ -122,9 +118,7 @@ public class FileUtil {
 
     /**
      * @param uri The Uri to check.
-     *
      * @return Whether the Uri authority is MediaProvider.
-     *
      * @author paulburke
      */
     public static boolean isMediaDocument(Uri uri) {
@@ -133,7 +127,6 @@ public class FileUtil {
 
     /**
      * @param uri The Uri to check.
-     *
      * @return Whether the Uri authority is Google Photos.
      */
     public static boolean isGooglePhotosUri(Uri uri) {
@@ -148,9 +141,7 @@ public class FileUtil {
      * @param uri           The Uri to query.
      * @param selection     (Optional) Filter used in the query.
      * @param selectionArgs (Optional) Selection arguments used in the query.
-     *
      * @return The value of the _data column, which is typically a file path.
-     *
      * @author paulburke
      */
     public static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {

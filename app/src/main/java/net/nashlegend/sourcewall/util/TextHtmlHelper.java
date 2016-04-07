@@ -251,7 +251,6 @@ public class TextHtmlHelper {
      * 消除Html尾部空白
      *
      * @param s 要处理的html span
-     *
      * @return 处理过的span
      */
     public static CharSequence trimEnd(CharSequence s) {
@@ -271,7 +270,6 @@ public class TextHtmlHelper {
      * 解决相对路径的问题
      *
      * @param spannedText 要处理的span
-     *
      * @return 处理过的span
      */
     public static Spanned correctLinkPaths(Spanned spannedText) {

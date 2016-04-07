@@ -17,8 +17,8 @@ import android.webkit.WebViewClient;
 import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.App;
-import net.nashlegend.sourcewall.activities.ImageActivity;
 import net.nashlegend.sourcewall.R;
+import net.nashlegend.sourcewall.activities.ImageActivity;
 import net.nashlegend.sourcewall.util.CommonUtil;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
@@ -129,7 +129,7 @@ public class WWebView extends WebView {
     }
 
     public void onImageClicked(String clickedUrl) {
-        if (CommonUtil.shouldThrottle()){
+        if (CommonUtil.shouldThrottle()) {
             return;
         }
         String html = primarySource;

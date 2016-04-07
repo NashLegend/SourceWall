@@ -1,0 +1,52 @@
+import java.text.SimpleDateFormat
+
+def supportVersion = "23.2.1"
+
+def releaseTime() {
+    return Integer.parseInt(new SimpleDateFormat("yyyyMMdd", Locale.CHINA).format(new Date(new GregorianCalendar(Locale.CHINA).getTimeInMillis())));
+}
+
+ext {
+
+    build = [
+            applicationId    : "net.nashlegend.sourcewall",
+            versionCode      : 20160407,
+            versionName      : "1.8.0",
+            buildToolsVersion: "23.0.3",
+            compileSdkVersion: 23,
+            minSdkVersion    : 15,
+            targetSdkVersion : 22
+    ]
+
+    dependencies = [
+            SupportV4        : "com.android.support:support-v4:${supportVersion}",
+            SupportAppcompat : "com.android.support:appcompat-v7:${supportVersion}",
+            SupportDesign    : "com.android.support:design:${supportVersion}",
+            CardView         : "com.android.support:cardview-v7:${supportVersion}",
+            EventBus         : "de.greenrobot:eventbus:2.4.0",
+            GreenDAO         : "de.greenrobot:greendao:2.1.0",
+            GreenDAOGenerator: "de.greenrobot:greendao-generator:2.1.0",
+            Umeng            : "com.umeng.analytics:analytics:latest.integration",
+            OKHttp           : "com.squareup.okhttp:okhttp:2.7.4",
+            ImageLoader      : "com.nostra13.universalimageloader:universal-image-loader:1.9.5",
+            ButterKnife      : "com.jakewharton:butterknife:7.0.1",
+            RxAndroid        : "io.reactivex:rxandroid:1.1.0",
+            RxJava           : "io.reactivex:rxjava:1.1.0",
+            Jsoup            : "org.jsoup:jsoup:1.8.3",
+            Fab              : "com.getbase:floatingactionbutton:1.10.1",
+            ScaleImage       : "com.davemorrissey.labs:subsampling-scale-image-view:3.4.1",
+            GifDrawable      : "pl.droidsonroids.gif:android-gif-drawable:1.1.13",
+            RxBinding        : 'com.jakewharton.rxbinding:rxbinding:0.3.0',
+            RxBindingV4      : 'com.jakewharton.rxbinding:rxbinding-support-v4:0.3.0',
+            RxBindingV7      : 'com.jakewharton.rxbinding:rxbinding-appcompat-v7:0.3.0',
+            Httpmime         : 'org.apache.httpcomponents:httpmime:4.2.1',
+            NumberProgressBar: 'com.daimajia.numberprogressbar:library:1.2@aar'
+    ]
+
+    keys = [
+            UMENG_APP_KEY        : "55018d1dfd98c583330009fd",
+            WEIBO_APP_KEY        : "9938859001b934d378b01820",
+            WEIXIN_APP_ID_DEBUG  : "9938859001b934d378b01820",
+            WEIXIN_APP_ID_RELEASE: "9938859001b934d378b01820",
+    ]
+}

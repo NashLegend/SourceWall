@@ -39,12 +39,12 @@ import net.nashlegend.sourcewall.commonview.SScrollView;
 import net.nashlegend.sourcewall.commonview.WWebView;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.model.QuestionAnswer;
-import net.nashlegend.sourcewall.swrequest.api.MessageAPI;
-import net.nashlegend.sourcewall.swrequest.api.QuestionAPI;
-import net.nashlegend.sourcewall.swrequest.api.UserAPI;
 import net.nashlegend.sourcewall.swrequest.RequestObject.CallBack;
 import net.nashlegend.sourcewall.swrequest.ResponseCode;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
+import net.nashlegend.sourcewall.swrequest.api.MessageAPI;
+import net.nashlegend.sourcewall.swrequest.api.QuestionAPI;
+import net.nashlegend.sourcewall.swrequest.api.UserAPI;
 import net.nashlegend.sourcewall.util.CommonUtil;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
@@ -311,7 +311,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        if (CommonUtil.shouldThrottle()){
+        if (CommonUtil.shouldThrottle()) {
             return;
         }
         switch (v.getId()) {
@@ -400,7 +400,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
             }
 
             @Override
-            public void onSuccess(@NonNull ResponseObject<Boolean> result) {
+            public void onSuccess(@NonNull Boolean result, @NonNull ResponseObject<Boolean> detailed) {
                 if (bury) {
                     toast("已标记为\"不是答案\"");
                     answer.setHasBuried(true);
@@ -442,7 +442,7 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
             }
 
             @Override
-            public void onSuccess(@NonNull ResponseObject<Boolean> result) {
+            public void onSuccess(@NonNull Boolean result, @NonNull ResponseObject<Boolean> detailed) {
                 toast("感谢成功");
                 answer.setHasThanked(true);
                 thankButton.setIcon(R.drawable.heart);

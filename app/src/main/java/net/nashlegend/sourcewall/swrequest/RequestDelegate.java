@@ -5,10 +5,13 @@ import android.support.annotation.NonNull;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.FormEncodingBuilder;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.MultipartBuilder;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 
+import java.io.File;
 import java.util.HashMap;
 
 /**
@@ -198,5 +201,33 @@ public class RequestDelegate {
             paramString.deleteCharAt(paramString.length() - 1);
         }
         return deleteAsync(url + paramString.toString(), defCallBack, tag);
+    }
+
+    /**
+     * 异步上传
+     *
+     * @param uploadUrl 上传的地址
+     * @param params    上传参数
+     * @param filePath  要上传图片的路径
+     * @param callBack
+     * @return 返回ResultObject，resultObject.result是上传后的图片地址
+     */
+    synchronized public Call uploadAsync(String uploadUrl, HashMap<String, String> params,
+                                         String fileKey, MediaType mediaType, String filePath, Callback callBack) {
+        File file = new File(filePath);
+        if (file.exists() && !file.isDirectory() && file.length() > 0) {
+            MultipartBuilder builder = new MultipartBuilder().type(MultipartBuilder.FORM)
+                    .addFormDataPart(fileKey, file.getName(), RequestBody.create(mediaType, file));
+            if (params != null && params.size() > 0) {
+                for (HashMap.Entry<String, String> entry : params.entrySet()) {
+                    builder.addFormDataPart(entry.getKey(), entry.getValue());
+                }
+            }
+            Request request = new Request.Builder().url(uploadUrl).post(builder.build()).build();
+            Call call = getDefaultHttpClient().newCall(request);
+            call.enqueue(callBack);
+            return call;
+        }
+        return null;
     }
 }

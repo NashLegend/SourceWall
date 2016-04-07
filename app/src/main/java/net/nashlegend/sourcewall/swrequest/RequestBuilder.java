@@ -254,7 +254,7 @@ public class RequestBuilder<T> {
      * @return
      */
     public RequestBuilder<T> setRequestCallBack(RequestObject.CallBack<T> callBack) {
-        rbRequest.callBack = callBack;
+        rbRequest.setCallBack(callBack);
         return this;
     }
 
@@ -355,12 +355,18 @@ public class RequestBuilder<T> {
         return rbRequest;
     }
 
-    @Deprecated
-    public void uploadAsync(String filePath) {
+    public void upload(String filePath) {
         addExtras();
-        rbRequest.filePath = filePath;
+        rbRequest.uploadFilePath = filePath;
         rbRequest.requestType = RequestObject.RequestType.UPLOAD;
-        rbRequest.uploadAsync();
+        rbRequest.upload();
+    }
+
+    public void download(String filePath) {
+        addExtras();
+        rbRequest.downloadFilePath = filePath;
+        rbRequest.requestType = RequestObject.RequestType.DOWNLOAD;
+        rbRequest.download();
     }
 
 }

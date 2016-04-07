@@ -17,7 +17,7 @@ public class Notice extends AceModel {
     private String ukey = "";//永远是用户自己
     private String url = "";
 
-    public static Notice fromJson(JSONObject noticesObject) throws Exception{
+    public static Notice fromJson(JSONObject noticesObject) throws Exception {
         Notice notice = new Notice();
         notice.setContent(noticesObject.optString("content"));
         notice.setUrl(noticesObject.optString("url"));

@@ -58,7 +58,6 @@ public class AccessTokenKeeper {
      * 从 SharedPreferences 读取 Token 信息。
      *
      * @param context 应用程序上下文环境
-     *
      * @return 返回 Token 对象
      */
     public static Oauth2AccessToken readAccessToken(Context context) {

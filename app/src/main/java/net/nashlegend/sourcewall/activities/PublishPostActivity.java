@@ -41,11 +41,11 @@ import net.nashlegend.sourcewall.commonview.IStackedAsyncTaskInterface;
 import net.nashlegend.sourcewall.dialogs.InputDialog;
 import net.nashlegend.sourcewall.model.PrepareData;
 import net.nashlegend.sourcewall.model.SubItem;
+import net.nashlegend.sourcewall.swrequest.RequestObject.CallBack;
+import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.swrequest.api.APIBase;
 import net.nashlegend.sourcewall.swrequest.api.PostAPI;
 import net.nashlegend.sourcewall.swrequest.api.QuestionAPI;
-import net.nashlegend.sourcewall.swrequest.RequestObject.CallBack;
-import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.FileUtil;
 import net.nashlegend.sourcewall.util.Mob;
@@ -271,10 +271,9 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
             }
 
             @Override
-            public void onSuccess(@NonNull ResponseObject<PrepareData> result) {
+            public void onSuccess(@NonNull PrepareData result, @NonNull ResponseObject<PrepareData> detailed) {
                 toast(getString(R.string.get_csrf_ok));
-                PrepareData prepareData = result.result;
-                onReceivePreparedData(prepareData);
+                onReceivePreparedData(result);
             }
         };
         if (isPost()) {

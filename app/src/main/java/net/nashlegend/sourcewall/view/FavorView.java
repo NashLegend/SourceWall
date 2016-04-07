@@ -24,9 +24,9 @@ import net.nashlegend.sourcewall.model.Basket;
 import net.nashlegend.sourcewall.model.Category;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.Question;
-import net.nashlegend.sourcewall.swrequest.api.FavorAPI;
 import net.nashlegend.sourcewall.swrequest.RequestObject;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
+import net.nashlegend.sourcewall.swrequest.api.FavorAPI;
 import net.nashlegend.sourcewall.util.ToastUtil;
 
 import java.util.ArrayList;
@@ -101,10 +101,9 @@ public class FavorView extends FrameLayout implements View.OnClickListener, ISta
             }
 
             @Override
-            public void onSuccess(@NonNull ResponseObject<ArrayList<Basket>> result) {
-                ArrayList<Basket> baskets = result.result;
+            public void onSuccess(@NonNull ArrayList<Basket> baskets, @NonNull ResponseObject<ArrayList<Basket>> detailed) {
                 adapter.clear();
-                if (baskets != null && baskets.size() > 0) {
+                if (baskets.size() > 0) {
                     adapter.setList(baskets);
                 }
                 adapter.notifyDataSetChanged();
@@ -122,9 +121,8 @@ public class FavorView extends FrameLayout implements View.OnClickListener, ISta
             }
 
             @Override
-            public void onSuccess(@NonNull ResponseObject<Basket> result) {
+            public void onSuccess(@NonNull Basket basket, @NonNull ResponseObject<Basket> detailed) {
                 ToastUtil.toast("创建成功");
-                Basket basket = result.result;
                 adapter.add(basket);
                 adapter.notifyDataSetChanged();
                 openBasketListView();
@@ -140,8 +138,8 @@ public class FavorView extends FrameLayout implements View.OnClickListener, ISta
             }
 
             @Override
-            public void onSuccess(@NonNull ResponseObject<ArrayList<Category>> result) {
-                categories = result.result;
+            public void onSuccess(@NonNull ArrayList<Category> result, @NonNull ResponseObject<ArrayList<Category>> detailed) {
+                categories = result;
                 String[] items = new String[categories.size()];
                 for (int i = 0; i < categories.size(); i++) {
                     items[i] = categories.get(i).getName();

@@ -13,7 +13,6 @@ public class DisplayUtil {
      * 获取手机屏幕高度,以px为单位
      *
      * @param context
-     *
      * @return
      */
     public static int getScreenHeight(Context context) {
@@ -27,7 +26,6 @@ public class DisplayUtil {
      * 获取手机屏幕宽度，以px为单位
      *
      * @param context
-     *
      * @return
      */
     public static int getScreenWidth(Context context) {
@@ -68,7 +66,6 @@ public class DisplayUtil {
      * 返回屏幕像素密度
      *
      * @param context
-     *
      * @return
      */
     public static float getPixelDensity(Context context) {
@@ -79,7 +76,6 @@ public class DisplayUtil {
      * 返回状态栏高度
      *
      * @param activity
-     *
      * @return
      */
     public static int getStatusBarHeight(Activity activity) {
@@ -97,7 +93,6 @@ public class DisplayUtil {
      *
      * @param dp
      * @param context
-     *
      * @return
      */
     public static int dip2px(float dp, Context context) {
@@ -110,7 +105,6 @@ public class DisplayUtil {
      *
      * @param px
      * @param context
-     *
      * @return
      */
     public static int px2dip(float px, Context context) {

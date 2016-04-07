@@ -1,22 +1,47 @@
 apply plugin: 'com.android.application'
 
+def keys = rootProject.ext.keys
+def build = rootProject.ext.build
+def dependency = rootProject.ext.dependencies
+
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    compileSdkVersion build.compileSdkVersion
+    buildToolsVersion build.buildToolsVersion
 
     defaultConfig {
-        manifestPlaceholders = [CHANNEL_NAME: "github"]
-        applicationId "net.nashlegend.sourcewall"
-        minSdkVersion 15
-        targetSdkVersion 22
-        versionCode 20150722
-        versionName "1.6.1.0"
+        applicationId build.applicationId
+        minSdkVersion build.minSdkVersion
+        targetSdkVersion build.targetSDKVersion
+        versionCode build.versionCode
+        versionName build.versionName
+        manifestPlaceholders = [
+                WEIXIN_APP_ID: keys.WEIXIN_APP_ID_DEBUG,
+                WEIBO_APP_KEY: keys.WEIBO_APP_KEY,
+                UMENG_APP_KEY: keys.UMENG_APP_KEY,
+        ]
     }
 
     buildTypes {
         release {
             minifyEnabled false
+            shrinkResources true
+            manifestPlaceholders = [
+                    WEIXIN_APP_ID: keys.WEIXIN_APP_ID_RELEASE,
+                    WEIBO_APP_KEY: keys.WEIBO_APP_KEY,
+                    UMENG_APP_KEY: keys.UMENG_APP_KEY,
+            ]
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def outputFile = output.outputFile
+            if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                def fileName = "sourcewall_${variant.buildType.name}_v${defaultConfig.versionName}_${defaultConfig.versionCode}";
+                fileName += "_${variant.productFlavors[0].name}.apk"
+                output.outputFile = new File(outputFile.parent, fileName)
+            }
         }
     }
 
@@ -46,24 +71,24 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:23.2.1'
-    compile 'com.android.support:support-v4:23.2.1'
-    compile 'com.android.support:cardview-v7:23.2.1'
-    compile 'com.android.support:design:23.2.1'
-    compile 'org.jsoup:jsoup:1.8.3'
-    compile 'io.reactivex:rxandroid:1.1.0'
-    compile 'io.reactivex:rxjava:1.1.0'
-    compile 'com.jakewharton.rxbinding:rxbinding:0.3.0'
-    compile 'com.jakewharton.rxbinding:rxbinding-support-v4:0.3.0'
-    compile 'com.jakewharton.rxbinding:rxbinding-appcompat-v7:0.3.0'
-    compile 'com.jakewharton:butterknife:7.0.1'
-    compile 'com.squareup.okhttp:okhttp:2.7.2'
-    compile 'org.apache.httpcomponents:httpmime:4.2.1'
-    compile 'com.getbase:floatingactionbutton:1.10.1'
-    compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.4.1'
-    compile 'de.greenrobot:greendao:2.1.0'
-    compile 'de.greenrobot:eventbus:2.4.0'
-    compile 'com.umeng.analytics:analytics:latest.integration'
-    compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.13'
-    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+    compile dependency.SupportV4
+    compile dependency.SupportAppcompat
+    compile dependency.SupportDesign
+    compile dependency.CardView
+    compile dependency.EventBus
+    compile dependency.GreenDAO
+    compile dependency.Umeng
+    compile dependency.OKHttp
+    compile dependency.ButterKnife
+    compile dependency.RxAndroid
+    compile dependency.RxJava
+    compile dependency.Jsoup
+    compile dependency.Fab
+    compile dependency.ScaleImage
+    compile dependency.GifDrawable
+    compile dependency.ImageLoader
+    compile dependency.RxBinding
+    compile dependency.RxBindingV4
+    compile dependency.RxBindingV7
+    compile dependency.Httpmime
 }

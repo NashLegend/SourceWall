@@ -9,8 +9,8 @@ import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
-import net.nashlegend.sourcewall.activities.BaseActivity;
 import net.nashlegend.sourcewall.R;
+import net.nashlegend.sourcewall.activities.BaseActivity;
 import net.nashlegend.sourcewall.util.ShareUtil;
 
 public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler {

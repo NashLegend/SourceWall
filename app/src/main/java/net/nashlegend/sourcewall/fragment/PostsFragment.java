@@ -29,11 +29,11 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.BaseActivity;
 import net.nashlegend.sourcewall.activities.MainActivity;
 import net.nashlegend.sourcewall.activities.PostActivity;
 import net.nashlegend.sourcewall.activities.PublishPostActivity;
-import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.ShuffleGroupActivity;
 import net.nashlegend.sourcewall.adapters.PostAdapter;
 import net.nashlegend.sourcewall.commonview.AAsyncTask;
@@ -103,7 +103,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if (CommonUtil.shouldThrottle()){
+                if (CommonUtil.shouldThrottle()) {
                     return;
                 }
                 if (view instanceof PostListItemView) {

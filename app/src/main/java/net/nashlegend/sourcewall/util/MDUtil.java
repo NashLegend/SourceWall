@@ -1,7 +1,7 @@
 package net.nashlegend.sourcewall.util;
 
-import net.nashlegend.sourcewall.swrequest.api.APIBase;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
+import net.nashlegend.sourcewall.swrequest.api.APIBase;
 
 /**
  * Created by NashLegend on 2014/12/5 0005

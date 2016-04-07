@@ -5,12 +5,12 @@ import android.net.Uri;
 import android.provider.Browser;
 import android.text.TextUtils;
 
-import net.nashlegend.sourcewall.activities.AnswerActivity;
 import net.nashlegend.sourcewall.App;
+import net.nashlegend.sourcewall.R;
+import net.nashlegend.sourcewall.activities.AnswerActivity;
 import net.nashlegend.sourcewall.activities.ArticleActivity;
 import net.nashlegend.sourcewall.activities.PostActivity;
 import net.nashlegend.sourcewall.activities.QuestionActivity;
-import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.SingleReplyActivity;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.Post;

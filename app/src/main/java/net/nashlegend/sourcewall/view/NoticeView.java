@@ -13,9 +13,9 @@ import com.umeng.analytics.MobclickAgent;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.NoticeAdapter;
 import net.nashlegend.sourcewall.model.Notice;
-import net.nashlegend.sourcewall.swrequest.api.MessageAPI;
 import net.nashlegend.sourcewall.swrequest.RequestObject;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
+import net.nashlegend.sourcewall.swrequest.api.MessageAPI;
 import net.nashlegend.sourcewall.util.Mob;
 
 import java.util.ArrayList;
@@ -77,7 +77,7 @@ public class NoticeView extends AceView<Notice> implements View.OnClickListener 
             }
 
             @Override
-            public void onSuccess(@NonNull ResponseObject<ArrayList<Notice>> result) {
+            public void onSuccess(@NonNull ArrayList<Notice> result, @NonNull ResponseObject<ArrayList<Notice>> detailed) {
                 if (noticeAdapter != null && noticeAdapter.getList().remove(notice)) {
                     noticeAdapter.notifyDataSetChanged();
                 }

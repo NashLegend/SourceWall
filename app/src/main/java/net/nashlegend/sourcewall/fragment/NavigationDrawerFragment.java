@@ -40,10 +40,10 @@ import net.nashlegend.sourcewall.events.LoginStateChangedEvent;
 import net.nashlegend.sourcewall.model.ReminderNoticeNum;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.model.UserInfo;
-import net.nashlegend.sourcewall.swrequest.api.MessageAPI;
-import net.nashlegend.sourcewall.swrequest.api.UserAPI;
 import net.nashlegend.sourcewall.swrequest.RequestObject;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
+import net.nashlegend.sourcewall.swrequest.api.MessageAPI;
+import net.nashlegend.sourcewall.swrequest.api.UserAPI;
 import net.nashlegend.sourcewall.util.ChannelHelper;
 import net.nashlegend.sourcewall.util.CommonUtil;
 import net.nashlegend.sourcewall.util.Config;
@@ -536,8 +536,8 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
                 }
 
                 @Override
-                public void onSuccess(@NonNull ResponseObject<UserInfo> result) {
-                    setupUserInfo(result.result);
+                public void onSuccess(@NonNull UserInfo result, @NonNull ResponseObject<UserInfo> detailed) {
+                    setupUserInfo(result);
                 }
             });
         }
@@ -564,9 +564,8 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
             }
 
             @Override
-            public void onSuccess(@NonNull ResponseObject<ReminderNoticeNum> result) {
-                ReminderNoticeNum num = result.result;
-                if (num.getNotice_num() > 0) {
+            public void onSuccess(@NonNull ReminderNoticeNum result, @NonNull ResponseObject<ReminderNoticeNum> detailed) {
+                if (result.getNotice_num() > 0) {
                     noticeView.setVisibility(View.VISIBLE);
                 } else {
                     noticeView.setVisibility(View.GONE);

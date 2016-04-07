@@ -350,9 +350,7 @@ public abstract class AAsyncTask<Params, Progress, Result> {
      * on the UI thread.
      *
      * @param params The parameters of the task.
-     *
      * @return A result, defined by the subclass of this task.
-     *
      * @see #onPreExecute()
      * @see #onPostExecute
      * @see #publishProgress
@@ -376,7 +374,6 @@ public abstract class AAsyncTask<Params, Progress, Result> {
      * <p>This method won't be invoked if the task was cancelled.</p>
      *
      * @param result The result of the operation computed by {@link #doInBackground}.
-     *
      * @see #onPreExecute
      * @see #doInBackground
      * @see #onCancelled(Object)
@@ -390,7 +387,6 @@ public abstract class AAsyncTask<Params, Progress, Result> {
      * The specified values are the values passed to {@link #publishProgress}.
      *
      * @param values The values indicating progress.
-     *
      * @see #publishProgress
      * @see #doInBackground
      */
@@ -408,7 +404,6 @@ public abstract class AAsyncTask<Params, Progress, Result> {
      *
      * @param result The result, if any, computed in
      *               {@link #doInBackground(Object[])}, can be null
-     *
      * @see #cancel(boolean)
      * @see #isCancelled()
      */
@@ -439,7 +434,6 @@ public abstract class AAsyncTask<Params, Progress, Result> {
      * {@link #doInBackground(Object[])} to end the task as soon as possible.
      *
      * @return <tt>true</tt> if task was cancelled before it completed
-     *
      * @see #cancel(boolean)
      */
     public final boolean isCancelled() {
@@ -467,11 +461,9 @@ public abstract class AAsyncTask<Params, Progress, Result> {
      * @param mayInterruptIfRunning <tt>true</tt> if the thread executing this
      *                              task should be interrupted; otherwise, in-progress tasks are allowed
      *                              to complete.
-     *
      * @return <tt>false</tt> if the task could not be cancelled,
      * typically because it has already completed normally;
      * <tt>true</tt> otherwise
-     *
      * @see #isCancelled()
      * @see #onCancelled(Object)
      */
@@ -507,7 +499,6 @@ public abstract class AAsyncTask<Params, Progress, Result> {
      * retrieves its result.
      *
      * @return The computed result.
-     *
      * @throws CancellationException If the computation was cancelled.
      * @throws ExecutionException    If the computation threw an exception.
      * @throws InterruptedException  If the current thread was interrupted
@@ -523,9 +514,7 @@ public abstract class AAsyncTask<Params, Progress, Result> {
      *
      * @param timeout Time to wait before cancelling the operation.
      * @param unit    The time unit for the timeout.
-     *
      * @return The computed result.
-     *
      * @throws CancellationException If the computation was cancelled.
      * @throws ExecutionException    If the computation threw an exception.
      * @throws InterruptedException  If the current thread was interrupted
@@ -555,9 +544,7 @@ public abstract class AAsyncTask<Params, Progress, Result> {
      * <p>This method must be invoked on the UI thread.
      *
      * @param params The parameters of the task.
-     *
      * @return This instance of AsyncTask.
-     *
      * @throws IllegalStateException If {@link #getStatus()} returns either
      *                               {@link AAsyncTask.Status#RUNNING} or {@link AAsyncTask.Status#FINISHED}.
      * @see #executeOnExecutor(java.util.concurrent.Executor, Object[])
@@ -592,9 +579,7 @@ public abstract class AAsyncTask<Params, Progress, Result> {
      * @param exec   The executor to use.  {@link #THREAD_POOL_EXECUTOR} is available as a
      *               convenient process-wide thread pool for tasks that are loosely coupled.
      * @param params The parameters of the task.
-     *
      * @return This instance of AsyncTask.
-     *
      * @throws IllegalStateException If {@link #getStatus()} returns either
      *                               {@link AAsyncTask.Status#RUNNING} or {@link AAsyncTask.Status#FINISHED}.
      * @see #execute(Object[])
@@ -641,7 +626,6 @@ public abstract class AAsyncTask<Params, Progress, Result> {
      * canceled.
      *
      * @param values The progress values to update the UI with.
-     *
      * @see #onProgressUpdate
      * @see #doInBackground
      */

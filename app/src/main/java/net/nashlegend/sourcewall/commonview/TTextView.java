@@ -413,7 +413,7 @@ public class TTextView extends TextView {
     }
 
     private static void handleImageSpanClick(TextView textView, ImageSpan imageSpan) {
-        if (CommonUtil.shouldThrottle()){
+        if (CommonUtil.shouldThrottle()) {
             return;
         }
         if (textView instanceof TTextView) {

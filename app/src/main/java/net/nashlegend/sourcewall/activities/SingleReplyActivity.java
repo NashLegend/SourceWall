@@ -40,11 +40,11 @@ import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.model.UComment;
+import net.nashlegend.sourcewall.swrequest.RequestObject;
+import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.swrequest.api.ArticleAPI;
 import net.nashlegend.sourcewall.swrequest.api.PostAPI;
 import net.nashlegend.sourcewall.swrequest.api.UserAPI;
-import net.nashlegend.sourcewall.swrequest.RequestObject;
-import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.ImageUtils;
@@ -382,7 +382,7 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
             }
 
             @Override
-            public void onSuccess(@NonNull ResponseObject<Boolean> result) {
+            public void onSuccess(@NonNull Boolean result, @NonNull ResponseObject<Boolean> detailed) {
                 data.setHasLiked(true);
                 data.setLikeNum(data.getLikeNum() + 1);
                 supportText.setText(String.valueOf(data.getLikeNum()));
@@ -412,7 +412,7 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
             }
 
             @Override
-            public void onSuccess(@NonNull ResponseObject<Boolean> result) {
+            public void onSuccess(@NonNull Boolean result, @NonNull ResponseObject<Boolean> detailed) {
                 finish();
             }
         };

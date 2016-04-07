@@ -29,10 +29,10 @@ import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.model.QuestionAnswer;
 import net.nashlegend.sourcewall.model.UComment;
-import net.nashlegend.sourcewall.swrequest.api.QuestionAPI;
-import net.nashlegend.sourcewall.swrequest.api.UserAPI;
 import net.nashlegend.sourcewall.swrequest.RequestObject;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
+import net.nashlegend.sourcewall.swrequest.api.QuestionAPI;
+import net.nashlegend.sourcewall.swrequest.api.UserAPI;
 import net.nashlegend.sourcewall.util.CommonUtil;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Mob;
@@ -203,15 +203,14 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
                     }
 
                     @Override
-                    public void onSuccess(@NonNull ResponseObject<UComment> result) {
+                    public void onSuccess(@NonNull UComment result, @NonNull ResponseObject<UComment> detailed) {
                         CommonUtil.dismissDialog(progressDialog);
                         mMenu.findItem(R.id.action_cancel_simple_reply).setVisible(false);
                         textReply.setHint(R.string.hint_reply);
                         textReply.setText("");
                         hideInput();
                         if (task == null || task.getStatus() != AAsyncTask.Status.RUNNING) {
-                            UComment uComment = result.result;
-                            adapter.add(0, uComment);
+                            adapter.add(0, result);
                             adapter.notifyDataSetChanged();
                         }
                         toast("回复成功");

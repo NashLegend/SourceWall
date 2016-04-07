@@ -12,8 +12,9 @@ public class CommonUtil {
     /**
      * 是否应该阻止第二次单击
      * if(shouldThrottle()){
-     *     return;
+     * return;
      * }
+     *
      * @return
      */
     public static boolean shouldThrottle() {

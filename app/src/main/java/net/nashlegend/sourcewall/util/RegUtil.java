@@ -27,7 +27,6 @@ public class RegUtil {
      * Html转纯文本无格式不带换行，但是保留图片标签
      *
      * @param content
-     *
      * @return
      */
     public static String html2PlainTextWithImageTag(String content) {
@@ -38,7 +37,6 @@ public class RegUtil {
      * Html转纯文本无格式不带换行
      *
      * @param content
-     *
      * @return
      */
     public static String html2PlainText(String content) {
@@ -49,7 +47,6 @@ public class RegUtil {
      * Html转纯文本无格式不带换行除去引用块
      *
      * @param content
-     *
      * @return
      */
     public static String html2PlainTextWithoutBlockQuote(String content) {

@@ -42,9 +42,9 @@ import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.model.UComment;
-import net.nashlegend.sourcewall.swrequest.api.APIBase;
 import net.nashlegend.sourcewall.swrequest.RequestObject;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
+import net.nashlegend.sourcewall.swrequest.api.APIBase;
 import net.nashlegend.sourcewall.util.CommonUtil;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.FileUtil;
@@ -287,7 +287,7 @@ public class ReplyActivity extends SwipeActivity implements View.OnClickListener
             }
 
             @Override
-            public void onSuccess(@NonNull ResponseObject<String> result) {
+            public void onSuccess(@NonNull String result, @NonNull ResponseObject<String> detailed) {
                 CommonUtil.dismissDialog(progressDialog);
                 toast(R.string.reply_ok);
                 setResult(RESULT_OK);

@@ -61,7 +61,7 @@ public class ArticleListItemView extends AceView<Article> {
                 && model.getId().equals(article.getId())) {
             return;
         }
-        if (model==null){
+        if (model == null) {
             return;
         }
         article = model;

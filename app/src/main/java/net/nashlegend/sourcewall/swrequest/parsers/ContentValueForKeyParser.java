@@ -19,10 +19,10 @@ public class ContentValueForKeyParser implements Parser<String> {
 
     @Override
     public String parse(String str, ResponseObject<String> responseObject) throws Exception {
-        JSONObject jsonObject =  JsonHandler.getUniversalJsonObject(str, responseObject);
-        if (jsonObject != null){
+        JSONObject jsonObject = JsonHandler.getUniversalJsonObject(str, responseObject);
+        if (jsonObject != null) {
             return jsonObject.getString(key);
-        }else {
+        } else {
             responseObject.ok = false;
             return null;
         }

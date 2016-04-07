@@ -39,12 +39,12 @@ import net.nashlegend.sourcewall.dialogs.FavorDialog;
 import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.UComment;
-import net.nashlegend.sourcewall.swrequest.api.MessageAPI;
-import net.nashlegend.sourcewall.swrequest.api.PostAPI;
-import net.nashlegend.sourcewall.swrequest.api.UserAPI;
 import net.nashlegend.sourcewall.swrequest.RequestObject;
 import net.nashlegend.sourcewall.swrequest.ResponseCode;
 import net.nashlegend.sourcewall.swrequest.ResponseObject;
+import net.nashlegend.sourcewall.swrequest.api.MessageAPI;
+import net.nashlegend.sourcewall.swrequest.api.PostAPI;
+import net.nashlegend.sourcewall.swrequest.api.UserAPI;
 import net.nashlegend.sourcewall.util.AutoHideUtil;
 import net.nashlegend.sourcewall.util.AutoHideUtil.AutoHideListener;
 import net.nashlegend.sourcewall.util.CommonUtil;
@@ -245,7 +245,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
                 }
 
                 @Override
-                public void onSuccess(@NonNull ResponseObject<Boolean> result) {
+                public void onSuccess(@NonNull Boolean result, @NonNull ResponseObject<Boolean> detailed) {
                     post.setLikeNum(post.getLikeNum() + 1);
                     adapter.notifyDataSetChanged();
                     toastSingleton("已赞");
@@ -265,7 +265,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
 
     @Override
     public void onClick(View v) {
-        if (CommonUtil.shouldThrottle()){
+        if (CommonUtil.shouldThrottle()) {
             return;
         }
         switch (v.getId()) {
@@ -490,7 +490,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
             }
 
             @Override
-            public void onSuccess(@NonNull ResponseObject<Boolean> result) {
+            public void onSuccess(@NonNull Boolean result, @NonNull ResponseObject<Boolean> detailed) {
                 comment.setHasLiked(true);
                 comment.setLikeNum(comment.getLikeNum() + 1);
                 if (mediumListItemView.getData() == comment) {
@@ -511,7 +511,7 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
                 }
 
                 @Override
-                public void onSuccess(@NonNull ResponseObject<Boolean> result) {
+                public void onSuccess(@NonNull Boolean result, @NonNull ResponseObject<Boolean> detailed) {
                     if (post.getReplyNum() > 0) {
                         post.setReplyNum(post.getReplyNum() - 1);
                     }

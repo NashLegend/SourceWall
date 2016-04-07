@@ -107,7 +107,7 @@ public class ShuffleTagActivity extends SwipeActivity {
         return false;
     }
 
-    private void processFinish(){
+    private void processFinish() {
         commitChanges();
         finish();
     }

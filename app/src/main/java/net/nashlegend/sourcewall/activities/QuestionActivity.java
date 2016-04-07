@@ -33,11 +33,11 @@ import net.nashlegend.sourcewall.dialogs.FavorDialog;
 import net.nashlegend.sourcewall.dialogs.InputDialog;
 import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Question;
+import net.nashlegend.sourcewall.swrequest.RequestObject;
+import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.swrequest.api.MessageAPI;
 import net.nashlegend.sourcewall.swrequest.api.QuestionAPI;
 import net.nashlegend.sourcewall.swrequest.api.UserAPI;
-import net.nashlegend.sourcewall.swrequest.RequestObject;
-import net.nashlegend.sourcewall.swrequest.ResponseObject;
 import net.nashlegend.sourcewall.util.AutoHideUtil;
 import net.nashlegend.sourcewall.util.AutoHideUtil.AutoHideListener;
 import net.nashlegend.sourcewall.util.CommonUtil;
@@ -209,7 +209,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
     };
 
     private void onReplyItemClick(final View view) {
-        if (CommonUtil.shouldThrottle()){
+        if (CommonUtil.shouldThrottle()) {
             return;
         }
         if (view instanceof AnswerListItemView) {
@@ -223,7 +223,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
 
     @Override
     public void onClick(View v) {
-        if (CommonUtil.shouldThrottle()){
+        if (CommonUtil.shouldThrottle()) {
             return;
         }
         switch (v.getId()) {
@@ -280,7 +280,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
             }
 
             @Override
-            public void onSuccess(@NonNull ResponseObject<Boolean> result) {
+            public void onSuccess(@NonNull Boolean result, @NonNull ResponseObject<Boolean> detailed) {
                 toast(R.string.recommend_ok);
             }
         });
@@ -383,7 +383,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
             }
 
             @Override
-            public void onSuccess(@NonNull ResponseObject<Boolean> result) {
+            public void onSuccess(@NonNull Boolean result, @NonNull ResponseObject<Boolean> detailed) {
                 toast(R.string.follow_ok);
             }
         });
@@ -398,7 +398,7 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
             }
 
             @Override
-            public void onSuccess(@NonNull ResponseObject<Boolean> result) {
+            public void onSuccess(@NonNull Boolean result, @NonNull ResponseObject<Boolean> detailed) {
                 toast(R.string.unfollow_ok);
             }
         });
