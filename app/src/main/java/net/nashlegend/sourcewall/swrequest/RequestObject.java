@@ -127,7 +127,7 @@ public class RequestObject<T> {
                 @Override
                 public void onResponseProgress(long current, long total, boolean done) {
                     //do nothing
-                    System.out.println("download " + current + "_" + total);
+                    System.out.println("downloadAsync " + current + "_" + total);
                 }
             };
         }
@@ -260,6 +260,36 @@ public class RequestObject<T> {
         tag = object.tag;
         uploadParamKey = object.uploadParamKey;
         mediaType = object.mediaType;
+    }
+
+    /**
+     * 重新请求
+     */
+    public Call startRequestSync() throws Exception {
+        switch (requestType) {
+            case RequestType.PLAIN:
+                return requestSync();
+            case RequestType.UPLOAD:
+                return uploadSync();
+            case RequestType.DOWNLOAD:
+                return downloadSync();
+            default:
+                return requestSync();
+        }
+    }
+
+    /**
+     * 同步上传
+     */
+    private Call uploadSync() throws Exception {
+        return getRequestDelegate().upload(url, params, uploadParamKey, mediaType, uploadFilePath);
+    }
+
+    /**
+     * 同步下载
+     */
+    private Call downloadSync() throws Exception {
+        return requestSync();
     }
 
     /**
@@ -416,13 +446,38 @@ public class RequestObject<T> {
                     @Override
                     public void call(Subscriber<? super String> subscriber) {
                         try {
-                            call = requestSync();
+                            call = startRequestSync();
                             Response response = call.execute();
-                            String result = response.body().string();
-                            responseObject.statusCode = response.code();
-                            responseObject.body = result;
-                            subscriber.onNext(result);
-                            subscriber.onCompleted();
+                            if (requestType == RequestType.DOWNLOAD) {
+                                // 下载请求在此处就确定了请求的结果responseObject.ok，可以无parser，
+                                // 当然在parse处可以推翻此结论
+                                Throwable throwable = null;
+                                File downloadedFile = new File(downloadFilePath);
+                                BufferedSink sink = null;
+                                try {
+                                    sink = Okio.buffer(Okio.sink(downloadedFile));
+                                    sink.writeAll(response.body().source());
+                                    responseObject.ok = true;
+                                } catch (Exception e) {
+                                    responseObject.ok = false;
+                                    throwable = e;
+                                } finally {
+                                    if (sink != null) {
+                                        sink.close();
+                                    }
+                                }
+                                if (responseObject.ok) {
+                                    subscriber.onNext(downloadFilePath);
+                                } else {
+                                    subscriber.onError(throwable);
+                                }
+                            } else {
+                                String result = response.body().string();
+                                responseObject.statusCode = response.code();
+                                responseObject.body = result;
+                                subscriber.onNext(result);
+                                subscriber.onCompleted();
+                            }
                         } catch (Exception e) {
                             if (call != null && call.isCanceled()) {
                                 responseObject.isCancelled = true;
@@ -515,16 +570,16 @@ public class RequestObject<T> {
      * 重新请求
      */
     @Deprecated
-    private void requestAgain() {
+    public void startRequestAsync() {
         switch (requestType) {
             case RequestType.PLAIN:
                 requestAsync();
                 break;
             case RequestType.UPLOAD:
-                upload();
+                uploadAsync();
                 break;
             case RequestType.DOWNLOAD:
-                download();
+                downloadAsync();
                 break;
             default:
                 requestAsync();
@@ -533,11 +588,29 @@ public class RequestObject<T> {
     }
 
     /**
+     * 异步上传
+     */
+    @Deprecated
+    private void uploadAsync() {
+        prepareHandler();
+        getRequestDelegate().uploadAsync(url, params, uploadParamKey, mediaType, uploadFilePath, getInnerCallback());
+    }
+
+    /**
+     * 异步下载
+     */
+    @Deprecated
+    private void downloadAsync() {
+        prepareHandler();
+        requestAsync(getInnerDownloadCallback());
+    }
+
+    /**
      * 异步请求，如果在enqueue执行之前就执行了cancel，那么将不会有callback执行，用户将不知道已经取消了请求。
      * 我们在请求中已经添加了synchronized，所以不考虑这种情况了
      */
     @Deprecated
-    public void requestAsync() {
+    private void requestAsync() {
         requestAsync(getInnerCallback());
     }
 
@@ -562,24 +635,6 @@ public class RequestObject<T> {
                 call = getRequestDelegate().postAsync(url, params, callback, tag);
                 break;
         }
-    }
-
-    /**
-     * 异步上传
-     */
-    @Deprecated
-    public void upload() {
-        prepareHandler();
-        getRequestDelegate().uploadAsync(url, params, uploadParamKey, mediaType, uploadFilePath, getInnerCallback());
-    }
-
-    /**
-     * 异步下载
-     */
-    @Deprecated
-    public void download() {
-        prepareHandler();
-        requestAsync(getInnerDownloadCallback());
     }
 
     @Deprecated
@@ -676,7 +731,9 @@ public class RequestObject<T> {
                         sink = Okio.buffer(Okio.sink(downloadedFile));
                         sink.writeAll(response.body().source());
                         responseObject.ok = true;
-//                        responseObject.result = true;//此处Result不可为空啊，怎么办
+                        if (parser != null) {
+                            parser.parse(downloadFilePath, responseObject);
+                        }
                     } catch (Exception e) {
                         responseObject.ok = false;
                         throwable = e;
@@ -710,7 +767,7 @@ public class RequestObject<T> {
             } catch (InterruptedException e1) {
                 e1.printStackTrace();
             } finally {
-                requestAgain();
+                startRequestAsync();
             }
             notifyAction();
         } else {

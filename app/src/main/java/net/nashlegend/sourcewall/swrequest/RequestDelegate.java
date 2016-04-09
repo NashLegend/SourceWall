@@ -119,6 +119,27 @@ public class RequestDelegate {
         return delete(url + paramString.toString(), tag);
     }
 
+    /**
+     * 同步上传
+     *
+     * @param uploadUrl
+     * @param params
+     * @param filePath  要上传图片的路径
+     */
+    public Call upload(String uploadUrl, HashMap<String, String> params,
+                       String fileKey, MediaType mediaType, String filePath) throws Exception {
+        File file = new File(filePath);
+        MultipartBuilder builder = new MultipartBuilder().type(MultipartBuilder.FORM)
+                .addFormDataPart(fileKey, file.getName(), RequestBody.create(mediaType, file));
+        if (params != null && params.size() > 0) {
+            for (HashMap.Entry<String, String> entry : params.entrySet()) {
+                builder.addFormDataPart(entry.getKey(), entry.getValue());
+            }
+        }
+        Request request = new Request.Builder().url(uploadUrl).post(builder.build()).build();
+        return getDefaultHttpClient().newCall(request);
+    }
+
     synchronized public Call getAsync(String url, Callback defCallBack, Object tag) {
         Request request = new Request.Builder().get().url(url).tag(tag).build();
         Call call = getDefaultHttpClient().newCall(request);

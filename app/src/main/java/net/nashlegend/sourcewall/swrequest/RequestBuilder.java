@@ -8,6 +8,7 @@ import android.text.TextUtils;
 
 import com.squareup.okhttp.MediaType;
 
+import net.nashlegend.sourcewall.swrequest.RequestObject.RequestType;
 import net.nashlegend.sourcewall.swrequest.api.UserAPI;
 import net.nashlegend.sourcewall.swrequest.parsers.DirectlyStringParser;
 import net.nashlegend.sourcewall.swrequest.parsers.Parser;
@@ -259,6 +260,17 @@ public class RequestBuilder<T> {
     }
 
     /**
+     * 设置请求成功或者失败后的回调，如果没有parser，将不会回调
+     *
+     * @param detailedCallBack
+     * @return
+     */
+    public RequestBuilder<T> setRequestCallBack(RequestObject.DetailedCallBack<T> detailedCallBack) {
+        rbRequest.setCallBack(detailedCallBack);
+        return this;
+    }
+
+    /**
      * 设置请求的tag，可通过tag
      *
      * @param tag
@@ -307,6 +319,18 @@ public class RequestBuilder<T> {
         return this;
     }
 
+    public RequestBuilder<T> upload(String filePath) {
+        rbRequest.uploadFilePath = filePath;
+        rbRequest.requestType = RequestType.UPLOAD;
+        return this;
+    }
+
+    public RequestBuilder<T> download(String filePath) {
+        rbRequest.downloadFilePath = filePath;
+        rbRequest.requestType = RequestType.DOWNLOAD;
+        return this;
+    }
+
     private void addExtras() {
         if (useToken) {
             if (rbRequest.params == null) {
@@ -319,9 +343,8 @@ public class RequestBuilder<T> {
         }
     }
 
-    public RequestObject<T> buildPlainRequest() {
+    public RequestObject<T> buildRequest() {
         addExtras();
-        rbRequest.requestType = RequestObject.RequestType.PLAIN;
         return rbRequest;
     }
 
@@ -331,8 +354,7 @@ public class RequestBuilder<T> {
     @Deprecated
     public RequestObject<T> requestAsync() {
         addExtras();
-        rbRequest.requestType = RequestObject.RequestType.PLAIN;
-        rbRequest.requestAsync();
+        rbRequest.startRequestAsync();
         return rbRequest;
     }
 
@@ -341,7 +363,6 @@ public class RequestBuilder<T> {
      */
     public Observable<ResponseObject<T>> requestObservable() {
         addExtras();
-        rbRequest.requestType = RequestObject.RequestType.PLAIN;
         return rbRequest.requestObservable();
     }
 
@@ -350,23 +371,8 @@ public class RequestBuilder<T> {
      */
     public RequestObject<T> requestRx() {
         addExtras();
-        rbRequest.requestType = RequestObject.RequestType.PLAIN;
         rbRequest.requestRx();
         return rbRequest;
-    }
-
-    public void upload(String filePath) {
-        addExtras();
-        rbRequest.uploadFilePath = filePath;
-        rbRequest.requestType = RequestObject.RequestType.UPLOAD;
-        rbRequest.upload();
-    }
-
-    public void download(String filePath) {
-        addExtras();
-        rbRequest.downloadFilePath = filePath;
-        rbRequest.requestType = RequestObject.RequestType.DOWNLOAD;
-        rbRequest.download();
     }
 
 }
