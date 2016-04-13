@@ -2,7 +2,6 @@ package net.nashlegend.mvp.presenter;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 
 import net.nashlegend.mvp.presenter.interfaze.IActivityPresenter;
@@ -18,11 +17,6 @@ public class ActivityPresenter<T extends ActivityView> extends Presenter impleme
     }
 
     public T view;
-
-    @Override
-    public void onCreate(Intent intent, Bundle savedInstanceState, PersistableBundle persistentState) {
-
-    }
 
     @Override
     public void onCreate(Intent intent, @Nullable Bundle savedInstanceState) {

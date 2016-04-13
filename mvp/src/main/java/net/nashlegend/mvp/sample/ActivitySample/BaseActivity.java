@@ -1,8 +1,8 @@
 package net.nashlegend.mvp.sample.ActivitySample;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import net.nashlegend.mvp.presenter.interfaze.IActivityPresenter;
@@ -18,9 +18,9 @@ public abstract class BaseActivity<T extends IActivityPresenter>
     public T presenter;
 
     @Override
-    public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         setPresenter();
-        super.onCreate(savedInstanceState, persistentState);
+        super.onCreate(savedInstanceState);
     }
 
     public void setPresenter() {
