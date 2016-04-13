@@ -41,12 +41,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/githubDebug/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/githubDebug/jni" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/githubDebug/rs" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/r/androidTest/github/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/aidl/androidTest/github/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/buildConfig/androidTest/github/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/rs/androidTest/github/debug" isTestSource="true" generated="true" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/rs/androidTest/github/debug" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/resValues/androidTest/github/debug" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/testGithubDebug/res" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/testGithubDebug/resources" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/testGithubDebug/assets" type="java-test-resource" />
@@ -54,6 +48,12 @@
       <sourceFolder url="file://$MODULE_DIR$/src/testGithubDebug/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/testGithubDebug/jni" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/testGithubDebug/rs" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/r/androidTest/github/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/aidl/androidTest/github/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/buildConfig/androidTest/github/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/source/rs/androidTest/github/debug" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/rs/androidTest/github/debug" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/build/generated/res/resValues/androidTest/github/debug" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/github/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/github/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/github/assets" type="java-resource" />
@@ -127,6 +127,8 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.jakewharton.rxbinding/rxbinding-appcompat-v7/0.3.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.jakewharton.rxbinding/rxbinding-support-v4/0.3.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.jakewharton.rxbinding/rxbinding/0.3.0/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.squareup.leakcanary/leakcanary-android-no-op/1.4-beta2/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.squareup.leakcanary/leakcanary-android/1.4-beta2/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/io.reactivex/rxandroid/1.1.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/pl.droidsonroids.gif/android-gif-drawable/1.1.13/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental" />
@@ -145,10 +147,12 @@
     <orderEntry type="jdk" jdkName="Android API 23 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="support-v4-23.2.1" level="project" />
+    <orderEntry type="library" exported="" name="leakcanary-analyzer-1.4-beta2" level="project" />
     <orderEntry type="library" exported="" name="httpcore-4.2.1" level="project" />
     <orderEntry type="library" exported="" name="design-23.2.1" level="project" />
-    <orderEntry type="library" exported="" name="rxandroid-1.1.0" level="project" />
     <orderEntry type="library" exported="" name="subsampling-scale-image-view-3.4.1" level="project" />
+    <orderEntry type="library" exported="" name="rxandroid-1.1.0" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="leakcanary-android-no-op-1.4-beta2" level="project" />
     <orderEntry type="library" exported="" name="rxbinding-appcompat-v7-0.3.0" level="project" />
     <orderEntry type="library" exported="" name="rxjava-1.1.0" level="project" />
     <orderEntry type="library" exported="" name="animated-vector-drawable-23.2.1" level="project" />
@@ -169,6 +173,9 @@
     <orderEntry type="library" exported="" name="okhttp-2.7.4" level="project" />
     <orderEntry type="library" exported="" name="libammsdk" level="project" />
     <orderEntry type="library" exported="" name="rxbinding-support-v4-0.3.0" level="project" />
+    <orderEntry type="library" exported="" name="haha-2.0.2" level="project" />
+    <orderEntry type="library" exported="" name="leakcanary-android-1.4-beta2" level="project" />
+    <orderEntry type="library" exported="" name="leakcanary-watcher-1.4-beta2" level="project" />
     <orderEntry type="library" exported="" name="httpmime-4.2.1" level="project" />
     <orderEntry type="library" exported="" name="jsoup-1.8.3" level="project" />
     <orderEntry type="library" exported="" name="floatingactionbutton-1.10.1" level="project" />

@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.squareup.leakcanary.LeakCanary;
 
 import net.nashlegend.sourcewall.db.BaseDB;
 import net.nashlegend.sourcewall.db.gen.DaoMaster;
@@ -24,6 +25,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         application = this;
+        LeakCanary.install(this);
         initImageLoader(this);
     }
 

@@ -40,7 +40,10 @@ ext {
             RxBindingV4      : 'com.jakewharton.rxbinding:rxbinding-support-v4:0.3.0',
             RxBindingV7      : 'com.jakewharton.rxbinding:rxbinding-appcompat-v7:0.3.0',
             Httpmime         : 'org.apache.httpcomponents:httpmime:4.2.1',
-            NumberProgressBar: 'com.daimajia.numberprogressbar:library:1.2@aar'
+            NumberProgressBar: 'com.daimajia.numberprogressbar:library:1.2@aar',
+            LeakCanaryDebug  : 'com.squareup.leakcanary:leakcanary-android:1.4-beta2',
+            LeakCanaryRelease: 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2',
+            LeakCanaryTest   : 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
     ]
 
     keys = [

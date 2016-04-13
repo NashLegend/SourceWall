@@ -91,4 +91,7 @@ dependencies {
     compile dependency.RxBindingV4
     compile dependency.RxBindingV7
     compile dependency.Httpmime
+    debugCompile dependency.LeakCanaryDebug
+    releaseCompile dependency.LeakCanaryRelease
+    testCompile dependency.LeakCanaryTest
 }
