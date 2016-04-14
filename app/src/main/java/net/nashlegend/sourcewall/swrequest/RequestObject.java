@@ -46,6 +46,7 @@ import rx.Observer;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.exceptions.Exceptions;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
@@ -469,7 +470,7 @@ public class RequestObject<T> {
                                 if (responseObject.ok) {
                                     subscriber.onNext(downloadFilePath);
                                 } else {
-                                    subscriber.onError(throwable);
+                                    Exceptions.throwOrReport(throwable, subscriber, RequestObject.this);
                                 }
                             } else {
                                 String result = response.body().string();
@@ -482,7 +483,7 @@ public class RequestObject<T> {
                             if (call != null && call.isCanceled()) {
                                 responseObject.isCancelled = true;
                             }
-                            subscriber.onError(e);
+                            Exceptions.throwOrReport(e, subscriber, RequestObject.this);
                         }
                     }
                 })
