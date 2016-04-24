@@ -7,16 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
 
-import com.squareup.okhttp.Call;
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.Interceptor;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
-import com.squareup.okhttp.ResponseBody;
-
+import net.nashlegend.sourcewall.BuildConfig;
 import net.nashlegend.sourcewall.swrequest.cache.RequestCache;
 import net.nashlegend.sourcewall.swrequest.parsers.Parser;
 
@@ -32,6 +23,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Interceptor;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 import okio.Buffer;
 import okio.BufferedSink;
 import okio.BufferedSource;
@@ -59,6 +59,8 @@ public class RequestObject<T> {
      * 默认Tag
      */
     public static final String DefaultTag = "Default";
+    public boolean requestWithGzip = false;//是否使用Gzip压缩请求数据
+    public String fakeResponse = null;
     protected int maxRetryTimes = 0;//最大重试次数
     protected int interval = 0;//重试间隔
     protected int requestType = RequestType.PLAIN;
@@ -143,35 +145,42 @@ public class RequestObject<T> {
 
     synchronized public OkHttpClient getHttpClient() {
         if (okHttpClient == null) {
+            String key;
             switch (requestType) {
-                case RequestType.PLAIN:
-                    okHttpClient = HttpUtil.getDefaultHttpClient();
-                    break;
                 case RequestType.UPLOAD:
-                    okHttpClient = HttpUtil.getDefaultUploadHttpClient();
+                    key = "uploadClient";
                     break;
                 case RequestType.DOWNLOAD:
-                    okHttpClient = HttpUtil.getDefaultUploadHttpClient();
+                    key = "downloadClient";
                     break;
                 default:
-                    okHttpClient = HttpUtil.getDefaultHttpClient();
+                    key = "defaultClient";
                     break;
             }
-
-//            if (requestWithGzip) {
-//                okHttpClient = okHttpClient.clone();
-//                okHttpClient.networkInterceptors().add(new GzipRequestInterceptor());
-//            }
-
-            if (requestType == RequestType.UPLOAD) {
-                okHttpClient = okHttpClient.clone();
-                okHttpClient.networkInterceptors().add(new UploadProgressInterceptor());
+            if (requestWithGzip) {
+                key += "requestWithGzip";
             }
-
-            if (requestType == RequestType.DOWNLOAD) {
-                okHttpClient = okHttpClient.clone();
-                okHttpClient.networkInterceptors().add(new DownloadProgressInterceptor());
+            OkHttpClient tmpClient = HttpUtil.getOkHttpClient(key);
+            if (tmpClient == null) {
+                switch (requestType) {
+                    case RequestType.UPLOAD:
+                        tmpClient = HttpUtil.getDefaultUploadHttpClient().newBuilder()
+                                .addNetworkInterceptor(new UploadProgressInterceptor()).build();
+                        break;
+                    case RequestType.DOWNLOAD:
+                        tmpClient = HttpUtil.getDefaultUploadHttpClient().newBuilder()
+                                .addNetworkInterceptor(new DownloadProgressInterceptor()).build();
+                        break;
+                    default:
+                        tmpClient = HttpUtil.getDefaultHttpClient();
+                        break;
+                }
+                if (requestWithGzip) {
+                    tmpClient = tmpClient.newBuilder().addNetworkInterceptor(new GzipRequestInterceptor()).build();
+                }
+                HttpUtil.putOkHttpClient(key, tmpClient);
             }
+            okHttpClient = tmpClient;
         }
         return okHttpClient;
     }
@@ -506,6 +515,16 @@ public class RequestObject<T> {
                         return Observable.just("Error Occurred!");
                     }
                 })
+                .map(new Func1<String, String>() {
+                    @Override
+                    public String call(String s) {
+                        //debug模式下可返回fakeBody
+                        if (BuildConfig.DEBUG && fakeResponse != null) {
+                            return fakeResponse;
+                        }
+                        return s;
+                    }
+                })
                 .map(new Func1<String, ResponseObject<T>>() {
                     @Override
                     public ResponseObject<T> call(String string) {
@@ -571,7 +590,7 @@ public class RequestObject<T> {
      * 重新请求
      */
     @Deprecated
-    public void startRequestAsync() {
+    public void startRequest() {
         switch (requestType) {
             case RequestType.PLAIN:
                 requestAsync();
@@ -652,7 +671,7 @@ public class RequestObject<T> {
     private Callback getInnerCallback() {
         return new Callback() {
             @Override
-            synchronized public void onFailure(Request request, final IOException e) {
+            public void onFailure(Call call, IOException e) {
                 final ResponseObject<T> responseObject = new ResponseObject<>();
                 responseObject.requestObject = RequestObject.this;
                 JsonHandler.handleRequestException(e, responseObject);
@@ -677,7 +696,7 @@ public class RequestObject<T> {
             }
 
             @Override
-            synchronized public void onResponse(Response response) throws IOException {
+            public void onResponse(Call call, Response response) throws IOException {
                 final ResponseObject<T> responseObject = new ResponseObject<>();
                 responseObject.requestObject = RequestObject.this;
                 if (callBack != null && parser != null) {
@@ -709,7 +728,7 @@ public class RequestObject<T> {
     private Callback getInnerDownloadCallback() {
         return new Callback() {
             @Override
-            synchronized public void onFailure(Request request, final IOException e) {
+            public void onFailure(Call call, IOException e) {
                 final ResponseObject<T> responseObject = new ResponseObject<>();
                 responseObject.requestObject = RequestObject.this;
                 if (e != null && (e instanceof ConnectException || e instanceof UnknownHostException)) {
@@ -721,7 +740,7 @@ public class RequestObject<T> {
             }
 
             @Override
-            synchronized public void onResponse(Response response) throws IOException {
+            public void onResponse(Call call, Response response) throws IOException {
                 final ResponseObject<T> responseObject = new ResponseObject<>();
                 responseObject.requestObject = RequestObject.this;
                 if (callBack != null) {
@@ -768,7 +787,7 @@ public class RequestObject<T> {
             } catch (InterruptedException e1) {
                 e1.printStackTrace();
             } finally {
-                startRequestAsync();
+                startRequest();
             }
             notifyAction();
         } else {
@@ -828,6 +847,10 @@ public class RequestObject<T> {
     public interface RequestType {
         int PLAIN = 0;
         int UPLOAD = 1;
+        /**
+         * 理论上说下载返回结果没法用Parser，如果需要Parser，那么parse的是downloadFilePath
+         * 所以建议使用DirectlyStringParser,因为在onNext中返回了downloadFilePath
+         */
         int DOWNLOAD = 2;
     }
 
@@ -1046,7 +1069,7 @@ public class RequestObject<T> {
          * @throws IOException 异常
          */
         @Override
-        public long contentLength() throws IOException {
+        public long contentLength() {
             return responseBody.contentLength();
         }
 
@@ -1057,7 +1080,7 @@ public class RequestObject<T> {
          * @throws IOException 异常
          */
         @Override
-        public BufferedSource source() throws IOException {
+        public BufferedSource source() {
             if (bufferedSource == null) {
                 //包装
                 bufferedSource = Okio.buffer(source(responseBody.source()));

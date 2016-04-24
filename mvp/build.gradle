@@ -1,17 +1,14 @@
 apply plugin: 'com.android.library'
 
-def build = rootProject.ext.build
-def dependency = rootProject.ext.dependencies
-
 android {
-    compileSdkVersion build.compileSdkVersion
-    buildToolsVersion build.buildToolsVersion
+    compileSdkVersion built.compileSdkVersion
+    buildToolsVersion built.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion build.minSdkVersion
-        targetSdkVersion build.targetSDKVersion
-        versionCode build.versionCode
-        versionName build.versionName
+        minSdkVersion built.minSdkVersion
+        targetSdkVersion built.targetSDKVersion
+        versionCode built.versionCode
+        versionName built.versionName
     }
     buildTypes {
         release {
@@ -22,6 +19,5 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile dependency.SupportAppcompat
+    compile deps.SupportAppcompat
 }

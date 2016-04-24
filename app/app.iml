@@ -125,13 +125,13 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/bundles" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/classes" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/dependency-cache" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/23.2.1/jars" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.2.1/jars" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/cardview-v7/23.2.1/jars" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/design/23.2.1/jars" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.2.1/jars" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/support-v4/23.2.1/jars" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.2.1/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/23.3.0/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/cardview-v7/23.3.0/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/design/23.3.0/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.3.0/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/support-v4/23.3.0/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.3.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.davemorrissey.labs/subsampling-scale-image-view/3.4.1/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.getbase/floatingactionbutton/1.10.1/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.jakewharton.rxbinding/rxbinding-appcompat-v7/0.3.0/jars" />
@@ -142,48 +142,45 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/io.reactivex/rxandroid/1.1.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/pl.droidsonroids.gif/android-gif-drawable/1.1.13/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/instant-run-support" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/jniLibs" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental-safeguard" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/manifests" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/pre-dexed" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/res" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/rs" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/shaders" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/symbols" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/transforms" />
       <excludeFolder url="file://$MODULE_DIR$/build/outputs" />
       <excludeFolder url="file://$MODULE_DIR$/build/tmp" />
     </content>
     <orderEntry type="jdk" jdkName="Android API 23 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="support-v4-23.2.1" level="project" />
+    <orderEntry type="library" exported="" name="support-vector-drawable-23.3.0" level="project" />
     <orderEntry type="library" exported="" name="leakcanary-analyzer-1.4-beta2" level="project" />
     <orderEntry type="library" exported="" name="httpcore-4.2.1" level="project" />
-    <orderEntry type="library" exported="" name="design-23.2.1" level="project" />
+    <orderEntry type="library" exported="" name="okhttp-3.2.0" level="project" />
     <orderEntry type="library" exported="" name="rxjava-1.1.3" level="project" />
     <orderEntry type="library" exported="" name="subsampling-scale-image-view-3.4.1" level="project" />
     <orderEntry type="library" exported="" name="rxandroid-1.1.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="leakcanary-android-no-op-1.4-beta2" level="project" />
     <orderEntry type="library" exported="" name="rxbinding-appcompat-v7-0.3.0" level="project" />
-    <orderEntry type="library" exported="" name="animated-vector-drawable-23.2.1" level="project" />
-    <orderEntry type="library" exported="" name="support-annotations-23.2.1" level="project" />
-    <orderEntry type="library" exported="" name="recyclerview-v7-23.2.1" level="project" />
+    <orderEntry type="library" exported="" name="appcompat-v7-23.3.0" level="project" />
+    <orderEntry type="library" exported="" name="cardview-v7-23.3.0" level="project" />
     <orderEntry type="library" exported="" name="okio-1.6.0" level="project" />
-    <orderEntry type="library" exported="" name="support-vector-drawable-23.2.1" level="project" />
     <orderEntry type="library" exported="" name="universal-image-loader-1.9.5" level="project" />
     <orderEntry type="library" exported="" name="android-gif-drawable-1.1.13" level="project" />
     <orderEntry type="library" exported="" name="analytics-5.6.7" level="project" />
-    <orderEntry type="library" exported="" name="appcompat-v7-23.2.1" level="project" />
-    <orderEntry type="library" exported="" name="cardview-v7-23.2.1" level="project" />
+    <orderEntry type="library" exported="" name="support-v4-23.3.0" level="project" />
+    <orderEntry type="library" exported="" name="recyclerview-v7-23.3.0" level="project" />
+    <orderEntry type="library" exported="" name="design-23.3.0" level="project" />
     <orderEntry type="library" exported="" name="rxbinding-0.3.0" level="project" />
     <orderEntry type="library" exported="" name="butterknife-7.0.1" level="project" />
     <orderEntry type="library" exported="" name="eventbus-2.4.0" level="project" />
     <orderEntry type="library" exported="" name="weibosdkcore_v3.1.1" level="project" />
     <orderEntry type="library" exported="" name="greendao-2.1.0" level="project" />
-    <orderEntry type="library" exported="" name="okhttp-2.7.4" level="project" />
+    <orderEntry type="library" exported="" name="support-annotations-23.3.0" level="project" />
     <orderEntry type="library" exported="" name="libammsdk" level="project" />
     <orderEntry type="library" exported="" name="rxbinding-support-v4-0.3.0" level="project" />
     <orderEntry type="library" exported="" name="haha-2.0.2" level="project" />
+    <orderEntry type="library" exported="" name="animated-vector-drawable-23.3.0" level="project" />
     <orderEntry type="library" exported="" name="leakcanary-android-1.4-beta2" level="project" />
     <orderEntry type="library" exported="" name="leakcanary-watcher-1.4-beta2" level="project" />
     <orderEntry type="library" exported="" name="httpmime-4.2.1" level="project" />

@@ -22,7 +22,7 @@ import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
-import net.nashlegend.sourcewall.request.HttpFetcher;
+import net.nashlegend.sourcewall.swrequest.HttpUtil;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
@@ -91,8 +91,7 @@ public class LoginActivity extends SwipeActivity {
                         tmpUkey = paramValue;
                     }
                 }
-                HttpFetcher.setCookie(HttpFetcher.getDefaultHttpClient());
-                HttpFetcher.setCookie(HttpFetcher.getDefaultUploadHttpClient());
+                HttpUtil.setCookie(HttpUtil.getDefaultHttpClient());
             }
             return !(TextUtils.isEmpty(tmpUkey) || TextUtils.isEmpty(tmpToken));
         } catch (Exception e) {

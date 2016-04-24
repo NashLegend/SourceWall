@@ -1,8 +1,7 @@
 apply plugin: 'java'
 
-def dependency = rootProject.ext.dependencies
-
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile dependency.GreenDAOGenerator
+    compile deps.RxJava
+    compile deps.GreenDAOGenerator
+    compile deps.Json
 }

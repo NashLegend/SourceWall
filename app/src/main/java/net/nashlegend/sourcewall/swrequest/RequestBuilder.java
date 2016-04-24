@@ -6,7 +6,7 @@ import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import com.squareup.okhttp.MediaType;
+import okhttp3.MediaType;
 
 import net.nashlegend.sourcewall.swrequest.RequestObject.RequestType;
 import net.nashlegend.sourcewall.swrequest.api.UserAPI;
@@ -44,7 +44,7 @@ public class RequestBuilder<T> {
                 .setUrl("http://bbs.hupu.com/bxj")
                 .setRequestCallBack(callBack)
                 .setParser(new DirectlyStringParser())
-                .requestAsync();
+                .startRequest();
     }
 
     /**
@@ -146,6 +146,29 @@ public class RequestBuilder<T> {
      */
     public RequestBuilder<T> setParser(Parser<T> parser) {
         rbRequest.parser = parser;
+        return this;
+    }
+
+    /**
+     * 是否将请求数据进行Gzip压缩，默认为false
+     *
+     * @param requestWithGzip
+     * @return
+     */
+    public RequestBuilder<T> setRequestWithGzip(boolean requestWithGzip) {
+        rbRequest.requestWithGzip = requestWithGzip;
+        return this;
+    }
+
+    /**
+     * 启用伪造数据，不是null则启用，启用后仍然会走正常的请求流程，只是在请求返回后，无论对错，都返回伪造的数据
+     * 启用伪造数据时，请添加stopship标志防止打包出去
+     *
+     * @param faked
+     * @return
+     */
+    public RequestBuilder<T> setFakeResponse(String faked) {
+        rbRequest.fakeResponse = faked;
         return this;
     }
 
@@ -287,7 +310,6 @@ public class RequestBuilder<T> {
      *
      * @return
      */
-    @Deprecated
     public RequestBuilder<T> runCallbackOnMainThread() {
         rbRequest.ignoreHandler = false;
         rbRequest.handler = new Handler(Looper.getMainLooper());
@@ -300,7 +322,6 @@ public class RequestBuilder<T> {
      * @param looper
      * @return
      */
-    @Deprecated
     public RequestBuilder<T> runCallbackOn(Looper looper) {
         rbRequest.ignoreHandler = false;
         rbRequest.handler = new Handler(looper);
@@ -312,7 +333,6 @@ public class RequestBuilder<T> {
      *
      * @return
      */
-    @Deprecated
     public RequestBuilder<T> runCallbackWhatever() {
         rbRequest.ignoreHandler = true;
         rbRequest.handler = null;
@@ -351,10 +371,9 @@ public class RequestBuilder<T> {
     /**
      * 异步请求
      */
-    @Deprecated
-    public RequestObject<T> requestAsync() {
+    public RequestObject<T> startRequest() {
         addExtras();
-        rbRequest.startRequestAsync();
+        rbRequest.startRequest();
         return rbRequest;
     }
 

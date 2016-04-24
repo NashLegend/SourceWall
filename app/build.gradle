@@ -1,19 +1,15 @@
 apply plugin: 'com.android.application'
 
-def keys = rootProject.ext.keys
-def build = rootProject.ext.build
-def dependency = rootProject.ext.dependencies
-
 android {
-    compileSdkVersion build.compileSdkVersion
-    buildToolsVersion build.buildToolsVersion
+    compileSdkVersion built.compileSdkVersion
+    buildToolsVersion built.buildToolsVersion
 
     defaultConfig {
-        applicationId build.applicationId
-        minSdkVersion build.minSdkVersion
-        targetSdkVersion build.targetSDKVersion
-        versionCode build.versionCode
-        versionName build.versionName
+        applicationId built.applicationId
+        minSdkVersion built.minSdkVersion
+        targetSdkVersion built.targetSDKVersion
+        versionCode built.versionCode
+        versionName built.versionName
         manifestPlaceholders = [
                 WEIXIN_APP_ID: keys.WEIXIN_APP_ID_DEBUG,
                 WEIBO_APP_KEY: keys.WEIBO_APP_KEY,
@@ -71,27 +67,27 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile dependency.SupportV4
-    compile dependency.SupportAppcompat
-    compile dependency.SupportDesign
-    compile dependency.CardView
-    compile dependency.EventBus
-    compile dependency.GreenDAO
-    compile dependency.Umeng
-    compile dependency.OKHttp
-    compile dependency.ButterKnife
-    compile dependency.RxAndroid
-    compile dependency.RxJava
-    compile dependency.Jsoup
-    compile dependency.Fab
-    compile dependency.ScaleImage
-    compile dependency.GifDrawable
-    compile dependency.ImageLoader
-    compile dependency.RxBinding
-    compile dependency.RxBindingV4
-    compile dependency.RxBindingV7
-    compile dependency.Httpmime
-    debugCompile dependency.LeakCanaryDebug
-    releaseCompile dependency.LeakCanaryRelease
-    testCompile dependency.LeakCanaryTest
+    compile deps.SupportV4
+    compile deps.SupportAppcompat
+    compile deps.SupportDesign
+    compile deps.CardView
+    compile deps.EventBus
+    compile deps.GreenDAO
+    compile deps.Umeng
+    compile deps.OKHttp
+    compile deps.ButterKnife
+    compile deps.RxAndroid
+    compile deps.RxJava
+    compile deps.Jsoup
+    compile deps.Fab
+    compile deps.ScaleImage
+    compile deps.GifDrawable
+    compile deps.ImageLoader
+    compile deps.RxBinding
+    compile deps.RxBindingV4
+    compile deps.RxBindingV7
+    compile deps.Httpmime
+    debugCompile deps.LeakCanaryDebug
+    releaseCompile deps.LeakCanaryRelease
+    testCompile deps.LeakCanaryTest
 }

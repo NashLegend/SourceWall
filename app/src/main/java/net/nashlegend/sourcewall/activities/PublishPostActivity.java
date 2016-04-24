@@ -36,8 +36,6 @@ import android.widget.Spinner;
 import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.R;
-import net.nashlegend.sourcewall.commonview.AAsyncTask;
-import net.nashlegend.sourcewall.commonview.IStackedAsyncTaskInterface;
 import net.nashlegend.sourcewall.dialogs.InputDialog;
 import net.nashlegend.sourcewall.model.PrepareData;
 import net.nashlegend.sourcewall.model.SubItem;
@@ -357,17 +355,41 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
     }
 
     public void uploadImage(String path) {
-        if (FileUtil.isImage(path)) {
-            File file = new File(path);
-            if (file.exists()) {
-                ImageUploadTask task = new ImageUploadTask(this);
-                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
-            } else {
-                toast(R.string.file_not_exists);
-            }
-        } else {
+        if (!FileUtil.isImage(path)) {
             toast(R.string.file_not_image);
+            return;
         }
+        if (!new File(path).exists()) {
+            toast(R.string.file_not_exists);
+        }
+        if (!SharedPreferencesUtil.readBoolean(Consts.Key_User_Has_Learned_Add_Image, false)) {
+            new AlertDialog.Builder(PublishPostActivity.this)
+                    .setTitle(R.string.hint)
+                    .setMessage(R.string.tip_of_user_learn_add_image)
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            SharedPreferencesUtil.saveBoolean(Consts.Key_User_Has_Learned_Add_Image, true);
+                        }
+                    }).create().show();
+        }
+        setImageButtonsUploading();
+        APIBase.uploadImage(path, new CallBack<String>() {
+            @Override
+            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<String> result) {
+                resetImageButtons();
+                toast(R.string.upload_failed);
+            }
+
+            @Override
+            public void onSuccess(@NonNull String result, @NonNull ResponseObject<String> detailed) {
+                toast(R.string.hint_click_to_add_image_to_editor);
+                doneUploadingImage(result);
+                if (tmpUploadFile != null && tmpUploadFile.exists()) {
+                    tmpUploadFile.delete();
+                }
+            }
+        });
     }
 
     private void doneUploadingImage(String url) {
@@ -580,51 +602,6 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         insertButton.setVisibility(View.VISIBLE);
         imgButton.setVisibility(View.GONE);
         uploadingProgress.setVisibility(View.GONE);
-    }
-
-    class ImageUploadTask extends AAsyncTask<String, Integer, ResponseObject<String>> {
-
-        ImageUploadTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
-            super(iStackedAsyncTaskInterface);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            if (!SharedPreferencesUtil.readBoolean(Consts.Key_User_Has_Learned_Add_Image, false)) {
-                new AlertDialog.Builder(PublishPostActivity.this).setTitle(R.string.hint).setMessage(R.string.tip_of_user_learn_add_image).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        SharedPreferencesUtil.saveBoolean(Consts.Key_User_Has_Learned_Add_Image, true);
-                    }
-                }).create().show();
-            }
-            setImageButtonsUploading();
-        }
-
-        @Override
-        protected ResponseObject<String> doInBackground(String... params) {
-            String path = params[0];
-            return APIBase.uploadImage(path, true);
-        }
-
-        @Override
-        protected void onPostExecute(ResponseObject<String> result) {
-            if (result.ok) {
-                toast(R.string.hint_click_to_add_image_to_editor);
-                doneUploadingImage(result.result);
-                if (tmpUploadFile != null && tmpUploadFile.exists()) {
-                    tmpUploadFile.delete();
-                }
-            } else {
-                resetImageButtons();
-                toast(R.string.upload_failed);
-            }
-        }
-
-        @Override
-        public void onCancel() {
-            resetImageButtons();
-        }
     }
 
     @Override

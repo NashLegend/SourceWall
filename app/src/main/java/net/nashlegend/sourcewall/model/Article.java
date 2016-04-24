@@ -40,8 +40,8 @@ public class Article extends AceModel {
         article.setCommentNum(jo.optInt("replies_count"));
         article.setAuthor(Author.fromJson(jo.optJSONObject("author")));
         article.setDate(APIBase.parseDate(jo.optString("date_published")));
-        article.setSubjectName(APIBase.getJsonObject(jo, "subject").optString("name"));
-        article.setSubjectKey(APIBase.getJsonObject(jo, "subject").optString("key"));
+        article.setSubjectName(jo.optJSONObject("subject").optString("name"));
+        article.setSubjectKey(jo.optJSONObject("subject").optString("key"));
         article.setUrl(jo.optString("url"));
         article.setImageUrl(jo.optString("small_image"));
         article.setSummary(jo.optString("summary"));

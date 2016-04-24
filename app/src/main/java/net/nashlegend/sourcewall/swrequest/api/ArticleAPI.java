@@ -129,7 +129,7 @@ public class ArticleAPI extends APIBase {
                 }
             }
         } catch (Exception e) {
-            handleRequestException(e, resultObject);
+            JsonHandler.handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -159,7 +159,7 @@ public class ArticleAPI extends APIBase {
                     resultObject = parseArticleListJson(jString);
                 }
             } catch (Exception e) {
-                handleRequestException(e, resultObject);
+                JsonHandler.handleRequestException(e, resultObject);
             }
         }
         return resultObject;
@@ -178,7 +178,7 @@ public class ArticleAPI extends APIBase {
         try {
             ArrayList<Article> articleList = new ArrayList<>();
             if (jString != null) {
-                JSONArray articles = APIBase.getUniversalJsonArray(jString, resultObject);
+                JSONArray articles = JsonHandler.getUniversalJsonArray(jString, resultObject);
                 if (articles != null) {
                     for (int i = 0; i < articles.length(); i++) {
                         JSONObject jo = articles.getJSONObject(i);
@@ -189,7 +189,7 @@ public class ArticleAPI extends APIBase {
                 }
             }
         } catch (Exception e) {
-            handleRequestException(e, resultObject);
+            JsonHandler.handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -224,7 +224,7 @@ public class ArticleAPI extends APIBase {
             resultObject.ok = true;
             resultObject.result = article;
         } catch (Exception e) {
-            handleRequestException(e, resultObject);
+            JsonHandler.handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -265,7 +265,7 @@ public class ArticleAPI extends APIBase {
             resultObject.result = article;
             RequestCache.getInstance().addStringToCacheForceUpdate(url, html);
         } catch (Exception e) {
-            handleRequestException(e, resultObject);
+            JsonHandler.handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -302,7 +302,7 @@ public class ArticleAPI extends APIBase {
                         return article;
                     }
                 })
-                .requestAsync();
+                .startRequest();
     }
 
     /**
@@ -368,7 +368,7 @@ public class ArticleAPI extends APIBase {
             pairs.put("limit", String.valueOf(limit));
             pairs.put("offset", String.valueOf(offset));
             String jString = HttpFetcher.get(url, pairs).toString();
-            JSONArray articles = APIBase.getUniversalJsonArray(jString, resultObject);
+            JSONArray articles = JsonHandler.getUniversalJsonArray(jString, resultObject);
             if (articles != null) {
                 for (int i = 0; i < articles.length(); i++) {
                     JSONObject jo = articles.getJSONObject(i);
@@ -380,7 +380,7 @@ public class ArticleAPI extends APIBase {
                 resultObject.result = list;
             }
         } catch (Exception e) {
-            handleRequestException(e, resultObject);
+            JsonHandler.handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -419,7 +419,7 @@ public class ArticleAPI extends APIBase {
                         return list;
                     }
                 })
-                .requestAsync();
+                .startRequest();
     }
 
     /**
@@ -437,7 +437,7 @@ public class ArticleAPI extends APIBase {
         pairs.put("article_id", article_id);
         try {
             String result = HttpFetcher.get(url, pairs).toString();
-            JSONArray articlesArray = getUniversalJsonArray(result, resultObject);
+            JSONArray articlesArray = JsonHandler.getUniversalJsonArray(result, resultObject);
             if (articlesArray != null && articlesArray.length() == 1) {
                 JSONObject articleObject = articlesArray.getJSONObject(0);
                 Article article = Article.fromJsonSimple(articleObject);
@@ -446,7 +446,7 @@ public class ArticleAPI extends APIBase {
             }
 
         } catch (Exception e) {
-            handleRequestException(e, resultObject);
+            JsonHandler.handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -475,7 +475,7 @@ public class ArticleAPI extends APIBase {
                         return Article.fromJsonSimple(articleObject);
                     }
                 })
-                .requestAsync();
+                .startRequest();
     }
 
     /**
@@ -577,13 +577,13 @@ public class ArticleAPI extends APIBase {
         pairs.put("reply_id", reply_id);
         try {
             String result = HttpFetcher.get(url, pairs).toString();
-            JSONObject replyObject = getUniversalJsonObject(result, resultObject);
+            JSONObject replyObject = JsonHandler.getUniversalJsonObject(result, resultObject);
             assert replyObject != null;
             UComment comment = UComment.fromArticleJson(article_id, article_title, replyObject);
             resultObject.ok = true;
             resultObject.result = comment;
         } catch (Exception e) {
-            handleRequestException(e, resultObject);
+            JsonHandler.handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -618,7 +618,7 @@ public class ArticleAPI extends APIBase {
                 .setRequestCallBack(callBack)
                 .setParams(pairs)
                 .post()
-                .requestAsync();
+                .startRequest();
     }
 
     /**
@@ -637,7 +637,7 @@ public class ArticleAPI extends APIBase {
                 .setRequestCallBack(callBack)
                 .setParams(pairs)
                 .delete()
-                .requestAsync();
+                .startRequest();
     }
 
     /**
@@ -658,6 +658,6 @@ public class ArticleAPI extends APIBase {
                 .setRequestCallBack(callBack)
                 .setParams(pairs)
                 .post()
-                .requestAsync();
+                .startRequest();
     }
 }

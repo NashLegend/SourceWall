@@ -33,7 +33,7 @@ public class QuestionAnswer extends AceModel {
     private static String suffix = "</div></div>";
 
     public static QuestionAnswer fromJson(JSONObject answerObject) throws Exception {
-        JSONObject questionObject = APIBase.getJsonObject(answerObject, "question");
+        JSONObject questionObject = answerObject.optJSONObject("question");
         String hostTitle = questionObject.optString("question");
         String hostID = questionObject.optString("id");
         if (TextUtils.isEmpty(hostID)) {

@@ -42,7 +42,7 @@ public class FavorAPI extends APIBase {
                 .setRequestCallBack(callBack)
                 .setParams(params)
                 .post()
-                .requestAsync();
+                .startRequest();
     }
 
     /**
@@ -76,7 +76,7 @@ public class FavorAPI extends APIBase {
                 .setRequestCallBack(callBack)
                 .setParams(pairs)
                 .get()
-                .requestAsync();
+                .startRequest();
     }
 
     /**
@@ -104,7 +104,7 @@ public class FavorAPI extends APIBase {
                 .setRequestCallBack(callBack)
                 .setParams(params)
                 .post()
-                .requestAsync();
+                .startRequest();
     }
 
     /**
@@ -132,6 +132,6 @@ public class FavorAPI extends APIBase {
                 .setParser(parser)
                 .setRequestCallBack(callBack)
                 .get()
-                .requestAsync();
+                .startRequest();
     }
 }

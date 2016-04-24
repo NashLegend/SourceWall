@@ -9,6 +9,7 @@ import net.nashlegend.sourcewall.model.PrepareData;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.HttpFetcher;
+import net.nashlegend.sourcewall.swrequest.JsonHandler;
 import net.nashlegend.sourcewall.swrequest.RequestBuilder;
 import net.nashlegend.sourcewall.swrequest.RequestObject;
 import net.nashlegend.sourcewall.swrequest.RequestObject.CallBack;
@@ -80,7 +81,7 @@ public class PostAPI extends APIBase {
                 .setParams(pairs)
                 .setParser(new BooleanParser())
                 .setRequestCallBack(callBack)
-                .requestAsync();
+                .startRequest();
     }
 
     /**
@@ -99,7 +100,7 @@ public class PostAPI extends APIBase {
                 .setParams(pairs)
                 .setParser(new BooleanParser())
                 .setRequestCallBack(callBack)
-                .requestAsync();
+                .startRequest();
     }
 
     /**
@@ -180,7 +181,7 @@ public class PostAPI extends APIBase {
             resultObject.ok = true;
             resultObject.result = subItems;
         } catch (Exception e) {
-            handleRequestException(e, resultObject);
+            JsonHandler.handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -198,7 +199,7 @@ public class PostAPI extends APIBase {
                 resultObject = parsePostListJson(json);
             }
         } catch (Exception e) {
-            handleRequestException(e, resultObject);
+            JsonHandler.handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -223,7 +224,7 @@ public class PostAPI extends APIBase {
                 RequestCache.getInstance().addStringToCacheForceUpdate(Key_Post_My_Recent_Replies, json);
             }
         } catch (Exception e) {
-            handleRequestException(e, resultObject);
+            JsonHandler.handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -248,7 +249,7 @@ public class PostAPI extends APIBase {
                 RequestCache.getInstance().addStringToCacheForceUpdate(Key_Post_Hot_Posts, json);
             }
         } catch (Exception e) {
-            handleRequestException(e, resultObject);
+            JsonHandler.handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -266,7 +267,7 @@ public class PostAPI extends APIBase {
                 resultObject = parsePostListJson(json);
             }
         } catch (Exception e) {
-            handleRequestException(e, resultObject);
+            JsonHandler.handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -296,7 +297,7 @@ public class PostAPI extends APIBase {
             }
 
         } catch (Exception e) {
-            handleRequestException(e, resultObject);
+            JsonHandler.handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -315,7 +316,7 @@ public class PostAPI extends APIBase {
                 resultObject = parsePostListJson(jString);
             }
         } catch (Exception e) {
-            handleRequestException(e, resultObject);
+            JsonHandler.handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -324,7 +325,7 @@ public class PostAPI extends APIBase {
         ResponseObject<ArrayList<Post>> resultObject = new ResponseObject<>();
         try {
             ArrayList<Post> list = new ArrayList<>();
-            JSONArray articles = APIBase.getUniversalJsonArray(jString, resultObject);
+            JSONArray articles = JsonHandler.getUniversalJsonArray(jString, resultObject);
             if (articles != null) {
                 for (int i = 0; i < articles.length(); i++) {
                     JSONObject jo = articles.getJSONObject(i);
@@ -337,7 +338,7 @@ public class PostAPI extends APIBase {
                 resultObject.result = list;
             }
         } catch (Exception e) {
-            handleRequestException(e, resultObject);
+            JsonHandler.handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -353,12 +354,12 @@ public class PostAPI extends APIBase {
         String url = "http://apis.guokr.com/group/post/" + id + ".json";
         try {
             String json = RequestCache.getInstance().getStringFromCache(url);
-            JSONObject postResult = getUniversalJsonObject(json, resultObject);
+            JSONObject postResult = JsonHandler.getUniversalJsonObject(json, resultObject);
             Post detail = Post.fromJson(postResult);
             resultObject.ok = true;
             resultObject.result = detail;
         } catch (Exception e) {
-            handleRequestException(e, resultObject);
+            JsonHandler.handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -379,13 +380,13 @@ public class PostAPI extends APIBase {
                 return resultObject;
             }
             String json = response.toString();
-            JSONObject postResult = getUniversalJsonObject(json, resultObject);
+            JSONObject postResult = JsonHandler.getUniversalJsonObject(json, resultObject);
             Post detail = Post.fromJson(postResult);
             resultObject.ok = true;
             resultObject.result = detail;
             RequestCache.getInstance().addStringToCacheForceUpdate(url, json);
         } catch (Exception e) {
-            handleRequestException(e, resultObject);
+            JsonHandler.handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -410,7 +411,7 @@ public class PostAPI extends APIBase {
             pairs.put("limit", limit + "");
             pairs.put("offset", String.valueOf(offset));
             String jString = HttpFetcher.get(url, pairs).toString();
-            JSONArray comments = getUniversalJsonArray(jString, resultObject);
+            JSONArray comments = JsonHandler.getUniversalJsonArray(jString, resultObject);
             if (comments != null) {
                 for (int i = 0; i < comments.length(); i++) {
                     JSONObject jo = comments.getJSONObject(i);
@@ -421,7 +422,7 @@ public class PostAPI extends APIBase {
                 resultObject.result = list;
             }
         } catch (Exception e) {
-            handleRequestException(e, resultObject);
+            JsonHandler.handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -442,7 +443,7 @@ public class PostAPI extends APIBase {
                 .post()
                 .setRequestCallBack(callBack)
                 .setParams(pairs)
-                .requestAsync();
+                .startRequest();
     }
 
     /**
@@ -464,7 +465,7 @@ public class PostAPI extends APIBase {
                 .setRequestCallBack(callBack)
                 .setParams(pairs)
                 .post()
-                .requestAsync();
+                .startRequest();
     }
 
     /**
@@ -536,12 +537,12 @@ public class PostAPI extends APIBase {
         try {
 
             String result = HttpFetcher.get(url, pairs).toString();
-            JSONObject replyObject = getUniversalJsonObject(result, resultObject);
+            JSONObject replyObject = JsonHandler.getUniversalJsonObject(result, resultObject);
             UComment comment = UComment.fromPostJson(replyObject);
             resultObject.ok = true;
             resultObject.result = comment;
         } catch (Exception e) {
-            handleRequestException(e, resultObject);
+            JsonHandler.handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -563,7 +564,7 @@ public class PostAPI extends APIBase {
                 .delete()
                 .setRequestCallBack(callBack)
                 .setParams(pairs)
-                .requestAsync();
+                .startRequest();
     }
 
     /**
@@ -582,7 +583,7 @@ public class PostAPI extends APIBase {
                 .setParser(new BooleanParser())
                 .setRequestCallBack(callBack)
                 .setParams(pairs)
-                .requestAsync();
+                .startRequest();
     }
 
     /**
@@ -627,7 +628,7 @@ public class PostAPI extends APIBase {
                     }
                 })
                 .setRequestCallBack(callBack)
-                .requestAsync();
+                .startRequest();
     }
 
     /**
@@ -685,7 +686,7 @@ public class PostAPI extends APIBase {
                 }
             }
         } catch (Exception e) {
-            handleRequestException(e, resultObject);
+            JsonHandler.handleRequestException(e, resultObject);
         }
         return resultObject;
     }

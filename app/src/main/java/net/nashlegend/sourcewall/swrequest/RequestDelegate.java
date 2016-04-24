@@ -2,17 +2,17 @@ package net.nashlegend.sourcewall.swrequest;
 
 import android.support.annotation.NonNull;
 
-import com.squareup.okhttp.Call;
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.FormEncodingBuilder;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.MultipartBuilder;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-
 import java.io.File;
 import java.util.HashMap;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 
 /**
  * Created by NashLegend on 16/3/16.
@@ -21,30 +21,16 @@ public class RequestDelegate {
 
     private OkHttpClient defaultHttpClient;
 
-    /**
-     * 取消相关tag的请求
-     *
-     * @param tag
-     */
-    public void cancelRequestByTag(Object tag) {
-        getDefaultHttpClient().cancel(tag);
-    }
-
-    public RequestDelegate(@NonNull OkHttpClient defaultHttpClient) {
-        this.defaultHttpClient = defaultHttpClient;
-    }
-
-    public OkHttpClient getDefaultHttpClient() {
-        return defaultHttpClient;
+    public RequestDelegate(@NonNull OkHttpClient okHttpClient) {
+        defaultHttpClient = okHttpClient;
     }
 
     public Call get(String url, Object tag) throws Exception {
         Request request = new Request.Builder().get().url(url).tag(tag).build();
-        return getDefaultHttpClient().newCall(request);
+        return defaultHttpClient.newCall(request);
     }
 
-    public Call get(String url, HashMap<String, String> params, Object
-            tag) throws Exception {
+    public Call get(String url, HashMap<String, String> params, Object tag) throws Exception {
         StringBuilder paramString = new StringBuilder("");
         if (params == null) {
             params = new HashMap<>();
@@ -59,12 +45,11 @@ public class RequestDelegate {
         return get(url + paramString.toString(), tag);
     }
 
-    public Call post(String url, HashMap<String, String> params, Object
-            tag) throws Exception {
+    public Call post(String url, HashMap<String, String> params, Object tag) throws Exception {
         if (params == null) {
             params = new HashMap<>();
         }
-        FormEncodingBuilder builder = new FormEncodingBuilder();
+        FormBody.Builder builder = new FormBody.Builder();
         if (params.size() > 0) {
             for (HashMap.Entry<String, String> entry : params.entrySet()) {
                 builder.add(entry.getKey(), entry.getValue());
@@ -72,23 +57,22 @@ public class RequestDelegate {
         }
         RequestBody formBody = builder.build();
         Request request = new Request.Builder().post(formBody).url(url).tag(tag).build();
-        return getDefaultHttpClient().newCall(request);
+        return defaultHttpClient.newCall(request);
     }
 
-    public Call put(String url, HashMap<String, String> params, Object
-            tag) throws Exception {
+    public Call put(String url, HashMap<String, String> params, Object tag) throws Exception {
         if (params == null) {
             params = new HashMap<>();
         }
-        FormEncodingBuilder builder = new FormEncodingBuilder();
+        FormBody.Builder builder = new FormBody.Builder();
         if (params.size() > 0) {
             for (HashMap.Entry<String, String> entry : params.entrySet()) {
                 builder.add(entry.getKey(), entry.getValue());
             }
         }
         RequestBody formBody = builder.build();
-        Request request = new Request.Builder().put(formBody).url(url).tag(tag).build();
-        return getDefaultHttpClient().newCall(request);
+        Request request = new Request.Builder().post(formBody).url(url).tag(tag).build();
+        return defaultHttpClient.newCall(request);
     }
 
     public Call put(String url, Object tag) throws Exception {
@@ -100,11 +84,10 @@ public class RequestDelegate {
      */
     public Call delete(String url, Object tag) throws Exception {
         Request request = new Request.Builder().delete().url(url).tag(tag).build();
-        return getDefaultHttpClient().newCall(request);
+        return defaultHttpClient.newCall(request);
     }
 
-    public Call delete(String url, HashMap<String, String> params,
-                       Object tag) throws Exception {
+    public Call delete(String url, HashMap<String, String> params, Object tag) throws Exception {
         StringBuilder paramString = new StringBuilder("");
         if (params == null) {
             params = new HashMap<>();
@@ -129,7 +112,8 @@ public class RequestDelegate {
     public Call upload(String uploadUrl, HashMap<String, String> params,
                        String fileKey, MediaType mediaType, String filePath) throws Exception {
         File file = new File(filePath);
-        MultipartBuilder builder = new MultipartBuilder().type(MultipartBuilder.FORM)
+        MultipartBody.Builder builder = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
                 .addFormDataPart(fileKey, file.getName(), RequestBody.create(mediaType, file));
         if (params != null && params.size() > 0) {
             for (HashMap.Entry<String, String> entry : params.entrySet()) {
@@ -137,12 +121,12 @@ public class RequestDelegate {
             }
         }
         Request request = new Request.Builder().url(uploadUrl).post(builder.build()).build();
-        return getDefaultHttpClient().newCall(request);
+        return defaultHttpClient.newCall(request);
     }
 
     synchronized public Call getAsync(String url, Callback defCallBack, Object tag) {
         Request request = new Request.Builder().get().url(url).tag(tag).build();
-        Call call = getDefaultHttpClient().newCall(request);
+        Call call = defaultHttpClient.newCall(request);
         call.enqueue(defCallBack);
         return call;
     }
@@ -166,14 +150,14 @@ public class RequestDelegate {
         if (params == null) {
             params = new HashMap<>();
         }
-        FormEncodingBuilder builder = new FormEncodingBuilder();
+        FormBody.Builder builder = new FormBody.Builder();
         if (params.size() > 0) {
             for (HashMap.Entry<String, String> entry : params.entrySet()) {
                 builder.add(entry.getKey(), entry.getValue());
             }
         }
         Request request = new Request.Builder().post(builder.build()).url(url).tag(tag).build();
-        Call call = getDefaultHttpClient().newCall(request);
+        Call call = defaultHttpClient.newCall(request);
         call.enqueue(defCallBack);
         return call;
     }
@@ -182,15 +166,15 @@ public class RequestDelegate {
         if (params == null) {
             params = new HashMap<>();
         }
-        FormEncodingBuilder builder = new FormEncodingBuilder();
+        FormBody.Builder builder = new FormBody.Builder();
         if (params.size() > 0) {
             for (HashMap.Entry<String, String> entry : params.entrySet()) {
                 builder.add(entry.getKey(), entry.getValue());
             }
         }
         RequestBody formBody = builder.build();
-        Request request = new Request.Builder().put(formBody).url(url).tag(tag).build();
-        Call call = getDefaultHttpClient().newCall(request);
+        Request request = new Request.Builder().post(formBody).url(url).tag(tag).build();
+        Call call = defaultHttpClient.newCall(request);
         call.enqueue(defCallBack);
         return call;
     }
@@ -204,7 +188,7 @@ public class RequestDelegate {
      */
     synchronized public Call deleteAsync(String url, Callback defCallBack, Object tag) {
         Request request = new Request.Builder().delete().url(url).tag(tag).build();
-        Call call = getDefaultHttpClient().newCall(request);
+        Call call = defaultHttpClient.newCall(request);
         call.enqueue(defCallBack);
         return call;
     }
@@ -237,7 +221,8 @@ public class RequestDelegate {
                                          String fileKey, MediaType mediaType, String filePath, Callback callBack) {
         File file = new File(filePath);
         if (file.exists() && !file.isDirectory() && file.length() > 0) {
-            MultipartBuilder builder = new MultipartBuilder().type(MultipartBuilder.FORM)
+            MultipartBody.Builder builder = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
                     .addFormDataPart(fileKey, file.getName(), RequestBody.create(mediaType, file));
             if (params != null && params.size() > 0) {
                 for (HashMap.Entry<String, String> entry : params.entrySet()) {
@@ -245,7 +230,7 @@ public class RequestDelegate {
                 }
             }
             Request request = new Request.Builder().url(uploadUrl).post(builder.build()).build();
-            Call call = getDefaultHttpClient().newCall(request);
+            Call call = defaultHttpClient.newCall(request);
             call.enqueue(callBack);
             return call;
         }

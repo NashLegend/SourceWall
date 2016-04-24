@@ -7,6 +7,7 @@ import android.webkit.CookieSyncManager;
 import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.model.UserInfo;
 import net.nashlegend.sourcewall.request.HttpFetcher;
+import net.nashlegend.sourcewall.swrequest.HttpUtil;
 import net.nashlegend.sourcewall.swrequest.JsonHandler;
 import net.nashlegend.sourcewall.swrequest.RequestBuilder;
 import net.nashlegend.sourcewall.swrequest.RequestObject;
@@ -62,7 +63,7 @@ public class UserAPI extends APIBase {
                 })
                 .setRequestCallBack(callBack)
                 .get()
-                .requestAsync();
+                .startRequest();
     }
 
     /**
@@ -101,7 +102,7 @@ public class UserAPI extends APIBase {
                 .setRequestCallBack(callBack)
                 .setParams(pairs)
                 .post()
-                .requestAsync();
+                .startRequest();
     }
 
     /**
@@ -121,8 +122,8 @@ public class UserAPI extends APIBase {
         cookieManager.removeSessionCookie();
         CookieSyncManager.getInstance().sync();
         //直接置为null不就得了……
-        HttpFetcher.clearCookiesForOkHttp(HttpFetcher.getDefaultUploadHttpClient());
-        HttpFetcher.clearCookiesForOkHttp(HttpFetcher.getDefaultUploadHttpClient());
+        HttpUtil.clearCookiesForOkHttp(HttpUtil.getDefaultUploadHttpClient());
+        HttpUtil.clearCookiesForOkHttp(HttpUtil.getDefaultUploadHttpClient());
     }
 
     /**

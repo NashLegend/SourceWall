@@ -105,7 +105,7 @@ public class QuestionAPI extends APIBase {
             resultObject.ok = true;
             resultObject.result = subItems;
         } catch (Exception e) {
-            handleRequestException(e, resultObject);
+            JsonHandler.handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -138,7 +138,7 @@ public class QuestionAPI extends APIBase {
             }
 
         } catch (Exception e) {
-            handleRequestException(e, resultObject);
+            JsonHandler.handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -154,7 +154,7 @@ public class QuestionAPI extends APIBase {
         try {
             if (jString != null) {
                 ArrayList<Question> questions = new ArrayList<>();
-                JSONArray results = getUniversalJsonArray(jString, resultObject);
+                JSONArray results = JsonHandler.getUniversalJsonArray(jString, resultObject);
                 if (results != null) {
                     for (int i = 0; i < results.length(); i++) {
                         JSONObject jsonObject;
@@ -173,7 +173,7 @@ public class QuestionAPI extends APIBase {
             }
 
         } catch (Exception e) {
-            handleRequestException(e, resultObject);
+            JsonHandler.handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -195,7 +195,7 @@ public class QuestionAPI extends APIBase {
                 RequestCache.getInstance().addStringToCacheForceUpdate("question.hottest", html);
             }
         } catch (Exception e) {
-            handleRequestException(e, resultObject);
+            JsonHandler.handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -221,7 +221,7 @@ public class QuestionAPI extends APIBase {
                 RequestCache.getInstance().addStringToCacheForceUpdate("question.hottest", jString);
             }
         } catch (Exception e) {
-            handleRequestException(e, resultObject);
+            JsonHandler.handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -242,7 +242,7 @@ public class QuestionAPI extends APIBase {
                 RequestCache.getInstance().addStringToCacheForceUpdate("question.highlight", html);
             }
         } catch (Exception e) {
-            handleRequestException(e, resultObject);
+            JsonHandler.handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -260,7 +260,7 @@ public class QuestionAPI extends APIBase {
             resultObject.ok = true;
             resultObject.result = questions;
         } catch (Exception e) {
-            handleRequestException(e, resultObject);
+            JsonHandler.handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -289,14 +289,14 @@ public class QuestionAPI extends APIBase {
         try {
             Question question;
             String jString = RequestCache.getInstance().getStringFromCache(url);
-            JSONObject result = getUniversalJsonObject(jString, resultObject);
+            JSONObject result = JsonHandler.getUniversalJsonObject(jString, resultObject);
             if (result != null) {
                 question = Question.fromJson(result);
                 resultObject.ok = true;
                 resultObject.result = question;
             }
         } catch (Exception e) {
-            handleRequestException(e, resultObject);
+            JsonHandler.handleRequestException(e, resultObject);
         }
 
         return resultObject;
@@ -330,7 +330,7 @@ public class QuestionAPI extends APIBase {
                 return resultObject;
             }
             String jString = httpResult.toString();
-            JSONObject result = getUniversalJsonObject(jString, resultObject);
+            JSONObject result = JsonHandler.getUniversalJsonObject(jString, resultObject);
             if (result != null) {
                 question = Question.fromJson(result);
                 resultObject.ok = true;
@@ -338,7 +338,7 @@ public class QuestionAPI extends APIBase {
                 RequestCache.getInstance().addStringToCacheForceUpdate(url, jString);
             }
         } catch (Exception e) {
-            handleRequestException(e, resultObject);
+            JsonHandler.handleRequestException(e, resultObject);
         }
 
         return resultObject;
@@ -363,7 +363,7 @@ public class QuestionAPI extends APIBase {
             pairs.put("limit", "20");
             pairs.put("offset", String.valueOf(offset));
             String jString = HttpFetcher.get(url, pairs).toString();
-            JSONArray comments = getUniversalJsonArray(jString, resultObject);
+            JSONArray comments = JsonHandler.getUniversalJsonArray(jString, resultObject);
             if (comments != null) {
                 for (int i = 0; i < comments.length(); i++) {
                     JSONObject jo = comments.getJSONObject(i);
@@ -374,7 +374,7 @@ public class QuestionAPI extends APIBase {
                 resultObject.result = answers;
             }
         } catch (Exception e) {
-            handleRequestException(e, resultObject);
+            JsonHandler.handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -406,7 +406,7 @@ public class QuestionAPI extends APIBase {
         pairs.put("answer_id", id);
         try {
             String result = HttpFetcher.get(url, pairs).toString();
-            JSONArray answerArray = getUniversalJsonArray(result, resultObject);
+            JSONArray answerArray = JsonHandler.getUniversalJsonArray(result, resultObject);
             if (answerArray != null && answerArray.length() > 0) {
                 JSONObject answerObject = answerArray.getJSONObject(0);
                 QuestionAnswer answer = QuestionAnswer.fromJson(answerObject);
@@ -414,7 +414,7 @@ public class QuestionAPI extends APIBase {
                 resultObject.result = answer;
             }
         } catch (Exception e) {
-            handleRequestException(e, resultObject);
+            JsonHandler.handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -439,7 +439,7 @@ public class QuestionAPI extends APIBase {
             pairs.put("limit", "20");
             pairs.put("offset", String.valueOf(offset));
             String jString = HttpFetcher.get(url, pairs).toString();
-            JSONArray comments = getUniversalJsonArray(jString, resultObject);
+            JSONArray comments = JsonHandler.getUniversalJsonArray(jString, resultObject);
             if (comments != null) {
                 for (int i = 0; i < comments.length(); i++) {
                     JSONObject jsonObject = comments.getJSONObject(i);
@@ -450,7 +450,7 @@ public class QuestionAPI extends APIBase {
                 resultObject.result = list;
             }
         } catch (Exception e) {
-            handleRequestException(e, resultObject);
+            JsonHandler.handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -489,7 +489,7 @@ public class QuestionAPI extends APIBase {
                 .setRequestCallBack(callBack)
                 .setParams(pairs)
                 .delete()
-                .requestAsync();
+                .startRequest();
     }
 
     /**
@@ -511,7 +511,7 @@ public class QuestionAPI extends APIBase {
             pairs.put("limit", "20");
             pairs.put("offset", String.valueOf(offset));
             String jString = HttpFetcher.get(url, pairs).toString();
-            JSONArray comments = getUniversalJsonArray(jString, resultObject);
+            JSONArray comments = JsonHandler.getUniversalJsonArray(jString, resultObject);
             if (comments != null) {
                 for (int i = 0; i < comments.length(); i++) {
                     JSONObject jsonObject = comments.getJSONObject(i);
@@ -522,7 +522,7 @@ public class QuestionAPI extends APIBase {
                 resultObject.result = list;
             }
         } catch (Exception e) {
-            handleRequestException(e, resultObject);
+            JsonHandler.handleRequestException(e, resultObject);
         }
 
         return resultObject;
@@ -546,7 +546,7 @@ public class QuestionAPI extends APIBase {
                 .setRequestCallBack(callBack)
                 .setParams(pairs)
                 .post()
-                .requestAsync();
+                .startRequest();
     }
 
     /**
@@ -584,11 +584,11 @@ public class QuestionAPI extends APIBase {
             pairs.put("answer_id", id);
             pairs.put("opinion", opinion);
             String result = HttpFetcher.post(url, pairs).toString();
-            if (getUniversalJsonSimpleBoolean(result, resultObject)) {
+            if (JsonHandler.getUniversalJsonSimpleBoolean(result, resultObject)) {
                 resultObject.ok = true;
             }
         } catch (Exception e) {
-            handleRequestException(e, resultObject);
+            JsonHandler.handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -606,7 +606,7 @@ public class QuestionAPI extends APIBase {
         pairs.put("answer_id", id);
         pairs.put("opinion", opinion);
         new RequestBuilder<Boolean>().setUrl(url).setParams(pairs).setParser(new BooleanParser())
-                .setRequestCallBack(callBack).post().requestAsync();
+                .setRequestCallBack(callBack).post().startRequest();
     }
 
     /**
@@ -623,11 +623,11 @@ public class QuestionAPI extends APIBase {
             pairs.put("v", System.currentTimeMillis() + "");
             pairs.put("answer_id", id);
             String result = HttpFetcher.post(url, pairs).toString();
-            if (getUniversalJsonSimpleBoolean(result, resultObject)) {
+            if (JsonHandler.getUniversalJsonSimpleBoolean(result, resultObject)) {
                 resultObject.ok = true;
             }
         } catch (Exception e) {
-            handleRequestException(e, resultObject);
+            JsonHandler.handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -644,7 +644,7 @@ public class QuestionAPI extends APIBase {
         pairs.put("v", System.currentTimeMillis() + "");
         pairs.put("answer_id", id);
         new RequestBuilder<Boolean>().setUrl(url).setParams(pairs).setParser(new BooleanParser())
-                .setRequestCallBack(callBack).post().requestAsync();
+                .setRequestCallBack(callBack).post().startRequest();
     }
 
     /**
@@ -659,7 +659,7 @@ public class QuestionAPI extends APIBase {
         pairs.put("v", System.currentTimeMillis() + "");
         pairs.put("answer_id", id);
         new RequestBuilder<Boolean>().setUrl(url).setParams(pairs).setParser(new BooleanParser())
-                .setRequestCallBack(callBack).post().requestAsync();
+                .setRequestCallBack(callBack).post().startRequest();
     }
 
     /**
@@ -673,7 +673,7 @@ public class QuestionAPI extends APIBase {
         HashMap<String, String> pairs = new HashMap<>();
         pairs.put("answer_id", id);
         new RequestBuilder<Boolean>().setUrl(url).setParams(pairs).setParser(new BooleanParser())
-                .setRequestCallBack(callBack).delete().requestAsync();
+                .setRequestCallBack(callBack).delete().startRequest();
     }
 
     /**
@@ -702,7 +702,7 @@ public class QuestionAPI extends APIBase {
         pairs.put("question_id", questionID);
         pairs.put("retrieve_type", "by_question");
         new RequestBuilder<Boolean>().setUrl(url).setParams(pairs).setParser(new BooleanParser())
-                .setRequestCallBack(callBack).post().requestAsync();
+                .setRequestCallBack(callBack).post().startRequest();
     }
 
     /**
@@ -716,7 +716,7 @@ public class QuestionAPI extends APIBase {
         HashMap<String, String> pairs = new HashMap<>();
         pairs.put("question_id", questionID);
         pairs.put("retrieve_type", "by_question");
-        new RequestBuilder<Boolean>().setUrl(url).setParams(pairs).setRequestCallBack(callBack).setParser(new BooleanParser()).delete().requestAsync();
+        new RequestBuilder<Boolean>().setUrl(url).setParams(pairs).setRequestCallBack(callBack).setParser(new BooleanParser()).delete().startRequest();
     }
 
     /**
@@ -751,7 +751,7 @@ public class QuestionAPI extends APIBase {
                 .setRequestCallBack(callBack)
                 .setParams(pairs)
                 .post()
-                .requestAsync();
+                .startRequest();
     }
 
     /**
@@ -762,7 +762,7 @@ public class QuestionAPI extends APIBase {
      */
     public static void deleteMyComment(String id, CallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/ask/answer/" + id + ".json";
-        new RequestBuilder<Boolean>().setUrl(url).setRequestCallBack(callBack).setParser(new BooleanParser()).delete().requestAsync();
+        new RequestBuilder<Boolean>().setUrl(url).setRequestCallBack(callBack).setParser(new BooleanParser()).delete().startRequest();
     }
 
     /**
@@ -794,7 +794,7 @@ public class QuestionAPI extends APIBase {
                         return uComment;
                     }
                 })
-                .requestAsync();
+                .startRequest();
     }
 
     /**
@@ -817,7 +817,7 @@ public class QuestionAPI extends APIBase {
                 resultObject.result = prepareData;
             }
         } catch (Exception e) {
-            handleRequestException(e, resultObject);
+            JsonHandler.handleRequestException(e, resultObject);
         }
         return resultObject;
     }
@@ -863,7 +863,7 @@ public class QuestionAPI extends APIBase {
                 resultObject.result = result.toString();
             }
         } catch (Exception e) {
-            handleRequestException(e, resultObject);
+            JsonHandler.handleRequestException(e, resultObject);
         }
         return resultObject;
     }

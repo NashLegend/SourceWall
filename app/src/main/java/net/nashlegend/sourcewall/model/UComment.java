@@ -44,7 +44,7 @@ public class UComment extends AceModel {
     public static UComment fromPostJson(JSONObject replyObject) throws Exception {
         UComment comment = new UComment();
         String rid = replyObject.getString("id");
-        JSONObject postObject = APIBase.getJsonObject(replyObject, "post");
+        JSONObject postObject = replyObject.optJSONObject("post");
         String hostTitle = postObject.getString("title");
         String hostID = postObject.getString("id");
         boolean hasLiked = replyObject.optBoolean("current_user_has_liked");

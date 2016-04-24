@@ -10,4 +10,9 @@ public class SampleActivityPresenter extends ActivityPresenter<SampleActivityVie
     public SampleActivityPresenter(SampleActivityView view) {
         super(view);
     }
+
+    @Override
+    public void doSomething() {
+        view.doSomething();
+    }
 }

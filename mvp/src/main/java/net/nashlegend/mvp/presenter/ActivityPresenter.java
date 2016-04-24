@@ -62,4 +62,19 @@ public class ActivityPresenter<T extends ActivityView> extends Presenter impleme
     public void onBackPressed() {
 
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+
+    }
 }

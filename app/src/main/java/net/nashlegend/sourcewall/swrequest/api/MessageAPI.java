@@ -45,7 +45,7 @@ public class MessageAPI extends APIBase {
                 .setRequestCallBack(callBack)
                 .setParams(pairs)
                 .get()
-                .requestAsync();
+                .startRequest();
     }
 
     /**
@@ -79,7 +79,7 @@ public class MessageAPI extends APIBase {
                 .setRequestCallBack(callBack)
                 .setParams(pairs)
                 .get()
-                .requestAsync();
+                .startRequest();
     }
 
     /**
@@ -114,7 +114,7 @@ public class MessageAPI extends APIBase {
                 .setRequestCallBack(callBack)
                 .setParams(pairs)
                 .get()
-                .requestAsync();
+                .startRequest();
     }
 
     /**
@@ -130,7 +130,7 @@ public class MessageAPI extends APIBase {
                 .setParser(new BooleanParser())
                 .setRequestCallBack(callBack)
                 .put()
-                .requestAsync();
+                .startRequest();
     }
 
     /**
@@ -145,7 +145,7 @@ public class MessageAPI extends APIBase {
             @Override
             public ArrayList<Notice> parse(String str, ResponseObject<ArrayList<Notice>> responseObject) throws Exception {
                 JSONObject nObject = JsonHandler.getUniversalJsonObject(str, responseObject);
-                JSONArray notices = getJsonArray(nObject, "list");
+                JSONArray notices = JsonHandler.getJsonArray(nObject, "list");
                 ArrayList<Notice> noticeList = new ArrayList<>();
                 assert notices != null;
                 for (int i = 0; i < notices.length(); i++) {
@@ -166,7 +166,7 @@ public class MessageAPI extends APIBase {
                 .setRequestCallBack(callBack)
                 .setParams(pairs)
                 .put()
-                .requestAsync();
+                .startRequest();
     }
 
     /**
@@ -210,7 +210,7 @@ public class MessageAPI extends APIBase {
                 .setRequestCallBack(callBack)
                 .setParams(pairs)
                 .get()
-                .requestAsync();
+                .startRequest();
     }
 
     /**
@@ -234,7 +234,7 @@ public class MessageAPI extends APIBase {
                 .setParser(parser)
                 .setRequestCallBack(callBack)
                 .get()
-                .requestAsync();
+                .startRequest();
     }
 
 }

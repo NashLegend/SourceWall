@@ -26,4 +26,11 @@ public interface IActivityPresenter extends IPresenter {
     void onDestroy();
 
     void onBackPressed();
+
+    void onActivityResult(int requestCode, int resultCode, Intent data);
+
+    void onSaveInstanceState(Bundle outState);
+
+    void onRestoreInstanceState(Bundle savedInstanceState);
+
 }
