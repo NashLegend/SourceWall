@@ -136,12 +136,29 @@ public class UserAPI extends APIBase {
     }
 
     /**
+     * 保存用户token
+     *
+     * @param token
+     */
+    public static void setToken(String token) {
+        SharedPreferencesUtil.saveString(Consts.Key_Access_Token, token);
+    }
+
+    /**
      * 获取保存的用户ukey
      *
      * @return 用户ukey，6位长度
      */
     public static String getUkey() {
         return SharedPreferencesUtil.readString(Consts.Key_Ukey, "");
+    }
+    /**
+     * 获取保存的用户ukey
+     *
+     * @return 用户ukey，6位长度
+     */
+    public static void setUkey(String ukey) {
+        SharedPreferencesUtil.saveString(Consts.Key_Ukey, ukey);
     }
 
     /**

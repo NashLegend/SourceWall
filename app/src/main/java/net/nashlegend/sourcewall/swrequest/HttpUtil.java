@@ -83,7 +83,8 @@ public class HttpUtil {
                     .cookieJar(new CookieJar() {
                         @Override
                         synchronized public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
-                            List<Cookie> preCookies = cookieStore.get(url.host());
+                            List<Cookie> preCookies = cookieStore.get(url.host());//它与cookies都不可变
+                            ArrayList<Cookie> mergedCookies = new ArrayList<>();
                             if (preCookies != null) {
                                 List<Cookie> deprecatedCookies = new ArrayList<>();
                                 for (Cookie cookie : cookies) {
@@ -93,10 +94,11 @@ public class HttpUtil {
                                         }
                                     }
                                 }
-                                preCookies.removeAll(deprecatedCookies);
-                                cookies.addAll(preCookies);
+                                mergedCookies.addAll(preCookies);
+                                mergedCookies.removeAll(deprecatedCookies);
                             }
-                            cookieStore.put(url.host(), cookies);
+                            mergedCookies.addAll(cookies);
+                            cookieStore.put(url.host(), mergedCookies);
                         }
 
                         @Override
@@ -131,7 +133,9 @@ public class HttpUtil {
         cookies.add(new Cookie.Builder().domain("guokr.com").name("_32353_access_token").value(UserAPI.getToken()).build());
         cookies.add(new Cookie.Builder().domain("guokr.com").name("_32353_ukey").value(UserAPI.getUkey()).build());
         try {
-            client.cookieJar().saveFromResponse(HttpUrl.parse("http://guokr.com"), cookies);
+            client.cookieJar().saveFromResponse(HttpUrl.parse("http://www.guokr.com/"), cookies);
+            client.cookieJar().saveFromResponse(HttpUrl.parse("http://apis.guokr.com/"), cookies);
+            client.cookieJar().saveFromResponse(HttpUrl.parse("http://m.guokr.com/"), cookies);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -23,6 +23,7 @@ import com.umeng.analytics.MobclickAgent;
 import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.swrequest.HttpUtil;
+import net.nashlegend.sourcewall.swrequest.api.UserAPI;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
@@ -84,10 +85,10 @@ public class LoginActivity extends SwipeActivity {
                     String paramName = rawCookieParamNameAndValue[0].trim();
                     String paramValue = rawCookieParamNameAndValue[1].trim();
                     if (Consts.Cookie_Token_Key.equals(paramName)) {
-                        SharedPreferencesUtil.saveString(Consts.Key_Access_Token, paramValue);
+                        UserAPI.setToken(paramValue);
                         tmpToken = paramValue;
                     } else if (Consts.Cookie_Ukey_Key.equals(paramName)) {
-                        SharedPreferencesUtil.saveString(Consts.Key_Ukey, paramValue);
+                        UserAPI.setUkey(paramValue);
                         tmpUkey = paramValue;
                     }
                 }
