@@ -11,6 +11,7 @@ def releaseTime() {
 ext {
 
     deps = [
+            Junit            : "junit:junit:4.12",
             SupportV4        : "com.android.support:support-v4:${supportVersion}",
             SupportAppcompat : "com.android.support:appcompat-v7:${supportVersion}",
             SupportDesign    : "com.android.support:design:${supportVersion}",

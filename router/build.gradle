@@ -1,0 +1,32 @@
+apply plugin: 'com.android.library'
+apply plugin: 'maven'
+
+android {
+    compileSdkVersion built.compileSdkVersion
+    buildToolsVersion built.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion built.minSdkVersion
+        targetSdkVersion built.targetSDKVersion
+        versionCode built.versionCode
+        versionName built.versionName
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+}
+
+dependencies {
+    compile deps.SupportAppcompat
+    compile project(':router-annotations')
+    testCompile deps.Junit
+}
+
+apply from: rootProject.file('gradle/maven.gradle')

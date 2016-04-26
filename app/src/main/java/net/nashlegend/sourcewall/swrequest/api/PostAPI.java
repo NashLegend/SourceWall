@@ -469,6 +469,19 @@ public class PostAPI extends APIBase {
     }
 
     /**
+     * 匿名回复
+     *
+     * @param id      帖子id
+     * @param content 回复内容
+     * @param callBack
+     * @return ResponseObject.result is the reply_id if ok;
+     */
+    public static RequestObject<String> replyPostAnonymous(String id, String content, CallBack<String> callBack) {
+        // TODO: 16/4/27
+        return null;
+    }
+
+    /**
      * 根据一条通知的id获取所有内容
      * 先是：http://www.guokr.com/user/notice/8738252/
      * 跳到：http://www.guokr.com/post/reply/654321/

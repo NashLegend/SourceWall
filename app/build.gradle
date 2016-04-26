@@ -1,6 +1,20 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
 
 android {
+
+    lintOptions {
+        abortOnError true
+        enable 'StopShip'
+        fatal 'StopShip'
+    }
+
+    dexOptions {
+        incremental false
+        javaMaxHeapSize "4096M"
+        preDexLibraries = false
+    }
+
     compileSdkVersion built.compileSdkVersion
     buildToolsVersion built.buildToolsVersion
 
@@ -90,4 +104,9 @@ dependencies {
     debugCompile deps.LeakCanaryDebug
     releaseCompile deps.LeakCanaryRelease
     testCompile deps.LeakCanaryTest
+
+    compile project(':router')
+    compile project(':mvp')
+    apt project(':router-compiler')
+    compile 'com.android.support:support-v4:23.3.0'
 }

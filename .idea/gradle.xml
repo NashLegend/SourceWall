@@ -10,6 +10,9 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/mvp" />
+            <option value="$PROJECT_DIR$/router" />
+            <option value="$PROJECT_DIR$/router-annotations" />
+            <option value="$PROJECT_DIR$/router-compiler" />
             <option value="$PROJECT_DIR$/tools" />
           </set>
         </option>
@@ -18,6 +21,9 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/mvp" />
+            <option value="$PROJECT_DIR$/router" />
+            <option value="$PROJECT_DIR$/router-annotations" />
+            <option value="$PROJECT_DIR$/router-compiler" />
             <option value="$PROJECT_DIR$/tools" />
           </set>
         </option>
