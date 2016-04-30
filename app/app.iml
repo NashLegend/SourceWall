@@ -66,14 +66,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/github/jni" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/github/rs" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/github/shaders" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/testGithub/res" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/testGithub/resources" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/testGithub/assets" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/testGithub/aidl" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/testGithub/java" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/testGithub/jni" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/testGithub/rs" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/testGithub/shaders" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTestGithub/res" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTestGithub/resources" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTestGithub/assets" type="java-test-resource" />
@@ -82,6 +74,14 @@
       <sourceFolder url="file://$MODULE_DIR$/src/androidTestGithub/jni" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTestGithub/rs" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTestGithub/shaders" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testGithub/res" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testGithub/resources" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testGithub/assets" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testGithub/aidl" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testGithub/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testGithub/jni" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testGithub/rs" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/testGithub/shaders" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/debug/assets" type="java-resource" />
@@ -145,11 +145,14 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/pl.droidsonroids.gif/android-gif-drawable/1.1.13/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental-safeguard" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/instant-run-support" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/jniLibs" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/manifests" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/res" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/rs" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/shaders" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/symbols" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/transforms" />
       <excludeFolder url="file://$MODULE_DIR$/build/outputs" />
       <excludeFolder url="file://$MODULE_DIR$/build/tmp" />
     </content>
@@ -191,5 +194,6 @@
     <orderEntry type="module" module-name="router" exported="" />
     <orderEntry type="module" module-name="router-annotations" exported="" />
     <orderEntry type="module" module-name="mvp" exported="" />
+    <orderEntry type="library" exported="" name="android-android-23" level="project" />
   </component>
 </module>

@@ -26,7 +26,7 @@ import net.nashlegend.sourcewall.fragment.NavigationDrawerFragment;
 import net.nashlegend.sourcewall.fragment.PostsFragment;
 import net.nashlegend.sourcewall.fragment.QuestionsFragment;
 import net.nashlegend.sourcewall.model.SubItem;
-import net.nashlegend.sourcewall.swrequest.cache.RequestCache;
+import net.nashlegend.sourcewall.request.cache.RequestCache;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 

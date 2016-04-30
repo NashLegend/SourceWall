@@ -88,7 +88,7 @@
 
         </LinearLayout>
 
-        <net.nashlegend.sourcewall.commonview.TTextView
+        <net.nashlegend.sourcewall.view.common.TTextView
             android:id="@+id/text_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

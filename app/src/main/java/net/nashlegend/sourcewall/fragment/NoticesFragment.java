@@ -17,13 +17,13 @@ import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.NoticeAdapter;
-import net.nashlegend.sourcewall.commonview.LListView;
-import net.nashlegend.sourcewall.commonview.LoadingView;
+import net.nashlegend.sourcewall.view.common.LListView;
+import net.nashlegend.sourcewall.view.common.LoadingView;
 import net.nashlegend.sourcewall.model.Notice;
 import net.nashlegend.sourcewall.model.SubItem;
-import net.nashlegend.sourcewall.swrequest.RequestObject;
-import net.nashlegend.sourcewall.swrequest.ResponseObject;
-import net.nashlegend.sourcewall.swrequest.api.MessageAPI;
+import net.nashlegend.sourcewall.request.RequestObject;
+import net.nashlegend.sourcewall.request.ResponseObject;
+import net.nashlegend.sourcewall.request.api.MessageAPI;
 import net.nashlegend.sourcewall.util.CommonUtil;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;

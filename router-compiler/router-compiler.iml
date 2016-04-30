@@ -32,5 +32,6 @@
     <orderEntry type="library" exported="" name="auto-common-0.6" level="project" />
     <orderEntry type="library" exported="" name="javapoet-1.6.1" level="project" />
     <orderEntry type="library" exported="" name="guava-18.0" level="project" />
+    <orderEntry type="library" exported="" name="router-compiler.router-compiler" level="project" />
   </component>
 </module>

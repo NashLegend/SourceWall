@@ -2,9 +2,7 @@ package net.nashlegend.sourcewall.request;
 
 import android.text.TextUtils;
 
-import net.nashlegend.sourcewall.swrequest.HttpUtil;
-import net.nashlegend.sourcewall.swrequest.ResponseObject;
-import net.nashlegend.sourcewall.swrequest.api.UserAPI;
+import net.nashlegend.sourcewall.request.api.UserAPI;
 
 import java.util.HashMap;
 

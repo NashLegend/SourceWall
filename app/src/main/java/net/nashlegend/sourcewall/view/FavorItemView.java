@@ -12,9 +12,9 @@ import android.widget.TextView;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.model.Basket;
-import net.nashlegend.sourcewall.swrequest.RequestObject;
-import net.nashlegend.sourcewall.swrequest.ResponseObject;
-import net.nashlegend.sourcewall.swrequest.api.FavorAPI;
+import net.nashlegend.sourcewall.request.RequestObject;
+import net.nashlegend.sourcewall.request.ResponseObject;
+import net.nashlegend.sourcewall.request.api.FavorAPI;
 
 import de.greenrobot.event.EventBus;
 

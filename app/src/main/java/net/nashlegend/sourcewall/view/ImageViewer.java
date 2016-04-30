@@ -20,9 +20,9 @@ import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import net.nashlegend.sourcewall.R;
-import net.nashlegend.sourcewall.commonview.LoadingView;
-import net.nashlegend.sourcewall.commonview.ScalingImage;
-import net.nashlegend.sourcewall.swrequest.ResponseObject;
+import net.nashlegend.sourcewall.view.common.LoadingView;
+import net.nashlegend.sourcewall.view.common.ScalingImage;
+import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.DisplayUtil;
 import net.nashlegend.sourcewall.util.ImageUtils;

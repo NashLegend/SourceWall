@@ -52,7 +52,7 @@
             android:textSize="16sp" />
     </LinearLayout>
 
-    <net.nashlegend.sourcewall.commonview.shuffle.ShuffleCardSimple
+    <net.nashlegend.sourcewall.view.common.shuffle.ShuffleCardSimple
         android:id="@+id/senator"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

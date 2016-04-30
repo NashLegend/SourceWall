@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:gravity="center">
 
-    <net.nashlegend.sourcewall.commonview.ScalingImage
+    <net.nashlegend.sourcewall.view.common.ScalingImage
         android:id="@+id/zoom_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <net.nashlegend.sourcewall.commonview.LoadingView
+    <net.nashlegend.sourcewall.view.common.LoadingView
         android:id="@+id/image_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

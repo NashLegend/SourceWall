@@ -4,14 +4,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <net.nashlegend.sourcewall.commonview.LListView
+    <net.nashlegend.sourcewall.view.common.LListView
         android:id="@+id/notice_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="false" />
 
-    <net.nashlegend.sourcewall.commonview.LoadingView
+    <net.nashlegend.sourcewall.view.common.LoadingView
         android:id="@+id/notice_loading_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

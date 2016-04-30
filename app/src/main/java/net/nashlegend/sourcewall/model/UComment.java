@@ -2,7 +2,7 @@ package net.nashlegend.sourcewall.model;
 
 import android.os.Parcel;
 
-import net.nashlegend.sourcewall.swrequest.api.APIBase;
+import net.nashlegend.sourcewall.request.api.APIBase;
 
 import org.json.JSONObject;
 

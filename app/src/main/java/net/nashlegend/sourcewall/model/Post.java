@@ -3,8 +3,8 @@ package net.nashlegend.sourcewall.model;
 import android.os.Parcel;
 import android.text.TextUtils;
 
-import net.nashlegend.sourcewall.swrequest.JsonHandler;
-import net.nashlegend.sourcewall.swrequest.api.APIBase;
+import net.nashlegend.sourcewall.request.JsonHandler;
+import net.nashlegend.sourcewall.request.api.APIBase;
 
 import org.json.JSONObject;
 

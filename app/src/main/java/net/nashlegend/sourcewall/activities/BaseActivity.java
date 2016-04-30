@@ -8,8 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.R;
-import net.nashlegend.sourcewall.commonview.AAsyncTask;
-import net.nashlegend.sourcewall.commonview.IStackedAsyncTaskInterface;
+import net.nashlegend.sourcewall.view.common.AAsyncTask;
+import net.nashlegend.sourcewall.view.common.IStackedAsyncTaskInterface;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 import net.nashlegend.sourcewall.util.ToastUtil;

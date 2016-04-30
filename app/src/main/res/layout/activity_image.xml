@@ -5,7 +5,7 @@
     android:background="@android:color/black"
     tools:context=".activities.ImageActivity">
 
-    <net.nashlegend.sourcewall.commonview.AdaptivePager
+    <net.nashlegend.sourcewall.view.common.AdaptivePager
         android:id="@+id/image_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

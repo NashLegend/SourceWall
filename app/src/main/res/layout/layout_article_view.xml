@@ -53,7 +53,7 @@
                     android:textSize="@dimen/text_author_view_font_size_dimen" />
             </LinearLayout>
 
-            <net.nashlegend.sourcewall.commonview.WWebView
+            <net.nashlegend.sourcewall.view.common.WWebView
                 android:id="@+id/web_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

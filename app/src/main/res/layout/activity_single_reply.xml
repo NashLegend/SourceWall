@@ -8,7 +8,7 @@
     android:background="?attr/color_webview_background"
     tools:context=".activities.AnswerActivity">
 
-    <net.nashlegend.sourcewall.commonview.SScrollView
+    <net.nashlegend.sourcewall.view.common.SScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -28,7 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize" />
 
-            <net.nashlegend.sourcewall.commonview.WWebView
+            <net.nashlegend.sourcewall.view.common.WWebView
                 android:id="@+id/web_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -39,7 +39,7 @@
                 android:layout_height="64dp" />
         </LinearLayout>
 
-    </net.nashlegend.sourcewall.commonview.SScrollView>
+    </net.nashlegend.sourcewall.view.common.SScrollView>
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
@@ -186,7 +186,7 @@
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
-    <net.nashlegend.sourcewall.commonview.LoadingView
+    <net.nashlegend.sourcewall.view.common.LoadingView
         android:id="@+id/answer_progress_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

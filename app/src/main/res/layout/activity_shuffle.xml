@@ -20,7 +20,7 @@
             app:popupTheme="?attr/toolbarPopTheme" />
     </android.support.design.widget.AppBarLayout>
 
-    <net.nashlegend.sourcewall.commonview.shuffle.ShuffleDesk
+    <net.nashlegend.sourcewall.view.common.shuffle.ShuffleDesk
         android:id="@+id/shuffle_desk"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

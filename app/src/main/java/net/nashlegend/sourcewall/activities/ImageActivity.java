@@ -15,7 +15,7 @@ import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.ImageAdapter;
-import net.nashlegend.sourcewall.swrequest.ResponseObject;
+import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.ImageUtils;
 import net.nashlegend.sourcewall.util.Mob;

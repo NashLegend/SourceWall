@@ -16,17 +16,17 @@ import android.widget.TextView;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.FavorAdapter;
-import net.nashlegend.sourcewall.commonview.AAsyncTask;
-import net.nashlegend.sourcewall.commonview.IStackedAsyncTaskInterface;
+import net.nashlegend.sourcewall.view.common.AAsyncTask;
+import net.nashlegend.sourcewall.view.common.IStackedAsyncTaskInterface;
 import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.Basket;
 import net.nashlegend.sourcewall.model.Category;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.Question;
-import net.nashlegend.sourcewall.swrequest.RequestObject;
-import net.nashlegend.sourcewall.swrequest.ResponseObject;
-import net.nashlegend.sourcewall.swrequest.api.FavorAPI;
+import net.nashlegend.sourcewall.request.RequestObject;
+import net.nashlegend.sourcewall.request.ResponseObject;
+import net.nashlegend.sourcewall.request.api.FavorAPI;
 import net.nashlegend.sourcewall.util.ToastUtil;
 
 import java.util.ArrayList;
