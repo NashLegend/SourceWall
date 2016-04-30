@@ -360,9 +360,7 @@ public class RequestObject<T> {
                             if (cachedResult != null) {
                                 subscriber.onNext(cachedResult);
                                 if (isOutOfDate()) {
-                                    if (!CachedUtil.hasCleared) {
-                                        CachedUtil.removeOld();
-                                    }
+                                    CachedUtil.removeOld();
                                     //如果缓存的数据超过了缓存期，则仍然要读取一次网络
                                     subscriber.onNext(null);
                                 }

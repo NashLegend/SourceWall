@@ -63,7 +63,10 @@ public class CachedUtil {
         getEditor().clear().apply();
     }
 
-    public static void removeOld() {
+    synchronized public static void removeOld() {
+        if (hasCleared) {
+            return;
+        }
         hasCleared = true;
         Observable
                 .create(new Observable.OnSubscribe<String>() {
