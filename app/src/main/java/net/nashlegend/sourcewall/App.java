@@ -2,6 +2,8 @@ package net.nashlegend.sourcewall;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -56,5 +58,16 @@ public class App extends Application {
             daoSession = getDaoMaster().newSession();
         }
         return daoSession;
+    }
+
+    public static int getVersionInt() {
+        try {
+            PackageManager pm = getApp().getPackageManager();
+            PackageInfo pi = pm.getPackageInfo(getApp().getPackageName(), 0);
+            return pi.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return 1;
     }
 }

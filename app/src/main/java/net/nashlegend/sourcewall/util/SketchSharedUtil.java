@@ -1,5 +1,6 @@
 package net.nashlegend.sourcewall.util;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -24,11 +25,11 @@ public class SketchSharedUtil {
         return mSharedPreferences;
     }
 
+    @SuppressLint("CommitPrefEdits")
     public static Editor getEditor() {
         if (mEditor == null) {
             mEditor = getSharedPreferences().edit();
         }
-
         return mEditor;
     }
 
@@ -38,9 +39,9 @@ public class SketchSharedUtil {
     }
 
     // 写String
-    public static boolean saveString(String key, String value) {
+    public static void saveString(String key, String value) {
         getEditor().putString(key, value);
-        return getEditor().commit();
+        getEditor().apply();
     }
 
     // 读Boolean
@@ -49,9 +50,8 @@ public class SketchSharedUtil {
     }
 
     // 写Boolean
-    public static boolean saveBoolean(String key, boolean value) {
-        getEditor().putBoolean(key, value);
-        return getEditor().commit();
+    public static void saveBoolean(String key, boolean value) {
+        getEditor().putBoolean(key, value).apply();
     }
 
     // 读Int
@@ -60,9 +60,8 @@ public class SketchSharedUtil {
     }
 
     // 写Int
-    public static boolean saveInt(String key, int value) {
-        getEditor().putInt(key, value);
-        return getEditor().commit();
+    public static void saveInt(String key, int value) {
+        getEditor().putInt(key, value).apply();
     }
 
     // 读Int
@@ -71,20 +70,17 @@ public class SketchSharedUtil {
     }
 
     // 写Int
-    public static boolean saveLong(String key, long value) {
-        getEditor().putLong(key, value);
-        return getEditor().commit();
+    public static void saveLong(String key, long value) {
+        getEditor().putLong(key, value).apply();
     }
 
     // 删除一项
-    public static boolean remove(String key) {
-        getEditor().remove(key);
-        return getEditor().commit();
+    public static void remove(String key) {
+        getEditor().remove(key).apply();
     }
 
     // 全清空
-    public static boolean clear() {
-        getEditor().clear();
-        return getEditor().commit();
+    public static void clear() {
+        getEditor().clear().apply();
     }
 }

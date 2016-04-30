@@ -7,9 +7,9 @@ import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
 
-import net.nashlegend.sourcewall.BuildConfig;
 import net.nashlegend.sourcewall.swrequest.cache.RequestCache;
 import net.nashlegend.sourcewall.swrequest.parsers.Parser;
+import net.nashlegend.sourcewall.util.CachedUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,7 +44,6 @@ import okio.Source;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.exceptions.Exceptions;
 import rx.functions.Func1;
@@ -58,7 +57,7 @@ public class RequestObject<T> {
     /**
      * 默认Tag
      */
-    public static final String DefaultTag = "Default";
+    public static final String DefaultTag = "RequestObject";
     public boolean requestWithGzip = false;//是否使用Gzip压缩请求数据
     public String fakeResponse = null;
     protected int maxRetryTimes = 0;//最大重试次数
@@ -78,18 +77,21 @@ public class RequestObject<T> {
      * 是否优先使用缓存，如果useCachedFirst为true，那么useCachedIfFailed就为false了
      * 仅仅在使用Rx时有效，与useCacheIfFailed互斥
      */
-    protected boolean useCachedFirst = false;//TODO 未搞
+    protected boolean useCachedFirst = false;
     /**
      * 请求失败时是否使用缓存，如果为true，那么将使用缓存，请求成功的话也会将成功的数据缓存下来,
      * 与useCachedFirst互斥
      */
     protected boolean useCachedIfFailed = false;
-
+    /**
+     * 缓存时间，如果上次保存的缓存时间与本次请求的时间差相差超过了cacheTimeOut，则重新请求一次
+     */
+    protected long cacheTimeOut = -1;
     /*果壳貌似本身并没有Cache-Control，或者Cache-Control的max-age=0 所以这里的缓存是本地缓存*/
+
     /**
      * 下面部分均标为过时，请求逐步改为上面的Rx请求方式
      */
-    ////////////////////////////////////////////////////////////////////////////
 
     @Deprecated
     protected boolean ignoreHandler = false;
@@ -101,6 +103,7 @@ public class RequestObject<T> {
     private int crtTime = 0;//当前重试次数
     private boolean softCancelled = false;//取消掉一个请求，但是并不中断请求，只是不再执行CallBack,请求完成后无任何动作
     private Call call = null;
+    private String cacheKey = null;
 
     public void setCallBack(final CallBack<T> call) {
         if (call == null) {
@@ -192,35 +195,46 @@ public class RequestObject<T> {
      * @return
      */
     private String getCachedKey() {
-        StringBuilder keyBuilder = new StringBuilder("");
-        keyBuilder.append(method).append("/{").append(url).append("}/");
-        if (params == null) {
-            params = new HashMap<>();
-        }
-        if (params.size() > 0) {
-            ArrayList<Map.Entry<String, String>> entryArrayList = new ArrayList<>();
-            for (HashMap.Entry<String, String> entry : params.entrySet()) {
-                if (TextUtils.isEmpty(entry.getKey())) {
-                    continue;
+        if (cacheKey == null) {
+            synchronized (RequestObject.class) {
+                if (cacheKey == null) {
+                    StringBuilder keyBuilder = new StringBuilder("");
+                    keyBuilder.append(method).append("/{").append(url).append("}/");
+                    if (params == null) {
+                        params = new HashMap<>();
+                    }
+                    if (params.size() > 0) {
+                        ArrayList<Map.Entry<String, String>> entryArrayList = new ArrayList<>();
+                        for (HashMap.Entry<String, String> entry : params.entrySet()) {
+                            if (TextUtils.isEmpty(entry.getKey())) {
+                                continue;
+                            }
+                            entryArrayList.add(entry);
+                        }
+                        Collections.sort(entryArrayList, new Comparator<Map.Entry<String, String>>() {
+                            @Override
+                            public int compare(Map.Entry<String, String> lhs, Map.Entry<String, String> rhs) {
+                                return lhs.getKey().compareTo(rhs.getKey());
+                            }
+                        });
+                        if (entryArrayList.size() > 0) {
+                            keyBuilder.append("?");
+                            for (int i = 0; i < entryArrayList.size(); i++) {
+                                HashMap.Entry<String, String> entry = entryArrayList.get(i);
+                                keyBuilder.append(entry.getKey()).append("=").append(entry.getValue()).append("&");
+                            }
+                            keyBuilder.deleteCharAt(keyBuilder.length() - 1);
+                        }
+                    }
+                    cacheKey = keyBuilder.toString();
                 }
-                entryArrayList.add(entry);
             }
-            Collections.sort(entryArrayList, new Comparator<Map.Entry<String, String>>() {
-                @Override
-                public int compare(Map.Entry<String, String> lhs, Map.Entry<String, String> rhs) {
-                    return lhs.getKey().compareTo(rhs.getKey());
-                }
-            });
-            if (entryArrayList.size() > 0) {
-                keyBuilder.append("?");
-                for (int i = 0; i < entryArrayList.size(); i++) {
-                    HashMap.Entry<String, String> entry = entryArrayList.get(i);
-                    keyBuilder.append(entry.getKey()).append("=").append(entry.getValue()).append("&");
-                }
-                keyBuilder.deleteCharAt(keyBuilder.length() - 1);
-            }
         }
-        return keyBuilder.toString();
+        return cacheKey;
+    }
+
+    private boolean isOutOfDate() {
+        return System.currentTimeMillis() - CachedUtil.readTime(getCachedKey()) > cacheTimeOut;
     }
 
     /**
@@ -240,6 +254,7 @@ public class RequestObject<T> {
     private void saveToCache(String data) {
         if (shouldCache()) {
             RequestCache.getInstance().addStringToCacheForceUpdate(getCachedKey(), data);
+            CachedUtil.saveTime(getCachedKey(), System.currentTimeMillis());
         }
     }
 
@@ -249,7 +264,8 @@ public class RequestObject<T> {
      * @return
      */
     private void removeCache() {
-        RequestCache.getInstance().removeCache(getCachedKey());//TODO 待测试
+        RequestCache.getInstance().removeCache(getCachedKey());
+        CachedUtil.remove(getCachedKey());
     }
 
     private boolean shouldCache() {
@@ -327,120 +343,49 @@ public class RequestObject<T> {
     }
 
     /**
-     * 只请求缓存数据
-     */
-    public void requestCachedRx() {
-        requestCachedObservable()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<ResponseObject<T>>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        //requestObservable很难走到onError，因为都已经封好了，否则第二个参数不太好传给别人
-                        if (!softCancelled && callBack != null) {
-                            callBack.onFailure(e, responseObject);
-                        }
-                    }
-
-                    @Override
-                    public void onNext(ResponseObject<T> tResponseObject) {
-                        if (!softCancelled && callBack != null) {
-                            if (tResponseObject.ok) {
-                                callBack.onSuccess(tResponseObject.result, tResponseObject);
-                            } else {
-                                callBack.onFailure(tResponseObject.throwable, tResponseObject);
-                            }
-                        }
-                    }
-                });
-    }
-
-    /**
      * 请求缓存数据，如果已经有了缓存，然而还是解析失败了，只可能是版本升级中parser发生了变化
-     * TODO 优先使用缓存useCachedFirst，不应该放在requestObservable里面，这算是两个请求嘛,实际使用中可以组合两个请求
-     * 不太会Rx啊，还得学……
      *
      * @return
      */
     @NonNull
-    public Observable<ResponseObject<T>> requestCachedObservable() {
+    private Observable<ResponseObject<T>> readCacheObservable() {
         return Observable
                 .create(new Observable.OnSubscribe<String>() {
                     @Override
                     public void call(Subscriber<? super String> subscriber) {
                         try {
                             String cachedResult = readFromCache();
+                            responseObject.isCached = true;
+                            responseObject.body = cachedResult;
                             if (cachedResult != null) {
-                                responseObject.isCached = true;
-                                responseObject.body = cachedResult;
                                 subscriber.onNext(cachedResult);
-                                subscriber.onCompleted();
+                                if (isOutOfDate()) {
+                                    if (!CachedUtil.hasCleared) {
+                                        CachedUtil.removeOld();
+                                    }
+                                    //如果缓存的数据超过了缓存期，则仍然要读取一次网络
+                                    subscriber.onNext(null);
+                                }
                             } else {
-                                subscriber.onError(new IllegalStateException("No Cached Data!"));
+                                subscriber.onNext(null);
                             }
                         } catch (Exception e) {
-                            subscriber.onError(e);
+                            subscriber.onNext(null);
                         }
-                    }
-                })
-                .subscribeOn(Schedulers.io())
-                .onErrorResumeNext(new Func1<Throwable, Observable<? extends String>>() {
-                    @Override
-                    public Observable<? extends String> call(Throwable throwable) {
-                        JsonHandler.handleRequestException(throwable, responseObject);
-                        return Observable.just("Error Occurred!");
+                        subscriber.onCompleted();
                     }
                 })
                 .map(new Func1<String, ResponseObject<T>>() {
                     @Override
-                    public ResponseObject<T> call(String string) {
-                        if (responseObject.throwable == null && parser != null) {
+                    public ResponseObject<T> call(String s) {
+                        if (s == null) {
+                            return null;
+                        } else {
                             try {
-                                responseObject.result = parser.parse(string, responseObject);
+                                responseObject.result = parser.parse(s, responseObject);
+                                return responseObject;
                             } catch (Exception e) {
-                                JsonHandler.handleRequestException(e, responseObject);
-                            }
-                        }
-                        if (!responseObject.ok) {
-                            removeCache();
-                        }
-                        return responseObject;
-                    }
-                })
-                .subscribeOn(Schedulers.computation());
-    }
-
-    /**
-     * 通过RxJava的方式执行请求，与requestAsync一样，CallBack执行在主线程上
-     */
-    public void requestRx() {
-        requestObservable()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<ResponseObject<T>>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        //requestObservable很难走到onError，因为都已经封好了，否则第二个参数不太好传给别人
-                        if (!softCancelled && callBack != null) {
-                            callBack.onFailure(e, responseObject);
-                        }
-                    }
-
-                    @Override
-                    public void onNext(ResponseObject<T> tResponseObject) {
-                        if (!softCancelled && callBack != null) {
-                            if (tResponseObject.ok) {
-                                callBack.onSuccess(tResponseObject.result, tResponseObject);
-                            } else {
-                                callBack.onFailure(tResponseObject.throwable, tResponseObject);
+                                return null;
                             }
                         }
                     }
@@ -448,9 +393,12 @@ public class RequestObject<T> {
     }
 
     /**
-     * 异步请求，并不立即执行，仅仅返回Observable
+     * 请求网络返回数据
+     *
+     * @return
      */
-    public Observable<ResponseObject<T>> requestObservable() {
+    @NonNull
+    private Observable<ResponseObject<T>> readNetworkObservable() {
         return Observable
                 .create(new Observable.OnSubscribe<String>() {
                     @Override
@@ -496,7 +444,6 @@ public class RequestObject<T> {
                         }
                     }
                 })
-                .subscribeOn(Schedulers.io())
                 .retryWhen(new RxRetryHandler())
                 .onErrorResumeNext(new Func1<Throwable, Observable<? extends String>>() {
                     @Override
@@ -513,16 +460,6 @@ public class RequestObject<T> {
                         }
                         JsonHandler.handleRequestException(throwable, responseObject);
                         return Observable.just("Error Occurred!");
-                    }
-                })
-                .map(new Func1<String, String>() {
-                    @Override
-                    public String call(String s) {
-                        //debug模式下可返回fakeBody
-                        if (BuildConfig.DEBUG && fakeResponse != null) {
-                            return fakeResponse;
-                        }
-                        return s;
                     }
                 })
                 .map(new Func1<String, ResponseObject<T>>() {
@@ -543,12 +480,66 @@ public class RequestObject<T> {
                         }
                         return responseObject;
                     }
-                })
-                .subscribeOn(Schedulers.computation());
+                });
     }
 
-    public Subscription requestObservable(Subscriber<ResponseObject<T>> subscriber) {
-        return requestObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(subscriber);
+    /**
+     * 请求缓存数据，如果已经有了缓存，然而还是解析失败了，只可能是版本升级中parser发生了变化
+     *
+     * @return
+     */
+    @NonNull
+    public Observable<ResponseObject<T>> requestObservable() {
+        Observable<ResponseObject<T>> observable;
+        if (useCachedFirst) {
+            observable = readCacheObservable()
+                    .flatMap(new Func1<ResponseObject<T>, Observable<ResponseObject<T>>>() {
+                        @Override
+                        public Observable<ResponseObject<T>> call(ResponseObject<T> r) {
+                            if (r == null) {
+                                return readNetworkObservable();
+                            } else {
+                                return Observable.just(r);
+                            }
+                        }
+                    });
+        } else {
+            observable = readNetworkObservable();
+        }
+        return observable.subscribeOn(Schedulers.io());
+    }
+
+    /**
+     * 通过RxJava的方式执行请求，与requestAsync一样，CallBack执行在主线程上
+     */
+    public void requestRx() {
+        requestObservable()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ResponseObject<T>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        //requestObservable很难走到onError，因为都已经封好了，否则第二个参数不太好传给别人
+                        if (!softCancelled && callBack != null) {
+                            callBack.onFailure(e, responseObject);
+                        }
+                    }
+
+                    @Override
+                    public void onNext(ResponseObject<T> tResponseObject) {
+                        if (!softCancelled && callBack != null) {
+                            if (tResponseObject.ok) {
+                                callBack.onSuccess(tResponseObject.result, tResponseObject);
+                            } else {
+                                callBack.onFailure(tResponseObject.throwable, tResponseObject);
+                            }
+                        }
+                    }
+                });
     }
 
     public void softCancel() {
@@ -893,7 +884,7 @@ public class RequestObject<T> {
 
         /**
          * 如果执行到此处，ok必然为true,{@link ResponseObject#result}必然不为null
-         * <p/>
+         * <p>
          * 除了是下载文件的话，此处result为null，运行到此处必然已经成功了
          *
          * @param result

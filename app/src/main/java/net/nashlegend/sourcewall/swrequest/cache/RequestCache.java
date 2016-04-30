@@ -83,7 +83,7 @@ public class RequestCache {
                     }
                     if (getUsableSpace(diskCacheDir) > mCacheParams.diskCacheSize) {
                         try {
-                            mDiskLruCache = DiskLruCache.open(diskCacheDir, 1, 1, mCacheParams.diskCacheSize);
+                            mDiskLruCache = DiskLruCache.open(diskCacheDir, App.getVersionInt(), 1, mCacheParams.diskCacheSize);
                         } catch (final IOException e) {
                             mCacheParams.diskCacheDir = null;
                         }
