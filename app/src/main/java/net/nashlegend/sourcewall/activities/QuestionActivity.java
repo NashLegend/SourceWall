@@ -5,7 +5,6 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -25,14 +24,10 @@ import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.QuestionDetailAdapter;
-import net.nashlegend.sourcewall.view.common.AAsyncTask;
-import net.nashlegend.sourcewall.view.common.IStackedAsyncTaskInterface;
-import net.nashlegend.sourcewall.view.common.LListView;
-import net.nashlegend.sourcewall.view.common.LoadingView;
 import net.nashlegend.sourcewall.dialogs.FavorDialog;
 import net.nashlegend.sourcewall.dialogs.InputDialog;
-import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Question;
+import net.nashlegend.sourcewall.model.QuestionAnswer;
 import net.nashlegend.sourcewall.request.RequestObject;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.MessageAPI;
@@ -46,9 +41,15 @@ import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.ShareUtil;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;
 import net.nashlegend.sourcewall.view.AnswerListItemView;
+import net.nashlegend.sourcewall.view.common.LListView;
+import net.nashlegend.sourcewall.view.common.LoadingView;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 
 
 public class QuestionActivity extends SwipeActivity implements LListView.OnRefreshListener, View.OnClickListener, LoadingView.ReloadListener {
@@ -56,7 +57,6 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
     private LListView listView;
     private QuestionDetailAdapter adapter;
     private Question question;
-    private LoaderTask task;
     private LoadingView loadingView;
     private String notice_id;
     private FloatingActionsMenu floatingActionsMenu;
@@ -123,15 +123,10 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
     }
 
     private void loadData(int offset) {
-        cancelPotentialTask();
-        task = new LoaderTask(this);
-        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, offset);
-    }
-
-    private void cancelPotentialTask() {
-        if (task != null && task.getStatus() == AAsyncTask.Status.RUNNING) {
-            task.cancel(true);
-            listView.doneOperation();
+        if (offset < 0) {
+            loadFromQuestion();
+        } else {
+            loadAnswers(offset);
         }
     }
 
@@ -302,78 +297,6 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
         loadData(-1);
     }
 
-    class LoaderTask extends AAsyncTask<Integer, ResponseObject<Question>, ResponseObject<ArrayList<AceModel>>> {
-        int offset;
-
-        LoaderTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
-            super(iStackedAsyncTaskInterface);
-        }
-
-        @Override
-        protected ResponseObject<ArrayList<AceModel>> doInBackground(Integer... params) {
-            if (!TextUtils.isEmpty(notice_id)) {
-                MessageAPI.ignoreOneNotice(notice_id);
-                notice_id = null;
-            }
-            offset = params[0];
-            if (offset < 0) {
-                ResponseObject<Question> questionResult = QuestionAPI.getQuestionDetailByID(question.getId());
-                if (questionResult.ok) {
-                    publishProgress(questionResult);
-                } else {
-                    ResponseObject<Question> cachedQuestionResult = QuestionAPI.getCachedQuestionDetailByID(question.getId());
-                    if (cachedQuestionResult.ok) {
-                        publishProgress(cachedQuestionResult);
-                    } else {
-                        return new ResponseObject<>();
-                    }
-                }
-                return QuestionAPI.getQuestionAnswers(question.getId(), 0);
-            } else {
-                return QuestionAPI.getQuestionAnswers(question.getId(), offset);
-            }
-        }
-
-        @SafeVarargs
-        @Override
-        protected final void onProgressUpdate(ResponseObject<Question>... values) {
-            //在这里取到正文，正文的结果一定是正确的
-            progressBar.setVisibility(View.VISIBLE);
-            floatingActionsMenu.setVisibility(View.VISIBLE);
-            loadingView.onLoadSuccess();
-            ResponseObject<Question> result = values[0];
-            question = result.result;
-            adapter.add(0, question);
-            adapter.notifyDataSetChanged();
-        }
-
-        @Override
-        protected void onPostExecute(ResponseObject<ArrayList<AceModel>> result) {
-            progressBar.setVisibility(View.GONE);
-            if (result.ok) {
-                loadingView.onLoadSuccess();
-                ArrayList<AceModel> ars = result.result;
-                if (ars.size() > 0) {
-                    adapter.addAll(ars);
-                    adapter.notifyDataSetChanged();
-                }
-            } else {
-                if (result.statusCode == 404) {
-                    toastSingleton(R.string.page_404);
-                    finish();
-                } else {
-                    toastSingleton(getString(R.string.load_failed));
-                    loadingView.onLoadFailed();
-                }
-            }
-            if (adapter.getCount() > 0) {
-                listView.setCanPullToLoadMore(true);
-            } else {
-                listView.setCanPullToLoadMore(false);
-            }
-            listView.doneOperation();
-        }
-    }
 
     private void followQuestion() {
         QuestionAPI.followQuestion(question.getId(), new RequestObject.CallBack<Boolean>() {
@@ -448,4 +371,91 @@ public class QuestionActivity extends SwipeActivity implements LListView.OnRefre
             }
         }
     };
+
+    private void loadFromQuestion() {
+        if (!TextUtils.isEmpty(notice_id)) {
+            MessageAPI.ignoreOneNotice(notice_id);
+            notice_id = null;
+        }
+        QuestionAPI
+                .getQuestionDetailByID(question.getId())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ResponseObject<Question>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(ResponseObject<Question> result) {
+                        if (result.ok) {
+                            progressBar.setVisibility(View.VISIBLE);
+                            floatingActionsMenu.setVisibility(View.VISIBLE);
+                            loadingView.onLoadSuccess();
+                            question = result.result;
+                            adapter.add(0, question);
+                            adapter.notifyDataSetChanged();
+                            loadAnswers(0);
+                        } else {
+                            loadingView.onLoadFailed();
+                        }
+                    }
+                });
+    }
+
+    private void loadAnswers(int offset) {
+        QuestionAPI
+                .getQuestionAnswers(question.getId(), offset)
+                .doOnUnsubscribe(new Action0() {
+                    @Override
+                    public void call() {
+                        loadingView.onLoadSuccess();
+                        listView.doneOperation();
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ResponseObject<ArrayList<QuestionAnswer>>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(ResponseObject<ArrayList<QuestionAnswer>> result) {
+                        progressBar.setVisibility(View.GONE);
+                        if (result.ok) {
+                            loadingView.onLoadSuccess();
+                            ArrayList<QuestionAnswer> ars = result.result;
+                            if (ars.size() > 0) {
+                                adapter.addAll(ars);
+                                adapter.notifyDataSetChanged();
+                            }
+                        } else {
+                            if (result.statusCode == 404) {
+                                toastSingleton(R.string.page_404);
+                                finish();
+                            } else {
+                                toastSingleton(getString(R.string.load_failed));
+                                loadingView.onLoadFailed();
+                            }
+                        }
+                        if (adapter.getCount() > 0) {
+                            listView.setCanPullToLoadMore(true);
+                        } else {
+                            listView.setCanPullToLoadMore(false);
+                        }
+                        listView.doneOperation();
+                    }
+                });
+    }
 }

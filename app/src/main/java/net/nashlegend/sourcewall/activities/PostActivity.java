@@ -11,7 +11,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -31,12 +30,7 @@ import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.PostDetailAdapter;
-import net.nashlegend.sourcewall.view.common.AAsyncTask;
-import net.nashlegend.sourcewall.view.common.IStackedAsyncTaskInterface;
-import net.nashlegend.sourcewall.view.common.LListView;
-import net.nashlegend.sourcewall.view.common.LoadingView;
 import net.nashlegend.sourcewall.dialogs.FavorDialog;
-import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.RequestObject;
@@ -54,15 +48,20 @@ import net.nashlegend.sourcewall.util.RegUtil;
 import net.nashlegend.sourcewall.util.ShareUtil;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;
 import net.nashlegend.sourcewall.view.MediumListItemView;
+import net.nashlegend.sourcewall.view.common.LListView;
+import net.nashlegend.sourcewall.view.common.LoadingView;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 
 public class PostActivity extends SwipeActivity implements LListView.OnRefreshListener, View.OnClickListener, LoadingView.ReloadListener {
     private LListView listView;
     private final PostDetailAdapter adapter;
     private Post post;
-    private LoaderTask task;
     private LoadingView loadingView;
     private AdapterView.OnItemClickListener onItemClickListener;
     private String notice_id;
@@ -161,15 +160,10 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
     }
 
     private void loadData(int offset) {
-        cancelPotentialTask();
-        task = new LoaderTask(this);
-        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, offset);
-    }
-
-    private void cancelPotentialTask() {
-        if (task != null && task.getStatus() == AAsyncTask.Status.RUNNING) {
-            task.cancel(true);
-            listView.doneOperation();
+        if (offset < 0) {
+            loadFromPost();
+        } else {
+            loadReplies(offset);
         }
     }
 
@@ -343,103 +337,6 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
         }
     }
 
-    class LoaderTask extends AAsyncTask<Integer, ResponseObject<Post>, ResponseObject<ArrayList<AceModel>>> {
-
-        int offset;
-
-        LoaderTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
-            super(iStackedAsyncTaskInterface);
-        }
-
-        @Override
-        protected ResponseObject<ArrayList<AceModel>> doInBackground(Integer... params) {
-            if (!TextUtils.isEmpty(notice_id)) {
-                MessageAPI.ignoreOneNotice(notice_id);
-                notice_id = null;
-            }
-            offset = params[0];
-            int limit = 20;
-            if (offset < 0) {
-                offset = 0;
-                ResponseObject<Post> postResult = PostAPI.getPostDetailByIDFromJsonUrl(post.getId());//得不到回复数量
-                if (postResult.ok) {
-                    publishProgress(postResult);
-                } else {
-                    ResponseObject<Post> cachedPostResult = PostAPI.getCachedPostDetailByIDFromJsonUrl(post.getId());
-                    if (cachedPostResult.ok) {
-                        publishProgress(cachedPostResult);
-                    } else {
-                        return new ResponseObject<>();
-                    }
-                }
-            }
-            if (loadDesc) {
-                int tmpOffset = post.getReplyNum() - offset - 20;
-                if (tmpOffset <= 0) {
-                    hasLoadAll = true;
-                    limit = 20 + tmpOffset;
-                    tmpOffset = 0;
-                } else {
-                    hasLoadAll = false;
-                }
-                offset = tmpOffset;
-            }
-            ResponseObject<ArrayList<AceModel>> resultObject = PostAPI.getPostCommentsFromJsonUrl(post.getId(), offset, limit);
-            if (!resultObject.ok) {
-                hasLoadAll = false;
-            }
-            return resultObject;
-        }
-
-        @SafeVarargs
-        @Override
-        protected final void onProgressUpdate(ResponseObject<Post>... values) {
-            //在这里取到正文，正文的结果一定是正确的
-            progressBar.setVisibility(View.VISIBLE);
-            floatingActionsMenu.setVisibility(View.VISIBLE);
-            loadingView.onLoadSuccess();
-            ResponseObject<Post> result = values[0];
-            post = result.result;
-            post.setDesc(loadDesc);
-            adapter.add(0, post);
-            adapter.notifyDataSetChanged();
-        }
-
-        @Override
-        protected void onPostExecute(ResponseObject<ArrayList<AceModel>> result) {
-            progressBar.setVisibility(View.GONE);
-            if (result.ok) {
-                loadingView.onLoadSuccess();
-                ArrayList<AceModel> ars = result.result;
-                if (ars.size() > 0) {
-                    if (loadDesc) {
-                        adapter.addAllReversely(ars);
-                    } else {
-                        adapter.addAll(ars);
-                    }
-                    adapter.notifyDataSetChanged();
-                }
-            } else {
-                if (result.statusCode == 404) {
-                    toastSingleton(R.string.page_404);
-                    finish();
-                } else {
-                    toastSingleton(getString(R.string.load_failed));
-                    loadingView.onLoadFailed();
-                }
-            }
-            if (adapter.getCount() > 0) {
-                listView.setCanPullToLoadMore(true);
-            } else {
-                listView.setCanPullToLoadMore(false);
-            }
-            if (loadDesc && hasLoadAll) {
-                listView.setCanPullToLoadMore(false);
-            }
-            listView.doneOperation();
-        }
-    }
-
     private void replyPost() {
         replyPost(null);
     }
@@ -567,7 +464,6 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
     }
 
     private void onStartLoadingLatest() {
-        cancelPotentialTask();
         listView.setCanPullToLoadMore(false);
         menu.findItem(R.id.action_load_acs).setVisible(false);
         menu.findItem(R.id.action_load_desc).setVisible(false);
@@ -643,5 +539,112 @@ public class PostActivity extends SwipeActivity implements LListView.OnRefreshLi
             }
 
         }
+    }
+
+    private void loadFromPost() {
+        if (!TextUtils.isEmpty(notice_id)) {
+            MessageAPI.ignoreOneNotice(notice_id);
+            notice_id = null;
+        }
+        PostAPI
+                .getPostDetailByID(post.getId())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ResponseObject<Post>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(ResponseObject<Post> result) {
+                        if (result.ok) {
+                            progressBar.setVisibility(View.VISIBLE);
+                            floatingActionsMenu.setVisibility(View.VISIBLE);
+                            loadingView.onLoadSuccess();
+                            post = result.result;
+                            post.setDesc(loadDesc);
+                            adapter.add(0, post);
+                            adapter.notifyDataSetChanged();
+                            loadReplies(0);
+                        } else {
+                            loadingView.onLoadFailed();
+                        }
+                    }
+                });
+    }
+
+    private void loadReplies(int offset) {
+        int limit = 20;
+        if (loadDesc) {
+            int tmpOffset = post.getReplyNum() - offset - 20;
+            if (tmpOffset <= 0) {
+                hasLoadAll = true;
+                limit = 20 + tmpOffset;
+                tmpOffset = 0;
+            } else {
+                hasLoadAll = false;
+            }
+            offset = tmpOffset;
+        }
+        PostAPI
+                .getPostReplies(post.getId(), offset, limit)
+                .doOnUnsubscribe(new Action0() {
+                    @Override
+                    public void call() {
+                        loadingView.onLoadSuccess();
+                        listView.doneOperation();
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ResponseObject<ArrayList<UComment>>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(ResponseObject<ArrayList<UComment>> result) {
+                        progressBar.setVisibility(View.GONE);
+                        if (result.ok) {
+                            loadingView.onLoadSuccess();
+                            ArrayList<UComment> ars = result.result;
+                            if (ars.size() > 0) {
+                                if (loadDesc) {
+                                    adapter.addAllReversely(ars);
+                                } else {
+                                    adapter.addAll(ars);
+                                }
+                                adapter.notifyDataSetChanged();
+                            }
+                        } else {
+                            if (result.statusCode == 404) {
+                                toastSingleton(R.string.page_404);
+                                finish();
+                            } else {
+                                toastSingleton(getString(R.string.load_failed));
+                                loadingView.onLoadFailed();
+                            }
+                        }
+                        if (adapter.getCount() > 0) {
+                            listView.setCanPullToLoadMore(true);
+                        } else {
+                            listView.setCanPullToLoadMore(false);
+                        }
+                        if (loadDesc && hasLoadAll) {
+                            listView.setCanPullToLoadMore(false);
+                        }
+                        listView.doneOperation();
+                    }
+                });
     }
 }

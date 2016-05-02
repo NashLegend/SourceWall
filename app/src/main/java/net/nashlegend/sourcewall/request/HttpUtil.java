@@ -155,7 +155,7 @@ public class HttpUtil {
             Response response = chain.proceed(request);
             if (response.isRedirect()) {
                 String tmpUrl = chain.request().url().toString();
-                tmpUrl = tmpUrl.replaceAll("\\?.+","");
+                tmpUrl = tmpUrl.replaceAll("\\?.+", "");
                 String article_reply_reg = "^http://(www|m).guokr.com/article/reply/\\d+/$";//http://www.guokr.com/article/reply/2903740/
                 String post_reply_reg = "^http://(www|m).guokr.com/post/reply/\\d+/$";//http://www.guokr.com/post/reply/6148664/
                 //上面两条，只有通知才会跳到

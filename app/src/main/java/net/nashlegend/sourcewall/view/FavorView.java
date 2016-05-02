@@ -16,8 +16,6 @@ import android.widget.TextView;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.FavorAdapter;
-import net.nashlegend.sourcewall.view.common.AAsyncTask;
-import net.nashlegend.sourcewall.view.common.IStackedAsyncTaskInterface;
 import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.Basket;
@@ -28,6 +26,8 @@ import net.nashlegend.sourcewall.request.RequestObject;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.FavorAPI;
 import net.nashlegend.sourcewall.util.ToastUtil;
+import net.nashlegend.sourcewall.view.common.AAsyncTask;
+import net.nashlegend.sourcewall.view.common.IStackedAsyncTaskInterface;
 
 import java.util.ArrayList;
 

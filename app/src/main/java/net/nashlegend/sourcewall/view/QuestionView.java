@@ -11,12 +11,12 @@ import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.SimpleReplyActivity;
-import net.nashlegend.sourcewall.view.common.TTextView;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.util.CommonUtil;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
+import net.nashlegend.sourcewall.view.common.TTextView;
 
 /**
  * Created by NashLegend on 2014/9/18 0018

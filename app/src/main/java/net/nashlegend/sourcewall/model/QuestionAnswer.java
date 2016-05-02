@@ -1,7 +1,6 @@
 package net.nashlegend.sourcewall.model;
 
 import android.os.Parcel;
-import android.text.TextUtils;
 
 import net.nashlegend.sourcewall.request.api.APIBase;
 
@@ -34,14 +33,13 @@ public class QuestionAnswer extends AceModel {
 
     public static QuestionAnswer fromJson(JSONObject answerObject) throws Exception {
         JSONObject questionObject = answerObject.optJSONObject("question");
-        String hostTitle = questionObject.optString("question");
-        String hostID = questionObject.optString("id");
-        if (TextUtils.isEmpty(hostID)) {
+        String hostTitle = "";
+        String hostID = "";
+        if (questionObject != null) {
+            hostTitle = questionObject.optString("question");
             hostID = answerObject.optString("question_id");
         }
-
         String id = answerObject.optString("id");
-
         boolean current_user_has_supported = answerObject.optBoolean("current_user_has_supported");
         boolean current_user_has_buried = answerObject.optBoolean("current_user_has_buried");
         boolean current_user_has_thanked = answerObject.optBoolean("current_user_has_thanked");
@@ -67,6 +65,39 @@ public class QuestionAnswer extends AceModel {
         answer.setID(id);
         answer.setQuestionID(hostID);
         answer.setQuestion(hostTitle);
+        answer.setUpvoteNum(supportings_count);
+        answer.setDownvoteNum(opposings_count);
+        return answer;
+    }
+
+    public static QuestionAnswer fromListJson(JSONObject answerObject) throws Exception {
+        //取不到title
+        String hostID = answerObject.optString("question_id");
+        String id = answerObject.optString("id");
+        boolean current_user_has_supported = answerObject.optBoolean("current_user_has_supported");
+        boolean current_user_has_buried = answerObject.optBoolean("current_user_has_buried");
+        boolean current_user_has_thanked = answerObject.optBoolean("current_user_has_thanked");
+        boolean current_user_has_opposed = answerObject.optBoolean("current_user_has_opposed");
+        JSONObject authorObject = answerObject.optJSONObject("author");
+        String date_created = APIBase.parseDate(answerObject.optString("date_created"));
+        String date_modified = APIBase.parseDate(answerObject.optString("date_modified"));
+        int replies_count = answerObject.optInt("replies_count");
+        int supportings_count = answerObject.optInt("supportings_count");
+        int opposings_count = answerObject.optInt("opposings_count");
+        String content = answerObject.optString("html");
+
+        QuestionAnswer answer = new QuestionAnswer();
+        answer.setAuthor(Author.fromJson(authorObject));
+        answer.setCommentNum(replies_count);
+        answer.setContent(content.replaceAll("<img .*?/>", prefix + "$0" + suffix).replaceAll("style=\"max-width: \\d+px\"", "style=\"max-width: " + maxImageWidth + "px\""));
+        answer.setDate_created(date_created);
+        answer.setDate_modified(date_modified);
+        answer.setHasDownVoted(current_user_has_opposed);
+        answer.setHasBuried(current_user_has_buried);
+        answer.setHasUpVoted(current_user_has_supported);
+        answer.setHasThanked(current_user_has_thanked);
+        answer.setID(id);
+        answer.setQuestionID(hostID);
         answer.setUpvoteNum(supportings_count);
         answer.setDownvoteNum(opposings_count);
         return answer;

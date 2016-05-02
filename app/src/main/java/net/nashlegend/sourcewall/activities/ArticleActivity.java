@@ -177,7 +177,7 @@ public class ArticleActivity extends SwipeActivity implements OnRefreshListener,
      */
     private void loadData(int offset) {
         if (offset < 0) {
-            loadArticle();
+            loadFromArticle();
         } else {
             loadReplies(offset);
         }
@@ -496,7 +496,7 @@ public class ArticleActivity extends SwipeActivity implements OnRefreshListener,
         }
     }
 
-    private void loadArticle() {
+    private void loadFromArticle() {
         if (!TextUtils.isEmpty(notice_id)) {
             MessageAPI.ignoreOneNotice(notice_id);
             notice_id = null;

@@ -2,7 +2,6 @@ package net.nashlegend.sourcewall.request.api;
 
 import android.text.TextUtils;
 
-import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Author;
 import net.nashlegend.sourcewall.model.PrepareData;
 import net.nashlegend.sourcewall.model.Question;
@@ -15,51 +14,34 @@ import net.nashlegend.sourcewall.request.RequestBuilder;
 import net.nashlegend.sourcewall.request.RequestObject;
 import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
-import net.nashlegend.sourcewall.request.cache.RequestCache;
+import net.nashlegend.sourcewall.request.parsers.AnswerCommentListParser;
 import net.nashlegend.sourcewall.request.parsers.BooleanParser;
 import net.nashlegend.sourcewall.request.parsers.ContentValueForKeyParser;
 import net.nashlegend.sourcewall.request.parsers.Parser;
+import net.nashlegend.sourcewall.request.parsers.QuestionAnswerListParser;
+import net.nashlegend.sourcewall.request.parsers.QuestionCommentListParser;
+import net.nashlegend.sourcewall.request.parsers.QuestionHtmlListParser;
+import net.nashlegend.sourcewall.request.parsers.QuestionListParser;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.MDUtil;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * 单个答案地址。http://www.guokr.com/answer/782227/
- * 缓存key规则：
- * 热门问答的key是 question.hottest
- * 精彩回答的key是 question.highlight
- * 按tag加载的问题的key是 question.{tag}
- */
+import rx.Observable;
+
 public class QuestionAPI extends APIBase {
     private static final String HOTTEST = "hottest";
     private static final String HIGHLIGHT = "highlight";
     private static int maxImageWidth = 240;
     private static String prefix = "<div class=\"ZoomBox\"><div class=\"content-zoom ZoomIn\">";
     private static String suffix = "</div></div>";
-
-    public static ResponseObject<ArrayList<Question>> getCachedQuestionList(SubItem subItem) {
-        ResponseObject<ArrayList<Question>> cachedResponseObject = new ResponseObject<>();
-        String key = "question." + subItem.getValue();
-        String content = RequestCache.getInstance().getStringFromCache(key);
-        if (!TextUtils.isEmpty(content)) {
-            if (HIGHLIGHT.equals(subItem.getValue())) {
-                cachedResponseObject = parseQuestionsHtml(content);
-            } else {
-                cachedResponseObject = parseQuestionsListJson(content);
-            }
-        }
-        return cachedResponseObject;
-    }
 
     /**
      * 返回所有我感兴趣的标签
@@ -119,111 +101,43 @@ public class QuestionAPI extends APIBase {
      * @param offset 从第几个开始加载
      * @return ResponseObject
      */
-    public static ResponseObject<ArrayList<Question>> getQuestionsByTagFromJsonUrl(String tag, int offset) {
-        ResponseObject<ArrayList<Question>> resultObject = new ResponseObject<>();
-        try {
-            String url = "http://apis.guokr.com/ask/question.json";
-            HashMap<String, String> pairs = new HashMap<>();
-            pairs.put("retrieve_type", "by_tag");
-            pairs.put("tag_name", tag);
-            pairs.put("limit", "20");
-            pairs.put("offset", String.valueOf(offset));
-            String jString = HttpFetcher.get(url, pairs).toString();
-            resultObject = parseQuestionsListJson(jString);
-
-            if (resultObject.ok && offset == 0) {
-                //请求成功则缓存之
-                String key = "question." + URLDecoder.decode(tag, "utf-8");
-                RequestCache.getInstance().addStringToCacheForceUpdate(key, jString);
-            }
-
-        } catch (Exception e) {
-            JsonHandler.handleRequestException(e, resultObject);
-        }
-        return resultObject;
+    public static Observable<ResponseObject<ArrayList<Question>>> getQuestionsByTag(String tag, int offset, boolean useCache) {
+        String url = "http://apis.guokr.com/ask/question.json";
+        HashMap<String, String> pairs = new HashMap<>();
+        pairs.put("retrieve_type", "by_tag");
+        pairs.put("tag_name", tag);
+        pairs.put("limit", "20");
+        pairs.put("offset", String.valueOf(offset));
+        return new RequestBuilder<ArrayList<Question>>()
+                .setUrl(url)
+                .setParams(pairs)
+                .get()
+                .cacheTimeOut(300000)
+                .useCacheFirst(useCache)
+                .setParser(new QuestionListParser())
+                .requestObservable();
     }
 
     /**
-     * 解析QuestionList的json
-     *
-     * @param jString json
-     * @return ResponseObject
-     */
-    public static ResponseObject<ArrayList<Question>> parseQuestionsListJson(String jString) {
-        ResponseObject<ArrayList<Question>> resultObject = new ResponseObject<>();
-        try {
-            if (jString != null) {
-                ArrayList<Question> questions = new ArrayList<>();
-                JSONArray results = JsonHandler.getUniversalJsonArray(jString, resultObject);
-                if (results != null) {
-                    for (int i = 0; i < results.length(); i++) {
-                        JSONObject jsonObject;
-                        Object object = results.get(i);
-                        if (object instanceof JSONObject) {
-                            jsonObject = (JSONObject) object;
-                        } else {
-                            continue;
-                        }
-                        Question question = Question.fromJson(jsonObject);
-                        questions.add(question);
-                    }
-                    resultObject.ok = true;
-                    resultObject.result = questions;
-                }
-            }
-
-        } catch (Exception e) {
-            JsonHandler.handleRequestException(e, resultObject);
-        }
-        return resultObject;
-    }
-
-    /**
-     * 返回热门回答问题列表，解析html获得
-     *
-     * @param pageNo 页码
-     * @return ResponseObject
-     */
-    @Deprecated
-    public static ResponseObject<ArrayList<Question>> getHotQuestions(int pageNo) {
-        String url = "http://m.guokr.com/ask/hottest/?page=" + pageNo;
-        ResponseObject<ArrayList<Question>> resultObject = new ResponseObject<>();
-        try {
-            String html = HttpFetcher.get(url).toString();
-            resultObject = parseQuestionsHtml(html);
-            if (resultObject.ok && pageNo == 1) {
-                RequestCache.getInstance().addStringToCacheForceUpdate("question.hottest", html);
-            }
-        } catch (Exception e) {
-            JsonHandler.handleRequestException(e, resultObject);
-        }
-        return resultObject;
-    }
-
-    /**
-     * 返回热门回答问题列表，解析html获得
+     * 返回热门回答问题列表，解析json获得
      *
      * @param offset
      * @return ResponseObject
      */
-    public static ResponseObject<ArrayList<Question>> getHotQuestionsFromJsonUrl(int offset) {
-        ResponseObject<ArrayList<Question>> resultObject = new ResponseObject<>();
-        try {
-            String url = "http://apis.guokr.com/ask/question.json";
-            HashMap<String, String> pairs = new HashMap<>();
-            pairs.put("retrieve_type", "hot_question");
-            pairs.put("limit", "20");
-            pairs.put("offset", String.valueOf(offset));
-            String jString = HttpFetcher.get(url, pairs).toString();
-            resultObject = parseQuestionsListJson(jString);
-            if (resultObject.ok && offset == 0) {
-                //请求成功则缓存之
-                RequestCache.getInstance().addStringToCacheForceUpdate("question.hottest", jString);
-            }
-        } catch (Exception e) {
-            JsonHandler.handleRequestException(e, resultObject);
-        }
-        return resultObject;
+    public static Observable<ResponseObject<ArrayList<Question>>> getHotQuestions(int offset, boolean useCache) {
+        String url = "http://apis.guokr.com/ask/question.json";
+        HashMap<String, String> pairs = new HashMap<>();
+        pairs.put("retrieve_type", "hot_question");
+        pairs.put("limit", "20");
+        pairs.put("offset", String.valueOf(offset));
+        return new RequestBuilder<ArrayList<Question>>()
+                .setUrl(url)
+                .setParams(pairs)
+                .get()
+                .cacheTimeOut(300000)
+                .useCacheFirst(useCache)
+                .setParser(new QuestionListParser())
+                .requestObservable();
     }
 
     /**
@@ -232,151 +146,61 @@ public class QuestionAPI extends APIBase {
      * @param pageNo 页码
      * @return ResponseObject
      */
-    public static ResponseObject<ArrayList<Question>> getHighlightQuestions(int pageNo) {
+    public static Observable<ResponseObject<ArrayList<Question>>> getHighlightQuestions(int pageNo, boolean useCache) {
         String url = "http://m.guokr.com/ask/highlight/?page=" + pageNo;
-        ResponseObject<ArrayList<Question>> resultObject = new ResponseObject<>();
-        try {
-            String html = HttpFetcher.get(url).toString();
-            resultObject = parseQuestionsHtml(html);
-            if (resultObject.ok && pageNo == 1) {
-                RequestCache.getInstance().addStringToCacheForceUpdate("question.highlight", html);
-            }
-        } catch (Exception e) {
-            JsonHandler.handleRequestException(e, resultObject);
-        }
-        return resultObject;
+        return new RequestBuilder<ArrayList<Question>>()
+                .setUrl(url)
+                .get()
+                .cacheTimeOut(300000)
+                .useCacheFirst(useCache)
+                .setParser(new QuestionHtmlListParser())
+                .requestObservable();
     }
 
     /**
-     * 解析html页面获得问题列表
+     * 根据帖子id获取问题内容，json格式
      *
-     * @param html 页面内容
-     * @return ResponseObject
+     * @param id，帖子id
+     * @return resultObject
      */
-    public static ResponseObject<ArrayList<Question>> parseQuestionsHtml(String html) {
-        ResponseObject<ArrayList<Question>> resultObject = new ResponseObject<>();
-        try {
-            ArrayList<Question> questions = Question.fromHtmlList(html);
-            resultObject.ok = true;
-            resultObject.result = questions;
-        } catch (Exception e) {
-            JsonHandler.handleRequestException(e, resultObject);
-        }
-        return resultObject;
-    }
-
-    /**
-     * 返回问题内容,json格式
-     *
-     * @param id 问题ID
-     * @return ResponseObject
-     */
-    public static ResponseObject<Question> getCachedQuestionDetailByID(String id) {
+    public static Observable<ResponseObject<Question>> getQuestionDetailByID(String id) {
         String url = "http://apis.guokr.com/ask/question/" + id + ".json";
-        return getCachedQuestionDetailFromJsonUrl(url);
-    }
-
-
-    /**
-     * 返回问题内容
-     * resultObject.result是Question
-     *
-     * @param url 返回问题内容,json格式
-     * @return ResponseObject
-     */
-    public static ResponseObject<Question> getCachedQuestionDetailFromJsonUrl(String url) {
-        ResponseObject<Question> resultObject = new ResponseObject<>();
-        try {
-            Question question;
-            String jString = RequestCache.getInstance().getStringFromCache(url);
-            JSONObject result = JsonHandler.getUniversalJsonObject(jString, resultObject);
-            if (result != null) {
-                question = Question.fromJson(result);
-                resultObject.ok = true;
-                resultObject.result = question;
-            }
-        } catch (Exception e) {
-            JsonHandler.handleRequestException(e, resultObject);
-        }
-
-        return resultObject;
+        return new RequestBuilder<Question>()
+                .setUrl(url)
+                .useCacheIfFailed(true)
+                .get()
+                .setParser(new Parser<Question>() {
+                    @Override
+                    public Question parse(String response, ResponseObject<Question> responseObject) throws Exception {
+                        JSONObject result = JsonHandler.getUniversalJsonObject(response, responseObject);
+                        return Question.fromJson(result);
+                    }
+                })
+                .requestObservable();
     }
 
     /**
-     * 返回问题内容,json格式
+     * 获取文章评论，json格式
+     * resultObject.result是ArrayList[UComment]
      *
-     * @param id 问题ID
-     * @return ResponseObject
-     */
-    public static ResponseObject<Question> getQuestionDetailByID(String id) {
-        String url = "http://apis.guokr.com/ask/question/" + id + ".json";
-        return getQuestionDetailFromJsonUrl(url);
-    }
-
-    /**
-     * 返回问题内容
-     * resultObject.result是Question
-     *
-     * @param url 返回问题内容,json格式
-     * @return ResponseObject
-     */
-    public static ResponseObject<Question> getQuestionDetailFromJsonUrl(String url) {
-        ResponseObject<Question> resultObject = new ResponseObject<>();
-        try {
-            Question question;
-            ResponseObject httpResult = HttpFetcher.get(url, null);
-            resultObject.statusCode = httpResult.statusCode;
-            if (resultObject.statusCode == 404) {
-                return resultObject;
-            }
-            String jString = httpResult.toString();
-            JSONObject result = JsonHandler.getUniversalJsonObject(jString, resultObject);
-            if (result != null) {
-                question = Question.fromJson(result);
-                resultObject.ok = true;
-                resultObject.result = question;
-                RequestCache.getInstance().addStringToCacheForceUpdate(url, jString);
-            }
-        } catch (Exception e) {
-            JsonHandler.handleRequestException(e, resultObject);
-        }
-
-        return resultObject;
-    }
-
-    /**
-     * 获取问题的答案，json格式
-     * resultObject.result是ArrayList[QuestionAnswer]
-     *
-     * @param id     问题id
+     * @param id     article ID
      * @param offset 从第几个开始加载
      * @return ResponseObject
      */
-    public static ResponseObject<ArrayList<AceModel>> getQuestionAnswers(String id, int offset) {
-        ResponseObject<ArrayList<AceModel>> resultObject = new ResponseObject<>();
-        try {
-            ArrayList<AceModel> answers = new ArrayList<>();
-            String url = "http://apis.guokr.com/ask/answer.json";
-            HashMap<String, String> pairs = new HashMap<>();
-            pairs.put("retrieve_type", "by_question");
-            pairs.put("question_id", id);
-            pairs.put("limit", "20");
-            pairs.put("offset", String.valueOf(offset));
-            String jString = HttpFetcher.get(url, pairs).toString();
-            JSONArray comments = JsonHandler.getUniversalJsonArray(jString, resultObject);
-            if (comments != null) {
-                for (int i = 0; i < comments.length(); i++) {
-                    JSONObject jo = comments.getJSONObject(i);
-                    QuestionAnswer ans = QuestionAnswer.fromJson(jo);
-                    answers.add(ans);
-                }
-                resultObject.ok = true;
-                resultObject.result = answers;
-            }
-        } catch (Exception e) {
-            JsonHandler.handleRequestException(e, resultObject);
-        }
-        return resultObject;
+    public static Observable<ResponseObject<ArrayList<QuestionAnswer>>> getQuestionAnswers(final String id, final int offset) {
+        String url = "http://apis.guokr.com/ask/answer.json";
+        HashMap<String, String> pairs = new HashMap<>();
+        pairs.put("retrieve_type", "by_question");
+        pairs.put("question_id", id);
+        pairs.put("limit", "20");
+        pairs.put("offset", String.valueOf(offset));
+        return new RequestBuilder<ArrayList<QuestionAnswer>>()
+                .setUrl(url)
+                .get()
+                .setParams(pairs)
+                .useCacheIfFailed(offset == 0)
+                .setParser(new QuestionAnswerListParser())
+                .requestObservable();
     }
 
     /**
@@ -385,10 +209,10 @@ public class QuestionAPI extends APIBase {
      * @param url 评论id
      * @return resultObject resultObject.result是UComment
      */
-    public static ResponseObject<QuestionAnswer> getSingleAnswerFromRedirectUrl(String url) {
+    public static RequestObject<QuestionAnswer> getSingleAnswerFromRedirectUrl(String url, CallBack<QuestionAnswer> callBack) {
         //http://www.guokr.com/answer/654321/redirect/
         //http://www.guokr.com/answer/654321/
-        return getSingleAnswerByID(url.replaceAll("\\D+", ""));
+        return getSingleAnswerByID(url.replaceAll("\\D+", ""), callBack);
     }
 
     /**
@@ -397,62 +221,20 @@ public class QuestionAPI extends APIBase {
      * @param id 评论id
      * @return resultObject resultObject.result是UComment
      */
-    public static ResponseObject<QuestionAnswer> getSingleAnswerByID(String id) {
-        ResponseObject<QuestionAnswer> resultObject = new ResponseObject<>();
-        String url = "http://apis.guokr.com/ask/answer.json";
-        //url还有另一种形式，http://apis.guokr.com/ask/answer/999999.json
-        //这样后面就不必带answer_id参数了
-        HashMap<String, String> pairs = new HashMap<>();
-        pairs.put("answer_id", id);
-        try {
-            String result = HttpFetcher.get(url, pairs).toString();
-            JSONArray answerArray = JsonHandler.getUniversalJsonArray(result, resultObject);
-            if (answerArray != null && answerArray.length() > 0) {
-                JSONObject answerObject = answerArray.getJSONObject(0);
-                QuestionAnswer answer = QuestionAnswer.fromJson(answerObject);
-                resultObject.ok = true;
-                resultObject.result = answer;
-            }
-        } catch (Exception e) {
-            JsonHandler.handleRequestException(e, resultObject);
-        }
-        return resultObject;
-    }
-
-    /**
-     * 返回问题的评论，json格式
-     * resultObject.result是ArrayList[UComment]
-     *
-     * @param id     问题id
-     * @param offset 从第几个开始加载
-     * @return ResponseObject
-     */
-    @Deprecated
-    public static ResponseObject<ArrayList<UComment>> getQuestionComments(String id, int offset) {
-        ResponseObject<ArrayList<UComment>> resultObject = new ResponseObject<>();
-        try {
-            ArrayList<UComment> list = new ArrayList<>();
-            String url = "http://www.guokr.com/apis/ask/question_reply.json";
-            HashMap<String, String> pairs = new HashMap<>();
-            pairs.put("retrieve_type", "by_question");
-            pairs.put("question_id", id);
-            pairs.put("limit", "20");
-            pairs.put("offset", String.valueOf(offset));
-            String jString = HttpFetcher.get(url, pairs).toString();
-            JSONArray comments = JsonHandler.getUniversalJsonArray(jString, resultObject);
-            if (comments != null) {
-                for (int i = 0; i < comments.length(); i++) {
-                    JSONObject jsonObject = comments.getJSONObject(i);
-                    UComment comment = UComment.fromQuestionJson(jsonObject);
-                    list.add(comment);
-                }
-                resultObject.ok = true;
-                resultObject.result = list;
-            }
-        } catch (Exception e) {
-            JsonHandler.handleRequestException(e, resultObject);
-        }
-        return resultObject;
+    public static RequestObject<QuestionAnswer> getSingleAnswerByID(String id, CallBack<QuestionAnswer> callBack) {
+        String url = "http://apis.guokr.com/ask/answer/" + id + ".json";
+        return new RequestBuilder<QuestionAnswer>()
+                .setUrl(url)
+                .get()
+                .setParser(new Parser<QuestionAnswer>() {
+                    @Override
+                    public QuestionAnswer parse(String response, ResponseObject<QuestionAnswer> responseObject) throws Exception {
+                        JSONObject answerObject = JsonHandler.getUniversalJsonObject(response, responseObject);
+                        return QuestionAnswer.fromJson(answerObject);
+                    }
+                })
+                .setRequestCallBack(callBack)
+                .startRequest();
     }
 
     /**
@@ -472,23 +254,10 @@ public class QuestionAPI extends APIBase {
         pairs.put("offset", String.valueOf(offset));
         return new RequestBuilder<ArrayList<UComment>>()
                 .setUrl(url)
-                .setParser(new Parser<ArrayList<UComment>>() {
-                    @Override
-                    public ArrayList<UComment> parse(String str, ResponseObject<ArrayList<UComment>> responseObject) throws Exception {
-                        JSONArray comments = JsonHandler.getUniversalJsonArray(str, responseObject);
-                        ArrayList<UComment> list = new ArrayList<>();
-                        assert comments != null;
-                        for (int i = 0; i < comments.length(); i++) {
-                            JSONObject jsonObject = comments.getJSONObject(i);
-                            UComment comment = UComment.fromQuestionJson(jsonObject);
-                            list.add(comment);
-                        }
-                        return list;
-                    }
-                })
+                .setParser(new QuestionCommentListParser())
                 .setRequestCallBack(callBack)
                 .setParams(pairs)
-                .delete()
+                .get()
                 .startRequest();
     }
 
@@ -496,36 +265,24 @@ public class QuestionAPI extends APIBase {
      * 返回答案的评论，json格式
      * resultObject.result是ArrayList[UComment]
      *
-     * @param id     答案id
+     * @param id     问题id
      * @param offset 从第几个开始加载
      * @return ResponseObject
      */
-    public static ResponseObject<ArrayList<UComment>> getAnswerComments(String id, int offset) {
-        ResponseObject<ArrayList<UComment>> resultObject = new ResponseObject<>();
-        try {
-            ArrayList<UComment> list = new ArrayList<>();
-            String url = "http://www.guokr.com/apis/ask/answer_reply.json";
-            HashMap<String, String> pairs = new HashMap<>();
-            pairs.put("retrieve_type", "by_answer");
-            pairs.put("answer_id", id);
-            pairs.put("limit", "20");
-            pairs.put("offset", String.valueOf(offset));
-            String jString = HttpFetcher.get(url, pairs).toString();
-            JSONArray comments = JsonHandler.getUniversalJsonArray(jString, resultObject);
-            if (comments != null) {
-                for (int i = 0; i < comments.length(); i++) {
-                    JSONObject jsonObject = comments.getJSONObject(i);
-                    UComment comment = UComment.fromAnswerJson(jsonObject);
-                    list.add(comment);
-                }
-                resultObject.ok = true;
-                resultObject.result = list;
-            }
-        } catch (Exception e) {
-            JsonHandler.handleRequestException(e, resultObject);
-        }
-
-        return resultObject;
+    public static RequestObject<ArrayList<UComment>> getAnswerComments(String id, int offset, CallBack<ArrayList<UComment>> callBack) {
+        String url = "http://www.guokr.com/apis/ask/answer_reply.json";
+        HashMap<String, String> pairs = new HashMap<>();
+        pairs.put("retrieve_type", "by_answer");
+        pairs.put("answer_id", id);
+        pairs.put("limit", "20");
+        pairs.put("offset", String.valueOf(offset));
+        return new RequestBuilder<ArrayList<UComment>>()
+                .setUrl(url)
+                .setParser(new AnswerCommentListParser())
+                .setRequestCallBack(callBack)
+                .setParams(pairs)
+                .get()
+                .startRequest();
     }
 
     /**
@@ -555,8 +312,8 @@ public class QuestionAPI extends APIBase {
      * @param id 答案id
      * @return ResponseObject
      */
-    public static ResponseObject supportAnswer(String id) {
-        return supportOrOpposeAnswer(id, "support");
+    public static void supportAnswer(String id, CallBack<Boolean> callBack) {
+        supportOrOpposeAnswer(id, "support", callBack);
     }
 
     /**
@@ -565,32 +322,8 @@ public class QuestionAPI extends APIBase {
      * @param id 答案id
      * @return ResponseObject
      */
-    public static ResponseObject opposeAnswer(String id) {
-        return supportOrOpposeAnswer(id, "oppose");
-    }
-
-    /**
-     * 支持或者反对答案
-     *
-     * @param id      答案id
-     * @param opinion 反对或者赞同，参数
-     * @return ResponseObject
-     */
-    private static ResponseObject supportOrOpposeAnswer(String id, String opinion) {
-        String url = "http://www.guokr.com/apis/ask/answer_polling.json";
-        ResponseObject resultObject = new ResponseObject();
-        try {
-            HashMap<String, String> pairs = new HashMap<>();
-            pairs.put("answer_id", id);
-            pairs.put("opinion", opinion);
-            String result = HttpFetcher.post(url, pairs).toString();
-            if (JsonHandler.getUniversalJsonSimpleBoolean(result, resultObject)) {
-                resultObject.ok = true;
-            }
-        } catch (Exception e) {
-            JsonHandler.handleRequestException(e, resultObject);
-        }
-        return resultObject;
+    public static void opposeAnswer(String id, CallBack<Boolean> callBack) {
+        supportOrOpposeAnswer(id, "oppose", callBack);
     }
 
     /**
@@ -605,31 +338,13 @@ public class QuestionAPI extends APIBase {
         HashMap<String, String> pairs = new HashMap<>();
         pairs.put("answer_id", id);
         pairs.put("opinion", opinion);
-        new RequestBuilder<Boolean>().setUrl(url).setParams(pairs).setParser(new BooleanParser())
-                .setRequestCallBack(callBack).post().startRequest();
-    }
-
-    /**
-     * 感谢答案
-     *
-     * @param id 答案id
-     * @return ResponseObject
-     */
-    public static ResponseObject thankAnswer(String id) {
-        String url = "http://www.guokr.com/apis/ask/answer_thanking.json";
-        ResponseObject resultObject = new ResponseObject();
-        try {
-            HashMap<String, String> pairs = new HashMap<>();
-            pairs.put("v", System.currentTimeMillis() + "");
-            pairs.put("answer_id", id);
-            String result = HttpFetcher.post(url, pairs).toString();
-            if (JsonHandler.getUniversalJsonSimpleBoolean(result, resultObject)) {
-                resultObject.ok = true;
-            }
-        } catch (Exception e) {
-            JsonHandler.handleRequestException(e, resultObject);
-        }
-        return resultObject;
+        new RequestBuilder<Boolean>()
+                .setUrl(url)
+                .setParams(pairs)
+                .setParser(new BooleanParser())
+                .setRequestCallBack(callBack)
+                .post()
+                .startRequest();
     }
 
     /**
@@ -643,8 +358,13 @@ public class QuestionAPI extends APIBase {
         HashMap<String, String> pairs = new HashMap<>();
         pairs.put("v", System.currentTimeMillis() + "");
         pairs.put("answer_id", id);
-        new RequestBuilder<Boolean>().setUrl(url).setParams(pairs).setParser(new BooleanParser())
-                .setRequestCallBack(callBack).post().startRequest();
+        new RequestBuilder<Boolean>()
+                .setUrl(url)
+                .setParams(pairs)
+                .setParser(new BooleanParser())
+                .setRequestCallBack(callBack)
+                .post()
+                .startRequest();
     }
 
     /**
@@ -658,8 +378,13 @@ public class QuestionAPI extends APIBase {
         HashMap<String, String> pairs = new HashMap<>();
         pairs.put("v", System.currentTimeMillis() + "");
         pairs.put("answer_id", id);
-        new RequestBuilder<Boolean>().setUrl(url).setParams(pairs).setParser(new BooleanParser())
-                .setRequestCallBack(callBack).post().startRequest();
+        new RequestBuilder<Boolean>()
+                .setUrl(url)
+                .setParams(pairs)
+                .setParser(new BooleanParser())
+                .setRequestCallBack(callBack)
+                .post()
+                .startRequest();
     }
 
     /**
@@ -672,8 +397,13 @@ public class QuestionAPI extends APIBase {
         String url = "http://www.guokr.com/apis/ask/answer_burying.json";
         HashMap<String, String> pairs = new HashMap<>();
         pairs.put("answer_id", id);
-        new RequestBuilder<Boolean>().setUrl(url).setParams(pairs).setParser(new BooleanParser())
-                .setRequestCallBack(callBack).delete().startRequest();
+        new RequestBuilder<Boolean>()
+                .setUrl(url)
+                .setParams(pairs)
+                .setParser(new BooleanParser())
+                .setRequestCallBack(callBack)
+                .delete()
+                .startRequest();
     }
 
     /**
@@ -701,8 +431,13 @@ public class QuestionAPI extends APIBase {
         HashMap<String, String> pairs = new HashMap<>();
         pairs.put("question_id", questionID);
         pairs.put("retrieve_type", "by_question");
-        new RequestBuilder<Boolean>().setUrl(url).setParams(pairs).setParser(new BooleanParser())
-                .setRequestCallBack(callBack).post().startRequest();
+        new RequestBuilder<Boolean>()
+                .setUrl(url)
+                .setParams(pairs)
+                .setParser(new BooleanParser())
+                .setRequestCallBack(callBack)
+                .post()
+                .startRequest();
     }
 
     /**
@@ -716,7 +451,13 @@ public class QuestionAPI extends APIBase {
         HashMap<String, String> pairs = new HashMap<>();
         pairs.put("question_id", questionID);
         pairs.put("retrieve_type", "by_question");
-        new RequestBuilder<Boolean>().setUrl(url).setParams(pairs).setRequestCallBack(callBack).setParser(new BooleanParser()).delete().startRequest();
+        new RequestBuilder<Boolean>()
+                .setUrl(url)
+                .setParams(pairs)
+                .setRequestCallBack(callBack)
+                .setParser(new BooleanParser())
+                .delete()
+                .startRequest();
     }
 
     /**
@@ -762,7 +503,12 @@ public class QuestionAPI extends APIBase {
      */
     public static void deleteMyComment(String id, CallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/ask/answer/" + id + ".json";
-        new RequestBuilder<Boolean>().setUrl(url).setRequestCallBack(callBack).setParser(new BooleanParser()).delete().startRequest();
+        new RequestBuilder<Boolean>()
+                .setUrl(url)
+                .setRequestCallBack(callBack)
+                .setParser(new BooleanParser())
+                .delete()
+                .startRequest();
     }
 
     /**

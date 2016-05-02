@@ -4,7 +4,6 @@ import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.Author;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.model.UComment;
-import net.nashlegend.sourcewall.request.HttpFetcher;
 import net.nashlegend.sourcewall.request.JsonHandler;
 import net.nashlegend.sourcewall.request.RequestBuilder;
 import net.nashlegend.sourcewall.request.RequestObject;
@@ -30,6 +29,7 @@ import java.util.regex.Pattern;
 
 import rx.Observable;
 import rx.functions.Func1;
+import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
 public class ArticleAPI extends APIBase {
@@ -39,8 +39,7 @@ public class ArticleAPI extends APIBase {
     }
 
     /**
-     * 根据上面几个方法生成的url去取文章列表
-     * resultObject.result是ArrayList[Article]
+     * 返回文章列表
      *
      * @param type     文章类型
      * @param key      文章类型的key，如果是科学人首页则可以不取
@@ -78,6 +77,8 @@ public class ArticleAPI extends APIBase {
     }
 
     /**
+     * 此处默认会取缓存，如果没有变动的话
+     *
      * @param id
      * @return
      */
@@ -85,6 +86,7 @@ public class ArticleAPI extends APIBase {
         String url = "http://www.guokr.com/article/" + id + "/";
         return new RequestBuilder<Article>()
                 .setUrl(url)
+                .useCacheIfFailed(true)
                 .get()
                 .setParser(new Parser<Article>() {
                     @Override
@@ -182,39 +184,12 @@ public class ArticleAPI extends APIBase {
      * @param article_id article_id
      * @return ResponseObject
      */
-    private static ResponseObject<Article> getArticleSimpleByID(String article_id) {
-        ResponseObject<Article> resultObject = new ResponseObject<>();
-        String url = "http://apis.guokr.com/minisite/article.json";
-        HashMap<String, String> pairs = new HashMap<>();
-        pairs.put("article_id", article_id);
-        try {
-            String result = HttpFetcher.get(url, pairs).toString();
-            JSONArray articlesArray = JsonHandler.getUniversalJsonArray(result, resultObject);
-            if (articlesArray != null && articlesArray.length() == 1) {
-                JSONObject articleObject = articlesArray.getJSONObject(0);
-                Article article = Article.fromJsonSimple(articleObject);
-                resultObject.ok = true;
-                resultObject.result = article;
-            }
-        } catch (Exception e) {
-            JsonHandler.handleRequestException(e, resultObject);
-        }
-        return resultObject;
-    }
-
-    /**
-     * 获取一条article的简介，也就是除了正文之外的一切，这里只需要两个，id和title
-     *
-     * @param article_id article_id
-     * @return ResponseObject
-     */
-    private static RequestObject<Article> getArticleSimpleByID(String article_id, CallBack<Article> callBack) {
+    private static Observable<ResponseObject<Article>> getArticleSimpleByID(String article_id) {
         String url = "http://apis.guokr.com/minisite/article.json";
         HashMap<String, String> pairs = new HashMap<>();
         pairs.put("article_id", article_id);
         return new RequestBuilder<Article>()
                 .setUrl(url)
-                .setRequestCallBack(callBack)
                 .get()
                 .setParams(pairs)
                 .setParser(new Parser<Article>() {
@@ -226,7 +201,7 @@ public class ArticleAPI extends APIBase {
                         return Article.fromJsonSimple(articleObject);
                     }
                 })
-                .startRequest();
+                .requestObservable();
     }
 
     public static Observable<UComment> getSingleComment(String url) {
@@ -236,9 +211,9 @@ public class ArticleAPI extends APIBase {
                 .setWithToken(false)
                 .setParser(new DirectlyStringParser())
                 .requestObservable()
-                .flatMap(new Func1<ResponseObject<String>, Observable<ArrayList<String>>>() {
+                .flatMap(new Func1<ResponseObject<String>, Observable<UComment>>() {
                     @Override
-                    public Observable<ArrayList<String>> call(ResponseObject<String> response) {
+                    public Observable<UComment> call(ResponseObject<String> response) {
                         Document document = Jsoup.parse(response.result);
                         Elements elements = document.getElementsByTag("a");
                         if (elements.size() == 1) {
@@ -246,26 +221,29 @@ public class ArticleAPI extends APIBase {
                             if (matcher.find()) {
                                 String article_id = matcher.group(1);
                                 String reply_id = matcher.group(2);
-                                ArrayList<String> arrayList = new ArrayList<String>();
-                                arrayList.add(article_id);
-                                arrayList.add(reply_id);
-                                return Observable.just(arrayList);
+                                return Observable.zip(getArticleSimpleByID(article_id), getSingleCommentByID(reply_id),
+                                        new Func2<ResponseObject<Article>, ResponseObject<UComment>, UComment>() {
+                                            @Override
+                                            public UComment call(ResponseObject<Article> article, ResponseObject<UComment> comment) {
+                                                if (article.ok && comment.ok) {
+                                                    UComment uComment = comment.result;
+                                                    uComment.setHostID(article.result.getId());
+                                                    uComment.setHostTitle(article.result.getTitle());
+                                                    return uComment;
+                                                }
+                                                return null;
+                                            }
+                                        });
                             }
                         }
                         return Observable.error(new IllegalStateException("not a correct redirect content"));
                     }
                 })
-                .flatMap(new Func1<ArrayList<String>, Observable<UComment>>() {
+                .flatMap(new Func1<UComment, Observable<UComment>>() {
                     @Override
-                    public Observable<UComment> call(ArrayList<String> strings) {
-                        ResponseObject<Article> articleResult = getArticleSimpleByID(strings.get(0));
-                        if (articleResult.ok) {
-                            Article article = articleResult.result;
-                            ResponseObject<UComment> responseObject =
-                                    getSingleCommentByID(strings.get(1), article.getId(), article.getTitle());
-                            if (responseObject.ok) {
-                                return Observable.just(responseObject.result);
-                            }
+                    public Observable<UComment> call(UComment uComment) {
+                        if (uComment != null) {
+                            return Observable.just(uComment);
                         }
                         return Observable.error(new IllegalStateException("not a correct redirect content"));
                     }
@@ -284,40 +262,36 @@ public class ArticleAPI extends APIBase {
      * @param notice_id 通知id
      * @return resultObject resultObject.result是UComment
      */
-    public static Observable<UComment> getSingleCommentByNoticeIDRx(String notice_id) {
+    public static Observable<UComment> getSingleCommentByNoticeID(String notice_id) {
         String notice_url = "http://www.guokr.com/user/notice/" + notice_id + "/";
         return getSingleComment(notice_url);
     }
 
-
-    public static Observable<UComment> getSingleCommentFromRedirectUrlRx(String reply_url) {
+    public static Observable<UComment> getSingleCommentFromRedirectUrl(String reply_url) {
         return getSingleComment(reply_url);
     }
 
     /**
      * 根据一条评论的id获取评论内容，主要应用于消息通知
      * 无法取得此评论的文章的id和标题，无法取得楼层。
-     * 太蛋疼了，只能不显示文章标题或者提前传入
      *
      * @param reply_id 评论id
      * @return resultObject resultObject.result是UComment
      */
-    public static ResponseObject<UComment> getSingleCommentByID(String reply_id, String article_id, String article_title) {
-        ResponseObject<UComment> resultObject = new ResponseObject<>();
-//        String url = "http://apis.guokr.com/minisite/article_reply.json";
+    public static Observable<ResponseObject<UComment>> getSingleCommentByID(String reply_id) {
         String url = "http://apis.guokr.com/minisite/article_reply/" + reply_id + ".json";
-        //这样后面就不必带reply_id参数了
-        try {
-            String result = HttpFetcher.get(url).toString();
-            JSONObject replyObject = JsonHandler.getUniversalJsonObject(result, resultObject);
-            assert replyObject != null;
-            UComment comment = UComment.fromArticleJson(article_id, article_title, replyObject);
-            resultObject.ok = true;
-            resultObject.result = comment;
-        } catch (Exception e) {
-            JsonHandler.handleRequestException(e, resultObject);
-        }
-        return resultObject;
+        return new RequestBuilder<UComment>()
+                .setUrl(url)
+                .get()
+                .setParser(new Parser<UComment>() {
+                    @Override
+                    public UComment parse(String str, ResponseObject<UComment> responseObject) throws Exception {
+                        JSONObject replyObject = JsonHandler.getUniversalJsonObject(str, responseObject);
+                        assert replyObject != null;
+                        return UComment.fromArticleJson(replyObject);
+                    }
+                })
+                .requestObservable();
     }
 
     /**

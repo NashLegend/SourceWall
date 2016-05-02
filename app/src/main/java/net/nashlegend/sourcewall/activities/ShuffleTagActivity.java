@@ -15,11 +15,6 @@ import android.widget.TextView;
 import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.R;
-import net.nashlegend.sourcewall.view.common.AAsyncTask;
-import net.nashlegend.sourcewall.view.common.IStackedAsyncTaskInterface;
-import net.nashlegend.sourcewall.view.common.shuffle.AskTagMovableButton;
-import net.nashlegend.sourcewall.view.common.shuffle.MovableButton;
-import net.nashlegend.sourcewall.view.common.shuffle.ShuffleDesk;
 import net.nashlegend.sourcewall.db.AskTagHelper;
 import net.nashlegend.sourcewall.db.gen.AskTag;
 import net.nashlegend.sourcewall.model.SubItem;
@@ -30,9 +25,20 @@ import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Mob;
+import net.nashlegend.sourcewall.view.common.AAsyncTask;
+import net.nashlegend.sourcewall.view.common.IStackedAsyncTaskInterface;
+import net.nashlegend.sourcewall.view.common.shuffle.AskTagMovableButton;
+import net.nashlegend.sourcewall.view.common.shuffle.MovableButton;
+import net.nashlegend.sourcewall.view.common.shuffle.ShuffleDesk;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import rx.Observable;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * @author NashLegend
@@ -40,7 +46,6 @@ import java.util.List;
 public class ShuffleTagActivity extends SwipeActivity {
 
     private ShuffleDesk desk;
-    LoaderFromDBTask dbTask;
     LoaderFromNetTask netTask;
     Toolbar toolbar;
     ProgressDialog progressDialog;
@@ -60,6 +65,7 @@ public class ShuffleTagActivity extends SwipeActivity {
 
             @Override
             public void onGlobalLayout() {
+                //noinspection deprecation
                 desk.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                 initView();
             }
@@ -70,8 +76,33 @@ public class ShuffleTagActivity extends SwipeActivity {
             netTask = new LoaderFromNetTask(this);
             netTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
-            dbTask = new LoaderFromDBTask(this);
-            dbTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            Observable
+                    .just("String")
+                    .map(new Func1<String, String>() {
+                        @Override
+                        public String call(String s) {
+                            getButtons();
+                            return null;
+                        }
+                    })
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<String>() {
+                        @Override
+                        public void onCompleted() {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onNext(String s) {
+                            initView();
+                        }
+                    });
         }
     }
 
@@ -135,9 +166,6 @@ public class ShuffleTagActivity extends SwipeActivity {
         if (netTask != null && netTask.getStatus() == AAsyncTask.Status.RUNNING) {
             netTask.cancel(false);
         }
-        if (dbTask != null && dbTask.getStatus() == AAsyncTask.Status.RUNNING) {
-            dbTask.cancel(false);
-        }
         super.onDestroy();
     }
 
@@ -176,37 +204,21 @@ public class ShuffleTagActivity extends SwipeActivity {
             for (int i = 0; i < myTags.size(); i++) {
                 AskTag tmpTag = myTags.get(i);
                 boolean selected = false;
+                int order = 0;
                 for (int j = 0; j < selectedGroups.size(); j++) {
                     if (selectedGroups.get(j).getValue().equals(tmpTag.getValue())) {
                         selected = true;
+                        order = j;
                         break;
                     }
                 }
                 tmpTag.setSelected(selected);
                 if (selected) {
-                    tmpTag.setOrder(i);
+                    tmpTag.setOrder(order);
                 } else {
                     tmpTag.setOrder(1024 + i);
                 }
             }
-        }
-    }
-
-    class LoaderFromDBTask extends AAsyncTask<String, Integer, Boolean> {
-
-        public LoaderFromDBTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
-            super(iStackedAsyncTaskInterface);
-        }
-
-        @Override
-        protected Boolean doInBackground(String[] params) {
-            getButtons();
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            initView();
         }
     }
 

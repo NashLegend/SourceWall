@@ -155,7 +155,7 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
         if (TextUtils.isEmpty(notice_id)) {
             switch (hostSection) {
                 case SubItem.Section_Article:
-                    observable = ArticleAPI.getSingleCommentFromRedirectUrlRx(redirectUri.toString());
+                    observable = ArticleAPI.getSingleCommentFromRedirectUrl(redirectUri.toString());
                     break;
                 case SubItem.Section_Post:
                     observable = PostAPI.getSingleCommentFromRedirectUrl(redirectUri.toString());
@@ -164,7 +164,7 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
         } else {
             switch (hostSection) {
                 case SubItem.Section_Article:
-                    observable = ArticleAPI.getSingleCommentByNoticeIDRx(notice_id);
+                    observable = ArticleAPI.getSingleCommentByNoticeID(notice_id);
                     break;
                 case SubItem.Section_Post:
                     observable = PostAPI.getSingleCommentByNotice(notice_id);

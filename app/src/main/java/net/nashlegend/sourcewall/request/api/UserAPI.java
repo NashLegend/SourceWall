@@ -151,6 +151,7 @@ public class UserAPI extends APIBase {
     public static String getUkey() {
         return SharedPreferencesUtil.readString(Consts.Key_Ukey, "");
     }
+
     /**
      * 获取保存的用户ukey
      *

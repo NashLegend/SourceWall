@@ -7,9 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import net.nashlegend.sourcewall.util.ToastUtil;
 import net.nashlegend.sourcewall.view.common.AAsyncTask;
 import net.nashlegend.sourcewall.view.common.IStackedAsyncTaskInterface;
-import net.nashlegend.sourcewall.util.ToastUtil;
 
 import java.util.ArrayList;
 

@@ -9,12 +9,12 @@ import android.widget.TextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import net.nashlegend.sourcewall.R;
-import net.nashlegend.sourcewall.view.common.TTextView;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.ImageUtils;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
+import net.nashlegend.sourcewall.view.common.TTextView;
 
 /**
  * Created by NashLegend on 2014/9/18 0018.

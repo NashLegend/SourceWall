@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -32,11 +31,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.R;
-import net.nashlegend.sourcewall.view.common.AAsyncTask;
-import net.nashlegend.sourcewall.view.common.IStackedAsyncTaskInterface;
-import net.nashlegend.sourcewall.view.common.LoadingView;
-import net.nashlegend.sourcewall.view.common.SScrollView;
-import net.nashlegend.sourcewall.view.common.WWebView;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.model.QuestionAnswer;
 import net.nashlegend.sourcewall.request.RequestObject.CallBack;
@@ -51,6 +45,9 @@ import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.ImageUtils;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.StyleChecker;
+import net.nashlegend.sourcewall.view.common.LoadingView;
+import net.nashlegend.sourcewall.view.common.SScrollView;
+import net.nashlegend.sourcewall.view.common.WWebView;
 
 import java.util.ArrayList;
 
@@ -140,15 +137,25 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
         }
     }
 
-    LoaderTask loaderTask;
-
     private void loadDataByUri() {
-        if (loaderTask != null && loaderTask.getStatus() == AAsyncTask.Status.RUNNING) {
-            loaderTask.cancel(true);
-        }
+        MessageAPI.ignoreOneNotice(notice_id);
+        QuestionAPI.getSingleAnswerFromRedirectUrl(redirectUri.toString(), new CallBack<QuestionAnswer>() {
+            @Override
+            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<QuestionAnswer> result) {
+                loadingView.onLoadFailed();
+            }
 
-        loaderTask = new LoaderTask(this);
-        loaderTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            @Override
+            public void onSuccess(@NonNull QuestionAnswer result, @NonNull ResponseObject<QuestionAnswer> detailed) {
+                floatingActionsMenu.setVisibility(View.VISIBLE);
+                loadingView.onLoadSuccess();
+                answer = result;
+                question = new Question();
+                question.setTitle(answer.getQuestion());
+                question.setId(answer.getQuestionID());
+                initData();
+            }
+        });
 
     }
 
@@ -375,10 +382,34 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
                         toastSingleton(R.string.has_opposed);
                         return;
                     }
-                    OpinionTask task = new OpinionTask(AnswerActivity.this);
-                    task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, support);
+                    supportOrNot(support);
                 }
             }).create().show();
+        }
+    }
+
+    private void supportOrNot(final boolean isSupport) {
+        CallBack<Boolean> callBack = new CallBack<Boolean>() {
+            @Override
+            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
+                toast((isSupport ? "赞同" : "反对") + "未遂");
+            }
+
+            @Override
+            public void onSuccess(@NonNull Boolean result, @NonNull ResponseObject<Boolean> detailed) {
+                answer.setUpvoteNum(answer.getUpvoteNum() + 1);
+                supportText.setText(String.valueOf(answer.getUpvoteNum()));
+                answer.setHasDownVoted(!isSupport);
+                answer.setHasUpVoted(isSupport);
+                toast((isSupport ? "赞同" : "反对") + "成功");
+            }
+        };
+        if (isSupport) {
+            MobclickAgent.onEvent(AnswerActivity.this, Mob.Event_Support_Answer);
+            QuestionAPI.supportAnswer(answer.getID(), callBack);
+        } else {
+            MobclickAgent.onEvent(AnswerActivity.this, Mob.Event_Oppose_Answer);
+            QuestionAPI.opposeAnswer(answer.getID(), callBack);
         }
     }
 
@@ -453,72 +484,5 @@ public class AnswerActivity extends SwipeActivity implements View.OnClickListene
     @Override
     public void reload() {
         loadDataByUri();
-    }
-
-    class LoaderTask extends AAsyncTask<Uri, Integer, ResponseObject<QuestionAnswer>> {
-
-        public LoaderTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
-            super(iStackedAsyncTaskInterface);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            floatingActionsMenu.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected ResponseObject<QuestionAnswer> doInBackground(Uri... params) {
-            MessageAPI.ignoreOneNotice(notice_id);
-            return QuestionAPI.getSingleAnswerFromRedirectUrl(redirectUri.toString());
-        }
-
-        @Override
-        protected void onPostExecute(ResponseObject<QuestionAnswer> result) {
-            if (result.ok) {
-                floatingActionsMenu.setVisibility(View.VISIBLE);
-                loadingView.onLoadSuccess();
-                answer = result.result;
-                question = new Question();
-                question.setTitle(answer.getQuestion());
-                question.setId(answer.getQuestionID());
-                initData();
-            } else {
-                loadingView.onLoadFailed();
-            }
-        }
-    }
-
-    class OpinionTask extends AAsyncTask<Boolean, Integer, ResponseObject> {
-
-        boolean isSupport;
-
-        public OpinionTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
-            super(iStackedAsyncTaskInterface);
-        }
-
-        @Override
-        protected ResponseObject doInBackground(Boolean... params) {
-            isSupport = params[0];
-            if (isSupport) {
-                MobclickAgent.onEvent(AnswerActivity.this, Mob.Event_Support_Answer);
-                return QuestionAPI.supportAnswer(answer.getID());
-            } else {
-                MobclickAgent.onEvent(AnswerActivity.this, Mob.Event_Oppose_Answer);
-                return QuestionAPI.opposeAnswer(answer.getID());
-            }
-        }
-
-        @Override
-        protected void onPostExecute(ResponseObject resultObject) {
-            if (resultObject.ok) {
-                answer.setUpvoteNum(answer.getUpvoteNum() + 1);
-                supportText.setText(answer.getUpvoteNum() + "");
-                answer.setHasDownVoted(!isSupport);
-                answer.setHasUpVoted(isSupport);
-                toast((isSupport ? "赞同" : "反对") + "成功");
-            } else {
-                toast((isSupport ? "赞同" : "反对") + "未遂");
-            }
-        }
     }
 }

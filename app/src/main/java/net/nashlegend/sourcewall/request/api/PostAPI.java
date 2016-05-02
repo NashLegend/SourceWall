@@ -3,7 +3,6 @@ package net.nashlegend.sourcewall.request.api;
 import android.net.Uri;
 import android.text.TextUtils;
 
-import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.PrepareData;
 import net.nashlegend.sourcewall.model.SubItem;
@@ -14,7 +13,6 @@ import net.nashlegend.sourcewall.request.RequestBuilder;
 import net.nashlegend.sourcewall.request.RequestObject;
 import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
-import net.nashlegend.sourcewall.request.cache.RequestCache;
 import net.nashlegend.sourcewall.request.parsers.BooleanParser;
 import net.nashlegend.sourcewall.request.parsers.ContentValueForKeyParser;
 import net.nashlegend.sourcewall.request.parsers.DirectlyStringParser;
@@ -142,82 +140,58 @@ public class PostAPI extends APIBase {
      * @param id，帖子id
      * @return resultObject
      */
-    public static ResponseObject<Post> getCachedPostDetailByIDFromJsonUrl(String id) {
-        ResponseObject<Post> resultObject = new ResponseObject<>();
+    public static Observable<ResponseObject<Post>> getPostDetailByID(String id) {
         String url = "http://apis.guokr.com/group/post/" + id + ".json";
-        try {
-            String json = RequestCache.getInstance().getStringFromCache(url);
-            JSONObject postResult = JsonHandler.getUniversalJsonObject(json, resultObject);
-            Post detail = Post.fromJson(postResult);
-            resultObject.ok = true;
-            resultObject.result = detail;
-        } catch (Exception e) {
-            JsonHandler.handleRequestException(e, resultObject);
-        }
-        return resultObject;
+        return new RequestBuilder<Post>()
+                .setUrl(url)
+                .useCacheIfFailed(true)
+                .get()
+                .setParser(new Parser<Post>() {
+                    @Override
+                    public Post parse(String response, ResponseObject<Post> responseObject) throws Exception {
+                        JSONObject postResult = JsonHandler.getUniversalJsonObject(response, responseObject);
+                        return Post.fromJson(postResult);
+                    }
+                })
+                .requestObservable();
     }
 
     /**
-     * 根据帖子id获取帖子内容，json格式
-     *
-     * @param id，帖子id
-     * @return resultObject
-     */
-    public static ResponseObject<Post> getPostDetailByIDFromJsonUrl(String id) {
-        ResponseObject<Post> resultObject = new ResponseObject<>();
-        String url = "http://apis.guokr.com/group/post/" + id + ".json";
-        try {
-            ResponseObject response = HttpFetcher.get(url);
-            resultObject.statusCode = response.statusCode;
-            if (resultObject.statusCode == 404) {
-                return resultObject;
-            }
-            String json = response.toString();
-            JSONObject postResult = JsonHandler.getUniversalJsonObject(json, resultObject);
-            Post detail = Post.fromJson(postResult);
-            resultObject.ok = true;
-            resultObject.result = detail;
-            RequestCache.getInstance().addStringToCacheForceUpdate(url, json);
-        } catch (Exception e) {
-            JsonHandler.handleRequestException(e, resultObject);
-        }
-        return resultObject;
-    }
-
-    /**
-     * 使用Json解析方式获得帖子评论列表
+     * 获取文章评论，json格式
      * resultObject.result是ArrayList[UComment]
      *
-     * @param id     帖子id
-     * @param offset 从第offset个开始加载
-     * @param limit  要加载多少个
-     * @return resultObject
+     * @param id     article ID
+     * @param offset 从第几个开始加载
+     * @param limit
+     * @return ResponseObject
      */
-    public static ResponseObject<ArrayList<AceModel>> getPostCommentsFromJsonUrl(String id, int offset, int limit) {
-        ResponseObject<ArrayList<AceModel>> resultObject = new ResponseObject<>();
-        try {
-            ArrayList<AceModel> list = new ArrayList<>();
-            String url = "http://apis.guokr.com/group/post_reply.json";
-            HashMap<String, String> pairs = new HashMap<>();
-            pairs.put("retrieve_type", "by_post");
-            pairs.put("post_id", id);
-            pairs.put("limit", limit + "");
-            pairs.put("offset", String.valueOf(offset));
-            String jString = HttpFetcher.get(url, pairs).toString();
-            JSONArray comments = JsonHandler.getUniversalJsonArray(jString, resultObject);
-            if (comments != null) {
-                for (int i = 0; i < comments.length(); i++) {
-                    JSONObject jo = comments.getJSONObject(i);
-                    UComment comment = UComment.fromPostJson(jo);
-                    list.add(comment);
-                }
-                resultObject.ok = true;
-                resultObject.result = list;
-            }
-        } catch (Exception e) {
-            JsonHandler.handleRequestException(e, resultObject);
-        }
-        return resultObject;
+    public static Observable<ResponseObject<ArrayList<UComment>>> getPostReplies(final String id, final int offset, int limit) {
+        String url = "http://apis.guokr.com/group/post_reply.json";
+        HashMap<String, String> pairs = new HashMap<>();
+        pairs.put("retrieve_type", "by_post");
+        pairs.put("post_id", id);
+        pairs.put("limit", limit + "");
+        pairs.put("offset", String.valueOf(offset));
+        return new RequestBuilder<ArrayList<UComment>>()
+                .setUrl(url)
+                .get()
+                .setParams(pairs)
+                .useCacheIfFailed(offset == 0)
+                .setParser(new Parser<ArrayList<UComment>>() {
+                    @Override
+                    public ArrayList<UComment> parse(String response, ResponseObject<ArrayList<UComment>> responseObject) throws Exception {
+                        ArrayList<UComment> list = new ArrayList<>();
+                        JSONArray comments = JsonHandler.getUniversalJsonArray(response, responseObject);
+                        assert comments != null;
+                        for (int i = 0; i < comments.length(); i++) {
+                            JSONObject jo = comments.getJSONObject(i);
+                            UComment comment = UComment.fromPostJson(jo);
+                            list.add(comment);
+                        }
+                        return list;
+                    }
+                })
+                .requestObservable();
     }
 
     /**

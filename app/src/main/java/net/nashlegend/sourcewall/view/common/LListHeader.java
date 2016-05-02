@@ -9,8 +9,8 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import net.nashlegend.sourcewall.R;
-import net.nashlegend.sourcewall.view.common.LListView.OnRefreshListener;
 import net.nashlegend.sourcewall.util.DisplayUtil;
+import net.nashlegend.sourcewall.view.common.LListView.OnRefreshListener;
 
 public class LListHeader extends FrameLayout {
     private int currentState = LListView.State_Normal;

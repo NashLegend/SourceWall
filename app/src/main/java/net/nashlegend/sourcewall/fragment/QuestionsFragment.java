@@ -8,7 +8,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.MenuItemCompat;
@@ -37,13 +36,6 @@ import net.nashlegend.sourcewall.activities.PublishPostActivity;
 import net.nashlegend.sourcewall.activities.QuestionActivity;
 import net.nashlegend.sourcewall.activities.ShuffleTagActivity;
 import net.nashlegend.sourcewall.adapters.QuestionAdapter;
-import net.nashlegend.sourcewall.view.common.AAsyncTask;
-import net.nashlegend.sourcewall.view.common.IStackedAsyncTaskInterface;
-import net.nashlegend.sourcewall.view.common.LListView;
-import net.nashlegend.sourcewall.view.common.LoadingView;
-import net.nashlegend.sourcewall.view.common.shuffle.AskTagMovableButton;
-import net.nashlegend.sourcewall.view.common.shuffle.MovableButton;
-import net.nashlegend.sourcewall.view.common.shuffle.ShuffleDeskSimple;
 import net.nashlegend.sourcewall.db.AskTagHelper;
 import net.nashlegend.sourcewall.db.gen.AskTag;
 import net.nashlegend.sourcewall.model.Question;
@@ -56,11 +48,21 @@ import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 import net.nashlegend.sourcewall.view.QuestionListItemView;
+import net.nashlegend.sourcewall.view.common.LListView;
+import net.nashlegend.sourcewall.view.common.LoadingView;
+import net.nashlegend.sourcewall.view.common.shuffle.AskTagMovableButton;
+import net.nashlegend.sourcewall.view.common.shuffle.MovableButton;
+import net.nashlegend.sourcewall.view.common.shuffle.ShuffleDeskSimple;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+
+import rx.Observable;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 
 /**
  * Created by NashLegend on 2014/9/18 0018
@@ -70,7 +72,6 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
     private final String HIGHLIGHT = "highlight";
     private LListView listView;
     private QuestionAdapter adapter;
-    private LoaderTask task;
     private SubItem subItem;
     private LoadingView loadingView;
     private int currentPage = -1;//page从0开始，-1表示还没有数据
@@ -422,9 +423,11 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
         if (offset < 0) {
             offset = 0;
         }
-        cancelPotentialTask();
-        task = new LoaderTask(this);
-        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, offset);
+        try {
+            loadQuestions(offset);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadPrePage() {
@@ -566,135 +569,101 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
         listView.setSelection(0);
     }
 
-    private void cancelPotentialTask() {
-        if (task != null && task.getStatus() == AAsyncTask.Status.RUNNING) {
-            task.cancel(true);
-        }
-    }
-
     @Override
     public void reload() {
         loadData(0);
     }
 
-    class LoaderTask extends AAsyncTask<Integer, ResponseObject<ArrayList<Question>>, ResponseObject<ArrayList<Question>>> {
-
-        int loadedPage;
-
-        LoaderTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
-            super(iStackedAsyncTaskInterface);
+    private void loadQuestions(final int loadedPage) throws UnsupportedEncodingException {
+        boolean useCache = loadedPage == 0 && adapter.getList().size() == 0;
+        Observable<ResponseObject<ArrayList<Question>>> observable;
+        if (subItem.getType() == SubItem.Type_Collections) {
+            if (HOTTEST.equals(subItem.getValue())) {
+                observable = QuestionAPI.getHotQuestions(loadedPage * 20, useCache);
+            } else {
+                observable = QuestionAPI.getHighlightQuestions(loadedPage + 1, useCache);
+            }
+        } else {
+            observable = QuestionAPI.getQuestionsByTag(URLEncoder.encode(subItem.getValue(), "UTF-8"), loadedPage * 20, useCache);
         }
-
-        @Override
-        protected ResponseObject<ArrayList<Question>> doInBackground(Integer... datas) {
-            loadedPage = datas[0];
-            String key = String.valueOf(subItem.getSection()) + subItem.getType() + subItem.getName() + subItem.getValue();
-            if (loadedPage == 0 && adapter.getCount() == 0) {
-                ResponseObject<ArrayList<Question>> cachedResponseObject = QuestionAPI.getCachedQuestionList(subItem);
-                if (cachedResponseObject.ok) {
-                    long lastLoad = SharedPreferencesUtil.readLong(key, 0L) / 1000;
-                    long crtLoad = System.currentTimeMillis() / 1000;
-                    if (crtLoad - lastLoad > cacheDuration) {
-                        publishProgress(cachedResponseObject);
-                    } else {
-                        return cachedResponseObject;
+        observable
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnUnsubscribe(new Action0() {
+                    @Override
+                    public void call() {
+                        listView.doneOperation();
+                        loadingView.onLoadSuccess();
+                        if (currentPage > 0) {
+                            showHeader();
+                        } else {
+                            hideHeader();
+                        }
+                        if (adapter.getCount() > 0) {
+                            listView.setCanPullToLoadMore(true);
+                            listView.setCanPullToRefresh(true);
+                        } else {
+                            listView.setCanPullToLoadMore(false);
+                            listView.setCanPullToRefresh(true);
+                        }
                     }
-                }
-            }
+                })
+                .subscribe(new Observer<ResponseObject<ArrayList<Question>>>() {
+                    @Override
+                    public void onCompleted() {
+                        progressBar.setVisibility(View.GONE);
+                    }
 
-            ResponseObject<ArrayList<Question>> resultObject = new ResponseObject<>();
-            if (subItem.getType() == SubItem.Type_Collections) {
-                if (HOTTEST.equals(subItem.getValue())) {
-                    resultObject = QuestionAPI.getHotQuestionsFromJsonUrl(loadedPage * 20);
-                } else {
-                    resultObject = QuestionAPI.getHighlightQuestions(loadedPage + 1);
-                }
-            } else {
-                try {
-                    //如果是最后一页，低于20条，那么就会有问题——也就是请求不到数据
-                    resultObject = QuestionAPI.getQuestionsByTagFromJsonUrl(URLEncoder.encode(subItem.getValue(), "UTF-8"), loadedPage * 20);
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-            }
+                    @Override
+                    public void onError(Throwable e) {
 
-            if (resultObject.ok) {
-                SharedPreferencesUtil.saveLong(key, System.currentTimeMillis());
-            }
+                    }
 
-            return resultObject;
-        }
-
-        /**
-         * 加载缓存的列表，但是会导致点击的时候会更明显的卡一下
-         *
-         * @param values The values indicating progress.
-         */
-        @SafeVarargs
-        @Override
-        protected final void onProgressUpdate(ResponseObject<ArrayList<Question>>... values) {
-            ResponseObject<ArrayList<Question>> result = values[0];
-            ArrayList<Question> ars = result.result;
-            if (ars.size() > 0) {
-                progressBar.setVisibility(View.VISIBLE);
-                loadingView.onLoadSuccess();
-                adapter.setList(ars);
-                adapter.notifyDataSetInvalidated();
-            }
-        }
-
-        @Override
-        protected void onPostExecute(ResponseObject<ArrayList<Question>> result) {
-            listView.doneOperation();
-            progressBar.setVisibility(View.GONE);
-            if (result.ok) {
-                loadingView.onLoadSuccess();
-                ArrayList<Question> ars = result.result;
-                if (ars.size() > 0) {
-                    currentPage = loadedPage;
-                    adapter.setList(ars);
-                    adapter.notifyDataSetChanged();
-                    listView.setSelection(0);
-                } else {
-                    //没有数据，页码不变
-                    toast("没有加载到数据");
-                }
-            } else {
-                toast(R.string.load_failed);
-                loadingView.onLoadFailed();
-            }
-            if (currentPage > 0) {
-                showHeader();
-            } else {
-                hideHeader();
-            }
-            if (adapter.getCount() > 0) {
-                listView.setCanPullToLoadMore(true);
-                listView.setCanPullToRefresh(true);
-            } else {
-                listView.setCanPullToLoadMore(false);
-                listView.setCanPullToRefresh(true);
-            }
-            headerView.findViewById(R.id.text_header_load_hint).setVisibility(View.VISIBLE);
-            headerView.findViewById(R.id.progress_header_loading).setVisibility(View.GONE);
-        }
-
-        @Override
-        public void onCancel() {
-            listView.doneOperation();
-            loadingView.onLoadSuccess();
-            if (currentPage > 0) {
-                showHeader();
-            } else {
-                hideHeader();
-            }
-            if (adapter.getCount() > 0) {
-                listView.setCanPullToLoadMore(true);
-                listView.setCanPullToRefresh(true);
-            } else {
-                listView.setCanPullToLoadMore(false);
-                listView.setCanPullToRefresh(true);
-            }
-        }
+                    @Override
+                    public void onNext(ResponseObject<ArrayList<Question>> result) {
+                        if (result.isCached && loadedPage == 0) {
+                            if (result.ok) {
+                                ArrayList<Question> ars = result.result;
+                                if (ars.size() > 0) {
+                                    progressBar.setVisibility(View.VISIBLE);
+                                    loadingView.onLoadSuccess();
+                                    adapter.setList(ars);
+                                    adapter.notifyDataSetInvalidated();
+                                }
+                            }
+                        } else {
+                            listView.doneOperation();
+                            progressBar.setVisibility(View.GONE);
+                            if (result.ok) {
+                                loadingView.onLoadSuccess();
+                                ArrayList<Question> ars = result.result;
+                                if (ars.size() > 0) {
+                                    currentPage = loadedPage;
+                                    adapter.setList(ars);
+                                    adapter.notifyDataSetChanged();
+                                    listView.setSelection(0);
+                                } else {
+                                    toast("没有加载到数据");
+                                }
+                            } else {
+                                toast(R.string.load_failed);
+                                loadingView.onLoadFailed();
+                            }
+                            if (currentPage > 0) {
+                                showHeader();
+                            } else {
+                                hideHeader();
+                            }
+                            if (adapter.getCount() > 0) {
+                                listView.setCanPullToLoadMore(true);
+                                listView.setCanPullToRefresh(true);
+                            } else {
+                                listView.setCanPullToLoadMore(false);
+                                listView.setCanPullToRefresh(true);
+                            }
+                            headerView.findViewById(R.id.text_header_load_hint).setVisibility(View.VISIBLE);
+                            headerView.findViewById(R.id.progress_header_loading).setVisibility(View.GONE);
+                        }
+                    }
+                });
     }
 }

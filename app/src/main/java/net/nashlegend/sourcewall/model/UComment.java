@@ -22,7 +22,14 @@ public class UComment extends AceModel {
 
     private boolean hasLiked = false;
 
-    public static UComment fromArticleJson(String article_id, String article_title, JSONObject replyObject) throws Exception {
+    /**
+     * 缺少articleId与articleTitle
+     *
+     * @param replyObject
+     * @return
+     * @throws Exception
+     */
+    public static UComment fromArticleJson(JSONObject replyObject) throws Exception {
         UComment comment = new UComment();
         assert replyObject != null;
         String id = replyObject.optString("id");
@@ -31,13 +38,18 @@ public class UComment extends AceModel {
         int likeNum = replyObject.optInt("likings_count");
         String content = replyObject.optString("html");
         comment.setAuthor(Author.fromJson(replyObject.optJSONObject("author")));
-        comment.setHostID(article_id);
-        comment.setHostTitle(article_title);
         comment.setDate(date);
         comment.setHasLiked(hasLiked);
         comment.setLikeNum(likeNum);
         comment.setContent(content);
         comment.setID(id);
+        return comment;
+    }
+
+    public static UComment fromArticleJson(String article_id, String article_title, JSONObject replyObject) throws Exception {
+        UComment comment = fromArticleJson(replyObject);
+        comment.setHostID(article_id);
+        comment.setHostTitle(article_title);
         return comment;
     }
 

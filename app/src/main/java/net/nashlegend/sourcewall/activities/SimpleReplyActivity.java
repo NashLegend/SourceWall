@@ -2,7 +2,6 @@ package net.nashlegend.sourcewall.activities;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -21,10 +20,6 @@ import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.SimpleCommentAdapter;
-import net.nashlegend.sourcewall.view.common.AAsyncTask;
-import net.nashlegend.sourcewall.view.common.IStackedAsyncTaskInterface;
-import net.nashlegend.sourcewall.view.common.LListView;
-import net.nashlegend.sourcewall.view.common.LoadingView;
 import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.model.QuestionAnswer;
@@ -37,14 +32,14 @@ import net.nashlegend.sourcewall.util.CommonUtil;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.view.SimpleCommentItemView;
+import net.nashlegend.sourcewall.view.common.LListView;
+import net.nashlegend.sourcewall.view.common.LoadingView;
 
 import java.util.ArrayList;
-
 
 public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRefreshListener, View.OnClickListener, LoadingView.ReloadListener {
 
     private AceModel aceModel;
-    private LoaderTask task;
     private LListView listView;
     private SimpleCommentAdapter adapter;
     private Toolbar toolbar;
@@ -107,16 +102,7 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
         if (offset < 0) {
             offset = 0;
         }
-        cancelPotentialTask();
-        task = new LoaderTask(this);
-        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, offset);
-    }
-
-    private void cancelPotentialTask() {
-        if (task != null && task.getStatus() == AAsyncTask.Status.RUNNING) {
-            task.cancel(true);
-            listView.doneOperation();
-        }
+        loadComments(offset);
     }
 
     @Override
@@ -209,10 +195,8 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
                         textReply.setHint(R.string.hint_reply);
                         textReply.setText("");
                         hideInput();
-                        if (task == null || task.getStatus() != AAsyncTask.Status.RUNNING) {
-                            adapter.add(0, result);
-                            adapter.notifyDataSetChanged();
-                        }
+                        adapter.add(0, result);
+                        adapter.notifyDataSetChanged();
                         toast("回复成功");
                     }
                 };
@@ -268,55 +252,45 @@ public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRe
         loadData(0);
     }
 
-    class LoaderTask extends AAsyncTask<Integer, Integer, ResponseObject<ArrayList<UComment>>> {
-        int offset;
-
-        LoaderTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
-            super(iStackedAsyncTaskInterface);
-        }
-
-        @Override
-        protected ResponseObject<ArrayList<UComment>> doInBackground(Integer... params) {
-            ResponseObject<ArrayList<UComment>> resultObject = new ResponseObject<>();
-            offset = params[0];
-            if (aceModel instanceof Question) {
-                resultObject = QuestionAPI.getQuestionComments(((Question) aceModel).getId(), offset);
-            } else if (aceModel instanceof QuestionAnswer) {
-                resultObject = QuestionAPI.getAnswerComments(((QuestionAnswer) aceModel).getID(), offset);
+    private void loadComments(final int offset) {
+        RequestObject.CallBack<ArrayList<UComment>> callBack = new RequestObject.CallBack<ArrayList<UComment>>() {
+            @Override
+            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<ArrayList<UComment>> result) {
+                toast(R.string.load_failed);
+                loadingView.onLoadFailed();
+                listView.doneOperation();
             }
-            return resultObject;
 
-        }
-
-        @Override
-        protected void onPostExecute(ResponseObject<ArrayList<UComment>> result) {
-            if (result.ok) {
+            @Override
+            public void onSuccess(@NonNull ArrayList<UComment> result, @NonNull ResponseObject<ArrayList<UComment>> detailed) {
                 loadingView.onLoadSuccess();
-                ArrayList<UComment> ars = result.result;
                 if (offset == 0) {
                     //Refresh
-                    if (ars.size() > 0) {
-                        adapter.setList(ars);
+                    if (result.size() > 0) {
+                        adapter.setList(result);
                         adapter.notifyDataSetInvalidated();
                     }
                 } else {
                     //Load More
-                    if (ars.size() > 0) {
-                        adapter.addAll(ars);
+                    if (result.size() > 0) {
+                        adapter.addAll(result);
                         adapter.notifyDataSetChanged();
                     }
                 }
                 if (adapter.getCount() > 0) {
-                    listView.setCanPullToLoadMore(ars.size() >= 20);//请求下来20条说明已经后面可能还有数据
+                    listView.setCanPullToLoadMore(result.size() >= 20);//请求下来20条说明已经后面可能还有数据
                 } else {
                     listView.setCanPullToLoadMore(false);
                 }
                 listView.setCanPullToRefresh(true);
-            } else {
-                toast(R.string.load_failed);
-                loadingView.onLoadFailed();
+                listView.doneOperation();
             }
-            listView.doneOperation();
+        };
+
+        if (aceModel instanceof Question) {
+            QuestionAPI.getQuestionComments(((Question) aceModel).getId(), offset, callBack);
+        } else if (aceModel instanceof QuestionAnswer) {
+            QuestionAPI.getAnswerComments(((QuestionAnswer) aceModel).getID(), offset, callBack);
         }
     }
 }
