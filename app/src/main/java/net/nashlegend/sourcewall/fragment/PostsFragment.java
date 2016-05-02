@@ -8,7 +8,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.MenuItemCompat;
@@ -36,13 +35,6 @@ import net.nashlegend.sourcewall.activities.PostActivity;
 import net.nashlegend.sourcewall.activities.PublishPostActivity;
 import net.nashlegend.sourcewall.activities.ShuffleGroupActivity;
 import net.nashlegend.sourcewall.adapters.PostAdapter;
-import net.nashlegend.sourcewall.view.common.AAsyncTask;
-import net.nashlegend.sourcewall.view.common.IStackedAsyncTaskInterface;
-import net.nashlegend.sourcewall.view.common.LListView;
-import net.nashlegend.sourcewall.view.common.LoadingView;
-import net.nashlegend.sourcewall.view.common.shuffle.GroupMovableButton;
-import net.nashlegend.sourcewall.view.common.shuffle.MovableButton;
-import net.nashlegend.sourcewall.view.common.shuffle.ShuffleDeskSimple;
 import net.nashlegend.sourcewall.db.GroupHelper;
 import net.nashlegend.sourcewall.db.gen.MyGroup;
 import net.nashlegend.sourcewall.model.Post;
@@ -54,9 +46,19 @@ import net.nashlegend.sourcewall.util.CommonUtil;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 import net.nashlegend.sourcewall.view.PostListItemView;
+import net.nashlegend.sourcewall.view.common.LListView;
+import net.nashlegend.sourcewall.view.common.LoadingView;
+import net.nashlegend.sourcewall.view.common.shuffle.GroupMovableButton;
+import net.nashlegend.sourcewall.view.common.shuffle.MovableButton;
+import net.nashlegend.sourcewall.view.common.shuffle.ShuffleDeskSimple;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import rx.Observable;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 
 /**
  * Created by NashLegend on 2014/9/18 0018
@@ -69,7 +71,6 @@ import java.util.List;
 public class PostsFragment extends ChannelsFragment implements LListView.OnRefreshListener, LoadingView.ReloadListener {
     private LListView listView;
     private PostAdapter adapter;
-    private LoaderTask task;
     private SubItem subItem;
     private LoadingView loadingView;
     private int currentPage = -1;//page从0开始，-1表示还没有数据
@@ -424,9 +425,10 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         if (offset < 0) {
             offset = 0;
         }
-        cancelPotentialTask();
-        task = new LoaderTask(this);
-        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, offset);
+//        cancelPotentialTask();
+//        task = new LoaderTask(this);
+//        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, offset);
+        loadPosts(offset);
     }
 
     private void loadPrePage() {
@@ -589,134 +591,94 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         listView.setSelection(0);
     }
 
-    private void cancelPotentialTask() {
-        if (task != null && task.getStatus() == AAsyncTask.Status.RUNNING) {
-            task.cancel(true);
-            listView.doneOperation();
-        }
-    }
-
     @Override
     public void reload() {
         loadData(0);
     }
 
-    /**
-     * 这几个Task都长得很像，可以封装起来
-     */
-    class LoaderTask extends AAsyncTask<Integer, ResponseObject<ArrayList<Post>>, ResponseObject<ArrayList<Post>>> {
-
-        LoaderTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
-            super(iStackedAsyncTaskInterface);
-        }
-
-        int loadedPage;
-
-        @Override
-        protected ResponseObject<ArrayList<Post>> doInBackground(Integer... datas) {
-            loadedPage = datas[0];
-            String key = String.valueOf(subItem.getSection()) + subItem.getType() + subItem.getName() + subItem.getValue();
-            if (loadedPage == 0 && adapter.getCount() == 0) {
-                ResponseObject<ArrayList<Post>> cachedResponseObject = PostAPI.getCachedPostList(subItem);
-                if (cachedResponseObject.ok) {
-                    long lastLoad = SharedPreferencesUtil.readLong(key, 0l) / 1000;
-                    long crtLoad = System.currentTimeMillis() / 1000;
-                    if (subItem.getType() == SubItem.Type_Private_Channel || crtLoad - lastLoad > cacheDuration) {
-                        //我的小组，更新较快，不缓存
-                        publishProgress(cachedResponseObject);
-                    } else {
-                        return cachedResponseObject;
+    private void loadPosts(final int loadedPage) {
+        boolean useCache = subItem.getType() != SubItem.Type_Private_Channel && loadedPage == 0 && adapter.getList().size() == 0;
+        Observable<ResponseObject<ArrayList<Post>>> observable =
+                PostAPI.getPostList(subItem.getType(), subItem.getValue(), loadedPage * 20, useCache);
+        observable
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnUnsubscribe(new Action0() {
+                    @Override
+                    public void call() {
+                        loadingView.onLoadSuccess();
+                        listView.doneOperation();
+                        if (currentPage > 0) {
+                            showHeader();
+                        } else {
+                            hideHeader();
+                        }
+                        if (adapter.getCount() > 0) {
+                            listView.setCanPullToLoadMore(true);
+                            listView.setCanPullToRefresh(true);
+                        } else {
+                            listView.setCanPullToLoadMore(false);
+                            listView.setCanPullToRefresh(true);
+                        }
                     }
-                }
-            }
+                })
+                .subscribe(new Observer<ResponseObject<ArrayList<Post>>>() {
+                    @Override
+                    public void onCompleted() {
+                        progressBar.setVisibility(View.GONE);
+                    }
 
-            ResponseObject<ArrayList<Post>> resultObject = new ResponseObject<>();
-            //解析html的page是从1开始的，所以offset要+1
-            if (subItem.getType() == SubItem.Type_Collections) {
-                resultObject = PostAPI.getGroupHotPostListByJson(loadedPage * 20);// not featured
-            } else if (subItem.getType() == SubItem.Type_Private_Channel) {
-                resultObject = PostAPI.getMyGroupRecentRepliesPostsByJson(loadedPage * 20);// not featured
-            } else if (subItem.getType() == SubItem.Type_Single_Channel) {
-                resultObject = PostAPI.getGroupPostListByJsonUrl(subItem.getValue(), loadedPage * 20);// featured
-            }
+                    @Override
+                    public void onError(Throwable e) {
 
-            if (resultObject.ok) {
-                SharedPreferencesUtil.saveLong(key, System.currentTimeMillis());
-            }
+                    }
 
-            return resultObject;
-        }
-
-        /**
-         * 加载缓存的列表，但是会导致点击的时候会更明显的卡一下
-         *
-         * @param values The values indicating progress.
-         */
-        @SafeVarargs
-        @Override
-        protected final void onProgressUpdate(ResponseObject<ArrayList<Post>>... values) {
-            ResponseObject<ArrayList<Post>> result = values[0];
-            ArrayList<Post> ars = result.result;
-            if (ars.size() > 0) {
-                progressBar.setVisibility(View.VISIBLE);
-                loadingView.onLoadSuccess();
-                adapter.setList(ars);
-                adapter.notifyDataSetInvalidated();
-            }
-        }
-
-        @Override
-        protected void onPostExecute(ResponseObject<ArrayList<Post>> result) {
-            listView.doneOperation();
-            progressBar.setVisibility(View.GONE);
-            if (result.ok) {
-                loadingView.onLoadSuccess();
-                ArrayList<Post> ars = result.result;
-                if (ars.size() > 0) {
-                    currentPage = loadedPage;
-                    adapter.setList(ars);
-                    adapter.notifyDataSetChanged();
-                    listView.setSelection(0);
-                } else {
-                    //没有数据，页码不变
-                    toast("没有加载到数据");
-                }
-            } else {
-                toast(R.string.load_failed);
-                loadingView.onLoadFailed();
-            }
-            if (currentPage > 0) {
-                showHeader();
-            } else {
-                hideHeader();
-            }
-            if (adapter.getCount() > 0) {
-                listView.setCanPullToLoadMore(true);
-                listView.setCanPullToRefresh(true);
-            } else {
-                listView.setCanPullToLoadMore(false);
-                listView.setCanPullToRefresh(true);
-            }
-            headerView.findViewById(R.id.text_header_load_hint).setVisibility(View.VISIBLE);
-            headerView.findViewById(R.id.progress_header_loading).setVisibility(View.GONE);
-        }
-
-        @Override
-        public void onCancel() {
-            loadingView.onLoadSuccess();
-            listView.doneOperation();
-            if (currentPage > 0) {
-                showHeader();
-            } else {
-                hideHeader();
-            }
-            if (adapter.getCount() > 0) {
-                listView.setCanPullToLoadMore(true);
-                listView.setCanPullToRefresh(true);
-            } else {
-                listView.setCanPullToLoadMore(false);
-                listView.setCanPullToRefresh(true);
-            }
-        }
+                    @Override
+                    public void onNext(ResponseObject<ArrayList<Post>> result) {
+                        if (result.isCached && loadedPage == 0) {
+                            if (result.ok) {
+                                ArrayList<Post> ars = result.result;
+                                if (ars.size() > 0) {
+                                    progressBar.setVisibility(View.VISIBLE);
+                                    loadingView.onLoadSuccess();
+                                    adapter.addAll(ars);
+                                    adapter.notifyDataSetChanged();
+                                }
+                            }
+                        } else {
+                            listView.doneOperation();
+                            progressBar.setVisibility(View.GONE);
+                            if (result.ok) {
+                                loadingView.onLoadSuccess();
+                                ArrayList<Post> ars = result.result;
+                                if (ars.size() > 0) {
+                                    currentPage = loadedPage;
+                                    adapter.setList(ars);
+                                    adapter.notifyDataSetChanged();
+                                    listView.setSelection(0);
+                                } else {
+                                    //没有数据，页码不变
+                                    toast("没有加载到数据");
+                                }
+                            } else {
+                                toast(R.string.load_failed);
+                                loadingView.onLoadFailed();
+                            }
+                            if (currentPage > 0) {
+                                showHeader();
+                            } else {
+                                hideHeader();
+                            }
+                            if (adapter.getCount() > 0) {
+                                listView.setCanPullToLoadMore(true);
+                                listView.setCanPullToRefresh(true);
+                            } else {
+                                listView.setCanPullToLoadMore(false);
+                                listView.setCanPullToRefresh(true);
+                            }
+                            headerView.findViewById(R.id.text_header_load_hint).setVisibility(View.VISIBLE);
+                            headerView.findViewById(R.id.progress_header_loading).setVisibility(View.GONE);
+                        }
+                    }
+                });
     }
 }

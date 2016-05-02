@@ -11,7 +11,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -22,6 +21,7 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ProgressBar;
 
@@ -31,13 +31,8 @@ import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.ArticleDetailAdapter;
-import net.nashlegend.sourcewall.view.common.AAsyncTask;
-import net.nashlegend.sourcewall.view.common.IStackedAsyncTaskInterface;
-import net.nashlegend.sourcewall.view.common.LListView;
-import net.nashlegend.sourcewall.view.common.LoadingView;
 import net.nashlegend.sourcewall.dialogs.FavorDialog;
 import net.nashlegend.sourcewall.dialogs.InputDialog;
-import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.RequestObject;
@@ -54,16 +49,23 @@ import net.nashlegend.sourcewall.util.RegUtil;
 import net.nashlegend.sourcewall.util.ShareUtil;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;
 import net.nashlegend.sourcewall.view.MediumListItemView;
+import net.nashlegend.sourcewall.view.common.LListView;
+import net.nashlegend.sourcewall.view.common.LListView.OnRefreshListener;
+import net.nashlegend.sourcewall.view.common.LoadingView;
+import net.nashlegend.sourcewall.view.common.LoadingView.ReloadListener;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
-public class ArticleActivity extends SwipeActivity implements LListView.OnRefreshListener, View.OnClickListener, LoadingView.ReloadListener {
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
+
+public class ArticleActivity extends SwipeActivity implements OnRefreshListener, OnClickListener, ReloadListener {
 
     private LListView listView;
     private ArticleDetailAdapter adapter;
     private Article article;
-    private LoaderTask task;
     private LoadingView loadingView;
     private String notice_id;
     private AdapterView.OnItemClickListener onItemClickListener;
@@ -92,41 +94,48 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article);
-        MobclickAgent.onEvent(this, Mob.Event_Open_Article);
-        loadingView = (LoadingView) findViewById(R.id.article_progress_loading);
-        loadingView.setReloadListener(this);
-        progressBar = (ProgressBar) findViewById(R.id.article_loading);
-        appbar = (AppBarLayout) findViewById(R.id.app_bar);
         Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
+        floatingActionsMenu = (FloatingActionsMenu) findViewById(R.id.layout_operation);
+        FloatingActionButton replyButton = (FloatingActionButton) findViewById(R.id.button_reply);
+        FloatingActionButton recomButton = (FloatingActionButton) findViewById(R.id.button_recommend);
+        FloatingActionButton favorButton = (FloatingActionButton) findViewById(R.id.button_favor);
+        loadingView = (LoadingView) findViewById(R.id.article_progress_loading);
+        progressBar = (ProgressBar) findViewById(R.id.article_loading);
+        appbar = (AppBarLayout) findViewById(R.id.app_bar);
+        listView = (LListView) findViewById(R.id.list_detail);
+
+        MobclickAgent.onEvent(this, Mob.Event_Open_Article);
+        loadingView.setReloadListener(this);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        toolbar.setOnClickListener(new View.OnClickListener() {
+        if (toolbar != null) {
+            toolbar.setOnClickListener(new OnClickListener() {
 
-            boolean preparingToScrollToHead = false;
+                boolean preparingToScrollToHead = false;
 
-            @Override
-            public void onClick(View v) {
-                if (preparingToScrollToHead) {
-                    listView.setSelection(0);
-                } else {
-                    preparingToScrollToHead = true;
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            preparingToScrollToHead = false;
-                        }
-                    }, 200);
+                @Override
+                public void onClick(View v) {
+                    if (preparingToScrollToHead) {
+                        listView.setSelection(0);
+                    } else {
+                        preparingToScrollToHead = true;
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                preparingToScrollToHead = false;
+                            }
+                        }, 200);
+                    }
                 }
-            }
-        });
+            });
+        }
         article = getIntent().getParcelableExtra(Consts.Extra_Article);
         notice_id = getIntent().getStringExtra(Consts.Extra_Notice_Id);
         if (!TextUtils.isEmpty(article.getSubjectName())) {
             setTitle(article.getSubjectName() + " -- 科学人");
         }
-        listView = (LListView) findViewById(R.id.list_detail);
         adapter = new ArticleDetailAdapter(this);
         listView.setAdapter(adapter);
 
@@ -134,14 +143,16 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         listView.setCanPullToLoadMore(false);
         listView.setOnRefreshListener(this);
 
-        floatingActionsMenu = (FloatingActionsMenu) findViewById(R.id.layout_operation);
-        FloatingActionButton replyButton = (FloatingActionButton) findViewById(R.id.button_reply);
-        FloatingActionButton recomButton = (FloatingActionButton) findViewById(R.id.button_recommend);
-        FloatingActionButton favorButton = (FloatingActionButton) findViewById(R.id.button_favor);
 
-        replyButton.setOnClickListener(this);
-        recomButton.setOnClickListener(this);
-        favorButton.setOnClickListener(this);
+        if (replyButton != null) {
+            replyButton.setOnClickListener(this);
+        }
+        if (recomButton != null) {
+            recomButton.setOnClickListener(this);
+        }
+        if (favorButton != null) {
+            favorButton.setOnClickListener(this);
+        }
 
         headerHeight = (int) getResources().getDimension(R.dimen.actionbar_height);
         AutoHideUtil.applyListViewAutoHide(this, listView, (int) getResources().getDimension(R.dimen.actionbar_height), autoHideListener);
@@ -165,15 +176,10 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
      * @param offset -1是指刷新
      */
     private void loadData(int offset) {
-        cancelPotentialTask();
-        task = new LoaderTask(this);
-        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, offset);
-    }
-
-    private void cancelPotentialTask() {
-        if (task != null && task.getStatus() == AAsyncTask.Status.RUNNING) {
-            task.cancel(true);
-            listView.doneOperation();
+        if (offset < 0) {
+            loadArticle();
+        } else {
+            loadReplies(offset);
         }
     }
 
@@ -490,119 +496,128 @@ public class ArticleActivity extends SwipeActivity implements LListView.OnRefres
         }
     }
 
-    /**
-     * 替换的话，此处要使用Rx了
-     * TODO
-     */
-    class LoaderTask extends AAsyncTask<Integer, ResponseObject<Article>, ResponseObject<ArrayList<AceModel>>> {
-        int offset;
-
-        LoaderTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
-            super(iStackedAsyncTaskInterface);
+    private void loadArticle() {
+        if (!TextUtils.isEmpty(notice_id)) {
+            MessageAPI.ignoreOneNotice(notice_id);
+            notice_id = null;
         }
+        ArticleAPI
+                .getArticleDetail(article.getId())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ResponseObject<Article>>() {
+                    @Override
+                    public void onCompleted() {
 
-        @Override
-        protected ResponseObject<ArrayList<AceModel>> doInBackground(Integer... params) {
-            if (!TextUtils.isEmpty(notice_id)) {
-                MessageAPI.ignoreOneNotice(notice_id);
-                notice_id = null;
-            }
-            offset = params[0];
-            int limit = 20;
-            if (offset < 0) {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(ResponseObject<Article> result) {
+                        if (result.ok) {
+                            progressBar.setVisibility(View.VISIBLE);
+                            floatingActionsMenu.setVisibility(View.VISIBLE);
+                            loadingView.onLoadSuccess();
+                            Article tmpArticle = result.result;
+                            tmpArticle.setUrl(article.getUrl());
+                            tmpArticle.setSummary(article.getSummary());
+                            tmpArticle.setCommentNum(article.getCommentNum());
+                            article = tmpArticle;
+                            adapter.clear();
+                            adapter.add(article);
+                            adapter.notifyDataSetChanged();
+                            loadReplies(0);
+                        } else {
+                            loadingView.onLoadFailed();
+                        }
+                    }
+                });
+    }
+
+    private void loadReplies(int offset) {
+        int limit = 20;
+        if (loadDesc) {
+            //因为无法保证获取回复的数据，所以只能采取一次全部加载的方式,但是又不能超过5000，这是服务器的限制
+            if (article.getCommentNum() <= 0) {
+                limit = 4999;
                 offset = 0;
-                ResponseObject<Article> articleResult = ArticleAPI.getArticleDetailByID(article.getId());//得不到回复数量
-                if (articleResult.ok) {
-                    publishProgress(articleResult);
-                } else {
-                    ResponseObject<Article> cachedArticleResult = ArticleAPI.getCachedArticleDetailByID(article.getId());
-                    if (cachedArticleResult.ok) {
-                        publishProgress(cachedArticleResult);
-                    } else {
-                        return new ResponseObject<>();
-                    }
-                }
-            }
-            if (loadDesc) {
-                //因为无法保证获取回复的数据，所以只能采取一次全部加载的方式,但是又不能超过5000，这是服务器的限制
-                if (article.getCommentNum() <= 0) {
-                    limit = 4999;
-                    offset = 0;
+                hasLoadAll = true;
+            } else {
+                int tmpOffset = article.getCommentNum() - offset - 20;
+                if (tmpOffset <= 0) {
                     hasLoadAll = true;
+                    limit = 20 + tmpOffset;
+                    tmpOffset = 0;
                 } else {
-                    int tmpOffset = article.getCommentNum() - offset - 20;
-                    if (tmpOffset <= 0) {
-                        hasLoadAll = true;
-                        limit = 20 + tmpOffset;
-                        tmpOffset = 0;
-                    } else {
-                        hasLoadAll = false;
+                    hasLoadAll = false;
+                }
+                offset = tmpOffset;
+            }
+        }
+        ArticleAPI
+                .getArticleReplies(article.getId(), offset, limit)
+                .doOnUnsubscribe(new Action0() {
+                    @Override
+                    public void call() {
+                        loadingView.onLoadSuccess();
+                        listView.doneOperation();
                     }
-                    offset = tmpOffset;
-                }
-            }
-            ResponseObject<ArrayList<AceModel>> resultObject = ArticleAPI.getArticleComments(article.getId(), offset, limit);
-            if (!resultObject.ok && loadDesc) {
-                hasLoadAll = false;
-            }
-            return resultObject;
-        }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ResponseObject<ArrayList<UComment>>>() {
+                    @Override
+                    public void onCompleted() {
 
-        @SafeVarargs
-        @Override
-        protected final void onProgressUpdate(ResponseObject<Article>... values) {
-            //在这里取到正文，正文的结果一定是正确的
-            progressBar.setVisibility(View.VISIBLE);
-            floatingActionsMenu.setVisibility(View.VISIBLE);
-            loadingView.onLoadSuccess();
-            ResponseObject<Article> result = values[0];
-            Article tmpArticle = result.result;
-            tmpArticle.setUrl(article.getUrl());
-            tmpArticle.setSummary(article.getSummary());
-            tmpArticle.setCommentNum(article.getCommentNum());
-            article = tmpArticle;
-            adapter.add(0, article);
-            adapter.notifyDataSetChanged();
-        }
-
-        @Override
-        protected void onPostExecute(ResponseObject<ArrayList<AceModel>> result) {
-            progressBar.setVisibility(View.GONE);
-            if (result.ok) {
-                loadingView.onLoadSuccess();
-                ArrayList<AceModel> ars = result.result;
-                if (ars.size() > 0) {
-                    if (loadDesc) {
-                        adapter.addAllReversely(ars);
-                    } else {
-                        adapter.addAll(ars);
                     }
-                    adapter.notifyDataSetChanged();
-                }
-            } else {
-                if (result.statusCode == 404) {
-                    toastSingleton(R.string.page_404);
-                    finish();
-                } else {
-                    toastSingleton(getString(R.string.load_failed));
-                    loadingView.onLoadFailed();
-                }
-            }
-            if (adapter.getCount() > 0) {
-                listView.setCanPullToLoadMore(true);
-            } else {
-                listView.setCanPullToLoadMore(false);
-            }
-            if (loadDesc && hasLoadAll) {
-                article.setCommentNum(adapter.getCount() - 1);
-                listView.setCanPullToLoadMore(false);
-            }
-            listView.doneOperation();
-        }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(ResponseObject<ArrayList<UComment>> result) {
+                        progressBar.setVisibility(View.GONE);
+                        if (result.ok) {
+                            loadingView.onLoadSuccess();
+                            if (result.result.size() > 0) {
+                                if (loadDesc) {
+                                    adapter.addAllReversely(result.result);
+                                } else {
+                                    adapter.addAll(result.result);
+                                }
+                                adapter.notifyDataSetChanged();
+                            }
+                        } else {
+                            if (loadDesc) {
+                                hasLoadAll = false;
+                            }
+                            if (result.statusCode == 404) {
+                                toastSingleton(R.string.page_404);
+                                finish();
+                            } else {
+                                toastSingleton(getString(R.string.load_failed));
+                                loadingView.onLoadFailed();
+                            }
+                        }
+                        if (adapter.getCount() > 0) {
+                            listView.setCanPullToLoadMore(true);
+                        } else {
+                            listView.setCanPullToLoadMore(false);
+                        }
+                        if (loadDesc && hasLoadAll) {
+                            article.setCommentNum(adapter.getCount() - 1);
+                            listView.setCanPullToLoadMore(false);
+                        }
+                        listView.doneOperation();
+                    }
+                });
     }
 
     private void onStartLoadingLatest() {
-        cancelPotentialTask();
         listView.setCanPullToLoadMore(false);
         menu.findItem(R.id.action_load_acs).setVisible(false);
         menu.findItem(R.id.action_load_desc).setVisible(false);

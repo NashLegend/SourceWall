@@ -6,8 +6,6 @@ import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import okhttp3.MediaType;
-
 import net.nashlegend.sourcewall.request.RequestObject.RequestType;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.request.parsers.DirectlyStringParser;
@@ -15,6 +13,7 @@ import net.nashlegend.sourcewall.request.parsers.Parser;
 
 import java.util.HashMap;
 
+import okhttp3.MediaType;
 import rx.Observable;
 
 /**
@@ -268,6 +267,17 @@ public class RequestBuilder<T> {
         if (useCache) {
             rbRequest.useCachedIfFailed = false;
         }
+        return this;
+    }
+
+    /**
+     * 缓存超时时间
+     *
+     * @param timeOut
+     * @return
+     */
+    public RequestBuilder<T> cacheTimeOut(long timeOut) {
+        rbRequest.cacheTimeOut = timeOut;
         return this;
     }
 

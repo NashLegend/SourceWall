@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -30,11 +29,6 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import net.nashlegend.sourcewall.R;
-import net.nashlegend.sourcewall.view.common.AAsyncTask;
-import net.nashlegend.sourcewall.view.common.IStackedAsyncTaskInterface;
-import net.nashlegend.sourcewall.view.common.LoadingView;
-import net.nashlegend.sourcewall.view.common.SScrollView;
-import net.nashlegend.sourcewall.view.common.WWebView;
 import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.Post;
@@ -49,9 +43,17 @@ import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.ImageUtils;
 import net.nashlegend.sourcewall.util.StyleChecker;
+import net.nashlegend.sourcewall.view.common.LoadingView;
+import net.nashlegend.sourcewall.view.common.SScrollView;
+import net.nashlegend.sourcewall.view.common.WWebView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import rx.Observable;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class SingleReplyActivity extends SwipeActivity implements View.OnClickListener, LoadingView.ReloadListener {
 
@@ -130,11 +132,11 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
                 switch (sect) {
                     case "article":
                         hostSection = SubItem.Section_Article;
-                        loadDataByUri();
+                        load();
                         break;
                     case "post":
                         hostSection = SubItem.Section_Post;
-                        loadDataByUri();
+                        load();
                         break;
                     default:
                         finish();
@@ -148,14 +150,74 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
         }
     }
 
-    LoaderTask loaderTask;
-
-    private void loadDataByUri() {
-        if (loaderTask != null && loaderTask.getStatus() == AAsyncTask.Status.RUNNING) {
-            loaderTask.cancel(true);
+    private void load() {
+        Observable<UComment> observable = null;
+        if (TextUtils.isEmpty(notice_id)) {
+            switch (hostSection) {
+                case SubItem.Section_Article:
+                    observable = ArticleAPI.getSingleCommentFromRedirectUrlRx(redirectUri.toString());
+                    break;
+                case SubItem.Section_Post:
+                    observable = PostAPI.getSingleCommentFromRedirectUrl(redirectUri.toString());
+                    break;
+            }
+        } else {
+            switch (hostSection) {
+                case SubItem.Section_Article:
+                    observable = ArticleAPI.getSingleCommentByNoticeIDRx(notice_id);
+                    break;
+                case SubItem.Section_Post:
+                    observable = PostAPI.getSingleCommentByNotice(notice_id);
+                    break;
+            }
         }
-        loaderTask = new LoaderTask(this);
-        loaderTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, redirectUri);
+
+        if (observable == null) {
+            return;
+        }
+
+        floatingActionsMenu.setVisibility(View.GONE);
+
+        observable
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<UComment>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        loadingView.onLoadFailed();
+                    }
+
+                    @Override
+                    public void onNext(UComment uComment) {
+                        floatingActionsMenu.setVisibility(View.VISIBLE);
+                        loadingView.onLoadSuccess();
+                        data = uComment;
+                        if (UserAPI.getUserID().equals(data.getAuthor().getId())) {
+                            deleteButton.setVisibility(View.VISIBLE);
+                        } else {
+                            deleteButton.setVisibility(View.GONE);
+                        }
+                        if (hostSection == SubItem.Section_Article) {
+                            Article article = new Article();
+                            article.setTitle(data.getHostTitle());
+                            article.setId(data.getHostID());
+                            host = article;
+                        } else if (hostSection == SubItem.Section_Post) {
+                            Post post = new Post();
+                            post.setTitle(data.getHostTitle());
+                            post.setId(data.getHostID());
+                            host = post;
+                        } else {
+                            toast("Something Happened");
+                        }
+                        initData();
+                    }
+                });
     }
 
     private void initData() {
@@ -173,7 +235,6 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
             deleteButton.setIcon(R.drawable.dustbin_outline);
         }
         if (data.isHasLiked()) {
-            //TODO
             likeButton.setIcon(R.drawable.heart);
         } else {
             likeButton.setIcon(R.drawable.heart_outline);
@@ -187,6 +248,7 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
             @Override
             public void onGlobalLayout() {
                 if (authorLayout.getHeight() > 0) {
+                    //noinspection deprecation
                     rootView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                     topBarHeight = appbar.getHeight() + hostTitle.getHeight();
                     headerHeight = topBarHeight + authorLayout.getHeight();
@@ -429,74 +491,6 @@ public class SingleReplyActivity extends SwipeActivity implements View.OnClickLi
 
     @Override
     public void reload() {
-        loadDataByUri();
-    }
-
-    class LoaderTask extends AAsyncTask<Uri, Integer, ResponseObject<UComment>> {
-
-        public LoaderTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
-            super(iStackedAsyncTaskInterface);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            floatingActionsMenu.setVisibility(View.GONE);
-        }
-
-        @Override
-        protected ResponseObject<UComment> doInBackground(Uri... params) {
-            ResponseObject<UComment> resultObject = new ResponseObject<>();
-            if (TextUtils.isEmpty(notice_id)) {
-                switch (hostSection) {
-                    case SubItem.Section_Article:
-                        resultObject = ArticleAPI.getSingleCommentFromRedirectUrl(redirectUri.toString());
-                        break;
-                    case SubItem.Section_Post:
-                        resultObject = PostAPI.getSingleCommentFromRedirectUrl(redirectUri.toString());
-                        break;
-                }
-            } else {
-                switch (hostSection) {
-                    case SubItem.Section_Article:
-                        resultObject = ArticleAPI.getSingleCommentByNoticeID(notice_id);
-                        break;
-                    case SubItem.Section_Post:
-                        resultObject = PostAPI.getSingleCommentByNoticeID(notice_id);
-                        break;
-                }
-            }
-
-            return resultObject;
-        }
-
-        @Override
-        protected void onPostExecute(ResponseObject<UComment> result) {
-            if (result.ok) {
-                floatingActionsMenu.setVisibility(View.VISIBLE);
-                loadingView.onLoadSuccess();
-                data = result.result;
-                if (UserAPI.getUserID().equals(data.getAuthor().getId())) {
-                    deleteButton.setVisibility(View.VISIBLE);
-                } else {
-                    deleteButton.setVisibility(View.GONE);
-                }
-                if (hostSection == SubItem.Section_Article) {
-                    Article article = new Article();
-                    article.setTitle(data.getHostTitle());
-                    article.setId(data.getHostID());
-                    host = article;
-                } else if (hostSection == SubItem.Section_Post) {
-                    Post post = new Post();
-                    post.setTitle(data.getHostTitle());
-                    post.setId(data.getHostID());
-                    host = post;
-                } else {
-                    toast("Something Happened");
-                }
-                initData();
-            } else {
-                loadingView.onLoadFailed();
-            }
-        }
+        load();
     }
 }

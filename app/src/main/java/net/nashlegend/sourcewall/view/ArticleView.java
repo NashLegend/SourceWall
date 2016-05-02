@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,17 +12,19 @@ import android.widget.TextView;
 import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.ArticleDetailAdapter;
-import net.nashlegend.sourcewall.view.common.AAsyncTask;
-import net.nashlegend.sourcewall.view.common.WWebView;
-import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Article;
+import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.ArticleAPI;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 import net.nashlegend.sourcewall.util.StyleChecker;
+import net.nashlegend.sourcewall.view.common.WWebView;
 
 import java.util.ArrayList;
+
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by NashLegend on 2014/9/18 0018
@@ -36,7 +37,6 @@ public class ArticleView extends AceView<Article> {
     private TextView dateView;
     private View loadDesc;
     private ArticleDetailAdapter adapter;
-    private LoaderTask task;
 
     public Article getArticle() {
         return article;
@@ -113,58 +113,48 @@ public class ArticleView extends AceView<Article> {
 
 
     private void loadLatest() {
-        if (loadDesc.findViewById(R.id.text_header_load_hint).getVisibility() == View.VISIBLE) {
-            cancelPotentialTask();
-            task = new LoaderTask();
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }
-    }
+        Intent intent = new Intent();
+        intent.setAction(Consts.Action_Start_Loading_Latest);
+        App.getApp().sendBroadcast(intent);
+        loadDesc.findViewById(R.id.text_header_load_hint).setVisibility(View.INVISIBLE);
+        loadDesc.findViewById(R.id.progress_header_loading).setVisibility(View.VISIBLE);
 
-    private void cancelPotentialTask() {
-        if (task != null && task.getStatus() == AAsyncTask.Status.RUNNING) {
-            task.cancel(true);
-            loadDesc.findViewById(R.id.text_header_load_hint).setVisibility(View.VISIBLE);
-            loadDesc.findViewById(R.id.progress_header_loading).setVisibility(View.INVISIBLE);
-        }
+        ArticleAPI
+                .getArticleReplies(article.getId(), article.getCommentNum(), 4999)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ResponseObject<ArrayList<UComment>>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(ResponseObject<ArrayList<UComment>> result) {
+                        loadDesc.findViewById(R.id.text_header_load_hint).setVisibility(View.VISIBLE);
+                        loadDesc.findViewById(R.id.progress_header_loading).setVisibility(View.INVISIBLE);
+                        if (result.ok) {
+                            ArrayList<UComment> ars = result.result;
+                            if (ars.size() > 0) {
+                                adapter.addAllReversely(ars, 1);
+                                adapter.notifyDataSetChanged();
+                            }
+                            article.setCommentNum(article.getCommentNum() + ars.size());
+                        }
+                        Intent intent = new Intent();
+                        intent.setAction(Consts.Action_Finish_Loading_Latest);
+                        intent.putExtra(Consts.Extra_Activity_Hashcode, getContext().hashCode());
+                        App.getApp().sendBroadcast(intent);
+                    }
+                });
     }
 
     public void setAdapter(ArticleDetailAdapter adapter) {
         this.adapter = adapter;
-    }
-
-    class LoaderTask extends AAsyncTask<Integer, ResponseObject, ResponseObject<ArrayList<AceModel>>> {
-
-        @Override
-        protected void onPreExecute() {
-            Intent intent = new Intent();
-            intent.setAction(Consts.Action_Start_Loading_Latest);
-            App.getApp().sendBroadcast(intent);
-            loadDesc.findViewById(R.id.text_header_load_hint).setVisibility(View.INVISIBLE);
-            loadDesc.findViewById(R.id.progress_header_loading).setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected ResponseObject<ArrayList<AceModel>> doInBackground(Integer... params) {
-            return ArticleAPI.getArticleComments(article.getId(), article.getCommentNum(), 4999);//1000足够了
-        }
-
-        @Override
-        protected void onPostExecute(ResponseObject<ArrayList<AceModel>> result) {
-            loadDesc.findViewById(R.id.text_header_load_hint).setVisibility(View.VISIBLE);
-            loadDesc.findViewById(R.id.progress_header_loading).setVisibility(View.INVISIBLE);
-            if (result.ok) {
-                ArrayList<AceModel> ars = result.result;
-                if (ars.size() > 0) {
-                    adapter.addAllReversely(ars, 1);
-                    adapter.notifyDataSetChanged();
-                }
-                article.setCommentNum(article.getCommentNum() + ars.size());
-            }
-            Intent intent = new Intent();
-            intent.setAction(Consts.Action_Finish_Loading_Latest);
-            intent.putExtra(Consts.Extra_Activity_Hashcode, getContext().hashCode());
-            App.getApp().sendBroadcast(intent);
-        }
     }
 
     @Override

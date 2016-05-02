@@ -7,9 +7,9 @@ import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
 
+import net.nashlegend.sourcewall.request.cache.CacheHeaderUtil;
 import net.nashlegend.sourcewall.request.cache.RequestCache;
 import net.nashlegend.sourcewall.request.parsers.Parser;
-import net.nashlegend.sourcewall.request.cache.CacheHeaderUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -353,6 +353,9 @@ public class RequestObject<T> {
                 .create(new Observable.OnSubscribe<String>() {
                     @Override
                     public void call(Subscriber<? super String> subscriber) {
+                        if (subscriber.isUnsubscribed()) {
+                            return;
+                        }
                         try {
                             String cachedResult = readFromCache();
                             responseObject.isCached = true;
@@ -402,6 +405,7 @@ public class RequestObject<T> {
                     @Override
                     public void call(Subscriber<? super String> subscriber) {
                         try {
+                            responseObject.isCached = false;
                             call = startRequestSync();
                             Response response = call.execute();
                             if (requestType == RequestType.DOWNLOAD) {
@@ -882,7 +886,7 @@ public class RequestObject<T> {
 
         /**
          * 如果执行到此处，ok必然为true,{@link ResponseObject#result}必然不为null
-         * <p>
+         * <p/>
          * 除了是下载文件的话，此处result为null，运行到此处必然已经成功了
          *
          * @param result

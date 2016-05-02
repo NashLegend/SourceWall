@@ -13,24 +13,27 @@ import android.widget.TextView;
 import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.R;
-import net.nashlegend.sourcewall.view.common.AAsyncTask;
-import net.nashlegend.sourcewall.view.common.IStackedAsyncTaskInterface;
-import net.nashlegend.sourcewall.view.common.shuffle.GroupMovableButton;
-import net.nashlegend.sourcewall.view.common.shuffle.MovableButton;
-import net.nashlegend.sourcewall.view.common.shuffle.ShuffleDesk;
 import net.nashlegend.sourcewall.db.GroupHelper;
 import net.nashlegend.sourcewall.db.gen.MyGroup;
 import net.nashlegend.sourcewall.model.SubItem;
-import net.nashlegend.sourcewall.request.ResponseError;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
-import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Mob;
+import net.nashlegend.sourcewall.view.common.shuffle.GroupMovableButton;
+import net.nashlegend.sourcewall.view.common.shuffle.MovableButton;
+import net.nashlegend.sourcewall.view.common.shuffle.ShuffleDesk;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import rx.Observable;
+import rx.Observer;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * @author NashLegend
@@ -38,8 +41,6 @@ import java.util.List;
 public class ShuffleGroupActivity extends SwipeActivity {
 
     private ShuffleDesk desk;
-    LoaderFromDBTask dbTask;
-    LoaderFromNetTask netTask;
     Toolbar toolbar;
     ProgressDialog progressDialog;
     final int defaultGroupsNumber = 12;
@@ -66,11 +67,9 @@ public class ShuffleGroupActivity extends SwipeActivity {
         });
 
         if (getIntent().getBooleanExtra(Consts.Extra_Should_Load_Before_Shuffle, false)) {
-            netTask = new LoaderFromNetTask(this);
-            netTask.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR);
+            loadGroupsFromNet();
         } else {
-            dbTask = new LoaderFromDBTask(this);
-            dbTask.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR);
+            loadFromDB();
         }
     }
 
@@ -85,11 +84,7 @@ public class ShuffleGroupActivity extends SwipeActivity {
         int id = item.getItemId();
         if (id == R.id.action_reload_my_groups) {
             commitChanges();
-            if (netTask != null && netTask.getStatus() == AAsyncTask.Status.RUNNING) {
-                netTask.cancel(false);
-            }
-            netTask = new LoaderFromNetTask(this);
-            netTask.executeOnExecutor(android.os.AsyncTask.THREAD_POOL_EXECUTOR);
+            loadGroupsFromNet();
             return true;
         }
         if (item.getItemId() == android.R.id.home) {
@@ -131,12 +126,6 @@ public class ShuffleGroupActivity extends SwipeActivity {
 
     @Override
     protected void onDestroy() {
-        if (netTask != null && netTask.getStatus() == AAsyncTask.Status.RUNNING) {
-            netTask.cancel(false);
-        }
-        if (dbTask != null && dbTask.getStatus() == AAsyncTask.Status.RUNNING) {
-            dbTask.cancel(false);
-        }
         super.onDestroy();
     }
 
@@ -169,22 +158,23 @@ public class ShuffleGroupActivity extends SwipeActivity {
         desk.setUnselectedButtons(unselectedButtons);
     }
 
-
     private void mergeMyGroups(ArrayList<MyGroup> myGroups) {
         if (GroupHelper.getMyGroupsNumber() > 0) {
             List<MyGroup> selectedGroups = GroupHelper.getSelectedGroups();
             for (int i = 0; i < myGroups.size(); i++) {
                 MyGroup tmpGroup = myGroups.get(i);
                 boolean selected = false;
+                int order = 0;
                 for (int j = 0; j < selectedGroups.size(); j++) {
                     if (selectedGroups.get(j).getValue().equals(tmpGroup.getValue())) {
                         selected = true;
+                        order = j;
                         break;
                     }
                 }
                 tmpGroup.setSelected(selected);
                 if (selected) {
-                    tmpGroup.setOrder(i);
+                    tmpGroup.setOrder(order);
                 } else {
                     tmpGroup.setOrder(1024 + i);
                 }
@@ -192,85 +182,97 @@ public class ShuffleGroupActivity extends SwipeActivity {
         }
     }
 
-    class LoaderFromDBTask extends AAsyncTask<String, Integer, Boolean> {
+    private void loadFromDB() {
+        Observable
+                .just("String")
+                .map(new Func1<String, String>() {
+                    @Override
+                    public String call(String s) {
+                        getButtons();
+                        return null;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onCompleted() {
 
-        public LoaderFromDBTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
-            super(iStackedAsyncTaskInterface);
-        }
+                    }
 
-        @Override
-        protected Boolean doInBackground(String[] params) {
-            getButtons();
-            return true;
-        }
+                    @Override
+                    public void onError(Throwable e) {
 
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            initView();
-        }
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        initView();
+                    }
+                });
     }
 
-    class LoaderFromNetTask extends AAsyncTask<String, Integer, ResponseObject> {
+    private void loadGroupsFromNet() {
+        final Subscription subscription =
+                PostAPI
+                        .getAllMyGroups(UserAPI.getUkey())
+                        .flatMap(new Func1<ResponseObject<ArrayList<SubItem>>, Observable<ArrayList<MyGroup>>>() {
+                            @Override
+                            public Observable<ArrayList<MyGroup>> call(ResponseObject<ArrayList<SubItem>> result) {
+                                if (result.ok) {
+                                    ArrayList<MyGroup> myGroups = new ArrayList<>();
+                                    for (int i = 0; i < result.result.size(); i++) {
+                                        SubItem item = result.result.get(i);
+                                        MyGroup mygroup = new MyGroup();
+                                        mygroup.setName(item.getName());
+                                        mygroup.setValue(item.getValue());
+                                        mygroup.setType(item.getType());
+                                        mygroup.setSection(item.getSection());
+                                        mygroup.setSelected(i < defaultGroupsNumber);
+                                        mygroup.setOrder(i);
+                                        myGroups.add(mygroup);
+                                    }
+                                    mergeMyGroups(myGroups);
+                                    GroupHelper.putAllMyGroups(myGroups);
+                                    getButtons();
+                                    return Observable.just(myGroups);
+                                }
+                                return Observable.error(new IllegalStateException("error occurred"));
+                            }
+                        })
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Observer<ArrayList<MyGroup>>() {
+                            @Override
+                            public void onCompleted() {
+                                progressDialog.dismiss();
+                            }
 
-        public LoaderFromNetTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
-            super(iStackedAsyncTaskInterface);
-        }
+                            @Override
+                            public void onError(Throwable e) {
+                                progressDialog.dismiss();
+                                MobclickAgent.onEvent(ShuffleGroupActivity.this, Mob.Event_Load_My_Groups_Failed);
+                                toast("加载我的小组失败");
+                            }
 
-        @Override
-        protected void onPreExecute() {
-            MobclickAgent.onEvent(ShuffleGroupActivity.this, Mob.Event_Load_My_Groups);
-            progressDialog = new ProgressDialog(ShuffleGroupActivity.this);
-            progressDialog.setCanceledOnTouchOutside(false);
-            progressDialog.setMessage(getString(R.string.message_loading_my_groups));
-            progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialog) {
-                    LoaderFromNetTask.this.cancel(true);
+                            @Override
+                            public void onNext(ArrayList<MyGroup> myGroups) {
+                                progressDialog.dismiss();
+                                MobclickAgent.onEvent(ShuffleGroupActivity.this, Mob.Event_Load_My_Groups_OK);
+                                initView();
+                            }
+                        });
+        MobclickAgent.onEvent(ShuffleGroupActivity.this, Mob.Event_Load_My_Groups);
+        progressDialog = new ProgressDialog(ShuffleGroupActivity.this);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setMessage(getString(R.string.message_loading_my_groups));
+        progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                if (!subscription.isUnsubscribed()) {
+                    subscription.unsubscribe();
                 }
-            });
-            progressDialog.show();
-        }
-
-        @Override
-        protected ResponseObject doInBackground(String[] params) {
-            ResponseObject<ArrayList<SubItem>> result = PostAPI.getAllMyGroups();
-            if (result.ok) {
-                ArrayList<SubItem> subItems = result.result;
-                ArrayList<MyGroup> myGroups = new ArrayList<>();
-                for (int i = 0; i < subItems.size(); i++) {
-                    SubItem item = subItems.get(i);
-                    MyGroup mygroup = new MyGroup();
-                    mygroup.setName(item.getName());
-                    mygroup.setValue(item.getValue());
-                    mygroup.setType(item.getType());
-                    mygroup.setSection(item.getSection());
-                    mygroup.setSelected(i < defaultGroupsNumber);
-                    mygroup.setOrder(i);
-                    myGroups.add(mygroup);
-                }
-                mergeMyGroups(myGroups);
-                GroupHelper.putAllMyGroups(myGroups);
-                getButtons();
             }
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(ResponseObject resultObject) {
-            progressDialog.dismiss();
-            if (resultObject.ok) {
-                MobclickAgent.onEvent(ShuffleGroupActivity.this, Mob.Event_Load_My_Groups_OK);
-                initView();
-            } else {
-                MobclickAgent.onEvent(ShuffleGroupActivity.this, Mob.Event_Load_My_Groups_Failed);
-                MobclickAgent.reportError(ShuffleGroupActivity.this, "Loading my Groups failed \n Is WIFI:" + Config.isWifi() + "\n" + UserAPI.getUserInfoString() + resultObject.error_message);
-                if (resultObject.error == ResponseError.NO_USER_ID) {
-                    toast("未获得用户ID，无法加载");
-                } else {
-                    toast("加载我的小组失败");
-                }
-
-            }
-        }
+        });
+        progressDialog.show();
     }
 }

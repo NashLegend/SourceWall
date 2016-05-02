@@ -13,12 +13,13 @@ import net.nashlegend.sourcewall.request.JsonHandler;
 import net.nashlegend.sourcewall.request.RequestBuilder;
 import net.nashlegend.sourcewall.request.RequestObject;
 import net.nashlegend.sourcewall.request.RequestObject.CallBack;
-import net.nashlegend.sourcewall.request.ResponseError;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.cache.RequestCache;
 import net.nashlegend.sourcewall.request.parsers.BooleanParser;
 import net.nashlegend.sourcewall.request.parsers.ContentValueForKeyParser;
+import net.nashlegend.sourcewall.request.parsers.DirectlyStringParser;
 import net.nashlegend.sourcewall.request.parsers.Parser;
+import net.nashlegend.sourcewall.request.parsers.PostListParser;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.MDUtil;
 
@@ -36,33 +37,40 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * 单个回复地址。http://www.guokr.com/post/666281/reply/6224695/
- * 缓存key规则：
- * 我的小组的key是 Key_Post_My_Recent_Replies
- * 热门回帖的key是 Key_Post_Hot_Posts
- * 最近回复的key是 post.{id}
- */
+import rx.Observable;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
+
 public class PostAPI extends APIBase {
 
     public static final String Key_Post_Hot_Posts = "post.hot.post";
     public static final String Key_Post_My_Recent_Replies = "post.my.recent.replies";
 
-    /**
-     * 获取缓存的问题
-     *
-     * @param subItem 要取缓存的栏目
-     */
-    public static ResponseObject<ArrayList<Post>> getCachedPostList(SubItem subItem) {
-        ResponseObject<ArrayList<Post>> cachedResponseObject;
-        if (subItem.getType() == SubItem.Type_Collections) {
-            cachedResponseObject = PostAPI.getCachedGroupHotPostListFromMobileUrl();
-        } else if (subItem.getType() == SubItem.Type_Private_Channel) {
-            cachedResponseObject = PostAPI.getCachedMyGroupRecentRepliesPosts();
-        } else {
-            cachedResponseObject = PostAPI.getCachedGroupPostListJson(subItem.getValue());// featured
+    public static Observable<ResponseObject<ArrayList<Post>>> getPostList(int type, String key, int offset, boolean useCache) {
+        String url = "http://apis.guokr.com/group/post.json";
+        HashMap<String, String> pairs = new HashMap<>();
+        switch (type) {
+            case SubItem.Type_Collections:
+                pairs.put("retrieve_type", "hot_post");
+                break;
+            case SubItem.Type_Private_Channel:
+                pairs.put("retrieve_type", "recent_replies");
+                break;
+            case SubItem.Type_Single_Channel:
+                pairs.put("retrieve_type", "by_group");
+                pairs.put("group_id", key);
+                break;
         }
-        return cachedResponseObject;
+        pairs.put("limit", "20");
+        pairs.put("offset", String.valueOf(offset));
+        return new RequestBuilder<ArrayList<Post>>()
+                .setUrl(url)
+                .get()
+                .setParams(pairs)
+                .useCacheFirst(useCache)
+                .cacheTimeOut(300000)
+                .setParser(new PostListParser())
+                .requestObservable();
     }
 
     /**
@@ -103,244 +111,29 @@ public class PostAPI extends APIBase {
                 .startRequest();
     }
 
-    /**
-     * 返回所有我加入的小组
-     *
-     * @return ResponseObject，resultObject.result是ArrayList[SubItem]
-     */
-    public static ResponseObject<ArrayList<SubItem>> getAllMyGroups() {
-        ResponseObject<ArrayList<SubItem>> resultObject = new ResponseObject<>();
-        if (TextUtils.isEmpty(UserAPI.getUserID())) {
-            resultObject.error_message = "无法获得用户id";
-            resultObject.error = ResponseError.NO_USER_ID;
-            return resultObject;
-        }
-        String pageUrl = "http://m.guokr.com/group/i/" + UserAPI.getUserID() + "/joined/";
-        ArrayList<SubItem> subItems = new ArrayList<>();
-        int numPages;
-        try {
-            String firstPage = HttpFetcher.get(pageUrl).toString();
-            Document doc1 = Jsoup.parse(firstPage);
-            Elements lis = doc1.getElementsByClass("group-list").get(0).getElementsByTag("li");
-            numPages = Integer.valueOf(doc1.getElementsByClass("page-num").text().replaceAll("1/", ""));
-            //第一页
-            for (int i = 0; i < lis.size(); i++) {
-                Element element = lis.get(i).getElementsByTag("a").get(0);
-                String groupUrl = element.attr("href");//
-                String groupID = groupUrl.replaceAll("^\\D+(\\d+)\\D*", "$1");
-                String groupName = element.getElementsByTag("b").text();
-                SubItem subItem = new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, groupName, groupID);
-                subItems.add(subItem);
-            }
-            if (numPages > 1) {
-                for (int j = 2; j <= numPages; j++) {
-                    Thread.sleep(100);
-                    String url = pageUrl + "?page=" + j;
-                    Document pageDoc = Jsoup.parse(HttpFetcher.get(url).toString());
-                    Elements pageLis = pageDoc.getElementsByClass("group-list").get(0).getElementsByTag("li");
-                    for (int i = 0; i < pageLis.size(); i++) {
-                        Element element = pageLis.get(i).getElementsByTag("a").get(0);
-                        String groupUrl = element.attr("href");//
-                        String groupID = groupUrl.replaceAll("^\\D+(\\d+)\\D*", "$1");
-                        String groupName = element.getElementsByTag("b").text();
-                        SubItem subItem = new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, groupName, groupID);
-                        subItems.add(subItem);
+    public static Observable<ResponseObject<ArrayList<SubItem>>> getAllMyGroups(String ukey) {
+        String url = "http://apis.guokr.com/group/member.json";
+        return new RequestBuilder<ArrayList<SubItem>>()
+                .setUrl(url)
+                .get()
+                .addParam("retrieve_type", "by_user")
+                .addParam("ukey", ukey)
+                .addParam("limit", "999")
+                .setParser(new Parser<ArrayList<SubItem>>() {
+                    @Override
+                    public ArrayList<SubItem> parse(String response, ResponseObject<ArrayList<SubItem>> responseObject) throws Exception {
+                        ArrayList<SubItem> list = new ArrayList<>();
+                        JSONArray subItems = JsonHandler.getUniversalJsonArray(response, responseObject);
+                        assert subItems != null;
+                        for (int i = 0; i < subItems.length(); i++) {
+                            JSONObject jo = subItems.getJSONObject(i).optJSONObject("group");
+                            SubItem subItem = new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, jo.optString("name"), jo.optString("id"));
+                            list.add(subItem);
+                        }
+                        return list;
                     }
-                }
-            }
-            resultObject.ok = true;
-            resultObject.result = subItems;
-        } catch (Exception e) {
-            resultObject = retryGetGroups();
-        }
-        return resultObject;
-    }
-
-    public static ResponseObject<ArrayList<SubItem>> retryGetGroups() {
-        ResponseObject<ArrayList<SubItem>> resultObject = new ResponseObject<>();
-        if (TextUtils.isEmpty(UserAPI.getUserID())) {
-            resultObject.error_message = "无法获得用户id";
-            resultObject.error = ResponseError.NO_USER_ID;
-            return resultObject;
-        }
-        String pageUrl = "http://m.guokr.com/group/i/" + UserAPI.getUserID() + "/joined/";
-        ArrayList<SubItem> subItems = new ArrayList<>();
-        try {
-            String firstPage = HttpFetcher.get(pageUrl).toString();
-            Document doc1 = Jsoup.parse(firstPage);
-            Elements lis = doc1.getElementsByClass("group-list").get(0).getElementsByTag("li");
-            //第一页
-            for (int i = 0; i < lis.size(); i++) {
-                Element element = lis.get(i).getElementsByTag("a").get(0);
-                String groupUrl = element.attr("href");//
-                String groupID = groupUrl.replaceAll("^\\D+(\\d+)\\D*", "$1");
-                String groupName = element.getElementsByTag("b").text();
-                SubItem subItem = new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, groupName, groupID);
-                subItems.add(subItem);
-            }
-            resultObject.ok = true;
-            resultObject.result = subItems;
-        } catch (Exception e) {
-            JsonHandler.handleRequestException(e, resultObject);
-        }
-        return resultObject;
-    }
-
-    /**
-     * 缓存的最近回复帖子
-     *
-     * @return resultObject
-     */
-    private static ResponseObject<ArrayList<Post>> getCachedMyGroupRecentRepliesPosts() {
-        ResponseObject<ArrayList<Post>> resultObject = new ResponseObject<>();
-        try {
-            String json = RequestCache.getInstance().getStringFromCache(Key_Post_My_Recent_Replies);
-            if (json != null) {
-                resultObject = parsePostListJson(json);
-            }
-        } catch (Exception e) {
-            JsonHandler.handleRequestException(e, resultObject);
-        }
-        return resultObject;
-    }
-
-    /**
-     * 返回《我的小组》最新回复的主题列表，解析json获得
-     *
-     * @param offset offset
-     * @return resultObject
-     */
-    public static ResponseObject<ArrayList<Post>> getMyGroupRecentRepliesPostsByJson(int offset) {
-        String url = "http://apis.guokr.com/group/post.json";
-        ResponseObject<ArrayList<Post>> resultObject = new ResponseObject<>();
-        try {
-            HashMap<String, String> pairs = new HashMap<>();
-            pairs.put("retrieve_type", "recent_replies");
-            pairs.put("limit", "20");
-            pairs.put("offset", String.valueOf(offset));
-            String json = HttpFetcher.get(url, pairs, true).toString();
-            resultObject = parsePostListJson(json);
-            if (resultObject.ok && offset == 0) {
-                RequestCache.getInstance().addStringToCacheForceUpdate(Key_Post_My_Recent_Replies, json);
-            }
-        } catch (Exception e) {
-            JsonHandler.handleRequestException(e, resultObject);
-        }
-        return resultObject;
-    }
-
-    /**
-     * 获得小组热贴，json
-     *
-     * @param offset，要获取的页码
-     * @return 帖子列表
-     */
-    public static ResponseObject<ArrayList<Post>> getGroupHotPostListByJson(int offset) {
-        ResponseObject<ArrayList<Post>> resultObject = new ResponseObject<>();
-        try {
-            String url = "http://apis.guokr.com/group/post.json";
-            HashMap<String, String> pairs = new HashMap<>();
-            pairs.put("retrieve_type", "hot_post");
-            pairs.put("limit", "20");
-            pairs.put("offset", String.valueOf(offset));
-            String json = HttpFetcher.get(url, pairs, true).toString();
-            resultObject = parsePostListJson(json);
-            if (resultObject.ok && offset == 0) {
-                RequestCache.getInstance().addStringToCacheForceUpdate(Key_Post_Hot_Posts, json);
-            }
-        } catch (Exception e) {
-            JsonHandler.handleRequestException(e, resultObject);
-        }
-        return resultObject;
-    }
-
-    /**
-     * 获得缓存的小组热贴
-     *
-     * @return 帖子列表
-     */
-    public static ResponseObject<ArrayList<Post>> getCachedGroupHotPostListFromMobileUrl() {
-        ResponseObject<ArrayList<Post>> resultObject = new ResponseObject<>();
-        try {
-            String json = RequestCache.getInstance().getStringFromCache(Key_Post_Hot_Posts);
-            if (json != null) {
-                resultObject = parsePostListJson(json);
-            }
-        } catch (Exception e) {
-            JsonHandler.handleRequestException(e, resultObject);
-        }
-        return resultObject;
-    }
-
-    /**
-     * 根据小组id获得帖子列表，json格式
-     *
-     * @param id     小组id
-     * @param offset 从第几个帖子开始取
-     * @return resultObject
-     */
-    public static ResponseObject<ArrayList<Post>> getGroupPostListByJsonUrl(String id, int offset) {
-        ResponseObject<ArrayList<Post>> resultObject = new ResponseObject<>();
-        try {
-            String url = "http://apis.guokr.com/group/post.json";
-            HashMap<String, String> pairs = new HashMap<>();
-            pairs.put("retrieve_type", "by_group");
-            pairs.put("group_id", id);
-            pairs.put("limit", "20");
-            pairs.put("offset", String.valueOf(offset));
-            String jString = HttpFetcher.get(url, pairs).toString();
-            resultObject = parsePostListJson(jString);
-            if (resultObject.ok && offset == 0) {
-                //请求成功则缓存之
-                String key = "post." + id;
-                RequestCache.getInstance().addStringToCacheForceUpdate(key, jString);
-            }
-
-        } catch (Exception e) {
-            JsonHandler.handleRequestException(e, resultObject);
-        }
-        return resultObject;
-    }
-
-    /**
-     * 根据小组id获得缓存的帖子列表，json格式
-     *
-     * @param id 小组id
-     * @return resultObject
-     */
-    public static ResponseObject<ArrayList<Post>> getCachedGroupPostListJson(String id) {
-        ResponseObject<ArrayList<Post>> resultObject = new ResponseObject<>();
-        try {
-            String jString = RequestCache.getInstance().getStringFromCache("post." + id);
-            if (jString != null) {
-                resultObject = parsePostListJson(jString);
-            }
-        } catch (Exception e) {
-            JsonHandler.handleRequestException(e, resultObject);
-        }
-        return resultObject;
-    }
-
-    private static ResponseObject<ArrayList<Post>> parsePostListJson(String jString) {
-        ResponseObject<ArrayList<Post>> resultObject = new ResponseObject<>();
-        try {
-            ArrayList<Post> list = new ArrayList<>();
-            JSONArray articles = JsonHandler.getUniversalJsonArray(jString, resultObject);
-            if (articles != null) {
-                for (int i = 0; i < articles.length(); i++) {
-                    JSONObject jo = articles.getJSONObject(i);
-                    Post post = Post.fromJson(jo);
-                    post.setFeatured(true);
-                    // 无法获取titleImageUrl，也用不着，太TMD费流量了
-                    list.add(post);
-                }
-                resultObject.ok = true;
-                resultObject.result = list;
-            }
-        } catch (Exception e) {
-            JsonHandler.handleRequestException(e, resultObject);
-        }
-        return resultObject;
+                })
+                .requestObservable();
     }
 
     /**
@@ -471,8 +264,8 @@ public class PostAPI extends APIBase {
     /**
      * 匿名回复
      *
-     * @param id      帖子id
-     * @param content 回复内容
+     * @param id       帖子id
+     * @param content  回复内容
      * @param callBack
      * @return ResponseObject.result is the reply_id if ok;
      */
@@ -489,31 +282,36 @@ public class PostAPI extends APIBase {
      * @param notice_id 通知id
      * @return resultObject resultObject.result是UComment
      */
-    public static ResponseObject<UComment> getSingleCommentByNoticeID(String notice_id) {
-        ResponseObject<UComment> resultObject = new ResponseObject<>();
-        String reply_id;
-        if (TextUtils.isEmpty(notice_id)) {
-            return resultObject;
-        }
+    public static Observable<UComment> getSingleCommentByNotice(String notice_id) {
         String notice_url = "http://www.guokr.com/user/notice/" + notice_id + "/";
-        try {
-            ResponseObject httpResult = HttpFetcher.get(notice_url);
-            String replyRedirectResult = httpResult.toString();
-            Document document = Jsoup.parse(replyRedirectResult);
-            Elements elements = document.getElementsByTag("a");
-            if (elements.size() == 1) {
-                ///post/662450/?page=2#6150472
-                ///post/662632/#6148664
-                Matcher matcher = Pattern.compile("^/post/(\\d+)/.*#(\\d+)$").matcher(elements.get(0).text());
-                if (matcher.find()) {
-                    reply_id = matcher.group(2);
-                    return getSingleCommentByID(reply_id);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return resultObject;
+        return new RequestBuilder<String>()
+                .setUrl(notice_url)
+                .get()
+                .setWithToken(false)
+                .setParser(new DirectlyStringParser())
+                .requestObservable()
+                .flatMap(new Func1<ResponseObject<String>, Observable<String>>() {
+                    @Override
+                    public Observable<String> call(ResponseObject<String> response) {
+                        Document document = Jsoup.parse(response.result);
+                        Elements elements = document.getElementsByTag("a");
+                        if (elements.size() == 1) {
+                            Matcher matcher = Pattern.compile("^/post/(\\d+)/.*#(\\d+)$").matcher(elements.get(0).text());
+                            if (matcher.find()) {
+                                String reply_id = matcher.group(2);
+                                return Observable.just(reply_id);
+                            }
+                        }
+                        return Observable.error(new IllegalStateException("not a correct redirect content"));
+                    }
+                })
+                .flatMap(new Func1<String, Observable<UComment>>() {
+                    @Override
+                    public Observable<UComment> call(String id) {
+                        return getSingleCommentByID(id);
+                    }
+                })
+                .subscribeOn(Schedulers.io());
     }
 
     /**
@@ -522,7 +320,7 @@ public class PostAPI extends APIBase {
      * @param url 评论id
      * @return resultObject resultObject.result是UComment
      */
-    public static ResponseObject<UComment> getSingleCommentFromRedirectUrl(String url) {
+    public static Observable<UComment> getSingleCommentFromRedirectUrl(String url) {
         //url sample：http://www.guokr.com/post/reply/6224695/
         //uri http://www.guokr.com/post/666281/reply/6224695/
         Uri uri = Uri.parse(url);
@@ -540,24 +338,31 @@ public class PostAPI extends APIBase {
      * @param id 评论id
      * @return resultObject resultObject.result是UComment
      */
-    public static ResponseObject<UComment> getSingleCommentByID(String id) {
-        ResponseObject<UComment> resultObject = new ResponseObject<>();
-        String url = "http://www.guokr.com/apis/group/post_reply.json";
-        //url还有另一种形式，http://www.guokr.com/apis/group/post_reply/99999999.json
+    public static Observable<UComment> getSingleCommentByID(String id) {
+//        String url = "http://www.guokr.com/apis/group/post_reply.json";
+        String url = "http://www.guokr.com/apis/group/post_reply/" + id + ".json";
         //这样后面就不必带reply_id参数了
-        HashMap<String, String> pairs = new HashMap<>();
-        pairs.put("reply_id", id);
-        try {
-
-            String result = HttpFetcher.get(url, pairs).toString();
-            JSONObject replyObject = JsonHandler.getUniversalJsonObject(result, resultObject);
-            UComment comment = UComment.fromPostJson(replyObject);
-            resultObject.ok = true;
-            resultObject.result = comment;
-        } catch (Exception e) {
-            JsonHandler.handleRequestException(e, resultObject);
-        }
-        return resultObject;
+        return new RequestBuilder<UComment>()
+                .setUrl(url)
+                .get()
+                .setParser(new Parser<UComment>() {
+                    @Override
+                    public UComment parse(String response, ResponseObject<UComment> responseObject) throws Exception {
+                        JSONObject replyObject = JsonHandler.getUniversalJsonObject(response, responseObject);
+                        return UComment.fromPostJson(replyObject);
+                    }
+                })
+                .requestObservable()
+                .flatMap(new Func1<ResponseObject<UComment>, Observable<UComment>>() {
+                    @Override
+                    public Observable<UComment> call(ResponseObject<UComment> responseObject) {
+                        if (responseObject.ok) {
+                            return Observable.just(responseObject.result);
+                        } else {
+                            return Observable.error(new IllegalStateException("Error Found"));
+                        }
+                    }
+                });
     }
 
     /**

@@ -1,8 +1,7 @@
 package net.nashlegend.sourcewall.fragment;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,20 +17,22 @@ import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.ArticleActivity;
 import net.nashlegend.sourcewall.activities.MainActivity;
 import net.nashlegend.sourcewall.adapters.ArticleAdapter;
-import net.nashlegend.sourcewall.view.common.AAsyncTask;
-import net.nashlegend.sourcewall.view.common.IStackedAsyncTaskInterface;
-import net.nashlegend.sourcewall.view.common.LListView;
-import net.nashlegend.sourcewall.view.common.LoadingView;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.ArticleAPI;
 import net.nashlegend.sourcewall.util.CommonUtil;
 import net.nashlegend.sourcewall.util.Consts;
-import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 import net.nashlegend.sourcewall.view.ArticleListItemView;
+import net.nashlegend.sourcewall.view.common.LListView;
+import net.nashlegend.sourcewall.view.common.LoadingView;
 
 import java.util.ArrayList;
+
+import rx.Observable;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 
 /**
  * Created by NashLegend on 2014/9/18 0018
@@ -40,15 +41,13 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
 
     private LListView listView;
     private ArticleAdapter adapter;
-    private LoaderTask task;
     private SubItem subItem;
     private LoadingView loadingView;
-    private final long cacheDuration = 300;//5分钟内连续进入，则不更新
     private ProgressBar progressBar;
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
         getActivity().invalidateOptionsMenu();
     }
 
@@ -109,9 +108,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
     }
 
     private void loadData(int offset) {
-        cancelPotentialTask();
-        task = new LoaderTask(this);
-        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, offset);
+        loadArticles(offset);
     }
 
     @Override
@@ -185,121 +182,83 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
         listView.setSelection(0);
     }
 
-    private void cancelPotentialTask() {
-        if (task != null && task.getStatus() == AAsyncTask.Status.RUNNING) {
-            task.cancel(true);
-            listView.doneOperation();
-        }
-    }
-
     @Override
     public void reload() {
         loadData(0);
     }
 
-    class LoaderTask extends AAsyncTask<Integer, ResponseObject<ArrayList<Article>>, ResponseObject<ArrayList<Article>>> {
-
-        int offset;
-
-        LoaderTask(IStackedAsyncTaskInterface iStackedAsyncTaskInterface) {
-            super(iStackedAsyncTaskInterface);
-        }
-
-        @Override
-        protected ResponseObject<ArrayList<Article>> doInBackground(Integer... datas) {
-            offset = datas[0];
-            String key = String.valueOf(subItem.getSection()) + subItem.getType() + subItem.getName() + subItem.getValue();
-
-            if (offset == 0 && adapter.getCount() == 0) {
-                ResponseObject<ArrayList<Article>> cachedResponseObject = ArticleAPI.getCachedArticleList(subItem);
-                if (cachedResponseObject.ok) {
-                    long lastLoad = SharedPreferencesUtil.readLong(key, 0l) / 1000;
-                    long crtLoad = System.currentTimeMillis() / 1000;
-                    if (crtLoad - lastLoad > cacheDuration) {
-                        publishProgress(cachedResponseObject);
-                    } else {
-                        return cachedResponseObject;
+    private void loadArticles(final int offset) {
+        Observable<ResponseObject<ArrayList<Article>>> observable =
+                ArticleAPI.getArticleList(subItem.getType(), subItem.getValue(), offset, offset == 0 && adapter.getList().size() == 0);
+        observable
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnUnsubscribe(new Action0() {
+                    @Override
+                    public void call() {
+                        loadingView.onLoadSuccess();
+                        if (adapter.getCount() > 0) {
+                            listView.setCanPullToLoadMore(true);
+                            listView.setCanPullToRefresh(true);
+                        } else {
+                            listView.setCanPullToLoadMore(false);
+                            listView.setCanPullToRefresh(true);
+                        }
+                        listView.doneOperation();
                     }
-                }
-            }
-
-            ResponseObject<ArrayList<Article>> resultObject = new ResponseObject<>();
-            if (subItem.getType() == SubItem.Type_Collections) {
-                resultObject = ArticleAPI.getArticleListIndexPage(offset);
-            } else if (subItem.getType() == SubItem.Type_Single_Channel) {
-                resultObject = ArticleAPI.getArticleListByChannel(subItem.getValue(), offset);
-            } else if (subItem.getType() == SubItem.Type_Subject_Channel) {
-                resultObject = ArticleAPI.getArticleListBySubject(subItem.getValue(), offset);
-            }
-
-            if (resultObject.ok) {
-                SharedPreferencesUtil.saveLong(key, System.currentTimeMillis());
-            }
-
-            return resultObject;
-        }
-
-        /**
-         * 加载缓存的列表，但是会导致点击的时候会更明显的卡一下
-         *
-         * @param values The values indicating progress.
-         */
-        @SafeVarargs
-        @Override
-        protected final void onProgressUpdate(ResponseObject<ArrayList<Article>>... values) {
-            ResponseObject<ArrayList<Article>> result = values[0];
-            ArrayList<Article> ars = result.result;
-            if (ars.size() > 0) {
-                progressBar.setVisibility(View.VISIBLE);
-                loadingView.onLoadSuccess();
-                adapter.setList(ars);
-                adapter.notifyDataSetInvalidated();
-            }
-        }
-
-        @Override
-        protected void onPostExecute(ResponseObject<ArrayList<Article>> result) {
-            listView.doneOperation();
-            progressBar.setVisibility(View.GONE);
-            if (result.ok) {
-                loadingView.onLoadSuccess();
-                ArrayList<Article> ars = result.result;
-                if (offset > 0) {
-                    if (ars.size() > 0) {
-                        adapter.addAll(ars);
-                        adapter.notifyDataSetChanged();
+                })
+                .subscribe(new Observer<ResponseObject<ArrayList<Article>>>() {
+                    @Override
+                    public void onCompleted() {
+                        progressBar.setVisibility(View.GONE);
                     }
-                } else {
-                    if (ars.size() > 0) {
-                        adapter.setList(ars);
-                        adapter.notifyDataSetChanged();
-                    }
-                }
-            } else {
-                toast(R.string.load_failed);
-                loadingView.onLoadFailed();
-            }
-            if (adapter.getCount() > 0) {
-                listView.setCanPullToLoadMore(true);
-                listView.setCanPullToRefresh(true);
-            } else {
-                listView.setCanPullToLoadMore(false);
-                listView.setCanPullToRefresh(true);
-            }
-        }
 
-        @Override
-        public void onCancel() {
-            loadingView.onLoadSuccess();
-            if (adapter.getCount() > 0) {
-                listView.setCanPullToLoadMore(true);
-                listView.setCanPullToRefresh(true);
-            } else {
-                listView.setCanPullToLoadMore(false);
-                listView.setCanPullToRefresh(true);
-            }
-            listView.doneOperation();
-        }
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(ResponseObject<ArrayList<Article>> result) {
+                        if (result.isCached && offset == 0) {
+                            if (result.ok) {
+                                ArrayList<Article> ars = result.result;
+                                if (ars.size() > 0) {
+                                    progressBar.setVisibility(View.VISIBLE);
+                                    loadingView.onLoadSuccess();
+                                    adapter.addAll(ars);
+                                    adapter.notifyDataSetChanged();
+                                }
+                            }
+                        } else {
+                            listView.doneOperation();
+                            progressBar.setVisibility(View.GONE);
+                            if (result.ok) {
+                                loadingView.onLoadSuccess();
+                                ArrayList<Article> ars = result.result;
+                                if (offset > 0) {
+                                    if (ars.size() > 0) {
+                                        adapter.addAll(ars);
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                } else {
+                                    if (ars.size() > 0) {
+                                        adapter.setList(ars);
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                }
+                            } else {
+                                toast(R.string.load_failed);
+                                loadingView.onLoadFailed();
+                            }
+                            if (adapter.getCount() > 0) {
+                                listView.setCanPullToLoadMore(true);
+                                listView.setCanPullToRefresh(true);
+                            } else {
+                                listView.setCanPullToLoadMore(false);
+                                listView.setCanPullToRefresh(true);
+                            }
+                        }
+                    }
+                });
     }
-
 }

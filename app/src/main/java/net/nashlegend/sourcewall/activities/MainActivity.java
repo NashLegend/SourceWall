@@ -26,9 +26,14 @@ import net.nashlegend.sourcewall.fragment.NavigationDrawerFragment;
 import net.nashlegend.sourcewall.fragment.PostsFragment;
 import net.nashlegend.sourcewall.fragment.QuestionsFragment;
 import net.nashlegend.sourcewall.model.SubItem;
+import net.nashlegend.sourcewall.model.UComment;
+import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.cache.RequestCache;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
+
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
 
 public class MainActivity extends BaseActivity {
 
@@ -238,7 +243,6 @@ public class MainActivity extends BaseActivity {
             } else if (Consts.Action_Prepare_Open_Content_Fragment.equals(intent.getAction())) {
                 prepareFragment(subItem);
             }
-
         }
     }
 }
