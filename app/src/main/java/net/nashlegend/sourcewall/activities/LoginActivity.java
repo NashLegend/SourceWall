@@ -22,11 +22,14 @@ import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
+import net.nashlegend.sourcewall.events.LoginStateChangedEvent;
 import net.nashlegend.sourcewall.request.HttpUtil;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
+
+import de.greenrobot.event.EventBus;
 
 public class LoginActivity extends SwipeActivity {
 
@@ -94,7 +97,11 @@ public class LoginActivity extends SwipeActivity {
                 }
                 HttpUtil.setCookie(HttpUtil.getDefaultHttpClient());
             }
-            return !(TextUtils.isEmpty(tmpUkey) || TextUtils.isEmpty(tmpToken));
+            boolean gotToken = !TextUtils.isEmpty(tmpUkey) && !TextUtils.isEmpty(tmpToken);
+            if (gotToken) {
+                EventBus.getDefault().post(new LoginStateChangedEvent());
+            }
+            return gotToken;
         } catch (Exception e) {
             return false;
         }

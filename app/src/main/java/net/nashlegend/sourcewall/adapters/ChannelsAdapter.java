@@ -6,9 +6,13 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 
 import net.nashlegend.sourcewall.db.AskTagHelper;
+import net.nashlegend.sourcewall.db.BasketHelper;
 import net.nashlegend.sourcewall.db.GroupHelper;
 import net.nashlegend.sourcewall.model.SubItem;
+import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.ChannelHelper;
+import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 import net.nashlegend.sourcewall.view.GroupItemView;
 import net.nashlegend.sourcewall.view.SubItemView;
 
@@ -101,16 +105,34 @@ public class ChannelsAdapter extends BaseExpandableListAdapter {
         return true;
     }
 
-
-    public void createDefaultChannels() {
-        //添加科学人的所有栏目
+    public void setDefaultChannels() {
         ArrayList<SubItem> groups = ChannelHelper.getSections();
         ArrayList<ArrayList<SubItem>> cols = new ArrayList<>();
+        //添加科学人的所有栏目
         cols.add(ChannelHelper.getArticles());
-
         //添加小组
+        cols.add(getGroupSections());
+        //添加问答
+        cols.add(getAskSections());
+        if (UserAPI.isLoggedIn()) {
+            //添加收藏
+            ArrayList<SubItem> basketSubItems = getBasketSections();
+            if (basketSubItems.size() > 0) {
+                groups.add(ChannelHelper.getBasketGroup());
+                cols.add(basketSubItems);
+            }
+        }
+        setGroupList(groups);
+        setSubLists(cols);
+        notifyDataSetChanged();
+    }
+
+    private ArrayList<SubItem> getGroupSections() {
+        //重新加载小组数据库
         ArrayList<SubItem> groupSubItems = new ArrayList<>();
-        groupSubItems.add(new SubItem(SubItem.Section_Post, SubItem.Type_Private_Channel, "我的小组", "user_group"));
+        if (UserAPI.isLoggedIn()) {
+            groupSubItems.add(new SubItem(SubItem.Section_Post, SubItem.Type_Private_Channel, "我的小组", "user_group"));
+        }
         if (GroupHelper.getMyGroupsNumber() > 0) {
             //如果已经加载了栏目
             groupSubItems.add(new SubItem(SubItem.Section_Post, SubItem.Type_Collections, "小组热贴", "hot_posts"));
@@ -118,11 +140,12 @@ public class ChannelsAdapter extends BaseExpandableListAdapter {
         } else {
             groupSubItems.addAll(ChannelHelper.getPosts());
         }
-        cols.add(groupSubItems);
+        return groupSubItems;
+    }
 
-        //添加问答
+    private ArrayList<SubItem> getAskSections() {
+        //重新加载标签数据库
         ArrayList<SubItem> questionSubItems = new ArrayList<>();
-        questionSubItems.clear();
         if (AskTagHelper.getAskTagsNumber() > 0) {
             //如果已经加载了栏目
             questionSubItems.add(new SubItem(SubItem.Section_Question, SubItem.Type_Collections, "热门问答", "hottest"));
@@ -131,11 +154,16 @@ public class ChannelsAdapter extends BaseExpandableListAdapter {
         } else {
             questionSubItems.addAll(ChannelHelper.getQuestions());
         }
-        cols.add(questionSubItems);
+        return questionSubItems;
+    }
 
-        setGroupList(groups);
-        setSubLists(cols);
-
-        notifyDataSetChanged();
+    private ArrayList<SubItem> getBasketSections() {
+        //重新加载标签数据库
+        ArrayList<SubItem> basketSubItems = new ArrayList<>();
+        if (BasketHelper.getBasketsNumber() > 0) {
+            //如果已经加载了栏目
+            basketSubItems.addAll(BasketHelper.getSelectedBasketSubItems());
+        }
+        return basketSubItems;
     }
 }

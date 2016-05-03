@@ -34,8 +34,6 @@ import net.nashlegend.sourcewall.activities.LoginActivity;
 import net.nashlegend.sourcewall.activities.MessageCenterActivity;
 import net.nashlegend.sourcewall.activities.SettingActivity;
 import net.nashlegend.sourcewall.adapters.ChannelsAdapter;
-import net.nashlegend.sourcewall.db.AskTagHelper;
-import net.nashlegend.sourcewall.db.GroupHelper;
 import net.nashlegend.sourcewall.events.LoginStateChangedEvent;
 import net.nashlegend.sourcewall.model.ReminderNoticeNum;
 import net.nashlegend.sourcewall.model.SubItem;
@@ -44,7 +42,6 @@ import net.nashlegend.sourcewall.request.RequestObject;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.MessageAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
-import net.nashlegend.sourcewall.util.ChannelHelper;
 import net.nashlegend.sourcewall.util.CommonUtil;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
@@ -53,20 +50,12 @@ import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 import net.nashlegend.sourcewall.view.SubItemView;
 
-import java.util.ArrayList;
-
 import de.greenrobot.event.EventBus;
 
 public class NavigationDrawerFragment extends BaseFragment implements View.OnClickListener {
 
-    /**
-     * 用户是否第一次用到此应用的Drawer，没有的话就先打开
-     */
     private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
 
-    /**
-     * Helper component that ties the action bar to the navigation drawer.
-     */
     private ActionBarDrawerToggle mDrawerToggle;
 
     private DrawerLayout mDrawerLayout;
@@ -84,9 +73,8 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
     private View nightView;
     private ImageView avatarView;
     private TextView userName;
-    private boolean loginState = false;
-    private String userKey = "";
-    private boolean isFirstLoad = true;
+    private boolean currentLoginState = false;
+    private String currentUkey = "";
     private ImageView noticeView;
     private Intent lazyIntent;
 
@@ -150,8 +138,6 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
         listView = (ExpandableListView) layoutView.findViewById(R.id.list_channel);
         listView.setGroupIndicator(null);
         adapter = new ChannelsAdapter(getActivity());
-        adapter.createDefaultChannels();
-        checkChannelList();
         listView.setAdapter(adapter);
         listView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
@@ -181,12 +167,51 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
                 return false;
             }
         });
+
+        currentLoginState = UserAPI.isLoggedIn();
+        currentUkey = UserAPI.getUkey();
+        if (currentLoginState) {
+            setupLocalUserView();
+        }
         return layoutView;
     }
 
     @Override
-    public void onCreateViewAgain(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public void onResume() {
+        super.onResume();
+        recheckData();
+    }
 
+    private void recheckData() {
+        adapter.setDefaultChannels();
+        if (currentLoginState != UserAPI.isLoggedIn()) {
+            if (UserAPI.isLoggedIn()) {
+                loadUserInfo();
+            } else {
+                back2UnLogged();
+            }
+        } else {
+            if (UserAPI.isLoggedIn()) {
+                if (currentUkey != null && currentUkey.equals(UserAPI.getUkey())) {
+                    setupLocalUserView();
+                } else {
+                    //切换了用户的话
+                    loadUserInfo();
+                }
+            }
+        }
+        currentLoginState = UserAPI.isLoggedIn();
+        currentUkey = UserAPI.getUkey();
+        if (currentLoginState) {
+            loadMessages();
+        } else {
+            noticeView.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onCreateViewAgain(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        //do nothing
     }
 
     @Override
@@ -204,26 +229,15 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
         }
     }
 
-    /**
-     * Users of this fragment must call this method to set up the navigation drawer interactions.
-     *
-     * @param fragmentId   The android:id of this fragment in its activity's layout.
-     * @param drawerLayout The DrawerLayout containing this fragment's UI.
-     */
     public void setUp(int fragmentId, DrawerLayout drawerLayout, Toolbar toolbar) {
         mFragmentContainerView = getActivity().findViewById(fragmentId);
         mDrawerLayout = drawerLayout;
-
-        // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-        // set up the drawer's list view with items and click listener
 
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
 
-        // ActionBarDrawerToggle ties together the the proper interactions
-        // between the navigation drawer and the action bar app icon.
         mDrawerToggle = new ActionBarDrawerToggle(getActivity(), mDrawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             @Override
             public void onDrawerClosed(View drawerView) {
@@ -246,8 +260,6 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
                     return;
                 }
                 if (!mUserLearnedDrawer) {
-                    // The user manually opened the drawer; store this flag to prevent auto-showing
-                    // the navigation drawer automatically in the future.
                     mUserLearnedDrawer = true;
                     SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
                     sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true).apply();
@@ -260,7 +272,6 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
             mDrawerLayout.openDrawer(mFragmentContainerView);
         }
 
-        // Defer code dependent on restoration of previous instance state.
         mDrawerLayout.post(new Runnable() {
             @Override
             public void run() {
@@ -321,10 +332,6 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
         return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
-    /**
-     * Per the navigation drawer design guidelines, updates the action bar to show the global app
-     * 'context', rather than just what's in the current screen.
-     */
     private void showGlobalContextActionBar() {
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
@@ -377,103 +384,8 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
         }
     }
 
-    long currentGroupDBVersion = -1;
-    long currentTagDBVersion = -1;
-
     public void onEventMainThread(LoginStateChangedEvent e) {
         recheckData();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        recheckData();
-    }
-
-    private void recheckData() {
-        if (isFirstLoad) {
-            if (UserAPI.isLoggedIn()) {
-                String nameString = UserAPI.getName();
-                if (!TextUtils.isEmpty(nameString)) {
-                    userName.setText(nameString);
-                }
-                String avatarString = UserAPI.getUserAvatar();
-                if (!TextUtils.isEmpty(avatarString)) {
-                    if (Config.shouldLoadImage()) {
-                        ImageLoader.getInstance().displayImage(avatarString, avatarView, ImageUtils.avatarOptions);
-                    } else {
-                        avatarView.setImageResource(R.drawable.default_avatar);
-                    }
-                }
-            }
-            isFirstLoad = false;
-        } else {
-            if (loginState != UserAPI.isLoggedIn()) {
-                checkChannelList();
-                if (UserAPI.isLoggedIn()) {
-                    loadUserInfo();
-                } else {
-                    back2UnLogged();
-                }
-            } else {
-                if (UserAPI.isLoggedIn()) {
-                    if (userKey != null && userKey.equals(UserAPI.getUkey())) {
-                        String avatarString = UserAPI.getUserAvatar();
-                        if (!TextUtils.isEmpty(avatarString)) {
-                            if (Config.shouldLoadImage()) {
-                                ImageLoader.getInstance().displayImage(avatarString, avatarView, ImageUtils.avatarOptions);
-                            } else {
-                                avatarView.setImageResource(R.drawable.default_avatar);
-                            }
-                        }
-                        //重新加载小组数据库
-                        long lastGroupDBVersion = SharedPreferencesUtil.readLong(Consts.Key_Last_Post_Groups_Version, 0);
-                        if (currentGroupDBVersion != lastGroupDBVersion) {
-                            ArrayList<SubItem> groupSubItems = adapter.getSubLists().get(1);
-                            groupSubItems.clear();
-                            groupSubItems.add(new SubItem(SubItem.Section_Post, SubItem.Type_Private_Channel, "我的小组", "user_group"));
-                            if (GroupHelper.getMyGroupsNumber() > 0) {
-                                //如果已经加载了栏目
-                                groupSubItems.add(new SubItem(SubItem.Section_Post, SubItem.Type_Collections, "小组热贴", "hot_posts"));
-                                groupSubItems.addAll(GroupHelper.getSelectedGroupSubItems());
-                            } else {
-                                groupSubItems.addAll(ChannelHelper.getPosts());
-                            }
-                        }
-                        currentGroupDBVersion = lastGroupDBVersion;
-
-                        //重新加载标签数据库
-                        long lastTagDBVersion = SharedPreferencesUtil.readLong(Consts.Key_Last_Ask_Tags_Version, 0);
-                        if (currentTagDBVersion != lastTagDBVersion) {
-                            ArrayList<SubItem> questionSubItems = adapter.getSubLists().get(2);
-                            if (AskTagHelper.getAskTagsNumber() > 0) {
-                                //如果已经加载了栏目
-                                questionSubItems.clear();
-                                questionSubItems.add(new SubItem(SubItem.Section_Question, SubItem.Type_Collections, "热门问答", "hottest"));
-                                questionSubItems.add(new SubItem(SubItem.Section_Question, SubItem.Type_Collections, "精彩回答", "highlight"));
-                                questionSubItems.addAll(AskTagHelper.getSelectedQuestionSubItems());
-                            } else {
-                                questionSubItems.clear();
-                                questionSubItems.addAll(ChannelHelper.getQuestions());
-                            }
-                        }
-                        currentTagDBVersion = lastTagDBVersion;
-                        adapter.notifyDataSetChanged();
-                    } else {
-                        //切换了用户的话
-                        checkChannelList();
-                        loadUserInfo();
-                    }
-                }
-            }
-        }
-        loginState = UserAPI.isLoggedIn();
-        userKey = UserAPI.getUkey();
-        if (loginState) {
-            loadMessages();
-        } else {
-            noticeView.setVisibility(View.GONE);
-        }
     }
 
     /**
@@ -482,36 +394,6 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
     private void back2UnLogged() {
         avatarView.setImageResource(R.drawable.default_avatar);
         userName.setText(R.string.click_to_login);
-    }
-
-    /**
-     * 重新验证当前ChannelList是否是对的
-     */
-    private void checkChannelList() {
-        ArrayList<SubItem> groupSubItems = adapter.getSubLists().get(1);
-        groupSubItems.clear();
-        if (UserAPI.isLoggedIn()) {
-            groupSubItems.add(new SubItem(SubItem.Section_Post, SubItem.Type_Private_Channel, "我的小组", "user_group"));
-        }
-        if (GroupHelper.getMyGroupsNumber() > 0) {
-            //如果已经加载了栏目
-            groupSubItems.add(new SubItem(SubItem.Section_Post, SubItem.Type_Collections, "小组热贴", "hot_posts"));
-            groupSubItems.addAll(GroupHelper.getSelectedGroupSubItems());
-        } else {
-            groupSubItems.addAll(ChannelHelper.getPosts());
-        }
-
-        ArrayList<SubItem> questionSubItems = adapter.getSubLists().get(2);
-        questionSubItems.clear();
-        if (AskTagHelper.getAskTagsNumber() > 0) {
-            //如果已经加载了栏目
-            questionSubItems.add(new SubItem(SubItem.Section_Question, SubItem.Type_Collections, "热门问答", "hottest"));
-            questionSubItems.add(new SubItem(SubItem.Section_Question, SubItem.Type_Collections, "精彩回答", "highlight"));
-            questionSubItems.addAll(AskTagHelper.getSelectedQuestionSubItems());
-        } else {
-            questionSubItems.addAll(ChannelHelper.getQuestions());
-        }
-        adapter.notifyDataSetInvalidated();
     }
 
     private void loadUserInfo() {
@@ -566,6 +448,21 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
                 }
             }
         });
+    }
+
+    private void setupLocalUserView() {
+        String nameString = UserAPI.getName();
+        if (!TextUtils.isEmpty(nameString)) {
+            userName.setText(nameString);
+        }
+        String avatarString = UserAPI.getUserAvatar();
+        if (!TextUtils.isEmpty(avatarString)) {
+            if (Config.shouldLoadImage()) {
+                ImageLoader.getInstance().displayImage(avatarString, avatarView, ImageUtils.avatarOptions);
+            } else {
+                avatarView.setImageResource(R.drawable.default_avatar);
+            }
+        }
     }
 
     private void setupUserInfo(UserInfo info) {

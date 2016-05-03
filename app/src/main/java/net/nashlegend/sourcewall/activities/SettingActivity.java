@@ -180,14 +180,19 @@ public class SettingActivity extends SwipeActivity implements View.OnClickListen
 
     private void toggleLoginState() {
         if (UserAPI.isLoggedIn()) {
-            AlertDialog dialog = new AlertDialog.Builder(this).setTitle(R.string.hint).setMessage(R.string.ok_to_logout).setPositiveButton(R.string.log_out, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    UserAPI.clearMyInfo();
-                    MobclickAgent.onEvent(SettingActivity.this, Mob.Event_Logout);
-                    logText.setText(R.string.log_in);
-                }
-            }).setNegativeButton(R.string.cancel, null).create();
+            AlertDialog dialog = new AlertDialog.Builder(this)
+                    .setTitle(R.string.hint)
+                    .setMessage(R.string.ok_to_logout)
+                    .setPositiveButton(R.string.log_out, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            UserAPI.logout();
+                            MobclickAgent.onEvent(SettingActivity.this, Mob.Event_Logout);
+                            logText.setText(R.string.log_in);
+                        }
+                    })
+                    .setNegativeButton(R.string.cancel, null)
+                    .create();
             dialog.show();
         } else {
             startActivity(new Intent(this, LoginActivity.class));

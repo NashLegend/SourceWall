@@ -7,6 +7,7 @@ import android.os.Parcel;
  */
 public class SubItem extends AceModel {
 
+    public static final int Type_Group = -1;//集合，如科学人、热贴、精彩问答、热门问答
     public static final int Type_Collections = 0;//集合，如科学人、热贴、精彩问答、热门问答
     public static final int Type_Single_Channel = 1;//单项
     public static final int Type_Private_Channel = 2;//私人频道，我的小组
@@ -15,7 +16,7 @@ public class SubItem extends AceModel {
     public static final int Section_Article = 0;
     public static final int Section_Post = 1;
     public static final int Section_Question = 2;
-    public static final int Section_Favor = 3;
+    public static final int Section_Basket = 3;
 
     private int section;
     private int type;

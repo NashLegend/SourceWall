@@ -114,7 +114,6 @@ public class JsonHandler {
         }
     }
 
-
     /**
      * Bad Json指返回结果不为true的，而不是格式不对的
      *
@@ -130,8 +129,7 @@ public class JsonHandler {
         switch (responseObject.code) {
             case ResponseCode.CODE_TOKEN_INVALID:
                 ToastUtil.toastSingleton(R.string.token_invalid);
-                UserAPI.clearMyInfo();
-                EventBus.getDefault().post(new LoginStateChangedEvent());
+                UserAPI.logout();
                 break;
             default:
                 responseObject.code = ResponseCode.CODE_UNKNOWN;

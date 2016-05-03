@@ -18,6 +18,7 @@
     <string name="shuffle_tags">标签管理</string>
     <string name="post">小组</string>
     <string name="question">问答</string>
+    <string name="baskets">收藏</string>
     <string name="title_activity_login">登录</string>
     <string name="title_activity_reply_article">回复</string>
     <string name="pull_down_to_refresh">下拉以刷新</string>

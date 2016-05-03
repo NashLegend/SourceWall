@@ -5,6 +5,8 @@ import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
 import net.nashlegend.sourcewall.App;
+import net.nashlegend.sourcewall.db.BasketHelper;
+import net.nashlegend.sourcewall.events.LoginStateChangedEvent;
 import net.nashlegend.sourcewall.model.UserInfo;
 import net.nashlegend.sourcewall.request.HttpUtil;
 import net.nashlegend.sourcewall.request.JsonHandler;
@@ -18,6 +20,8 @@ import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 
 import java.util.HashMap;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by NashLegend on 2014/11/25 0025
@@ -108,7 +112,7 @@ public class UserAPI extends APIBase {
      * 退出登录、清除过期数据
      */
     @SuppressWarnings("deprecation")
-    public static void clearMyInfo() {
+    public static void logout() {
         SharedPreferencesUtil.remove(Consts.Key_Access_Token);
         SharedPreferencesUtil.remove(Consts.Key_Ukey);
         SharedPreferencesUtil.remove(Consts.Key_User_Avatar);
@@ -123,6 +127,8 @@ public class UserAPI extends APIBase {
         //直接置为null不就得了……
         HttpUtil.clearCookiesForOkHttp(HttpUtil.getDefaultUploadHttpClient());
         HttpUtil.clearCookiesForOkHttp(HttpUtil.getDefaultUploadHttpClient());
+        BasketHelper.clearAllMyBaskets();
+        EventBus.getDefault().post(new LoginStateChangedEvent());
     }
 
     /**
