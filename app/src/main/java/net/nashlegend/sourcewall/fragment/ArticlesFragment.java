@@ -3,6 +3,7 @@ package net.nashlegend.sourcewall.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
@@ -29,6 +31,8 @@ import net.nashlegend.sourcewall.view.common.LoadingView;
 
 import java.util.ArrayList;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -37,13 +41,18 @@ import rx.functions.Action0;
 /**
  * Created by NashLegend on 2014/9/18 0018
  */
-public class ArticlesFragment extends ChannelsFragment implements LListView.OnRefreshListener, LoadingView.ReloadListener {
+public class ArticlesFragment extends ChannelsFragment implements LListView.OnRefreshListener, LoadingView.ReloadListener, AdapterView.OnItemClickListener {
 
-    private LListView listView;
+    View layoutView;
+    @Bind(R.id.list_articles)
+    LListView listView;
+    @Bind(R.id.articles_loading)
+    ProgressBar progressBar;
+    @Bind(R.id.article_progress_loading)
+    LoadingView loadingView;
+
     private ArticleAdapter adapter;
     private SubItem subItem;
-    private LoadingView loadingView;
-    private ProgressBar progressBar;
 
     @Override
     public void onAttach(Context context) {
@@ -52,43 +61,26 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
     }
 
     @Override
-    public View onCreateLayoutView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_articles, container, false);
-        loadingView = (LoadingView) view.findViewById(R.id.article_progress_loading);
-        loadingView.setReloadListener(this);
-        subItem = getArguments().getParcelable(Consts.Extra_SubItem);
-        listView = (LListView) view.findViewById(R.id.list_articles);
-        adapter = new ArticleAdapter(getActivity());
-        listView.setCanPullToRefresh(false);
-        listView.setCanPullToLoadMore(false);
-        listView.setAdapter(adapter);
-        listView.setOnRefreshListener(this);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if (CommonUtil.shouldThrottle()) {
-                    return;
-                }
-                if (view instanceof ArticleListItemView) {
-                    Intent intent = new Intent();
-                    intent.setClass(App.getApp(), ArticleActivity.class);
-                    intent.putExtra(Consts.Extra_Article, ((ArticleListItemView) view).getData());
-                    startActivity(intent);
-                    getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
-                }
-
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if (layoutView == null) {
+            layoutView = inflater.inflate(R.layout.fragment_articles, container, false);
+            ButterKnife.bind(this, layoutView);
+            loadingView.setReloadListener(this);
+            subItem = getArguments().getParcelable(Consts.Extra_SubItem);
+            adapter = new ArticleAdapter(getActivity());
+            listView.setAdapter(adapter);
+            listView.setOnRefreshListener(this);
+            listView.setOnItemClickListener(this);
+            setTitle();
+            loadOver();
+        } else {
+            if (layoutView.getParent() != null) {
+                ((ViewGroup) layoutView.getParent()).removeView(layoutView);
             }
-        });
-        progressBar = (ProgressBar) view.findViewById(R.id.articles_loading);
-        setTitle();
-        loadOver();
-        return view;
-    }
-
-    @Override
-    public void onCreateViewAgain(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        SubItem mSubItem = getArguments().getParcelable(Consts.Extra_SubItem);
-        resetData(mSubItem);
+            SubItem mSubItem = getArguments().getParcelable(Consts.Extra_SubItem);
+            resetData(mSubItem);
+        }
+        return layoutView;
     }
 
     @Override
@@ -260,5 +252,25 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
                         }
                     }
                 });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if (CommonUtil.shouldThrottle()) {
+            return;
+        }
+        if (view instanceof ArticleListItemView) {
+            Intent intent = new Intent();
+            intent.setClass(App.getApp(), ArticleActivity.class);
+            intent.putExtra(Consts.Extra_Article, ((ArticleListItemView) view).getData());
+            startActivity(intent);
+            getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
+        }
     }
 }

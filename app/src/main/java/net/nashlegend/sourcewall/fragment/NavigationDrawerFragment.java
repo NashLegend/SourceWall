@@ -1,6 +1,5 @@
 package net.nashlegend.sourcewall.fragment;
 
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -50,32 +50,42 @@ import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 import net.nashlegend.sourcewall.view.SubItemView;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.greenrobot.event.EventBus;
 
 public class NavigationDrawerFragment extends BaseFragment implements View.OnClickListener {
 
     private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
+    @Bind(R.id.image_avatar)
+    ImageView avatarView;
+    @Bind(R.id.text_name)
+    TextView userName;
+    @Bind(R.id.image_notice)
+    ImageView noticeView;
+    @Bind(R.id.layout_user)
+    LinearLayout userView;
+    @Bind(R.id.list_channel)
+    ExpandableListView listView;
+    @Bind(R.id.view_switch_to_day)
+    LinearLayout dayView;
+    @Bind(R.id.view_switch_to_night)
+    LinearLayout nightView;
+    @Bind(R.id.view_setting)
+    LinearLayout settingView;
 
     private ActionBarDrawerToggle mDrawerToggle;
 
     private DrawerLayout mDrawerLayout;
-    private View layoutView;
     private View mFragmentContainerView;
 
     private boolean mFromSavedInstanceState;
     private SubItem currentSubItem = new SubItem(SubItem.Section_Article, SubItem.Type_Collections, "科学人", "");
     private boolean mUserLearnedDrawer;
-    private ExpandableListView listView;
     private ChannelsAdapter adapter;
-    private View settingView;
-    private View userView;
-    private View dayView;
-    private View nightView;
-    private ImageView avatarView;
-    private TextView userName;
     private boolean currentLoginState = false;
     private String currentUkey = "";
-    private ImageView noticeView;
     private Intent lazyIntent;
 
     public NavigationDrawerFragment() {
@@ -107,18 +117,8 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         EventBus.getDefault().register(this);
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
-    @Override
-    public View onCreateLayoutView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        layoutView = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
-
-        settingView = layoutView.findViewById(R.id.view_setting);
-        userView = layoutView.findViewById(R.id.layout_user);
-        dayView = layoutView.findViewById(R.id.view_switch_to_day);
-        nightView = layoutView.findViewById(R.id.view_switch_to_night);
-
+        View layoutView = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
+        ButterKnife.bind(this, layoutView);
         if (SharedPreferencesUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
             dayView.setVisibility(View.VISIBLE);
             nightView.setVisibility(View.GONE);
@@ -126,14 +126,6 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
             dayView.setVisibility(View.GONE);
             nightView.setVisibility(View.VISIBLE);
         }
-
-        avatarView = (ImageView) layoutView.findViewById(R.id.image_avatar);
-        userName = (TextView) layoutView.findViewById(R.id.text_name);
-        noticeView = (ImageView) layoutView.findViewById(R.id.image_notice);
-        settingView.setOnClickListener(this);
-        userView.setOnClickListener(this);
-        dayView.setOnClickListener(this);
-        nightView.setOnClickListener(this);
 
         listView = (ExpandableListView) layoutView.findViewById(R.id.list_channel);
         listView.setGroupIndicator(null);
@@ -207,11 +199,6 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
         } else {
             noticeView.setVisibility(View.GONE);
         }
-    }
-
-    @Override
-    public void onCreateViewAgain(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        //do nothing
     }
 
     @Override
@@ -364,7 +351,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
         getActivity().recreate();
     }
 
-    @Override
+    @OnClick({R.id.layout_user, R.id.view_setting, R.id.view_switch_to_day, R.id.view_switch_to_night})
     public void onClick(View v) {
         if (CommonUtil.shouldThrottle()) {
             return;
@@ -475,5 +462,11 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
             avatarView.setImageResource(R.drawable.default_avatar);
         }
         userName.setText(info.getNickname());
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 }

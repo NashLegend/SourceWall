@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ import android.view.ViewTreeObserver;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -55,6 +57,8 @@ import net.nashlegend.sourcewall.view.common.shuffle.ShuffleDeskSimple;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -68,132 +72,127 @@ import rx.functions.Action0;
  * 因此要改为按页加载，还要提供加载上一页的功能，按时间倒序排列的都有这问题……
  * 我擦……
  */
-public class PostsFragment extends ChannelsFragment implements LListView.OnRefreshListener, LoadingView.ReloadListener {
-    private LListView listView;
+public class PostsFragment extends ChannelsFragment implements LListView.OnRefreshListener, LoadingView.ReloadListener, AdapterView.OnItemClickListener {
+    View layoutView;
+    @Bind(R.id.list_posts)
+    LListView listView;
+    @Bind(R.id.posts_loading)
+    ProgressBar progressBar;
+    @Bind(R.id.post_progress_loading)
+    LoadingView loadingView;
+    @Bind(R.id.plastic_scroller)
+    ScrollView scrollView;
+    @Bind(R.id.layout_more_sections)
+    FrameLayout moreSectionsLayout;
+
     private PostAdapter adapter;
     private SubItem subItem;
-    private LoadingView loadingView;
     private int currentPage = -1;//page从0开始，-1表示还没有数据
     private View headerView;
-    private ViewGroup moreSectionsLayout;
     private ShuffleDeskSimple deskSimple;
     private Button manageButton;
     private long currentDBVersion = -1;
-    private final int cacheDuration = 300;
-    private ProgressBar progressBar;
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
         getActivity().invalidateOptionsMenu();
     }
 
     @Override
-    public View onCreateLayoutView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_posts, container, false);
-        subItem = getArguments().getParcelable(Consts.Extra_SubItem);
-        headerView = inflater.inflate(R.layout.layout_header_load_pre_page, null, false);
-        loadingView = (LoadingView) view.findViewById(R.id.post_progress_loading);
-        loadingView.setReloadListener(this);
-        listView = (LListView) view.findViewById(R.id.list_posts);
-        adapter = new PostAdapter(getActivity());
-        listView.setCanPullToRefresh(false);
-        listView.setCanPullToLoadMore(false);
-        listView.setAdapter(adapter);
-        listView.setOnRefreshListener(this);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if (CommonUtil.shouldThrottle()) {
-                    return;
-                }
-                if (view instanceof PostListItemView) {
-                    Intent intent = new Intent();
-                    intent.setClass(getActivity(), PostActivity.class);
-                    intent.putExtra(Consts.Extra_Post, ((PostListItemView) view).getData());
-                    startActivity(intent);
-                    getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
-                }
-            }
-        });
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if (layoutView == null) {
+            layoutView = inflater.inflate(R.layout.fragment_posts, container, false);
+            ButterKnife.bind(this, layoutView);
+            subItem = getArguments().getParcelable(Consts.Extra_SubItem);
+            headerView = inflater.inflate(R.layout.layout_header_load_pre_page, null, false);
+            loadingView.setReloadListener(this);
+            adapter = new PostAdapter(getActivity());
+            listView.setAdapter(adapter);
+            listView.setOnRefreshListener(this);
+            listView.setOnItemClickListener(this);
 
-        listView.addHeaderView(headerView);
-        headerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                if (headerView.getLayoutParams() != null) {
-                    headerView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                    hideHeader();
-                }
-            }
-        });
-        headerView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadPrePage();
-            }
-        });
-        //防止滑动headerView的时候下拉上拉
-        headerView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        listView.requestDisallowInterceptTouchEvent(true);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                    case MotionEvent.ACTION_CANCEL:
-                        listView.requestDisallowInterceptTouchEvent(false);
-                        break;
-                }
-                return false;
-            }
-        });
-
-        ScrollView scrollView = (ScrollView) view.findViewById(R.id.plastic_scroller);
-        moreSectionsLayout = (ViewGroup) view.findViewById(R.id.layout_more_sections);
-        deskSimple = new ShuffleDeskSimple(getActivity(), scrollView);
-        scrollView.addView(deskSimple);
-        deskSimple.setOnButtonClickListener(new ShuffleDeskSimple.OnButtonClickListener() {
-            @Override
-            public void onClick(MovableButton btn) {
-                if (btn instanceof GroupMovableButton) {
-                    onSectionButtonClicked((GroupMovableButton) btn);
-                }
-            }
-        });
-        ((TextView) deskSimple.findViewById(R.id.tip_of_more_sections)).setText(R.string.tip_of_more_groups);
-        manageButton = (Button) deskSimple.findViewById(R.id.button_manage_my_sections);
-        manageButton.setText(R.string.manage_all_groups);
-        manageButton.setVisibility(View.INVISIBLE);
-        manageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hideMoreSections();
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent intent = new Intent(getActivity(), ShuffleGroupActivity.class);
-                        startActivityForResult(intent, Consts.Code_Start_Shuffle_Groups);
-                        getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
+            listView.addHeaderView(headerView);
+            headerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    if (headerView.getLayoutParams() != null) {
+                        headerView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                        hideHeader();
                     }
-                }, 320);
-            }
-        });
-        moreSectionsLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                if (moreSectionsLayout.getHeight() > 0) {
-                    moreSectionsLayout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                    moreSectionsLayout.setTranslationY(-moreSectionsLayout.getHeight());
-                    moreSectionsLayout.setVisibility(View.VISIBLE);
                 }
+            });
+            headerView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    loadPrePage();
+                }
+            });
+            //防止滑动headerView的时候下拉上拉
+            headerView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            listView.requestDisallowInterceptTouchEvent(true);
+                            break;
+                        case MotionEvent.ACTION_UP:
+                        case MotionEvent.ACTION_CANCEL:
+                            listView.requestDisallowInterceptTouchEvent(false);
+                            break;
+                    }
+                    return false;
+                }
+            });
+
+            deskSimple = new ShuffleDeskSimple(getActivity(), scrollView);
+            scrollView.addView(deskSimple);
+            deskSimple.setOnButtonClickListener(new ShuffleDeskSimple.OnButtonClickListener() {
+                @Override
+                public void onClick(MovableButton btn) {
+                    if (btn instanceof GroupMovableButton) {
+                        onSectionButtonClicked((GroupMovableButton) btn);
+                    }
+                }
+            });
+            ((TextView) deskSimple.findViewById(R.id.tip_of_more_sections)).setText(R.string.tip_of_more_groups);
+            manageButton = (Button) deskSimple.findViewById(R.id.button_manage_my_sections);
+            manageButton.setText(R.string.manage_all_groups);
+            manageButton.setVisibility(View.INVISIBLE);
+            manageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    hideMoreSections();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent intent = new Intent(getActivity(), ShuffleGroupActivity.class);
+                            startActivityForResult(intent, Consts.Code_Start_Shuffle_Groups);
+                            getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
+                        }
+                    }, 320);
+                }
+            });
+            moreSectionsLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    if (moreSectionsLayout.getHeight() > 0) {
+                        moreSectionsLayout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                        moreSectionsLayout.setTranslationY(-moreSectionsLayout.getHeight());
+                        moreSectionsLayout.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+            setTitle();
+            loadOver();
+        } else {
+            if (layoutView.getParent() != null) {
+                ((ViewGroup) layoutView.getParent()).removeView(layoutView);
             }
-        });
-        progressBar = (ProgressBar) view.findViewById(R.id.posts_loading);
-        setTitle();
-        loadOver();
-        return view;
+            SubItem mSubItem = getArguments().getParcelable(Consts.Extra_SubItem);
+            resetData(mSubItem);
+        }
+        return layoutView;
     }
 
     boolean User_Has_Learned_Load_My_Groups = false;
@@ -240,12 +239,6 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
             unselectedButtons.add(button);
         }
         deskSimple.setButtons(unselectedButtons);
-    }
-
-    @Override
-    public void onCreateViewAgain(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        SubItem mSubItem = getArguments().getParcelable(Consts.Extra_SubItem);
-        resetData(mSubItem);
     }
 
     @Override
@@ -677,5 +670,25 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                         }
                     }
                 });
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if (CommonUtil.shouldThrottle()) {
+            return;
+        }
+        if (view instanceof PostListItemView) {
+            Intent intent = new Intent();
+            intent.setClass(getActivity(), PostActivity.class);
+            intent.putExtra(Consts.Extra_Post, ((PostListItemView) view).getData());
+            startActivity(intent);
+            getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 }

@@ -31,22 +31,27 @@ import net.nashlegend.sourcewall.view.common.LoadingView;
 
 import java.util.ArrayList;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Created by NashLegend on 2015/2/12 0012
  */
 public class NoticesFragment extends ChannelsFragment implements LListView.OnRefreshListener, LoadingView.ReloadListener {
 
+    @Bind(R.id.notice_list)
+    LListView listView;
+    @Bind(R.id.notice_loading_view)
+    LoadingView loadingView;
+
     private NoticeAdapter adapter;
-    private LListView listView;
-    private LoadingView loadingView;
     private ProgressDialog progressDialog;
 
     @Override
-    public View onCreateLayoutView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notice_list, container, false);
-        loadingView = (LoadingView) view.findViewById(R.id.notice_loading_view);
+        ButterKnife.bind(this, view);
         loadingView.setReloadListener(this);
-        listView = (LListView) view.findViewById(R.id.notice_list);
         adapter = new NoticeAdapter(getActivity());
         listView.setCanPullToRefresh(false);
         listView.setCanPullToLoadMore(false);
@@ -69,11 +74,6 @@ public class NoticesFragment extends ChannelsFragment implements LListView.OnRef
             }
         });
         return view;
-    }
-
-    @Override
-    public void onCreateViewAgain(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // do nothing
     }
 
     @Override
@@ -215,5 +215,11 @@ public class NoticesFragment extends ChannelsFragment implements LListView.OnRef
     @Override
     public void scrollToHead() {
         listView.setSelection(0);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 }

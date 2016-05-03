@@ -3,13 +3,13 @@ package net.nashlegend.sourcewall.fragment;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v4.view.MenuItemCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,6 +22,7 @@ import android.view.ViewTreeObserver;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -59,6 +60,8 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -67,138 +70,136 @@ import rx.functions.Action0;
 /**
  * Created by NashLegend on 2014/9/18 0018
  */
-public class QuestionsFragment extends ChannelsFragment implements LListView.OnRefreshListener, LoadingView.ReloadListener {
+public class QuestionsFragment extends ChannelsFragment implements LListView.OnRefreshListener, LoadingView.ReloadListener, AdapterView.OnItemClickListener {
     private final String HOTTEST = "hottest";
     private final String HIGHLIGHT = "highlight";
-    private LListView listView;
+
+    View layoutView;
+    @Bind(R.id.list_questions)
+    LListView listView;
+    @Bind(R.id.questions_loading)
+    ProgressBar progressBar;
+    @Bind(R.id.question_progress_loading)
+    LoadingView loadingView;
+    @Bind(R.id.plastic_scroller)
+    ScrollView scrollView;
+    @Bind(R.id.layout_more_sections)
+    FrameLayout morSectionsLayout;
+
     private QuestionAdapter adapter;
     private SubItem subItem;
-    private LoadingView loadingView;
     private int currentPage = -1;//page从0开始，-1表示还没有数据
     private View headerView;
-    private ViewGroup morSectionsLayout;
     private ShuffleDeskSimple deskSimple;
     private Button manageButton;
     private long currentDBVersion = -1;
     private final int Code_Publish_Question = 1055;
     private final int cacheDuration = 300;
-    private ProgressBar progressBar;
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
         getActivity().invalidateOptionsMenu();
     }
 
     @Override
-    public View onCreateLayoutView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_questions, container, false);
-        loadingView = (LoadingView) view.findViewById(R.id.question_progress_loading);
-        loadingView.setReloadListener(this);
-        subItem = getArguments().getParcelable(Consts.Extra_SubItem);
-        headerView = inflater.inflate(R.layout.layout_header_load_pre_page, null, false);
-        listView = (LListView) view.findViewById(R.id.list_questions);
-        adapter = new QuestionAdapter(getActivity());
-        listView.setCanPullToRefresh(false);
-        listView.setCanPullToLoadMore(false);
-        listView.setAdapter(adapter);
-        listView.setOnRefreshListener(this);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if (CommonUtil.shouldThrottle()) {
-                    return;
-                }
-                if (view instanceof QuestionListItemView) {
-                    Intent intent = new Intent();
-                    intent.setClass(getActivity(), QuestionActivity.class);
-                    intent.putExtra(Consts.Extra_Question, ((QuestionListItemView) view).getData());
-                    startActivity(intent);
-                    getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
-                }
-            }
-        });
-
-        listView.addHeaderView(headerView);
-        headerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                if (headerView.getLayoutParams() != null) {
-                    headerView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                    hideHeader();
-                }
-            }
-        });
-        headerView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadPrePage();
-            }
-        });
-        //防止滑动headerView的时候下拉上拉
-        headerView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        listView.requestDisallowInterceptTouchEvent(true);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                    case MotionEvent.ACTION_CANCEL:
-                        listView.requestDisallowInterceptTouchEvent(false);
-                        break;
-                }
-                return false;
-            }
-        });
-
-        ScrollView scrollView = (ScrollView) view.findViewById(R.id.plastic_scroller);
-        morSectionsLayout = (ViewGroup) view.findViewById(R.id.layout_more_sections);
-        deskSimple = new ShuffleDeskSimple(getActivity(), scrollView);
-        scrollView.addView(deskSimple);
-        deskSimple.setOnButtonClickListener(new ShuffleDeskSimple.OnButtonClickListener() {
-            @Override
-            public void onClick(MovableButton btn) {
-                if (btn instanceof AskTagMovableButton) {
-                    onSectionButtonClicked((AskTagMovableButton) btn);
-                }
-            }
-        });
-        ((TextView) deskSimple.findViewById(R.id.tip_of_more_sections)).setText(R.string.tip_of_more_tags);
-        manageButton = (Button) deskSimple.findViewById(R.id.button_manage_my_sections);
-        manageButton.setText(R.string.magage_all_tags);
-        manageButton.setVisibility(View.INVISIBLE);
-        manageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hideMoreSections();
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        MobclickAgent.onEvent(getActivity(), Mob.Event_Load_My_Tags);
-                        Intent intent = new Intent(getActivity(), ShuffleTagActivity.class);
-                        startActivityForResult(intent, Consts.Code_Start_Shuffle_Ask_Tags);
-                        getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        if (layoutView == null) {
+            layoutView = inflater.inflate(R.layout.fragment_questions, container, false);
+            ButterKnife.bind(this, layoutView);
+            loadingView.setReloadListener(this);
+            subItem = getArguments().getParcelable(Consts.Extra_SubItem);
+            headerView = inflater.inflate(R.layout.layout_header_load_pre_page, null, false);
+            adapter = new QuestionAdapter(getActivity());
+            listView.setAdapter(adapter);
+            listView.setOnRefreshListener(this);
+            listView.setOnItemClickListener(this);
+            listView.addHeaderView(headerView);
+            headerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    if (headerView.getLayoutParams() != null) {
+                        headerView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                        hideHeader();
                     }
-                }, 320);
-            }
-        });
-        morSectionsLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                if (morSectionsLayout.getHeight() > 0) {
-                    morSectionsLayout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                    morSectionsLayout.setTranslationY(-morSectionsLayout.getHeight());
-                    morSectionsLayout.setVisibility(View.VISIBLE);
                 }
+            });
+            headerView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    loadPrePage();
+                }
+            });
+            //防止滑动headerView的时候下拉上拉
+            headerView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            listView.requestDisallowInterceptTouchEvent(true);
+                            break;
+                        case MotionEvent.ACTION_UP:
+                        case MotionEvent.ACTION_CANCEL:
+                            listView.requestDisallowInterceptTouchEvent(false);
+                            break;
+                    }
+                    return false;
+                }
+            });
+
+            deskSimple = new ShuffleDeskSimple(getActivity(), scrollView);
+            scrollView.addView(deskSimple);
+            deskSimple.setOnButtonClickListener(new ShuffleDeskSimple.OnButtonClickListener() {
+                @Override
+                public void onClick(MovableButton btn) {
+                    if (btn instanceof AskTagMovableButton) {
+                        onSectionButtonClicked((AskTagMovableButton) btn);
+                    }
+                }
+            });
+            ((TextView) deskSimple.findViewById(R.id.tip_of_more_sections)).setText(R.string.tip_of_more_tags);
+            manageButton = (Button) deskSimple.findViewById(R.id.button_manage_my_sections);
+            manageButton.setText(R.string.magage_all_tags);
+            manageButton.setVisibility(View.INVISIBLE);
+            manageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    hideMoreSections();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            MobclickAgent.onEvent(getActivity(), Mob.Event_Load_My_Tags);
+                            Intent intent = new Intent(getActivity(), ShuffleTagActivity.class);
+                            startActivityForResult(intent, Consts.Code_Start_Shuffle_Ask_Tags);
+                            getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
+                        }
+                    }, 320);
+                }
+            });
+            morSectionsLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    if (morSectionsLayout.getHeight() > 0) {
+                        morSectionsLayout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                        morSectionsLayout.setTranslationY(-morSectionsLayout.getHeight());
+                        morSectionsLayout.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+            setTitle();
+            loadOver();
+        } else {
+            if (layoutView.getParent() != null) {
+                ((ViewGroup) layoutView.getParent()).removeView(layoutView);
             }
-        });
+            onCreateViewAgain();
+        }
+        return layoutView;
+    }
 
-        progressBar = (ProgressBar) view.findViewById(R.id.questions_loading);
-
-        setTitle();
-        loadOver();
-        return view;
+    public void onCreateViewAgain() {
+        SubItem mSubItem = getArguments().getParcelable(Consts.Extra_SubItem);
+        resetData(mSubItem);
     }
 
     boolean User_Has_Learned_Load_My_Tags = false;
@@ -400,12 +401,6 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
             sections.add(AskTag);
         }
         AskTagHelper.putUnselectedTags(sections);
-    }
-
-    @Override
-    public void onCreateViewAgain(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        SubItem mSubItem = getArguments().getParcelable(Consts.Extra_SubItem);
-        resetData(mSubItem);
     }
 
     @Override
@@ -665,5 +660,25 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
                         }
                     }
                 });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if (CommonUtil.shouldThrottle()) {
+            return;
+        }
+        if (view instanceof QuestionListItemView) {
+            Intent intent = new Intent();
+            intent.setClass(getActivity(), QuestionActivity.class);
+            intent.putExtra(Consts.Extra_Question, ((QuestionListItemView) view).getData());
+            startActivity(intent);
+            getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
+        }
     }
 }
