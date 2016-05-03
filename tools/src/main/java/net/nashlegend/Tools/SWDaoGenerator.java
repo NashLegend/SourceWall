@@ -12,6 +12,7 @@ public class SWDaoGenerator {
         Schema schema = new Schema(1, "net.nashlegend.sourcewall.db.gen");
         addPostSubItem(schema);
         addQuestionSubItem(schema);
+        addFavorSubItem(schema);
         new DaoGenerator().generateAll(schema, "app/src/main/java");
     }
 
@@ -33,6 +34,19 @@ public class SWDaoGenerator {
         post.addIntProperty("type").notNull();
         post.addStringProperty("name").notNull();
         post.addStringProperty("value");
+        post.addBooleanProperty("selected").notNull();
+        post.addIntProperty("order").notNull();
+    }
+
+    private static void addFavorSubItem(Schema schema) {
+        Entity post = schema.addEntity("MyBasket");
+        post.addIdProperty().autoincrement();
+        post.addIntProperty("section").notNull();
+        post.addIntProperty("type").notNull();
+        post.addStringProperty("name").notNull();
+        post.addStringProperty("value");
+        post.addStringProperty("categoryId");
+        post.addStringProperty("categoryName");
         post.addBooleanProperty("selected").notNull();
         post.addIntProperty("order").notNull();
     }
