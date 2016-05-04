@@ -39,6 +39,7 @@ import net.nashlegend.sourcewall.activities.ShuffleGroupActivity;
 import net.nashlegend.sourcewall.adapters.PostAdapter;
 import net.nashlegend.sourcewall.db.GroupHelper;
 import net.nashlegend.sourcewall.db.gen.MyGroup;
+import net.nashlegend.sourcewall.events.OpenContentFragmentEvent;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.ResponseObject;
@@ -57,8 +58,10 @@ import net.nashlegend.sourcewall.view.common.shuffle.ShuffleDeskSimple;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
+import de.greenrobot.event.EventBus;
 import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -74,15 +77,15 @@ import rx.functions.Action0;
  */
 public class PostsFragment extends ChannelsFragment implements LListView.OnRefreshListener, LoadingView.ReloadListener, AdapterView.OnItemClickListener {
     View layoutView;
-    @Bind(R.id.list_posts)
+    @BindView(R.id.list_posts)
     LListView listView;
-    @Bind(R.id.posts_loading)
+    @BindView(R.id.posts_loading)
     ProgressBar progressBar;
-    @Bind(R.id.post_progress_loading)
+    @BindView(R.id.post_progress_loading)
     LoadingView loadingView;
-    @Bind(R.id.plastic_scroller)
+    @BindView(R.id.plastic_scroller)
     ScrollView scrollView;
-    @Bind(R.id.layout_more_sections)
+    @BindView(R.id.layout_more_sections)
     FrameLayout moreSectionsLayout;
 
     private PostAdapter adapter;
@@ -92,6 +95,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     private ShuffleDeskSimple deskSimple;
     private Button manageButton;
     private long currentDBVersion = -1;
+    private Unbinder unbinder;
 
     @Override
     public void onAttach(Context context) {
@@ -103,7 +107,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (layoutView == null) {
             layoutView = inflater.inflate(R.layout.fragment_posts, container, false);
-            ButterKnife.bind(this, layoutView);
+            unbinder = ButterKnife.bind(this, layoutView);
             subItem = getArguments().getParcelable(Consts.Extra_SubItem);
             headerView = inflater.inflate(R.layout.layout_header_load_pre_page, null, false);
             loadingView.setReloadListener(this);
@@ -217,10 +221,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     private void onSectionButtonClicked(GroupMovableButton button) {
         MyGroup myGroup = button.getSection();
         SubItem subItem = new SubItem(myGroup.getSection(), myGroup.getType(), myGroup.getName(), myGroup.getValue());
-        Intent intent = new Intent();
-        intent.setAction(Consts.Action_Open_Content_Fragment);
-        intent.putExtra(Consts.Extra_SubItem, subItem);
-        getActivity().sendBroadcast(intent);
+        EventBus.getDefault().post(new OpenContentFragmentEvent(subItem));
         hideMoreSections();
     }
 
@@ -689,6 +690,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
+        layoutView = null;
     }
 }

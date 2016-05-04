@@ -2,12 +2,14 @@ package net.nashlegend.sourcewall.request.api;
 
 import net.nashlegend.sourcewall.model.Basket;
 import net.nashlegend.sourcewall.model.Category;
+import net.nashlegend.sourcewall.model.Favor;
 import net.nashlegend.sourcewall.request.JsonHandler;
 import net.nashlegend.sourcewall.request.RequestBuilder;
 import net.nashlegend.sourcewall.request.RequestObject;
 import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.parsers.BooleanParser;
+import net.nashlegend.sourcewall.request.parsers.FavorListParser;
 import net.nashlegend.sourcewall.request.parsers.Parser;
 
 import org.json.JSONArray;
@@ -16,10 +18,38 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import rx.Observable;
+
 /**
  * Created by NashLegend on 16/3/15.
  */
 public class FavorAPI extends APIBase {
+
+    /**
+     * 返回文章列表
+     *
+     * @param basketId
+     * @param offset
+     * @param useCache 是否使用cache
+     * @return
+     */
+    public static Observable<ResponseObject<ArrayList<Favor>>> getFavorList(String basketId, int offset, boolean useCache) {
+        String url = "http://apis.guokr.com/favorite/link.json";
+        HashMap<String, String> pairs = new HashMap<>();
+        pairs.put("retrieve_type", "by_basket");
+        pairs.put("basket_id", "18786");
+        pairs.put("limit", "20");
+        pairs.put("offset", String.valueOf(offset));
+        return new RequestBuilder<ArrayList<Favor>>()
+                .setUrl(url)
+                .get()
+                .setWithToken(false)
+                .setParams(pairs)
+                .useCacheFirst(useCache)
+                .cacheTimeOut(300000)
+                .setParser(new FavorListParser())
+                .requestObservable();
+    }
 
     /**
      * 收藏一个链接，理论是任意链接都行，吧……

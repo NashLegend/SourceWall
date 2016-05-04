@@ -35,6 +35,8 @@ import net.nashlegend.sourcewall.activities.MessageCenterActivity;
 import net.nashlegend.sourcewall.activities.SettingActivity;
 import net.nashlegend.sourcewall.adapters.ChannelsAdapter;
 import net.nashlegend.sourcewall.events.LoginStateChangedEvent;
+import net.nashlegend.sourcewall.events.OpenContentFragmentEvent;
+import net.nashlegend.sourcewall.events.PrepareOpenContentFragmentEvent;
 import net.nashlegend.sourcewall.model.ReminderNoticeNum;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.model.UserInfo;
@@ -50,29 +52,30 @@ import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 import net.nashlegend.sourcewall.view.SubItemView;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import de.greenrobot.event.EventBus;
 
 public class NavigationDrawerFragment extends BaseFragment implements View.OnClickListener {
 
     private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
-    @Bind(R.id.image_avatar)
+    @BindView(R.id.image_avatar)
     ImageView avatarView;
-    @Bind(R.id.text_name)
+    @BindView(R.id.text_name)
     TextView userName;
-    @Bind(R.id.image_notice)
+    @BindView(R.id.image_notice)
     ImageView noticeView;
-    @Bind(R.id.layout_user)
+    @BindView(R.id.layout_user)
     LinearLayout userView;
-    @Bind(R.id.list_channel)
+    @BindView(R.id.list_channel)
     ExpandableListView listView;
-    @Bind(R.id.view_switch_to_day)
+    @BindView(R.id.view_switch_to_day)
     LinearLayout dayView;
-    @Bind(R.id.view_switch_to_night)
+    @BindView(R.id.view_switch_to_night)
     LinearLayout nightView;
-    @Bind(R.id.view_setting)
+    @BindView(R.id.view_setting)
     LinearLayout settingView;
 
     private ActionBarDrawerToggle mDrawerToggle;
@@ -86,7 +89,8 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
     private ChannelsAdapter adapter;
     private boolean currentLoginState = false;
     private String currentUkey = "";
-    private Intent lazyIntent;
+    private SubItem lazyItem;
+    private Unbinder unbinder;
 
     public NavigationDrawerFragment() {
 
@@ -118,7 +122,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         EventBus.getDefault().register(this);
         View layoutView = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
-        ButterKnife.bind(this, layoutView);
+        unbinder = ButterKnife.bind(this, layoutView);
         if (SharedPreferencesUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
             dayView.setVisibility(View.VISIBLE);
             nightView.setVisibility(View.GONE);
@@ -147,14 +151,9 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
 
                     SubItem subItem = ((SubItemView) v).getSubItem();
                     currentSubItem = subItem;
-                    lazyIntent = new Intent();
-                    lazyIntent.setAction(Consts.Action_Open_Content_Fragment);
-                    lazyIntent.putExtra(Consts.Extra_SubItem, subItem);
+                    lazyItem = subItem;
 
-                    Intent prepareIntent = new Intent();
-                    prepareIntent.setAction(Consts.Action_Prepare_Open_Content_Fragment);
-                    prepareIntent.putExtra(Consts.Extra_SubItem, subItem);
-                    getActivity().sendBroadcast(prepareIntent);
+                    EventBus.getDefault().post(new PrepareOpenContentFragmentEvent(subItem));
                 }
                 return false;
             }
@@ -216,8 +215,8 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
         }
     }
 
-    public void setUp(int fragmentId, DrawerLayout drawerLayout, Toolbar toolbar) {
-        mFragmentContainerView = getActivity().findViewById(fragmentId);
+    public void setUp(View container, DrawerLayout drawerLayout, Toolbar toolbar) {
+        mFragmentContainerView = container;
         mDrawerLayout = drawerLayout;
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
@@ -232,9 +231,9 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
                 if (!isAdded()) {
                     return;
                 }
-                if (lazyIntent != null) {
-                    getActivity().sendBroadcast(lazyIntent);
-                    lazyIntent = null;
+                if (lazyItem != null) {
+                    EventBus.getDefault().post(new OpenContentFragmentEvent(lazyItem));
+                    lazyItem = null;
                 } else {
                     getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
                 }
@@ -269,10 +268,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         if (currentSubItem != null) {
-            lazyIntent = new Intent();
-            lazyIntent.setAction(Consts.Action_Open_Content_Fragment);
-            lazyIntent.putExtra(Consts.Extra_SubItem, currentSubItem);
-            getActivity().sendBroadcast(lazyIntent);
+            EventBus.getDefault().post(new OpenContentFragmentEvent(currentSubItem));
         }
 
     }
@@ -467,6 +463,6 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 }

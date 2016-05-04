@@ -31,26 +31,28 @@ import net.nashlegend.sourcewall.view.common.LoadingView;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * Created by NashLegend on 2015/2/12 0012
  */
-public class NoticesFragment extends ChannelsFragment implements LListView.OnRefreshListener, LoadingView.ReloadListener {
+public class NoticesFragment extends BaseFragment implements IChannelsFragment, LListView.OnRefreshListener, LoadingView.ReloadListener {
 
-    @Bind(R.id.notice_list)
+    @BindView(R.id.notice_list)
     LListView listView;
-    @Bind(R.id.notice_loading_view)
+    @BindView(R.id.notice_loading_view)
     LoadingView loadingView;
 
     private NoticeAdapter adapter;
     private ProgressDialog progressDialog;
+    private Unbinder unbinder;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notice_list, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
         loadingView.setReloadListener(this);
         adapter = new NoticeAdapter(getActivity());
         listView.setCanPullToRefresh(false);
@@ -220,6 +222,6 @@ public class NoticesFragment extends ChannelsFragment implements LListView.OnRef
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 }

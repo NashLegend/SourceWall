@@ -16,7 +16,7 @@ public class SubItem extends AceModel {
     public static final int Section_Article = 0;
     public static final int Section_Post = 1;
     public static final int Section_Question = 2;
-    public static final int Section_Basket = 3;
+    public static final int Section_Favor = 3;
 
     private int section;
     private int type;

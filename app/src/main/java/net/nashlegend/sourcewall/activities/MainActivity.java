@@ -1,9 +1,5 @@
 package net.nashlegend.sourcewall.activities;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.MenuItemCompat;
@@ -20,8 +16,11 @@ import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.BuildConfig;
 import net.nashlegend.sourcewall.R;
+import net.nashlegend.sourcewall.events.OpenContentFragmentEvent;
+import net.nashlegend.sourcewall.events.PrepareOpenContentFragmentEvent;
 import net.nashlegend.sourcewall.fragment.ArticlesFragment;
 import net.nashlegend.sourcewall.fragment.ChannelsFragment;
+import net.nashlegend.sourcewall.fragment.FavorsFragment;
 import net.nashlegend.sourcewall.fragment.NavigationDrawerFragment;
 import net.nashlegend.sourcewall.fragment.PostsFragment;
 import net.nashlegend.sourcewall.fragment.QuestionsFragment;
@@ -30,35 +29,34 @@ import net.nashlegend.sourcewall.request.cache.RequestCache;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import de.greenrobot.event.EventBus;
+
 public class MainActivity extends BaseActivity {
-
-    /**
-     * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
-     */
+    @BindView(R.id.action_bar)
+    Toolbar toolbar;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout drawerLayout;
+    @BindView(R.id.navigation_drawer)
+    View container;
     private NavigationDrawerFragment mNavigationDrawerFragment;
-
-    /**
-     * Used to store the last screen title. For use in {@link #restoreActionBar()}.
-     */
-    private Receiver receiver;
     private ArticlesFragment articlesFragment;
     private PostsFragment postsFragment;
     private QuestionsFragment questionsFragment;
+    private FavorsFragment favorsFragment;
     public ChannelsFragment currentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+        EventBus.getDefault().register(this);
         MobclickAgent.setDebugMode(BuildConfig.DEBUG);
         AnalyticsConfig.enableEncrypt(true);
-        receiver = new Receiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Consts.Action_Open_Content_Fragment);
-        filter.addAction(Consts.Action_Prepare_Open_Content_Fragment);
-        registerReceiver(receiver, filter);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
+
         toolbar.setOnClickListener(new View.OnClickListener() {
             boolean preparingToScrollToHead = false;
 
@@ -82,7 +80,7 @@ public class MainActivity extends BaseActivity {
             }
         });
         mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-        mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
+        mNavigationDrawerFragment.setUp(container, drawerLayout, toolbar);
     }
 
     @Override
@@ -94,7 +92,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         RequestCache.getInstance().closeCache();
-        unregisterReceiver(receiver);
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 
@@ -186,7 +184,6 @@ public class MainActivity extends BaseActivity {
                 || super.onOptionsItemSelected(item);
     }
 
-
     public void replaceFragment(ChannelsFragment fragment, SubItem subItem) {
         if (currentFragment == fragment) {
             fragment.resetData(subItem);
@@ -206,38 +203,45 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    class Receiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            SubItem subItem = intent.getParcelableExtra(Consts.Extra_SubItem);
-            if (subItem == null) {
-                subItem = new SubItem(SubItem.Section_Article, SubItem.Type_Collections, "科学人", "");
-            }
-            if (Consts.Action_Open_Content_Fragment.equals(intent.getAction())) {
-                switch (subItem.getSection()) {
-                    case SubItem.Section_Article:
-                        if (articlesFragment == null) {
-                            articlesFragment = new ArticlesFragment();
-                        }
-                        replaceFragment(articlesFragment, subItem);
-                        break;
-                    case SubItem.Section_Post:
-                        if (postsFragment == null) {
-                            postsFragment = new PostsFragment();
-                        }
-                        replaceFragment(postsFragment, subItem);
-                        break;
-                    case SubItem.Section_Question:
-                        if (questionsFragment == null) {
-                            questionsFragment = new QuestionsFragment();
-                        }
-                        replaceFragment(questionsFragment, subItem);
-                        break;
+    public void onEventMainThread(OpenContentFragmentEvent event) {
+        SubItem subItem = event.subItem;
+        if (subItem == null) {
+            subItem = new SubItem(SubItem.Section_Article, SubItem.Type_Collections, "科学人", "");
+        }
+        switch (subItem.getSection()) {
+            case SubItem.Section_Article:
+                if (articlesFragment == null) {
+                    articlesFragment = new ArticlesFragment();
                 }
-            } else if (Consts.Action_Prepare_Open_Content_Fragment.equals(intent.getAction())) {
-                prepareFragment(subItem);
-            }
+                replaceFragment(articlesFragment, subItem);
+                break;
+            case SubItem.Section_Post:
+                if (postsFragment == null) {
+                    postsFragment = new PostsFragment();
+                }
+                replaceFragment(postsFragment, subItem);
+                break;
+            case SubItem.Section_Question:
+                if (questionsFragment == null) {
+                    questionsFragment = new QuestionsFragment();
+                }
+                replaceFragment(questionsFragment, subItem);
+                break;
+            case SubItem.Section_Favor:
+                if (favorsFragment == null) {
+                    favorsFragment = new FavorsFragment();
+                }
+                replaceFragment(favorsFragment, subItem);
+                break;
         }
     }
+
+    public void onEventMainThread(PrepareOpenContentFragmentEvent event) {
+        SubItem subItem = event.subItem;
+        if (subItem == null) {
+            subItem = new SubItem(SubItem.Section_Article, SubItem.Type_Collections, "科学人", "");
+        }
+        prepareFragment(subItem);
+    }
+
 }

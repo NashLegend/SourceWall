@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.model.AceModel;
-import net.nashlegend.sourcewall.view.FavorView;
+import net.nashlegend.sourcewall.view.BasketsView;
 
 /**
  * Created by NashLegend on 2014/12/2 0002
@@ -29,7 +29,7 @@ public class FavorDialog extends Dialog {
     public static class Builder {
         private Context mContext;
         private FavorDialog dialog;
-        private FavorView favorView;
+        private BasketsView basketsView;
         private View okButton;
         private String title;
         private boolean cancelable = true;
@@ -51,13 +51,13 @@ public class FavorDialog extends Dialog {
 
         public FavorDialog create(AceModel data) {
             dialog = new FavorDialog(mContext);
-            favorView = new FavorView(mContext);
-            okButton = favorView.findViewById(R.id.button_favor_dialog_ok);
-            favorView.setData(data);
+            basketsView = new BasketsView(mContext);
+            okButton = basketsView.findViewById(R.id.button_favor_dialog_ok);
+            basketsView.setData(data);
             dialog.setTitle(title);
             dialog.setCancelable(cancelable);
             dialog.setCanceledOnTouchOutside(canceledOnTouchOutside);
-            dialog.setContentView(favorView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            dialog.setContentView(basketsView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             okButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

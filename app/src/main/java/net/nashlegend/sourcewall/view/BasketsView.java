@@ -15,7 +15,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import net.nashlegend.sourcewall.R;
-import net.nashlegend.sourcewall.adapters.FavorAdapter;
+import net.nashlegend.sourcewall.adapters.BasketAdapter;
 import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.Basket;
@@ -34,11 +34,11 @@ import java.util.ArrayList;
 /**
  * Created by NashLegend on 2014/12/2 0002
  */
-public class FavorView extends FrameLayout implements View.OnClickListener, IStackedAsyncTaskInterface {
+public class BasketsView extends FrameLayout implements View.OnClickListener, IStackedAsyncTaskInterface {
 
     ListView listView;
     ProgressBar progressBaskets;
-    FavorAdapter adapter;
+    BasketAdapter adapter;
     Button btn_invoke_create;
     Button btn_ok;
     Button btn_create_basket;
@@ -50,10 +50,10 @@ public class FavorView extends FrameLayout implements View.OnClickListener, ISta
     TextView introText;
     ArrayList<Category> categories;
 
-    public FavorView(Context context) {
+    public BasketsView(Context context) {
         super(context);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.dialog_favor, this);
+        inflater.inflate(R.layout.dialog_baskets, this);
         nameText = (TextView) findViewById(R.id.text_create_basket_name);
         introText = (TextView) findViewById(R.id.text_create_basket_introduction);
         listLayout = (ViewGroup) findViewById(R.id.layout_favor_dialog_list);
@@ -80,7 +80,7 @@ public class FavorView extends FrameLayout implements View.OnClickListener, ISta
             link = "http://www.guokr.com/question/" + ((Question) model).getId() + "/";
             title = ((Question) model).getTitle();
         }
-        adapter = new FavorAdapter(getContext(), link, title);
+        adapter = new BasketAdapter(getContext(), link, title);
         listView.setAdapter(adapter);
         btn_invoke_create.setOnClickListener(this);
         btn_ok.setOnClickListener(this);

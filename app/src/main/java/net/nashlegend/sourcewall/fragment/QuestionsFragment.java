@@ -39,6 +39,7 @@ import net.nashlegend.sourcewall.activities.ShuffleTagActivity;
 import net.nashlegend.sourcewall.adapters.QuestionAdapter;
 import net.nashlegend.sourcewall.db.AskTagHelper;
 import net.nashlegend.sourcewall.db.gen.AskTag;
+import net.nashlegend.sourcewall.events.OpenContentFragmentEvent;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.ResponseObject;
@@ -60,8 +61,10 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
+import de.greenrobot.event.EventBus;
 import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -75,16 +78,16 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
     private final String HIGHLIGHT = "highlight";
 
     View layoutView;
-    @Bind(R.id.list_questions)
+    @BindView(R.id.list_questions)
     LListView listView;
-    @Bind(R.id.questions_loading)
+    @BindView(R.id.questions_loading)
     ProgressBar progressBar;
-    @Bind(R.id.question_progress_loading)
+    @BindView(R.id.question_progress_loading)
     LoadingView loadingView;
-    @Bind(R.id.plastic_scroller)
+    @BindView(R.id.plastic_scroller)
     ScrollView scrollView;
-    @Bind(R.id.layout_more_sections)
-    FrameLayout morSectionsLayout;
+    @BindView(R.id.layout_more_sections)
+    FrameLayout moreSectionsLayout;
 
     private QuestionAdapter adapter;
     private SubItem subItem;
@@ -95,6 +98,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
     private long currentDBVersion = -1;
     private final int Code_Publish_Question = 1055;
     private final int cacheDuration = 300;
+    private Unbinder unbinder;
 
     @Override
     public void onAttach(Context context) {
@@ -106,7 +110,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (layoutView == null) {
             layoutView = inflater.inflate(R.layout.fragment_questions, container, false);
-            ButterKnife.bind(this, layoutView);
+            unbinder = ButterKnife.bind(this, layoutView);
             loadingView.setReloadListener(this);
             subItem = getArguments().getParcelable(Consts.Extra_SubItem);
             headerView = inflater.inflate(R.layout.layout_header_load_pre_page, null, false);
@@ -176,13 +180,13 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
                     }, 320);
                 }
             });
-            morSectionsLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            moreSectionsLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
-                    if (morSectionsLayout.getHeight() > 0) {
-                        morSectionsLayout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                        morSectionsLayout.setTranslationY(-morSectionsLayout.getHeight());
-                        morSectionsLayout.setVisibility(View.VISIBLE);
+                    if (moreSectionsLayout.getHeight() > 0) {
+                        moreSectionsLayout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                        moreSectionsLayout.setTranslationY(-moreSectionsLayout.getHeight());
+                        moreSectionsLayout.setVisibility(View.VISIBLE);
                     }
                 }
             });
@@ -224,10 +228,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
     private void onSectionButtonClicked(AskTagMovableButton button) {
         AskTag askTag = button.getSection();
         SubItem subItem = new SubItem(askTag.getSection(), askTag.getType(), askTag.getName(), askTag.getValue());
-        Intent intent = new Intent();
-        intent.setAction(Consts.Action_Open_Content_Fragment);
-        intent.putExtra(Consts.Extra_SubItem, subItem);
-        getActivity().sendBroadcast(intent);
+        EventBus.getDefault().post(new OpenContentFragmentEvent(subItem));
         hideMoreSections();
     }
 
@@ -241,12 +242,12 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
         }
         setTitle();
         isMoreSectionsButtonShowing = false;
-        morSectionsLayout.setVisibility(View.VISIBLE);
+        moreSectionsLayout.setVisibility(View.VISIBLE);
         if (animatorSet != null && animatorSet.isRunning()) {
             animatorSet.cancel();
         }
         animatorSet = new AnimatorSet();
-        ObjectAnimator layoutAnimator = ObjectAnimator.ofFloat(morSectionsLayout, "translationY", morSectionsLayout.getTranslationY(), -morSectionsLayout.getHeight());
+        ObjectAnimator layoutAnimator = ObjectAnimator.ofFloat(moreSectionsLayout, "translationY", moreSectionsLayout.getTranslationY(), -moreSectionsLayout.getHeight());
         layoutAnimator.setInterpolator(new DecelerateInterpolator());
         ObjectAnimator imageAnimator = ObjectAnimator.ofFloat(moreSectionsImageView, "rotation", moreSectionsImageView.getRotation(), 360);
         imageAnimator.setInterpolator(new DecelerateInterpolator());
@@ -318,7 +319,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
             animatorSet.cancel();
         }
         animatorSet = new AnimatorSet();
-        ObjectAnimator layoutAnimator = ObjectAnimator.ofFloat(morSectionsLayout, "translationY", morSectionsLayout.getTranslationY(), 0);
+        ObjectAnimator layoutAnimator = ObjectAnimator.ofFloat(moreSectionsLayout, "translationY", moreSectionsLayout.getTranslationY(), 0);
         layoutAnimator.setInterpolator(new DecelerateInterpolator());
         ObjectAnimator imageAnimator = ObjectAnimator.ofFloat(moreSectionsImageView, "rotation", moreSectionsImageView.getRotation(), 180);
         imageAnimator.setInterpolator(new DecelerateInterpolator());
@@ -665,7 +666,8 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
+        layoutView = null;
     }
 
     @Override

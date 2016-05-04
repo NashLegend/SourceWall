@@ -21,7 +21,7 @@ import de.greenrobot.event.EventBus;
 /**
  * Created by NashLegend on 2014/12/2 0002
  */
-public class FavorItemView extends AceView<Basket> implements View.OnClickListener {
+public class BasketItemView extends AceView<Basket> implements View.OnClickListener {
     TextView textView;
     ImageButton button;
     ProgressBar progressBar;
@@ -30,10 +30,10 @@ public class FavorItemView extends AceView<Basket> implements View.OnClickListen
     String title = "";
     RequestObject<Boolean> requestObject;
 
-    public FavorItemView(Context context) {
+    public BasketItemView(Context context) {
         super(context);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.layout_favor_item_view, this);
+        inflater.inflate(R.layout.layout_basket_item_view, this);
         textView = (TextView) findViewById(R.id.text_basket_name);
         button = (ImageButton) findViewById(R.id.button_add_2_favor);
         progressBar = (ProgressBar) findViewById(R.id.progress_adding_favor);
@@ -63,11 +63,11 @@ public class FavorItemView extends AceView<Basket> implements View.OnClickListen
                 && this.basket.getId().equals(bas.getId());
     }
 
-    public FavorItemView(Context context, AttributeSet attrs) {
+    public BasketItemView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public FavorItemView(Context context, AttributeSet attrs, int defStyle) {
+    public BasketItemView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 

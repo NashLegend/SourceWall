@@ -108,5 +108,5 @@ dependencies {
     compile project(':router')
     compile project(':mvp')
     apt project(':router-compiler')
-    compile 'com.android.support:support-v4:23.3.0'
+    apt deps.ButterKnifeCompiler
 }

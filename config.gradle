@@ -11,39 +11,40 @@ def releaseTime() {
 ext {
 
     deps = [
-            Junit            : "junit:junit:4.12",
-            SupportV4        : "com.android.support:support-v4:${supportVersion}",
-            SupportAppcompat : "com.android.support:appcompat-v7:${supportVersion}",
-            SupportDesign    : "com.android.support:design:${supportVersion}",
-            CardView         : "com.android.support:cardview-v7:${supportVersion}",
-            EventBus         : "de.greenrobot:eventbus:2.4.0",
-            GreenDAO         : "de.greenrobot:greendao:2.1.0",
-            GreenDAOGenerator: "de.greenrobot:greendao-generator:2.1.0",
-            Umeng            : "com.umeng.analytics:analytics:latest.integration",
-            OKHttp           : "com.squareup.okhttp3:okhttp:3.2.0",
-            ImageLoader      : "com.nostra13.universalimageloader:universal-image-loader:1.9.5",
-            ButterKnife      : "com.jakewharton:butterknife:7.0.1",
-            RxAndroid        : "io.reactivex:rxandroid:1.1.0",
-            RxJava           : "io.reactivex:rxjava:1.1.3",
-            RxBinding        : 'com.jakewharton.rxbinding:rxbinding:0.3.0',
-            RxBindingV4      : 'com.jakewharton.rxbinding:rxbinding-support-v4:0.3.0',
-            RxBindingV7      : 'com.jakewharton.rxbinding:rxbinding-appcompat-v7:0.3.0',
-            Jsoup            : "org.jsoup:jsoup:1.8.3",
-            Fab              : "com.getbase:floatingactionbutton:1.10.1",
-            ScaleImage       : "com.davemorrissey.labs:subsampling-scale-image-view:3.4.1",
-            GifDrawable      : "pl.droidsonroids.gif:android-gif-drawable:1.1.13",
-            Httpmime         : 'org.apache.httpcomponents:httpmime:4.2.1',
-            NumberProgressBar: 'com.daimajia.numberprogressbar:library:1.2@aar',
-            LeakCanaryDebug  : 'com.squareup.leakcanary:leakcanary-android:1.4-beta2',
-            LeakCanaryRelease: 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2',
-            LeakCanaryTest   : 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2',
-            MultiDex         : "com.android.support:multidex:1.0.1",//
-            ZXing            : "com.google.zxing:core:3.2.1",//
-            Json             : "org.json:json:20160212",//
-            AndFix           : "com.alipay.euler:andfix:0.4.0@aar",
-            AutoService      : 'com.google.auto.service:auto-service:1.0-rc2',
-            AutoCommon       : 'com.google.auto:auto-common:0.6',
-            JavaPoet         : 'com.squareup:javapoet:1.6.1'
+            Junit              : "junit:junit:4.12",
+            SupportV4          : "com.android.support:support-v4:${supportVersion}",
+            SupportAppcompat   : "com.android.support:appcompat-v7:${supportVersion}",
+            SupportDesign      : "com.android.support:design:${supportVersion}",
+            CardView           : "com.android.support:cardview-v7:${supportVersion}",
+            EventBus           : "de.greenrobot:eventbus:2.4.0",
+            GreenDAO           : "de.greenrobot:greendao:2.1.0",
+            GreenDAOGenerator  : "de.greenrobot:greendao-generator:2.1.0",
+            Umeng              : "com.umeng.analytics:analytics:latest.integration",
+            OKHttp             : "com.squareup.okhttp3:okhttp:3.2.0",
+            ImageLoader        : "com.nostra13.universalimageloader:universal-image-loader:1.9.5",
+            ButterKnife        : "com.jakewharton:butterknife:8.0.1",
+            ButterKnifeCompiler: "com.jakewharton:butterknife-compiler:8.0.1",
+            RxAndroid          : "io.reactivex:rxandroid:1.1.0",
+            RxJava             : "io.reactivex:rxjava:1.1.3",
+            RxBinding          : 'com.jakewharton.rxbinding:rxbinding:0.3.0',
+            RxBindingV4        : 'com.jakewharton.rxbinding:rxbinding-support-v4:0.3.0',
+            RxBindingV7        : 'com.jakewharton.rxbinding:rxbinding-appcompat-v7:0.3.0',
+            Jsoup              : "org.jsoup:jsoup:1.8.3",
+            Fab                : "com.getbase:floatingactionbutton:1.10.1",
+            ScaleImage         : "com.davemorrissey.labs:subsampling-scale-image-view:3.4.1",
+            GifDrawable        : "pl.droidsonroids.gif:android-gif-drawable:1.1.13",
+            Httpmime           : 'org.apache.httpcomponents:httpmime:4.2.1',
+            NumberProgressBar  : 'com.daimajia.numberprogressbar:library:1.2@aar',
+            LeakCanaryDebug    : 'com.squareup.leakcanary:leakcanary-android:1.4-beta2',
+            LeakCanaryRelease  : 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2',
+            LeakCanaryTest     : 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2',
+            MultiDex           : "com.android.support:multidex:1.0.1",//
+            ZXing              : "com.google.zxing:core:3.2.1",//
+            Json               : "org.json:json:20160212",//
+            AndFix             : "com.alipay.euler:andfix:0.4.0@aar",
+            AutoService        : 'com.google.auto.service:auto-service:1.0-rc2',
+            AutoCommon         : 'com.google.auto:auto-common:0.6',
+            JavaPoet           : 'com.squareup:javapoet:1.6.1'
     ]
 
     built = [

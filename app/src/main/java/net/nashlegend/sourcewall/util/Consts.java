@@ -6,8 +6,6 @@ package net.nashlegend.sourcewall.util;
  */
 public class Consts {
 
-    public static final String Action_Prepare_Open_Content_Fragment = "sourcewall.action.prepare.open.content.fragment";
-    public static final String Action_Open_Content_Fragment = "sourcewall.action.open.content.fragment";
     public static final String Action_Start_Loading_Latest = "sourcewall.action.start.loading.latest";
     public static final String Action_Finish_Loading_Latest = "sourcewall.action.end.loading.latest";
 

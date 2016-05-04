@@ -4,16 +4,20 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
-import net.nashlegend.sourcewall.model.Favor;
-import net.nashlegend.sourcewall.view.FavorListItemView;
+import net.nashlegend.sourcewall.model.Basket;
+import net.nashlegend.sourcewall.view.BasketItemView;
 
 /**
- * Created by NashLegend on 2014/9/18 0018
+ * Created by NashLegend on 2014/12/2 0002
  */
-public class FavorAdapter extends AceAdapter<Favor> {
+public class BasketAdapter extends AceAdapter<Basket> {
+    String link = "";
+    String title = "";
 
-    public FavorAdapter(Context context) {
+    public BasketAdapter(Context context, String link, String title) {
         super(context);
+        this.link = link;
+        this.title = title;
     }
 
     @Override
@@ -34,9 +38,9 @@ public class FavorAdapter extends AceAdapter<Favor> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = new FavorListItemView(getContext());
+            convertView = new BasketItemView(getContext());
         }
-        ((FavorListItemView) convertView).setData(list.get(position));
+        ((BasketItemView) convertView).setData(list.get(position), link, title);
         return convertView;
     }
 }

@@ -1,7 +1,6 @@
 package net.nashlegend.sourcewall.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -13,18 +12,16 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ProgressBar;
 
-import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
-import net.nashlegend.sourcewall.activities.ArticleActivity;
 import net.nashlegend.sourcewall.activities.MainActivity;
-import net.nashlegend.sourcewall.adapters.ArticleAdapter;
-import net.nashlegend.sourcewall.model.Article;
+import net.nashlegend.sourcewall.adapters.FavorAdapter;
+import net.nashlegend.sourcewall.model.Favor;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.ResponseObject;
-import net.nashlegend.sourcewall.request.api.ArticleAPI;
+import net.nashlegend.sourcewall.request.api.FavorAPI;
 import net.nashlegend.sourcewall.util.CommonUtil;
 import net.nashlegend.sourcewall.util.Consts;
-import net.nashlegend.sourcewall.view.ArticleListItemView;
+import net.nashlegend.sourcewall.view.FavorListItemView;
 import net.nashlegend.sourcewall.view.common.LListView;
 import net.nashlegend.sourcewall.view.common.LoadingView;
 
@@ -41,17 +38,17 @@ import rx.functions.Action0;
 /**
  * Created by NashLegend on 2014/9/18 0018
  */
-public class ArticlesFragment extends ChannelsFragment implements LListView.OnRefreshListener, LoadingView.ReloadListener, AdapterView.OnItemClickListener {
+public class FavorsFragment extends ChannelsFragment implements LListView.OnRefreshListener, LoadingView.ReloadListener, AdapterView.OnItemClickListener {
 
     View layoutView;
-    @BindView(R.id.list_articles)
+    @BindView(R.id.list_favors)
     LListView listView;
-    @BindView(R.id.articles_loading)
+    @BindView(R.id.favors_loading)
     ProgressBar progressBar;
-    @BindView(R.id.article_progress_loading)
+    @BindView(R.id.favor_progress_loading)
     LoadingView loadingView;
 
-    private ArticleAdapter adapter;
+    private FavorAdapter adapter;
     private SubItem subItem;
     private Unbinder unbinder;
 
@@ -64,11 +61,11 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (layoutView == null) {
-            layoutView = inflater.inflate(R.layout.fragment_articles, container, false);
+            layoutView = inflater.inflate(R.layout.fragment_favors, container, false);
             unbinder = ButterKnife.bind(this, layoutView);
             loadingView.setReloadListener(this);
             subItem = getArguments().getParcelable(Consts.Extra_SubItem);
-            adapter = new ArticleAdapter(getActivity());
+            adapter = new FavorAdapter(getActivity());
             listView.setAdapter(adapter);
             listView.setOnRefreshListener(this);
             listView.setOnItemClickListener(this);
@@ -86,13 +83,8 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
 
     @Override
     public void setTitle() {
-        if (subItem.getType() == SubItem.Type_Collections) {
-            getActivity().setTitle("科学人");
-            ((MainActivity) getActivity()).getSupportActionBar().setTitle("科学人");
-        } else {
-            getActivity().setTitle(this.subItem.getName() + " -- 科学人");
-            ((MainActivity) getActivity()).getSupportActionBar().setTitle(this.subItem.getName() + " -- 科学人");
-        }
+        getActivity().setTitle(this.subItem.getName() + " -- 收藏");
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle(this.subItem.getName() + " -- 收藏");
     }
 
     private void loadOver() {
@@ -101,7 +93,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
     }
 
     private void loadData(int offset) {
-        loadArticles(offset);
+        loadFavors(offset);
     }
 
     @Override
@@ -121,7 +113,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
 
     @Override
     public int getFragmentMenu() {
-        return R.menu.menu_fragment_article;
+        return R.menu.menu_fragment_favor;
     }
 
     @Override
@@ -180,9 +172,9 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
         loadData(0);
     }
 
-    private void loadArticles(final int offset) {
-        Observable<ResponseObject<ArrayList<Article>>> observable =
-                ArticleAPI.getArticleList(subItem.getType(), subItem.getValue(), offset, offset == 0 && adapter.getList().size() == 0);
+    private void loadFavors(final int offset) {
+        Observable<ResponseObject<ArrayList<Favor>>> observable =
+                FavorAPI.getFavorList(subItem.getValue(), offset, offset == 0 && adapter.getList().size() == 0);
         observable
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnUnsubscribe(new Action0() {
@@ -199,7 +191,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
                         listView.doneOperation();
                     }
                 })
-                .subscribe(new Observer<ResponseObject<ArrayList<Article>>>() {
+                .subscribe(new Observer<ResponseObject<ArrayList<Favor>>>() {
                     @Override
                     public void onCompleted() {
                         progressBar.setVisibility(View.GONE);
@@ -211,10 +203,10 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
                     }
 
                     @Override
-                    public void onNext(ResponseObject<ArrayList<Article>> result) {
+                    public void onNext(ResponseObject<ArrayList<Favor>> result) {
                         if (result.isCached && offset == 0) {
                             if (result.ok) {
-                                ArrayList<Article> ars = result.result;
+                                ArrayList<Favor> ars = result.result;
                                 if (ars.size() > 0) {
                                     progressBar.setVisibility(View.VISIBLE);
                                     loadingView.onLoadSuccess();
@@ -227,7 +219,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
                             progressBar.setVisibility(View.GONE);
                             if (result.ok) {
                                 loadingView.onLoadSuccess();
-                                ArrayList<Article> ars = result.result;
+                                ArrayList<Favor> ars = result.result;
                                 if (offset > 0) {
                                     if (ars.size() > 0) {
                                         adapter.addAll(ars);
@@ -267,12 +259,9 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
         if (CommonUtil.shouldThrottle()) {
             return;
         }
-        if (view instanceof ArticleListItemView) {
-            Intent intent = new Intent();
-            intent.setClass(App.getApp(), ArticleActivity.class);
-            intent.putExtra(Consts.Extra_Article, ((ArticleListItemView) view).getData());
-            startActivity(intent);
-            getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
+        if (view instanceof FavorListItemView) {
+            toast("Not Done Yet");
+            //open url
         }
     }
 }
