@@ -21,6 +21,7 @@ import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.FavorAPI;
 import net.nashlegend.sourcewall.util.CommonUtil;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.UrlCheckUtil;
 import net.nashlegend.sourcewall.view.FavorListItemView;
 import net.nashlegend.sourcewall.view.common.LListView;
 import net.nashlegend.sourcewall.view.common.LoadingView;
@@ -260,8 +261,7 @@ public class FavorsFragment extends ChannelsFragment implements LListView.OnRefr
             return;
         }
         if (view instanceof FavorListItemView) {
-            toast("Not Done Yet");
-            //open url
+            UrlCheckUtil.redirectRequest(((FavorListItemView) view).getData().getUrl());
         }
     }
 }

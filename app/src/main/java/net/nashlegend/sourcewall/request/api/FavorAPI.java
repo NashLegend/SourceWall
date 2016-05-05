@@ -37,7 +37,7 @@ public class FavorAPI extends APIBase {
         String url = "http://apis.guokr.com/favorite/link.json";
         HashMap<String, String> pairs = new HashMap<>();
         pairs.put("retrieve_type", "by_basket");
-        pairs.put("basket_id", "18786");
+        pairs.put("basket_id", basketId);
         pairs.put("limit", "20");
         pairs.put("offset", String.valueOf(offset));
         return new RequestBuilder<ArrayList<Favor>>()

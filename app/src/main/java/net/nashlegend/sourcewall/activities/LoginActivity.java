@@ -71,6 +71,9 @@ public class LoginActivity extends SwipeActivity {
     @Override
     protected void onDestroy() {
         webView.stopLoading();
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
         super.onDestroy();
     }
 
@@ -107,6 +110,8 @@ public class LoginActivity extends SwipeActivity {
         }
     }
 
+    AlertDialog dialog;
+
     WebViewClient webViewClient = new WebViewClient() {
         @Override
         public boolean shouldOverrideUrlLoading(final WebView view, String url) {
@@ -118,33 +123,33 @@ public class LoginActivity extends SwipeActivity {
                     setResult(RESULT_OK);
                     delayFinish();
                 } else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                    builder.setTitle(R.string.hint);
-                    builder.setMessage(R.string.user_handle_login_message);
-                    builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            String lazyLoad = "http://m.guokr.com/sso/mobile/?suppress_prompt=1&lazy=y&success=http%3A%2F%2Fm.guokr.com%2F";
-                            view.loadUrl(lazyLoad);
-                        }
-                    });
-                    builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                            setResult(RESULT_CANCELED);
-                            delayFinish();
-                        }
-                    });
-                    builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                        @Override
-                        public void onCancel(DialogInterface dialog) {
-                            dialog.cancel();
-                            setResult(RESULT_CANCELED);
-                            delayFinish();
-                        }
-                    });
-                    builder.show();
+                    dialog = new AlertDialog.Builder(LoginActivity.this)
+                            .setTitle(R.string.hint)
+                            .setMessage(R.string.user_handle_login_message)
+                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    String lazyLoad = "http://m.guokr.com/sso/mobile/?suppress_prompt=1&lazy=y&success=http%3A%2F%2Fm.guokr.com%2F";
+                                    view.loadUrl(lazyLoad);
+                                }
+                            })
+                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                    setResult(RESULT_CANCELED);
+                                    delayFinish();
+                                }
+                            })
+                            .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                @Override
+                                public void onCancel(DialogInterface dialog) {
+                                    dialog.cancel();
+                                    setResult(RESULT_CANCELED);
+                                    delayFinish();
+                                }
+                            }).create();
+                    dialog.show();
                 }
             } else {
                 view.loadUrl(url);

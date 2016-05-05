@@ -1,7 +1,6 @@
 package net.nashlegend.sourcewall.view;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.TextView;
@@ -19,8 +18,6 @@ public class FavorListItemView extends AceView<Favor> {
 
     @BindView(R.id.text_title)
     TextView title;
-    @BindView(R.id.text_basket)
-    TextView basket;
     @BindView(R.id.text_date)
     TextView textDate;
 
@@ -45,7 +42,6 @@ public class FavorListItemView extends AceView<Favor> {
     public void setData(Favor model) {
         mFavor = model;
         title.setText(mFavor.getTitle());
-        basket.setText(mFavor.getBasketName());
         textDate.setText(mFavor.getCreateTime());
     }
 

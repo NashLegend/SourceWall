@@ -71,7 +71,7 @@ public class RequestDelegate {
             }
         }
         RequestBody formBody = builder.build();
-        Request request = new Request.Builder().post(formBody).url(url).tag(tag).build();
+        Request request = new Request.Builder().put(formBody).url(url).tag(tag).build();
         return defaultHttpClient.newCall(request);
     }
 
@@ -173,7 +173,7 @@ public class RequestDelegate {
             }
         }
         RequestBody formBody = builder.build();
-        Request request = new Request.Builder().post(formBody).url(url).tag(tag).build();
+        Request request = new Request.Builder().put(formBody).url(url).tag(tag).build();
         Call call = defaultHttpClient.newCall(request);
         call.enqueue(defCallBack);
         return call;

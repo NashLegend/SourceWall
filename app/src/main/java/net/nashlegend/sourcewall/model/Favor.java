@@ -12,8 +12,7 @@ import org.json.JSONObject;
 public class Favor extends AceModel {
     private String id = "";
     private String title = "";
-    private String basket_id = "";
-    private String basketName = "";
+    private String url = "";
     private String createTime = "";
 
     public Favor() {
@@ -21,8 +20,12 @@ public class Favor extends AceModel {
     }
 
     public static Favor fromJson(JSONObject jo) throws Exception {
-        // TODO: 16/5/5  
+        // TODO: 16/5/5
         Favor favor = new Favor();
+        favor.setId(jo.optString("id"));
+        favor.setTitle(jo.optString("title"));
+        favor.setUrl(jo.optString("url"));
+        favor.setCreateTime(APIBase.parseDate(jo.optString("date_created")));
         return favor;
     }
 
@@ -32,14 +35,6 @@ public class Favor extends AceModel {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getBasketName() {
-        return basketName;
-    }
-
-    public void setBasketName(String basketName) {
-        this.basketName = basketName;
     }
 
     public String getCreateTime() {
@@ -58,12 +53,12 @@ public class Favor extends AceModel {
         this.title = title;
     }
 
-    public String getBasket_id() {
-        return basket_id;
+    public String getUrl() {
+        return url;
     }
 
-    public void setBasket_id(String basket_id) {
-        this.basket_id = basket_id;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     @Override
@@ -75,16 +70,14 @@ public class Favor extends AceModel {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.id);
         dest.writeString(this.title);
-        dest.writeString(this.basket_id);
-        dest.writeString(this.basketName);
+        dest.writeString(this.url);
         dest.writeString(this.createTime);
     }
 
     protected Favor(Parcel in) {
         this.id = in.readString();
         this.title = in.readString();
-        this.basket_id = in.readString();
-        this.basketName = in.readString();
+        this.url = in.readString();
         this.createTime = in.readString();
     }
 

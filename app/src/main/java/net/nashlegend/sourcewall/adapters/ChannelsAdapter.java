@@ -1,6 +1,8 @@
 package net.nashlegend.sourcewall.adapters;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
@@ -8,11 +10,13 @@ import android.widget.BaseExpandableListAdapter;
 import net.nashlegend.sourcewall.db.AskTagHelper;
 import net.nashlegend.sourcewall.db.BasketHelper;
 import net.nashlegend.sourcewall.db.GroupHelper;
+import net.nashlegend.sourcewall.model.Basket;
 import net.nashlegend.sourcewall.model.SubItem;
+import net.nashlegend.sourcewall.request.RequestObject;
+import net.nashlegend.sourcewall.request.ResponseObject;
+import net.nashlegend.sourcewall.request.api.FavorAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.ChannelHelper;
-import net.nashlegend.sourcewall.util.Consts;
-import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 import net.nashlegend.sourcewall.view.GroupItemView;
 import net.nashlegend.sourcewall.view.SubItemView;
 
@@ -120,6 +124,8 @@ public class ChannelsAdapter extends BaseExpandableListAdapter {
             if (basketSubItems.size() > 0) {
                 groups.add(ChannelHelper.getBasketGroup());
                 cols.add(basketSubItems);
+            } else {
+                loadBaskets();
             }
         }
         setGroupList(groups);
@@ -162,8 +168,38 @@ public class ChannelsAdapter extends BaseExpandableListAdapter {
         ArrayList<SubItem> basketSubItems = new ArrayList<>();
         if (BasketHelper.getBasketsNumber() > 0) {
             //如果已经加载了栏目
-            basketSubItems.addAll(BasketHelper.getSelectedBasketSubItems());
+            basketSubItems.addAll(BasketHelper.getAllMyBasketsSubItems());
         }
         return basketSubItems;
+    }
+
+    private void loadBaskets() {
+        FavorAPI.getBaskets(new RequestObject.CallBack<ArrayList<Basket>>() {
+            @Override
+            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<ArrayList<Basket>> result) {
+
+            }
+
+            @Override
+            public void onSuccess(@NonNull ArrayList<Basket> result, @NonNull ResponseObject<ArrayList<Basket>> detailed) {
+                onGetBaskets(result);
+            }
+        });
+    }
+
+    synchronized private void onGetBaskets(ArrayList<Basket> baskets) {
+        BasketHelper.putAllBaskets(baskets);
+        if (groupList.size() != 4) {
+            if (baskets.size() > 0) {
+                ArrayList<SubItem> basketSubItems = new ArrayList<>();
+                for (int i = 0; i < baskets.size(); i++) {
+                    Basket basket = baskets.get(i);
+                    SubItem basketSubItem = new SubItem(SubItem.Section_Favor, SubItem.Type_Single_Channel, basket.getName(), basket.getId());
+                    basketSubItems.add(basketSubItem);
+                }
+                groupList.add(ChannelHelper.getBasketGroup());
+                subLists.add(basketSubItems);
+            }
+        }
     }
 }

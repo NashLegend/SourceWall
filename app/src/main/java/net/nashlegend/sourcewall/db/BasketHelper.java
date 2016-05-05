@@ -3,6 +3,7 @@ package net.nashlegend.sourcewall.db;
 import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.db.gen.MyBasket;
 import net.nashlegend.sourcewall.db.gen.MyBasketDao;
+import net.nashlegend.sourcewall.model.Basket;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
@@ -22,6 +23,17 @@ public class BasketHelper {
         return basketDao.count();
     }
 
+    public static List<SubItem> getAllMyBasketsSubItems() {
+        List<MyBasket> MyBaskets = getAllMyBaskets();
+        ArrayList<SubItem> subItems = new ArrayList<>();
+        for (int i = 0; i < MyBaskets.size(); i++) {
+            MyBasket basket = MyBaskets.get(i);
+            SubItem subItem = new SubItem(basket.getSection(), basket.getType(), basket.getName(), basket.getValue());
+            subItems.add(subItem);
+        }
+        return subItems;
+    }
+
     public static List<MyBasket> getAllMyBaskets() {
         MyBasketDao basketDao = App.getDaoSession().getMyBasketDao();
         return basketDao.loadAll();
@@ -36,10 +48,7 @@ public class BasketHelper {
     }
 
     public static List<SubItem> getSelectedBasketSubItems() {
-        MyBasketDao basketDao = App.getDaoSession().getMyBasketDao();
-        QueryBuilder<MyBasket> builder = basketDao.queryBuilder().where(MyBasketDao.Properties.Selected.eq(true)).
-                orderAsc(MyBasketDao.Properties.Order);
-        List<MyBasket> MyBaskets = builder.list();
+        List<MyBasket> MyBaskets = getSelectedBaskets();
         ArrayList<SubItem> subItems = new ArrayList<>();
         for (int i = 0; i < MyBaskets.size(); i++) {
             MyBasket basket = MyBaskets.get(i);
@@ -55,6 +64,23 @@ public class BasketHelper {
                 where(MyBasketDao.Properties.Selected.eq(false)).
                 orderAsc(MyBasketDao.Properties.Order);
         return builder.list();
+    }
+
+    public static void putAllBaskets(List<Basket> baskets) {
+        ArrayList<MyBasket> myBaskets = new ArrayList<>();
+        for (int i = 0; i < baskets.size(); i++) {
+            MyBasket myBasket = new MyBasket();
+            Basket basket = baskets.get(i);
+            myBasket.setCategoryId(basket.getCategory_id());
+            myBasket.setCategoryName(basket.getCategory_name());
+            myBasket.setName(basket.getName());
+            myBasket.setOrder(i);
+            myBasket.setSection(SubItem.Section_Favor);
+            myBasket.setType(SubItem.Type_Single_Channel);
+            myBasket.setValue(basket.getId());
+            myBaskets.add(myBasket);
+        }
+        putAllMyBaskets(myBaskets);
     }
 
     public static void putAllMyBaskets(List<MyBasket> myBaskets) {
