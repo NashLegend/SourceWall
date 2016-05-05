@@ -57,6 +57,7 @@ public class APIBase {
      * @return 返回ResponseObject，resultObject.result是上传后的图片地址，果壳并不会对图片进行压缩
      */
     public static void uploadImage(String path, CallBack<String> callBack) {
+        // TODO: 16/5/6 未压缩
         new RequestBuilder<String>()
                 .setUrl("http://www.guokr.com/apis/image.json?enable_watermark=true")
                 .upload(path)
