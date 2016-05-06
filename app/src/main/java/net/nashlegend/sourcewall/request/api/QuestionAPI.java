@@ -583,13 +583,7 @@ public class QuestionAPI extends APIBase {
         ResponseObject<String> resultObject = new ResponseObject<>();
         String url = "http://www.guokr.com/questions/new/";
         try {
-            ResponseObject<String> mdResult = MDUtil.parseMarkdownByGitHub(annotation);
-            String htmlDesc;
-            if (mdResult.ok) {
-                htmlDesc = mdResult.result;
-            } else {
-                htmlDesc = MDUtil.Markdown2HtmlDumb(annotation);
-            }
+            String htmlDesc = MDUtil.Markdown2Html(annotation);
             htmlDesc += Config.getComplexReplyTail();
             HashMap<String, String> pairs = new HashMap<>();
             pairs.put("csrf_token", csrf);

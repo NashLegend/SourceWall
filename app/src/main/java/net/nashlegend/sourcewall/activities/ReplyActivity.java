@@ -56,7 +56,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 格式使用的应该是UBB代码
+ * 格式使用的是UBB代码，输入框本身输入的是UBB
  */
 public class ReplyActivity extends SwipeActivity implements View.OnClickListener {
 

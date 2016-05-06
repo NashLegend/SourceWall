@@ -1,19 +1,13 @@
 package net.nashlegend.sourcewall.util;
 
-import net.nashlegend.sourcewall.request.ResponseObject;
-import net.nashlegend.sourcewall.request.api.APIBase;
+import org.markdown4j.Markdown4jProcessor;
+
+import java.io.IOException;
 
 /**
  * Created by NashLegend on 2014/12/5 0005
  */
 public class MDUtil {
-
-    /**
-     * 通过github接口转换markdown，一小时只能60次
-     */
-    public static ResponseObject<String> parseMarkdownByGitHub(String text) {
-        return APIBase.parseMarkdownByGitHub(text);
-    }
 
     /**
      * Markdown转换为Html，只转换简单链接和图片
@@ -25,6 +19,17 @@ public class MDUtil {
             sb.append("<p>").append(markdown2HtmlLink(markdown2HtmlImage(paragraph))).append("</p>");
         }
         return sb.toString();
+    }
+
+    /**
+     * Markdown转换为Html，使用Markdown4J
+     */
+    public static String Markdown2Html(String text) {
+        try {
+            return new Markdown4jProcessor().process(text);
+        } catch (IOException e) {
+            return Markdown2HtmlDumb(text);
+        }
     }
 
     /**

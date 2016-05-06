@@ -441,14 +441,7 @@ public class PostAPI extends APIBase {
         ResponseObject<String> resultObject = new ResponseObject<>();
         String url = "http://www.guokr.com/group/" + group_id + "/post/edit/";
         try {
-            ResponseObject<String> mdResult = MDUtil.parseMarkdownByGitHub(body);
-            String htmlBody = "";
-            if (mdResult.ok) {
-                //使用github接口转换成html
-                htmlBody = mdResult.result;
-            } else {
-                htmlBody = MDUtil.Markdown2HtmlDumb(body);
-            }
+            String htmlBody = MDUtil.Markdown2Html(body);
             htmlBody += Config.getComplexReplyTail();
             HashMap<String, String> pairs = new HashMap<>();
             pairs.put("csrf_token", csrf);
@@ -457,7 +450,6 @@ public class PostAPI extends APIBase {
             pairs.put("body", htmlBody);
             pairs.put("captcha", "");
             pairs.put("share_opts", "activity");
-
             ResponseObject result = HttpFetcher.post(url, pairs, false);
             //这里已经将302手动设置为了200，所以
             if (result.statusCode == 200) {

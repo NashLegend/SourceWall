@@ -59,7 +59,7 @@ import java.util.regex.Pattern;
 
 
 /**
- * 发贴，以后再写提问
+ * 发贴，Markdown格式
  */
 public class PublishPostActivity extends SwipeActivity implements View.OnClickListener {
     private EditText titleEditText;

@@ -81,7 +81,7 @@ public class APIBase {
 
     /**
      * 使用github的接口转换markdown为html.
-     * TODO 目前RequestBuilder尚未搞RequestBody
+     * 通过github接口转换markdown，一小时只能60次
      *
      * @param text 要转换的文本内容
      * @return ResponseObject
