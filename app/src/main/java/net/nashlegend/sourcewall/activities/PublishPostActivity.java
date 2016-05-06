@@ -13,7 +13,6 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -39,11 +38,11 @@ import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.dialogs.InputDialog;
 import net.nashlegend.sourcewall.model.PrepareData;
 import net.nashlegend.sourcewall.model.SubItem;
+import net.nashlegend.sourcewall.request.RequestObject;
 import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.APIBase;
 import net.nashlegend.sourcewall.request.api.PostAPI;
-import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.FileUtil;
 import net.nashlegend.sourcewall.util.Mob;
@@ -502,10 +501,9 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
             topic = tagEditText.getText().toString();
         }
         hideInput();
-        PublishTask task = new PublishTask();
         String title = titleEditText.getText().toString();
         String body = bodyEditText.getText().toString();
-        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, group_id, csrf, title, body, topic);
+        publishPost(group_id, csrf, title, body, topic);
         MobclickAgent.onEvent(this, Mob.Event_Publish_Post);
     }
 
@@ -537,51 +535,44 @@ public class PublishPostActivity extends SwipeActivity implements View.OnClickLi
         }
     }
 
-    class PublishTask extends AsyncTask<String, Integer, ResponseObject> {
-
-        @Override
-        protected void onPreExecute() {
-            progressDialog = new ProgressDialog(PublishPostActivity.this);
-            progressDialog.setCanceledOnTouchOutside(false);
-            progressDialog.setMessage(getString(R.string.message_wait_a_minute));
-            progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialog) {
-                    PublishTask.this.cancel(true);
-                }
-            });
-            progressDialog.show();
-        }
-
-        @Override
-        protected ResponseObject doInBackground(String... params) {
-            String group_id = params[0];
-            String csrf = params[1];
-            String title = params[2];
-            String body = params[3];
-            String topic = params[4];
-            if (isPost()) {
-                return PostAPI.publishPost(group_id, csrf, title, body, topic);
-            } else {
-                String[] topics = topic.split(",");
-                return QuestionAPI.publishQuestion(csrf, title, body, topics);
+    public void publishPost(String group_id, String csrf, String title, String body, String topic) {
+        RequestObject object = PostAPI.publishPost(group_id, csrf, title, body, topic, new CallBack<String>() {
+            @Override
+            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<String> result) {
+                MobclickAgent.onEvent(PublishPostActivity.this, Mob.Event_Publish_Post_Failed);
+                new AlertDialog.Builder(PublishPostActivity.this).setTitle(R.string.hint).setMessage(R.string.publish_post_failed).setPositiveButton(R.string.ok, null).show();
             }
-        }
 
-        @Override
-        protected void onPostExecute(ResponseObject resultObject) {
-            progressDialog.dismiss();
-            if (resultObject.ok) {
+            @Override
+            public void onSuccess(@NonNull String result, @NonNull ResponseObject<String> detailed) {
+                dismissDialog();
                 MobclickAgent.onEvent(PublishPostActivity.this, Mob.Event_Publish_Post_OK);
                 toast(R.string.publish_post_ok);
                 setResult(RESULT_OK);
                 replyOK = true;
                 tryClearSketch();
                 finish();
-            } else {
-                MobclickAgent.onEvent(PublishPostActivity.this, Mob.Event_Publish_Post_Failed);
-                new AlertDialog.Builder(PublishPostActivity.this).setTitle(R.string.hint).setMessage(R.string.publish_post_failed).setPositiveButton(R.string.ok, null).show();
             }
+        });
+        showDialog(object);
+    }
+
+    private void showDialog(final RequestObject requestObject) {
+        progressDialog = new ProgressDialog(PublishPostActivity.this);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setMessage(getString(R.string.message_wait_a_minute));
+        progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                requestObject.softCancel();
+            }
+        });
+        progressDialog.show();
+    }
+
+    private void dismissDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
         }
     }
 

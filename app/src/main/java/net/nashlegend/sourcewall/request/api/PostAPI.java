@@ -425,7 +425,6 @@ public class PostAPI extends APIBase {
 
     /**
      * 发帖
-     * TODO
      * 有Json方式的删贴，有空加上。
      * http://www.guokr.com/apis/group/post.json?reason={}&post_id={}&access_token={}  //
      * request method = delete/put
@@ -437,6 +436,67 @@ public class PostAPI extends APIBase {
      * @param topic    帖子主题
      * @return resultObject
      */
+    public static RequestObject<String> publishPost(String group_id, String csrf, String title, String body, String topic, CallBack<String> callBack) {
+        String url = "http://www.guokr.com/group/" + group_id + "/post/edit/";
+        HashMap<String, String> pairs = new HashMap<>();
+        pairs.put("csrf_token", csrf);
+        pairs.put("title", title);
+        pairs.put("topic", topic);
+        pairs.put("body", MDUtil.Markdown2Html(body) + Config.getComplexReplyTail());
+        pairs.put("captcha", "");
+        pairs.put("share_opts", "activity");
+
+        return new RequestBuilder<String>()
+                .post()
+                .setUrl(url)
+                .setParams(pairs)
+                .setParser(new Parser<String>() {
+                    @Override
+                    public String parse(String response, ResponseObject<String> responseObject) throws Exception {
+                        Document document = Jsoup.parse(response);
+                        Elements elements = document.getElementsByTag("a");
+                        Matcher matcher = Pattern.compile("^/post/(\\d+)/$").matcher(elements.get(0).text());
+                        return matcher.group(1);
+                    }
+                })
+                .setRequestCallBack(callBack)
+                .startRequest();
+    }
+
+    /**
+     * 删贴
+     *
+     * @param post_id
+     * @param callBack
+     * @return resultObject
+     */
+    public static RequestObject<Boolean> deletePost(String post_id, CallBack<Boolean> callBack) {
+        String url = "http://www.guokr.com/apis/group/post.json";
+        HashMap<String, String> pairs = new HashMap<>();
+        pairs.put("reason", "");
+        pairs.put("post_id", post_id);
+
+        return new RequestBuilder<Boolean>()
+                .delete()//or put?
+                .setUrl(url)
+                .setParams(pairs)
+                .setParser(new BooleanParser())
+                .setRequestCallBack(callBack)
+                .startRequest();
+    }
+
+    /**
+     * 发帖
+     * 有Json方式的删贴，有空加上。
+     *
+     * @param group_id 小组id
+     * @param csrf     csrf_token
+     * @param title    标题
+     * @param body     帖子内容   html格式
+     * @param topic    帖子主题
+     * @return resultObject
+     */
+    @Deprecated
     public static ResponseObject<String> publishPost(String group_id, String csrf, String title, String body, String topic) {
         ResponseObject<String> resultObject = new ResponseObject<>();
         String url = "http://www.guokr.com/group/" + group_id + "/post/edit/";
