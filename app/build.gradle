@@ -102,6 +102,7 @@ dependencies {
     compile deps.RxBindingV7
     compile deps.Httpmime
     compile deps.Markdown4J
+    compile deps.SearchView
 
     debugCompile deps.LeakCanaryDebug
     releaseCompile deps.LeakCanaryRelease

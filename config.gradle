@@ -45,10 +45,9 @@ ext {
             AutoService        : 'com.google.auto.service:auto-service:1.0-rc2',
             AutoCommon         : 'com.google.auto:auto-common:0.6',
             JavaPoet           : 'com.squareup:javapoet:1.6.1',
-            TextMark           : 'com.github.rjeschke:txtmark:0.13',//与Markdown4J目前版本有冲突，只使用Markdown4J即可，Markdown4J貌似是基于他的
-            PegDown            : 'org.pegdown:pegdown:1.6.0',//速度很慢，不用
-            ByPasses           : 'com.github.Commit451:bypasses:1.0.2',//不能转html，不用
             Markdown4J         : 'org.commonjava.googlecode.markdown4j:markdown4j:2.2-cj-1.1',
+            MaterialSearchView : 'com.miguelcatalan:materialsearchview:1.4.0',
+            SearchView         : 'com.lapism:searchview:2.2'
     ]
 
     built = [
