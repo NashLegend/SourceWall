@@ -119,11 +119,6 @@ public class NoticesFragment extends BaseFragment implements IChannelsFragment, 
     }
 
     @Override
-    public void setTitle() {
-        loadData();
-    }
-
-    @Override
     public void onStartRefresh() {
         loadData();
     }

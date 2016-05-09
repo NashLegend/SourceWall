@@ -11,7 +11,7 @@ import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.fragment.NoticesFragment;
 import net.nashlegend.sourcewall.util.Mob;
 
-public class MessageCenterActivity extends SwipeActivity {
+public class MessageCenterActivity extends BaseActivity {
 
     NoticesFragment noticesFragment;
 

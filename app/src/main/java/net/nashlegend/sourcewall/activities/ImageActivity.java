@@ -50,6 +50,7 @@ public class ImageActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
+        setSwipeEnabled(false);
         head = findViewById(R.id.layoutHead);
         indicator = (TextView) findViewById(R.id.tvIndicator);
         downloadButton = (ImageButton) findViewById(R.id.btn_download);

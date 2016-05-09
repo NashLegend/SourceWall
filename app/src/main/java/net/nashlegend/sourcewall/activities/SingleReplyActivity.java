@@ -55,7 +55,7 @@ import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class SingleReplyActivity extends SwipeActivity implements View.OnClickListener, LoadingView.ReloadListener {
+public class SingleReplyActivity extends BaseActivity implements View.OnClickListener, LoadingView.ReloadListener {
 
     private View rootView;
     private View authorLayout;

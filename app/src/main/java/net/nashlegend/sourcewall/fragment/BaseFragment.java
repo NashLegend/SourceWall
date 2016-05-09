@@ -15,8 +15,6 @@ public abstract class BaseFragment extends Fragment implements IStackedAsyncTask
     private final ArrayList<AAsyncTask> stackedTasks = new ArrayList<>();
     private boolean isActive = false;
 
-    abstract public void setTitle();
-
     @Override
     public void addToStackedTasks(AAsyncTask task) {
         stackedTasks.add(task);

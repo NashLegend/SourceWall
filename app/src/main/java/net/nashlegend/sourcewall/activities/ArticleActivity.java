@@ -61,7 +61,7 @@ import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 
-public class ArticleActivity extends SwipeActivity implements OnRefreshListener, OnClickListener, ReloadListener {
+public class ArticleActivity extends BaseActivity implements OnRefreshListener, OnClickListener, ReloadListener {
 
     private LListView listView;
     private ArticleDetailAdapter adapter;

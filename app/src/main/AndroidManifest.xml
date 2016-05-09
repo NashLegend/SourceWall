@@ -27,6 +27,17 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".activities.PostListActivity"
+            android:label="@string/title_activity_post_list"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.WebPageActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.Main2Activity"
+            android:label="@string/title_activity_main2"
+            android:theme="@style/BottomTheme" />
+        <activity
             android:name=".activities.SettingActivity"
             android:label="@string/title_activity_setting"
             android:screenOrientation="portrait">
@@ -122,11 +133,6 @@
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="${CHANNEL_NAME}" />
-
-        <activity
-            android:name=".activities.PostListActivity"
-            android:label="@string/title_activity_post_list"></activity>
-        <activity android:name=".activities.WebPageActivity"></activity>
     </application>
 
 </manifest>

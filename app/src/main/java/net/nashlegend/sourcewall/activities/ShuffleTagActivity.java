@@ -43,7 +43,7 @@ import rx.schedulers.Schedulers;
 /**
  * @author NashLegend
  */
-public class ShuffleTagActivity extends SwipeActivity {
+public class ShuffleTagActivity extends BaseActivity {
 
     private ShuffleDesk desk;
     LoaderFromNetTask netTask;

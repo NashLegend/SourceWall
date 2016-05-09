@@ -17,6 +17,8 @@ public abstract class ChannelsFragment extends BaseFragment {
      */
     abstract public int getFragmentMenu();
 
+    abstract public void setTitle();
+
     /**
      * 接管Activity的Menu生成
      *

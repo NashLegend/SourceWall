@@ -58,7 +58,7 @@ import java.util.regex.Pattern;
 /**
  * 格式使用的是UBB代码，输入框本身输入的是UBB
  */
-public class ReplyActivity extends SwipeActivity implements View.OnClickListener {
+public class ReplyActivity extends BaseActivity implements View.OnClickListener {
 
     private EditText editText;
     private TextView hostText;

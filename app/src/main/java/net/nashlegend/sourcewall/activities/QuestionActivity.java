@@ -52,7 +52,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 
 
-public class QuestionActivity extends SwipeActivity implements LListView.OnRefreshListener, View.OnClickListener, LoadingView.ReloadListener {
+public class QuestionActivity extends BaseActivity implements LListView.OnRefreshListener, View.OnClickListener, LoadingView.ReloadListener {
 
     private LListView listView;
     private QuestionDetailAdapter adapter;

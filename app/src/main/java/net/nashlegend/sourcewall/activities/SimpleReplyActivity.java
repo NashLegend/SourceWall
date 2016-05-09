@@ -37,7 +37,7 @@ import net.nashlegend.sourcewall.view.common.LoadingView;
 
 import java.util.ArrayList;
 
-public class SimpleReplyActivity extends SwipeActivity implements LListView.OnRefreshListener, View.OnClickListener, LoadingView.ReloadListener {
+public class SimpleReplyActivity extends BaseActivity implements LListView.OnRefreshListener, View.OnClickListener, LoadingView.ReloadListener {
 
     private AceModel aceModel;
     private LListView listView;

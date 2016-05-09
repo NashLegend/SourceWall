@@ -51,7 +51,7 @@ import net.nashlegend.sourcewall.view.common.WWebView;
 
 import java.util.ArrayList;
 
-public class AnswerActivity extends SwipeActivity implements View.OnClickListener, LoadingView.ReloadListener {
+public class AnswerActivity extends BaseActivity implements View.OnClickListener, LoadingView.ReloadListener {
 
     private View rootView;
     private View authorLayout;

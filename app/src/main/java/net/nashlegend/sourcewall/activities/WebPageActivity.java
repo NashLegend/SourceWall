@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import net.nashlegend.sourcewall.R;
 
-public class WebPageActivity extends SwipeActivity {
+public class WebPageActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

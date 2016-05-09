@@ -19,6 +19,7 @@ public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wxentry);
+        setSwipeEnabled(false);
         IWXAPI api = WXAPIFactory.createWXAPI(this, ShareUtil.getWeixinAppId(), false);
         api.registerApp(ShareUtil.getWeixinAppId());
         api.handleIntent(getIntent(), this);

@@ -103,6 +103,7 @@ dependencies {
     compile deps.Httpmime
     compile deps.Markdown4J
     compile deps.SearchView
+    compile deps.BottomBar
 
     debugCompile deps.LeakCanaryDebug
     releaseCompile deps.LeakCanaryRelease

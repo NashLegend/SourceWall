@@ -51,6 +51,7 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setSwipeEnabled(false);
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
         MobclickAgent.setDebugMode(BuildConfig.DEBUG);

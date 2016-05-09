@@ -38,7 +38,7 @@ import rx.schedulers.Schedulers;
 /**
  * @author NashLegend
  */
-public class ShuffleGroupActivity extends SwipeActivity {
+public class ShuffleGroupActivity extends BaseActivity {
 
     private ShuffleDesk desk;
     Toolbar toolbar;

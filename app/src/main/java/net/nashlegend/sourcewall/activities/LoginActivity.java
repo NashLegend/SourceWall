@@ -31,7 +31,7 @@ import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 
 import de.greenrobot.event.EventBus;
 
-public class LoginActivity extends SwipeActivity {
+public class LoginActivity extends BaseActivity {
 
     private WebView webView;
     private String cookieStr;

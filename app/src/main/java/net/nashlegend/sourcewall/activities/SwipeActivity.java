@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
@@ -22,7 +23,10 @@ import android.widget.FrameLayout;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.util.DisplayUtil;
 
-public class SwipeActivity extends BaseActivity {
+/**
+ * 滑动关闭页面基类，使用时继承此类并使用BlankTheme主题即可
+ */
+public class SwipeActivity extends AppCompatActivity {
 
     private SwipeLayout swipeLayout;
 
@@ -88,20 +92,19 @@ public class SwipeActivity extends BaseActivity {
         if (swipeFinished) {
             finish(0, 0);
         } else {
-            swipeLayout.cancelPotentialAnimation();
             finish(0, R.anim.slide_out_right);
         }
     }
 
     public void finish(int enterAnim, int exitAnim) {
-        if (swipeFinished) {
-            super.finish();
-            overridePendingTransition(enterAnim, exitAnim);
-        } else {
-            swipeLayout.cancelPotentialAnimation();
-            super.finish();
-            overridePendingTransition(enterAnim, exitAnim);
-        }
+        swipeLayout.cancelPotentialAnimation();
+        super.finish();
+        overridePendingTransition(enterAnim, exitAnim);
+    }
+
+    public void finishDirectly() {
+        swipeLayout.cancelPotentialAnimation();
+        super.finish();
     }
 
     @Override

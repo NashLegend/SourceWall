@@ -204,11 +204,6 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
         }
     }
 
-    @Override
-    public void setTitle() {
-
-    }
-
     public boolean isDrawerOpen() {
         return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mFragmentContainerView);
     }

@@ -60,7 +60,7 @@ import java.util.regex.Pattern;
 /**
  * 发贴，Markdown格式
  */
-public class PublishPostActivity extends SwipeActivity implements View.OnClickListener {
+public class PublishPostActivity extends BaseActivity implements View.OnClickListener {
     private EditText titleEditText;
     private EditText tagEditText;
     private EditText bodyEditText;

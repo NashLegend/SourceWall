@@ -37,6 +37,7 @@ public class WeiboShareActivity extends BaseActivity implements IWeiboHandler.Re
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weibo_share);
+        setSwipeEnabled(false);
         findViewById(R.id.container).setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
