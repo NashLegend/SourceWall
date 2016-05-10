@@ -52,6 +52,12 @@ android {
                 fileName += "_${variant.productFlavors[0].name}.apk"
                 output.outputFile = new File(outputFile.parent, fileName)
             }
+
+            if (output.zipAlign != null) {
+                output.zipAlign.doLast {
+                    output.zipAlign.inputFile.delete()
+                }
+            }
         }
     }
 
