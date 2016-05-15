@@ -63,6 +63,8 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onClick(View v) {
+                // STOPSHIP: 16/5/15
+                Main2Activity.open();
                 if (!mNavigationDrawerFragment.isDrawerOpen()) {
                     if (preparingToScrollToHead) {
                         if (currentFragment != null) {

@@ -2,39 +2,43 @@ package net.nashlegend.sourcewall.fragment;
 
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import net.nashlegend.sourcewall.R;
+import net.nashlegend.sourcewall.model.SubItem;
+import net.nashlegend.sourcewall.util.ChannelHelper;
+
+import java.util.ArrayList;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 public class ArticlePagerFragment extends BaseFragment {
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    ArrayList<SubItem> subItems = ChannelHelper.getArticles();
+    @BindView(R.id.article_tabs)
+    TabLayout tabLayout;
+    @BindView(R.id.article_pager)
+    ViewPager articlePager;
 
+    ArticlePagerAdapter adapter;
+    private Unbinder unbinder;
 
     public ArticlePagerFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ArticlePagerFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ArticlePagerFragment newInstance(String param1, String param2) {
+    public static ArticlePagerFragment newInstance() {
         ArticlePagerFragment fragment = new ArticlePagerFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -42,17 +46,50 @@ public class ArticlePagerFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_article_pager, container, false);
+        View view = inflater.inflate(R.layout.fragment_article_pager, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        adapter = new ArticlePagerAdapter(getFragmentManager());
+        articlePager.setAdapter(adapter);
+
+        tabLayout.setupWithViewPager(articlePager);
+        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+        for (int i = 0; i < tabLayout.getTabCount(); i++) {
+            TabLayout.Tab tab = tabLayout.getTabAt(i);
+            if (tab == null) {
+                break;
+            }
+            tab.setText(subItems.get(i).getName());
+        }
+
+        return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+    class ArticlePagerAdapter extends FragmentStatePagerAdapter {
+
+        public ArticlePagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return Articles2Fragment.newInstance(subItems.get(position));
+        }
+
+        @Override
+        public int getCount() {
+            return subItems.size();
+        }
     }
 
 }
