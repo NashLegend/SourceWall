@@ -55,7 +55,6 @@ public class MainActivity extends BaseActivity {
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
         MobclickAgent.setDebugMode(BuildConfig.DEBUG);
-        AnalyticsConfig.enableEncrypt(true);
         setSupportActionBar(toolbar);
 
         toolbar.setOnClickListener(new View.OnClickListener() {

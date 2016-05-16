@@ -88,16 +88,6 @@ public class Articles2Fragment extends BaseFragment implements LoadingView.Reloa
         return layoutView;
     }
 
-    public void setTitle() {
-        if (subItem.getType() == SubItem.Type_Collections) {
-            getActivity().setTitle("科学人");
-            ((MainActivity) getActivity()).getSupportActionBar().setTitle("科学人");
-        } else {
-            getActivity().setTitle(this.subItem.getName() + " -- 科学人");
-            ((MainActivity) getActivity()).getSupportActionBar().setTitle(this.subItem.getName() + " -- 科学人");
-        }
-    }
-
     private void loadOver() {
         loadData(0);
         loadingView.startLoading();

@@ -27,7 +27,7 @@ public class ArticlePagerFragment extends BaseFragment {
     @BindView(R.id.article_tabs)
     TabLayout tabLayout;
     @BindView(R.id.article_pager)
-    ViewPager articlePager;
+    ViewPager viewPager;
 
     ArticlePagerAdapter adapter;
     private Unbinder unbinder;
@@ -54,9 +54,9 @@ public class ArticlePagerFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_article_pager, container, false);
         unbinder = ButterKnife.bind(this, view);
         adapter = new ArticlePagerAdapter(getFragmentManager());
-        articlePager.setAdapter(adapter);
+        viewPager.setAdapter(adapter);
 
-        tabLayout.setupWithViewPager(articlePager);
+        tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         for (int i = 0; i < tabLayout.getTabCount(); i++) {
             TabLayout.Tab tab = tabLayout.getTabAt(i);

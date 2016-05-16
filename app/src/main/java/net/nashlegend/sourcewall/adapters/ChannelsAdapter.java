@@ -115,9 +115,9 @@ public class ChannelsAdapter extends BaseExpandableListAdapter {
         //添加科学人的所有栏目
         cols.add(ChannelHelper.getArticles());
         //添加小组
-        cols.add(getGroupSections());
+        cols.add(ChannelHelper.getGroupSectionsByUserState());
         //添加问答
-        cols.add(getAskSections());
+        cols.add(ChannelHelper.getQuestionSectionsByUserState());
         if (UserAPI.isLoggedIn()) {
             //添加收藏
             ArrayList<SubItem> basketSubItems = getBasketSections();
@@ -131,36 +131,6 @@ public class ChannelsAdapter extends BaseExpandableListAdapter {
         setGroupList(groups);
         setSubLists(cols);
         notifyDataSetChanged();
-    }
-
-    private ArrayList<SubItem> getGroupSections() {
-        //重新加载小组数据库
-        ArrayList<SubItem> groupSubItems = new ArrayList<>();
-        if (UserAPI.isLoggedIn()) {
-            groupSubItems.add(new SubItem(SubItem.Section_Post, SubItem.Type_Private_Channel, "我的小组", "user_group"));
-        }
-        if (GroupHelper.getMyGroupsNumber() > 0) {
-            //如果已经加载了栏目
-            groupSubItems.add(new SubItem(SubItem.Section_Post, SubItem.Type_Collections, "小组热贴", "hot_posts"));
-            groupSubItems.addAll(GroupHelper.getSelectedGroupSubItems());
-        } else {
-            groupSubItems.addAll(ChannelHelper.getPosts());
-        }
-        return groupSubItems;
-    }
-
-    private ArrayList<SubItem> getAskSections() {
-        //重新加载标签数据库
-        ArrayList<SubItem> questionSubItems = new ArrayList<>();
-        if (AskTagHelper.getAskTagsNumber() > 0) {
-            //如果已经加载了栏目
-            questionSubItems.add(new SubItem(SubItem.Section_Question, SubItem.Type_Collections, "热门问答", "hottest"));
-            questionSubItems.add(new SubItem(SubItem.Section_Question, SubItem.Type_Collections, "精彩回答", "highlight"));
-            questionSubItems.addAll(AskTagHelper.getSelectedQuestionSubItems());
-        } else {
-            questionSubItems.addAll(ChannelHelper.getQuestions());
-        }
-        return questionSubItems;
     }
 
     private ArrayList<SubItem> getBasketSections() {

@@ -2,7 +2,10 @@ package net.nashlegend.sourcewall.util;
 
 import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
+import net.nashlegend.sourcewall.db.AskTagHelper;
+import net.nashlegend.sourcewall.db.GroupHelper;
 import net.nashlegend.sourcewall.model.SubItem;
+import net.nashlegend.sourcewall.request.api.UserAPI;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -87,6 +90,22 @@ public class ChannelHelper {
         return subItems;
     }
 
+    public static ArrayList<SubItem> getGroupSectionsByUserState() {
+        //重新加载小组数据库
+        ArrayList<SubItem> groupSubItems = new ArrayList<>();
+        if (UserAPI.isLoggedIn()) {
+            groupSubItems.add(new SubItem(SubItem.Section_Post, SubItem.Type_Private_Channel, "我的小组", "user_group"));
+        }
+        if (GroupHelper.getMyGroupsNumber() > 0) {
+            //如果已经加载了栏目
+            groupSubItems.add(new SubItem(SubItem.Section_Post, SubItem.Type_Collections, "小组热贴", "hot_posts"));
+            groupSubItems.addAll(GroupHelper.getSelectedGroupSubItems());
+        } else {
+            groupSubItems.addAll(ChannelHelper.getPosts());
+        }
+        return groupSubItems;
+    }
+
     public static ArrayList<SubItem> getQuestions() {
         SubItem[] items = {
                 new SubItem(SubItem.Section_Question, SubItem.Type_Collections, "热门问答", "hottest"),
@@ -110,5 +129,19 @@ public class ChannelHelper {
         ArrayList<SubItem> subItems = new ArrayList<>();
         Collections.addAll(subItems, items);
         return subItems;
+    }
+
+    public static ArrayList<SubItem> getQuestionSectionsByUserState() {
+        //重新加载标签数据库
+        ArrayList<SubItem> questionSubItems = new ArrayList<>();
+        if (AskTagHelper.getAskTagsNumber() > 0) {
+            //如果已经加载了栏目
+            questionSubItems.add(new SubItem(SubItem.Section_Question, SubItem.Type_Collections, "热门问答", "hottest"));
+            questionSubItems.add(new SubItem(SubItem.Section_Question, SubItem.Type_Collections, "精彩回答", "highlight"));
+            questionSubItems.addAll(AskTagHelper.getSelectedQuestionSubItems());
+        } else {
+            questionSubItems.addAll(ChannelHelper.getQuestions());
+        }
+        return questionSubItems;
     }
 }
