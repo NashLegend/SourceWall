@@ -78,6 +78,11 @@ public class PostPagerFragment extends BaseFragment {
         }
 
         @Override
+        public CharSequence getPageTitle(int position) {
+            return subItems.get(position).getName();
+        }
+
+        @Override
         public Fragment getItem(int position) {
             return Posts2Fragment.newInstance(subItems.get(position));
         }

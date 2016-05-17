@@ -84,6 +84,11 @@ public class QuestionPagerFragment extends BaseFragment {
         }
 
         @Override
+        public CharSequence getPageTitle(int position) {
+            return subItems.get(position).getName();
+        }
+
+        @Override
         public Fragment getItem(int position) {
             return Questions2Fragment.newInstance(subItems.get(position));
         }

@@ -79,6 +79,11 @@ public class ArticlePagerFragment extends BaseFragment {
         }
 
         @Override
+        public CharSequence getPageTitle(int position) {
+            return subItems.get(position).getName();
+        }
+
+        @Override
         public Fragment getItem(int position) {
             return Articles2Fragment.newInstance(subItems.get(position));
         }
