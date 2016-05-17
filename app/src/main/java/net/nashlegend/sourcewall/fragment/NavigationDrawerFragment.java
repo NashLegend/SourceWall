@@ -94,7 +94,6 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
     private boolean currentLoginState = false;
     private String currentUkey = "";
     private SubItem lazyItem;
-    private Unbinder unbinder;
 
     public NavigationDrawerFragment() {
 
@@ -459,9 +458,4 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
         userName.setText(info.getNickname());
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-    }
 }

@@ -53,7 +53,6 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
 
     private ArticleAdapter adapter;
     private SubItem subItem;
-    private Unbinder unbinder;
 
     @Override
     public void onAttach(Context context) {
@@ -253,13 +252,6 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
                         }
                     }
                 });
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-        layoutView = null;
     }
 
     @Override

@@ -52,7 +52,6 @@ public class Articles2Fragment extends BaseFragment implements LoadingView.Reloa
 
     private ArticleAdapter adapter;
     private SubItem subItem;
-    private Unbinder unbinder;
 
     public Articles2Fragment() {
         // Required empty public constructor
@@ -194,12 +193,6 @@ public class Articles2Fragment extends BaseFragment implements LoadingView.Reloa
                         }
                     }
                 });
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
     }
 
     @Override

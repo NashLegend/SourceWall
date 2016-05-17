@@ -51,7 +51,6 @@ public class FavorsFragment extends ChannelsFragment implements LListView.OnRefr
 
     private FavorAdapter adapter;
     private SubItem subItem;
-    private Unbinder unbinder;
 
     @Override
     public void onAttach(Context context) {
@@ -246,13 +245,6 @@ public class FavorsFragment extends ChannelsFragment implements LListView.OnRefr
                         }
                     }
                 });
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-        layoutView = null;
     }
 
     @Override

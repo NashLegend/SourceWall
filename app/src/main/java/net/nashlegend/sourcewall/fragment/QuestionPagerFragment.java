@@ -19,14 +19,13 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link QuestionPagerFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class QuestionPagerFragment extends Fragment {
+public class QuestionPagerFragment extends BaseFragment {
 
     ArrayList<SubItem> subItems = ChannelHelper.getQuestionSectionsByUserState();
     @BindView(R.id.question_tabs)
@@ -35,7 +34,6 @@ public class QuestionPagerFragment extends Fragment {
     ViewPager viewPager;
 
     QuestionPagerAdapter adapter;
-    private Unbinder unbinder;
 
     public QuestionPagerFragment() {
         // Required empty public constructor

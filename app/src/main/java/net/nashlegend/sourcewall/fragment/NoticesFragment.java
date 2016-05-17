@@ -47,7 +47,6 @@ public class NoticesFragment extends BaseFragment implements IChannelsFragment, 
 
     private NoticeAdapter adapter;
     private ProgressDialog progressDialog;
-    private Unbinder unbinder;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -214,9 +213,4 @@ public class NoticesFragment extends BaseFragment implements IChannelsFragment, 
         listView.setSelection(0);
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-    }
 }

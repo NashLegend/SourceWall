@@ -95,7 +95,6 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     private ShuffleDeskSimple deskSimple;
     private Button manageButton;
     private long currentDBVersion = -1;
-    private Unbinder unbinder;
 
     @Override
     public void onAttach(Context context) {
@@ -687,10 +686,4 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         }
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-        layoutView = null;
-    }
 }

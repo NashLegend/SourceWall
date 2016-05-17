@@ -35,7 +35,6 @@ public class PostPagerFragment extends BaseFragment {
     ViewPager viewPager;
 
     PostPagerAdapter adapter;
-    private Unbinder unbinder;
 
     public PostPagerFragment() {
         // Required empty public constructor
@@ -65,12 +64,6 @@ public class PostPagerFragment extends BaseFragment {
             tab.setText(subItems.get(i).getName());
         }
         return view;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
     }
 
     class PostPagerAdapter extends FragmentStatePagerAdapter {

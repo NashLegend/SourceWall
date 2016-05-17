@@ -98,7 +98,6 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
     private long currentDBVersion = -1;
     private final int Code_Publish_Question = 1055;
     private final int cacheDuration = 300;
-    private Unbinder unbinder;
 
     @Override
     public void onAttach(Context context) {
@@ -661,13 +660,6 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
                         }
                     }
                 });
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-        layoutView = null;
     }
 
     @Override

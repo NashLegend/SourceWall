@@ -30,7 +30,6 @@ public class ArticlePagerFragment extends BaseFragment {
     ViewPager viewPager;
 
     ArticlePagerAdapter adapter;
-    private Unbinder unbinder;
 
     public ArticlePagerFragment() {
         // Required empty public constructor
@@ -67,12 +66,6 @@ public class ArticlePagerFragment extends BaseFragment {
         }
 
         return view;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
     }
 
     class ArticlePagerAdapter extends FragmentStatePagerAdapter {

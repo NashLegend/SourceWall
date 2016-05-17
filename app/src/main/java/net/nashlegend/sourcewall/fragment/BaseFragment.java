@@ -8,12 +8,15 @@ import net.nashlegend.sourcewall.view.common.IStackedAsyncTaskInterface;
 
 import java.util.ArrayList;
 
+import butterknife.Unbinder;
+
 /**
  * Created by NashLegend on 2014/9/18 0018
  */
 public abstract class BaseFragment extends Fragment implements IStackedAsyncTaskInterface {
     private final ArrayList<AAsyncTask> stackedTasks = new ArrayList<>();
     private boolean isActive = false;
+    public Unbinder unbinder;
 
     @Override
     public void addToStackedTasks(AAsyncTask task) {
@@ -43,6 +46,18 @@ public abstract class BaseFragment extends Fragment implements IStackedAsyncTask
 
     public boolean isActive() {
         return isActive;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (unbinder != null) {
+            try {
+                unbinder.unbind();
+            } catch (Exception ignored) {
+
+            }
+        }
     }
 
     @Override

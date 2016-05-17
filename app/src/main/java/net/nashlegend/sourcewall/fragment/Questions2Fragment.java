@@ -58,7 +58,6 @@ public class Questions2Fragment extends BaseFragment implements LoadingView.Relo
     private SubItem subItem;
     private int currentPage = -1;//page从0开始，-1表示还没有数据
     private View headerView;
-    private Unbinder unbinder;
 
     public Questions2Fragment() {
         // Required empty public constructor
@@ -284,12 +283,6 @@ public class Questions2Fragment extends BaseFragment implements LoadingView.Relo
                         }
                     }
                 });
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
     }
 
     @Override
