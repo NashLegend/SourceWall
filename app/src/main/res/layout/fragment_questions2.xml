@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -11,7 +12,8 @@
         android:divider="@null"
         android:paddingLeft="@dimen/list_standard_padding_horizontal"
         android:paddingRight="@dimen/list_standard_padding_horizontal"
-        android:scrollbarStyle="outsideOverlay" />
+        android:scrollbarStyle="outsideOverlay"
+        tools:listitem="@layout/layout_question_item_view" />
 
     <ProgressBar
         android:id="@+id/questions_loading"

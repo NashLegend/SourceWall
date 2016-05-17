@@ -1,6 +1,5 @@
 package net.nashlegend.sourcewall.fragment;
 
-
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -20,11 +19,6 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link QuestionPagerFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class QuestionPagerFragment extends BaseFragment {
     View layoutView;
     ArrayList<SubItem> subItems = ChannelHelper.getQuestionSectionsByUserState();
@@ -56,25 +50,12 @@ public class QuestionPagerFragment extends BaseFragment {
             viewPager.setAdapter(adapter);
             tabLayout.setupWithViewPager(viewPager);
             tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-            for (int i = 0; i < tabLayout.getTabCount(); i++) {
-                TabLayout.Tab tab = tabLayout.getTabAt(i);
-                if (tab == null) {
-                    break;
-                }
-                tab.setText(subItems.get(i).getName());
-            }
         } else {
             if (layoutView.getParent() != null) {
                 ((ViewGroup) layoutView.getParent()).removeView(layoutView);
             }
         }
         return layoutView;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
     }
 
     class QuestionPagerAdapter extends FragmentStatePagerAdapter {

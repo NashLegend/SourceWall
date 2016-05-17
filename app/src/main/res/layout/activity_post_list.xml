@@ -32,7 +32,8 @@
             android:layout_height="match_parent"
             android:background="?attr/color_list_background"
             android:footerDividersEnabled="false"
-            android:headerDividersEnabled="false" />
+            android:headerDividersEnabled="false"
+            tools:listitem="@layout/layout_post_item_view"/>
 
         <net.nashlegend.sourcewall.view.common.LoadingView
             android:id="@+id/post_progress_loading"

@@ -25,8 +25,6 @@ public class Main2Activity extends BaseActivity {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.main2_content)
-    FrameLayout main2Content;
     @BindView(R.id.bottom_bar)
     PagerBottomTabLayout bottomBar;
 

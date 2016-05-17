@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:foreground="@drawable/selectable_item_background"
@@ -20,9 +21,9 @@
             android:id="@+id/text_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/sample_title"
             android:textColor="?attr/color_list_title"
-            android:textSize="@dimen/list_standard_title_font_size" />
+            android:textSize="@dimen/list_standard_title_font_size"
+            tools:text="@string/sample_title" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -37,8 +38,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
                 android:singleLine="true"
-                android:text="@string/sample_author"
-                android:textColor="?attr/color_author_color" />
+                android:textColor="?attr/color_author_color"
+                tools:text="@string/sample_author" />
 
             <TextView
                 android:id="@+id/text_date"
@@ -47,8 +48,8 @@
                 android:layout_marginLeft="@dimen/list_standard_item_text_text_gap"
                 android:layout_weight="0"
                 android:singleLine="true"
-                android:text="@string/sample_date"
-                android:textColor="?attr/color_author_color" />
+                android:textColor="?attr/color_author_color"
+                tools:text="@string/sample_date" />
 
             <View
                 android:layout_width="0dp"
@@ -69,9 +70,9 @@
                 android:layout_weight="0"
                 android:paddingBottom="1.5dp"
                 android:singleLine="true"
-                android:text="@string/sample_like_num"
                 android:textColor="?attr/color_author_color"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                tools:text="@string/sample_like_num" />
         </LinearLayout>
 
         <net.nashlegend.sourcewall.view.ArticleImage
@@ -87,7 +88,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/list_standard_image_summary_span"
             android:lineSpacingExtra="@dimen/lineSpacingExtra"
-            android:text="@string/sample_summary"
-            android:textColor="?attr/color_list_summary" />
+            android:textColor="?attr/color_list_summary"
+            tools:text="@string/sample_summary" />
     </LinearLayout>
 </android.support.v7.widget.CardView>

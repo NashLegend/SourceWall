@@ -11,7 +11,8 @@
         android:divider="@null"
         android:paddingLeft="@dimen/list_standard_padding_horizontal"
         android:paddingRight="@dimen/list_standard_padding_horizontal"
-        android:scrollbarStyle="outsideOverlay" />
+        android:scrollbarStyle="outsideOverlay"
+        tools:listitem="@layout/layout_article_item_view" />
 
     <ProgressBar
         android:id="@+id/articles_loading"

@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:paddingBottom="@dimen/list_standard_item_padding_vertical"
     android:paddingLeft="@dimen/list_standard_item_padding_horizontal"
@@ -31,7 +32,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/sample_author" />
+                tools:text="@string/sample_author" />
 
             <TextView
                 android:id="@+id/text_date"
@@ -40,7 +41,7 @@
                 android:textColor="?attr/color_author_color"
                 android:layout_marginLeft="@dimen/list_standard_item_text_text_gap"
                 android:layout_weight="0"
-                android:text="@string/sample_date" />
+                tools:text="@string/sample_date" />
         </LinearLayout>
 
         <TextView
@@ -50,6 +51,6 @@
             android:lineSpacingExtra="@dimen/lineSpacingExtra"
             android:textColor="?attr/color_author_color"
             android:layout_marginTop="5dp"
-            android:text="@string/sample_summary" />
+            tools:text="@string/sample_summary" />
     </LinearLayout>
 </LinearLayout>

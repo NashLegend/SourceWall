@@ -3,6 +3,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:descendantFocusability="blocksDescendants"
     android:orientation="horizontal"
     android:paddingBottom="12dp"
@@ -15,7 +16,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="@string/sample_summary" />
+        tools:text="@string/sample_summary" />
 
     <ImageButton
         android:id="@+id/btn_ignore"

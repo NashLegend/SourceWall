@@ -20,11 +20,6 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link PostPagerFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class PostPagerFragment extends BaseFragment {
     View layoutView;
     ArrayList<SubItem> subItems = ChannelHelper.getGroupSectionsByUserState();
@@ -56,13 +51,6 @@ public class PostPagerFragment extends BaseFragment {
             viewPager.setAdapter(adapter);
             tabLayout.setupWithViewPager(viewPager);
             tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-            for (int i = 0; i < tabLayout.getTabCount(); i++) {
-                TabLayout.Tab tab = tabLayout.getTabAt(i);
-                if (tab == null) {
-                    break;
-                }
-                tab.setText(subItems.get(i).getName());
-            }
         } else {
             if (layoutView.getParent() != null) {
                 ((ViewGroup) layoutView.getParent()).removeView(layoutView);

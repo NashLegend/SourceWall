@@ -68,7 +68,7 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:paddingTop="10dp"
-        android:text="@string/sample_title"
+        tools:text="@string/sample_title"
         android:textColor="?attr/color_answer_question_title_text"
         android:textSize="@dimen/Text_title_size_dimen" />
 
@@ -106,14 +106,14 @@
                     android:id="@+id/text_author"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/sample_author"
+                    tools:text="@string/sample_author"
                     android:textColor="?attr/color_answer_author_text" />
 
                 <TextView
                     android:id="@+id/text_author_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/sample_author_title"
+                    tools:text="@string/sample_author_title"
                     android:textColor="?attr/color_answer_author_sub_text" />
             </LinearLayout>
 
@@ -136,7 +136,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/list_standard_item_text_icon_gap"
                     android:layout_weight="0"
-                    android:text="@string/sample_like_num"
+                    tools:text="@string/sample_like_num"
                     android:textColor="?attr/color_answer_author_sub_text" />
             </LinearLayout>
         </LinearLayout>

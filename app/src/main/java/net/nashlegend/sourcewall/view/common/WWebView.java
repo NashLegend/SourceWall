@@ -48,8 +48,7 @@ public class WWebView extends WebView {
     ArrayList<String> images = null;
 
     public WWebView(Context context) {
-        super(context);
-        init();
+        this(context, null);
     }
 
     public WWebView(Context context, AttributeSet attrs) {

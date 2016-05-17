@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:foreground="@drawable/selectable_item_background"
     app:cardBackgroundColor="?attr/cardBackgroundColor"
     app:cardUseCompatPadding="true">
@@ -20,7 +21,7 @@
             android:id="@+id/text_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/sample_title"
+            tools:text="@string/sample_title"
             android:textColor="?attr/color_list_title"
             android:textSize="@dimen/list_standard_title_font_size" />
 
@@ -32,7 +33,7 @@
             android:ellipsize="end"
             android:lineSpacingExtra="@dimen/lineSpacingExtra"
             android:maxLines="3"
-            android:text="@string/sample_summary"
+            tools:text="@string/sample_summary"
             android:textColor="?attr/color_list_summary"
             android:textSize="@dimen/list_standard_summary_font_size" />
     </LinearLayout>

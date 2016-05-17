@@ -2,7 +2,8 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <net.nashlegend.sourcewall.view.common.LListView
         android:id="@+id/list_questions"
@@ -10,6 +11,7 @@
         android:layout_height="match_parent"
         android:divider="@null"
         android:paddingLeft="@dimen/list_standard_padding_horizontal"
+        tools:listitem="@layout/layout_question_item_view"
         android:paddingRight="@dimen/list_standard_padding_horizontal"
         android:scrollbarStyle="outsideOverlay" />
 

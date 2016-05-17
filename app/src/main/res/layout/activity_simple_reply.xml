@@ -32,12 +32,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:footerDividersEnabled="false"
-            android:headerDividersEnabled="false" />
+            android:headerDividersEnabled="false"
+            tools:listitem="@layout/layout_simple_comment_item_view" />
 
         <net.nashlegend.sourcewall.view.common.LoadingView
             android:id="@+id/replies_progress_loading"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            tools:visibility="gone" />
 
     </RelativeLayout>
 

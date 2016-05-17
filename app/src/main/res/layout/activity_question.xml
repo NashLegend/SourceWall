@@ -21,12 +21,15 @@
             android:overScrollMode="never"
             android:paddingLeft="@dimen/list_standard_padding_horizontal"
             android:paddingRight="@dimen/list_standard_padding_horizontal"
-            android:scrollbarStyle="outsideOverlay" />
+            android:scrollbarStyle="outsideOverlay"
+            tools:listheader="@layout/layout_question_view"
+            tools:listitem="@layout/layout_medium_comment_item_view" />
 
         <net.nashlegend.sourcewall.view.common.LoadingView
             android:id="@+id/question_progress_loading"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            tools:visibility="gone" />
     </RelativeLayout>
 
     <android.support.design.widget.AppBarLayout

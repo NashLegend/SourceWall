@@ -54,16 +54,8 @@ public class ArticlePagerFragment extends BaseFragment {
             unbinder = ButterKnife.bind(this, layoutView);
             adapter = new ArticlePagerAdapter(getFragmentManager());
             viewPager.setAdapter(adapter);
-
             tabLayout.setupWithViewPager(viewPager);
             tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-            for (int i = 0; i < tabLayout.getTabCount(); i++) {
-                TabLayout.Tab tab = tabLayout.getTabAt(i);
-                if (tab == null) {
-                    break;
-                }
-                tab.setText(subItems.get(i).getName());
-            }
         } else {
             if (layoutView.getParent() != null) {
                 ((ViewGroup) layoutView.getParent()).removeView(layoutView);

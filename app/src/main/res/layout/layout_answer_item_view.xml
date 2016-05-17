@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:foreground="@drawable/selectable_item_background"
     app:cardBackgroundColor="?attr/cardBackgroundColor"
     app:cardUseCompatPadding="true">
@@ -36,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:gravity="center"
-                android:text="@string/sample_support_number"
+                tools:text="@string/sample_support_number"
                 android:textColor="?attr/color_author_color"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -57,7 +58,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
-                    android:text="@string/sample_author"
+                    tools:text="@string/sample_author"
                     android:textColor="?attr/color_author_color" />
 
                 <TextView
@@ -66,7 +67,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/list_standard_item_text_text_gap"
                     android:singleLine="true"
-                    android:text="@string/sample_author_title"
+                    tools:text="@string/sample_author_title"
                     android:textColor="?attr/color_author_color" />
             </LinearLayout>
 
@@ -74,7 +75,7 @@
                 android:id="@+id/text_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/sample_date"
+                tools:text="@string/sample_date"
                 android:textColor="?attr/color_author_color" />
 
             <TextView
@@ -83,7 +84,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="3"
-                android:text="@string/sample_summary"
+                tools:text="@string/sample_summary"
                 android:textColor="?attr/color_list_summary"
                 android:textSize="@dimen/list_standard_summary_font_size" />
         </LinearLayout>

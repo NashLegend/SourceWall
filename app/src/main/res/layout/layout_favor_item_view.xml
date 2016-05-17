@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <LinearLayout
@@ -20,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/post_item_title_margin_bottom"
-            android:text="@string/sample_title"
+            tools:text="@string/sample_title"
             android:textColor="?attr/color_list_title"
             android:textSize="@dimen/list_standard_title_font_size" />
 
@@ -29,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:text="@string/sample_date"
+            tools:text="@string/sample_date"
             android:textColor="?attr/color_author_color"
             android:textSize="@dimen/text_author_view_font_size_dimen" />
     </LinearLayout>

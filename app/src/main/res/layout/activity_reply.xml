@@ -1,6 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/color_clear_page_background"
@@ -38,10 +38,10 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/abc_action_bar_subtitle_bottom_margin_material"
-            android:text="@string/sample_title"
             android:textColor="?attr/color_reply_quote_text"
             android:textSize="16sp"
-            android:visibility="gone" />
+            android:visibility="gone"
+            tools:text="@string/sample_title" />
 
         <EditText
             android:id="@+id/text_reply"
