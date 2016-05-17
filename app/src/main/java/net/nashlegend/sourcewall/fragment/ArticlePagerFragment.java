@@ -49,21 +49,26 @@ public class ArticlePagerFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        layoutView = inflater.inflate(R.layout.fragment_article_pager, container, false);
-        unbinder = ButterKnife.bind(this, layoutView);
-        adapter = new ArticlePagerAdapter(getFragmentManager());
-        viewPager.setAdapter(adapter);
+        if (layoutView == null) {
+            layoutView = inflater.inflate(R.layout.fragment_article_pager, container, false);
+            unbinder = ButterKnife.bind(this, layoutView);
+            adapter = new ArticlePagerAdapter(getFragmentManager());
+            viewPager.setAdapter(adapter);
 
-        tabLayout.setupWithViewPager(viewPager);
-        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-        for (int i = 0; i < tabLayout.getTabCount(); i++) {
-            TabLayout.Tab tab = tabLayout.getTabAt(i);
-            if (tab == null) {
-                break;
+            tabLayout.setupWithViewPager(viewPager);
+            tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+            for (int i = 0; i < tabLayout.getTabCount(); i++) {
+                TabLayout.Tab tab = tabLayout.getTabAt(i);
+                if (tab == null) {
+                    break;
+                }
+                tab.setText(subItems.get(i).getName());
             }
-            tab.setText(subItems.get(i).getName());
+        } else {
+            if (layoutView.getParent() != null) {
+                ((ViewGroup) layoutView.getParent()).removeView(layoutView);
+            }
         }
-
         return layoutView;
     }
 
