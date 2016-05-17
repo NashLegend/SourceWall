@@ -1,7 +1,6 @@
 package net.nashlegend.sourcewall.request;
 
 import net.nashlegend.sourcewall.R;
-import net.nashlegend.sourcewall.events.LoginStateChangedEvent;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.ToastUtil;
 
@@ -11,8 +10,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
-
-import de.greenrobot.event.EventBus;
 
 /**
  * Created by NashLegend on 2015/9/23 0023.

@@ -1,6 +1,5 @@
 package net.nashlegend.sourcewall.request.parsers;
 
-import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.Favor;
 import net.nashlegend.sourcewall.request.JsonHandler;
 import net.nashlegend.sourcewall.request.ResponseObject;

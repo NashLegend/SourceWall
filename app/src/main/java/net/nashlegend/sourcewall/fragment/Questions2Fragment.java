@@ -31,7 +31,6 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -43,7 +42,7 @@ import rx.functions.Action0;
  * create an instance of this fragment.
  */
 public class Questions2Fragment extends BaseFragment implements LoadingView.ReloadListener, LListView.OnRefreshListener, AdapterView.OnItemClickListener {
-
+    View layoutView;
     private final String HOTTEST = "hottest";
     private final String HIGHLIGHT = "highlight";
 
@@ -82,8 +81,7 @@ public class Questions2Fragment extends BaseFragment implements LoadingView.Relo
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View layoutView = inflater.inflate(R.layout.fragment_questions2, container, false);
+        layoutView = inflater.inflate(R.layout.fragment_questions2, container, false);
         unbinder = ButterKnife.bind(this, layoutView);
         loadingView.setReloadListener(this);
         subItem = getArguments().getParcelable(Consts.Extra_SubItem);

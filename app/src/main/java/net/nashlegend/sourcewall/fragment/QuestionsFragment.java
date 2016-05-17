@@ -63,7 +63,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import de.greenrobot.event.EventBus;
 import rx.Observable;
 import rx.Observer;

@@ -2,7 +2,6 @@ package net.nashlegend.sourcewall.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,7 +11,6 @@ import android.widget.AdapterView;
 import android.widget.ProgressBar;
 
 import net.nashlegend.sourcewall.R;
-import net.nashlegend.sourcewall.activities.MainActivity;
 import net.nashlegend.sourcewall.activities.PostActivity;
 import net.nashlegend.sourcewall.adapters.PostAdapter;
 import net.nashlegend.sourcewall.model.Post;
@@ -29,13 +27,13 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 
 public class Posts2Fragment extends BaseFragment implements LoadingView.ReloadListener, LListView.OnRefreshListener, AdapterView.OnItemClickListener {
+    View layoutView;
     @BindView(R.id.list_posts)
     LListView listView;
     @BindView(R.id.posts_loading)
@@ -71,7 +69,7 @@ public class Posts2Fragment extends BaseFragment implements LoadingView.ReloadLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View layoutView = inflater.inflate(R.layout.fragment_posts2, container, false);
+        layoutView = inflater.inflate(R.layout.fragment_posts2, container, false);
         unbinder = ButterKnife.bind(this, layoutView);
         subItem = getArguments().getParcelable(Consts.Extra_SubItem);
         headerView = inflater.inflate(R.layout.layout_header_load_pre_page, null, false);

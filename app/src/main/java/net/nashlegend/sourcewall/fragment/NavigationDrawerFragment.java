@@ -37,13 +37,11 @@ import net.nashlegend.sourcewall.adapters.ChannelsAdapter;
 import net.nashlegend.sourcewall.events.LoginStateChangedEvent;
 import net.nashlegend.sourcewall.events.OpenContentFragmentEvent;
 import net.nashlegend.sourcewall.events.PrepareOpenContentFragmentEvent;
-import net.nashlegend.sourcewall.model.Basket;
 import net.nashlegend.sourcewall.model.ReminderNoticeNum;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.model.UserInfo;
 import net.nashlegend.sourcewall.request.RequestObject;
 import net.nashlegend.sourcewall.request.ResponseObject;
-import net.nashlegend.sourcewall.request.api.FavorAPI;
 import net.nashlegend.sourcewall.request.api.MessageAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.CommonUtil;
@@ -54,12 +52,9 @@ import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 import net.nashlegend.sourcewall.view.SubItemView;
 
-import java.util.ArrayList;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 import de.greenrobot.event.EventBus;
 
 public class NavigationDrawerFragment extends BaseFragment implements View.OnClickListener {

@@ -19,10 +19,9 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 public class ArticlePagerFragment extends BaseFragment {
-
+    View layoutView;
     ArrayList<SubItem> subItems = ChannelHelper.getArticles();
     @BindView(R.id.article_tabs)
     TabLayout tabLayout;
@@ -50,8 +49,8 @@ public class ArticlePagerFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_article_pager, container, false);
-        unbinder = ButterKnife.bind(this, view);
+        layoutView = inflater.inflate(R.layout.fragment_article_pager, container, false);
+        unbinder = ButterKnife.bind(this, layoutView);
         adapter = new ArticlePagerAdapter(getFragmentManager());
         viewPager.setAdapter(adapter);
 
@@ -65,7 +64,7 @@ public class ArticlePagerFragment extends BaseFragment {
             tab.setText(subItems.get(i).getName());
         }
 
-        return view;
+        return layoutView;
     }
 
     class ArticlePagerAdapter extends FragmentStatePagerAdapter {

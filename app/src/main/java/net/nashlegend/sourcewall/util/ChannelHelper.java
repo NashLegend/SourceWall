@@ -16,7 +16,7 @@ import java.util.Collections;
  */
 public class ChannelHelper {
 
-    public static SubItem getBasketGroup(){
+    public static SubItem getBasketGroup() {
         return new SubItem(SubItem.Section_Favor, SubItem.Type_Group, App.getApp().getResources().getString(R.string.baskets), "Baskets");
     }
 

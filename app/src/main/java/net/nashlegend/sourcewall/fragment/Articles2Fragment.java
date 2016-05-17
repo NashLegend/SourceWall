@@ -14,7 +14,6 @@ import android.widget.ProgressBar;
 import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.ArticleActivity;
-import net.nashlegend.sourcewall.activities.MainActivity;
 import net.nashlegend.sourcewall.adapters.ArticleAdapter;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.SubItem;
@@ -30,7 +29,6 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -42,7 +40,7 @@ import rx.functions.Action0;
  * create an instance of this fragment.
  */
 public class Articles2Fragment extends BaseFragment implements LoadingView.ReloadListener, LListView.OnRefreshListener, AdapterView.OnItemClickListener {
-
+    View layoutView;
     @BindView(R.id.list_articles)
     LListView listView;
     @BindView(R.id.articles_loading)
@@ -75,7 +73,7 @@ public class Articles2Fragment extends BaseFragment implements LoadingView.Reloa
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View layoutView = inflater.inflate(R.layout.fragment_articles2, container, false);
+        layoutView = inflater.inflate(R.layout.fragment_articles2, container, false);
         unbinder = ButterKnife.bind(this, layoutView);
         loadingView.setReloadListener(this);
         subItem = getArguments().getParcelable(Consts.Extra_SubItem);

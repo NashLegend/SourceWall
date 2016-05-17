@@ -7,9 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 
-import net.nashlegend.sourcewall.db.AskTagHelper;
 import net.nashlegend.sourcewall.db.BasketHelper;
-import net.nashlegend.sourcewall.db.GroupHelper;
 import net.nashlegend.sourcewall.model.Basket;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.RequestObject;

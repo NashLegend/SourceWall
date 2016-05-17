@@ -19,7 +19,6 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,7 +26,7 @@ import butterknife.Unbinder;
  * create an instance of this fragment.
  */
 public class PostPagerFragment extends BaseFragment {
-
+    View layoutView;
     ArrayList<SubItem> subItems = ChannelHelper.getGroupSectionsByUserState();
     @BindView(R.id.post_tabs)
     TabLayout tabLayout;
@@ -50,8 +49,8 @@ public class PostPagerFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_post_pager, container, false);
-        unbinder = ButterKnife.bind(this, view);
+        layoutView = inflater.inflate(R.layout.fragment_post_pager, container, false);
+        unbinder = ButterKnife.bind(this, layoutView);
         adapter = new PostPagerAdapter(getFragmentManager());
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
@@ -63,7 +62,7 @@ public class PostPagerFragment extends BaseFragment {
             }
             tab.setText(subItems.get(i).getName());
         }
-        return view;
+        return layoutView;
     }
 
     class PostPagerAdapter extends FragmentStatePagerAdapter {

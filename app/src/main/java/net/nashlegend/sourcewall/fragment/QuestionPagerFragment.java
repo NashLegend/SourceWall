@@ -26,7 +26,7 @@ import butterknife.ButterKnife;
  * create an instance of this fragment.
  */
 public class QuestionPagerFragment extends BaseFragment {
-
+    View layoutView;
     ArrayList<SubItem> subItems = ChannelHelper.getQuestionSectionsByUserState();
     @BindView(R.id.question_tabs)
     TabLayout tabLayout;
@@ -49,8 +49,8 @@ public class QuestionPagerFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_question_pager, container, false);
-        unbinder = ButterKnife.bind(this, view);
+        layoutView = inflater.inflate(R.layout.fragment_question_pager, container, false);
+        unbinder = ButterKnife.bind(this, layoutView);
         adapter = new QuestionPagerAdapter(getFragmentManager());
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
@@ -62,7 +62,7 @@ public class QuestionPagerFragment extends BaseFragment {
             }
             tab.setText(subItems.get(i).getName());
         }
-        return view;
+        return layoutView;
     }
 
     @Override
