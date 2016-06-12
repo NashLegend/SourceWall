@@ -51,13 +51,6 @@ public abstract class BaseFragment extends Fragment implements IStackedAsyncTask
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (unbinder != null) {
-            try {
-                unbinder.unbind();
-            } catch (Exception ignored) {
-
-            }
-        }
     }
 
     @Override
