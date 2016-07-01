@@ -26,8 +26,7 @@ public class RequestDelegate {
     }
 
     public Call get(String url, Object tag) throws Exception {
-        Request request = new Request.Builder().get().url(url).tag(tag).build();
-        return defaultHttpClient.newCall(request);
+        return requestSync(Method.GET, null, url, tag);
     }
 
     public Call get(String url, HashMap<String, String> params, Object tag) throws Exception {
@@ -55,9 +54,7 @@ public class RequestDelegate {
                 builder.add(entry.getKey(), entry.getValue());
             }
         }
-        RequestBody formBody = builder.build();
-        Request request = new Request.Builder().post(formBody).url(url).tag(tag).build();
-        return defaultHttpClient.newCall(request);
+        return requestSync(Method.POST, builder.build(), url, tag);
     }
 
     public Call put(String url, HashMap<String, String> params, Object tag) throws Exception {
@@ -70,9 +67,7 @@ public class RequestDelegate {
                 builder.add(entry.getKey(), entry.getValue());
             }
         }
-        RequestBody formBody = builder.build();
-        Request request = new Request.Builder().put(formBody).url(url).tag(tag).build();
-        return defaultHttpClient.newCall(request);
+        return requestSync(Method.PUT, builder.build(), url, tag);
     }
 
     public Call put(String url, Object tag) throws Exception {
@@ -83,8 +78,7 @@ public class RequestDelegate {
      * Delete 也是需要RequestBody的，然而这里并没有……
      */
     public Call delete(String url, Object tag) throws Exception {
-        Request request = new Request.Builder().delete().url(url).tag(tag).build();
-        return defaultHttpClient.newCall(request);
+        return requestSync(Method.DELETE, RequestBody.create(null, new byte[0]), url, tag);
     }
 
     public Call delete(String url, HashMap<String, String> params, Object tag) throws Exception {
@@ -124,14 +118,11 @@ public class RequestDelegate {
         return defaultHttpClient.newCall(request);
     }
 
-    synchronized public Call getAsync(String url, Callback defCallBack, Object tag) {
-        Request request = new Request.Builder().get().url(url).tag(tag).build();
-        Call call = defaultHttpClient.newCall(request);
-        call.enqueue(defCallBack);
-        return call;
+    public Call getAsync(String url, Callback defCallBack, Object tag) {
+        return requestAsync(Method.GET, null, url, tag, defCallBack);
     }
 
-    synchronized public Call getAsync(String url, HashMap<String, String> params, Callback defCallBack, Object tag) {
+    public Call getAsync(String url, HashMap<String, String> params, Callback defCallBack, Object tag) {
         StringBuilder paramString = new StringBuilder("");
         if (params == null) {
             params = new HashMap<>();
@@ -146,7 +137,7 @@ public class RequestDelegate {
         return getAsync(url + paramString.toString(), defCallBack, tag);
     }
 
-    synchronized public Call postAsync(String url, HashMap<String, String> params, Callback defCallBack, Object tag) {
+    public Call postAsync(String url, HashMap<String, String> params, Callback defCallBack, Object tag) {
         if (params == null) {
             params = new HashMap<>();
         }
@@ -156,13 +147,10 @@ public class RequestDelegate {
                 builder.add(entry.getKey(), entry.getValue());
             }
         }
-        Request request = new Request.Builder().post(builder.build()).url(url).tag(tag).build();
-        Call call = defaultHttpClient.newCall(request);
-        call.enqueue(defCallBack);
-        return call;
+        return requestAsync(Method.POST, builder.build(), url, tag, defCallBack);
     }
 
-    synchronized public Call putAsync(String url, HashMap<String, String> params, Callback defCallBack, Object tag) {
+    public Call putAsync(String url, HashMap<String, String> params, Callback defCallBack, Object tag) {
         if (params == null) {
             params = new HashMap<>();
         }
@@ -172,28 +160,22 @@ public class RequestDelegate {
                 builder.add(entry.getKey(), entry.getValue());
             }
         }
-        RequestBody formBody = builder.build();
-        Request request = new Request.Builder().put(formBody).url(url).tag(tag).build();
-        Call call = defaultHttpClient.newCall(request);
-        call.enqueue(defCallBack);
-        return call;
+        return requestAsync(Method.PUT, builder.build(), url, tag, defCallBack);
     }
 
-    synchronized public Call putAsync(String url, Callback defCallBack, Object tag) {
+    public Call putAsync(String url, Callback defCallBack, Object tag) {
         return putAsync(url, null, defCallBack, tag);
     }
 
     /**
      * Delete 也是需要RequestBody的，然而这里并没有……
      */
-    synchronized public Call deleteAsync(String url, Callback defCallBack, Object tag) {
+    public Call deleteAsync(String url, Callback defCallBack, Object tag) {
         Request request = new Request.Builder().delete().url(url).tag(tag).build();
-        Call call = defaultHttpClient.newCall(request);
-        call.enqueue(defCallBack);
-        return call;
+        return requestAsync(Method.DELETE, RequestBody.create(null, new byte[0]), url, tag, defCallBack);
     }
 
-    synchronized public Call deleteAsync(String url, HashMap<String, String> params, Callback defCallBack, Object tag) {
+    public Call deleteAsync(String url, HashMap<String, String> params, Callback defCallBack, Object tag) {
         StringBuilder paramString = new StringBuilder("");
         if (params == null) {
             params = new HashMap<>();
@@ -217,7 +199,7 @@ public class RequestDelegate {
      * @param callBack
      * @return 返回ResultObject，resultObject.result是上传后的图片地址
      */
-    synchronized public Call uploadAsync(String uploadUrl, HashMap<String, String> params,
+    public Call uploadAsync(String uploadUrl, HashMap<String, String> params,
                                          String fileKey, MediaType mediaType, String filePath, Callback callBack) {
         File file = new File(filePath);
         if (file.exists() && !file.isDirectory() && file.length() > 0) {
@@ -229,11 +211,32 @@ public class RequestDelegate {
                     builder.addFormDataPart(entry.getKey(), entry.getValue());
                 }
             }
-            Request request = new Request.Builder().url(uploadUrl).post(builder.build()).build();
-            Call call = defaultHttpClient.newCall(request);
-            call.enqueue(callBack);
-            return call;
+            return requestAsync(Method.POST, builder.build(), uploadUrl, null, callBack);
         }
         return null;
+    }
+
+    public Call requestAsync(String method, RequestBody body, String url, Object tag, Callback callBack) {
+        Call call = getCall(method, body, url, tag);
+        call.enqueue(callBack);
+        return call;
+    }
+
+    public Call requestSync(String method, RequestBody body, String url, Object tag) {
+        return getCall(method, body, url, tag);
+    }
+
+    private Call getCall(String method, RequestBody body, String url, Object tag) {
+        Request request = new Request.Builder().method(method, body).url(url).tag(tag).build();
+        return defaultHttpClient.newCall(request);
+    }
+
+    static class Method {
+        public static final String GET = "GET";
+        public static final String POST = "POST";
+        public static final String DELETE = "DELETE";
+        public static final String PUT = "PUT";
+        public static final String HEAD = "HEAD";
+        public static final String PATCH = "PATCH";
     }
 }
