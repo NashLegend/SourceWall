@@ -11,7 +11,10 @@ import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.request.parsers.DirectlyStringParser;
 import net.nashlegend.sourcewall.request.parsers.Parser;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import okhttp3.MediaType;
 import rx.Observable;
@@ -103,9 +106,24 @@ public class RequestBuilder<T> {
      * @param params
      * @return
      */
-    public RequestBuilder<T> setParams(HashMap<String, String> params) {
-        rbRequest.params = params;
+    public RequestBuilder<T> setParams(List<Param> params) {
+        rbRequest.params.clear();
+        rbRequest.params.addAll(params);
         return this;
+    }
+
+    /**
+     * 设置键值对请求参数，如果之前曾经设置过，则将会清空之前的参数
+     *
+     * @param params
+     * @return
+     */
+    public RequestBuilder<T> setParams(HashMap<String, String> params) {
+        ArrayList<Param> paramList = new ArrayList<>();
+        for (Map.Entry<String, String> entry : params.entrySet()) {
+            paramList.add(new Param(entry.getKey(), entry.getValue()));
+        }
+        return setParams(paramList);
     }
 
     /**
@@ -114,11 +132,8 @@ public class RequestBuilder<T> {
      * @param params
      * @return
      */
-    public RequestBuilder<T> addParams(HashMap<String, String> params) {
-        if (rbRequest.params == null) {
-            rbRequest.params = new HashMap<>();
-        }
-        rbRequest.params.putAll(params);
+    public RequestBuilder<T> addParams(List<Param> params) {
+        rbRequest.params.addAll(params);
         return this;
     }
 
@@ -130,10 +145,7 @@ public class RequestBuilder<T> {
      * @return
      */
     public RequestBuilder<T> addParam(String key, String value) {
-        if (rbRequest.params == null) {
-            rbRequest.params = new HashMap<>();
-        }
-        rbRequest.params.put(key, value);
+        rbRequest.params.add(new Param(key, value));
         return this;
     }
 
@@ -363,12 +375,9 @@ public class RequestBuilder<T> {
 
     private void addExtras() {
         if (useToken) {
-            if (rbRequest.params == null) {
-                rbRequest.params = new HashMap<>();
-            }
             String token = UserAPI.getToken();
             if (!TextUtils.isEmpty(token)) {
-                rbRequest.params.put("access_token", token);
+                rbRequest.params.add(new Param("token", token));
             }
         }
     }

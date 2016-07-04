@@ -19,8 +19,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
@@ -64,7 +63,7 @@ public class RequestObject<T> {
     protected int interval = 0;//重试间隔
     protected int requestType = RequestType.PLAIN;
     protected int method = Method.POST;
-    protected HashMap<String, String> params = new HashMap<>();
+    public final List<Param> params = new ArrayList<>();
     protected String url = "";
     protected DetailedCallBack<T> callBack = null;
     protected Parser<T> parser;
@@ -200,28 +199,24 @@ public class RequestObject<T> {
                 if (cacheKey == null) {
                     StringBuilder keyBuilder = new StringBuilder("");
                     keyBuilder.append(method).append("/{").append(url).append("}/");
-                    if (params == null) {
-                        params = new HashMap<>();
-                    }
                     if (params.size() > 0) {
-                        ArrayList<Map.Entry<String, String>> entryArrayList = new ArrayList<>();
-                        for (HashMap.Entry<String, String> entry : params.entrySet()) {
-                            if (TextUtils.isEmpty(entry.getKey())) {
+                        ArrayList<Param> entryArrayList = new ArrayList<>();
+                        for (Param param : params) {
+                            if (TextUtils.isEmpty(param.key)) {
                                 continue;
                             }
-                            entryArrayList.add(entry);
+                            entryArrayList.add(param);
                         }
-                        Collections.sort(entryArrayList, new Comparator<Map.Entry<String, String>>() {
+                        Collections.sort(entryArrayList, new Comparator<Param>() {
                             @Override
-                            public int compare(Map.Entry<String, String> lhs, Map.Entry<String, String> rhs) {
-                                return lhs.getKey().compareTo(rhs.getKey());
+                            public int compare(Param lhs, Param rhs) {
+                                return lhs.key.compareTo(rhs.key);
                             }
                         });
                         if (entryArrayList.size() > 0) {
                             keyBuilder.append("?");
-                            for (int i = 0; i < entryArrayList.size(); i++) {
-                                HashMap.Entry<String, String> entry = entryArrayList.get(i);
-                                keyBuilder.append(entry.getKey()).append("=").append(entry.getValue()).append("&");
+                            for (Param param : entryArrayList) {
+                                keyBuilder.append(param.key).append("=").append(param.value).append("&");
                             }
                             keyBuilder.deleteCharAt(keyBuilder.length() - 1);
                         }
@@ -273,13 +268,11 @@ public class RequestObject<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public void copyPartFrom(@NonNull RequestObject object) {
-        try {
-            if (object.params != null) {
-                params = (HashMap<String, String>) object.params.clone();
-            }
-        } catch (Exception ignored) {
-
+    public void copyPartFrom(@NonNull RequestObject<?> object) {
+        params.clear();
+        for (int i = 0; i < object.params.size(); i++) {
+            Param param = object.params.get(i);
+            params.add(param.copy());
         }
         method = object.method;
         url = object.url;
