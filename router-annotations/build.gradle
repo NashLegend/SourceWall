@@ -1,7 +1,0 @@
-apply plugin: 'java'
-apply plugin: 'maven'
-
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
-
-apply from: rootProject.file('gradle/maven.gradle')
