@@ -20,7 +20,7 @@ ext {
             GreenDAO           : "de.greenrobot:greendao:2.1.0",
             GreenDAOGenerator  : "de.greenrobot:greendao-generator:2.1.0",
             Umeng              : "com.umeng.analytics:analytics:latest.integration",
-            OKHttp             : "com.squareup.okhttp3:okhttp:3.2.0",
+            OKHttp             : "com.squareup.okhttp3:okhttp:3.3.1",
             ImageLoader        : "com.nostra13.universalimageloader:universal-image-loader:1.9.5",
             ButterKnife        : "com.jakewharton:butterknife:8.1.0",
             ButterKnifeCompiler: "com.jakewharton:butterknife-compiler:8.1.0",
