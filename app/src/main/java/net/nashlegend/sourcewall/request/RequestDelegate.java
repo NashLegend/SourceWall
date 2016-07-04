@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import java.io.File;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Call;
@@ -61,26 +61,18 @@ public class RequestDelegate {
     /**
      * 同步上传
      *
-     * @param uploadUrl
+     * @param url
      * @param params
+     * @param fileKey
      * @param filePath  要上传图片的路径
+     * @param mediaType
+     * @return
+     * @throws Exception
      */
-    public Call upload(String uploadUrl, List<Param> params,
-                       String fileKey, MediaType mediaType, String filePath) throws Exception {
-        File file = new File(filePath);
-        MultipartBody.Builder builder = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart(fileKey, file.getName(), RequestBody.create(mediaType, file));
-        if (params != null && params.size() > 0) {
-            for (Param param : params) {
-                if (TextUtils.isEmpty(param.key) || TextUtils.isEmpty(param.value)) {
-                    continue;
-                }
-                builder.addFormDataPart(param.key, param.value);
-            }
-        }
-        Request request = new Request.Builder().url(uploadUrl).post(builder.build()).build();
-        return defaultHttpClient.newCall(request);
+    public Call upload(String url, String fileKey, String filePath,
+                       List<Param> params, MediaType mediaType) throws Exception {
+        MultipartBody body = getMultipartBody(mediaType, fileKey, filePath, params);
+        return requestSync(Method.POST, body, url, null);
     }
 
     public Call getAsync(String url, Callback defCallBack, Object tag) {
@@ -118,30 +110,19 @@ public class RequestDelegate {
      * 异步上传
      *
      * @param uploadUrl 上传的地址
-     * @param params    上传参数
+     * @param fileKey
      * @param filePath  要上传图片的路径
+     * @param params    上传参数
+     * @param mediaType
      * @param callBack
      * @return 返回ResultObject，resultObject.result是上传后的图片地址
      */
-    public Call uploadAsync(String uploadUrl, List<Param> params,
-                            String fileKey, MediaType mediaType, String filePath, Callback callBack) {
-        File file = new File(filePath);
-        if (file.exists() && !file.isDirectory() && file.length() > 0) {
-            MultipartBody.Builder builder = new MultipartBody.Builder()
-                    .setType(MultipartBody.FORM)
-                    .addFormDataPart(fileKey, file.getName(), RequestBody.create(mediaType, file));
-            if (params != null && params.size() > 0) {
-                for (Param param : params) {
-                    if (TextUtils.isEmpty(param.key) || TextUtils.isEmpty(param.value)) {
-                        continue;
-                    }
-                    builder.addFormDataPart(param.key, param.value);
-                }
-            }
-            return requestAsync(Method.POST, builder.build(), uploadUrl, null, callBack);
-        }
-        return null;
+    public Call uploadAsync(String uploadUrl, String fileKey, String filePath,
+                            List<Param> params, MediaType mediaType, Callback callBack) {
+        MultipartBody body = getMultipartBody(mediaType, fileKey, filePath, params);
+        return requestAsync(Method.POST, body, uploadUrl, null, callBack);
     }
+
 
     /**
      * 生成queryString,如:a=b&b=c&c=d
@@ -180,6 +161,13 @@ public class RequestDelegate {
             }
         }
         return builder.build();
+    }
+
+
+    private MultipartBody getMultipartBody(MediaType mediaType, String fileKey, String filePath, List<Param> params) {
+        ArrayList<Param> fileParam = new ArrayList<>();
+        fileParam.add(new Param(fileKey, filePath));
+        return getMultipartBody(mediaType, fileParam, params);
     }
 
     private MultipartBody getMultipartBody(MediaType mediaType, List<Param> fileParams, List<Param> params) {

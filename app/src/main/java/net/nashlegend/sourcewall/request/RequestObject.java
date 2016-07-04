@@ -68,7 +68,7 @@ public class RequestObject<T> {
     protected DetailedCallBack<T> callBack = null;
     protected Parser<T> parser;
     protected Object tag = DefaultTag;
-    protected String uploadParamKey = "file";
+    protected String uploadFileKey = "file";
     protected MediaType mediaType = null;
     protected String uploadFilePath = "";
     protected String downloadFilePath = "";
@@ -277,7 +277,7 @@ public class RequestObject<T> {
         method = object.method;
         url = object.url;
         tag = object.tag;
-        uploadParamKey = object.uploadParamKey;
+        uploadFileKey = object.uploadFileKey;
         mediaType = object.mediaType;
     }
 
@@ -301,7 +301,7 @@ public class RequestObject<T> {
      * 同步上传
      */
     private Call uploadSync() throws Exception {
-        return getRequestDelegate().upload(url, params, uploadParamKey, mediaType, uploadFilePath);
+        return getRequestDelegate().upload(url, uploadFileKey, uploadFilePath, params, mediaType);
     }
 
     /**
@@ -553,7 +553,7 @@ public class RequestObject<T> {
         err.append("    ").append("url").append(":").append(url).append("\n");
         err.append("    ").append("tag").append(":").append(tag).append("\n");
         if (requestType == RequestType.UPLOAD) {
-            err.append("    ").append("uploadParamKey").append(":").append(uploadParamKey).append("\n");
+            err.append("    ").append("uploadFileKey").append(":").append(uploadFileKey).append("\n");
             err.append("    ").append("mediaType").append(":").append(mediaType).append("\n");
         }
         return err.toString();
@@ -599,7 +599,7 @@ public class RequestObject<T> {
     @Deprecated
     private void uploadAsync() {
         prepareHandler();
-        getRequestDelegate().uploadAsync(url, params, uploadParamKey, mediaType, uploadFilePath, getInnerCallback());
+        getRequestDelegate().uploadAsync(url, uploadFileKey, uploadFilePath, params, mediaType, getInnerCallback());
     }
 
     /**

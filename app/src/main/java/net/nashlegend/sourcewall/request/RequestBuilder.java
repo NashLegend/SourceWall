@@ -226,8 +226,8 @@ public class RequestBuilder<T> {
      * @param key
      * @return
      */
-    public RequestBuilder<T> setUploadParamKey(@NonNull String key) {
-        rbRequest.uploadParamKey = key;
+    public RequestBuilder<T> setUploadFileKey(@NonNull String key) {
+        rbRequest.uploadFileKey = key;
         return this;
     }
 

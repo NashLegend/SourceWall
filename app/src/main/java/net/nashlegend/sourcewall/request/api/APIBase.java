@@ -61,7 +61,7 @@ public class APIBase {
         new RequestBuilder<String>()
                 .setUrl("http://www.guokr.com/apis/image.json?enable_watermark=true")
                 .upload(path)
-                .setUploadParamKey("upload_file")
+                .setUploadFileKey("upload_file")
                 .setMediaType("image/*")
                 .setRequestCallBack(callBack)
                 .setParser(new Parser<String>() {
