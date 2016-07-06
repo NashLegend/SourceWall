@@ -16,6 +16,8 @@ ext {
             SupportAppcompat   : "com.android.support:appcompat-v7:${supportVersion}",
             SupportDesign      : "com.android.support:design:${supportVersion}",
             CardView           : "com.android.support:cardview-v7:${supportVersion}",
+            RecyclerView       : "com.android.support:recyclerview-v7:${supportVersion}",
+            SupportAnnotation  : "com.android.support:support-annotations:${supportVersion}",
             EventBus           : "de.greenrobot:eventbus:2.4.0",
             GreenDAO           : "de.greenrobot:greendao:2.1.0",
             GreenDAOGenerator  : "de.greenrobot:greendao-generator:2.1.0",
@@ -49,6 +51,7 @@ ext {
             MaterialSearchView : 'com.miguelcatalan:materialsearchview:1.4.0',
             SearchView         : 'com.lapism:searchview:2.2',
             BottomBar          : 'me.majiajie:pager-bottom-tab-strip:1.0.0',
+            Logger             : 'com.orhanobut:logger:1.14',
     ]
 
     built = [

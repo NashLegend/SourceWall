@@ -381,10 +381,17 @@ public class RequestBuilder<T> {
     /**
      * 异步请求
      */
-    public RequestObject<T> requestAsync() {
+    public NetworkTask<T> requestAsync() {
         addExtras();
-        request.startRequest();
-        return request;
+        return new NetworkTask<>(request).startRequestAsync();
+    }
+
+    /**
+     * 同步请求
+     */
+    public ResponseObject<T> requestSync() {
+        addExtras();
+        return new NetworkTask<>(request).startRequestSync();
     }
 
     /**
@@ -392,7 +399,7 @@ public class RequestBuilder<T> {
      */
     public Observable<ResponseObject<T>> flatMap() {
         addExtras();
-        return request.flatMap();
+        return new NetworkTask<>(request).flatMap();
     }
 
     /**
@@ -400,7 +407,7 @@ public class RequestBuilder<T> {
      */
     public RequestObject<T> requestRx() {
         addExtras();
-        request.requestRx();
+        new NetworkTask<>(request).requestRx();
         return request;
     }
 

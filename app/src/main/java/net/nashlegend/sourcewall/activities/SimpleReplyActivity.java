@@ -24,6 +24,7 @@ import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.model.QuestionAnswer;
 import net.nashlegend.sourcewall.model.UComment;
+import net.nashlegend.sourcewall.request.NetworkTask;
 import net.nashlegend.sourcewall.request.RequestObject;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
@@ -201,18 +202,18 @@ public class SimpleReplyActivity extends BaseActivity implements LListView.OnRef
                     }
                 };
 
-                RequestObject<UComment> requestObject = null;
+                NetworkTask<UComment> networkTask = null;
                 if (aceModel instanceof Question) {
-                    requestObject = QuestionAPI.commentOnQuestion(((Question) aceModel).getId(), content, callBack);
+                    networkTask = QuestionAPI.commentOnQuestion(((Question) aceModel).getId(), content, callBack);
                 } else if (aceModel instanceof QuestionAnswer) {
-                    requestObject = QuestionAPI.commentOnAnswer(((QuestionAnswer) aceModel).getID(), content, callBack);
+                    networkTask = QuestionAPI.commentOnAnswer(((QuestionAnswer) aceModel).getID(), content, callBack);
                 }
 
-                if (requestObject != null) {
+                if (networkTask != null) {
                     progressDialog = new ProgressDialog(SimpleReplyActivity.this);
                     progressDialog.setCanceledOnTouchOutside(false);
                     progressDialog.setMessage(getString(R.string.message_wait_a_minute));
-                    final RequestObject<UComment> finalRequestObject = requestObject;
+                    final NetworkTask<UComment> finalRequestObject = networkTask;
                     progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                         @Override
                         public void onCancel(DialogInterface dialog) {

@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.model.Basket;
+import net.nashlegend.sourcewall.request.NetworkTask;
 import net.nashlegend.sourcewall.request.RequestObject;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.FavorAPI;
@@ -28,7 +29,7 @@ public class BasketItemView extends AceView<Basket> implements View.OnClickListe
     Basket basket;
     String link = "";
     String title = "";
-    RequestObject<Boolean> requestObject;
+    NetworkTask<Boolean> networkTask;
 
     public BasketItemView(Context context) {
         super(context);
@@ -115,7 +116,7 @@ public class BasketItemView extends AceView<Basket> implements View.OnClickListe
         button.setEnabled(false);
         button.setVisibility(GONE);
         progressBar.setVisibility(VISIBLE);
-        requestObject = FavorAPI.favorLink(link, title, bas, new RequestObject.CallBack<Boolean>() {
+        networkTask = FavorAPI.favorLink(link, title, bas, new RequestObject.CallBack<Boolean>() {
             @Override
             public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
                 bas.setFavoring(false);

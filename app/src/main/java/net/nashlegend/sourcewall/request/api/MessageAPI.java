@@ -5,6 +5,7 @@ import net.nashlegend.sourcewall.model.Notice;
 import net.nashlegend.sourcewall.model.Reminder;
 import net.nashlegend.sourcewall.model.ReminderNoticeNum;
 import net.nashlegend.sourcewall.request.JsonHandler;
+import net.nashlegend.sourcewall.request.NetworkTask;
 import net.nashlegend.sourcewall.request.RequestBuilder;
 import net.nashlegend.sourcewall.request.RequestObject;
 import net.nashlegend.sourcewall.request.RequestObject.CallBack;
@@ -29,7 +30,7 @@ public class MessageAPI extends APIBase {
      * @param callBack
      * @return
      */
-    public static RequestObject<ReminderNoticeNum> getReminderAndNoticeNum(CallBack<ReminderNoticeNum> callBack) {
+    public static NetworkTask<ReminderNoticeNum> getReminderAndNoticeNum(CallBack<ReminderNoticeNum> callBack) {
         Parser<ReminderNoticeNum> parser = new Parser<ReminderNoticeNum>() {
             @Override
             public ReminderNoticeNum parse(String str, ResponseObject<ReminderNoticeNum> responseObject) throws Exception {
@@ -55,7 +56,7 @@ public class MessageAPI extends APIBase {
      * @param callBack
      * @return
      */
-    public static RequestObject<ArrayList<Reminder>> getReminderList(int offset, CallBack<ArrayList<Reminder>> callBack) {
+    public static NetworkTask<ArrayList<Reminder>> getReminderList(int offset, CallBack<ArrayList<Reminder>> callBack) {
         Parser<ArrayList<Reminder>> parser = new Parser<ArrayList<Reminder>>() {
             @Override
             public ArrayList<Reminder> parse(String str, ResponseObject<ArrayList<Reminder>> responseObject) throws Exception {
@@ -88,7 +89,7 @@ public class MessageAPI extends APIBase {
      * @param callBack
      * @return
      */
-    public static RequestObject<ArrayList<Notice>> getNoticeList(CallBack<ArrayList<Notice>> callBack) {
+    public static NetworkTask<ArrayList<Notice>> getNoticeList(CallBack<ArrayList<Notice>> callBack) {
         Parser<ArrayList<Notice>> parser = new Parser<ArrayList<Notice>>() {
             @Override
             public ArrayList<Notice> parse(String str, ResponseObject<ArrayList<Notice>> responseObject) throws Exception {
@@ -123,7 +124,7 @@ public class MessageAPI extends APIBase {
      * @param callBack
      * @return
      */
-    public static RequestObject<Boolean> ignoreAllNotice(CallBack<Boolean> callBack) {
+    public static NetworkTask<Boolean> ignoreAllNotice(CallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/community/notice_ignore.json";
         return new RequestBuilder<Boolean>()
                 .url(url)
@@ -140,7 +141,7 @@ public class MessageAPI extends APIBase {
      * @param callBack
      * @return
      */
-    public static RequestObject<ArrayList<Notice>> ignoreOneNotice(String noticeID, CallBack<ArrayList<Notice>> callBack) {
+    public static NetworkTask<ArrayList<Notice>> ignoreOneNotice(String noticeID, CallBack<ArrayList<Notice>> callBack) {
         Parser<ArrayList<Notice>> parser = new Parser<ArrayList<Notice>>() {
             @Override
             public ArrayList<Notice> parse(String str, ResponseObject<ArrayList<Notice>> responseObject) throws Exception {
@@ -174,7 +175,7 @@ public class MessageAPI extends APIBase {
      *
      * @return RequestObject
      */
-    public static RequestObject<ArrayList<Notice>> ignoreOneNotice(String noticeID) {
+    public static NetworkTask<ArrayList<Notice>> ignoreOneNotice(String noticeID) {
         return ignoreOneNotice(noticeID, null);
     }
 
@@ -185,7 +186,7 @@ public class MessageAPI extends APIBase {
      * @param callBack
      * @return RequestObject
      */
-    public static RequestObject<ArrayList<Message>> getMessageList(int offset, CallBack<ArrayList<Message>> callBack) {
+    public static NetworkTask<ArrayList<Message>> getMessageList(int offset, CallBack<ArrayList<Message>> callBack) {
         Parser<ArrayList<Message>> parser = new Parser<ArrayList<Message>>() {
             @Override
             public ArrayList<Message> parse(String str, ResponseObject<ArrayList<Message>> responseObject) throws Exception {
@@ -220,7 +221,7 @@ public class MessageAPI extends APIBase {
      * @param callBack
      * @return RequestObject
      */
-    public static RequestObject<Message> getOneMessage(String id, CallBack<Message> callBack) {
+    public static NetworkTask<Message> getOneMessage(String id, CallBack<Message> callBack) {
         Parser<Message> parser = new Parser<Message>() {
             @Override
             public Message parse(String str, ResponseObject<Message> responseObject) throws Exception {

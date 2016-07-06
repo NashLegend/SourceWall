@@ -138,6 +138,17 @@ public class RequestDelegate {
     /**
      * 异步上传
      *
+     * @param request
+     * @param callBack
+     * @return 返回ResultObject，resultObject.result是上传后的图片地址
+     */
+    public Call uploadAsync(RequestObject<?> request, Callback callBack) {
+        return uploadAsync(request.url, request.uploadFileKey, request.uploadFilePath, request.params, request.mediaType,callBack);
+    }
+
+    /**
+     * 异步上传
+     *
      * @param uploadUrl 上传的地址
      * @param fileKey
      * @param filePath  要上传图片的路径

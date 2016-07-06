@@ -10,8 +10,8 @@ import net.nashlegend.sourcewall.events.LoginStateChangedEvent;
 import net.nashlegend.sourcewall.model.UserInfo;
 import net.nashlegend.sourcewall.request.HttpUtil;
 import net.nashlegend.sourcewall.request.JsonHandler;
+import net.nashlegend.sourcewall.request.NetworkTask;
 import net.nashlegend.sourcewall.request.RequestBuilder;
-import net.nashlegend.sourcewall.request.RequestObject;
 import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.parsers.BooleanParser;
@@ -54,7 +54,7 @@ public class UserAPI extends APIBase {
      * @param ukey 用户ukey
      * @return ResponseObject
      */
-    public static RequestObject<UserInfo> getUserInfoByUkey(String ukey, CallBack<UserInfo> callBack) {
+    public static NetworkTask<UserInfo> getUserInfoByUkey(String ukey, CallBack<UserInfo> callBack) {
         String url = "http://apis.guokr.com/community/user/" + ukey + ".json";
         return new RequestBuilder<UserInfo>()
                 .url(url)
@@ -75,7 +75,7 @@ public class UserAPI extends APIBase {
      * @param id 用户id
      * @return ResponseObject
      */
-    public static RequestObject<UserInfo> getUserInfoByID(String id, CallBack<UserInfo> callBack) {
+    public static NetworkTask<UserInfo> getUserInfoByID(String id, CallBack<UserInfo> callBack) {
         return getUserInfoByUkey(base36Encode(Long.valueOf(id)), callBack);
     }
 
@@ -88,7 +88,7 @@ public class UserAPI extends APIBase {
      * @param comment 评语
      * @return ResponseObject
      */
-    public static RequestObject<Boolean> recommendLink(String link, String title, String summary, String comment, CallBack<Boolean> callBack) {
+    public static NetworkTask<Boolean> recommendLink(String link, String title, String summary, String comment, CallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/community/user/recommend.json";
         if (TextUtils.isEmpty(summary)) {
             summary = title;

@@ -4,6 +4,7 @@ import net.nashlegend.sourcewall.model.Basket;
 import net.nashlegend.sourcewall.model.Category;
 import net.nashlegend.sourcewall.model.Favor;
 import net.nashlegend.sourcewall.request.JsonHandler;
+import net.nashlegend.sourcewall.request.NetworkTask;
 import net.nashlegend.sourcewall.request.RequestBuilder;
 import net.nashlegend.sourcewall.request.RequestObject;
 import net.nashlegend.sourcewall.request.RequestObject.CallBack;
@@ -60,7 +61,7 @@ public class FavorAPI extends APIBase {
      * @param callBack
      * @return ResponseObject
      */
-    public static RequestObject<Boolean> favorLink(String link, String title, Basket basket, CallBack<Boolean> callBack) {
+    public static NetworkTask<Boolean> favorLink(String link, String title, Basket basket, CallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/favorite/link.json";
         HashMap<String, String> params = new HashMap<>();
         params.put("basket_id", basket.getId());
@@ -80,7 +81,7 @@ public class FavorAPI extends APIBase {
      *
      * @return ResponseObject.result is ArrayList[Basket]
      */
-    public static RequestObject<ArrayList<Basket>> getBaskets(CallBack<ArrayList<Basket>> callBack) {
+    public static NetworkTask<ArrayList<Basket>> getBaskets(CallBack<ArrayList<Basket>> callBack) {
         Parser<ArrayList<Basket>> parser = new Parser<ArrayList<Basket>>() {
             @Override
             public ArrayList<Basket> parse(String str, ResponseObject<ArrayList<Basket>> responseObject) throws Exception {
@@ -117,7 +118,7 @@ public class FavorAPI extends APIBase {
      * @param category_id  category
      * @return ResponseObject.result is Basket
      */
-    public static RequestObject<Basket> createBasket(String title, String introduction, String category_id, CallBack<Basket> callBack) {
+    public static NetworkTask<Basket> createBasket(String title, String introduction, String category_id, CallBack<Basket> callBack) {
         String url = "http://www.guokr.com/apis/favorite/basket.json";
         HashMap<String, String> params = new HashMap<>();
         params.put("title", title);
@@ -142,7 +143,7 @@ public class FavorAPI extends APIBase {
      *
      * @return ResponseObject
      */
-    public static RequestObject<ArrayList<Category>> getCategoryList(CallBack<ArrayList<Category>> callBack) {
+    public static NetworkTask<ArrayList<Category>> getCategoryList(CallBack<ArrayList<Category>> callBack) {
         Parser<ArrayList<Category>> parser = new Parser<ArrayList<Category>>() {
             @Override
             public ArrayList<Category> parse(String str, ResponseObject<ArrayList<Category>> responseObject) throws Exception {

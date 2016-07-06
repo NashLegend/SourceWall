@@ -40,6 +40,7 @@ import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.model.UComment;
+import net.nashlegend.sourcewall.request.NetworkTask;
 import net.nashlegend.sourcewall.request.RequestObject;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.APIBase;
@@ -299,7 +300,7 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
         if (comment != null) {
             header = "[blockquote]" + hostText.getText() + "[/blockquote]";
         }
-        final RequestObject<String> requestObject = APIBase.reply(aceModel, header + rep, new RequestObject.CallBack<String>() {
+        final NetworkTask<String> task = APIBase.reply(aceModel, header + rep, new RequestObject.CallBack<String>() {
             @Override
             public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<String> result) {
                 CommonUtil.dismissDialog(progressDialog);
@@ -316,14 +317,14 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
                 finish();
             }
         });
-        if (requestObject != null) {
+        if (task != null) {
             progressDialog = new ProgressDialog(ReplyActivity.this);
             progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.setMessage(getString(R.string.message_wait_a_minute));
             progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialog) {
-                    requestObject.softCancel();
+                    task.softCancel();
                 }
             });
             progressDialog.show();

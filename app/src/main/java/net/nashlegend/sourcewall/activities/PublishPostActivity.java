@@ -38,6 +38,7 @@ import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.dialogs.InputDialog;
 import net.nashlegend.sourcewall.model.PrepareData;
 import net.nashlegend.sourcewall.model.SubItem;
+import net.nashlegend.sourcewall.request.NetworkTask;
 import net.nashlegend.sourcewall.request.RequestObject;
 import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
@@ -536,7 +537,7 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
     }
 
     public void publishPost(String group_id, String csrf, String title, String body, String topic) {
-        RequestObject object = PostAPI.publishPost(group_id, csrf, title, body, topic, new CallBack<String>() {
+        NetworkTask task = PostAPI.publishPost(group_id, csrf, title, body, topic, new CallBack<String>() {
             @Override
             public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<String> result) {
                 MobclickAgent.onEvent(PublishPostActivity.this, Mob.Event_Publish_Post_Failed);
@@ -554,17 +555,17 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
                 finish();
             }
         });
-        showDialog(object);
+        showDialog(task);
     }
 
-    private void showDialog(final RequestObject requestObject) {
+    private void showDialog(final NetworkTask task) {
         progressDialog = new ProgressDialog(PublishPostActivity.this);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setMessage(getString(R.string.message_wait_a_minute));
         progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                requestObject.softCancel();
+                task.softCancel();
             }
         });
         progressDialog.show();

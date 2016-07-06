@@ -5,6 +5,7 @@ import net.nashlegend.sourcewall.model.Author;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.JsonHandler;
+import net.nashlegend.sourcewall.request.NetworkTask;
 import net.nashlegend.sourcewall.request.RequestBuilder;
 import net.nashlegend.sourcewall.request.RequestObject;
 import net.nashlegend.sourcewall.request.RequestObject.CallBack;
@@ -303,7 +304,7 @@ public class ArticleAPI extends APIBase {
      * @param comment   推荐评语
      * @return ResponseObject
      */
-    public static RequestObject<Boolean> recommendArticle(String articleID, String title, String summary, String comment, CallBack<Boolean> callBack) {
+    public static NetworkTask<Boolean> recommendArticle(String articleID, String title, String summary, String comment, CallBack<Boolean> callBack) {
         String articleUrl = "http://www.guokr.com/article/" + articleID + "/";
         return UserAPI.recommendLink(articleUrl, title, summary, comment, callBack);
     }
@@ -314,7 +315,7 @@ public class ArticleAPI extends APIBase {
      * @param id 文章id
      * @return ResponseObject
      */
-    public static RequestObject<Boolean> likeComment(String id, CallBack<Boolean> callBack) {
+    public static NetworkTask<Boolean> likeComment(String id, CallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/minisite/article_reply_liking.json";
         HashMap<String, String> pairs = new HashMap<>();
         pairs.put("reply_id", id);
@@ -333,7 +334,7 @@ public class ArticleAPI extends APIBase {
      * @param id 评论id
      * @return ResponseObject
      */
-    public static RequestObject<Boolean> deleteMyComment(String id, CallBack<Boolean> callBack) {
+    public static NetworkTask<Boolean> deleteMyComment(String id, CallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/minisite/article_reply.json";
         HashMap<String, String> pairs = new HashMap<>();
         pairs.put("reply_id", id);
@@ -353,7 +354,7 @@ public class ArticleAPI extends APIBase {
      * @param content 回复内容
      * @return ResponseObject.result is the reply_id if ok;
      */
-    public static RequestObject<String> replyArticle(String id, String content, CallBack<String> callBack) {
+    public static NetworkTask<String> replyArticle(String id, String content, CallBack<String> callBack) {
         String url = "http://apis.guokr.com/minisite/article_reply.json";
         HashMap<String, String> pairs = new HashMap<>();
         pairs.put("article_id", id);

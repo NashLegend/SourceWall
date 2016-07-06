@@ -10,6 +10,7 @@ import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.request.HttpUtil;
 import net.nashlegend.sourcewall.request.JsonHandler;
+import net.nashlegend.sourcewall.request.NetworkTask;
 import net.nashlegend.sourcewall.request.RequestBuilder;
 import net.nashlegend.sourcewall.request.RequestObject;
 import net.nashlegend.sourcewall.request.RequestObject.CallBack;
@@ -38,7 +39,7 @@ public class APIBase {
      * @return ResponseObject
      */
     @Nullable
-    public static RequestObject<String> reply(AceModel data, String content, CallBack<String> callBack) {
+    public static NetworkTask<String> reply(AceModel data, String content, CallBack<String> callBack) {
         if (data instanceof Article) {
             return ArticleAPI.replyArticle(((Article) data).getId(), content + Config.getSimpleReplyTail(), callBack);
         } else if (data instanceof Post) {

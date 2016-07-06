@@ -110,6 +110,7 @@ dependencies {
     compile deps.Markdown4J
     compile deps.SearchView
     compile deps.BottomBar
+    compile deps.Logger
 
     debugCompile deps.LeakCanaryDebug
     releaseCompile deps.LeakCanaryRelease
@@ -117,4 +118,32 @@ dependencies {
 
     compile project(':mvp')
     apt deps.ButterKnifeCompiler
+
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-all:2.0.2-beta'
+    testCompile 'org.hamcrest:hamcrest-all:1.3'
+    testCompile 'org.robolectric:robolectric:3.1'
+    testCompile 'org.robolectric:shadows-multidex:3.1'
+
+    // Android Testing Support Library's runner and rules
+    androidTestCompile "com.android.support.test:runner:0.5"
+    androidTestCompile "com.android.support.test:rules:0.5"
+
+    // Dependencies for Android unit tests
+    androidTestCompile "junit:junit:4.12"
+    androidTestCompile "org.mockito:mockito-core:2.0.2-beta"
+    androidTestCompile 'com.google.dexmaker:dexmaker:1.2'
+    androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
+
+    // Espresso UI Testing
+    androidTestCompile "com.android.support.test.espresso:espresso-core:2.2.2"
+    androidTestCompile "com.android.support.test.espresso:espresso-contrib:2.2.2"
+    androidTestCompile "com.android.support.test.espresso:espresso-intents:2.2.2"
+
+    // Resolve conflicts between main and test APK:
+    androidTestCompile deps.SupportAnnotation
+    androidTestCompile deps.SupportV4
+    androidTestCompile deps.RecyclerView
+    androidTestCompile deps.SupportAppcompat
+    androidTestCompile deps.SupportDesign
 }
