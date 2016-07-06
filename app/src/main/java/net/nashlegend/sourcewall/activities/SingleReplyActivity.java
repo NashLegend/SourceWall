@@ -35,6 +35,7 @@ import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.RequestObject;
+import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.ArticleAPI;
 import net.nashlegend.sourcewall.request.api.PostAPI;
@@ -437,7 +438,7 @@ public class SingleReplyActivity extends BaseActivity implements View.OnClickLis
             toastSingleton(R.string.has_liked_this);
             return;
         }
-        RequestObject.CallBack<Boolean> callBack = new RequestObject.CallBack<Boolean>() {
+        CallBack<Boolean> callBack = new CallBack<Boolean>() {
             @Override
             public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
                 toast("点赞未遂");
@@ -467,7 +468,7 @@ public class SingleReplyActivity extends BaseActivity implements View.OnClickLis
             notifyNeedLog();
             return;
         }
-        RequestObject.CallBack<Boolean> callBack = new RequestObject.CallBack<Boolean>() {
+        CallBack<Boolean> callBack = new CallBack<Boolean>() {
             @Override
             public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
                 toastSingleton("未能删除");

@@ -41,6 +41,7 @@ import net.nashlegend.sourcewall.model.ReminderNoticeNum;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.model.UserInfo;
 import net.nashlegend.sourcewall.request.RequestObject;
+import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.MessageAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
@@ -378,7 +379,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
             if (TextUtils.isEmpty(nameString)) {
                 userName.setText(R.string.loading);
             }
-            UserAPI.getUserInfoByUkey(UserAPI.getUkey(), new RequestObject.CallBack<UserInfo>() {
+            UserAPI.getUserInfoByUkey(UserAPI.getUkey(), new CallBack<UserInfo>() {
                 @Override
                 public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<UserInfo> result) {
                     String nameString = UserAPI.getName();
@@ -409,7 +410,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
     }
 
     private void loadMessages() {
-        MessageAPI.getReminderAndNoticeNum(new RequestObject.CallBack<ReminderNoticeNum>() {
+        MessageAPI.getReminderAndNoticeNum(new CallBack<ReminderNoticeNum>() {
             @Override
             public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<ReminderNoticeNum> result) {
                 noticeView.setVisibility(View.GONE);

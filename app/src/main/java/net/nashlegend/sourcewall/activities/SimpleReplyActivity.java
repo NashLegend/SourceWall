@@ -26,6 +26,7 @@ import net.nashlegend.sourcewall.model.QuestionAnswer;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.NetworkTask;
 import net.nashlegend.sourcewall.request.RequestObject;
+import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
@@ -182,7 +183,7 @@ public class SimpleReplyActivity extends BaseActivity implements LListView.OnRef
                     MobclickAgent.onEvent(SimpleReplyActivity.this, Mob.Event_Comment_On_Answer);
                 }
 
-                RequestObject.CallBack<UComment> callBack = new RequestObject.CallBack<UComment>() {
+                CallBack<UComment> callBack = new CallBack<UComment>() {
                     @Override
                     public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<UComment> result) {
                         CommonUtil.dismissDialog(progressDialog);
@@ -254,7 +255,7 @@ public class SimpleReplyActivity extends BaseActivity implements LListView.OnRef
     }
 
     private void loadComments(final int offset) {
-        RequestObject.CallBack<ArrayList<UComment>> callBack = new RequestObject.CallBack<ArrayList<UComment>>() {
+        CallBack<ArrayList<UComment>> callBack = new CallBack<ArrayList<UComment>>() {
             @Override
             public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<ArrayList<UComment>> result) {
                 toast(R.string.load_failed);

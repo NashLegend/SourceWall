@@ -62,7 +62,7 @@ public class ImageUtils {
      * @return 是否成功压缩
      * @throws IOException
      */
-    public static String compressImage(String path) throws IOException {
+    public static String compressImage(String path) {
         if (FileUtil.getFileSuffix(new File(path)).equals("gif")) {
             return path;
         }
@@ -99,12 +99,29 @@ public class ImageUtils {
             }
             parentPath = pFile.getAbsolutePath();
             String cachePath = new File(parentPath, System.currentTimeMillis() + ".jpg").getAbsolutePath();
-            FileOutputStream outputStream;
-            outputStream = new FileOutputStream(cachePath);
-            compressedBitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream);//jpg速度远快于png，并且体积要小
-            outputStream.flush();
-            outputStream.close();
-            return cachePath;
+            FileOutputStream outputStream = null;
+            boolean ok = false;
+            try {
+                outputStream = new FileOutputStream(cachePath);
+                compressedBitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream);//jpg速度远快于png，并且体积要小
+                outputStream.flush();
+                ok = true;
+            } catch (IOException e) {
+                ok = false;
+            } finally {
+                try {
+                    if (outputStream != null) {
+                        outputStream.close();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            if (ok) {
+                return cachePath;
+            } else {
+                return path;
+            }
         } else {
             return path;
         }

@@ -21,6 +21,7 @@ import net.nashlegend.sourcewall.model.Notice;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.NetworkTask;
 import net.nashlegend.sourcewall.request.RequestObject;
+import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.MessageAPI;
 import net.nashlegend.sourcewall.util.CommonUtil;
@@ -87,7 +88,7 @@ public class NoticesFragment extends BaseFragment implements IChannelsFragment, 
 
     private void loadData() {
         cancelPotentialTask();
-        networkTask = MessageAPI.getNoticeList(new RequestObject.CallBack<ArrayList<Notice>>() {
+        networkTask = MessageAPI.getNoticeList(new CallBack<ArrayList<Notice>>() {
             @Override
             public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<ArrayList<Notice>> result) {
                 loadingView.onLoadFailed();
@@ -159,7 +160,7 @@ public class NoticesFragment extends BaseFragment implements IChannelsFragment, 
     }
 
     private void ignoreAll() {
-        final NetworkTask ignoreNetworkTask = MessageAPI.ignoreAllNotice(new RequestObject.CallBack<Boolean>() {
+        final NetworkTask ignoreNetworkTask = MessageAPI.ignoreAllNotice(new CallBack<Boolean>() {
             @Override
             public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
                 CommonUtil.dismissDialog(progressDialog);

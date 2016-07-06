@@ -19,6 +19,7 @@ import java.util.Map;
 
 import okhttp3.MediaType;
 import rx.Observable;
+import rx.Subscription;
 
 /**
  * Created by NashLegend on 2015/9/22 0022.
@@ -373,9 +374,9 @@ public class RequestBuilder<T> {
         }
     }
 
-    public RequestObject<T> buildRequest() {
+    public NetworkTask<T> build() {
         addExtras();
-        return request;
+        return new NetworkTask<>(request);
     }
 
     /**
@@ -405,10 +406,9 @@ public class RequestBuilder<T> {
     /**
      * 异步请求，返回的是一个Observable，但是并没有执行，需要手动subscribe
      */
-    public RequestObject<T> requestRx() {
+    public Subscription requestRx() {
         addExtras();
-        new NetworkTask<>(request).requestRx();
-        return request;
+        return new NetworkTask<>(request).requestRx();
     }
 
 }

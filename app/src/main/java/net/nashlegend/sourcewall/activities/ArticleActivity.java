@@ -36,6 +36,7 @@ import net.nashlegend.sourcewall.dialogs.InputDialog;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.RequestObject;
+import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.ArticleAPI;
 import net.nashlegend.sourcewall.request.api.MessageAPI;
@@ -235,7 +236,7 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
     }
 
     private void confirmRecommend(String comment) {
-        ArticleAPI.recommendArticle(article.getId(), article.getTitle(), article.getSummary(), comment, new RequestObject.CallBack<Boolean>() {
+        ArticleAPI.recommendArticle(article.getId(), article.getTitle(), article.getSummary(), comment, new CallBack<Boolean>() {
             @Override
             public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
                 toast(R.string.recommend_failed);
@@ -321,7 +322,7 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
             return;
         }
         final UComment comment = mediumListItemView.getData();
-        ArticleAPI.likeComment(comment.getID(), new RequestObject.CallBack<Boolean>() {
+        ArticleAPI.likeComment(comment.getID(), new CallBack<Boolean>() {
             @Override
             public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
 
@@ -345,7 +346,7 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
             notifyNeedLog();
             return;
         }
-        ArticleAPI.deleteMyComment(comment.getID(), new RequestObject.CallBack<Boolean>() {
+        ArticleAPI.deleteMyComment(comment.getID(), new CallBack<Boolean>() {
             @Override
             public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
                 toastSingleton("删除失败~");

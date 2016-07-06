@@ -29,6 +29,7 @@ import net.nashlegend.sourcewall.dialogs.InputDialog;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.model.QuestionAnswer;
 import net.nashlegend.sourcewall.request.RequestObject;
+import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.MessageAPI;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
@@ -268,7 +269,7 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
     }
 
     private void confirmRecommend(String comment) {
-        QuestionAPI.recommendQuestion(question.getId(), question.getTitle(), question.getSummary(), comment, new RequestObject.CallBack<Boolean>() {
+        QuestionAPI.recommendQuestion(question.getId(), question.getTitle(), question.getSummary(), comment, new CallBack<Boolean>() {
             @Override
             public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
                 toast(R.string.recommend_failed);
@@ -299,7 +300,7 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
 
 
     private void followQuestion() {
-        QuestionAPI.followQuestion(question.getId(), new RequestObject.CallBack<Boolean>() {
+        QuestionAPI.followQuestion(question.getId(), new CallBack<Boolean>() {
             @Override
             public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
                 toast(R.string.follow_failed);
@@ -314,7 +315,7 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
 
     private void unfollowQuestion() {
         MobclickAgent.onEvent(QuestionActivity.this, Mob.Event_Unfollow_Question);
-        QuestionAPI.unfollowQuestion(question.getId(), new RequestObject.CallBack<Boolean>() {
+        QuestionAPI.unfollowQuestion(question.getId(), new CallBack<Boolean>() {
             @Override
             public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
                 toast(R.string.unfollow_failed);

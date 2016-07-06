@@ -42,6 +42,7 @@ import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.NetworkTask;
 import net.nashlegend.sourcewall.request.RequestObject;
+import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.APIBase;
 import net.nashlegend.sourcewall.util.CommonUtil;
@@ -185,7 +186,7 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
             }).create().show();
         }
         setImageButtonsUploading();
-        APIBase.uploadImage(path, new RequestObject.CallBack<String>() {
+        APIBase.uploadImage(path, new CallBack<String>() {
             @Override
             public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<String> result) {
                 resetImageButtons();
@@ -300,7 +301,7 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
         if (comment != null) {
             header = "[blockquote]" + hostText.getText() + "[/blockquote]";
         }
-        final NetworkTask<String> task = APIBase.reply(aceModel, header + rep, new RequestObject.CallBack<String>() {
+        final NetworkTask<String> task = APIBase.reply(aceModel, header + rep, new CallBack<String>() {
             @Override
             public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<String> result) {
                 CommonUtil.dismissDialog(progressDialog);

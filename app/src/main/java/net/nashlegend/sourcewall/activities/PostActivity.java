@@ -34,6 +34,7 @@ import net.nashlegend.sourcewall.dialogs.FavorDialog;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.RequestObject;
+import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.ResponseCode;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.MessageAPI;
@@ -232,7 +233,7 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
             notifyNeedLog();
         } else {
             MobclickAgent.onEvent(this, Mob.Event_Like_Post);
-            PostAPI.likePost(post.getId(), new RequestObject.CallBack<Boolean>() {
+            PostAPI.likePost(post.getId(), new CallBack<Boolean>() {
                 @Override
                 public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
 
@@ -378,7 +379,7 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
             return;
         }
         final UComment comment = mediumListItemView.getData();
-        PostAPI.likeComment(comment.getID(), new RequestObject.CallBack<Boolean>() {
+        PostAPI.likeComment(comment.getID(), new CallBack<Boolean>() {
             @Override
             public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
                 if (result.code == ResponseCode.CODE_ALREADY_LIKED) {
@@ -401,7 +402,7 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
         if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
         } else {
-            PostAPI.deleteMyComment(comment.getID(), new RequestObject.CallBack<Boolean>() {
+            PostAPI.deleteMyComment(comment.getID(), new CallBack<Boolean>() {
                 @Override
                 public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
                     toastSingleton(getString(R.string.delete_failed));

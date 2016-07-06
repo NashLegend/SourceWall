@@ -12,11 +12,11 @@ import net.nashlegend.sourcewall.request.HttpUtil;
 import net.nashlegend.sourcewall.request.JsonHandler;
 import net.nashlegend.sourcewall.request.NetworkTask;
 import net.nashlegend.sourcewall.request.RequestBuilder;
-import net.nashlegend.sourcewall.request.RequestObject;
 import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.parsers.Parser;
 import net.nashlegend.sourcewall.util.Config;
+import net.nashlegend.sourcewall.util.ImageUtils;
 
 import org.json.JSONObject;
 
@@ -30,6 +30,12 @@ import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import rx.Observable;
+import rx.Observer;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 public class APIBase {
 
@@ -57,27 +63,63 @@ public class APIBase {
      * @param path 要上传图片的路径
      * @return 返回ResponseObject，resultObject.result是上传后的图片地址，果壳并不会对图片进行压缩
      */
-    public static void uploadImage(String path, CallBack<String> callBack) {
-        // TODO: 16/5/6 未压缩
-        new RequestBuilder<String>()
-                .url("http://www.guokr.com/apis/image.json?enable_watermark=true")
-                .upload(path)
-                .uploadFileKey("upload_file")
-                .mediaType("image/*")
-                .callback(callBack)
-                .parser(new Parser<String>() {
+    public static Subscription uploadImage(final String path, final CallBack<String> callBack) {
+        // XXX: 16/7/6  not graceful
+        return Observable.just(path)
+                .map(new Func1<String, String>() {
                     @Override
-                    public String parse(String str, ResponseObject<String> responseObject) throws Exception {
-                        JSONObject object = JsonHandler.getUniversalJsonObject(str, responseObject);
-                        if (object != null) {
-                            return object.getString("url");
-                        } else {
-                            responseObject.ok = false;
-                            return "";
-                        }
+                    public String call(String path) {
+                        return ImageUtils.compressImage(path);
                     }
                 })
-                .requestAsync();
+                .map(new Func1<String, ResponseObject<String>>() {
+                    @Override
+                    public ResponseObject<String> call(String path) {
+                        return new RequestBuilder<String>()
+                                .url("http://www.guokr.com/apis/image.json?enable_watermark=true")
+                                .upload(path)
+                                .uploadFileKey("upload_file")
+                                .mediaType("image/*")
+                                .callback(callBack)
+                                .parser(new Parser<String>() {
+                                    @Override
+                                    public String parse(String str, ResponseObject<String> responseObject) throws Exception {
+                                        JSONObject object = JsonHandler.getUniversalJsonObject(str, responseObject);
+                                        if (object != null) {
+                                            return object.getString("url");
+                                        } else {
+                                            responseObject.ok = false;
+                                            return "";
+                                        }
+                                    }
+                                })
+                                .requestSync();
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ResponseObject<String>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        callBack.onFailure(e, new ResponseObject<String>());
+                    }
+
+                    @Override
+                    public void onNext(ResponseObject<String> responseObject) {
+                        if (callBack != null) {
+                            if (responseObject.ok) {
+                                callBack.onSuccess(responseObject.result, responseObject);
+                            } else {
+                                callBack.onFailure(responseObject.throwable, responseObject);
+                            }
+                        }
+                    }
+                });
     }
 
     /**

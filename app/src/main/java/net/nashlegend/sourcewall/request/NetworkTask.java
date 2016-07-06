@@ -35,6 +35,7 @@ import okio.Okio;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.exceptions.Exceptions;
 import rx.functions.Func1;
@@ -48,14 +49,14 @@ public class NetworkTask<T> {
 
     private RequestDelegate delegate;
     private OkHttpClient okHttpClient;
-    private final ResponseObject<T> responseObject = new ResponseObject<>();
     private int crtTime = 0;//当前重试次数
     private Call call = null;
     private String cacheKey = null;
     private boolean softCancelled = false;//取消掉一个请求，但是并不中断请求，只是不再执行CallBack,请求完成后无任何动作
 
 
-    RequestObject<T> request;
+    public final ResponseObject<T> responseObject = new ResponseObject<>();
+    public RequestObject<T> request;
 
     public NetworkTask(@NonNull RequestObject<T> request) {
         this.request = request;
@@ -427,8 +428,8 @@ public class NetworkTask<T> {
     /**
      * 通过RxJava的方式执行请求，与requestAsync一样，CallBack执行在主线程上
      */
-    public NetworkTask<T> requestRx() {
-        flatMap()
+    private Subscription handleResponseObservable(@NonNull Observable<ResponseObject<T>> observable) {
+        return observable
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<ResponseObject<T>>() {
                     @Override
@@ -455,9 +456,14 @@ public class NetworkTask<T> {
                         }
                     }
                 });
-        return this;
     }
 
+    /**
+     * 通过RxJava的方式执行请求，与requestAsync一样，CallBack执行在主线程上
+     */
+    public Subscription requestRx() {
+        return handleResponseObservable(flatMap());
+    }
 
     public boolean shouldHandNotifier(Throwable exception, ResponseObject responseObject) {
         return responseObject.code != ResponseCode.CODE_TOKEN_INVALID
@@ -756,7 +762,7 @@ public class NetworkTask<T> {
             }
         }
     }
-    
+
     public class RxRetryHandler implements Func1<Observable<? extends Throwable>, Observable<?>> {
 
         @Override

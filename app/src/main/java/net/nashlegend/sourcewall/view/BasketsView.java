@@ -23,6 +23,7 @@ import net.nashlegend.sourcewall.model.Category;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.request.RequestObject;
+import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.FavorAPI;
 import net.nashlegend.sourcewall.util.ToastUtil;
@@ -92,7 +93,7 @@ public class BasketsView extends FrameLayout implements View.OnClickListener, IS
     private void loadBasket() {
         progressBaskets.setVisibility(VISIBLE);
         listView.setVisibility(INVISIBLE);
-        FavorAPI.getBaskets(new RequestObject.CallBack<ArrayList<Basket>>() {
+        FavorAPI.getBaskets(new CallBack<ArrayList<Basket>>() {
             @Override
             public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<ArrayList<Basket>> result) {
                 progressBaskets.setVisibility(INVISIBLE);
@@ -114,7 +115,7 @@ public class BasketsView extends FrameLayout implements View.OnClickListener, IS
     }
 
     private void createBasket(String title, String introduction, String category_id) {
-        FavorAPI.createBasket(title, introduction, category_id, new RequestObject.CallBack<Basket>() {
+        FavorAPI.createBasket(title, introduction, category_id, new CallBack<Basket>() {
             @Override
             public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Basket> result) {
                 ToastUtil.toast("创建失败");
@@ -131,7 +132,7 @@ public class BasketsView extends FrameLayout implements View.OnClickListener, IS
     }
 
     private void loadCategories() {
-        FavorAPI.getCategoryList(new RequestObject.CallBack<ArrayList<Category>>() {
+        FavorAPI.getCategoryList(new CallBack<ArrayList<Category>>() {
             @Override
             public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<ArrayList<Category>> result) {
                 ToastUtil.toast("加载目录失败");

@@ -11,6 +11,7 @@ import net.nashlegend.sourcewall.db.BasketHelper;
 import net.nashlegend.sourcewall.model.Basket;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.RequestObject;
+import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.FavorAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
@@ -142,7 +143,7 @@ public class ChannelsAdapter extends BaseExpandableListAdapter {
     }
 
     private void loadBaskets() {
-        FavorAPI.getBaskets(new RequestObject.CallBack<ArrayList<Basket>>() {
+        FavorAPI.getBaskets(new CallBack<ArrayList<Basket>>() {
             @Override
             public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<ArrayList<Basket>> result) {
 

@@ -14,6 +14,7 @@ import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.NoticeAdapter;
 import net.nashlegend.sourcewall.model.Notice;
 import net.nashlegend.sourcewall.request.RequestObject;
+import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.MessageAPI;
 import net.nashlegend.sourcewall.util.Mob;
@@ -70,7 +71,7 @@ public class NoticeView extends AceView<Notice> implements View.OnClickListener 
 
     private void ignoreNotice(final Notice notice) {
         MobclickAgent.onEvent(getContext(), Mob.Event_Ignore_One_Notice);
-        MessageAPI.ignoreOneNotice(notice.getId(), new RequestObject.CallBack<ArrayList<Notice>>() {
+        MessageAPI.ignoreOneNotice(notice.getId(), new CallBack<ArrayList<Notice>>() {
             @Override
             public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<ArrayList<Notice>> result) {
 
