@@ -10,6 +10,7 @@ import java.util.List;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
+import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -21,10 +22,14 @@ import okhttp3.RequestBody;
  */
 public class RequestDelegate {
 
-    private OkHttpClient defaultHttpClient;
+    private OkHttpClient httpClient;
 
     public RequestDelegate(@NonNull OkHttpClient okHttpClient) {
-        defaultHttpClient = okHttpClient;
+        httpClient = okHttpClient;
+    }
+
+    public Call get(RequestObject<?> request) throws Exception {
+        return get(request.url, request.params, request.tag);
     }
 
     public Call get(String url, Object tag) throws Exception {
@@ -32,19 +37,27 @@ public class RequestDelegate {
     }
 
     public Call get(String url, List<Param> params, Object tag) throws Exception {
-        return get(url + "?" + getQueryString(params), tag);
+        return get(combine(url, params), tag);
+    }
+
+    public Call post(RequestObject<?> request) throws Exception {
+        return post(request.url, request.params, request.tag);
     }
 
     public Call post(String url, List<Param> params, Object tag) throws Exception {
         return requestSync(Method.POST, getFormBody(params), url, tag);
     }
 
+    public Call put(RequestObject<?> request) throws Exception {
+        return put(request.url, request.params, request.tag);
+    }
+
     public Call put(String url, List<Param> params, Object tag) throws Exception {
         return requestSync(Method.PUT, getFormBody(params), url, tag);
     }
 
-    public Call put(String url, Object tag) throws Exception {
-        return put(url, null, tag);
+    public Call delete(RequestObject<?> request) throws Exception {
+        return delete(request.url, request.params, request.tag);
     }
 
     /**
@@ -55,7 +68,11 @@ public class RequestDelegate {
     }
 
     public Call delete(String url, List<Param> params, Object tag) throws Exception {
-        return delete(url + "?" + getQueryString(params), tag);
+        return delete(combine(url, params), tag);
+    }
+
+    public Call upload(RequestObject<?> request) throws Exception {
+        return upload(request.url, request.uploadFileKey, request.uploadFilePath, request.params, request.mediaType);
     }
 
     /**
@@ -75,24 +92,36 @@ public class RequestDelegate {
         return requestSync(Method.POST, body, url, null);
     }
 
+    public Call getAsync(RequestObject<?> request, Callback defCallBack) {
+        return getAsync(request.url, request.params, defCallBack, request.tag);
+    }
+
     public Call getAsync(String url, Callback defCallBack, Object tag) {
         return requestAsync(Method.GET, null, url, tag, defCallBack);
     }
 
     public Call getAsync(String url, List<Param> params, Callback defCallBack, Object tag) {
-        return getAsync(url + "?" + getQueryString(params), defCallBack, tag);
+        return getAsync(combine(url, params), defCallBack, tag);
+    }
+
+    public Call postAsync(RequestObject<?> request, Callback defCallBack) {
+        return postAsync(request.url, request.params, defCallBack, request.tag);
     }
 
     public Call postAsync(String url, List<Param> params, Callback defCallBack, Object tag) {
         return requestAsync(Method.POST, getFormBody(params), url, tag, defCallBack);
     }
 
+    public Call putAsync(RequestObject<?> request, Callback defCallBack) {
+        return putAsync(request.url, request.params, defCallBack, request.tag);
+    }
+
     public Call putAsync(String url, List<Param> params, Callback defCallBack, Object tag) {
         return requestAsync(Method.PUT, getFormBody(params), url, tag, defCallBack);
     }
 
-    public Call putAsync(String url, Callback defCallBack, Object tag) {
-        return putAsync(url, null, defCallBack, tag);
+    public Call deleteAsync(RequestObject<?> request, Callback defCallBack) {
+        return deleteAsync(request.url, request.params, defCallBack, request.tag);
     }
 
     /**
@@ -103,7 +132,7 @@ public class RequestDelegate {
     }
 
     public Call deleteAsync(String url, List<Param> params, Callback defCallBack, Object tag) {
-        return deleteAsync(url + "?" + getQueryString(params), defCallBack, tag);
+        return deleteAsync(combine(url, params), defCallBack, tag);
     }
 
     /**
@@ -123,9 +152,12 @@ public class RequestDelegate {
         return requestAsync(Method.POST, body, uploadUrl, null, callBack);
     }
 
+    private String combine(String url, List<Param> params) {
+        return HttpUrl.parse(url).newBuilder().query(getQueryString(params)).build().toString();
+    }
 
     /**
-     * 生成queryString,如:a=b&b=c&c=d
+     * 生成queryString,如:a=b&c=d&e=f
      *
      * @param params
      * @return
@@ -162,7 +194,6 @@ public class RequestDelegate {
         }
         return builder.build();
     }
-
 
     private MultipartBody getMultipartBody(MediaType mediaType, String fileKey, String filePath, List<Param> params) {
         ArrayList<Param> fileParam = new ArrayList<>();
@@ -206,15 +237,15 @@ public class RequestDelegate {
 
     private Call getCall(String method, RequestBody body, String url, Object tag) {
         Request request = new Request.Builder().method(method, body).url(url).tag(tag).build();
-        return defaultHttpClient.newCall(request);
+        return httpClient.newCall(request);
     }
 
     static class Method {
-        public static final String GET = "GET";
-        public static final String POST = "POST";
-        public static final String DELETE = "DELETE";
-        public static final String PUT = "PUT";
-        public static final String HEAD = "HEAD";
-        public static final String PATCH = "PATCH";
+        public static final String GET = "GET";//must no body
+        public static final String POST = "POST";//must body
+        public static final String DELETE = "DELETE";//may body
+        public static final String PUT = "PUT";//must body
+        public static final String HEAD = "HEAD";//must no body
+        public static final String PATCH = "PATCH";//must body
     }
 }

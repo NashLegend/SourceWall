@@ -199,7 +199,7 @@ public class RequestBuilder<T> {
     }
 
     /**
-     * 设置请求地址
+     * 设置请求地址,地址可以自带参数
      *
      * @param url
      * @return
