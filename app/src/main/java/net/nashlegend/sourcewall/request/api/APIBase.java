@@ -76,7 +76,7 @@ public class APIBase {
                         }
                     }
                 })
-                .startRequest();
+                .requestAsync();
     }
 
     /**

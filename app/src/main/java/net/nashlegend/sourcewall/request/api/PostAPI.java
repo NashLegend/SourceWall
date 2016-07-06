@@ -68,7 +68,7 @@ public class PostAPI extends APIBase {
                 .useCacheFirst(useCache)
                 .cacheTimeOut(300000)
                 .parser(new PostListParser())
-                .requestObservable();
+                .flatMap();
     }
 
     /**
@@ -87,7 +87,7 @@ public class PostAPI extends APIBase {
                 .params(pairs)
                 .parser(new BooleanParser())
                 .callback(callBack)
-                .startRequest();
+                .requestAsync();
     }
 
     /**
@@ -106,7 +106,7 @@ public class PostAPI extends APIBase {
                 .params(pairs)
                 .parser(new BooleanParser())
                 .callback(callBack)
-                .startRequest();
+                .requestAsync();
     }
 
     public static Observable<ResponseObject<ArrayList<SubItem>>> getAllMyGroups(String ukey) {
@@ -131,7 +131,7 @@ public class PostAPI extends APIBase {
                         return list;
                     }
                 })
-                .requestObservable();
+                .flatMap();
     }
 
     /**
@@ -153,7 +153,7 @@ public class PostAPI extends APIBase {
                         return Post.fromJson(postResult);
                     }
                 })
-                .requestObservable();
+                .flatMap();
     }
 
     /**
@@ -191,7 +191,7 @@ public class PostAPI extends APIBase {
                         return list;
                     }
                 })
-                .requestObservable();
+                .flatMap();
     }
 
     /**
@@ -210,7 +210,7 @@ public class PostAPI extends APIBase {
                 .post()
                 .callback(callBack)
                 .params(pairs)
-                .startRequest();
+                .requestAsync();
     }
 
     /**
@@ -232,7 +232,7 @@ public class PostAPI extends APIBase {
                 .callback(callBack)
                 .params(pairs)
                 .post()
-                .startRequest();
+                .requestAsync();
     }
 
     /**
@@ -263,7 +263,7 @@ public class PostAPI extends APIBase {
                 .get()
                 .withToken(false)
                 .parser(new DirectlyStringParser())
-                .requestObservable()
+                .flatMap()
                 .flatMap(new Func1<ResponseObject<String>, Observable<String>>() {
                     @Override
                     public Observable<String> call(ResponseObject<String> response) {
@@ -326,7 +326,7 @@ public class PostAPI extends APIBase {
                         return UComment.fromPostJson(replyObject);
                     }
                 })
-                .requestObservable()
+                .flatMap()
                 .flatMap(new Func1<ResponseObject<UComment>, Observable<UComment>>() {
                     @Override
                     public Observable<UComment> call(ResponseObject<UComment> responseObject) {
@@ -356,7 +356,7 @@ public class PostAPI extends APIBase {
                 .delete()
                 .callback(callBack)
                 .params(pairs)
-                .startRequest();
+                .requestAsync();
     }
 
     /**
@@ -375,7 +375,7 @@ public class PostAPI extends APIBase {
                 .parser(new BooleanParser())
                 .callback(callBack)
                 .params(pairs)
-                .startRequest();
+                .requestAsync();
     }
 
     /**
@@ -420,7 +420,7 @@ public class PostAPI extends APIBase {
                     }
                 })
                 .callback(callBack)
-                .startRequest();
+                .requestAsync();
     }
 
     /**
@@ -460,7 +460,7 @@ public class PostAPI extends APIBase {
                     }
                 })
                 .callback(callBack)
-                .startRequest();
+                .requestAsync();
     }
 
     /**
@@ -482,7 +482,7 @@ public class PostAPI extends APIBase {
                 .params(pairs)
                 .parser(new BooleanParser())
                 .callback(callBack)
-                .startRequest();
+                .requestAsync();
     }
 
     /**

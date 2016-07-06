@@ -115,7 +115,7 @@ public class QuestionAPI extends APIBase {
                 .cacheTimeOut(300000)
                 .useCacheFirst(useCache)
                 .parser(new QuestionListParser())
-                .requestObservable();
+                .flatMap();
     }
 
     /**
@@ -137,7 +137,7 @@ public class QuestionAPI extends APIBase {
                 .cacheTimeOut(300000)
                 .useCacheFirst(useCache)
                 .parser(new QuestionListParser())
-                .requestObservable();
+                .flatMap();
     }
 
     /**
@@ -154,7 +154,7 @@ public class QuestionAPI extends APIBase {
                 .cacheTimeOut(300000)
                 .useCacheFirst(useCache)
                 .parser(new QuestionHtmlListParser())
-                .requestObservable();
+                .flatMap();
     }
 
     /**
@@ -176,7 +176,7 @@ public class QuestionAPI extends APIBase {
                         return Question.fromJson(result);
                     }
                 })
-                .requestObservable();
+                .flatMap();
     }
 
     /**
@@ -200,7 +200,7 @@ public class QuestionAPI extends APIBase {
                 .params(pairs)
                 .useCacheIfFailed(offset == 0)
                 .parser(new QuestionAnswerListParser())
-                .requestObservable();
+                .flatMap();
     }
 
     /**
@@ -234,7 +234,7 @@ public class QuestionAPI extends APIBase {
                     }
                 })
                 .callback(callBack)
-                .startRequest();
+                .requestAsync();
     }
 
     /**
@@ -258,7 +258,7 @@ public class QuestionAPI extends APIBase {
                 .callback(callBack)
                 .params(pairs)
                 .get()
-                .startRequest();
+                .requestAsync();
     }
 
     /**
@@ -282,7 +282,7 @@ public class QuestionAPI extends APIBase {
                 .callback(callBack)
                 .params(pairs)
                 .get()
-                .startRequest();
+                .requestAsync();
     }
 
     /**
@@ -303,7 +303,7 @@ public class QuestionAPI extends APIBase {
                 .callback(callBack)
                 .params(pairs)
                 .post()
-                .startRequest();
+                .requestAsync();
     }
 
     /**
@@ -344,7 +344,7 @@ public class QuestionAPI extends APIBase {
                 .parser(new BooleanParser())
                 .callback(callBack)
                 .post()
-                .startRequest();
+                .requestAsync();
     }
 
     /**
@@ -364,7 +364,7 @@ public class QuestionAPI extends APIBase {
                 .parser(new BooleanParser())
                 .callback(callBack)
                 .post()
-                .startRequest();
+                .requestAsync();
     }
 
     /**
@@ -384,7 +384,7 @@ public class QuestionAPI extends APIBase {
                 .parser(new BooleanParser())
                 .callback(callBack)
                 .post()
-                .startRequest();
+                .requestAsync();
     }
 
     /**
@@ -403,7 +403,7 @@ public class QuestionAPI extends APIBase {
                 .parser(new BooleanParser())
                 .callback(callBack)
                 .delete()
-                .startRequest();
+                .requestAsync();
     }
 
     /**
@@ -437,7 +437,7 @@ public class QuestionAPI extends APIBase {
                 .parser(new BooleanParser())
                 .callback(callBack)
                 .post()
-                .startRequest();
+                .requestAsync();
     }
 
     /**
@@ -457,7 +457,7 @@ public class QuestionAPI extends APIBase {
                 .callback(callBack)
                 .parser(new BooleanParser())
                 .delete()
-                .startRequest();
+                .requestAsync();
     }
 
     /**
@@ -492,7 +492,7 @@ public class QuestionAPI extends APIBase {
                 .callback(callBack)
                 .params(pairs)
                 .post()
-                .startRequest();
+                .requestAsync();
     }
 
     /**
@@ -508,7 +508,7 @@ public class QuestionAPI extends APIBase {
                 .callback(callBack)
                 .parser(new BooleanParser())
                 .delete()
-                .startRequest();
+                .requestAsync();
     }
 
     /**
@@ -540,7 +540,7 @@ public class QuestionAPI extends APIBase {
                         return uComment;
                     }
                 })
-                .startRequest();
+                .requestAsync();
     }
 
     /**

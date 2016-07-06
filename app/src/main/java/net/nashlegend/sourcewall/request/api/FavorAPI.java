@@ -48,7 +48,7 @@ public class FavorAPI extends APIBase {
                 .useCacheFirst(useCache)
                 .cacheTimeOut(300000)
                 .parser(new FavorListParser())
-                .requestObservable();
+                .flatMap();
     }
 
     /**
@@ -72,7 +72,7 @@ public class FavorAPI extends APIBase {
                 .callback(callBack)
                 .params(params)
                 .post()
-                .startRequest();
+                .requestAsync();
     }
 
     /**
@@ -106,7 +106,7 @@ public class FavorAPI extends APIBase {
                 .callback(callBack)
                 .params(pairs)
                 .get()
-                .startRequest();
+                .requestAsync();
     }
 
     /**
@@ -134,7 +134,7 @@ public class FavorAPI extends APIBase {
                 .callback(callBack)
                 .params(params)
                 .post()
-                .startRequest();
+                .requestAsync();
     }
 
     /**
@@ -162,6 +162,6 @@ public class FavorAPI extends APIBase {
                 .parser(parser)
                 .callback(callBack)
                 .get()
-                .startRequest();
+                .requestAsync();
     }
 }

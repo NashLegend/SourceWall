@@ -48,7 +48,7 @@ public class RequestBuilder<T> {
                 .addParam("key", "value")
                 .callback(callBack)
                 .parser(new DirectlyStringParser())
-                .startRequest();
+                .requestAsync();
     }
 
     /**
@@ -381,7 +381,7 @@ public class RequestBuilder<T> {
     /**
      * 异步请求
      */
-    public RequestObject<T> startRequest() {
+    public RequestObject<T> requestAsync() {
         addExtras();
         request.startRequest();
         return request;
@@ -390,9 +390,9 @@ public class RequestBuilder<T> {
     /**
      * 异步请求，返回的是一个Observable，但是并没有执行，需要手动subscribe
      */
-    public Observable<ResponseObject<T>> requestObservable() {
+    public Observable<ResponseObject<T>> flatMap() {
         addExtras();
-        return request.requestObservable();
+        return request.flatMap();
     }
 
     /**

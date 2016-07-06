@@ -299,7 +299,7 @@ public class RequestObject<T> {
      * @return
      */
     @NonNull
-    private Observable<ResponseObject<T>> readCacheObservable() {
+    private Observable<ResponseObject<T>> cachedObservable() {
         return Observable
                 .create(new Observable.OnSubscribe<String>() {
                     @Override
@@ -442,10 +442,10 @@ public class RequestObject<T> {
      * @return
      */
     @NonNull
-    public Observable<ResponseObject<T>> requestObservable() {
+    public Observable<ResponseObject<T>> flatMap() {
         Observable<ResponseObject<T>> observable;
         if (useCachedFirst) {
-            observable = readCacheObservable()
+            observable = cachedObservable()
                     .flatMap(new Func1<ResponseObject<T>, Observable<ResponseObject<T>>>() {
                         @Override
                         public Observable<ResponseObject<T>> call(ResponseObject<T> r) {
@@ -466,7 +466,7 @@ public class RequestObject<T> {
      * 通过RxJava的方式执行请求，与requestAsync一样，CallBack执行在主线程上
      */
     public void requestRx() {
-        requestObservable()
+        flatMap()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<ResponseObject<T>>() {
                     @Override

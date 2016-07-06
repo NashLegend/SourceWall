@@ -73,7 +73,7 @@ public class ArticleAPI extends APIBase {
                 .useCacheFirst(useCache)
                 .cacheTimeOut(300000)
                 .parser(new ArticleListParser())
-                .requestObservable();
+                .flatMap();
     }
 
     /**
@@ -96,7 +96,7 @@ public class ArticleAPI extends APIBase {
                         return article;
                     }
                 })
-                .requestObservable();
+                .flatMap();
     }
 
     /**
@@ -135,7 +135,7 @@ public class ArticleAPI extends APIBase {
                         return list;
                     }
                 })
-                .requestObservable();
+                .flatMap();
     }
 
     /**
@@ -201,7 +201,7 @@ public class ArticleAPI extends APIBase {
                         return Article.fromJsonSimple(articleObject);
                     }
                 })
-                .requestObservable();
+                .flatMap();
     }
 
     public static Observable<UComment> getSingleComment(String url) {
@@ -210,7 +210,7 @@ public class ArticleAPI extends APIBase {
                 .get()
                 .withToken(false)
                 .parser(new DirectlyStringParser())
-                .requestObservable()
+                .flatMap()
                 .flatMap(new Func1<ResponseObject<String>, Observable<UComment>>() {
                     @Override
                     public Observable<UComment> call(ResponseObject<String> response) {
@@ -291,7 +291,7 @@ public class ArticleAPI extends APIBase {
                         return UComment.fromArticleJson(replyObject);
                     }
                 })
-                .requestObservable();
+                .flatMap();
     }
 
     /**
@@ -324,7 +324,7 @@ public class ArticleAPI extends APIBase {
                 .callback(callBack)
                 .params(pairs)
                 .post()
-                .startRequest();
+                .requestAsync();
     }
 
     /**
@@ -343,7 +343,7 @@ public class ArticleAPI extends APIBase {
                 .callback(callBack)
                 .params(pairs)
                 .delete()
-                .startRequest();
+                .requestAsync();
     }
 
     /**
@@ -364,6 +364,6 @@ public class ArticleAPI extends APIBase {
                 .callback(callBack)
                 .params(pairs)
                 .post()
-                .startRequest();
+                .requestAsync();
     }
 }

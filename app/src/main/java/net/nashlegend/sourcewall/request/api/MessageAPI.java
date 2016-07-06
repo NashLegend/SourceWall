@@ -45,7 +45,7 @@ public class MessageAPI extends APIBase {
                 .callback(callBack)
                 .params(pairs)
                 .get()
-                .startRequest();
+                .requestAsync();
     }
 
     /**
@@ -79,7 +79,7 @@ public class MessageAPI extends APIBase {
                 .callback(callBack)
                 .params(pairs)
                 .get()
-                .startRequest();
+                .requestAsync();
     }
 
     /**
@@ -114,7 +114,7 @@ public class MessageAPI extends APIBase {
                 .callback(callBack)
                 .params(pairs)
                 .get()
-                .startRequest();
+                .requestAsync();
     }
 
     /**
@@ -130,7 +130,7 @@ public class MessageAPI extends APIBase {
                 .parser(new BooleanParser())
                 .callback(callBack)
                 .put()
-                .startRequest();
+                .requestAsync();
     }
 
     /**
@@ -166,7 +166,7 @@ public class MessageAPI extends APIBase {
                 .callback(callBack)
                 .params(pairs)
                 .put()
-                .startRequest();
+                .requestAsync();
     }
 
     /**
@@ -210,7 +210,7 @@ public class MessageAPI extends APIBase {
                 .callback(callBack)
                 .params(pairs)
                 .get()
-                .startRequest();
+                .requestAsync();
     }
 
     /**
@@ -234,7 +234,7 @@ public class MessageAPI extends APIBase {
                 .parser(parser)
                 .callback(callBack)
                 .get()
-                .startRequest();
+                .requestAsync();
     }
 
 }

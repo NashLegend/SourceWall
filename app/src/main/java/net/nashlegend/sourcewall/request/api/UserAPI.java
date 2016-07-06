@@ -66,7 +66,7 @@ public class UserAPI extends APIBase {
                 })
                 .callback(callBack)
                 .get()
-                .startRequest();
+                .requestAsync();
     }
 
     /**
@@ -105,7 +105,7 @@ public class UserAPI extends APIBase {
                 .callback(callBack)
                 .params(pairs)
                 .post()
-                .startRequest();
+                .requestAsync();
     }
 
     /**
