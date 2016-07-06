@@ -9,6 +9,9 @@ import android.text.TextUtils;
 
 import net.nashlegend.sourcewall.request.cache.CacheHeaderUtil;
 import net.nashlegend.sourcewall.request.cache.RequestCache;
+import net.nashlegend.sourcewall.request.interceptors.DownloadProgressInterceptor;
+import net.nashlegend.sourcewall.request.interceptors.GzipRequestInterceptor;
+import net.nashlegend.sourcewall.request.interceptors.UploadProgressInterceptor;
 import net.nashlegend.sourcewall.request.parsers.Parser;
 
 import java.io.File;
@@ -24,22 +27,11 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
-import okhttp3.ResponseBody;
-import okio.Buffer;
 import okio.BufferedSink;
-import okio.BufferedSource;
-import okio.ForwardingSink;
-import okio.ForwardingSource;
-import okio.GzipSink;
 import okio.Okio;
-import okio.Sink;
-import okio.Source;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
@@ -104,40 +96,6 @@ public class RequestObject<T> {
     private Call call = null;
     private String cacheKey = null;
 
-    public void setCallBack(final CallBack<T> call) {
-        if (call == null) {
-            return;
-        }
-        //noinspection StatementWithEmptyBody
-        if (call instanceof DetailedCallBack) {
-            //do nothing
-        } else {
-            this.callBack = new DetailedCallBack<T>() {
-                @Override
-                public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<T> result) {
-                    call.onFailure(e, result);
-                }
-
-                @Override
-                public void onSuccess(@NonNull T result, @NonNull ResponseObject<T> detailed) {
-                    call.onSuccess(result, detailed);
-                }
-
-                @Override
-                public void onRequestProgress(long current, long total) {
-                    //do nothing
-                    System.out.println(current + "_" + total);
-                }
-
-                @Override
-                public void onResponseProgress(long current, long total, boolean done) {
-                    //do nothing
-                    System.out.println("downloadAsync " + current + "_" + total);
-                }
-            };
-        }
-    }
-
     synchronized public RequestDelegate getRequestDelegate() {
         if (requestDelegate == null) {
             requestDelegate = new RequestDelegate(getHttpClient());
@@ -167,11 +125,11 @@ public class RequestObject<T> {
                 switch (requestType) {
                     case RequestType.UPLOAD:
                         tmpClient = HttpUtil.getDefaultUploadHttpClient().newBuilder()
-                                .addNetworkInterceptor(new UploadProgressInterceptor()).build();
+                                .addNetworkInterceptor(new UploadProgressInterceptor(callBack)).build();
                         break;
                     case RequestType.DOWNLOAD:
                         tmpClient = HttpUtil.getDefaultUploadHttpClient().newBuilder()
-                                .addNetworkInterceptor(new DownloadProgressInterceptor()).build();
+                                .addNetworkInterceptor(new DownloadProgressInterceptor(callBack)).build();
                         break;
                     default:
                         tmpClient = HttpUtil.getDefaultHttpClient();
@@ -548,13 +506,13 @@ public class RequestObject<T> {
     @SuppressWarnings("StringBufferReplaceableByString")
     public String dump() {
         StringBuilder err = new StringBuilder();
-        err.append("    ").append("params").append(":").append(params).append("\n");
-        err.append("    ").append("method").append(":").append(method).append("\n");
-        err.append("    ").append("url").append(":").append(url).append("\n");
-        err.append("    ").append("tag").append(":").append(tag).append("\n");
+        err.append("\t\t").append("params").append(":").append(Urls.getQueryString(params)).append("\n");
+        err.append("\t\t").append("method").append(":").append(method).append("\n");
+        err.append("\t\t").append("url").append(":").append(url).append("\n");
+        err.append("\t\t").append("tag").append(":").append(tag).append("\n");
         if (requestType == RequestType.UPLOAD) {
-            err.append("    ").append("uploadFileKey").append(":").append(uploadFileKey).append("\n");
-            err.append("    ").append("mediaType").append(":").append(mediaType).append("\n");
+            err.append("\t\t").append("uploadFileKey").append(":").append(uploadFileKey).append("\n");
+            err.append("\t\t").append("mediaType").append(":").append(mediaType).append("\n");
         }
         return err.toString();
     }
@@ -842,25 +800,20 @@ public class RequestObject<T> {
 
 
     /**
-     * http 请求回调
+     * http 请求基本回调
      *
      * @param <T>
      */
-    public interface CallBack<T> {
-        /**
-         * ok必须为false
-         *
-         * @param e
-         * @param result
-         */
-        void onFailure(@Nullable Throwable e, @NonNull ResponseObject<T> result);
+    public static abstract class CallBack<T> implements DetailedCallBack<T> {
+        @Override
+        public void onRequestProgress(long current, long total) {
 
-        /**
-         * 如果执行到此处，ok必然为true,当然 如果是下载文件的话，此处result为null，运行到此处必然已经成功了
-         *
-         * @param result
-         */
-        void onSuccess(@NonNull T result, @NonNull ResponseObject<T> detailed);
+        }
+
+        @Override
+        public void onResponseProgress(long current, long total, boolean done) {
+
+        }
     }
 
     /**
@@ -868,7 +821,7 @@ public class RequestObject<T> {
      *
      * @param <T>
      */
-    public interface DetailedCallBack<T> extends CallBack<T> {
+    public interface DetailedCallBack<T> {
         /**
          * result不可能为空
          *
@@ -879,8 +832,6 @@ public class RequestObject<T> {
 
         /**
          * 如果执行到此处，ok必然为true,{@link ResponseObject#result}必然不为null
-         * <p/>
-         * 除了是下载文件的话，此处result为null，运行到此处必然已经成功了
          *
          * @param result
          * @param detailed
@@ -920,277 +871,6 @@ public class RequestObject<T> {
                             }
                         }
                     });
-        }
-    }
-
-    /**
-     * 上传的Interceptor
-     */
-    class UploadProgressInterceptor implements Interceptor {
-
-        @Override
-        public Response intercept(Chain chain) throws IOException {
-            Request originalRequest = chain.request();
-            ProgressRequestBody progressRequestBody = new ProgressRequestBody(originalRequest.body(), callBack);
-            Request compressedRequest = originalRequest.newBuilder()
-                    .method(originalRequest.method(), progressRequestBody)
-                    .build();
-            return chain.proceed(compressedRequest);
-        }
-    }
-
-    /**
-     * 下载的Interceptor
-     */
-    class DownloadProgressInterceptor implements Interceptor {
-
-        @Override
-        public Response intercept(Chain chain) throws IOException {
-            Response originalResponse = chain.proceed(chain.request());
-            //包装响应体并返回
-            return originalResponse.newBuilder()
-                    .body(new ProgressResponseBody(originalResponse.body(), callBack))
-                    .build();
-        }
-    }
-
-    class GzipRequestInterceptor implements Interceptor {
-        @Override
-        public Response intercept(Chain chain) throws IOException {
-            Request originalRequest = chain.request();
-            if (originalRequest.body() == null || originalRequest.header("Content-Encoding") != null) {
-                return chain.proceed(originalRequest);
-            }
-
-            RequestBody body = forceContentLength(gzip(originalRequest.body()));
-
-            Request compressedRequest = originalRequest.newBuilder()
-                    .header("Content-Encoding", "gzip")
-                    .header("Content-Length", String.valueOf(body.contentLength()))
-                    .method(originalRequest.method(), body)
-                    .build();
-            return chain.proceed(compressedRequest);
-        }
-
-        /**
-         * https://github.com/square/okhttp/issues/350
-         */
-        private RequestBody forceContentLength(final RequestBody requestBody) throws IOException {
-            final Buffer buffer = new Buffer();
-            requestBody.writeTo(buffer);
-            return new RequestBody() {
-                @Override
-                public MediaType contentType() {
-                    return requestBody.contentType();
-                }
-
-                @Override
-                public long contentLength() {
-                    return buffer.size();
-                }
-
-                @Override
-                public void writeTo(BufferedSink sink) throws IOException {
-                    sink.write(buffer.snapshot());
-                }
-            };
-        }
-
-        private RequestBody gzip(final RequestBody body) {
-            return new RequestBody() {
-                @Override
-                public MediaType contentType() {
-                    return body.contentType();
-                }
-
-                @Override
-                public long contentLength() {
-                    return -1; // We don't know the compressed length in advance!
-                }
-
-                @Override
-                public void writeTo(BufferedSink sink) throws IOException {
-                    BufferedSink gzipSink = Okio.buffer(new GzipSink(sink));
-                    body.writeTo(gzipSink);
-                    gzipSink.close();
-                }
-            };
-        }
-    }
-
-    public class ProgressResponseBody extends ResponseBody {
-        //实际的待包装响应体
-        private final ResponseBody responseBody;
-        //进度回调接口
-        @Nullable
-        private final DetailedCallBack callBack;
-        //包装完成的BufferedSource
-        private BufferedSource bufferedSource;
-
-        /**
-         * 构造函数，赋值
-         *
-         * @param responseBody 待包装的响应体
-         * @param callBack
-         */
-        public ProgressResponseBody(ResponseBody responseBody, @Nullable DetailedCallBack callBack) {
-            this.responseBody = responseBody;
-            this.callBack = callBack;
-        }
-
-        /**
-         * 重写调用实际的响应体的contentType
-         *
-         * @return MediaType
-         */
-        @Override
-        public MediaType contentType() {
-            return responseBody.contentType();
-        }
-
-        /**
-         * 重写调用实际的响应体的contentLength
-         *
-         * @return contentLength
-         * @throws IOException 异常
-         */
-        @Override
-        public long contentLength() {
-            return responseBody.contentLength();
-        }
-
-        /**
-         * 重写进行包装source
-         *
-         * @return BufferedSource
-         * @throws IOException 异常
-         */
-        @Override
-        public BufferedSource source() {
-            if (bufferedSource == null) {
-                //包装
-                bufferedSource = Okio.buffer(source(responseBody.source()));
-            }
-            return bufferedSource;
-        }
-
-
-        /**
-         * 读取，回调进度接口
-         *
-         * @param source Source
-         * @return Source
-         */
-        private Source source(Source source) {
-
-            return new ForwardingSource(source) {
-                //当前读取字节数
-                long totalBytesRead = 0L;
-
-                @Override
-                public long read(Buffer sink, long byteCount) throws IOException {
-                    long bytesRead = super.read(sink, byteCount);
-                    //增加当前读取的字节数，如果读取完成了bytesRead会返回-1
-                    totalBytesRead += bytesRead != -1 ? bytesRead : 0;
-                    //回调，如果contentLength()不知道长度，会返回-1
-                    if (callBack != null) {
-                        callBack.onResponseProgress(totalBytesRead, responseBody.contentLength(), bytesRead == -1);
-                    }
-                    return bytesRead;
-                }
-            };
-        }
-    }
-
-    public class ProgressRequestBody extends RequestBody {
-        //实际的待包装请求体
-        private final RequestBody requestBody;
-        //进度回调接口
-        @Nullable
-        private final DetailedCallBack callBack;
-        //包装完成的BufferedSink
-        private BufferedSink bufferedSink;
-
-        /**
-         * 构造函数，赋值
-         *
-         * @param requestBody 待包装的请求体
-         * @param callBack
-         */
-        public ProgressRequestBody(RequestBody requestBody, @Nullable DetailedCallBack callBack) {
-            this.requestBody = requestBody;
-            this.callBack = callBack;
-        }
-
-        /**
-         * 重写调用实际的响应体的contentType
-         *
-         * @return MediaType
-         */
-        @Override
-        public MediaType contentType() {
-            return requestBody.contentType();
-        }
-
-        /**
-         * 重写调用实际的响应体的contentLength
-         *
-         * @return contentLength
-         * @throws IOException 异常
-         */
-        @Override
-        public long contentLength() throws IOException {
-            return requestBody.contentLength();
-        }
-
-        /**
-         * 重写进行写入
-         *
-         * @param sink BufferedSink
-         * @throws IOException 异常
-         */
-        @Override
-        public void writeTo(BufferedSink sink) throws IOException {
-            if (bufferedSink == null) {
-                //包装
-                bufferedSink = Okio.buffer(sink(sink));
-            }
-            //写入
-            requestBody.writeTo(bufferedSink);
-            //必须调用flush，否则最后一部分数据可能不会被写入
-            bufferedSink.flush();
-
-        }
-
-        /**
-         * 写入，回调进度接口
-         *
-         * @param sink Sink
-         * @return Sink
-         */
-        private Sink sink(Sink sink) {
-            return new ForwardingSink(sink) {
-                //当前写入字节数
-                long bytesWritten = 0L;
-                //总字节长度，避免多次调用contentLength()方法
-                long contentLength = 0L;
-
-                @Override
-                public void write(Buffer source, long byteCount) throws IOException {
-                    super.write(source, byteCount);
-                    if (contentLength == 0) {
-                        //获得contentLength的值，后续不再调用
-                        contentLength = contentLength();
-                    }
-                    //增加当前写入的字节数
-                    bytesWritten += byteCount;
-
-                    //回调
-                    if (callBack != null) {
-                        callBack.onRequestProgress(bytesWritten, contentLength);
-                    }
-                }
-            };
         }
     }
 }

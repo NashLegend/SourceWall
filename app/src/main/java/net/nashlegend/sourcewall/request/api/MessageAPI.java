@@ -40,10 +40,10 @@ public class MessageAPI extends APIBase {
         HashMap<String, String> pairs = new HashMap<>();
         pairs.put("_", String.valueOf(System.currentTimeMillis()));
         return new RequestBuilder<ReminderNoticeNum>()
-                .setUrl(url)
-                .setParser(parser)
-                .setRequestCallBack(callBack)
-                .setParams(pairs)
+                .url(url)
+                .parser(parser)
+                .callback(callBack)
+                .params(pairs)
                 .get()
                 .startRequest();
     }
@@ -74,10 +74,10 @@ public class MessageAPI extends APIBase {
         pairs.put("limit", "20");
         pairs.put("offset", String.valueOf(offset));
         return new RequestBuilder<ArrayList<Reminder>>()
-                .setUrl(url)
-                .setParser(parser)
-                .setRequestCallBack(callBack)
-                .setParams(pairs)
+                .url(url)
+                .parser(parser)
+                .callback(callBack)
+                .params(pairs)
                 .get()
                 .startRequest();
     }
@@ -109,10 +109,10 @@ public class MessageAPI extends APIBase {
         pairs.put("limit", "1024");
         pairs.put("offset", "0");
         return new RequestBuilder<ArrayList<Notice>>()
-                .setUrl(url)
-                .setParser(parser)
-                .setRequestCallBack(callBack)
-                .setParams(pairs)
+                .url(url)
+                .parser(parser)
+                .callback(callBack)
+                .params(pairs)
                 .get()
                 .startRequest();
     }
@@ -126,9 +126,9 @@ public class MessageAPI extends APIBase {
     public static RequestObject<Boolean> ignoreAllNotice(CallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/community/notice_ignore.json";
         return new RequestBuilder<Boolean>()
-                .setUrl(url)
-                .setParser(new BooleanParser())
-                .setRequestCallBack(callBack)
+                .url(url)
+                .parser(new BooleanParser())
+                .callback(callBack)
                 .put()
                 .startRequest();
     }
@@ -161,10 +161,10 @@ public class MessageAPI extends APIBase {
         pairs.put("nid", noticeID);
         pairs.put("_", System.currentTimeMillis() + "");
         return new RequestBuilder<ArrayList<Notice>>()
-                .setUrl(url)
-                .setParser(parser)
-                .setRequestCallBack(callBack)
-                .setParams(pairs)
+                .url(url)
+                .parser(parser)
+                .callback(callBack)
+                .params(pairs)
                 .put()
                 .startRequest();
     }
@@ -205,10 +205,10 @@ public class MessageAPI extends APIBase {
         pairs.put("limit", "20");
         pairs.put("offset", String.valueOf(offset));
         return new RequestBuilder<ArrayList<Message>>()
-                .setUrl(url)
-                .setParser(parser)
-                .setRequestCallBack(callBack)
-                .setParams(pairs)
+                .url(url)
+                .parser(parser)
+                .callback(callBack)
+                .params(pairs)
                 .get()
                 .startRequest();
     }
@@ -230,9 +230,9 @@ public class MessageAPI extends APIBase {
         };
         String url = "http://www.guokr.com/apis/community/user/message/" + id + ".json";
         return new RequestBuilder<Message>()
-                .setUrl(url)
-                .setParser(parser)
-                .setRequestCallBack(callBack)
+                .url(url)
+                .parser(parser)
+                .callback(callBack)
                 .get()
                 .startRequest();
     }

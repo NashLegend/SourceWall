@@ -109,12 +109,12 @@ public class QuestionAPI extends APIBase {
         pairs.put("limit", "20");
         pairs.put("offset", String.valueOf(offset));
         return new RequestBuilder<ArrayList<Question>>()
-                .setUrl(url)
-                .setParams(pairs)
+                .url(url)
+                .params(pairs)
                 .get()
                 .cacheTimeOut(300000)
                 .useCacheFirst(useCache)
-                .setParser(new QuestionListParser())
+                .parser(new QuestionListParser())
                 .requestObservable();
     }
 
@@ -131,12 +131,12 @@ public class QuestionAPI extends APIBase {
         pairs.put("limit", "20");
         pairs.put("offset", String.valueOf(offset));
         return new RequestBuilder<ArrayList<Question>>()
-                .setUrl(url)
-                .setParams(pairs)
+                .url(url)
+                .params(pairs)
                 .get()
                 .cacheTimeOut(300000)
                 .useCacheFirst(useCache)
-                .setParser(new QuestionListParser())
+                .parser(new QuestionListParser())
                 .requestObservable();
     }
 
@@ -149,11 +149,11 @@ public class QuestionAPI extends APIBase {
     public static Observable<ResponseObject<ArrayList<Question>>> getHighlightQuestions(int pageNo, boolean useCache) {
         String url = "http://m.guokr.com/ask/highlight/?page=" + pageNo;
         return new RequestBuilder<ArrayList<Question>>()
-                .setUrl(url)
+                .url(url)
                 .get()
                 .cacheTimeOut(300000)
                 .useCacheFirst(useCache)
-                .setParser(new QuestionHtmlListParser())
+                .parser(new QuestionHtmlListParser())
                 .requestObservable();
     }
 
@@ -166,10 +166,10 @@ public class QuestionAPI extends APIBase {
     public static Observable<ResponseObject<Question>> getQuestionDetailByID(String id) {
         String url = "http://apis.guokr.com/ask/question/" + id + ".json";
         return new RequestBuilder<Question>()
-                .setUrl(url)
+                .url(url)
                 .useCacheIfFailed(true)
                 .get()
-                .setParser(new Parser<Question>() {
+                .parser(new Parser<Question>() {
                     @Override
                     public Question parse(String response, ResponseObject<Question> responseObject) throws Exception {
                         JSONObject result = JsonHandler.getUniversalJsonObject(response, responseObject);
@@ -195,11 +195,11 @@ public class QuestionAPI extends APIBase {
         pairs.put("limit", "20");
         pairs.put("offset", String.valueOf(offset));
         return new RequestBuilder<ArrayList<QuestionAnswer>>()
-                .setUrl(url)
+                .url(url)
                 .get()
-                .setParams(pairs)
+                .params(pairs)
                 .useCacheIfFailed(offset == 0)
-                .setParser(new QuestionAnswerListParser())
+                .parser(new QuestionAnswerListParser())
                 .requestObservable();
     }
 
@@ -224,16 +224,16 @@ public class QuestionAPI extends APIBase {
     public static RequestObject<QuestionAnswer> getSingleAnswerByID(String id, CallBack<QuestionAnswer> callBack) {
         String url = "http://apis.guokr.com/ask/answer/" + id + ".json";
         return new RequestBuilder<QuestionAnswer>()
-                .setUrl(url)
+                .url(url)
                 .get()
-                .setParser(new Parser<QuestionAnswer>() {
+                .parser(new Parser<QuestionAnswer>() {
                     @Override
                     public QuestionAnswer parse(String response, ResponseObject<QuestionAnswer> responseObject) throws Exception {
                         JSONObject answerObject = JsonHandler.getUniversalJsonObject(response, responseObject);
                         return QuestionAnswer.fromJson(answerObject);
                     }
                 })
-                .setRequestCallBack(callBack)
+                .callback(callBack)
                 .startRequest();
     }
 
@@ -253,10 +253,10 @@ public class QuestionAPI extends APIBase {
         pairs.put("limit", "20");
         pairs.put("offset", String.valueOf(offset));
         return new RequestBuilder<ArrayList<UComment>>()
-                .setUrl(url)
-                .setParser(new QuestionCommentListParser())
-                .setRequestCallBack(callBack)
-                .setParams(pairs)
+                .url(url)
+                .parser(new QuestionCommentListParser())
+                .callback(callBack)
+                .params(pairs)
                 .get()
                 .startRequest();
     }
@@ -277,10 +277,10 @@ public class QuestionAPI extends APIBase {
         pairs.put("limit", "20");
         pairs.put("offset", String.valueOf(offset));
         return new RequestBuilder<ArrayList<UComment>>()
-                .setUrl(url)
-                .setParser(new AnswerCommentListParser())
-                .setRequestCallBack(callBack)
-                .setParams(pairs)
+                .url(url)
+                .parser(new AnswerCommentListParser())
+                .callback(callBack)
+                .params(pairs)
                 .get()
                 .startRequest();
     }
@@ -298,10 +298,10 @@ public class QuestionAPI extends APIBase {
         pairs.put("question_id", id);
         pairs.put("content", content);
         return new RequestBuilder<String>()
-                .setUrl(url)
-                .setParser(new ContentValueForKeyParser("id"))
-                .setRequestCallBack(callBack)
-                .setParams(pairs)
+                .url(url)
+                .parser(new ContentValueForKeyParser("id"))
+                .callback(callBack)
+                .params(pairs)
                 .post()
                 .startRequest();
     }
@@ -339,10 +339,10 @@ public class QuestionAPI extends APIBase {
         pairs.put("answer_id", id);
         pairs.put("opinion", opinion);
         new RequestBuilder<Boolean>()
-                .setUrl(url)
-                .setParams(pairs)
-                .setParser(new BooleanParser())
-                .setRequestCallBack(callBack)
+                .url(url)
+                .params(pairs)
+                .parser(new BooleanParser())
+                .callback(callBack)
                 .post()
                 .startRequest();
     }
@@ -359,10 +359,10 @@ public class QuestionAPI extends APIBase {
         pairs.put("v", System.currentTimeMillis() + "");
         pairs.put("answer_id", id);
         new RequestBuilder<Boolean>()
-                .setUrl(url)
-                .setParams(pairs)
-                .setParser(new BooleanParser())
-                .setRequestCallBack(callBack)
+                .url(url)
+                .params(pairs)
+                .parser(new BooleanParser())
+                .callback(callBack)
                 .post()
                 .startRequest();
     }
@@ -379,10 +379,10 @@ public class QuestionAPI extends APIBase {
         pairs.put("v", System.currentTimeMillis() + "");
         pairs.put("answer_id", id);
         new RequestBuilder<Boolean>()
-                .setUrl(url)
-                .setParams(pairs)
-                .setParser(new BooleanParser())
-                .setRequestCallBack(callBack)
+                .url(url)
+                .params(pairs)
+                .parser(new BooleanParser())
+                .callback(callBack)
                 .post()
                 .startRequest();
     }
@@ -398,10 +398,10 @@ public class QuestionAPI extends APIBase {
         HashMap<String, String> pairs = new HashMap<>();
         pairs.put("answer_id", id);
         new RequestBuilder<Boolean>()
-                .setUrl(url)
-                .setParams(pairs)
-                .setParser(new BooleanParser())
-                .setRequestCallBack(callBack)
+                .url(url)
+                .params(pairs)
+                .parser(new BooleanParser())
+                .callback(callBack)
                 .delete()
                 .startRequest();
     }
@@ -432,10 +432,10 @@ public class QuestionAPI extends APIBase {
         pairs.put("question_id", questionID);
         pairs.put("retrieve_type", "by_question");
         new RequestBuilder<Boolean>()
-                .setUrl(url)
-                .setParams(pairs)
-                .setParser(new BooleanParser())
-                .setRequestCallBack(callBack)
+                .url(url)
+                .params(pairs)
+                .parser(new BooleanParser())
+                .callback(callBack)
                 .post()
                 .startRequest();
     }
@@ -452,10 +452,10 @@ public class QuestionAPI extends APIBase {
         pairs.put("question_id", questionID);
         pairs.put("retrieve_type", "by_question");
         new RequestBuilder<Boolean>()
-                .setUrl(url)
-                .setParams(pairs)
-                .setRequestCallBack(callBack)
-                .setParser(new BooleanParser())
+                .url(url)
+                .params(pairs)
+                .callback(callBack)
+                .parser(new BooleanParser())
                 .delete()
                 .startRequest();
     }
@@ -474,8 +474,8 @@ public class QuestionAPI extends APIBase {
         pairs.put("content", comment);
         pairs.put("retrieve_type", "by_question");
         return new RequestBuilder<UComment>()
-                .setUrl(url)
-                .setParser(new Parser<UComment>() {
+                .url(url)
+                .parser(new Parser<UComment>() {
                     @Override
                     public UComment parse(String str, ResponseObject<UComment> responseObject) throws Exception {
                         JSONObject jsonObject = JsonHandler.getUniversalJsonObject(str, responseObject);
@@ -489,8 +489,8 @@ public class QuestionAPI extends APIBase {
                         return uComment;
                     }
                 })
-                .setRequestCallBack(callBack)
-                .setParams(pairs)
+                .callback(callBack)
+                .params(pairs)
                 .post()
                 .startRequest();
     }
@@ -504,9 +504,9 @@ public class QuestionAPI extends APIBase {
     public static void deleteMyComment(String id, CallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/ask/answer/" + id + ".json";
         new RequestBuilder<Boolean>()
-                .setUrl(url)
-                .setRequestCallBack(callBack)
-                .setParser(new BooleanParser())
+                .url(url)
+                .callback(callBack)
+                .parser(new BooleanParser())
                 .delete()
                 .startRequest();
     }
@@ -525,8 +525,8 @@ public class QuestionAPI extends APIBase {
         pairs.put("content", comment);
         pairs.put("retrieve_type", "by_answer");
         return new RequestBuilder<UComment>()
-                .setUrl(url).setRequestCallBack(callBack).setParams(pairs).post()
-                .setParser(new Parser<UComment>() {
+                .url(url).callback(callBack).params(pairs).post()
+                .parser(new Parser<UComment>() {
                     @Override
                     public UComment parse(String str, ResponseObject<UComment> responseObject) throws Exception {
                         JSONObject jsonObject = JsonHandler.getUniversalJsonObject(str, responseObject);

@@ -59,12 +59,12 @@ public class APIBase {
     public static void uploadImage(String path, CallBack<String> callBack) {
         // TODO: 16/5/6 未压缩
         new RequestBuilder<String>()
-                .setUrl("http://www.guokr.com/apis/image.json?enable_watermark=true")
+                .url("http://www.guokr.com/apis/image.json?enable_watermark=true")
                 .upload(path)
-                .setUploadFileKey("upload_file")
-                .setMediaType("image/*")
-                .setRequestCallBack(callBack)
-                .setParser(new Parser<String>() {
+                .uploadFileKey("upload_file")
+                .mediaType("image/*")
+                .callback(callBack)
+                .parser(new Parser<String>() {
                     @Override
                     public String parse(String str, ResponseObject<String> responseObject) throws Exception {
                         JSONObject object = JsonHandler.getUniversalJsonObject(str, responseObject);

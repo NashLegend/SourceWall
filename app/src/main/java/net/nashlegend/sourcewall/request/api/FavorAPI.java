@@ -41,13 +41,13 @@ public class FavorAPI extends APIBase {
         pairs.put("limit", "20");
         pairs.put("offset", String.valueOf(offset));
         return new RequestBuilder<ArrayList<Favor>>()
-                .setUrl(url)
+                .url(url)
                 .get()
-                .setWithToken(false)
-                .setParams(pairs)
+                .withToken(false)
+                .params(pairs)
                 .useCacheFirst(useCache)
                 .cacheTimeOut(300000)
-                .setParser(new FavorListParser())
+                .parser(new FavorListParser())
                 .requestObservable();
     }
 
@@ -67,10 +67,10 @@ public class FavorAPI extends APIBase {
         params.put("url", link);
         params.put("title", title);
         return new RequestBuilder<Boolean>()
-                .setUrl(url)
-                .setParser(new BooleanParser())
-                .setRequestCallBack(callBack)
-                .setParams(params)
+                .url(url)
+                .parser(new BooleanParser())
+                .callback(callBack)
+                .params(params)
                 .post()
                 .startRequest();
     }
@@ -101,10 +101,10 @@ public class FavorAPI extends APIBase {
         pairs.put("ukey", UserAPI.getUkey());
         pairs.put("limit", "100");
         return new RequestBuilder<ArrayList<Basket>>()
-                .setUrl(url)
-                .setParser(parser)
-                .setRequestCallBack(callBack)
-                .setParams(pairs)
+                .url(url)
+                .parser(parser)
+                .callback(callBack)
+                .params(pairs)
                 .get()
                 .startRequest();
     }
@@ -124,15 +124,15 @@ public class FavorAPI extends APIBase {
         params.put("introduction", introduction);
         params.put("category_id", category_id);
         return new RequestBuilder<Basket>()
-                .setUrl(url)
-                .setParser(new Parser<Basket>() {
+                .url(url)
+                .parser(new Parser<Basket>() {
                     @Override
                     public Basket parse(String str, ResponseObject<Basket> responseObject) throws Exception {
                         return Basket.fromJson(JsonHandler.getUniversalJsonObject(str, responseObject));
                     }
                 })
-                .setRequestCallBack(callBack)
-                .setParams(params)
+                .callback(callBack)
+                .params(params)
                 .post()
                 .startRequest();
     }
@@ -158,9 +158,9 @@ public class FavorAPI extends APIBase {
         };
         String url = "http://www.guokr.com/apis/favorite/category.json";
         return new RequestBuilder<ArrayList<Category>>()
-                .setUrl(url)
-                .setParser(parser)
-                .setRequestCallBack(callBack)
+                .url(url)
+                .parser(parser)
+                .callback(callBack)
                 .get()
                 .startRequest();
     }

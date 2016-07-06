@@ -57,14 +57,14 @@ public class UserAPI extends APIBase {
     public static RequestObject<UserInfo> getUserInfoByUkey(String ukey, CallBack<UserInfo> callBack) {
         String url = "http://apis.guokr.com/community/user/" + ukey + ".json";
         return new RequestBuilder<UserInfo>()
-                .setUrl(url)
-                .setParser(new Parser<UserInfo>() {
+                .url(url)
+                .parser(new Parser<UserInfo>() {
                     @Override
                     public UserInfo parse(String str, ResponseObject<UserInfo> responseObject) throws Exception {
                         return UserInfo.fromJson(JsonHandler.getUniversalJsonObject(str, responseObject));
                     }
                 })
-                .setRequestCallBack(callBack)
+                .callback(callBack)
                 .get()
                 .startRequest();
     }
@@ -100,10 +100,10 @@ public class UserAPI extends APIBase {
         pairs.put("comment", comment);
         pairs.put("target", "activity");
         return new RequestBuilder<Boolean>()
-                .setUrl(url)
-                .setParser(new BooleanParser())
-                .setRequestCallBack(callBack)
-                .setParams(pairs)
+                .url(url)
+                .parser(new BooleanParser())
+                .callback(callBack)
+                .params(pairs)
                 .post()
                 .startRequest();
     }

@@ -6,6 +6,7 @@ import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import net.nashlegend.sourcewall.request.RequestObject.DetailedCallBack;
 import net.nashlegend.sourcewall.request.RequestObject.RequestType;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.request.parsers.DirectlyStringParser;
@@ -37,15 +38,16 @@ public class RequestBuilder<T> {
      * 二、后台线程发起，该在哪就在哪
      */
 
-    private RequestObject<T> rbRequest = new RequestObject<>();
+    private RequestObject<T> request = new RequestObject<>();
 
     private boolean useToken = true;//是否使用token，默认使用
 
     public static void fakeRequest(RequestObject.CallBack<String> callBack) {
         new RequestBuilder<String>()
-                .setUrl("http://bbs.hupu.com/bxj")
-                .setRequestCallBack(callBack)
-                .setParser(new DirectlyStringParser())
+                .url("http://bbs.hupu.com/bxj")
+                .addParam("key", "value")
+                .callback(callBack)
+                .parser(new DirectlyStringParser())
                 .startRequest();
     }
 
@@ -59,8 +61,8 @@ public class RequestBuilder<T> {
      * @param method
      * @return
      */
-    public RequestBuilder<T> setMethod(@Method int method) {
-        rbRequest.method = method;
+    public RequestBuilder<T> method(@Method int method) {
+        request.method = method;
         return this;
     }
 
@@ -70,7 +72,7 @@ public class RequestBuilder<T> {
      * @return
      */
     public RequestBuilder<T> get() {
-        return setMethod(RequestObject.Method.GET);
+        return method(RequestObject.Method.GET);
     }
 
     /**
@@ -79,7 +81,7 @@ public class RequestBuilder<T> {
      * @return
      */
     public RequestBuilder<T> post() {
-        return setMethod(RequestObject.Method.POST);
+        return method(RequestObject.Method.POST);
     }
 
     /**
@@ -88,7 +90,7 @@ public class RequestBuilder<T> {
      * @return
      */
     public RequestBuilder<T> put() {
-        return setMethod(RequestObject.Method.PUT);
+        return method(RequestObject.Method.PUT);
     }
 
     /**
@@ -97,7 +99,7 @@ public class RequestBuilder<T> {
      * @return
      */
     public RequestBuilder<T> delete() {
-        return setMethod(RequestObject.Method.DELETE);
+        return method(RequestObject.Method.DELETE);
     }
 
     /**
@@ -106,9 +108,9 @@ public class RequestBuilder<T> {
      * @param params
      * @return
      */
-    public RequestBuilder<T> setParams(List<Param> params) {
-        rbRequest.params.clear();
-        rbRequest.params.addAll(params);
+    public RequestBuilder<T> params(List<Param> params) {
+        request.params.clear();
+        request.params.addAll(params);
         return this;
     }
 
@@ -118,12 +120,12 @@ public class RequestBuilder<T> {
      * @param params
      * @return
      */
-    public RequestBuilder<T> setParams(HashMap<String, String> params) {
+    public RequestBuilder<T> params(HashMap<String, String> params) {
         ArrayList<Param> paramList = new ArrayList<>();
         for (Map.Entry<String, String> entry : params.entrySet()) {
             paramList.add(new Param(entry.getKey(), entry.getValue()));
         }
-        return setParams(paramList);
+        return params(paramList);
     }
 
     /**
@@ -133,7 +135,7 @@ public class RequestBuilder<T> {
      * @return
      */
     public RequestBuilder<T> addParams(List<Param> params) {
-        rbRequest.params.addAll(params);
+        request.params.addAll(params);
         return this;
     }
 
@@ -145,7 +147,7 @@ public class RequestBuilder<T> {
      * @return
      */
     public RequestBuilder<T> addParam(String key, String value) {
-        rbRequest.params.add(new Param(key, value));
+        request.params.add(new Param(key, value));
         return this;
     }
 
@@ -155,8 +157,8 @@ public class RequestBuilder<T> {
      * @param parser
      * @return
      */
-    public RequestBuilder<T> setParser(Parser<T> parser) {
-        rbRequest.parser = parser;
+    public RequestBuilder<T> parser(Parser<T> parser) {
+        request.parser = parser;
         return this;
     }
 
@@ -166,8 +168,8 @@ public class RequestBuilder<T> {
      * @param requestWithGzip
      * @return
      */
-    public RequestBuilder<T> setRequestWithGzip(boolean requestWithGzip) {
-        rbRequest.requestWithGzip = requestWithGzip;
+    public RequestBuilder<T> requestWithGzip(boolean requestWithGzip) {
+        request.requestWithGzip = requestWithGzip;
         return this;
     }
 
@@ -178,8 +180,8 @@ public class RequestBuilder<T> {
      * @param faked
      * @return
      */
-    public RequestBuilder<T> setFakeResponse(String faked) {
-        rbRequest.fakeResponse = faked;
+    public RequestBuilder<T> fakeResponse(String faked) {
+        request.fakeResponse = faked;
         return this;
     }
 
@@ -190,10 +192,10 @@ public class RequestBuilder<T> {
      * @param interval 请求间隔
      * @return
      */
-    public RequestBuilder<T> setRetry(int maxTimes, int interval) {
+    public RequestBuilder<T> retry(int maxTimes, int interval) {
         if (maxTimes > 0) {
-            rbRequest.maxRetryTimes = maxTimes;
-            rbRequest.interval = interval;
+            request.maxRetryTimes = maxTimes;
+            request.interval = interval;
         }
         return this;
     }
@@ -204,8 +206,8 @@ public class RequestBuilder<T> {
      * @param url
      * @return
      */
-    public RequestBuilder<T> setUrl(@NonNull String url) {
-        rbRequest.url = url;
+    public RequestBuilder<T> url(@NonNull String url) {
+        request.url = url;
         return this;
     }
 
@@ -215,7 +217,7 @@ public class RequestBuilder<T> {
      * @param use
      * @return
      */
-    public RequestBuilder<T> setWithToken(boolean use) {
+    public RequestBuilder<T> withToken(boolean use) {
         useToken = use;
         return this;
     }
@@ -226,8 +228,8 @@ public class RequestBuilder<T> {
      * @param key
      * @return
      */
-    public RequestBuilder<T> setUploadFileKey(@NonNull String key) {
-        rbRequest.uploadFileKey = key;
+    public RequestBuilder<T> uploadFileKey(@NonNull String key) {
+        request.uploadFileKey = key;
         return this;
     }
 
@@ -237,8 +239,8 @@ public class RequestBuilder<T> {
      * @param mediaType
      * @return
      */
-    public RequestBuilder<T> setMediaType(@NonNull String mediaType) {
-        rbRequest.mediaType = MediaType.parse(mediaType);
+    public RequestBuilder<T> mediaType(@NonNull String mediaType) {
+        request.mediaType = MediaType.parse(mediaType);
         return this;
     }
 
@@ -248,8 +250,8 @@ public class RequestBuilder<T> {
      * @param mediaType
      * @return
      */
-    public RequestBuilder<T> setMediaType(@NonNull MediaType mediaType) {
-        rbRequest.mediaType = mediaType;
+    public RequestBuilder<T> mediaType(@NonNull MediaType mediaType) {
+        request.mediaType = mediaType;
         return this;
     }
 
@@ -260,9 +262,9 @@ public class RequestBuilder<T> {
      * @return
      */
     public RequestBuilder<T> useCacheIfFailed(boolean useCache) {
-        rbRequest.useCachedIfFailed = useCache;
+        request.useCachedIfFailed = useCache;
         if (useCache) {
-            rbRequest.useCachedFirst = false;
+            request.useCachedFirst = false;
         }
         return this;
     }
@@ -275,9 +277,9 @@ public class RequestBuilder<T> {
      * @return
      */
     public RequestBuilder<T> useCacheFirst(boolean useCache) {
-        rbRequest.useCachedFirst = useCache;
+        request.useCachedFirst = useCache;
         if (useCache) {
-            rbRequest.useCachedIfFailed = false;
+            request.useCachedIfFailed = false;
         }
         return this;
     }
@@ -289,7 +291,7 @@ public class RequestBuilder<T> {
      * @return
      */
     public RequestBuilder<T> cacheTimeOut(long timeOut) {
-        rbRequest.cacheTimeOut = timeOut;
+        request.cacheTimeOut = timeOut;
         return this;
     }
 
@@ -299,19 +301,8 @@ public class RequestBuilder<T> {
      * @param callBack
      * @return
      */
-    public RequestBuilder<T> setRequestCallBack(RequestObject.CallBack<T> callBack) {
-        rbRequest.setCallBack(callBack);
-        return this;
-    }
-
-    /**
-     * 设置请求成功或者失败后的回调，如果没有parser，将不会回调
-     *
-     * @param detailedCallBack
-     * @return
-     */
-    public RequestBuilder<T> setRequestCallBack(RequestObject.DetailedCallBack<T> detailedCallBack) {
-        rbRequest.setCallBack(detailedCallBack);
+    public RequestBuilder<T> callback(DetailedCallBack<T> callBack) {
+        request.callBack = callBack;
         return this;
     }
 
@@ -321,8 +312,8 @@ public class RequestBuilder<T> {
      * @param tag
      * @return
      */
-    public RequestBuilder<T> setTag(Object tag) {
-        rbRequest.tag = tag;
+    public RequestBuilder<T> tag(Object tag) {
+        request.tag = tag;
         return this;
     }
 
@@ -333,8 +324,8 @@ public class RequestBuilder<T> {
      * @return
      */
     public RequestBuilder<T> runCallbackOnMainThread() {
-        rbRequest.ignoreHandler = false;
-        rbRequest.handler = new Handler(Looper.getMainLooper());
+        request.ignoreHandler = false;
+        request.handler = new Handler(Looper.getMainLooper());
         return this;
     }
 
@@ -345,8 +336,8 @@ public class RequestBuilder<T> {
      * @return
      */
     public RequestBuilder<T> runCallbackOn(Looper looper) {
-        rbRequest.ignoreHandler = false;
-        rbRequest.handler = new Handler(looper);
+        request.ignoreHandler = false;
+        request.handler = new Handler(looper);
         return this;
     }
 
@@ -356,20 +347,20 @@ public class RequestBuilder<T> {
      * @return
      */
     public RequestBuilder<T> runCallbackWhatever() {
-        rbRequest.ignoreHandler = true;
-        rbRequest.handler = null;
+        request.ignoreHandler = true;
+        request.handler = null;
         return this;
     }
 
     public RequestBuilder<T> upload(String filePath) {
-        rbRequest.uploadFilePath = filePath;
-        rbRequest.requestType = RequestType.UPLOAD;
+        request.uploadFilePath = filePath;
+        request.requestType = RequestType.UPLOAD;
         return this;
     }
 
     public RequestBuilder<T> download(String filePath) {
-        rbRequest.downloadFilePath = filePath;
-        rbRequest.requestType = RequestType.DOWNLOAD;
+        request.downloadFilePath = filePath;
+        request.requestType = RequestType.DOWNLOAD;
         return this;
     }
 
@@ -377,14 +368,14 @@ public class RequestBuilder<T> {
         if (useToken) {
             String token = UserAPI.getToken();
             if (!TextUtils.isEmpty(token)) {
-                rbRequest.params.add(new Param("token", token));
+                request.params.add(new Param("token", token));
             }
         }
     }
 
     public RequestObject<T> buildRequest() {
         addExtras();
-        return rbRequest;
+        return request;
     }
 
     /**
@@ -392,8 +383,8 @@ public class RequestBuilder<T> {
      */
     public RequestObject<T> startRequest() {
         addExtras();
-        rbRequest.startRequest();
-        return rbRequest;
+        request.startRequest();
+        return request;
     }
 
     /**
@@ -401,7 +392,7 @@ public class RequestBuilder<T> {
      */
     public Observable<ResponseObject<T>> requestObservable() {
         addExtras();
-        return rbRequest.requestObservable();
+        return request.requestObservable();
     }
 
     /**
@@ -409,8 +400,8 @@ public class RequestBuilder<T> {
      */
     public RequestObject<T> requestRx() {
         addExtras();
-        rbRequest.requestRx();
-        return rbRequest;
+        request.requestRx();
+        return request;
     }
 
 }

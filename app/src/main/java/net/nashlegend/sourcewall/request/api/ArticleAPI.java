@@ -66,13 +66,13 @@ public class ArticleAPI extends APIBase {
         pairs.put("limit", "20");
         pairs.put("offset", String.valueOf(offset));
         return new RequestBuilder<ArrayList<Article>>()
-                .setUrl(url)
+                .url(url)
                 .get()
-                .setWithToken(false)
-                .setParams(pairs)
+                .withToken(false)
+                .params(pairs)
                 .useCacheFirst(useCache)
                 .cacheTimeOut(300000)
-                .setParser(new ArticleListParser())
+                .parser(new ArticleListParser())
                 .requestObservable();
     }
 
@@ -85,10 +85,10 @@ public class ArticleAPI extends APIBase {
     public static Observable<ResponseObject<Article>> getArticleDetail(final String id) {
         String url = "http://www.guokr.com/article/" + id + "/";
         return new RequestBuilder<Article>()
-                .setUrl(url)
+                .url(url)
                 .useCacheIfFailed(true)
                 .get()
-                .setParser(new Parser<Article>() {
+                .parser(new Parser<Article>() {
                     @Override
                     public Article parse(String response, ResponseObject<Article> responseObject) throws Exception {
                         Article article = Article.fromHtmlDetail(id, response);
@@ -115,11 +115,11 @@ public class ArticleAPI extends APIBase {
         pairs.put("limit", String.valueOf(limit));
         pairs.put("offset", String.valueOf(offset));
         return new RequestBuilder<ArrayList<UComment>>()
-                .setUrl(url)
+                .url(url)
                 .get()
-                .setParams(pairs)
+                .params(pairs)
                 .useCacheIfFailed(offset == 0)
-                .setParser(new Parser<ArrayList<UComment>>() {
+                .parser(new Parser<ArrayList<UComment>>() {
                     @Override
                     public ArrayList<UComment> parse(String response, ResponseObject<ArrayList<UComment>> responseObject) throws Exception {
                         ArrayList<UComment> list = new ArrayList<>();
@@ -189,10 +189,10 @@ public class ArticleAPI extends APIBase {
         HashMap<String, String> pairs = new HashMap<>();
         pairs.put("article_id", article_id);
         return new RequestBuilder<Article>()
-                .setUrl(url)
+                .url(url)
                 .get()
-                .setParams(pairs)
-                .setParser(new Parser<Article>() {
+                .params(pairs)
+                .parser(new Parser<Article>() {
                     @Override
                     public Article parse(String str, ResponseObject<Article> responseObject) throws Exception {
                         JSONArray articlesArray = JsonHandler.getUniversalJsonArray(str, responseObject);
@@ -206,10 +206,10 @@ public class ArticleAPI extends APIBase {
 
     public static Observable<UComment> getSingleComment(String url) {
         return new RequestBuilder<String>()
-                .setUrl(url)
+                .url(url)
                 .get()
-                .setWithToken(false)
-                .setParser(new DirectlyStringParser())
+                .withToken(false)
+                .parser(new DirectlyStringParser())
                 .requestObservable()
                 .flatMap(new Func1<ResponseObject<String>, Observable<UComment>>() {
                     @Override
@@ -281,9 +281,9 @@ public class ArticleAPI extends APIBase {
     public static Observable<ResponseObject<UComment>> getSingleCommentByID(String reply_id) {
         String url = "http://apis.guokr.com/minisite/article_reply/" + reply_id + ".json";
         return new RequestBuilder<UComment>()
-                .setUrl(url)
+                .url(url)
                 .get()
-                .setParser(new Parser<UComment>() {
+                .parser(new Parser<UComment>() {
                     @Override
                     public UComment parse(String str, ResponseObject<UComment> responseObject) throws Exception {
                         JSONObject replyObject = JsonHandler.getUniversalJsonObject(str, responseObject);
@@ -319,10 +319,10 @@ public class ArticleAPI extends APIBase {
         HashMap<String, String> pairs = new HashMap<>();
         pairs.put("reply_id", id);
         return new RequestBuilder<Boolean>()
-                .setUrl(url)
-                .setParser(new BooleanParser())
-                .setRequestCallBack(callBack)
-                .setParams(pairs)
+                .url(url)
+                .parser(new BooleanParser())
+                .callback(callBack)
+                .params(pairs)
                 .post()
                 .startRequest();
     }
@@ -338,10 +338,10 @@ public class ArticleAPI extends APIBase {
         HashMap<String, String> pairs = new HashMap<>();
         pairs.put("reply_id", id);
         return new RequestBuilder<Boolean>()
-                .setUrl(url)
-                .setParser(new BooleanParser())
-                .setRequestCallBack(callBack)
-                .setParams(pairs)
+                .url(url)
+                .parser(new BooleanParser())
+                .callback(callBack)
+                .params(pairs)
                 .delete()
                 .startRequest();
     }
@@ -359,10 +359,10 @@ public class ArticleAPI extends APIBase {
         pairs.put("article_id", id);
         pairs.put("content", content);
         return new RequestBuilder<String>()
-                .setUrl(url)
-                .setParser(new ContentValueForKeyParser("id"))
-                .setRequestCallBack(callBack)
-                .setParams(pairs)
+                .url(url)
+                .parser(new ContentValueForKeyParser("id"))
+                .callback(callBack)
+                .params(pairs)
                 .post()
                 .startRequest();
     }
