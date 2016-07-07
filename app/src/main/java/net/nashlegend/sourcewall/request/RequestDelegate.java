@@ -292,6 +292,9 @@ public class RequestDelegate {
             case Method.DELETE:
                 return combine(object.url, object.params);
             default:
+                if (object.requestBody!=null){
+                    return combine(object.url, object.params);
+                }
                 return object.url;
         }
     }
