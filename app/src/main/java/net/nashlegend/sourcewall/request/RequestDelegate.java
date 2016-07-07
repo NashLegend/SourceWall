@@ -143,7 +143,7 @@ public class RequestDelegate {
      * @return 返回ResultObject，resultObject.result是上传后的图片地址
      */
     public Call uploadAsync(RequestObject<?> request, Callback callBack) {
-        return uploadAsync(request.url, request.uploadFileKey, request.uploadFilePath, request.params, request.mediaType,callBack);
+        return uploadAsync(request.url, request.uploadFileKey, request.uploadFilePath, request.params, request.mediaType, callBack);
     }
 
     /**
@@ -164,7 +164,13 @@ public class RequestDelegate {
     }
 
     private String combine(String url, List<Param> params) {
-        return HttpUrl.parse(url).newBuilder().query(getQueryString(params)).build().toString();
+        HttpUrl.Builder builder = HttpUrl.parse(url).newBuilder();
+        if (params != null) {
+            for (Param param : params) {
+                builder.addQueryParameter(param.key, param.value);
+            }
+        }
+        return builder.build().toString();
     }
 
     /**
