@@ -6,19 +6,18 @@ import net.nashlegend.sourcewall.request.cache.RequestCache;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.CookieManager;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
 import okhttp3.Call;
 import okhttp3.Cookie;
-import okhttp3.CookieJar;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
+import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -29,31 +28,29 @@ import okhttp3.Response;
 @SuppressWarnings("ResultOfMethodCallIgnored")
 public class HttpUtil {
 
-    private static final HashMap<String, List<Cookie>> cookieStore = new HashMap<>();
     private final static int HTTP_RESPONSE_DISK_CACHE_MAX_SIZE = 20 * 1024 * 1024;//Cache的最大体积,20M
     private final static int CONNECTION_TIMEOUT = 30000;//网络状况差的时候这个时间可能很长
     private final static int SO_TIMEOUT = 60000;
     private final static int WRITE_TIMEOUT = 30000;//
     private static OkHttpClient defaultHttpClient;
     private static OkHttpClient uploadHttpClient;
+    private static CookieManager cookieManager = new CookieManager();
+    private static JavaNetCookieJar cookieJar = new JavaNetCookieJar(cookieManager);
 
-    public static final ConcurrentHashMap<String, OkHttpClient> CLIENT_HASH_MAP = new ConcurrentHashMap<>();
-
-    public static void cancelRequestByTag(Object tag) {
-        try {
-            OkHttpClient client = getDefaultHttpClient();
-            for (Call call : client.dispatcher().queuedCalls()) {
-                if (!call.isCanceled() && call.request().tag().equals(tag)) {
-                    call.cancel();
-                }
+    public static void cancel(Object tag) {
+        if (tag == null) {
+            return;
+        }
+        OkHttpClient client = getDefaultHttpClient();
+        for (Call call : client.dispatcher().queuedCalls()) {
+            if (!call.isCanceled() && tag.equals(call.request().tag())) {
+                call.cancel();
             }
-            for (Call call : client.dispatcher().runningCalls()) {
-                if (!call.isCanceled() && call.request().tag().equals(tag)) {
-                    call.cancel();
-                }
+        }
+        for (Call call : client.dispatcher().runningCalls()) {
+            if (!call.isCanceled() && tag.equals(call.request().tag())) {
+                call.cancel();
             }
-        } catch (Exception ignored) {
-
         }
     }
 
@@ -66,33 +63,7 @@ public class HttpUtil {
                     .connectTimeout(CONNECTION_TIMEOUT, TimeUnit.MILLISECONDS)
                     .readTimeout(SO_TIMEOUT, TimeUnit.MILLISECONDS)
                     .writeTimeout(WRITE_TIMEOUT, TimeUnit.MILLISECONDS)
-                    .cookieJar(new CookieJar() {
-                        @Override
-                        synchronized public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
-                            List<Cookie> preCookies = cookieStore.get(url.host());//它与cookies都不可变
-                            ArrayList<Cookie> mergedCookies = new ArrayList<>();
-                            if (preCookies != null) {
-                                List<Cookie> deprecatedCookies = new ArrayList<>();
-                                for (Cookie cookie : cookies) {
-                                    for (Cookie preCookie : preCookies) {
-                                        if (cookie.name().equals(preCookie.name())) {
-                                            deprecatedCookies.add(preCookie);
-                                        }
-                                    }
-                                }
-                                mergedCookies.addAll(preCookies);
-                                mergedCookies.removeAll(deprecatedCookies);
-                            }
-                            mergedCookies.addAll(cookies);
-                            cookieStore.put(url.host(), mergedCookies);
-                        }
-
-                        @Override
-                        synchronized public List<Cookie> loadForRequest(HttpUrl url) {
-                            List<Cookie> cookies = cookieStore.get(url.host());
-                            return cookies != null ? cookies : new ArrayList<Cookie>();
-                        }
-                    })
+                    .cookieJar(cookieJar)
                     .build();
             setCookie(defaultHttpClient);
         }
@@ -131,7 +102,7 @@ public class HttpUtil {
      * @param client
      */
     synchronized public static void clearCookiesForOkHttp(OkHttpClient client) {
-        cookieStore.clear();
+        cookieManager.getCookieStore().removeAll();
     }
 
     static class RedirectInterceptor implements Interceptor {

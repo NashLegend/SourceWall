@@ -369,7 +369,7 @@ public class RequestBuilder<T> {
         if (useToken) {
             String token = UserAPI.getToken();
             if (!TextUtils.isEmpty(token)) {
-                request.params.add(new Param("token", token));
+                request.params.add(new Param("access_token", token));
             }
         }
     }

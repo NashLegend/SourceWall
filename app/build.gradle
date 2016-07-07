@@ -95,6 +95,7 @@ dependencies {
     compile deps.GreenDAO
     compile deps.Umeng
     compile deps.OKHttp
+    compile deps.OKHttpUrlConnection
     compile deps.ButterKnife
     compile deps.RxAndroid
     compile deps.RxJava
