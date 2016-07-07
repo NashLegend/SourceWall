@@ -10,7 +10,6 @@ import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -42,33 +41,20 @@ public class HttpUtil {
 
     public static void cancelRequestByTag(Object tag) {
         try {
-            for (Map.Entry<String, OkHttpClient> entry : CLIENT_HASH_MAP.entrySet()) {
-                OkHttpClient client = entry.getValue();
-                if (client != null) {
-                    for (Call call : client.dispatcher().queuedCalls()) {
-                        if (!call.isCanceled() && call.request().tag().equals(tag)) {
-                            call.cancel();
-                        }
-                    }
-
-                    for (Call call : client.dispatcher().runningCalls()) {
-                        if (!call.isCanceled() && call.request().tag().equals(tag)) {
-                            call.cancel();
-                        }
-                    }
+            OkHttpClient client = getDefaultHttpClient();
+            for (Call call : client.dispatcher().queuedCalls()) {
+                if (!call.isCanceled() && call.request().tag().equals(tag)) {
+                    call.cancel();
+                }
+            }
+            for (Call call : client.dispatcher().runningCalls()) {
+                if (!call.isCanceled() && call.request().tag().equals(tag)) {
+                    call.cancel();
                 }
             }
         } catch (Exception ignored) {
 
         }
-    }
-
-    public static void putOkHttpClient(String key, OkHttpClient client) {
-        CLIENT_HASH_MAP.put(key, client);
-    }
-
-    public static OkHttpClient getOkHttpClient(String key) {
-        return CLIENT_HASH_MAP.get(key);
     }
 
     synchronized public static OkHttpClient getDefaultHttpClient() {

@@ -52,8 +52,7 @@ public class NetworkTask<T> {
     private int crtTime = 0;//当前重试次数
     private Call call = null;
     private String cacheKey = null;
-    private boolean softCancelled = false;//取消掉一个请求，但是并不中断请求，只是不再执行CallBack,请求完成后无任何动作
-
+    private boolean dismissed = false;//取消掉一个请求，但是并不中断请求，只是不再执行CallBack,请求完成后无任何动作
 
     public final ResponseObject<T> responseObject = new ResponseObject<>();
     public RequestObject<T> request;
@@ -71,48 +70,25 @@ public class NetworkTask<T> {
 
     synchronized public OkHttpClient getHttpClient() {
         if (okHttpClient == null) {
-            String key;
+            OkHttpClient.Builder builder = HttpUtil.getDefaultHttpClient().newBuilder();
             switch (request.requestType) {
                 case RequestType.UPLOAD:
-                    key = "uploadClient";
+                    builder.addNetworkInterceptor(new UploadProgressInterceptor(request.callBack)).build();
                     break;
                 case RequestType.DOWNLOAD:
-                    key = "downloadClient";
+                    builder.addNetworkInterceptor(new DownloadProgressInterceptor(request.callBack)).build();
                     break;
                 default:
-                    key = "defaultClient";
+                    //do nothing
                     break;
             }
             if (request.requestWithGzip) {
-                key += "requestWithGzip";
+                builder.addNetworkInterceptor(new GzipRequestInterceptor()).build();
             }
-            OkHttpClient tmpClient = HttpUtil.getOkHttpClient(key);
-            if (tmpClient == null) {
-                switch (request.requestType) {
-                    case RequestType.UPLOAD:
-                        tmpClient = HttpUtil.getDefaultUploadHttpClient().newBuilder()
-                                .addNetworkInterceptor(new UploadProgressInterceptor(request.callBack)).build();
-                        break;
-                    case RequestType.DOWNLOAD:
-                        tmpClient = HttpUtil.getDefaultUploadHttpClient().newBuilder()
-                                .addNetworkInterceptor(new DownloadProgressInterceptor(request.callBack)).build();
-                        break;
-                    default:
-                        tmpClient = HttpUtil.getDefaultHttpClient();
-                        break;
-                }
-                if (request.requestWithGzip) {
-                    tmpClient = tmpClient.newBuilder().addNetworkInterceptor(new GzipRequestInterceptor()).build();
-                }
-                HttpUtil.putOkHttpClient(key, tmpClient);
-            }
-            okHttpClient = tmpClient;
+            okHttpClient = builder.build();
         }
         return okHttpClient;
     }
-
-    // TODO: 16/7/6
-
 
     /**
      * 生成此次请求的缓存key，
@@ -194,12 +170,18 @@ public class NetworkTask<T> {
         return request.useCachedIfFailed || request.useCachedFirst;
     }
 
-    public void softCancel() {
-        this.softCancelled = true;
+    public void cancel() {
+        if (call != null && !call.isCanceled()) {
+            call.cancel();
+        }
     }
 
-    public boolean isSoftCancelled() {
-        return softCancelled;
+    public void dismiss() {
+        this.dismissed = true;
+    }
+
+    public boolean isDismissed() {
+        return dismissed;
     }
 
     /**
@@ -439,15 +421,15 @@ public class NetworkTask<T> {
 
                     @Override
                     public void onError(Throwable e) {
-                        //requestObservable很难走到onError，因为都已经封好了，否则第二个参数不太好传给别人
-                        if (!softCancelled && request.callBack != null) {
+                        //requestObservable基本走不到onError，因为都已经封好了，否则第二个参数不太好传给别人
+                        if (!dismissed && request.callBack != null) {
                             request.callBack.onFailure(e, responseObject);
                         }
                     }
 
                     @Override
                     public void onNext(ResponseObject<T> tResponseObject) {
-                        if (!softCancelled && request.callBack != null) {
+                        if (!dismissed && request.callBack != null) {
                             if (tResponseObject.ok) {
                                 request.callBack.onSuccess(tResponseObject.result, tResponseObject);
                             } else {
@@ -734,7 +716,7 @@ public class NetworkTask<T> {
     }
 
     private void callSuccess(@NonNull final ResponseObject<T> responseObject) {
-        if (!softCancelled && request.callBack != null) {
+        if (!dismissed && request.callBack != null) {
             if (request.handler != null) {
                 request.handler.post(new Runnable() {
                     @Override
@@ -749,7 +731,7 @@ public class NetworkTask<T> {
     }
 
     private void callFailure(@Nullable final Throwable e, @NonNull final ResponseObject<T> responseObject) {
-        if (!softCancelled && request.callBack != null) {
+        if (!dismissed && request.callBack != null) {
             if (request.handler != null) {
                 request.handler.post(new Runnable() {
                     @Override

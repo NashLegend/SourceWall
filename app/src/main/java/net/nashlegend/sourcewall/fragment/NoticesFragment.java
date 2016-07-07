@@ -20,7 +20,6 @@ import net.nashlegend.sourcewall.adapters.NoticeAdapter;
 import net.nashlegend.sourcewall.model.Notice;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.NetworkTask;
-import net.nashlegend.sourcewall.request.RequestObject;
 import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.MessageAPI;
@@ -113,7 +112,7 @@ public class NoticesFragment extends BaseFragment implements IChannelsFragment, 
 
     private void cancelPotentialTask() {
         if (networkTask != null) {
-            networkTask.softCancel();
+            networkTask.dismiss();
         }
         listView.doneOperation();
     }
@@ -183,7 +182,7 @@ public class NoticesFragment extends BaseFragment implements IChannelsFragment, 
         progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                ignoreNetworkTask.softCancel();
+                ignoreNetworkTask.dismiss();
             }
         });
         progressDialog.show();
