@@ -2,11 +2,12 @@ package net.nashlegend.sourcewall.request;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringDef;
 import android.text.TextUtils;
 
 import net.nashlegend.sourcewall.request.RequestObject.DetailedCallBack;
+import net.nashlegend.sourcewall.request.RequestObject.Method;
 import net.nashlegend.sourcewall.request.RequestObject.RequestType;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.request.parsers.DirectlyStringParser;
@@ -17,7 +18,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.CacheControl;
+import okhttp3.Headers;
 import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import rx.Observable;
 import rx.Subscription;
 
@@ -27,9 +31,9 @@ import rx.Subscription;
  */
 public class RequestBuilder<T> {
 
-    @IntDef({RequestObject.Method.GET, RequestObject.Method.POST,
-            RequestObject.Method.PUT, RequestObject.Method.DELETE})
-    public @interface Method {
+    @StringDef({Method.GET, Method.POST,
+            Method.PUT, Method.DELETE})
+    public @interface MethodDef {
     }
 
     /**
@@ -54,15 +58,15 @@ public class RequestBuilder<T> {
 
     /**
      * 设置请求方法
-     * {@link RequestObject.Method#GET}
-     * {@link RequestObject.Method#POST}
-     * {@link RequestObject.Method#PUT}
-     * {@link RequestObject.Method#DELETE}
+     * {@link Method#GET}
+     * {@link Method#POST}
+     * {@link Method#PUT}
+     * {@link Method#DELETE}
      *
      * @param method
      * @return
      */
-    public RequestBuilder<T> method(@Method int method) {
+    public RequestBuilder<T> method(@MethodDef String method) {
         request.method = method;
         return this;
     }
@@ -73,7 +77,7 @@ public class RequestBuilder<T> {
      * @return
      */
     public RequestBuilder<T> get() {
-        return method(RequestObject.Method.GET);
+        return method(Method.GET);
     }
 
     /**
@@ -82,7 +86,7 @@ public class RequestBuilder<T> {
      * @return
      */
     public RequestBuilder<T> post() {
-        return method(RequestObject.Method.POST);
+        return method(Method.POST);
     }
 
     /**
@@ -91,7 +95,7 @@ public class RequestBuilder<T> {
      * @return
      */
     public RequestBuilder<T> put() {
-        return method(RequestObject.Method.PUT);
+        return method(Method.PUT);
     }
 
     /**
@@ -100,7 +104,7 @@ public class RequestBuilder<T> {
      * @return
      */
     public RequestBuilder<T> delete() {
-        return method(RequestObject.Method.DELETE);
+        return method(Method.DELETE);
     }
 
     /**
@@ -149,6 +153,50 @@ public class RequestBuilder<T> {
      */
     public RequestBuilder<T> addParam(String key, String value) {
         request.params.add(new Param(key, value));
+        return this;
+    }
+
+    /**
+     * Sets the header named {@code name} to {@code value}. If this request already has any headers
+     * with that name, they are all replaced.
+     */
+    public RequestBuilder<T> header(String name, String value) {
+        request.headers.set(name, value);
+        return this;
+    }
+
+    /**
+     * Adds a header with {@code name} and {@code value}. Prefer this method for multiply-valued
+     * headers like "Cookie".
+     * <p>
+     * <p>Note that for some headers including {@code Content-Length} and {@code Content-Encoding},
+     * OkHttp may replace {@code value} with a header derived from the request body.
+     */
+    public RequestBuilder<T> addHeader(String name, String value) {
+        request.headers.add(name, value);
+        return this;
+    }
+
+    public RequestBuilder<T> removeHeader(String name) {
+        request.headers.removeAll(name);
+        return this;
+    }
+
+    /**
+     * Removes all headers on this builder and adds {@code headers}.
+     */
+    public RequestBuilder<T> headers(Headers headers) {
+        request.headers = headers.newBuilder();
+        return this;
+    }
+
+    public RequestBuilder<T> cacheControl(CacheControl cacheControl) {
+        request.cacheControl = cacheControl;
+        return this;
+    }
+
+    public RequestBuilder<T> requestBody(RequestBody body) {
+        request.requestBody = body;
         return this;
     }
 

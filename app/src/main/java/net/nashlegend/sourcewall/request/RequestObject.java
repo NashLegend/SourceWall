@@ -9,7 +9,10 @@ import net.nashlegend.sourcewall.request.parsers.Parser;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.CacheControl;
+import okhttp3.Headers;
 import okhttp3.MediaType;
+import okhttp3.RequestBody;
 
 /**
  * Created by NashLegend on 2015/9/23 0023.
@@ -20,17 +23,22 @@ public class RequestObject<T> {
      * 默认Tag
      */
     public static final String DefaultTag = "RequestObject";
+
+    public String url = "";
+    public String method = Method.POST;
+    public Object tag = DefaultTag;
+    public RequestBody requestBody;
+    public Headers.Builder headers;
+    public CacheControl cacheControl;
+
     public boolean requestWithGzip = false;//是否使用Gzip压缩请求数据
     public String fakeResponse = null;
     public int maxRetryTimes = 0;//最大重试次数
     public int interval = 0;//重试间隔
     public int requestType = RequestType.PLAIN;
-    public int method = Method.POST;
     public final List<Param> params = new ArrayList<>();
-    public String url = "";
     public DetailedCallBack<T> callBack = null;
     public Parser<T> parser;
-    public Object tag = DefaultTag;
     public String uploadFileKey = "file";
     public MediaType mediaType = null;
     public String uploadFilePath = "";
@@ -59,6 +67,11 @@ public class RequestObject<T> {
     protected boolean ignoreHandler = false;
     @Deprecated
     protected Handler handler;
+
+    public RequestObject() {
+        this.method = Method.GET;
+        this.headers = new Headers.Builder();
+    }
 
     @SuppressWarnings("unchecked")
     public void copyPartFrom(@NonNull RequestObject<?> object) {
@@ -91,11 +104,13 @@ public class RequestObject<T> {
     /**
      * http 请求方法
      */
-    public interface Method {
-        int GET = 0;
-        int POST = 1;
-        int PUT = 2;
-        int DELETE = 3;
+    public static class Method {
+        public static final String GET = "GET";//must no body
+        public static final String POST = "POST";//must body
+        public static final String DELETE = "DELETE";//may body
+        public static final String PUT = "PUT";//must body
+        public static final String HEAD = "HEAD";//must no body
+        public static final String PATCH = "PATCH";//must body
     }
 
     /**

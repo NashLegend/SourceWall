@@ -3,6 +3,8 @@ package net.nashlegend.sourcewall.request;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import net.nashlegend.sourcewall.request.RequestObject.Method;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -252,17 +254,68 @@ public class RequestDelegate {
         return getCall(method, body, url, tag);
     }
 
+    public Call requestAsync(Request request, Callback callBack) {
+        Call call = httpClient.newCall(request);
+        call.enqueue(callBack);
+        return call;
+    }
+
+    public Call requestSync(Request request, Object tag) {
+        Call call = httpClient.newCall(request);
+        return call;
+    }
+
     private Call getCall(String method, RequestBody body, String url, Object tag) {
         Request request = new Request.Builder().method(method, body).url(url).tag(tag).build();
         return httpClient.newCall(request);
     }
 
-    static class Method {
-        public static final String GET = "GET";//must no body
-        public static final String POST = "POST";//must body
-        public static final String DELETE = "DELETE";//may body
-        public static final String PUT = "PUT";//must body
-        public static final String HEAD = "HEAD";//must no body
-        public static final String PATCH = "PATCH";//must body
+    public Request getRequest(RequestObject<?> object) {
+        Request.Builder build = new Request.Builder()
+                .method(object.method, getBody(object))
+                .url(getUrl(object))
+                .tag(object.tag);
+        if (object.headers != null) {
+            build.headers(object.headers.build());
+        }
+        if (object.cacheControl != null) {
+            build.cacheControl(object.cacheControl);
+        }
+        Request request = build.build();
+        return request;
+    }
+
+    private String getUrl(RequestObject<?> object) {
+        switch (object.method) {
+            case Method.GET:
+            case Method.HEAD:
+            case Method.DELETE:
+                return combine(object.url, object.params);
+            default:
+                return object.url;
+        }
+    }
+
+    private RequestBody getBody(RequestObject<?> object) {
+        if (object.requestBody != null) {
+            return object.requestBody;
+        } else {
+            switch (object.method) {
+                case Method.GET:
+                case Method.HEAD:
+                    return null;
+                case Method.POST:
+                    if (object.requestType == RequestObject.RequestType.UPLOAD) {
+                        return getMultipartBody(object.mediaType, object.uploadFileKey, object.uploadFilePath, object.params);
+                    }
+                case Method.PUT:
+                case Method.PATCH:
+                    return getFormBody(object.params);
+                case Method.DELETE:
+                    return null;
+                default:
+                    return null;
+            }
+        }
     }
 }
