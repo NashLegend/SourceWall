@@ -31,8 +31,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.R;
-import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.model.Answer;
+import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.ResponseCode;
 import net.nashlegend.sourcewall.request.ResponseObject;

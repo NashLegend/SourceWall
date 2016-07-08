@@ -10,8 +10,8 @@ import net.nashlegend.sourcewall.request.RequestObject.DetailedCallBack;
 import net.nashlegend.sourcewall.request.RequestObject.Method;
 import net.nashlegend.sourcewall.request.RequestObject.RequestType;
 import net.nashlegend.sourcewall.request.api.UserAPI;
-import net.nashlegend.sourcewall.request.parsers.StringParser;
 import net.nashlegend.sourcewall.request.parsers.Parser;
+import net.nashlegend.sourcewall.request.parsers.StringParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,6 +1,5 @@
 package net.nashlegend.sourcewall.request.interceptors;
 
-import net.nashlegend.sourcewall.request.RequestObject;
 import net.nashlegend.sourcewall.request.RequestObject.DetailedCallBack;
 
 import java.io.IOException;

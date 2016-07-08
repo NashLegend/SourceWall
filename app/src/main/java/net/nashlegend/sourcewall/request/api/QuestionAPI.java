@@ -2,9 +2,9 @@ package net.nashlegend.sourcewall.request.api;
 
 import android.text.TextUtils;
 
+import net.nashlegend.sourcewall.model.Answer;
 import net.nashlegend.sourcewall.model.PrepareData;
 import net.nashlegend.sourcewall.model.Question;
-import net.nashlegend.sourcewall.model.Answer;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.JsonHandler;

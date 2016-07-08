@@ -13,7 +13,6 @@ import android.widget.TextView;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.model.Basket;
 import net.nashlegend.sourcewall.request.NetworkTask;
-import net.nashlegend.sourcewall.request.RequestObject;
 import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.FavorAPI;
