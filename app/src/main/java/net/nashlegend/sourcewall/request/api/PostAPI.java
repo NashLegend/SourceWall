@@ -1,13 +1,11 @@
 package net.nashlegend.sourcewall.request.api;
 
 import android.net.Uri;
-import android.text.TextUtils;
 
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.PrepareData;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.model.UComment;
-import net.nashlegend.sourcewall.request.HttpFetcher;
 import net.nashlegend.sourcewall.request.JsonHandler;
 import net.nashlegend.sourcewall.request.NetworkTask;
 import net.nashlegend.sourcewall.request.RequestBuilder;
@@ -16,18 +14,17 @@ import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.parsers.BooleanParser;
 import net.nashlegend.sourcewall.request.parsers.ContentValueForKeyParser;
-import net.nashlegend.sourcewall.request.parsers.DirectlyStringParser;
 import net.nashlegend.sourcewall.request.parsers.Parser;
 import net.nashlegend.sourcewall.request.parsers.PostListParser;
+import net.nashlegend.sourcewall.request.parsers.PostPrepareDataParser;
+import net.nashlegend.sourcewall.request.parsers.StringParser;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.MDUtil;
 
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
@@ -263,7 +260,7 @@ public class PostAPI extends APIBase {
                 .get()
                 .url(notice_url)
                 .withToken(false)
-                .parser(new DirectlyStringParser())
+                .parser(new StringParser())
                 .flatMap()
                 .flatMap(new Func1<ResponseObject<String>, Observable<String>>() {
                     @Override
@@ -391,35 +388,7 @@ public class PostAPI extends APIBase {
         return new RequestBuilder<PrepareData>()
                 .get()
                 .url(url)
-                .parser(new Parser<PrepareData>() {
-                    @Override
-                    public PrepareData parse(String str, ResponseObject<PrepareData> responseObject) throws Exception {
-                        Document doc = Jsoup.parse(str);
-                        Element selects = doc.getElementById("topic");
-                        ArrayList<BasicNameValuePair> pairs = new ArrayList<>();
-                        String csrf = doc.getElementById("csrf_token").attr("value");
-                        if (selects != null) {
-                            Elements elements = selects.getElementsByTag("option");
-                            if (elements != null && elements.size() > 0) {
-                                for (int i = 0; i < elements.size(); i++) {
-                                    Element topic = elements.get(i);
-                                    String name = topic.text();
-                                    String value = topic.attr("value");
-                                    if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(value)) {
-                                        pairs.add(new BasicNameValuePair(name, value));
-                                    }
-                                }
-                            }
-                        }
-                        PrepareData prepareData = new PrepareData();
-                        responseObject.ok = !TextUtils.isEmpty(csrf);
-                        if (!TextUtils.isEmpty(csrf)) {
-                            prepareData.setCsrf(csrf);
-                            prepareData.setPairs(pairs);
-                        }
-                        return prepareData;
-                    }
-                })
+                .parser(new PostPrepareDataParser())
                 .callback(callBack)
                 .requestAsync();
     }
@@ -476,7 +445,6 @@ public class PostAPI extends APIBase {
         HashMap<String, String> pairs = new HashMap<>();
         pairs.put("reason", "");
         pairs.put("post_id", post_id);
-
         return new RequestBuilder<Boolean>()
                 .delete()//or put?
                 .url(url)
@@ -484,56 +452,6 @@ public class PostAPI extends APIBase {
                 .parser(new BooleanParser())
                 .callback(callBack)
                 .requestAsync();
-    }
-
-    /**
-     * 发帖
-     * 有Json方式的删贴，有空加上。
-     *
-     * @param group_id 小组id
-     * @param csrf     csrf_token
-     * @param title    标题
-     * @param body     帖子内容   html格式
-     * @param topic    帖子主题
-     * @return resultObject
-     */
-    @Deprecated
-    public static ResponseObject<String> publishPost(String group_id, String csrf, String title, String body, String topic) {
-        ResponseObject<String> resultObject = new ResponseObject<>();
-        String url = "http://www.guokr.com/group/" + group_id + "/post/edit/";
-        try {
-            String htmlBody = MDUtil.Markdown2Html(body);
-            htmlBody += Config.getComplexReplyTail();
-            HashMap<String, String> pairs = new HashMap<>();
-            pairs.put("csrf_token", csrf);
-            pairs.put("title", title);
-            pairs.put("topic", topic);
-            pairs.put("body", htmlBody);
-            pairs.put("captcha", "");
-            pairs.put("share_opts", "activity");
-            ResponseObject result = HttpFetcher.post(url, pairs, false);
-            //这里已经将302手动设置为了200，所以
-            if (result.statusCode == 200) {
-                try {
-                    String replyRedirectResult = result.toString();
-                    Document document = Jsoup.parse(replyRedirectResult);
-                    Elements elements = document.getElementsByTag("a");
-                    if (elements.size() == 1) {
-                        Matcher matcher = Pattern.compile("^/post/(\\d+)/$").matcher(elements.get(0).text());
-                        if (matcher.find()) {
-                            String post_id = matcher.group(1);
-                            resultObject.ok = true;
-                            resultObject.result = post_id;
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        } catch (Exception e) {
-            JsonHandler.handleRequestException(e, resultObject);
-        }
-        return resultObject;
     }
 
 }

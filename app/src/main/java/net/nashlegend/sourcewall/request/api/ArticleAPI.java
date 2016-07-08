@@ -12,7 +12,7 @@ import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.parsers.ArticleListParser;
 import net.nashlegend.sourcewall.request.parsers.BooleanParser;
 import net.nashlegend.sourcewall.request.parsers.ContentValueForKeyParser;
-import net.nashlegend.sourcewall.request.parsers.DirectlyStringParser;
+import net.nashlegend.sourcewall.request.parsers.StringParser;
 import net.nashlegend.sourcewall.request.parsers.Parser;
 
 import org.json.JSONArray;
@@ -209,7 +209,7 @@ public class ArticleAPI extends APIBase {
                 .get()
                 .url(url)
                 .withToken(false)// FIXME: 16/7/8 为啥来着
-                .parser(new DirectlyStringParser())
+                .parser(new StringParser())
                 .flatMap()
                 .flatMap(new Func1<ResponseObject<String>, Observable<UComment>>() {
                     @Override

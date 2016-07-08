@@ -8,12 +8,12 @@ import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.model.QuestionAnswer;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.model.UComment;
-import net.nashlegend.sourcewall.request.HttpFetcher;
 import net.nashlegend.sourcewall.request.JsonHandler;
 import net.nashlegend.sourcewall.request.NetworkTask;
 import net.nashlegend.sourcewall.request.RequestBuilder;
 import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
+import net.nashlegend.sourcewall.request.SimpleHttp;
 import net.nashlegend.sourcewall.request.parsers.AnswerCommentListParser;
 import net.nashlegend.sourcewall.request.parsers.BooleanParser;
 import net.nashlegend.sourcewall.request.parsers.ContentValueForKeyParser;
@@ -54,7 +54,7 @@ public class QuestionAPI extends APIBase {
         ArrayList<SubItem> subItems = new ArrayList<>();
         int numPages;
         try {
-            String firstPage = HttpFetcher.get(pageUrl).toString();
+            String firstPage = SimpleHttp.get(pageUrl).result;
             Document doc1 = Jsoup.parse(firstPage);
             Elements as = doc1.getElementsByClass("gpages");
             if (as.size() == 0) {
@@ -74,7 +74,7 @@ public class QuestionAPI extends APIBase {
                 for (int j = 2; j <= numPages; j++) {
                     Thread.sleep(100);
                     String url = pageUrl + "?page=" + j;
-                    Document pageDoc = Jsoup.parse(HttpFetcher.get(url).toString());
+                    Document pageDoc = Jsoup.parse(SimpleHttp.get(url).result);
                     Elements lis2 = pageDoc.getElementsByClass("join-list").get(0).getElementsByTag("li");
                     for (int i = 0; i < lis2.size(); i++) {
                         Element element = lis2.get(i).getElementsByClass("join-list-desc").get(0);
@@ -556,7 +556,7 @@ public class QuestionAPI extends APIBase {
         ResponseObject<PrepareData> resultObject = new ResponseObject<>();
         try {
             String url = "http://www.guokr.com/questions/new/";
-            String html = HttpFetcher.get(url).toString();
+            String html = SimpleHttp.get(url).result;
             Document doc = Jsoup.parse(html);
             String csrf = doc.getElementById("csrf_token").attr("value");
             if (!TextUtils.isEmpty(csrf)) {
@@ -599,8 +599,7 @@ public class QuestionAPI extends APIBase {
                 }
             }
             pairs.put("captcha", "");
-
-            ResponseObject result = HttpFetcher.post(url, pairs, false);
+            ResponseObject result = SimpleHttp.post(url, pairs, false);
             if (result.statusCode == 302 && testPublishResult(result.toString())) {
                 resultObject.ok = true;
                 resultObject.result = result.toString();

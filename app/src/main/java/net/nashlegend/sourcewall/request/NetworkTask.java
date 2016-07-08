@@ -54,6 +54,7 @@ public class NetworkTask<T> {
     private OkHttpClient okHttpClient;
     private int crtTime = 0;//当前重试次数
     private Call call = null;
+    private Subscription subscription;
     private String cacheKey = null;
     private boolean dismissed = false;//取消掉一个请求，但是并不中断请求，只是不再执行CallBack,请求完成后无任何动作
 
@@ -64,14 +65,14 @@ public class NetworkTask<T> {
         this.request = request;
     }
 
-    synchronized public RequestDelegate getDelegate() {
+    synchronized private RequestDelegate getDelegate() {
         if (delegate == null) {
             delegate = new RequestDelegate(getHttpClient());
         }
         return new RequestDelegate(getHttpClient());
     }
 
-    synchronized public OkHttpClient getHttpClient() {
+    synchronized private OkHttpClient getHttpClient() {
         if (okHttpClient == null) {
             OkHttpClient.Builder builder = HttpUtil.getDefaultHttpClient().newBuilder();
             switch (request.requestType) {
@@ -178,9 +179,16 @@ public class NetworkTask<T> {
     }
 
     public void cancel() {
+        if (subscription != null && !subscription.isUnsubscribed()) {
+            subscription.unsubscribe();
+        }
         if (call != null && !call.isCanceled()) {
             call.cancel();
         }
+    }
+
+    public boolean isCancelled() {
+        return call != null && call.isCanceled();
     }
 
     public void dismiss() {
@@ -418,7 +426,7 @@ public class NetworkTask<T> {
      * 通过RxJava的方式执行请求，与requestAsync一样，CallBack执行在主线程上
      */
     private Subscription handleResponseObservable(@NonNull Observable<ResponseObject<T>> observable) {
-        return observable
+        subscription = observable
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<ResponseObject<T>>() {
                     @Override
@@ -445,6 +453,7 @@ public class NetworkTask<T> {
                         }
                     }
                 });
+        return subscription;
     }
 
     /**
@@ -454,7 +463,7 @@ public class NetworkTask<T> {
         return handleResponseObservable(flatMap());
     }
 
-    public boolean shouldHandNotifier(Throwable exception, ResponseObject responseObject) {
+    private boolean shouldHandNotifier(Throwable exception, ResponseObject responseObject) {
         return responseObject.code != ResponseCode.CODE_TOKEN_INVALID
                 && call != null
                 && !call.isCanceled()
@@ -562,7 +571,7 @@ public class NetworkTask<T> {
      * 异步请求，如果在enqueue执行之前就执行了cancel，那么将不会有callback执行，用户将不知道已经取消了请求。
      * 我们在请求中已经添加了synchronized，所以不考虑这种情况了
      */
-    public void requestAsync(Callback callback) {
+    private void requestAsync(Callback callback) {
         prepareHandler();
         switch (request.method) {
             case Method.GET:

@@ -261,9 +261,19 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<PrepareData> result) {
                 if (result.statusCode == 403) {
-                    new AlertDialog.Builder(PublishPostActivity.this).setTitle(R.string.hint).setMessage(getString(R.string.have_not_join_this_group)).setPositiveButton(R.string.ok, null).create().show();
+                    new AlertDialog.Builder(PublishPostActivity.this)
+                            .setTitle(R.string.hint)
+                            .setMessage(getString(R.string.have_not_join_this_group))
+                            .setPositiveButton(R.string.ok, null)
+                            .create()
+                            .show();
                 } else {
-                    new AlertDialog.Builder(PublishPostActivity.this).setTitle(getString(R.string.get_csrf_failed)).setMessage(getString(R.string.hint_reload_csrf)).setPositiveButton(R.string.ok, null).create().show();
+                    new AlertDialog.Builder(PublishPostActivity.this)
+                            .setTitle(getString(R.string.get_csrf_failed))
+                            .setMessage(getString(R.string.hint_reload_csrf))
+                            .setPositiveButton(R.string.ok, null)
+                            .create()
+                            .show();
                 }
             }
 

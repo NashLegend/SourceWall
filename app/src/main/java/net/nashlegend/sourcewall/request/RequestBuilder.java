@@ -10,7 +10,7 @@ import net.nashlegend.sourcewall.request.RequestObject.DetailedCallBack;
 import net.nashlegend.sourcewall.request.RequestObject.Method;
 import net.nashlegend.sourcewall.request.RequestObject.RequestType;
 import net.nashlegend.sourcewall.request.api.UserAPI;
-import net.nashlegend.sourcewall.request.parsers.DirectlyStringParser;
+import net.nashlegend.sourcewall.request.parsers.StringParser;
 import net.nashlegend.sourcewall.request.parsers.Parser;
 
 import java.util.ArrayList;
@@ -46,12 +46,13 @@ public class RequestBuilder<T> {
 
     private boolean useToken = true;//是否使用token，默认使用
 
-    public static void fakeRequest(RequestObject.CallBack<String> callBack) {
+    public static void sampleRequest(RequestObject.CallBack<String> callBack) {
         new RequestBuilder<String>()
+                .get()
                 .url("http://bbs.hupu.com/bxj")
                 .addParam("key", "value")
+                .parser(new StringParser())
                 .callback(callBack)
-                .parser(new DirectlyStringParser())
                 .requestAsync();
     }
 
@@ -61,6 +62,8 @@ public class RequestBuilder<T> {
      * {@link Method#POST}
      * {@link Method#PUT}
      * {@link Method#DELETE}
+     * {@link Method#HEAD}
+     * {@link Method#PATCH}
      *
      * @param method
      * @return
