@@ -124,9 +124,7 @@ public class UserAPI extends APIBase {
         cookieManager.hasCookies();
         cookieManager.removeSessionCookie();
         CookieSyncManager.getInstance().sync();
-        //直接置为null不就得了……
-        HttpUtil.clearCookiesForOkHttp(HttpUtil.getDefaultUploadHttpClient());
-        HttpUtil.clearCookiesForOkHttp(HttpUtil.getDefaultUploadHttpClient());
+        HttpUtil.clearCookies();
         BasketHelper.clearAllMyBaskets();
         EventBus.getDefault().post(new LoginStateChangedEvent());
     }

@@ -24,7 +24,6 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -40,6 +39,10 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.exceptions.Exceptions;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
+
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static net.nashlegend.sourcewall.request.HttpUtil.SO_TIMEOUT;
+import static net.nashlegend.sourcewall.request.HttpUtil.WRITE_TIMEOUT;
 
 /**
  * Created by NashLegend on 16/7/6.
@@ -73,10 +76,14 @@ public class NetworkTask<T> {
             OkHttpClient.Builder builder = HttpUtil.getDefaultHttpClient().newBuilder();
             switch (request.requestType) {
                 case RequestType.UPLOAD:
-                    builder.addNetworkInterceptor(new UploadProgressInterceptor(request.callBack)).build();
+                    builder.readTimeout(SO_TIMEOUT * 10, MILLISECONDS)
+                            .writeTimeout(WRITE_TIMEOUT * 10, MILLISECONDS)
+                            .addNetworkInterceptor(new UploadProgressInterceptor(request.callBack));
                     break;
                 case RequestType.DOWNLOAD:
-                    builder.addNetworkInterceptor(new DownloadProgressInterceptor(request.callBack)).build();
+                    builder.readTimeout(SO_TIMEOUT * 10, MILLISECONDS)
+                            .writeTimeout(WRITE_TIMEOUT * 50, MILLISECONDS)
+                            .addNetworkInterceptor(new DownloadProgressInterceptor(request.callBack));
                     break;
                 default:
                     //do nothing
@@ -755,7 +762,7 @@ public class NetworkTask<T> {
                         public Observable<?> call(Throwable throwable) {
                             if (shouldHandNotifier(throwable, responseObject)) {
                                 notifyAction();
-                                return Observable.timer(request.maxRetryTimes, TimeUnit.MILLISECONDS);
+                                return Observable.timer(request.maxRetryTimes, MILLISECONDS);
                             } else {
                                 return Observable.error(throwable);
                             }
