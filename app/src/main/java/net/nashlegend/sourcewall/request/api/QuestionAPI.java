@@ -2,7 +2,6 @@ package net.nashlegend.sourcewall.request.api;
 
 import android.text.TextUtils;
 
-import net.nashlegend.sourcewall.model.Author;
 import net.nashlegend.sourcewall.model.PrepareData;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.model.QuestionAnswer;
@@ -15,17 +14,19 @@ import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.SimpleHttp;
 import net.nashlegend.sourcewall.request.parsers.AnswerCommentListParser;
+import net.nashlegend.sourcewall.request.parsers.AnswerCommentParser;
+import net.nashlegend.sourcewall.request.parsers.AnswerParser;
 import net.nashlegend.sourcewall.request.parsers.BooleanParser;
 import net.nashlegend.sourcewall.request.parsers.ContentValueForKeyParser;
-import net.nashlegend.sourcewall.request.parsers.Parser;
 import net.nashlegend.sourcewall.request.parsers.QuestionAnswerListParser;
 import net.nashlegend.sourcewall.request.parsers.QuestionCommentListParser;
+import net.nashlegend.sourcewall.request.parsers.QuestionCommentParser;
 import net.nashlegend.sourcewall.request.parsers.QuestionHtmlListParser;
 import net.nashlegend.sourcewall.request.parsers.QuestionListParser;
+import net.nashlegend.sourcewall.request.parsers.QuestionParser;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.MDUtil;
 
-import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -169,13 +170,7 @@ public class QuestionAPI extends APIBase {
                 .get()
                 .url(url)
                 .useCacheIfFailed(true)
-                .parser(new Parser<Question>() {
-                    @Override
-                    public Question parse(String response, ResponseObject<Question> responseObject) throws Exception {
-                        JSONObject result = JsonHandler.getUniversalJsonObject(response, responseObject);
-                        return Question.fromJson(result);
-                    }
-                })
+                .parser(new QuestionParser())
                 .flatMap();
     }
 
@@ -226,13 +221,7 @@ public class QuestionAPI extends APIBase {
         return new RequestBuilder<QuestionAnswer>()
                 .get()
                 .url(url)
-                .parser(new Parser<QuestionAnswer>() {
-                    @Override
-                    public QuestionAnswer parse(String response, ResponseObject<QuestionAnswer> responseObject) throws Exception {
-                        JSONObject answerObject = JsonHandler.getUniversalJsonObject(response, responseObject);
-                        return QuestionAnswer.fromJson(answerObject);
-                    }
-                })
+                .parser(new AnswerParser())
                 .callback(callBack)
                 .requestAsync();
     }
@@ -477,20 +466,7 @@ public class QuestionAPI extends APIBase {
                 .post()
                 .url(url)
                 .params(pairs)
-                .parser(new Parser<UComment>() {
-                    @Override
-                    public UComment parse(String str, ResponseObject<UComment> responseObject) throws Exception {
-                        JSONObject jsonObject = JsonHandler.getUniversalJsonObject(str, responseObject);
-                        UComment uComment = new UComment();
-                        assert jsonObject != null;
-                        uComment.setAuthor(Author.fromJson(jsonObject.optJSONObject("author")));
-                        uComment.setContent(jsonObject.optString("text"));
-                        uComment.setDate(parseDate(jsonObject.optString("date_created")));
-                        uComment.setID(jsonObject.optString("id"));
-                        uComment.setHostID(jsonObject.optString("question_id"));
-                        return uComment;
-                    }
-                })
+                .parser(new QuestionCommentParser())
                 .callback(callBack)
                 .requestAsync();
     }
@@ -528,20 +504,7 @@ public class QuestionAPI extends APIBase {
                 .post()
                 .url(url)
                 .params(pairs)
-                .parser(new Parser<UComment>() {
-                    @Override
-                    public UComment parse(String str, ResponseObject<UComment> responseObject) throws Exception {
-                        JSONObject jsonObject = JsonHandler.getUniversalJsonObject(str, responseObject);
-                        UComment uComment = new UComment();
-                        assert jsonObject != null;
-                        uComment.setAuthor(Author.fromJson(jsonObject.optJSONObject("author")));
-                        uComment.setContent(jsonObject.optString("text"));
-                        uComment.setDate(parseDate(jsonObject.optString("date_created")));
-                        uComment.setID(jsonObject.optString("id"));
-                        uComment.setHostID(jsonObject.optString("answer_id"));
-                        return uComment;
-                    }
-                })
+                .parser(new AnswerCommentParser())
                 .callback(callBack)
                 .requestAsync();
     }

@@ -9,13 +9,11 @@ import net.nashlegend.sourcewall.db.BasketHelper;
 import net.nashlegend.sourcewall.events.LoginStateChangedEvent;
 import net.nashlegend.sourcewall.model.UserInfo;
 import net.nashlegend.sourcewall.request.HttpUtil;
-import net.nashlegend.sourcewall.request.JsonHandler;
 import net.nashlegend.sourcewall.request.NetworkTask;
 import net.nashlegend.sourcewall.request.RequestBuilder;
 import net.nashlegend.sourcewall.request.RequestObject.CallBack;
-import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.parsers.BooleanParser;
-import net.nashlegend.sourcewall.request.parsers.Parser;
+import net.nashlegend.sourcewall.request.parsers.UserInfoParser;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 
@@ -59,12 +57,7 @@ public class UserAPI extends APIBase {
         return new RequestBuilder<UserInfo>()
                 .get()
                 .url(url)
-                .parser(new Parser<UserInfo>() {
-                    @Override
-                    public UserInfo parse(String str, ResponseObject<UserInfo> responseObject) throws Exception {
-                        return UserInfo.fromJson(JsonHandler.getUniversalJsonObject(str, responseObject));
-                    }
-                })
+                .parser(new UserInfoParser())
                 .callback(callBack)
                 .requestAsync();
     }

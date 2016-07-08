@@ -6,7 +6,6 @@ import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.PrepareData;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.model.UComment;
-import net.nashlegend.sourcewall.request.JsonHandler;
 import net.nashlegend.sourcewall.request.NetworkTask;
 import net.nashlegend.sourcewall.request.RequestBuilder;
 import net.nashlegend.sourcewall.request.RequestObject;
@@ -14,15 +13,17 @@ import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.parsers.BooleanParser;
 import net.nashlegend.sourcewall.request.parsers.ContentValueForKeyParser;
-import net.nashlegend.sourcewall.request.parsers.Parser;
+import net.nashlegend.sourcewall.request.parsers.GroupListParser;
+import net.nashlegend.sourcewall.request.parsers.PostCommentListParser;
+import net.nashlegend.sourcewall.request.parsers.PostCommentParser;
 import net.nashlegend.sourcewall.request.parsers.PostListParser;
+import net.nashlegend.sourcewall.request.parsers.PostParser;
 import net.nashlegend.sourcewall.request.parsers.PostPrepareDataParser;
+import net.nashlegend.sourcewall.request.parsers.PublishPostParser;
 import net.nashlegend.sourcewall.request.parsers.StringParser;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.MDUtil;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -115,20 +116,7 @@ public class PostAPI extends APIBase {
                 .addParam("retrieve_type", "by_user")
                 .addParam("ukey", ukey)
                 .addParam("limit", "999")
-                .parser(new Parser<ArrayList<SubItem>>() {
-                    @Override
-                    public ArrayList<SubItem> parse(String response, ResponseObject<ArrayList<SubItem>> responseObject) throws Exception {
-                        ArrayList<SubItem> list = new ArrayList<>();
-                        JSONArray subItems = JsonHandler.getUniversalJsonArray(response, responseObject);
-                        assert subItems != null;
-                        for (int i = 0; i < subItems.length(); i++) {
-                            JSONObject jo = subItems.getJSONObject(i).optJSONObject("group");
-                            SubItem subItem = new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, jo.optString("name"), jo.optString("id"));
-                            list.add(subItem);
-                        }
-                        return list;
-                    }
-                })
+                .parser(new GroupListParser())
                 .flatMap();
     }
 
@@ -144,13 +132,7 @@ public class PostAPI extends APIBase {
                 .get()
                 .url(url)
                 .useCacheIfFailed(true)
-                .parser(new Parser<Post>() {
-                    @Override
-                    public Post parse(String response, ResponseObject<Post> responseObject) throws Exception {
-                        JSONObject postResult = JsonHandler.getUniversalJsonObject(response, responseObject);
-                        return Post.fromJson(postResult);
-                    }
-                })
+                .parser(new PostParser())
                 .flatMap();
     }
 
@@ -175,20 +157,7 @@ public class PostAPI extends APIBase {
                 .url(url)
                 .params(pairs)
                 .useCacheIfFailed(offset == 0)
-                .parser(new Parser<ArrayList<UComment>>() {
-                    @Override
-                    public ArrayList<UComment> parse(String response, ResponseObject<ArrayList<UComment>> responseObject) throws Exception {
-                        ArrayList<UComment> list = new ArrayList<>();
-                        JSONArray comments = JsonHandler.getUniversalJsonArray(response, responseObject);
-                        assert comments != null;
-                        for (int i = 0; i < comments.length(); i++) {
-                            JSONObject jo = comments.getJSONObject(i);
-                            UComment comment = UComment.fromPostJson(jo);
-                            list.add(comment);
-                        }
-                        return list;
-                    }
-                })
+                .parser(new PostCommentListParser())
                 .flatMap();
     }
 
@@ -317,13 +286,7 @@ public class PostAPI extends APIBase {
         return new RequestBuilder<UComment>()
                 .get()
                 .url(url)
-                .parser(new Parser<UComment>() {
-                    @Override
-                    public UComment parse(String response, ResponseObject<UComment> responseObject) throws Exception {
-                        JSONObject replyObject = JsonHandler.getUniversalJsonObject(response, responseObject);
-                        return UComment.fromPostJson(replyObject);
-                    }
-                })
+                .parser(new PostCommentParser())
                 .flatMap()
                 .flatMap(new Func1<ResponseObject<UComment>, Observable<UComment>>() {
                     @Override
@@ -420,15 +383,7 @@ public class PostAPI extends APIBase {
                 .post()
                 .url(url)
                 .params(pairs)
-                .parser(new Parser<String>() {
-                    @Override
-                    public String parse(String response, ResponseObject<String> responseObject) throws Exception {
-                        Document document = Jsoup.parse(response);
-                        Elements elements = document.getElementsByTag("a");
-                        Matcher matcher = Pattern.compile("^/post/(\\d+)/$").matcher(elements.get(0).text());
-                        return matcher.group(1);
-                    }
-                })
+                .parser(new PublishPostParser())
                 .callback(callBack)
                 .requestAsync();
     }

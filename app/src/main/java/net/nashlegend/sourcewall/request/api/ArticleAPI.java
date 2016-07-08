@@ -4,19 +4,19 @@ import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.Author;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.model.UComment;
-import net.nashlegend.sourcewall.request.JsonHandler;
 import net.nashlegend.sourcewall.request.NetworkTask;
 import net.nashlegend.sourcewall.request.RequestBuilder;
 import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
+import net.nashlegend.sourcewall.request.parsers.ArticleCommentListParser;
+import net.nashlegend.sourcewall.request.parsers.ArticleCommentParser;
+import net.nashlegend.sourcewall.request.parsers.ArticleHtmlParser;
 import net.nashlegend.sourcewall.request.parsers.ArticleListParser;
 import net.nashlegend.sourcewall.request.parsers.BooleanParser;
 import net.nashlegend.sourcewall.request.parsers.ContentValueForKeyParser;
+import net.nashlegend.sourcewall.request.parsers.SimpleArticleParser;
 import net.nashlegend.sourcewall.request.parsers.StringParser;
-import net.nashlegend.sourcewall.request.parsers.Parser;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -82,20 +82,13 @@ public class ArticleAPI extends APIBase {
      * @param id
      * @return
      */
-    public static Observable<ResponseObject<Article>> getArticleDetail(final String id) {
+    public static Observable<ResponseObject<Article>> getArticleDetail(String id) {
         String url = "http://www.guokr.com/article/" + id + "/";
         return new RequestBuilder<Article>()
                 .get()
                 .url(url)
                 .useCacheIfFailed(true)
-                .parser(new Parser<Article>() {
-                    @Override
-                    public Article parse(String response, ResponseObject<Article> responseObject) throws Exception {
-                        Article article = Article.fromHtmlDetail(id, response);
-                        responseObject.ok = true;
-                        return article;
-                    }
-                })
+                .parser(new ArticleHtmlParser(id))
                 .flatMap();
     }
 
@@ -119,22 +112,7 @@ public class ArticleAPI extends APIBase {
                 .get()
                 .params(pairs)
                 .useCacheIfFailed(offset == 0)
-                .parser(new Parser<ArrayList<UComment>>() {
-                    @Override
-                    public ArrayList<UComment> parse(String response, ResponseObject<ArrayList<UComment>> responseObject) throws Exception {
-                        ArrayList<UComment> list = new ArrayList<>();
-                        JSONArray articles = JsonHandler.getUniversalJsonArray(response, responseObject);
-                        if (articles != null) {
-                            for (int i = 0; i < articles.length(); i++) {
-                                JSONObject jo = articles.getJSONObject(i);
-                                UComment comment = UComment.fromArticleJson(id, "", jo);
-                                comment.setFloor((offset + i + 1) + "楼");
-                                list.add(comment);
-                            }
-                        }
-                        return list;
-                    }
-                })
+                .parser(new ArticleCommentListParser(offset, id))
                 .flatMap();
     }
 
@@ -192,15 +170,7 @@ public class ArticleAPI extends APIBase {
                 .get()
                 .url(url)
                 .params(pairs)
-                .parser(new Parser<Article>() {
-                    @Override
-                    public Article parse(String str, ResponseObject<Article> responseObject) throws Exception {
-                        JSONArray articlesArray = JsonHandler.getUniversalJsonArray(str, responseObject);
-                        assert articlesArray != null;
-                        JSONObject articleObject = articlesArray.getJSONObject(0);
-                        return Article.fromJsonSimple(articleObject);
-                    }
-                })
+                .parser(new SimpleArticleParser())
                 .flatMap();
     }
 
@@ -283,14 +253,7 @@ public class ArticleAPI extends APIBase {
         return new RequestBuilder<UComment>()
                 .get()
                 .url(url)
-                .parser(new Parser<UComment>() {
-                    @Override
-                    public UComment parse(String str, ResponseObject<UComment> responseObject) throws Exception {
-                        JSONObject replyObject = JsonHandler.getUniversalJsonObject(str, responseObject);
-                        assert replyObject != null;
-                        return UComment.fromArticleJson(replyObject);
-                    }
-                })
+                .parser(new ArticleCommentParser())
                 .flatMap();
     }
 

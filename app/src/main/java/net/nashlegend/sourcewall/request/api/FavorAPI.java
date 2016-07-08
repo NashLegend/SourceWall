@@ -3,17 +3,15 @@ package net.nashlegend.sourcewall.request.api;
 import net.nashlegend.sourcewall.model.Basket;
 import net.nashlegend.sourcewall.model.Category;
 import net.nashlegend.sourcewall.model.Favor;
-import net.nashlegend.sourcewall.request.JsonHandler;
 import net.nashlegend.sourcewall.request.NetworkTask;
 import net.nashlegend.sourcewall.request.RequestBuilder;
 import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
+import net.nashlegend.sourcewall.request.parsers.BasketListParser;
+import net.nashlegend.sourcewall.request.parsers.BasketParser;
 import net.nashlegend.sourcewall.request.parsers.BooleanParser;
+import net.nashlegend.sourcewall.request.parsers.CategoryListParser;
 import net.nashlegend.sourcewall.request.parsers.FavorListParser;
-import net.nashlegend.sourcewall.request.parsers.Parser;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -81,19 +79,6 @@ public class FavorAPI extends APIBase {
      * @return ResponseObject.result is ArrayList[Basket]
      */
     public static NetworkTask<ArrayList<Basket>> getBaskets(CallBack<ArrayList<Basket>> callBack) {
-        Parser<ArrayList<Basket>> parser = new Parser<ArrayList<Basket>>() {
-            @Override
-            public ArrayList<Basket> parse(String str, ResponseObject<ArrayList<Basket>> responseObject) throws Exception {
-                JSONArray jsonArray = JsonHandler.getUniversalJsonArray(str, responseObject);
-                ArrayList<Basket> baskets = new ArrayList<>();
-                assert jsonArray != null;
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    Basket basket = Basket.fromJson(jsonArray.getJSONObject(i));
-                    baskets.add(basket);
-                }
-                return baskets;
-            }
-        };
         String url = "http://www.guokr.com/apis/favorite/basket.json";
         HashMap<String, String> pairs = new HashMap<>();
         pairs.put("t", System.currentTimeMillis() + "");
@@ -104,7 +89,7 @@ public class FavorAPI extends APIBase {
                 .get()
                 .url(url)
                 .params(pairs)
-                .parser(parser)
+                .parser(new BasketListParser())
                 .callback(callBack)
                 .requestAsync();
     }
@@ -127,12 +112,7 @@ public class FavorAPI extends APIBase {
                 .post()
                 .url(url)
                 .params(params)
-                .parser(new Parser<Basket>() {
-                    @Override
-                    public Basket parse(String str, ResponseObject<Basket> responseObject) throws Exception {
-                        return Basket.fromJson(JsonHandler.getUniversalJsonObject(str, responseObject));
-                    }
-                })
+                .parser(new BasketParser())
                 .callback(callBack)
                 .requestAsync();
     }
@@ -143,24 +123,11 @@ public class FavorAPI extends APIBase {
      * @return ResponseObject
      */
     public static NetworkTask<ArrayList<Category>> getCategoryList(CallBack<ArrayList<Category>> callBack) {
-        Parser<ArrayList<Category>> parser = new Parser<ArrayList<Category>>() {
-            @Override
-            public ArrayList<Category> parse(String str, ResponseObject<ArrayList<Category>> responseObject) throws Exception {
-                JSONArray jsonArray = JsonHandler.getUniversalJsonArray(str, responseObject);
-                ArrayList<Category> categories = new ArrayList<>();
-                assert jsonArray != null;
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject subObject = jsonArray.getJSONObject(i);
-                    categories.add(Category.fromJson(subObject));
-                }
-                return categories;
-            }
-        };
         String url = "http://www.guokr.com/apis/favorite/category.json";
         return new RequestBuilder<ArrayList<Category>>()
                 .get()
                 .url(url)
-                .parser(parser)
+                .parser(new CategoryListParser())
                 .callback(callBack)
                 .requestAsync();
     }
