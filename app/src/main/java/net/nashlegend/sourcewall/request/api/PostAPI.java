@@ -63,8 +63,8 @@ public class PostAPI extends APIBase {
         pairs.put("limit", "20");
         pairs.put("offset", String.valueOf(offset));
         return new RequestBuilder<ArrayList<Post>>()
-                .url(url)
                 .get()
+                .url(url)
                 .params(pairs)
                 .useCacheFirst(useCache)
                 .cacheTimeOut(300000)
@@ -83,8 +83,8 @@ public class PostAPI extends APIBase {
         HashMap<String, String> pairs = new HashMap<>();
         pairs.put("group_id", id);
         new RequestBuilder<Boolean>()
-                .url(url)
                 .post()
+                .url(url)
                 .params(pairs)
                 .parser(new BooleanParser())
                 .callback(callBack)
@@ -102,8 +102,8 @@ public class PostAPI extends APIBase {
         HashMap<String, String> pairs = new HashMap<>();
         pairs.put("group_id", id);
         new RequestBuilder<Boolean>()
-                .url(url)
                 .delete()
+                .url(url)
                 .params(pairs)
                 .parser(new BooleanParser())
                 .callback(callBack)
@@ -113,8 +113,8 @@ public class PostAPI extends APIBase {
     public static Observable<ResponseObject<ArrayList<SubItem>>> getAllMyGroups(String ukey) {
         String url = "http://apis.guokr.com/group/member.json";
         return new RequestBuilder<ArrayList<SubItem>>()
-                .url(url)
                 .get()
+                .url(url)
                 .addParam("retrieve_type", "by_user")
                 .addParam("ukey", ukey)
                 .addParam("limit", "999")
@@ -144,9 +144,9 @@ public class PostAPI extends APIBase {
     public static Observable<ResponseObject<Post>> getPostDetailByID(String id) {
         String url = "http://apis.guokr.com/group/post/" + id + ".json";
         return new RequestBuilder<Post>()
+                .get()
                 .url(url)
                 .useCacheIfFailed(true)
-                .get()
                 .parser(new Parser<Post>() {
                     @Override
                     public Post parse(String response, ResponseObject<Post> responseObject) throws Exception {
@@ -174,8 +174,8 @@ public class PostAPI extends APIBase {
         pairs.put("limit", limit + "");
         pairs.put("offset", String.valueOf(offset));
         return new RequestBuilder<ArrayList<UComment>>()
-                .url(url)
                 .get()
+                .url(url)
                 .params(pairs)
                 .useCacheIfFailed(offset == 0)
                 .parser(new Parser<ArrayList<UComment>>() {
@@ -206,11 +206,11 @@ public class PostAPI extends APIBase {
         HashMap<String, String> pairs = new HashMap<>();
         pairs.put("post_id", postID);
         return new RequestBuilder<Boolean>()
-                .url(url)
-                .parser(new BooleanParser())
                 .post()
-                .callback(callBack)
+                .url(url)
                 .params(pairs)
+                .parser(new BooleanParser())
+                .callback(callBack)
                 .requestAsync();
     }
 
@@ -260,8 +260,8 @@ public class PostAPI extends APIBase {
     public static Observable<UComment> getSingleCommentByNotice(String notice_id) {
         String notice_url = "http://www.guokr.com/user/notice/" + notice_id + "/";
         return new RequestBuilder<String>()
-                .url(notice_url)
                 .get()
+                .url(notice_url)
                 .withToken(false)
                 .parser(new DirectlyStringParser())
                 .flatMap()
@@ -318,8 +318,8 @@ public class PostAPI extends APIBase {
         String url = "http://www.guokr.com/apis/group/post_reply/" + id + ".json";
         //这样后面就不必带reply_id参数了
         return new RequestBuilder<UComment>()
-                .url(url)
                 .get()
+                .url(url)
                 .parser(new Parser<UComment>() {
                     @Override
                     public UComment parse(String response, ResponseObject<UComment> responseObject) throws Exception {
@@ -352,11 +352,11 @@ public class PostAPI extends APIBase {
         pairs.put("reply_id", id);
         pairs.put("reason", id);
         return new RequestBuilder<Boolean>()
-                .url(url)
-                .parser(new BooleanParser())
                 .delete()
-                .callback(callBack)
+                .url(url)
                 .params(pairs)
+                .parser(new BooleanParser())
+                .callback(callBack)
                 .requestAsync();
     }
 
@@ -371,8 +371,8 @@ public class PostAPI extends APIBase {
         HashMap<String, String> pairs = new HashMap<>();
         pairs.put("reply_id", id);
         return new RequestBuilder<Boolean>()
-                .url(url)
                 .post()
+                .url(url)
                 .parser(new BooleanParser())
                 .callback(callBack)
                 .params(pairs)
@@ -389,8 +389,8 @@ public class PostAPI extends APIBase {
     public static NetworkTask<PrepareData> getPostPrepareData(String group_id, CallBack<PrepareData> callBack) {
         String url = "http://www.guokr.com/group/" + group_id + "/post/edit/";
         return new RequestBuilder<PrepareData>()
-                .url(url)
                 .get()
+                .url(url)
                 .parser(new Parser<PrepareData>() {
                     @Override
                     public PrepareData parse(String str, ResponseObject<PrepareData> responseObject) throws Exception {

@@ -25,7 +25,7 @@ public class RequestObject<T> {
     public static final String DefaultTag = "RequestObject";
 
     public String url = "";
-    public String method = Method.POST;
+    public String method = Method.GET;
     public Object tag = DefaultTag;
     public RequestBody requestBody;
     public Headers.Builder headers;
@@ -63,9 +63,7 @@ public class RequestObject<T> {
     /**
      * 下面部分均标为过时，请求逐步改为上面的Rx请求方式
      */
-    @Deprecated
     protected boolean ignoreHandler = false;
-    @Deprecated
     protected Handler handler;
 
     public RequestObject() {

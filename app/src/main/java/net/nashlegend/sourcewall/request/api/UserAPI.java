@@ -57,6 +57,7 @@ public class UserAPI extends APIBase {
     public static NetworkTask<UserInfo> getUserInfoByUkey(String ukey, CallBack<UserInfo> callBack) {
         String url = "http://apis.guokr.com/community/user/" + ukey + ".json";
         return new RequestBuilder<UserInfo>()
+                .get()
                 .url(url)
                 .parser(new Parser<UserInfo>() {
                     @Override
@@ -65,7 +66,6 @@ public class UserAPI extends APIBase {
                     }
                 })
                 .callback(callBack)
-                .get()
                 .requestAsync();
     }
 
@@ -100,11 +100,11 @@ public class UserAPI extends APIBase {
         pairs.put("comment", comment);
         pairs.put("target", "activity");
         return new RequestBuilder<Boolean>()
+                .post()
                 .url(url)
+                .params(pairs)
                 .parser(new BooleanParser())
                 .callback(callBack)
-                .params(pairs)
-                .post()
                 .requestAsync();
     }
 

@@ -6,7 +6,6 @@ import net.nashlegend.sourcewall.model.Favor;
 import net.nashlegend.sourcewall.request.JsonHandler;
 import net.nashlegend.sourcewall.request.NetworkTask;
 import net.nashlegend.sourcewall.request.RequestBuilder;
-import net.nashlegend.sourcewall.request.RequestObject;
 import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.parsers.BooleanParser;
@@ -42,10 +41,10 @@ public class FavorAPI extends APIBase {
         pairs.put("limit", "20");
         pairs.put("offset", String.valueOf(offset));
         return new RequestBuilder<ArrayList<Favor>>()
-                .url(url)
                 .get()
-                .withToken(false)
+                .url(url)
                 .params(pairs)
+                .withToken(false)
                 .useCacheFirst(useCache)
                 .cacheTimeOut(300000)
                 .parser(new FavorListParser())
@@ -68,11 +67,11 @@ public class FavorAPI extends APIBase {
         params.put("url", link);
         params.put("title", title);
         return new RequestBuilder<Boolean>()
+                .post()
                 .url(url)
+                .params(params)
                 .parser(new BooleanParser())
                 .callback(callBack)
-                .params(params)
-                .post()
                 .requestAsync();
     }
 
@@ -102,11 +101,11 @@ public class FavorAPI extends APIBase {
         pairs.put("ukey", UserAPI.getUkey());
         pairs.put("limit", "100");
         return new RequestBuilder<ArrayList<Basket>>()
+                .get()
                 .url(url)
+                .params(pairs)
                 .parser(parser)
                 .callback(callBack)
-                .params(pairs)
-                .get()
                 .requestAsync();
     }
 
@@ -125,7 +124,9 @@ public class FavorAPI extends APIBase {
         params.put("introduction", introduction);
         params.put("category_id", category_id);
         return new RequestBuilder<Basket>()
+                .post()
                 .url(url)
+                .params(params)
                 .parser(new Parser<Basket>() {
                     @Override
                     public Basket parse(String str, ResponseObject<Basket> responseObject) throws Exception {
@@ -133,8 +134,6 @@ public class FavorAPI extends APIBase {
                     }
                 })
                 .callback(callBack)
-                .params(params)
-                .post()
                 .requestAsync();
     }
 
@@ -159,10 +158,10 @@ public class FavorAPI extends APIBase {
         };
         String url = "http://www.guokr.com/apis/favorite/category.json";
         return new RequestBuilder<ArrayList<Category>>()
+                .get()
                 .url(url)
                 .parser(parser)
                 .callback(callBack)
-                .get()
                 .requestAsync();
     }
 }

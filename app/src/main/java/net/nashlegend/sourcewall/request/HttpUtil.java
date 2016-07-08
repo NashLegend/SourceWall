@@ -24,7 +24,7 @@ import okhttp3.OkHttpClient;
 @SuppressWarnings("ResultOfMethodCallIgnored")
 public class HttpUtil {
 
-    public final static int HTTP_RESPONSE_DISK_CACHE_MAX_SIZE = 20 * 1024 * 1024;//Cache的最大体积,20M
+    public final static int DISK_CACHE_SIZE = 20 * 1024 * 1024;//Cache的最大体积,20M
     public final static int CONNECTION_TIMEOUT = 30000;//网络状况差的时候这个时间可能很长
     public final static int SO_TIMEOUT = 60000;
     public final static int WRITE_TIMEOUT = 30000;//
@@ -54,7 +54,7 @@ public class HttpUtil {
             final File cacheDir = RequestCache.getDiskCacheDir(App.getApp(), "OkHttp.cache");
             defaultHttpClient = new OkHttpClient.Builder()
                     .addNetworkInterceptor(new RedirectInterceptor())
-                    .cache(new Cache(cacheDir, HTTP_RESPONSE_DISK_CACHE_MAX_SIZE))
+                    .cache(new Cache(cacheDir, DISK_CACHE_SIZE))
                     .connectTimeout(CONNECTION_TIMEOUT, TimeUnit.MILLISECONDS)
                     .readTimeout(SO_TIMEOUT, TimeUnit.MILLISECONDS)
                     .writeTimeout(WRITE_TIMEOUT, TimeUnit.MILLISECONDS)

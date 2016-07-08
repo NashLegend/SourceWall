@@ -12,7 +12,6 @@ import net.nashlegend.sourcewall.request.HttpFetcher;
 import net.nashlegend.sourcewall.request.JsonHandler;
 import net.nashlegend.sourcewall.request.NetworkTask;
 import net.nashlegend.sourcewall.request.RequestBuilder;
-import net.nashlegend.sourcewall.request.RequestObject;
 import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.parsers.AnswerCommentListParser;
@@ -110,9 +109,9 @@ public class QuestionAPI extends APIBase {
         pairs.put("limit", "20");
         pairs.put("offset", String.valueOf(offset));
         return new RequestBuilder<ArrayList<Question>>()
+                .get()
                 .url(url)
                 .params(pairs)
-                .get()
                 .cacheTimeOut(300000)
                 .useCacheFirst(useCache)
                 .parser(new QuestionListParser())
@@ -132,9 +131,9 @@ public class QuestionAPI extends APIBase {
         pairs.put("limit", "20");
         pairs.put("offset", String.valueOf(offset));
         return new RequestBuilder<ArrayList<Question>>()
+                .get()
                 .url(url)
                 .params(pairs)
-                .get()
                 .cacheTimeOut(300000)
                 .useCacheFirst(useCache)
                 .parser(new QuestionListParser())
@@ -150,8 +149,8 @@ public class QuestionAPI extends APIBase {
     public static Observable<ResponseObject<ArrayList<Question>>> getHighlightQuestions(int pageNo, boolean useCache) {
         String url = "http://m.guokr.com/ask/highlight/?page=" + pageNo;
         return new RequestBuilder<ArrayList<Question>>()
-                .url(url)
                 .get()
+                .url(url)
                 .cacheTimeOut(300000)
                 .useCacheFirst(useCache)
                 .parser(new QuestionHtmlListParser())
@@ -167,9 +166,9 @@ public class QuestionAPI extends APIBase {
     public static Observable<ResponseObject<Question>> getQuestionDetailByID(String id) {
         String url = "http://apis.guokr.com/ask/question/" + id + ".json";
         return new RequestBuilder<Question>()
+                .get()
                 .url(url)
                 .useCacheIfFailed(true)
-                .get()
                 .parser(new Parser<Question>() {
                     @Override
                     public Question parse(String response, ResponseObject<Question> responseObject) throws Exception {
@@ -196,8 +195,8 @@ public class QuestionAPI extends APIBase {
         pairs.put("limit", "20");
         pairs.put("offset", String.valueOf(offset));
         return new RequestBuilder<ArrayList<QuestionAnswer>>()
-                .url(url)
                 .get()
+                .url(url)
                 .params(pairs)
                 .useCacheIfFailed(offset == 0)
                 .parser(new QuestionAnswerListParser())
@@ -225,8 +224,8 @@ public class QuestionAPI extends APIBase {
     public static NetworkTask<QuestionAnswer> getSingleAnswerByID(String id, CallBack<QuestionAnswer> callBack) {
         String url = "http://apis.guokr.com/ask/answer/" + id + ".json";
         return new RequestBuilder<QuestionAnswer>()
-                .url(url)
                 .get()
+                .url(url)
                 .parser(new Parser<QuestionAnswer>() {
                     @Override
                     public QuestionAnswer parse(String response, ResponseObject<QuestionAnswer> responseObject) throws Exception {
@@ -254,11 +253,11 @@ public class QuestionAPI extends APIBase {
         pairs.put("limit", "20");
         pairs.put("offset", String.valueOf(offset));
         return new RequestBuilder<ArrayList<UComment>>()
+                .get()
                 .url(url)
+                .params(pairs)
                 .parser(new QuestionCommentListParser())
                 .callback(callBack)
-                .params(pairs)
-                .get()
                 .requestAsync();
     }
 
@@ -278,11 +277,11 @@ public class QuestionAPI extends APIBase {
         pairs.put("limit", "20");
         pairs.put("offset", String.valueOf(offset));
         return new RequestBuilder<ArrayList<UComment>>()
+                .get()
                 .url(url)
+                .params(pairs)
                 .parser(new AnswerCommentListParser())
                 .callback(callBack)
-                .params(pairs)
-                .get()
                 .requestAsync();
     }
 
@@ -299,11 +298,11 @@ public class QuestionAPI extends APIBase {
         pairs.put("question_id", id);
         pairs.put("content", content);
         return new RequestBuilder<String>()
+                .post()
                 .url(url)
+                .params(pairs)
                 .parser(new ContentValueForKeyParser("id"))
                 .callback(callBack)
-                .params(pairs)
-                .post()
                 .requestAsync();
     }
 
@@ -340,11 +339,11 @@ public class QuestionAPI extends APIBase {
         pairs.put("answer_id", id);
         pairs.put("opinion", opinion);
         new RequestBuilder<Boolean>()
+                .post()
                 .url(url)
                 .params(pairs)
                 .parser(new BooleanParser())
                 .callback(callBack)
-                .post()
                 .requestAsync();
     }
 
@@ -360,11 +359,11 @@ public class QuestionAPI extends APIBase {
         pairs.put("v", System.currentTimeMillis() + "");
         pairs.put("answer_id", id);
         new RequestBuilder<Boolean>()
+                .post()
                 .url(url)
                 .params(pairs)
                 .parser(new BooleanParser())
                 .callback(callBack)
-                .post()
                 .requestAsync();
     }
 
@@ -380,11 +379,11 @@ public class QuestionAPI extends APIBase {
         pairs.put("v", System.currentTimeMillis() + "");
         pairs.put("answer_id", id);
         new RequestBuilder<Boolean>()
+                .post()
                 .url(url)
                 .params(pairs)
                 .parser(new BooleanParser())
                 .callback(callBack)
-                .post()
                 .requestAsync();
     }
 
@@ -399,11 +398,11 @@ public class QuestionAPI extends APIBase {
         HashMap<String, String> pairs = new HashMap<>();
         pairs.put("answer_id", id);
         new RequestBuilder<Boolean>()
+                .delete()
                 .url(url)
                 .params(pairs)
                 .parser(new BooleanParser())
                 .callback(callBack)
-                .delete()
                 .requestAsync();
     }
 
@@ -433,11 +432,11 @@ public class QuestionAPI extends APIBase {
         pairs.put("question_id", questionID);
         pairs.put("retrieve_type", "by_question");
         new RequestBuilder<Boolean>()
+                .post()
                 .url(url)
                 .params(pairs)
                 .parser(new BooleanParser())
                 .callback(callBack)
-                .post()
                 .requestAsync();
     }
 
@@ -453,11 +452,11 @@ public class QuestionAPI extends APIBase {
         pairs.put("question_id", questionID);
         pairs.put("retrieve_type", "by_question");
         new RequestBuilder<Boolean>()
+                .delete()
                 .url(url)
                 .params(pairs)
                 .callback(callBack)
                 .parser(new BooleanParser())
-                .delete()
                 .requestAsync();
     }
 
@@ -475,7 +474,9 @@ public class QuestionAPI extends APIBase {
         pairs.put("content", comment);
         pairs.put("retrieve_type", "by_question");
         return new RequestBuilder<UComment>()
+                .post()
                 .url(url)
+                .params(pairs)
                 .parser(new Parser<UComment>() {
                     @Override
                     public UComment parse(String str, ResponseObject<UComment> responseObject) throws Exception {
@@ -491,8 +492,6 @@ public class QuestionAPI extends APIBase {
                     }
                 })
                 .callback(callBack)
-                .params(pairs)
-                .post()
                 .requestAsync();
     }
 
@@ -505,10 +504,10 @@ public class QuestionAPI extends APIBase {
     public static void deleteMyComment(String id, CallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/ask/answer/" + id + ".json";
         new RequestBuilder<Boolean>()
-                .url(url)
-                .callback(callBack)
-                .parser(new BooleanParser())
                 .delete()
+                .url(url)
+                .parser(new BooleanParser())
+                .callback(callBack)
                 .requestAsync();
     }
 
@@ -526,7 +525,9 @@ public class QuestionAPI extends APIBase {
         pairs.put("content", comment);
         pairs.put("retrieve_type", "by_answer");
         return new RequestBuilder<UComment>()
-                .url(url).callback(callBack).params(pairs).post()
+                .post()
+                .url(url)
+                .params(pairs)
                 .parser(new Parser<UComment>() {
                     @Override
                     public UComment parse(String str, ResponseObject<UComment> responseObject) throws Exception {
@@ -541,6 +542,7 @@ public class QuestionAPI extends APIBase {
                         return uComment;
                     }
                 })
+                .callback(callBack)
                 .requestAsync();
     }
 

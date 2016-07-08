@@ -41,11 +41,11 @@ public class MessageAPI extends APIBase {
         HashMap<String, String> pairs = new HashMap<>();
         pairs.put("_", String.valueOf(System.currentTimeMillis()));
         return new RequestBuilder<ReminderNoticeNum>()
+                .get()
                 .url(url)
+                .params(pairs)
                 .parser(parser)
                 .callback(callBack)
-                .params(pairs)
-                .get()
                 .requestAsync();
     }
 
@@ -75,11 +75,11 @@ public class MessageAPI extends APIBase {
         pairs.put("limit", "20");
         pairs.put("offset", String.valueOf(offset));
         return new RequestBuilder<ArrayList<Reminder>>()
+                .get()
                 .url(url)
+                .params(pairs)
                 .parser(parser)
                 .callback(callBack)
-                .params(pairs)
-                .get()
                 .requestAsync();
     }
 
@@ -110,11 +110,11 @@ public class MessageAPI extends APIBase {
         pairs.put("limit", "1024");
         pairs.put("offset", "0");
         return new RequestBuilder<ArrayList<Notice>>()
+                .get()
                 .url(url)
+                .params(pairs)
                 .parser(parser)
                 .callback(callBack)
-                .params(pairs)
-                .get()
                 .requestAsync();
     }
 
@@ -127,10 +127,10 @@ public class MessageAPI extends APIBase {
     public static NetworkTask<Boolean> ignoreAllNotice(CallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/community/notice_ignore.json";
         return new RequestBuilder<Boolean>()
+                .put()
                 .url(url)
                 .parser(new BooleanParser())
                 .callback(callBack)
-                .put()
                 .requestAsync();
     }
 
@@ -162,11 +162,11 @@ public class MessageAPI extends APIBase {
         pairs.put("nid", noticeID);
         pairs.put("_", System.currentTimeMillis() + "");
         return new RequestBuilder<ArrayList<Notice>>()
+                .put()
                 .url(url)
+                .params(pairs)
                 .parser(parser)
                 .callback(callBack)
-                .params(pairs)
-                .put()
                 .requestAsync();
     }
 
@@ -206,11 +206,11 @@ public class MessageAPI extends APIBase {
         pairs.put("limit", "20");
         pairs.put("offset", String.valueOf(offset));
         return new RequestBuilder<ArrayList<Message>>()
+                .get()
                 .url(url)
+                .params(pairs)
                 .parser(parser)
                 .callback(callBack)
-                .params(pairs)
-                .get()
                 .requestAsync();
     }
 
@@ -231,10 +231,10 @@ public class MessageAPI extends APIBase {
         };
         String url = "http://www.guokr.com/apis/community/user/message/" + id + ".json";
         return new RequestBuilder<Message>()
+                .get()
                 .url(url)
                 .parser(parser)
                 .callback(callBack)
-                .get()
                 .requestAsync();
     }
 

@@ -64,7 +64,7 @@ public class APIBase {
      * @return 返回ResponseObject，resultObject.result是上传后的图片地址，果壳并不会对图片进行压缩
      */
     public static Subscription uploadImage(final String path, final CallBack<String> callBack) {
-        // XXX: 16/7/6  not graceful
+        // XXX: 16/7/6  not elegant
         return Observable.just(path)
                 .map(new Func1<String, String>() {
                     @Override
@@ -76,6 +76,7 @@ public class APIBase {
                     @Override
                     public ResponseObject<String> call(String path) {
                         return new RequestBuilder<String>()
+                                .post()
                                 .url("http://www.guokr.com/apis/image.json?enable_watermark=true")
                                 .upload(path)
                                 .uploadFileKey("upload_file")

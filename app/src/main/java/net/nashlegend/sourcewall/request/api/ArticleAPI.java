@@ -7,7 +7,6 @@ import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.JsonHandler;
 import net.nashlegend.sourcewall.request.NetworkTask;
 import net.nashlegend.sourcewall.request.RequestBuilder;
-import net.nashlegend.sourcewall.request.RequestObject;
 import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.parsers.ArticleListParser;
@@ -86,9 +85,9 @@ public class ArticleAPI extends APIBase {
     public static Observable<ResponseObject<Article>> getArticleDetail(final String id) {
         String url = "http://www.guokr.com/article/" + id + "/";
         return new RequestBuilder<Article>()
+                .get()
                 .url(url)
                 .useCacheIfFailed(true)
-                .get()
                 .parser(new Parser<Article>() {
                     @Override
                     public Article parse(String response, ResponseObject<Article> responseObject) throws Exception {
@@ -190,8 +189,8 @@ public class ArticleAPI extends APIBase {
         HashMap<String, String> pairs = new HashMap<>();
         pairs.put("article_id", article_id);
         return new RequestBuilder<Article>()
-                .url(url)
                 .get()
+                .url(url)
                 .params(pairs)
                 .parser(new Parser<Article>() {
                     @Override
@@ -207,9 +206,9 @@ public class ArticleAPI extends APIBase {
 
     public static Observable<UComment> getSingleComment(String url) {
         return new RequestBuilder<String>()
-                .url(url)
                 .get()
-                .withToken(false)
+                .url(url)
+                .withToken(false)// FIXME: 16/7/8 为啥来着
                 .parser(new DirectlyStringParser())
                 .flatMap()
                 .flatMap(new Func1<ResponseObject<String>, Observable<UComment>>() {
@@ -282,8 +281,8 @@ public class ArticleAPI extends APIBase {
     public static Observable<ResponseObject<UComment>> getSingleCommentByID(String reply_id) {
         String url = "http://apis.guokr.com/minisite/article_reply/" + reply_id + ".json";
         return new RequestBuilder<UComment>()
-                .url(url)
                 .get()
+                .url(url)
                 .parser(new Parser<UComment>() {
                     @Override
                     public UComment parse(String str, ResponseObject<UComment> responseObject) throws Exception {
@@ -320,10 +319,11 @@ public class ArticleAPI extends APIBase {
         HashMap<String, String> pairs = new HashMap<>();
         pairs.put("reply_id", id);
         return new RequestBuilder<Boolean>()
+                .post()
                 .url(url)
+                .params(pairs)
                 .parser(new BooleanParser())
                 .callback(callBack)
-                .params(pairs)
                 .post()
                 .requestAsync();
     }
@@ -339,11 +339,11 @@ public class ArticleAPI extends APIBase {
         HashMap<String, String> pairs = new HashMap<>();
         pairs.put("reply_id", id);
         return new RequestBuilder<Boolean>()
+                .delete()
                 .url(url)
+                .params(pairs)
                 .parser(new BooleanParser())
                 .callback(callBack)
-                .params(pairs)
-                .delete()
                 .requestAsync();
     }
 
@@ -360,11 +360,11 @@ public class ArticleAPI extends APIBase {
         pairs.put("article_id", id);
         pairs.put("content", content);
         return new RequestBuilder<String>()
+                .post()
                 .url(url)
+                .params(pairs)
                 .parser(new ContentValueForKeyParser("id"))
                 .callback(callBack)
-                .params(pairs)
-                .post()
                 .requestAsync();
     }
 }

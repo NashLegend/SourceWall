@@ -31,8 +31,7 @@ import rx.Subscription;
  */
 public class RequestBuilder<T> {
 
-    @StringDef({Method.GET, Method.POST,
-            Method.PUT, Method.DELETE})
+    @StringDef({Method.GET, Method.POST, Method.PUT, Method.DELETE, Method.HEAD, Method.PATCH})
     public @interface MethodDef {
     }
 
@@ -403,6 +402,7 @@ public class RequestBuilder<T> {
 
     public RequestBuilder<T> upload(String filePath) {
         request.uploadFilePath = filePath;
+        request.method = Method.POST;
         request.requestType = RequestType.UPLOAD;
         return this;
     }
