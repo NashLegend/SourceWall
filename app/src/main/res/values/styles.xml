@@ -62,6 +62,8 @@
         <item name="color_author_dark_color">@color/author_dark_color</item>
         <item name="color_author_sub_color">@color/author_sub_color</item>
 
+        <!--文本默认色-->
+        <item name="color_text_primary">@color/text_color_primary</item>
         <!--正文标题颜色-->
         <item name="color_article_title">@color/article_title</item>
         <!--正文内容字体颜色-->
@@ -225,6 +227,9 @@
         <item name="color_author_dark_color">@color/author_dark_color_night</item>
         <item name="color_author_sub_color">@color/author_sub_color_night</item>
 
+
+        <!--文本默认色-->
+        <item name="color_text_primary">@color/text_color_primaryn</item>
         <!--正文标题颜色-->
         <item name="color_article_title">@color/article_title_night</item>
         <!--正文内容字体颜色-->

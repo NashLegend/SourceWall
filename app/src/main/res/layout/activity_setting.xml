@@ -1,6 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/color_clear_page_background"
@@ -18,7 +18,8 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             android:theme="?attr/toolbarTheme"
-            app:popupTheme="?attr/toolbarPopTheme" />
+            app:popupTheme="?attr/toolbarPopTheme"
+            app:title="@string/action_settings" />
     </android.support.design.widget.AppBarLayout>
 
     <RelativeLayout
@@ -28,10 +29,10 @@
         android:layout_gravity="center_vertical"
         android:background="?android:attr/selectableItemBackground"
         android:clickable="true"
-        android:paddingBottom="10dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="0dp"
-        android:paddingTop="10dp">
+        android:paddingBottom="@dimen/setting_padding_vertical"
+        android:paddingLeft="@dimen/setting_padding_horizontal"
+        android:paddingRight="@dimen/setting_padding_horizontal"
+        android:paddingTop="@dimen/setting_padding_vertical">
 
         <TextView
             android:id="@+id/text_image_mode_view"
@@ -39,6 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:text="@string/image_load_mode"
+            android:textColor="?attr/color_text_primary"
             android:textSize="16sp" />
 
         <TextView
@@ -51,11 +53,11 @@
             android:textSize="12sp" />
 
         <ImageView
+            android:id="@+id/image_mode_arrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/image_mode_arrow"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="16dp"
+            android:layout_marginRight="6dp"
             android:background="@drawable/chevron_right" />
     </RelativeLayout>
 
@@ -64,7 +66,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingTop="10dp">
+        android:paddingBottom="@dimen/setting_padding_vertical"
+        android:paddingLeft="@dimen/setting_padding_horizontal"
+        android:paddingRight="@dimen/setting_padding_horizontal">
 
         <RadioGroup
             android:layout_width="match_parent"
@@ -75,37 +79,39 @@
                 android:id="@+id/button_always_load"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:text="@string/mode_always_load" />
+                android:text="@string/mode_always_load"
+                android:textSize="16sp" />
 
             <RadioButton
                 android:id="@+id/button_never_load"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:text="@string/mode_never_load" />
+                android:text="@string/mode_never_load"
+                android:textSize="16sp" />
 
             <RadioButton
                 android:id="@+id/button_wifi_only"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:text="@string/mode_load_load_when_wifi" />
+                android:text="@string/mode_load_load_when_wifi"
+                android:textSize="16sp" />
         </RadioGroup>
 
         <CheckBox
             android:id="@+id/check_homepage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/no_load_homepage_image"
-            android:singleLine="true" />
+            android:maxLines="1"
+            android:text="@string/no_load_homepage_image" />
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="0.4dp"
+        android:layout_height="@dimen/splitter_height"
+        android:layout_marginLeft="@dimen/setting_padding_horizontal"
+        android:layout_marginRight="@dimen/setting_padding_horizontal"
         android:layout_weight="0"
-        android:background="@android:color/darker_gray" />
+        android:background="@color/splitter_color_grey" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -118,16 +124,17 @@
             android:layout_height="wrap_content"
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true"
-            android:paddingBottom="10dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="0dp"
-            android:paddingTop="10dp">
+            android:paddingBottom="@dimen/setting_padding_vertical"
+            android:paddingLeft="@dimen/setting_padding_horizontal"
+            android:paddingRight="@dimen/setting_padding_horizontal"
+            android:paddingTop="@dimen/setting_padding_vertical">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:text="@string/custom_tail"
+                android:textColor="?attr/color_text_primary"
                 android:textSize="16sp" />
 
             <ImageView
@@ -135,7 +142,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="16dp"
+                android:layout_marginRight="6dp"
                 android:background="@drawable/chevron_right" />
         </RelativeLayout>
 
@@ -144,7 +151,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingTop="10dp">
+            android:paddingBottom="@dimen/setting_padding_vertical"
+            android:paddingLeft="@dimen/setting_padding_horizontal"
+            android:paddingRight="@dimen/setting_padding_horizontal">
 
             <RadioGroup
                 android:layout_width="match_parent"
@@ -155,22 +164,22 @@
                     android:id="@+id/button_use_default"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    android:text="@string/use_default_tail" />
+                    android:text="@string/use_default_tail"
+                    android:textSize="16sp" />
 
                 <RadioButton
                     android:id="@+id/button_use_phone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    android:text="@string/use_phone_as_tail" />
+                    android:text="@string/use_phone_as_tail"
+                    android:textSize="16sp" />
 
                 <RadioButton
                     android:id="@+id/button_use_custom"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    android:text="@string/use_custom_tail" />
+                    android:text="@string/use_custom_tail"
+                    android:textSize="16sp" />
             </RadioGroup>
 
             <EditText
@@ -181,12 +190,13 @@
         </LinearLayout>
     </LinearLayout>
 
-
     <View
         android:layout_width="match_parent"
-        android:layout_height="0.4dp"
+        android:layout_height="@dimen/splitter_height"
+        android:layout_marginLeft="@dimen/setting_padding_horizontal"
+        android:layout_marginRight="@dimen/setting_padding_horizontal"
         android:layout_weight="0"
-        android:background="@android:color/darker_gray" />
+        android:background="@color/splitter_color_grey" />
 
     <RelativeLayout
         android:id="@+id/layout_about_app"
@@ -195,10 +205,10 @@
         android:layout_gravity="center_vertical"
         android:background="?android:attr/selectableItemBackground"
         android:clickable="true"
-        android:paddingBottom="10dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="0dp"
-        android:paddingTop="10dp">
+        android:paddingBottom="@dimen/setting_padding_vertical"
+        android:paddingLeft="@dimen/setting_padding_horizontal"
+        android:paddingRight="@dimen/setting_padding_horizontal"
+        android:paddingTop="@dimen/setting_padding_vertical">
 
         <TextView
             android:id="@+id/text_about_app"
@@ -206,21 +216,24 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:text="@string/about_app"
+            android:textColor="?attr/color_text_primary"
             android:textSize="16sp" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="16dp"
+            android:layout_marginRight="6dp"
             android:background="@drawable/chevron_right" />
     </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="0.4dp"
+        android:layout_height="@dimen/splitter_height"
+        android:layout_marginLeft="@dimen/setting_padding_horizontal"
+        android:layout_marginRight="@dimen/setting_padding_horizontal"
         android:layout_weight="0"
-        android:background="@android:color/darker_gray" />
+        android:background="@color/splitter_color_grey" />
 
     <RelativeLayout
         android:id="@+id/layout_log_in_out"
@@ -229,10 +242,10 @@
         android:layout_gravity="center_vertical"
         android:background="?android:attr/selectableItemBackground"
         android:clickable="true"
-        android:paddingBottom="10dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="0dp"
-        android:paddingTop="10dp">
+        android:paddingBottom="@dimen/setting_padding_vertical"
+        android:paddingLeft="@dimen/setting_padding_horizontal"
+        android:paddingRight="@dimen/setting_padding_horizontal"
+        android:paddingTop="@dimen/setting_padding_vertical">
 
         <TextView
             android:id="@+id/text_log_in_out"
@@ -240,21 +253,24 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:text="@string/log_out"
+            android:textColor="?attr/color_text_primary"
             android:textSize="16sp" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="16dp"
+            android:layout_marginRight="6dp"
             android:background="@drawable/chevron_right" />
     </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="0.4dp"
+        android:layout_height="@dimen/splitter_height"
+        android:layout_marginLeft="@dimen/setting_padding_horizontal"
+        android:layout_marginRight="@dimen/setting_padding_horizontal"
         android:layout_weight="0"
-        android:background="@android:color/darker_gray" />
+        android:background="@color/splitter_color_grey" />
 
 
 </LinearLayout>

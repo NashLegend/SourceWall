@@ -203,7 +203,6 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         new AlertDialog.Builder(this).setTitle(R.string.about_app).setMessage(R.string.introduction_about_app).create().show();
     }
 
-
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (buttonView.getId() == R.id.check_homepage) {
@@ -227,12 +226,15 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                         tailText.setEnabled(true);
                         break;
                     case R.id.button_always_load:
+                        imageText.setText(R.string.mode_always_load);
                         checkBox.setEnabled(true);
                         break;
                     case R.id.button_never_load:
+                        imageText.setText(R.string.mode_never_load);
                         checkBox.setEnabled(false);
                         break;
                     case R.id.button_wifi_only:
+                        imageText.setText(R.string.mode_load_load_when_wifi);
                         checkBox.setEnabled(true);
                         break;
                 }

@@ -9,7 +9,7 @@
         android:id="@+id/question_tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_primary"
+        android:background="?attr/colorPrimary"
         app:tabIndicatorColor="@android:color/white"
         app:tabSelectedTextColor="@android:color/white"
         app:tabTextColor="@android:color/white" />

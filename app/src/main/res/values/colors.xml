@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="text_color_primary">#ffffff</color>
-    <color name="text_color_primary_night">#000000</color>
+    <color name="text_color_primary">#555555</color>
+    <color name="text_color_primary_night">#d0d0d0</color>
     <color name="color_primary">#0288d1</color>
     <color name="color_primary_night">#424242</color>
     <color name="color_primary_dark">#0277bd</color>
@@ -128,5 +128,6 @@
 
     <!-- 看图页面顶部下载按钮和文字的背景-->
     <color name="image_header_color_bg">#66333333</color>
+    <color name="splitter_color_grey">#dddddd</color>
 
 </resources>

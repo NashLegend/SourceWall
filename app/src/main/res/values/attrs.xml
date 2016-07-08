@@ -32,6 +32,8 @@
     <attr name="color_author_sub_color" format="color" />
 
     <!--正文标题颜色-->
+    <attr name="color_text_primary" format="color" />
+    <!--正文标题颜色-->
     <attr name="color_article_title" format="color" />
     <!--正文内容字体颜色-->
     <attr name="color_article_content_text" format="color" />
