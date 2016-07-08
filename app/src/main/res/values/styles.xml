@@ -229,7 +229,7 @@
 
 
         <!--文本默认色-->
-        <item name="color_text_primary">@color/text_color_primaryn</item>
+        <item name="color_text_primary">@color/text_color_primary_night</item>
         <!--正文标题颜色-->
         <item name="color_article_title">@color/article_title_night</item>
         <!--正文内容字体颜色-->
