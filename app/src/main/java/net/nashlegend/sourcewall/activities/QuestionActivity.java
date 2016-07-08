@@ -27,8 +27,7 @@ import net.nashlegend.sourcewall.adapters.QuestionDetailAdapter;
 import net.nashlegend.sourcewall.dialogs.FavorDialog;
 import net.nashlegend.sourcewall.dialogs.InputDialog;
 import net.nashlegend.sourcewall.model.Question;
-import net.nashlegend.sourcewall.model.QuestionAnswer;
-import net.nashlegend.sourcewall.request.RequestObject;
+import net.nashlegend.sourcewall.model.Answer;
 import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.MessageAPI;
@@ -420,7 +419,7 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<ResponseObject<ArrayList<QuestionAnswer>>>() {
+                .subscribe(new Observer<ResponseObject<ArrayList<Answer>>>() {
                     @Override
                     public void onCompleted() {
 
@@ -432,11 +431,11 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
                     }
 
                     @Override
-                    public void onNext(ResponseObject<ArrayList<QuestionAnswer>> result) {
+                    public void onNext(ResponseObject<ArrayList<Answer>> result) {
                         progressBar.setVisibility(View.GONE);
                         if (result.ok) {
                             loadingView.onLoadSuccess();
-                            ArrayList<QuestionAnswer> ars = result.result;
+                            ArrayList<Answer> ars = result.result;
                             if (ars.size() > 0) {
                                 adapter.addAll(ars);
                                 adapter.notifyDataSetChanged();

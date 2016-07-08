@@ -4,7 +4,7 @@ import android.text.TextUtils;
 
 import net.nashlegend.sourcewall.model.PrepareData;
 import net.nashlegend.sourcewall.model.Question;
-import net.nashlegend.sourcewall.model.QuestionAnswer;
+import net.nashlegend.sourcewall.model.Answer;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.JsonHandler;
@@ -182,14 +182,14 @@ public class QuestionAPI extends APIBase {
      * @param offset 从第几个开始加载
      * @return ResponseObject
      */
-    public static Observable<ResponseObject<ArrayList<QuestionAnswer>>> getQuestionAnswers(final String id, final int offset) {
+    public static Observable<ResponseObject<ArrayList<Answer>>> getQuestionAnswers(final String id, final int offset) {
         String url = "http://apis.guokr.com/ask/answer.json";
         HashMap<String, String> pairs = new HashMap<>();
         pairs.put("retrieve_type", "by_question");
         pairs.put("question_id", id);
         pairs.put("limit", "20");
         pairs.put("offset", String.valueOf(offset));
-        return new RequestBuilder<ArrayList<QuestionAnswer>>()
+        return new RequestBuilder<ArrayList<Answer>>()
                 .get()
                 .url(url)
                 .params(pairs)
@@ -204,7 +204,7 @@ public class QuestionAPI extends APIBase {
      * @param url 评论id
      * @return resultObject resultObject.result是UComment
      */
-    public static NetworkTask<QuestionAnswer> getSingleAnswerFromRedirectUrl(String url, CallBack<QuestionAnswer> callBack) {
+    public static NetworkTask<Answer> getSingleAnswerFromRedirectUrl(String url, CallBack<Answer> callBack) {
         //http://www.guokr.com/answer/654321/redirect/
         //http://www.guokr.com/answer/654321/
         return getSingleAnswerByID(url.replaceAll("\\D+", ""), callBack);
@@ -216,9 +216,9 @@ public class QuestionAPI extends APIBase {
      * @param id 评论id
      * @return resultObject resultObject.result是UComment
      */
-    public static NetworkTask<QuestionAnswer> getSingleAnswerByID(String id, CallBack<QuestionAnswer> callBack) {
+    public static NetworkTask<Answer> getSingleAnswerByID(String id, CallBack<Answer> callBack) {
         String url = "http://apis.guokr.com/ask/answer/" + id + ".json";
-        return new RequestBuilder<QuestionAnswer>()
+        return new RequestBuilder<Answer>()
                 .get()
                 .url(url)
                 .parser(new AnswerParser())

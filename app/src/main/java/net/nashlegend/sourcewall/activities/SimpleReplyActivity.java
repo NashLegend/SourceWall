@@ -22,7 +22,7 @@ import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.SimpleCommentAdapter;
 import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Question;
-import net.nashlegend.sourcewall.model.QuestionAnswer;
+import net.nashlegend.sourcewall.model.Answer;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.NetworkTask;
 import net.nashlegend.sourcewall.request.RequestObject.CallBack;
@@ -178,7 +178,7 @@ public class SimpleReplyActivity extends BaseActivity implements LListView.OnRef
 
                 if (aceModel instanceof Question) {
                     MobclickAgent.onEvent(SimpleReplyActivity.this, Mob.Event_Comment_On_Question);
-                } else if (aceModel instanceof QuestionAnswer) {
+                } else if (aceModel instanceof Answer) {
                     MobclickAgent.onEvent(SimpleReplyActivity.this, Mob.Event_Comment_On_Answer);
                 }
 
@@ -205,8 +205,8 @@ public class SimpleReplyActivity extends BaseActivity implements LListView.OnRef
                 NetworkTask<UComment> networkTask = null;
                 if (aceModel instanceof Question) {
                     networkTask = QuestionAPI.commentOnQuestion(((Question) aceModel).getId(), content, callBack);
-                } else if (aceModel instanceof QuestionAnswer) {
-                    networkTask = QuestionAPI.commentOnAnswer(((QuestionAnswer) aceModel).getID(), content, callBack);
+                } else if (aceModel instanceof Answer) {
+                    networkTask = QuestionAPI.commentOnAnswer(((Answer) aceModel).getID(), content, callBack);
                 }
 
                 if (networkTask != null) {
@@ -290,8 +290,8 @@ public class SimpleReplyActivity extends BaseActivity implements LListView.OnRef
 
         if (aceModel instanceof Question) {
             QuestionAPI.getQuestionComments(((Question) aceModel).getId(), offset, callBack);
-        } else if (aceModel instanceof QuestionAnswer) {
-            QuestionAPI.getAnswerComments(((QuestionAnswer) aceModel).getID(), offset, callBack);
+        } else if (aceModel instanceof Answer) {
+            QuestionAPI.getAnswerComments(((Answer) aceModel).getID(), offset, callBack);
         }
     }
 }

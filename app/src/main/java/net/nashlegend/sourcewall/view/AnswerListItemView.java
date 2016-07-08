@@ -9,7 +9,7 @@ import android.widget.TextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import net.nashlegend.sourcewall.R;
-import net.nashlegend.sourcewall.model.QuestionAnswer;
+import net.nashlegend.sourcewall.model.Answer;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.ImageUtils;
@@ -19,8 +19,8 @@ import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 /**
  * Created by NashLegend on 2014/9/18 0018
  */
-public class AnswerListItemView extends AceView<QuestionAnswer> {
-    private QuestionAnswer answer;
+public class AnswerListItemView extends AceView<Answer> {
+    private Answer answer;
     private TextView contentView;
     private TextView authorView;
     private ImageView avatar;
@@ -54,7 +54,7 @@ public class AnswerListItemView extends AceView<QuestionAnswer> {
     }
 
     @Override
-    public void setData(QuestionAnswer model) {
+    public void setData(Answer model) {
         answer = model;
         supportView.setText(String.valueOf(answer.getUpvoteNum()));
         authorView.setText(answer.getAuthor().getName());
@@ -70,7 +70,7 @@ public class AnswerListItemView extends AceView<QuestionAnswer> {
     }
 
     @Override
-    public QuestionAnswer getData() {
+    public Answer getData() {
         return answer;
     }
 }

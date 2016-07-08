@@ -32,7 +32,7 @@ import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.model.Question;
-import net.nashlegend.sourcewall.model.QuestionAnswer;
+import net.nashlegend.sourcewall.model.Answer;
 import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.ResponseCode;
 import net.nashlegend.sourcewall.request.ResponseObject;
@@ -66,7 +66,7 @@ public class AnswerActivity extends BaseActivity implements View.OnClickListener
     private TextView supportText;
     private View supportView;
     private Question question;
-    private QuestionAnswer answer;
+    private Answer answer;
     private Uri redirectUri;
     private String notice_id;
     private LoadingView loadingView;
@@ -139,14 +139,14 @@ public class AnswerActivity extends BaseActivity implements View.OnClickListener
 
     private void loadDataByUri() {
         MessageAPI.ignoreOneNotice(notice_id);
-        QuestionAPI.getSingleAnswerFromRedirectUrl(redirectUri.toString(), new CallBack<QuestionAnswer>() {
+        QuestionAPI.getSingleAnswerFromRedirectUrl(redirectUri.toString(), new CallBack<Answer>() {
             @Override
-            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<QuestionAnswer> result) {
+            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Answer> result) {
                 loadingView.onLoadFailed();
             }
 
             @Override
-            public void onSuccess(@NonNull QuestionAnswer result, @NonNull ResponseObject<QuestionAnswer> detailed) {
+            public void onSuccess(@NonNull Answer result, @NonNull ResponseObject<Answer> detailed) {
                 floatingActionsMenu.setVisibility(View.VISIBLE);
                 loadingView.onLoadSuccess();
                 answer = result;

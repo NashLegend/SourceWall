@@ -9,7 +9,7 @@ import org.json.JSONObject;
 /**
  * Created by NashLegend on 2014/9/16 0016
  */
-public class QuestionAnswer extends AceModel {
+public class Answer extends AceModel {
 
     private String content = "";
     private String date_created = "";
@@ -31,7 +31,7 @@ public class QuestionAnswer extends AceModel {
     private static String prefix = "<div class=\"ZoomBox\"><div class=\"content-zoom ZoomIn\">";
     private static String suffix = "</div></div>";
 
-    public static QuestionAnswer fromJson(JSONObject answerObject) throws Exception {
+    public static Answer fromJson(JSONObject answerObject) throws Exception {
         JSONObject questionObject = answerObject.optJSONObject("question");
         String hostTitle = "";
         String hostID = "";
@@ -52,7 +52,7 @@ public class QuestionAnswer extends AceModel {
         int opposings_count = answerObject.optInt("opposings_count");
         String content = answerObject.optString("html");
 
-        QuestionAnswer answer = new QuestionAnswer();
+        Answer answer = new Answer();
         answer.setAuthor(Author.fromJson(authorObject));
         answer.setCommentNum(replies_count);
         answer.setContent(content.replaceAll("<img .*?/>", prefix + "$0" + suffix).replaceAll("style=\"max-width: \\d+px\"", "style=\"max-width: " + maxImageWidth + "px\""));
@@ -70,7 +70,7 @@ public class QuestionAnswer extends AceModel {
         return answer;
     }
 
-    public static QuestionAnswer fromListJson(JSONObject answerObject) throws Exception {
+    public static Answer fromListJson(JSONObject answerObject) throws Exception {
         //取不到title
         String hostID = answerObject.optString("question_id");
         String id = answerObject.optString("id");
@@ -86,7 +86,7 @@ public class QuestionAnswer extends AceModel {
         int opposings_count = answerObject.optInt("opposings_count");
         String content = answerObject.optString("html");
 
-        QuestionAnswer answer = new QuestionAnswer();
+        Answer answer = new Answer();
         answer.setAuthor(Author.fromJson(authorObject));
         answer.setCommentNum(replies_count);
         answer.setContent(content.replaceAll("<img .*?/>", prefix + "$0" + suffix).replaceAll("style=\"max-width: \\d+px\"", "style=\"max-width: " + maxImageWidth + "px\""));
@@ -250,10 +250,10 @@ public class QuestionAnswer extends AceModel {
         dest.writeByte(isContentComplex ? (byte) 1 : (byte) 0);
     }
 
-    public QuestionAnswer() {
+    public Answer() {
     }
 
-    protected QuestionAnswer(Parcel in) {
+    protected Answer(Parcel in) {
         this.content = in.readString();
         this.date_created = in.readString();
         this.date_modified = in.readString();
@@ -271,13 +271,13 @@ public class QuestionAnswer extends AceModel {
         this.isContentComplex = in.readByte() != 0;
     }
 
-    public static final Creator<QuestionAnswer> CREATOR = new Creator<QuestionAnswer>() {
-        public QuestionAnswer createFromParcel(Parcel source) {
-            return new QuestionAnswer(source);
+    public static final Creator<Answer> CREATOR = new Creator<Answer>() {
+        public Answer createFromParcel(Parcel source) {
+            return new Answer(source);
         }
 
-        public QuestionAnswer[] newArray(int size) {
-            return new QuestionAnswer[size];
+        public Answer[] newArray(int size) {
+            return new Answer[size];
         }
     };
 }
