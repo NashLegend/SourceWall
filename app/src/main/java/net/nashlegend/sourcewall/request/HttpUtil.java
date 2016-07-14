@@ -7,6 +7,7 @@ import net.nashlegend.sourcewall.request.interceptors.RedirectInterceptor;
 
 import java.io.File;
 import java.net.CookieManager;
+import java.net.CookiePolicy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -14,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.Cache;
 import okhttp3.Call;
 import okhttp3.Cookie;
+import okhttp3.CookieJar;
 import okhttp3.HttpUrl;
 import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
@@ -29,8 +31,8 @@ public class HttpUtil {
     public final static int SO_TIMEOUT = 60000;
     public final static int WRITE_TIMEOUT = 30000;//
     private static OkHttpClient defaultHttpClient;
-    private static CookieManager cookieManager = new CookieManager();
-    private static JavaNetCookieJar cookieJar = new JavaNetCookieJar(cookieManager);
+    private static CookieManager cookieManager;
+    private static CakeBox cookieJar;
 
     public static void cancel(Object tag) {
         if (tag == null) {
@@ -58,11 +60,26 @@ public class HttpUtil {
                     .connectTimeout(CONNECTION_TIMEOUT, TimeUnit.MILLISECONDS)
                     .readTimeout(SO_TIMEOUT, TimeUnit.MILLISECONDS)
                     .writeTimeout(WRITE_TIMEOUT, TimeUnit.MILLISECONDS)
-                    .cookieJar(cookieJar)
+                    .cookieJar(getCookieJar())
                     .build();
             setCookie(defaultHttpClient);
         }
         return defaultHttpClient;
+    }
+
+    synchronized private static CookieJar getCookieJar() {
+        if (cookieJar == null) {
+            cookieJar = new CakeBox(getCookieManager());
+        }
+        return cookieJar;
+    }
+
+    synchronized private static CookieManager getCookieManager() {
+        if (cookieManager == null) {
+            cookieManager = new CookieManager();
+            cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
+        }
+        return cookieManager;
     }
 
     /**
@@ -85,6 +102,6 @@ public class HttpUtil {
      * 清除Cookie
      */
     synchronized public static void clearCookies() {
-        cookieManager.getCookieStore().removeAll();
+        getCookieManager().getCookieStore().removeAll();
     }
 }

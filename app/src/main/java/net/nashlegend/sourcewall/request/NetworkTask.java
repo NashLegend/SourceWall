@@ -69,7 +69,7 @@ public class NetworkTask<T> {
         if (delegate == null) {
             delegate = new RequestDelegate(getHttpClient());
         }
-        return new RequestDelegate(getHttpClient());
+        return delegate;
     }
 
     synchronized private OkHttpClient getHttpClient() {
