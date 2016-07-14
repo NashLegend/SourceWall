@@ -38,6 +38,20 @@
         android:id="@+id/question_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/question_tabs" />
+        android:layout_below="@id/pager_header" />
+
+    <FrameLayout
+        android:id="@+id/layout_more_sections"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/pager_header"
+        android:background="?attr/color_shuffle_desk_background"
+        android:visibility="invisible">
+
+        <ScrollView
+            android:id="@+id/plastic_scroller"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
 
 </RelativeLayout>

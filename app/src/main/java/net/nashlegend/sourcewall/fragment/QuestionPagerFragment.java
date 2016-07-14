@@ -9,7 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.model.SubItem;
@@ -29,7 +29,7 @@ public class QuestionPagerFragment extends BaseFragment {
     @BindView(R.id.question_pager)
     ViewPager viewPager;
     @BindView(R.id.show_more)
-    ImageButton showMore;
+    ImageView showMore;
 
     QuestionPagerAdapter adapter;
 

@@ -24,7 +24,10 @@ public class GroupHelper {
 
     public static List<MyGroup> getAllMyGroups() {
         MyGroupDao myGroupDao = App.getDaoSession().getMyGroupDao();
-        return myGroupDao.loadAll();
+        QueryBuilder<MyGroup> builder = myGroupDao.queryBuilder().
+                orderAsc(MyGroupDao.Properties.Order);
+        List<MyGroup> list =  builder.list();
+        return list;
     }
 
     public static List<MyGroup> getSelectedGroups() {
@@ -35,10 +38,7 @@ public class GroupHelper {
     }
 
     public static List<SubItem> getSelectedGroupSubItems() {
-        MyGroupDao myGroupDao = App.getDaoSession().getMyGroupDao();
-        QueryBuilder<MyGroup> builder = myGroupDao.queryBuilder().where(MyGroupDao.Properties.Selected.eq(true)).
-                orderAsc(MyGroupDao.Properties.Order);
-        List<MyGroup> groups = builder.list();
+        List<MyGroup> groups = getSelectedGroups();
         ArrayList<SubItem> subItems = new ArrayList<>();
         for (int i = 0; i < groups.size(); i++) {
             MyGroup myGroup = groups.get(i);

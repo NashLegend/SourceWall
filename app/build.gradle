@@ -10,7 +10,6 @@ android {
     }
 
     dexOptions {
-        incremental false
         javaMaxHeapSize "4096M"
         preDexLibraries = false
     }
@@ -83,6 +82,7 @@ android {
         exclude 'META-INF/NOTICE.txt'
         exclude 'META-INF/LICENSE.txt'
     }
+    buildToolsVersion '23.0.3'
 }
 
 dependencies {
