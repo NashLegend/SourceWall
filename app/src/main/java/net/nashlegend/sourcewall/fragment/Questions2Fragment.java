@@ -26,7 +26,6 @@ import net.nashlegend.sourcewall.view.common.LListView;
 import net.nashlegend.sourcewall.view.common.LoadingView;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -200,7 +199,7 @@ public class Questions2Fragment extends BaseFragment implements LoadingView.Relo
                 observable = QuestionAPI.getHighlightQuestions(loadedPage + 1, useCache);
             }
         } else {
-            observable = QuestionAPI.getQuestionsByTag(URLEncoder.encode(subItem.getValue(), "UTF-8"), loadedPage * 20, useCache);
+            observable = QuestionAPI.getQuestionsByTag(subItem.getValue(), loadedPage * 20, useCache);
         }
         observable
                 .observeOn(AndroidSchedulers.mainThread())

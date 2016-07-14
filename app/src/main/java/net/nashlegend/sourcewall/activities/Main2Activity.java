@@ -47,7 +47,7 @@ public class Main2Activity extends BaseActivity {
         Controller controller = bottomBar.builder()
                 .addTabItem(android.R.drawable.ic_menu_gallery, "科学人")
                 .addTabItem(android.R.drawable.ic_menu_manage, "小组")
-                .addTabItem(android.R.drawable.ic_search_category_default, "小组")
+                .addTabItem(android.R.drawable.ic_search_category_default, "问答")
                 .addTabItem(android.R.drawable.ic_menu_always_landscape_portrait, "我")
                 .build();
         controller.addTabItemClickListener(new OnTabItemSelectListener() {

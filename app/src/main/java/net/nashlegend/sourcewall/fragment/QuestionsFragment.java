@@ -57,7 +57,6 @@ import net.nashlegend.sourcewall.view.common.shuffle.MovableButton;
 import net.nashlegend.sourcewall.view.common.shuffle.ShuffleDeskSimple;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -578,7 +577,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
                 observable = QuestionAPI.getHighlightQuestions(loadedPage + 1, useCache);
             }
         } else {
-            observable = QuestionAPI.getQuestionsByTag(URLEncoder.encode(subItem.getValue(), "UTF-8"), loadedPage * 20, useCache);
+            observable = QuestionAPI.getQuestionsByTag(subItem.getValue(), loadedPage * 20, useCache);
         }
         observable
                 .observeOn(AndroidSchedulers.mainThread())
