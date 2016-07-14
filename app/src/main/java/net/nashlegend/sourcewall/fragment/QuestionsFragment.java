@@ -107,7 +107,7 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (layoutView == null) {
             layoutView = inflater.inflate(R.layout.fragment_questions, container, false);
-            unbinder = ButterKnife.bind(this, layoutView);
+            ButterKnife.bind(this, layoutView);
             loadingView.setReloadListener(this);
             subItem = getArguments().getParcelable(Consts.Extra_SubItem);
             headerView = inflater.inflate(R.layout.layout_header_load_pre_page, null, false);

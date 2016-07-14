@@ -120,7 +120,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         EventBus.getDefault().register(this);
         View layoutView = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
-        unbinder = ButterKnife.bind(this, layoutView);
+        ButterKnife.bind(this, layoutView);
         if (SharedPreferencesUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
             dayView.setVisibility(View.VISIBLE);
             nightView.setVisibility(View.GONE);

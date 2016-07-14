@@ -74,7 +74,7 @@ public class Articles2Fragment extends BaseFragment implements LoadingView.Reloa
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         layoutView = inflater.inflate(R.layout.fragment_articles2, container, false);
-        unbinder = ButterKnife.bind(this, layoutView);
+        ButterKnife.bind(this, layoutView);
         loadingView.setReloadListener(this);
         subItem = getArguments().getParcelable(Consts.Extra_SubItem);
         adapter = new ArticleAdapter(getActivity());

@@ -63,7 +63,7 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (layoutView == null) {
             layoutView = inflater.inflate(R.layout.fragment_articles, container, false);
-            unbinder = ButterKnife.bind(this, layoutView);
+            ButterKnife.bind(this, layoutView);
             loadingView.setReloadListener(this);
             subItem = getArguments().getParcelable(Consts.Extra_SubItem);
             adapter = new ArticleAdapter(getActivity());

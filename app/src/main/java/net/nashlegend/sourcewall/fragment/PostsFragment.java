@@ -105,7 +105,7 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (layoutView == null) {
             layoutView = inflater.inflate(R.layout.fragment_posts, container, false);
-            unbinder = ButterKnife.bind(this, layoutView);
+            ButterKnife.bind(this, layoutView);
             subItem = getArguments().getParcelable(Consts.Extra_SubItem);
             headerView = inflater.inflate(R.layout.layout_header_load_pre_page, null, false);
             loadingView.setReloadListener(this);

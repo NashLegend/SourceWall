@@ -81,7 +81,7 @@ public class Questions2Fragment extends BaseFragment implements LoadingView.Relo
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         layoutView = inflater.inflate(R.layout.fragment_questions2, container, false);
-        unbinder = ButterKnife.bind(this, layoutView);
+        ButterKnife.bind(this, layoutView);
         loadingView.setReloadListener(this);
         subItem = getArguments().getParcelable(Consts.Extra_SubItem);
         headerView = inflater.inflate(R.layout.layout_header_load_pre_page, null, false);

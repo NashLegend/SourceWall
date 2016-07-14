@@ -5,19 +5,37 @@
     android:layout_height="match_parent"
     tools:context=".fragment.PostPagerFragment">
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/post_tabs"
+    <LinearLayout
+        android:id="@+id/pager_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
-        app:tabIndicatorColor="@android:color/white"
-        app:tabSelectedTextColor="@android:color/white"
-        app:tabTextColor="@android:color/white" />
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/post_tabs"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="?attr/colorPrimary"
+            app:tabIndicatorColor="@android:color/white"
+            app:tabSelectedTextColor="@android:color/white"
+            app:tabTextColor="@android:color/white" />
+
+        <ImageView
+            android:id="@+id/show_more"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:scaleType="centerInside"
+            android:src="@drawable/chevron_down" />
+    </LinearLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/post_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/post_tabs" />
+        android:layout_below="@id/pager_header" />
 
 </RelativeLayout>

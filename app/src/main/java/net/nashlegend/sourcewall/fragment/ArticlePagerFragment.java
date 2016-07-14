@@ -51,7 +51,7 @@ public class ArticlePagerFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         if (layoutView == null) {
             layoutView = inflater.inflate(R.layout.fragment_article_pager, container, false);
-            unbinder = ButterKnife.bind(this, layoutView);
+            ButterKnife.bind(this, layoutView);
             adapter = new ArticlePagerAdapter(getFragmentManager());
             viewPager.setAdapter(adapter);
             tabLayout.setupWithViewPager(viewPager);

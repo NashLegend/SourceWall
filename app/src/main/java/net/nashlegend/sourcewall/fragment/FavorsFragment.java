@@ -61,7 +61,7 @@ public class FavorsFragment extends ChannelsFragment implements LListView.OnRefr
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (layoutView == null) {
             layoutView = inflater.inflate(R.layout.fragment_favors, container, false);
-            unbinder = ButterKnife.bind(this, layoutView);
+            ButterKnife.bind(this, layoutView);
             loadingView.setReloadListener(this);
             subItem = getArguments().getParcelable(Consts.Extra_SubItem);
             adapter = new FavorAdapter(getActivity());

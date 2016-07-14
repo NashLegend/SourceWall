@@ -70,7 +70,7 @@ public class Posts2Fragment extends BaseFragment implements LoadingView.ReloadLi
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         layoutView = inflater.inflate(R.layout.fragment_posts2, container, false);
-        unbinder = ButterKnife.bind(this, layoutView);
+        ButterKnife.bind(this, layoutView);
         subItem = getArguments().getParcelable(Consts.Extra_SubItem);
         headerView = inflater.inflate(R.layout.layout_header_load_pre_page, null, false);
         loadingView.setReloadListener(this);

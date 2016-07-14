@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.model.SubItem;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class PostPagerFragment extends BaseFragment {
     View layoutView;
@@ -27,6 +29,8 @@ public class PostPagerFragment extends BaseFragment {
     TabLayout tabLayout;
     @BindView(R.id.post_pager)
     ViewPager viewPager;
+    @BindView(R.id.show_more)
+    ImageButton showMore;
 
     PostPagerAdapter adapter;
 
@@ -46,7 +50,7 @@ public class PostPagerFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         if (layoutView == null) {
             layoutView = inflater.inflate(R.layout.fragment_post_pager, container, false);
-            unbinder = ButterKnife.bind(this, layoutView);
+            ButterKnife.bind(this, layoutView);
             adapter = new PostPagerAdapter(getFragmentManager());
             viewPager.setAdapter(adapter);
             tabLayout.setupWithViewPager(viewPager);
@@ -57,6 +61,11 @@ public class PostPagerFragment extends BaseFragment {
             }
         }
         return layoutView;
+    }
+
+    @OnClick(R.id.show_more)
+    public void toggleShowMore() {
+
     }
 
     class PostPagerAdapter extends FragmentStatePagerAdapter {

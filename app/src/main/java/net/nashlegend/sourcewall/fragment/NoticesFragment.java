@@ -51,7 +51,7 @@ public class NoticesFragment extends BaseFragment implements IChannelsFragment, 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notice_list, container, false);
-        unbinder = ButterKnife.bind(this, view);
+        ButterKnife.bind(this, view);
         loadingView.setReloadListener(this);
         adapter = new NoticeAdapter(getActivity());
         listView.setCanPullToRefresh(false);
