@@ -99,7 +99,7 @@ public class ChannelHelper {
         if (GroupHelper.getMyGroupsNumber() > 0) {
             //如果已经加载了栏目
             groupSubItems.add(new SubItem(SubItem.Section_Post, SubItem.Type_Collections, "小组热贴", "hot_posts"));
-            groupSubItems.addAll(GroupHelper.getSelectedGroupSubItems());
+            groupSubItems.addAll(GroupHelper.getAllMyGroupSubItems());
         } else {
             groupSubItems.addAll(ChannelHelper.getPosts());
         }

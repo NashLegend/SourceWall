@@ -61,24 +61,11 @@ public class ShuffleCardSimple extends ShuffleCard {
             crtCol = ShuffleDesk.Columns - 1;
         }
         if (crtCol != lastCol || crtRow != lastRow) {
-            if (isOnFixedPosition(crtRow, crtCol) && isOnFixedPosition(lastRow, lastCol)) {
-                // do nothing
-            } else if (isOnFixedPosition(crtRow, crtCol)) {
-                animateAfter(lastRow, lastCol, false);
-            } else if (isOnFixedPosition(lastRow, lastCol)) {
-                animateAfter(crtRow, crtCol, true);
-            } else {
-                animateButtonsBetween(crtRow, crtCol, lastRow, lastCol);
-            }
+            animateButtonsBetween(crtRow, crtCol, lastRow, lastCol);
         }
         currentButton.setTargetPosition(new Point(crtCol, crtRow));
         lastRow = crtRow;
         lastCol = crtCol;
-    }
-
-    private boolean isOnFixedPosition(int row, int col) {
-        return false;
-        // return row == 0 && col <= 2;
     }
 
     private PointF getCurrentButtonCenter() {
@@ -111,7 +98,7 @@ public class ShuffleCardSimple extends ShuffleCard {
 
         Point point = new Point(crtCol, crtRow);
         int ind = crtRow * ShuffleDesk.Columns + crtCol;
-        if (isOnFixedPosition(crtRow, crtCol) || ind >= list.size() - 1) {
+        if (ind >= list.size() - 1) {
             point.x = (list.size() - 1) % ShuffleDesk.Columns;
             point.y = (list.size() - 1) / ShuffleDesk.Columns;
         }

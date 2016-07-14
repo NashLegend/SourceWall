@@ -150,7 +150,6 @@ public class PostPagerFragment extends BaseFragment {
         return false;
     }
 
-
     private void onSectionButtonClicked(GroupMovableButton button) {
         MyGroup myGroup = button.getSection();
         SubItem subItem = new SubItem(myGroup.getSection(), myGroup.getType(), myGroup.getName(), myGroup.getValue());
@@ -158,6 +157,7 @@ public class PostPagerFragment extends BaseFragment {
         for (int i = 0; i < subItems.size(); i++) {
             if (subItems.get(i).getValue().equals(subItem.getValue())) {
                 viewPager.setCurrentItem(i, false);
+                tabLayout.getTabAt(i).select();
                 break;
             }
         }
@@ -213,21 +213,25 @@ public class PostPagerFragment extends BaseFragment {
                         manageButton.setVisibility(View.VISIBLE);
                     } else {
                         manageButton.setVisibility(View.INVISIBLE);
-                        AlertDialog dialog = new AlertDialog.Builder(getActivity()).setTitle(R.string.hint).setMessage(R.string.ok_to_load_groups).setPositiveButton(R.string.confirm_to_load_my_groups, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                hideMoreSections();
-                                new Handler().postDelayed(new Runnable() {
+                        new AlertDialog
+                                .Builder(getActivity())
+                                .setTitle(R.string.hint)
+                                .setMessage(R.string.ok_to_load_groups)
+                                .setPositiveButton(R.string.confirm_to_load_my_groups, new DialogInterface.OnClickListener() {
                                     @Override
-                                    public void run() {
-                                        Intent intent = new Intent(getActivity(), ShuffleGroupActivity.class);
-                                        intent.putExtra(Consts.Extra_Should_Load_Before_Shuffle, true);
-                                        startActivityForResult(intent, Consts.Code_Start_Shuffle_Groups);
-                                        getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        hideMoreSections();
+                                        new Handler().postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Intent intent = new Intent(getActivity(), ShuffleGroupActivity.class);
+                                                intent.putExtra(Consts.Extra_Should_Load_Before_Shuffle, true);
+                                                startActivityForResult(intent, Consts.Code_Start_Shuffle_Groups);
+                                                getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
+                                            }
+                                        }, 320);
                                     }
-                                }, 320);
-                            }
-                        }).setNegativeButton(R.string.use_default_groups, new DialogInterface.OnClickListener() {
+                                }).setNegativeButton(R.string.use_default_groups, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 hideMoreSections();
@@ -237,8 +241,9 @@ public class PostPagerFragment extends BaseFragment {
                             public void onCancel(DialogInterface dialog) {
                                 hideMoreSections();
                             }
-                        }).create();
-                        dialog.show();
+                        })
+                                .create()
+                                .show();
                     }
                 }
             }
@@ -292,7 +297,20 @@ public class PostPagerFragment extends BaseFragment {
     }
 
     private void commitChange(ArrayList<MovableButton> buttons) {
-        // TODO: 16/7/14  有变化时才那个啥,ViewPager数据 跟着变更
+        boolean changed = false;
+        if (subItems.size() == buttons.size() + 2) {
+            for (int i = 2; i < subItems.size(); i++) {
+                MyGroup myGroup = (MyGroup) buttons.get(i-2).getSection();
+                if (!subItems.get(i).getValue().equals(myGroup.getValue())) {
+                    changed = true;
+                    break;
+                }
+            }
+            if (!changed) {
+                return;
+            }
+        }
+
         List<MyGroup> sections = new ArrayList<>();
         for (int i = 0; i < buttons.size(); i++) {
             MyGroup myGroup = (MyGroup) buttons.get(i).getSection();
@@ -300,6 +318,12 @@ public class PostPagerFragment extends BaseFragment {
             sections.add(myGroup);
         }
         GroupHelper.putAllMyGroups(sections);
+        update();
+    }
+
+    private void update() {
+        subItems = ChannelHelper.getGroupSectionsByUserState();
+        adapter.notifyDataSetChanged();
     }
 
     class PostPagerAdapter extends FragmentStatePagerAdapter {

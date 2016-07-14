@@ -91,6 +91,10 @@ public class ShuffleDeskSimple extends RelativeLayout {
         }
     }
 
+    public boolean hasChanged(){
+        return false;
+    }
+
     public static interface OnButtonClickListener {
         void onClick(MovableButton btn);
     }

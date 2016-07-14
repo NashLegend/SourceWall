@@ -30,6 +30,17 @@ public class GroupHelper {
         return list;
     }
 
+    public static List<SubItem> getAllMyGroupSubItems() {
+        List<MyGroup> groups = getAllMyGroups();
+        ArrayList<SubItem> subItems = new ArrayList<>();
+        for (int i = 0; i < groups.size(); i++) {
+            MyGroup myGroup = groups.get(i);
+            SubItem subItem = new SubItem(myGroup.getSection(), myGroup.getType(), myGroup.getName(), myGroup.getValue());
+            subItems.add(subItem);
+        }
+        return subItems;
+    }
+
     public static List<MyGroup> getSelectedGroups() {
         MyGroupDao myGroupDao = App.getDaoSession().getMyGroupDao();
         QueryBuilder<MyGroup> builder = myGroupDao.queryBuilder().where(MyGroupDao.Properties.Selected.eq(true)).
