@@ -40,6 +40,17 @@ public class ImageUtils {
             .bitmapConfig(Bitmap.Config.RGB_565)
             .build();
 
+    public static DisplayImageOptions bigAvatarOptions = new DisplayImageOptions.Builder()
+            .showImageOnLoading(R.drawable.ic_default_avatar_96dp)
+            .showImageForEmptyUri(R.drawable.ic_default_avatar_96dp)
+            .showImageOnFail(R.drawable.ic_default_avatar_96dp)
+            .cacheInMemory(true)
+            .cacheOnDisk(true)
+            .displayer(new CircleBitmapDisplayer())
+            .bitmapConfig(Bitmap.Config.RGB_565)
+            .build();
+
+
     public static DisplayImageOptions avatarOptions = new DisplayImageOptions.Builder()
             .showImageOnLoading(R.drawable.default_avatar)
             .showImageForEmptyUri(R.drawable.default_avatar)

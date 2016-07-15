@@ -10,10 +10,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.LoginActivity;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.ImageUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,6 +47,7 @@ public class ProfileFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+
         }
     }
 
@@ -53,14 +57,17 @@ public class ProfileFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         ButterKnife.bind(this, view);
+        initView();
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
+    private void initView() {
         if (UserAPI.isLoggedIn()) {
-
+            ImageLoader.getInstance().displayImage(UserAPI.getUserAvatar(), imageAvatar, ImageUtils.bigAvatarOptions);
+            userName.setText(UserAPI.getName());
+        } else {
+            imageAvatar.setImageResource(R.drawable.ic_default_avatar_96dp);
+            userName.setText(R.string.click_to_login);
         }
     }
 

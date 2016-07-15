@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content"
                 tools:text="@string/sample_title"
                 android:textColor="?attr/color_article_title"
-                android:textSize="@dimen/Text_title_size_dimen" />
+                android:textSize="@dimen/text_title_size_dimen" />
 
             <LinearLayout
                 android:layout_width="match_parent"
