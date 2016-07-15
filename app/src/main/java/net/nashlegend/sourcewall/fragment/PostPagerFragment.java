@@ -1,14 +1,12 @@
 package net.nashlegend.sourcewall.fragment;
 
-
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -18,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -26,13 +25,17 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import net.nashlegend.sourcewall.R;
-import net.nashlegend.sourcewall.activities.ShuffleGroupActivity;
 import net.nashlegend.sourcewall.db.GroupHelper;
 import net.nashlegend.sourcewall.db.gen.MyGroup;
 import net.nashlegend.sourcewall.model.SubItem;
+import net.nashlegend.sourcewall.request.ResponseObject;
+import net.nashlegend.sourcewall.request.api.PostAPI;
+import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.ChannelHelper;
+import net.nashlegend.sourcewall.util.CommonUtil;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
+import net.nashlegend.sourcewall.util.SimpleAnimationListener;
 import net.nashlegend.sourcewall.view.common.shuffle.GroupMovableButton;
 import net.nashlegend.sourcewall.view.common.shuffle.MovableButton;
 import net.nashlegend.sourcewall.view.common.shuffle.ShuffleDeskSimple;
@@ -43,6 +46,11 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rx.Observable;
+import rx.Observer;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 
 public class PostPagerFragment extends BaseFragment {
     View layoutView;
@@ -106,12 +114,6 @@ public class PostPagerFragment extends BaseFragment {
                 @Override
                 public void onClick(View v) {
                     hideMoreSections();
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            hideMoreSections();
-                        }
-                    }, 320);
                 }
             });
             moreSectionsLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -130,6 +132,16 @@ public class PostPagerFragment extends BaseFragment {
             }
         }
         return layoutView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (UserAPI.isLoggedIn()) {
+            showMore.setVisibility(View.VISIBLE);
+        } else {
+            showMore.setVisibility(View.GONE);
+        }
     }
 
     @OnClick(R.id.show_more)
@@ -168,8 +180,7 @@ public class PostPagerFragment extends BaseFragment {
         deskSimple.initView();
     }
 
-    private void getButtons() {
-        List<MyGroup> allSelections = GroupHelper.getAllMyGroups();
+    private void resetButtons(List<MyGroup> allSelections) {
         ArrayList<MovableButton> allGroupButtons = new ArrayList<>();
         for (int i = 0; i < allSelections.size(); i++) {
             MyGroup section = allSelections.get(i);
@@ -178,6 +189,8 @@ public class PostPagerFragment extends BaseFragment {
             allGroupButtons.add(button);
         }
         deskSimple.setButtons(allGroupButtons);
+        deskSimple.InitDatas();
+        deskSimple.initView();
     }
 
     private void showMoreSections() {
@@ -191,14 +204,19 @@ public class PostPagerFragment extends BaseFragment {
         animatorSet = new AnimatorSet();
         ObjectAnimator layoutAnimator = ObjectAnimator.ofFloat(moreSectionsLayout, "translationY", moreSectionsLayout.getTranslationY(), 0);
         layoutAnimator.setInterpolator(new DecelerateInterpolator());
+
+        ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(moreSectionsLayout, "alpha", 0.0f, 1);
+        alphaAnimator.setInterpolator(new AccelerateInterpolator());
+
         ObjectAnimator imageAnimator = ObjectAnimator.ofFloat(showMore, "rotation", showMore.getRotation(), 180);
         imageAnimator.setInterpolator(new DecelerateInterpolator());
 
         ArrayList<Animator> animators = new ArrayList<>();
         animators.add(layoutAnimator);
         animators.add(imageAnimator);
+        animators.add(alphaAnimator);
 
-        animatorSet.addListener(new Animator.AnimatorListener() {
+        animatorSet.addListener(new SimpleAnimationListener() {
 
             @Override
             public void onAnimationEnd(Animator animation) {
@@ -206,7 +224,7 @@ public class PostPagerFragment extends BaseFragment {
                     if (GroupHelper.getMyGroupsNumber() > 0) {
                         long lastDBVersion = SharedPreferencesUtil.readLong(Consts.Key_Last_Post_Groups_Version, 0);
                         if (currentDBVersion != lastDBVersion) {
-                            getButtons();
+                            resetButtons(GroupHelper.getAllMyGroups());
                             initView();
                             currentDBVersion = SharedPreferencesUtil.readLong(Consts.Key_Last_Post_Groups_Version, 0);
                         }
@@ -220,46 +238,26 @@ public class PostPagerFragment extends BaseFragment {
                                 .setPositiveButton(R.string.confirm_to_load_my_groups, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        hideMoreSections();
-                                        new Handler().postDelayed(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                Intent intent = new Intent(getActivity(), ShuffleGroupActivity.class);
-                                                intent.putExtra(Consts.Extra_Should_Load_Before_Shuffle, true);
-                                                startActivityForResult(intent, Consts.Code_Start_Shuffle_Groups);
-                                                getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
-                                            }
-                                        }, 320);
+                                        loadGroupsFromNet();
                                     }
-                                }).setNegativeButton(R.string.use_default_groups, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                hideMoreSections();
-                            }
-                        }).setOnCancelListener(new DialogInterface.OnCancelListener() {
-                            @Override
-                            public void onCancel(DialogInterface dialog) {
-                                hideMoreSections();
-                            }
-                        })
+                                })
+                                .setNegativeButton(R.string.use_default_groups, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        hideMoreSections();
+                                    }
+                                })
+                                .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                    @Override
+                                    public void onCancel(DialogInterface dialog) {
+                                        hideMoreSections();
+                                    }
+                                })
                                 .create()
                                 .show();
                     }
                 }
             }
-
-            @Override
-            public void onAnimationStart(Animator animation) {
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-            }
-
         });
 
         animatorSet.playTogether(animators);
@@ -279,15 +277,19 @@ public class PostPagerFragment extends BaseFragment {
             animatorSet.cancel();
         }
         animatorSet = new AnimatorSet();
-        ObjectAnimator layoutAnimator = ObjectAnimator
-                .ofFloat(moreSectionsLayout, "translationY", moreSectionsLayout.getTranslationY(), -moreSectionsLayout.getHeight());
-        layoutAnimator.setInterpolator(new DecelerateInterpolator());
+        ObjectAnimator layoutAnimator = ObjectAnimator.ofFloat(moreSectionsLayout, "translationY", moreSectionsLayout.getTranslationY(), -moreSectionsLayout.getHeight());
+        layoutAnimator.setInterpolator(new AccelerateInterpolator());
+
+        ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(moreSectionsLayout, "alpha", 1, 0.0f);
+        alphaAnimator.setInterpolator(new AccelerateInterpolator());
+
         ObjectAnimator imageAnimator = ObjectAnimator.ofFloat(showMore, "rotation", showMore.getRotation(), 360);
         imageAnimator.setInterpolator(new DecelerateInterpolator());
 
         ArrayList<Animator> animators = new ArrayList<>();
         animators.add(layoutAnimator);
         animators.add(imageAnimator);
+        animators.add(alphaAnimator);
         if (deskSimple.getButtons() != null && deskSimple.getButtons().size() > 0) {
             commitChange(deskSimple.getSortedButtons());
         }
@@ -300,7 +302,7 @@ public class PostPagerFragment extends BaseFragment {
         boolean changed = false;
         if (subItems.size() == buttons.size() + 2) {
             for (int i = 2; i < subItems.size(); i++) {
-                MyGroup myGroup = (MyGroup) buttons.get(i-2).getSection();
+                MyGroup myGroup = (MyGroup) buttons.get(i - 2).getSection();
                 if (!subItems.get(i).getValue().equals(myGroup.getValue())) {
                     changed = true;
                     break;
@@ -325,6 +327,67 @@ public class PostPagerFragment extends BaseFragment {
         subItems = ChannelHelper.getGroupSectionsByUserState();
         adapter.notifyDataSetChanged();
     }
+
+    ProgressDialog progressDialog;
+
+    private void loadGroupsFromNet() {
+        final Subscription subscription =
+                PostAPI
+                        .getAllMyGroups(UserAPI.getUkey())
+                        .flatMap(new Func1<ResponseObject<ArrayList<SubItem>>, Observable<ArrayList<MyGroup>>>() {
+                            @Override
+                            public Observable<ArrayList<MyGroup>> call(ResponseObject<ArrayList<SubItem>> result) {
+                                if (result.ok) {
+                                    ArrayList<MyGroup> myGroups = new ArrayList<>();
+                                    for (int i = 0; i < result.result.size(); i++) {
+                                        SubItem item = result.result.get(i);
+                                        MyGroup mygroup = new MyGroup();
+                                        mygroup.setName(item.getName());
+                                        mygroup.setValue(item.getValue());
+                                        mygroup.setType(item.getType());
+                                        mygroup.setSection(item.getSection());
+                                        mygroup.setOrder(i);
+                                        myGroups.add(mygroup);
+                                    }
+                                    GroupHelper.putAllMyGroups(myGroups);
+                                    return Observable.just(myGroups);
+                                }
+                                return Observable.error(new IllegalStateException("error occurred"));
+                            }
+                        })
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Observer<ArrayList<MyGroup>>() {
+                            @Override
+                            public void onCompleted() {
+                                CommonUtil.cancelDialog(progressDialog);
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                CommonUtil.cancelDialog(progressDialog);
+                            }
+
+                            @Override
+                            public void onNext(ArrayList<MyGroup> myGroups) {
+                                CommonUtil.cancelDialog(progressDialog);
+                                resetButtons(myGroups);
+                                initView();
+                            }
+                        });
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setMessage(getString(R.string.message_loading_my_groups));
+        progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                if (!subscription.isUnsubscribed()) {
+                    subscription.unsubscribe();
+                }
+            }
+        });
+        progressDialog.show();
+    }
+
 
     class PostPagerAdapter extends FragmentStatePagerAdapter {
 

@@ -8,14 +8,16 @@
     tools:context=".activities.Main2Activity"
     tools:showIn="@layout/activity_main2">
 
-    <FrameLayout
-        android:id="@+id/main2_content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
     <me.majiajie.pagerbottomtabstrip.PagerBottomTabLayout
         android:id="@+id/bottom_bar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true" />
+
+    <FrameLayout
+        android:id="@+id/main2_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_bar" />
+
 </RelativeLayout>

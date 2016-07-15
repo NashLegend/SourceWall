@@ -172,7 +172,6 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
                             MobclickAgent.onEvent(getActivity(), Mob.Event_Load_My_Tags);
                             Intent intent = new Intent(getActivity(), ShuffleTagActivity.class);
                             startActivityForResult(intent, Consts.Code_Start_Shuffle_Ask_Tags);
-                            getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
                         }
                     }, 320);
                 }
@@ -350,7 +349,6 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
                                         Intent intent = new Intent(getActivity(), ShuffleTagActivity.class);
                                         intent.putExtra(Consts.Extra_Should_Load_Before_Shuffle, true);
                                         startActivityForResult(intent, Consts.Code_Start_Shuffle_Ask_Tags);
-                                        getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
                                     }
                                 }, 320);
                             }
@@ -436,7 +434,6 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
             Intent intent = new Intent(getActivity(), PublishPostActivity.class);
             intent.putExtra(Consts.Extra_SubItem, subItem);
             startActivityForResult(intent, Consts.Code_Publish_Question);
-            getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
         } else {
             ((BaseActivity) getActivity()).notifyNeedLog();
         }
@@ -670,7 +667,6 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
             intent.setClass(getActivity(), QuestionActivity.class);
             intent.putExtra(Consts.Extra_Question, ((QuestionListItemView) view).getData());
             startActivity(intent);
-            getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
         }
     }
 }

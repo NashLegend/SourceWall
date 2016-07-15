@@ -392,7 +392,6 @@ public class SingleReplyActivity extends BaseActivity implements View.OnClickLis
                     intent.putExtra(Consts.Extra_Post, host);
                 }
                 startActivity(intent);
-                overridePendingTransition(R.anim.slide_in_right, 0);
                 break;
             case R.id.layout_opinion:
                 likeThis();
@@ -425,7 +424,6 @@ public class SingleReplyActivity extends BaseActivity implements View.OnClickLis
             intent.putExtra(Consts.Extra_Simple_Comment, data);
         }
         startActivity(intent);
-        overridePendingTransition(R.anim.slide_in_right, 0);
     }
 
     private void likeThis() {

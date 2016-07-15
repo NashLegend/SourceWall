@@ -34,7 +34,9 @@ public class CommonUtil {
 
     public static void dismissDialog(Dialog dialog) {
         try {
-            dialog.dismiss();
+            if (dialog != null && dialog.isShowing()) {
+                dialog.dismiss();
+            }
         } catch (Exception ignored) {
 
         }

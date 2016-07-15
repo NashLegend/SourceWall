@@ -271,7 +271,6 @@ public class Posts2Fragment extends BaseFragment implements LoadingView.ReloadLi
             intent.setClass(getActivity(), PostActivity.class);
             intent.putExtra(Consts.Extra_Post, ((PostListItemView) view).getData());
             startActivity(intent);
-            getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
         }
     }
 

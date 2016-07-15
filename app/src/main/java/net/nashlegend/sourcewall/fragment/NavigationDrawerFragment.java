@@ -322,14 +322,12 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
         if (!UserAPI.isLoggedIn()) {
             Intent intent = new Intent(getActivity(), LoginActivity.class);
             startActivityForResult(intent, Consts.Code_Login);
-            getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
         } else {
             if (TextUtils.isEmpty(UserAPI.getName())) {
                 loadUserInfo();
             } else {
                 Intent intent = new Intent(getActivity(), MessageCenterActivity.class);
                 startActivityForResult(intent, Consts.Code_Message_Center);
-                getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
             }
         }
     }
@@ -351,7 +349,6 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
                 break;
             case R.id.view_setting:
                 startActivity(new Intent(getActivity(), SettingActivity.class));
-                getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
                 break;
             case R.id.view_switch_to_day:
             case R.id.view_switch_to_night:

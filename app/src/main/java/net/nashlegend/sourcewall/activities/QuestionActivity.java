@@ -212,7 +212,6 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
             intent.putExtra(Consts.Extra_Answer, ((AnswerListItemView) view).getData());
             intent.putExtra(Consts.Extra_Question, question);
             startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_right, 0);
         }
     }
 
@@ -288,7 +287,6 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
             Intent intent = new Intent(this, ReplyActivity.class);
             intent.putExtra(Consts.Extra_Ace_Model, question);
             startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_right, 0);
         }
     }
 

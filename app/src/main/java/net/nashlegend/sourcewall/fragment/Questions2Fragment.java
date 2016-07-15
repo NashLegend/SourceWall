@@ -292,7 +292,6 @@ public class Questions2Fragment extends BaseFragment implements LoadingView.Relo
             intent.setClass(getActivity(), QuestionActivity.class);
             intent.putExtra(Consts.Extra_Question, ((QuestionListItemView) view).getData());
             startActivity(intent);
-            getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
         }
     }
 

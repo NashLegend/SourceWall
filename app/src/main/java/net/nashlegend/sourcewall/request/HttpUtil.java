@@ -17,7 +17,6 @@ import okhttp3.Call;
 import okhttp3.Cookie;
 import okhttp3.CookieJar;
 import okhttp3.HttpUrl;
-import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
 
 /**
@@ -26,7 +25,7 @@ import okhttp3.OkHttpClient;
 @SuppressWarnings("ResultOfMethodCallIgnored")
 public class HttpUtil {
 
-    public final static int DISK_CACHE_SIZE = 20 * 1024 * 1024;//Cache的最大体积,20M
+    public final static int DISK_CACHE_SIZE = 50 * 1024 * 1024;//Cache的最大体积,20M
     public final static int CONNECTION_TIMEOUT = 30000;//网络状况差的时候这个时间可能很长
     public final static int SO_TIMEOUT = 60000;
     public final static int WRITE_TIMEOUT = 30000;//

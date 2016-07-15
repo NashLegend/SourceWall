@@ -263,7 +263,6 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
             intent.setClass(App.getApp(), ArticleActivity.class);
             intent.putExtra(Consts.Extra_Article, ((ArticleListItemView) view).getData());
             startActivity(intent);
-            getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
         }
     }
 }

@@ -170,7 +170,6 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                         public void run() {
                             Intent intent = new Intent(getActivity(), ShuffleGroupActivity.class);
                             startActivityForResult(intent, Consts.Code_Start_Shuffle_Groups);
-                            getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
                         }
                     }, 320);
                 }
@@ -303,7 +302,6 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
                                         Intent intent = new Intent(getActivity(), ShuffleGroupActivity.class);
                                         intent.putExtra(Consts.Extra_Should_Load_Before_Shuffle, true);
                                         startActivityForResult(intent, Consts.Code_Start_Shuffle_Groups);
-                                        getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
                                     }
                                 }, 320);
                             }
@@ -435,7 +433,6 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
             Intent intent = new Intent(getActivity(), PublishPostActivity.class);
             intent.putExtra(Consts.Extra_SubItem, subItem);
             startActivityForResult(intent, Consts.Code_Publish_Post);
-            getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
         } else {
             ((BaseActivity) getActivity()).notifyNeedLog();
         }
@@ -681,7 +678,6 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
             intent.setClass(getActivity(), PostActivity.class);
             intent.putExtra(Consts.Extra_Post, ((PostListItemView) view).getData());
             startActivity(intent);
-            getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
         }
     }
 

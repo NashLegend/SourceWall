@@ -330,7 +330,6 @@ public class AnswerActivity extends BaseActivity implements View.OnClickListener
                     intent.setClass(this, QuestionActivity.class);
                     intent.putExtra(Consts.Extra_Question, (question));
                     startActivity(intent);
-                    overridePendingTransition(R.anim.slide_in_right, 0);
                 }
                 break;
             case R.id.layout_opinion:
@@ -362,7 +361,6 @@ public class AnswerActivity extends BaseActivity implements View.OnClickListener
         Intent intent = new Intent(this, SimpleReplyActivity.class);
         intent.putExtra(Consts.Extra_Ace_Model, answer);
         startActivity(intent);
-        overridePendingTransition(R.anim.slide_in_right, 0);
     }
 
     private void invokeOpinionDialog() {

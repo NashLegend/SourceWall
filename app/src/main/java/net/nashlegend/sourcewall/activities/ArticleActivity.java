@@ -197,7 +197,6 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
                 intent.putExtra(Consts.Extra_Simple_Comment, comment);
             }
             startActivityForResult(intent, Consts.Code_Reply_Article);
-            overridePendingTransition(R.anim.slide_in_right, 0);
         }
     }
 
