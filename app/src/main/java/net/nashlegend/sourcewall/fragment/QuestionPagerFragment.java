@@ -28,7 +28,6 @@ import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.db.AskTagHelper;
 import net.nashlegend.sourcewall.db.gen.AskTag;
 import net.nashlegend.sourcewall.model.SubItem;
-import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.ChannelHelper;
@@ -41,19 +40,14 @@ import net.nashlegend.sourcewall.view.common.shuffle.MovableButton;
 import net.nashlegend.sourcewall.view.common.shuffle.ShuffleDeskSimple;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.Observable;
 import rx.Observer;
-import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class QuestionPagerFragment extends BaseFragment {
@@ -225,42 +219,20 @@ public class QuestionPagerFragment extends BaseFragment {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                if (isAdded()) {
-                    if (AskTagHelper.getAskTagsNumber() > 0) {
-                        long lastDBVersion = SharedPreferencesUtil.readLong(Consts.Key_Last_Ask_Tags_Version, 0);
-                        if (currentDBVersion != lastDBVersion) {
-                            resetButtons(AskTagHelper.getAllMyTags());
-                            initView();
-                            currentDBVersion = SharedPreferencesUtil.readLong(Consts.Key_Last_Ask_Tags_Version, 0);
-                        }
-                        manageButton.setVisibility(View.VISIBLE);
-                    } else {
-                        manageButton.setVisibility(View.INVISIBLE);
-                        new AlertDialog
-                                .Builder(getActivity())
-                                .setTitle(R.string.hint)
-                                .setMessage(R.string.ok_to_load_tags)
-                                .setPositiveButton(R.string.confirm_to_load_my_tags, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        reloadFromNet();
-                                    }
-                                })
-                                .setNegativeButton(R.string.use_default_tags, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        hideMoreSections();
-                                    }
-                                })
-                                .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                                    @Override
-                                    public void onCancel(DialogInterface dialog) {
-                                        hideMoreSections();
-                                    }
-                                })
-                                .create()
-                                .show();
+                if (!isAdded()) {
+                    return;
+                }
+                if (AskTagHelper.getAskTagsNumber() > 0) {
+                    long lastDBVersion = SharedPreferencesUtil.readLong(Consts.Key_Last_Ask_Tags_Version, 0);
+                    if (currentDBVersion != lastDBVersion) {
+                        resetButtons(AskTagHelper.getAllMyTags());
+                        initView();
+                        currentDBVersion = SharedPreferencesUtil.readLong(Consts.Key_Last_Ask_Tags_Version, 0);
                     }
+                    manageButton.setVisibility(View.VISIBLE);
+                } else {
+                    manageButton.setVisibility(View.INVISIBLE);
+                    popUnloaded();
                 }
             }
         });
@@ -268,6 +240,33 @@ public class QuestionPagerFragment extends BaseFragment {
         animatorSet.playTogether(animators);
         animatorSet.setDuration(400);
         animatorSet.start();
+    }
+
+    private void popUnloaded() {
+        new AlertDialog
+                .Builder(getActivity())
+                .setTitle(R.string.hint)
+                .setMessage(R.string.ok_to_load_tags)
+                .setPositiveButton(R.string.confirm_to_load_my_tags, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        reloadFromNet();
+                    }
+                })
+                .setNegativeButton(R.string.use_default_tags, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        hideMoreSections();
+                    }
+                })
+                .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        hideMoreSections();
+                    }
+                })
+                .create()
+                .show();
     }
 
     private AnimatorSet animatorSet;
@@ -337,86 +336,29 @@ public class QuestionPagerFragment extends BaseFragment {
     ProgressDialog progressDialog;
 
     private void reloadFromNet() {
-        final Subscription subscription = Observable
-                .create(new Observable.OnSubscribe<ResponseObject<ArrayList<SubItem>>>() {
-                    @Override
-                    public void call(Subscriber<? super ResponseObject<ArrayList<SubItem>>> subscriber) {
-                        subscriber.onNext(QuestionAPI.getAllMyTags());
-                    }
-                })
-                .flatMap(new Func1<ResponseObject<ArrayList<SubItem>>, Observable<ArrayList<SubItem>>>() {
-                    @Override
-                    public Observable<ArrayList<SubItem>> call(ResponseObject<ArrayList<SubItem>> result) {
-                        if (result.ok) {
-                            return Observable.just(result.result);
-                        }
-                        return Observable.error(new IllegalStateException("error occurred"));
-                    }
-                })
-                .map(new Func1<ArrayList<SubItem>, ArrayList<AskTag>>() {
-                    @Override
-                    public ArrayList<AskTag> call(ArrayList<SubItem> subItems) {
-                        ArrayList<AskTag> askTags = new ArrayList<>();
-                        for (int i = 0; i < subItems.size(); i++) {
-                            SubItem item = subItems.get(i);
-                            AskTag tag = new AskTag();
-                            tag.setName(item.getName());
-                            tag.setValue(item.getValue());
-                            tag.setType(item.getType());
-                            tag.setSection(item.getSection());
-                            tag.setOrder(i + 10086);
-                            askTags.add(tag);
-                        }
-                        return askTags;
-                    }
-                })
-                .map(new Func1<ArrayList<AskTag>, ArrayList<AskTag>>() {
-                    @Override
-                    public ArrayList<AskTag> call(ArrayList<AskTag> newTags) {
-                        List<AskTag> original = AskTagHelper.getAllMyTags();
-                        for (int i = 0; i < newTags.size(); i++) {
-                            AskTag newGroup = newTags.get(i);
-                            for (int j = 0; j < original.size(); j++) {
-                                if (original.get(j).getValue().equals(newGroup.getValue())) {
-                                    newGroup.setOrder(j);
-                                    break;
-                                }
-                            }
-                        }
-                        Collections.sort(newTags, new Comparator<AskTag>() {
+        final Subscription subscription =
+                QuestionAPI
+                        .getAllMyTagsAndMerge()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Observer<ArrayList<AskTag>>() {
                             @Override
-                            public int compare(AskTag lhs, AskTag rhs) {
-                                return lhs.getOrder() - rhs.getOrder();
+                            public void onCompleted() {
+                                CommonUtil.cancelDialog(progressDialog);
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                CommonUtil.cancelDialog(progressDialog);
+                            }
+
+                            @Override
+                            public void onNext(ArrayList<AskTag> askTagList) {
+                                CommonUtil.cancelDialog(progressDialog);
+                                resetButtons(askTagList);
+                                initView();
                             }
                         });
-                        for (int i = 0; i < newTags.size(); i++) {
-                            newTags.get(i).setOrder(i);
-                            newTags.get(i).setSelected(true);
-                        }
-                        AskTagHelper.putAllMyTags(newTags);
-                        return newTags;
-                    }
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<ArrayList<AskTag>>() {
-                    @Override
-                    public void onCompleted() {
-                        CommonUtil.cancelDialog(progressDialog);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        CommonUtil.cancelDialog(progressDialog);
-                    }
-
-                    @Override
-                    public void onNext(ArrayList<AskTag> askTagList) {
-                        CommonUtil.cancelDialog(progressDialog);
-                        resetButtons(askTagList);
-                        initView();
-                    }
-                });
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setMessage(getString(R.string.message_wait_a_minute));

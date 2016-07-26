@@ -28,7 +28,6 @@ import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.db.GroupHelper;
 import net.nashlegend.sourcewall.db.gen.MyGroup;
 import net.nashlegend.sourcewall.model.SubItem;
-import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.ChannelHelper;
@@ -41,18 +40,14 @@ import net.nashlegend.sourcewall.view.common.shuffle.MovableButton;
 import net.nashlegend.sourcewall.view.common.shuffle.ShuffleDeskSimple;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.Observable;
 import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class PostPagerFragment extends BaseFragment {
@@ -226,42 +221,20 @@ public class PostPagerFragment extends BaseFragment {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                if (isAdded()) {
-                    if (GroupHelper.getMyGroupsNumber() > 0) {
-                        long lastDBVersion = SharedPreferencesUtil.readLong(Consts.Key_Last_Post_Groups_Version, 0);
-                        if (currentDBVersion != lastDBVersion) {
-                            resetButtons(GroupHelper.getAllMyGroups());
-                            initView();
-                            currentDBVersion = SharedPreferencesUtil.readLong(Consts.Key_Last_Post_Groups_Version, 0);
-                        }
-                        manageButton.setVisibility(View.VISIBLE);
-                    } else {
-                        manageButton.setVisibility(View.INVISIBLE);
-                        new AlertDialog
-                                .Builder(getActivity())
-                                .setTitle(R.string.hint)
-                                .setMessage(R.string.ok_to_load_groups)
-                                .setPositiveButton(R.string.confirm_to_load_my_groups, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        reloadFromNet();
-                                    }
-                                })
-                                .setNegativeButton(R.string.use_default_groups, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        hideMoreSections();
-                                    }
-                                })
-                                .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                                    @Override
-                                    public void onCancel(DialogInterface dialog) {
-                                        hideMoreSections();
-                                    }
-                                })
-                                .create()
-                                .show();
+                if (!isAdded()) {
+                    return;
+                }
+                if (GroupHelper.getMyGroupsNumber() > 0) {
+                    long lastDBVersion = SharedPreferencesUtil.readLong(Consts.Key_Last_Post_Groups_Version, 0);
+                    if (currentDBVersion != lastDBVersion) {
+                        resetButtons(GroupHelper.getAllMyGroups());
+                        initView();
+                        currentDBVersion = SharedPreferencesUtil.readLong(Consts.Key_Last_Post_Groups_Version, 0);
                     }
+                    manageButton.setVisibility(View.VISIBLE);
+                } else {
+                    manageButton.setVisibility(View.INVISIBLE);
+                    popUnloaded();
                 }
             }
         });
@@ -269,6 +242,33 @@ public class PostPagerFragment extends BaseFragment {
         animatorSet.playTogether(animators);
         animatorSet.setDuration(400);
         animatorSet.start();
+    }
+
+    private void popUnloaded() {
+        new AlertDialog
+                .Builder(getActivity())
+                .setTitle(R.string.hint)
+                .setMessage(R.string.ok_to_load_groups)
+                .setPositiveButton(R.string.confirm_to_load_my_groups, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        reloadFromNet();
+                    }
+                })
+                .setNegativeButton(R.string.use_default_groups, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        hideMoreSections();
+                    }
+                })
+                .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        hideMoreSections();
+                    }
+                })
+                .create()
+                .show();
     }
 
     private AnimatorSet animatorSet;
@@ -340,60 +340,7 @@ public class PostPagerFragment extends BaseFragment {
     private void reloadFromNet() {
         final Subscription subscription =
                 PostAPI
-                        .getAllMyGroups(UserAPI.getUkey())
-                        .flatMap(new Func1<ResponseObject<ArrayList<SubItem>>, Observable<ArrayList<SubItem>>>() {
-                            @Override
-                            public Observable<ArrayList<SubItem>> call(ResponseObject<ArrayList<SubItem>> result) {
-                                if (result.ok) {
-                                    return Observable.just(result.result);
-                                }
-                                return Observable.error(new IllegalStateException("error occurred"));
-                            }
-                        })
-                        .map(new Func1<ArrayList<SubItem>, ArrayList<MyGroup>>() {
-                            @Override
-                            public ArrayList<MyGroup> call(ArrayList<SubItem> subItems) {
-                                ArrayList<MyGroup> myGroups = new ArrayList<>();
-                                for (int i = 0; i < subItems.size(); i++) {
-                                    SubItem item = subItems.get(i);
-                                    MyGroup mygroup = new MyGroup();
-                                    mygroup.setName(item.getName());
-                                    mygroup.setValue(item.getValue());
-                                    mygroup.setType(item.getType());
-                                    mygroup.setSection(item.getSection());
-                                    mygroup.setOrder(i + 10086);
-                                    myGroups.add(mygroup);
-                                }
-                                return myGroups;
-                            }
-                        })
-                        .map(new Func1<ArrayList<MyGroup>, ArrayList<MyGroup>>() {
-                            @Override
-                            public ArrayList<MyGroup> call(ArrayList<MyGroup> newGroups) {
-                                List<MyGroup> original = GroupHelper.getAllMyGroups();
-                                for (int i = 0; i < newGroups.size(); i++) {
-                                    MyGroup newGroup = newGroups.get(i);
-                                    for (int j = 0; j < original.size(); j++) {
-                                        if (original.get(j).getValue().equals(newGroup.getValue())) {
-                                            newGroup.setOrder(j);
-                                            break;
-                                        }
-                                    }
-                                }
-                                Collections.sort(newGroups, new Comparator<MyGroup>() {
-                                    @Override
-                                    public int compare(MyGroup lhs, MyGroup rhs) {
-                                        return lhs.getOrder() - rhs.getOrder();
-                                    }
-                                });
-                                for (int i = 0; i < newGroups.size(); i++) {
-                                    newGroups.get(i).setOrder(i);
-                                    newGroups.get(i).setSelected(true);
-                                }
-                                GroupHelper.putAllMyGroups(newGroups);
-                                return newGroups;
-                            }
-                        })
+                        .getAllMyGroupsAndMerge()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Observer<ArrayList<MyGroup>>() {

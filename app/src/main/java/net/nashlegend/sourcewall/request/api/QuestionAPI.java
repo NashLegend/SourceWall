@@ -2,6 +2,8 @@ package net.nashlegend.sourcewall.request.api;
 
 import android.text.TextUtils;
 
+import net.nashlegend.sourcewall.db.AskTagHelper;
+import net.nashlegend.sourcewall.db.gen.AskTag;
 import net.nashlegend.sourcewall.model.Answer;
 import net.nashlegend.sourcewall.model.PrepareData;
 import net.nashlegend.sourcewall.model.Question;
@@ -33,9 +35,14 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 
 import rx.Observable;
+import rx.Subscriber;
+import rx.functions.Func1;
 
 public class QuestionAPI extends APIBase {
     private static final String HOTTEST = "hottest";
@@ -43,6 +50,69 @@ public class QuestionAPI extends APIBase {
     private static int maxImageWidth = 240;
     private static String prefix = "<div class=\"ZoomBox\"><div class=\"content-zoom ZoomIn\">";
     private static String suffix = "</div></div>";
+
+    public static Observable<ArrayList<AskTag>> getAllMyTagsAndMerge(){
+        return Observable
+                .create(new Observable.OnSubscribe<ResponseObject<ArrayList<SubItem>>>() {
+                    @Override
+                    public void call(Subscriber<? super ResponseObject<ArrayList<SubItem>>> subscriber) {
+                        subscriber.onNext(QuestionAPI.getAllMyTags());
+                    }
+                })
+                .flatMap(new Func1<ResponseObject<ArrayList<SubItem>>, Observable<ArrayList<SubItem>>>() {
+                    @Override
+                    public Observable<ArrayList<SubItem>> call(ResponseObject<ArrayList<SubItem>> result) {
+                        if (result.ok) {
+                            return Observable.just(result.result);
+                        }
+                        return Observable.error(new IllegalStateException("error occurred"));
+                    }
+                })
+                .map(new Func1<ArrayList<SubItem>, ArrayList<AskTag>>() {
+                    @Override
+                    public ArrayList<AskTag> call(ArrayList<SubItem> subItems) {
+                        ArrayList<AskTag> askTags = new ArrayList<>();
+                        for (int i = 0; i < subItems.size(); i++) {
+                            SubItem item = subItems.get(i);
+                            AskTag tag = new AskTag();
+                            tag.setName(item.getName());
+                            tag.setValue(item.getValue());
+                            tag.setType(item.getType());
+                            tag.setSection(item.getSection());
+                            tag.setOrder(i + 10086);
+                            askTags.add(tag);
+                        }
+                        return askTags;
+                    }
+                })
+                .map(new Func1<ArrayList<AskTag>, ArrayList<AskTag>>() {
+                    @Override
+                    public ArrayList<AskTag> call(ArrayList<AskTag> newTags) {
+                        List<AskTag> original = AskTagHelper.getAllMyTags();
+                        for (int i = 0; i < newTags.size(); i++) {
+                            AskTag newGroup = newTags.get(i);
+                            for (int j = 0; j < original.size(); j++) {
+                                if (original.get(j).getValue().equals(newGroup.getValue())) {
+                                    newGroup.setOrder(j);
+                                    break;
+                                }
+                            }
+                        }
+                        Collections.sort(newTags, new Comparator<AskTag>() {
+                            @Override
+                            public int compare(AskTag lhs, AskTag rhs) {
+                                return lhs.getOrder() - rhs.getOrder();
+                            }
+                        });
+                        for (int i = 0; i < newTags.size(); i++) {
+                            newTags.get(i).setOrder(i);
+                            newTags.get(i).setSelected(true);
+                        }
+                        AskTagHelper.putAllMyTags(newTags);
+                        return newTags;
+                    }
+                });
+    }
 
     /**
      * 返回所有我感兴趣的标签

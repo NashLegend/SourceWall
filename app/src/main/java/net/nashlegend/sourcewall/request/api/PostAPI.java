@@ -2,6 +2,8 @@ package net.nashlegend.sourcewall.request.api;
 
 import android.net.Uri;
 
+import net.nashlegend.sourcewall.db.GroupHelper;
+import net.nashlegend.sourcewall.db.gen.MyGroup;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.PrepareData;
 import net.nashlegend.sourcewall.model.SubItem;
@@ -29,6 +31,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -108,16 +112,74 @@ public class PostAPI extends APIBase {
                 .requestAsync();
     }
 
-    public static Observable<ResponseObject<ArrayList<SubItem>>> getAllMyGroups(String ukey) {
+    public static Observable<ResponseObject<ArrayList<SubItem>>> getAllMyGroups() {
         String url = "http://apis.guokr.com/group/member.json";
         return new RequestBuilder<ArrayList<SubItem>>()
                 .get()
                 .url(url)
                 .addParam("retrieve_type", "by_user")
-                .addParam("ukey", ukey)
+                .addParam("ukey", UserAPI.getUkey())
                 .addParam("limit", "999")
                 .parser(new GroupListParser())
                 .flatMap();
+    }
+
+    public static Observable<ArrayList<MyGroup>> getAllMyGroupsAndMerge() {
+        return PostAPI
+                .getAllMyGroups()
+                .flatMap(new Func1<ResponseObject<ArrayList<SubItem>>, Observable<ArrayList<SubItem>>>() {
+                    @Override
+                    public Observable<ArrayList<SubItem>> call(ResponseObject<ArrayList<SubItem>> result) {
+                        if (result.ok) {
+                            return Observable.just(result.result);
+                        }
+                        return Observable.error(new IllegalStateException("error occurred"));
+                    }
+                })
+                .map(new Func1<ArrayList<SubItem>, ArrayList<MyGroup>>() {
+                    @Override
+                    public ArrayList<MyGroup> call(ArrayList<SubItem> subItems) {
+                        ArrayList<MyGroup> myGroups = new ArrayList<>();
+                        for (int i = 0; i < subItems.size(); i++) {
+                            SubItem item = subItems.get(i);
+                            MyGroup mygroup = new MyGroup();
+                            mygroup.setName(item.getName());
+                            mygroup.setValue(item.getValue());
+                            mygroup.setType(item.getType());
+                            mygroup.setSection(item.getSection());
+                            mygroup.setOrder(i + 10086);
+                            myGroups.add(mygroup);
+                        }
+                        return myGroups;
+                    }
+                })
+                .map(new Func1<ArrayList<MyGroup>, ArrayList<MyGroup>>() {
+                    @Override
+                    public ArrayList<MyGroup> call(ArrayList<MyGroup> newGroups) {
+                        List<MyGroup> original = GroupHelper.getAllMyGroups();
+                        for (int i = 0; i < newGroups.size(); i++) {
+                            MyGroup newGroup = newGroups.get(i);
+                            for (int j = 0; j < original.size(); j++) {
+                                if (original.get(j).getValue().equals(newGroup.getValue())) {
+                                    newGroup.setOrder(j);
+                                    break;
+                                }
+                            }
+                        }
+                        Collections.sort(newGroups, new Comparator<MyGroup>() {
+                            @Override
+                            public int compare(MyGroup lhs, MyGroup rhs) {
+                                return lhs.getOrder() - rhs.getOrder();
+                            }
+                        });
+                        for (int i = 0; i < newGroups.size(); i++) {
+                            newGroups.get(i).setOrder(i);
+                            newGroups.get(i).setSelected(true);
+                        }
+                        GroupHelper.putAllMyGroups(newGroups);
+                        return newGroups;
+                    }
+                });
     }
 
     /**

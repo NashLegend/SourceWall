@@ -18,7 +18,6 @@ import net.nashlegend.sourcewall.db.gen.MyGroup;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.PostAPI;
-import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.view.common.shuffle.GroupMovableButton;
@@ -215,7 +214,7 @@ public class ShuffleGroupActivity extends BaseActivity {
     private void loadGroupsFromNet() {
         final Subscription subscription =
                 PostAPI
-                        .getAllMyGroups(UserAPI.getUkey())
+                        .getAllMyGroups()
                         .flatMap(new Func1<ResponseObject<ArrayList<SubItem>>, Observable<ArrayList<MyGroup>>>() {
                             @Override
                             public Observable<ArrayList<MyGroup>> call(ResponseObject<ArrayList<SubItem>> result) {
