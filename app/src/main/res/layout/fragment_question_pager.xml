@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     tools:context=".fragment.QuestionPagerFragment">
 
-
     <LinearLayout
         android:id="@+id/pager_header"
         android:layout_width="match_parent"
@@ -31,7 +30,6 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:scaleType="centerInside"
             android:src="@drawable/chevron_down" />
-
     </LinearLayout>
 
     <android.support.v4.view.ViewPager
@@ -44,7 +42,6 @@
         android:id="@+id/layout_more_sections"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/pager_header"
         android:background="?attr/color_shuffle_desk_background"
         android:visibility="invisible">
 

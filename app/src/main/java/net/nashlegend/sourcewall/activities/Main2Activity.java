@@ -2,7 +2,6 @@ package net.nashlegend.sourcewall.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,6 +9,7 @@ import android.view.MenuItem;
 import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.fragment.ArticlePagerFragment;
+import net.nashlegend.sourcewall.fragment.BaseFragment;
 import net.nashlegend.sourcewall.fragment.PostPagerFragment;
 import net.nashlegend.sourcewall.fragment.ProfileFragment;
 import net.nashlegend.sourcewall.fragment.QuestionPagerFragment;
@@ -27,7 +27,7 @@ public class Main2Activity extends BaseActivity {
     @BindView(R.id.bottom_bar)
     PagerBottomTabLayout bottomBar;
 
-    Fragment crtFragment;
+    BaseFragment crtFragment;
     ArticlePagerFragment articlePagerFragment;
     PostPagerFragment postPagerFragment;
     QuestionPagerFragment questionPagerFragment;
@@ -82,8 +82,8 @@ public class Main2Activity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private Fragment getFragmentByPosition(int idx) {
-        Fragment fragment = null;
+    private BaseFragment getFragmentByPosition(int idx) {
+        BaseFragment fragment = null;
         switch (idx) {
             case 0:
                 if (articlePagerFragment == null) {
@@ -111,6 +111,18 @@ public class Main2Activity extends BaseActivity {
                 break;
         }
         return fragment;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (wasTakenOver()) {
+            return;
+        }
+        super.onBackPressed();
+    }
+
+    private boolean wasTakenOver() {
+        return crtFragment != null && crtFragment.takeOverBackPress();
     }
 
     public static void open() {

@@ -128,6 +128,9 @@ public class RequestBuilder<T> {
      * @return
      */
     public RequestBuilder<T> params(HashMap<String, String> params) {
+        if (params == null) {
+            params = new HashMap<>();
+        }
         ArrayList<Param> paramList = new ArrayList<>();
         for (Map.Entry<String, String> entry : params.entrySet()) {
             paramList.add(new Param(entry.getKey(), entry.getValue()));

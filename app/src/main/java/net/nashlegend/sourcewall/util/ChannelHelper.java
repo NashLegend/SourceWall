@@ -138,7 +138,7 @@ public class ChannelHelper {
             //如果已经加载了栏目
             questionSubItems.add(new SubItem(SubItem.Section_Question, SubItem.Type_Collections, "热门问答", "hottest"));
             questionSubItems.add(new SubItem(SubItem.Section_Question, SubItem.Type_Collections, "精彩回答", "highlight"));
-            questionSubItems.addAll(AskTagHelper.getSelectedQuestionSubItems());
+            questionSubItems.addAll(AskTagHelper.getAllMyTagSubItems());
         } else {
             questionSubItems.addAll(ChannelHelper.getQuestions());
         }

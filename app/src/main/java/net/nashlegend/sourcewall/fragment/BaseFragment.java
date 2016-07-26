@@ -95,4 +95,8 @@ public abstract class BaseFragment extends Fragment implements IStackedAsyncTask
         }
     }
 
+    public boolean takeOverBackPress() {
+        return false;
+    }
+
 }

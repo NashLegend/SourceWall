@@ -41,6 +41,8 @@ import net.nashlegend.sourcewall.view.common.shuffle.MovableButton;
 import net.nashlegend.sourcewall.view.common.shuffle.ShuffleDeskSimple;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -51,6 +53,7 @@ import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 public class PostPagerFragment extends BaseFragment {
     View layoutView;
@@ -108,12 +111,12 @@ public class PostPagerFragment extends BaseFragment {
             });
             ((TextView) deskSimple.findViewById(R.id.tip_of_more_sections)).setText(R.string.tip_of_more_groups);
             manageButton = (Button) deskSimple.findViewById(R.id.button_manage_my_sections);
-            manageButton.setText(R.string.manage_all_groups);
+            manageButton.setText(R.string.reload_all_groups);
             manageButton.setVisibility(View.INVISIBLE);
             manageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    hideMoreSections();
+                    reloadFromNet();
                 }
             });
             moreSectionsLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -153,8 +156,11 @@ public class PostPagerFragment extends BaseFragment {
         }
     }
 
-    public boolean takeOverBackPressed() {
-        // TODO: 16/7/14
+    @Override
+    public boolean takeOverBackPress() {
+        if (!isVisible()) {
+            return false;
+        }
         if (isMoreSectionsButtonShowing) {
             hideMoreSections();
             return true;
@@ -238,7 +244,7 @@ public class PostPagerFragment extends BaseFragment {
                                 .setPositiveButton(R.string.confirm_to_load_my_groups, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        loadGroupsFromNet();
+                                        reloadFromNet();
                                     }
                                 })
                                 .setNegativeButton(R.string.use_default_groups, new DialogInterface.OnClickListener() {
@@ -277,7 +283,8 @@ public class PostPagerFragment extends BaseFragment {
             animatorSet.cancel();
         }
         animatorSet = new AnimatorSet();
-        ObjectAnimator layoutAnimator = ObjectAnimator.ofFloat(moreSectionsLayout, "translationY", moreSectionsLayout.getTranslationY(), -moreSectionsLayout.getHeight());
+        ObjectAnimator layoutAnimator = ObjectAnimator.ofFloat(moreSectionsLayout, "translationY",
+                moreSectionsLayout.getTranslationY(), -moreSectionsLayout.getHeight());
         layoutAnimator.setInterpolator(new AccelerateInterpolator());
 
         ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(moreSectionsLayout, "alpha", 1, 0.0f);
@@ -330,31 +337,64 @@ public class PostPagerFragment extends BaseFragment {
 
     ProgressDialog progressDialog;
 
-    private void loadGroupsFromNet() {
+    private void reloadFromNet() {
         final Subscription subscription =
                 PostAPI
                         .getAllMyGroups(UserAPI.getUkey())
-                        .flatMap(new Func1<ResponseObject<ArrayList<SubItem>>, Observable<ArrayList<MyGroup>>>() {
+                        .flatMap(new Func1<ResponseObject<ArrayList<SubItem>>, Observable<ArrayList<SubItem>>>() {
                             @Override
-                            public Observable<ArrayList<MyGroup>> call(ResponseObject<ArrayList<SubItem>> result) {
+                            public Observable<ArrayList<SubItem>> call(ResponseObject<ArrayList<SubItem>> result) {
                                 if (result.ok) {
-                                    ArrayList<MyGroup> myGroups = new ArrayList<>();
-                                    for (int i = 0; i < result.result.size(); i++) {
-                                        SubItem item = result.result.get(i);
-                                        MyGroup mygroup = new MyGroup();
-                                        mygroup.setName(item.getName());
-                                        mygroup.setValue(item.getValue());
-                                        mygroup.setType(item.getType());
-                                        mygroup.setSection(item.getSection());
-                                        mygroup.setOrder(i);
-                                        myGroups.add(mygroup);
-                                    }
-                                    GroupHelper.putAllMyGroups(myGroups);
-                                    return Observable.just(myGroups);
+                                    return Observable.just(result.result);
                                 }
                                 return Observable.error(new IllegalStateException("error occurred"));
                             }
                         })
+                        .map(new Func1<ArrayList<SubItem>, ArrayList<MyGroup>>() {
+                            @Override
+                            public ArrayList<MyGroup> call(ArrayList<SubItem> subItems) {
+                                ArrayList<MyGroup> myGroups = new ArrayList<>();
+                                for (int i = 0; i < subItems.size(); i++) {
+                                    SubItem item = subItems.get(i);
+                                    MyGroup mygroup = new MyGroup();
+                                    mygroup.setName(item.getName());
+                                    mygroup.setValue(item.getValue());
+                                    mygroup.setType(item.getType());
+                                    mygroup.setSection(item.getSection());
+                                    mygroup.setOrder(i + 10086);
+                                    myGroups.add(mygroup);
+                                }
+                                return myGroups;
+                            }
+                        })
+                        .map(new Func1<ArrayList<MyGroup>, ArrayList<MyGroup>>() {
+                            @Override
+                            public ArrayList<MyGroup> call(ArrayList<MyGroup> newGroups) {
+                                List<MyGroup> original = GroupHelper.getAllMyGroups();
+                                for (int i = 0; i < newGroups.size(); i++) {
+                                    MyGroup newGroup = newGroups.get(i);
+                                    for (int j = 0; j < original.size(); j++) {
+                                        if (original.get(j).getValue().equals(newGroup.getValue())) {
+                                            newGroup.setOrder(j);
+                                            break;
+                                        }
+                                    }
+                                }
+                                Collections.sort(newGroups, new Comparator<MyGroup>() {
+                                    @Override
+                                    public int compare(MyGroup lhs, MyGroup rhs) {
+                                        return lhs.getOrder() - rhs.getOrder();
+                                    }
+                                });
+                                for (int i = 0; i < newGroups.size(); i++) {
+                                    newGroups.get(i).setOrder(i);
+                                    newGroups.get(i).setSelected(true);
+                                }
+                                GroupHelper.putAllMyGroups(newGroups);
+                                return newGroups;
+                            }
+                        })
+                        .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Observer<ArrayList<MyGroup>>() {
                             @Override

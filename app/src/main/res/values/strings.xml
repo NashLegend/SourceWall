@@ -153,8 +153,10 @@
     <string name="sample_support_number">9999</string>
     <string name="hint_input_your_tail">输入自定义尾巴，不输入则不添加尾巴~</string>
     <string name="load_failed">加载失败</string>
-    <string name="magage_all_tags">管理所有标签</string>
+    <string name="manage_all_tags">管理所有标签</string>
+    <string name="reload_all_tags">重新加载标签</string>
     <string name="manage_all_groups">管理所有小组</string>
+    <string name="reload_all_groups">重新加载小组</string>
     <string name="has_supported">已经赞同过</string>
     <string name="has_opposed">已经反对过</string>
     <string name="click_again_to_exit">再次点击返回退出程序</string>

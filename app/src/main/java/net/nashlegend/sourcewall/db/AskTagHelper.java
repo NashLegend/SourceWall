@@ -24,7 +24,24 @@ public class AskTagHelper {
 
     public static List<AskTag> getAllMyTags() {
         AskTagDao tagDao = App.getDaoSession().getAskTagDao();
-        return tagDao.loadAll();
+        QueryBuilder<AskTag> builder = tagDao.queryBuilder().
+                orderAsc(AskTagDao.Properties.Order);
+        List<AskTag> list =  builder.list();
+        return list;
+    }
+
+    public static List<SubItem> getAllMyTagSubItems() {
+        AskTagDao tagDao = App.getDaoSession().getAskTagDao();
+        QueryBuilder<AskTag> builder = tagDao.queryBuilder().
+                orderAsc(AskTagDao.Properties.Order);
+        List<AskTag> askTags =  builder.list();
+        ArrayList<SubItem> subItems = new ArrayList<>();
+        for (int i = 0; i < askTags.size(); i++) {
+            AskTag tag = askTags.get(i);
+            SubItem subItem = new SubItem(tag.getSection(), tag.getType(), tag.getName(), tag.getValue());
+            subItems.add(subItem);
+        }
+        return subItems;
     }
 
     public static List<AskTag> getSelectedTags() {
