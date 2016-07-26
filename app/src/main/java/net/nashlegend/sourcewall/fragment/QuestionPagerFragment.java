@@ -100,9 +100,7 @@ public class QuestionPagerFragment extends BaseFragment {
             deskSimple.setOnButtonClickListener(new ShuffleDeskSimple.OnButtonClickListener() {
                 @Override
                 public void onClick(MovableButton btn) {
-                    if (btn instanceof AskTagMovableButton) {
-                        onSectionButtonClicked((AskTagMovableButton) btn);
-                    }
+                    onSectionButtonClicked((AskTagMovableButton) btn);
                 }
             });
             ((TextView) deskSimple.findViewById(R.id.tip_of_more_sections)).setText(R.string.tip_of_more_tags);

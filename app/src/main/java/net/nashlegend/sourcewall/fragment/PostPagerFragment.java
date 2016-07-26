@@ -99,9 +99,7 @@ public class PostPagerFragment extends BaseFragment {
             deskSimple.setOnButtonClickListener(new ShuffleDeskSimple.OnButtonClickListener() {
                 @Override
                 public void onClick(MovableButton btn) {
-                    if (btn instanceof GroupMovableButton) {
-                        onSectionButtonClicked((GroupMovableButton) btn);
-                    }
+                    onSectionButtonClicked((GroupMovableButton) btn);
                 }
             });
             ((TextView) deskSimple.findViewById(R.id.tip_of_more_sections)).setText(R.string.tip_of_more_groups);

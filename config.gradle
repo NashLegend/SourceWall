@@ -57,8 +57,8 @@ ext {
 
     built = [
             applicationId    : "net.nashlegend.sourcewall",
-            versionCode      : 20160704,
-            versionName      : "1.8.0",
+            versionCode      : 20160726,
+            versionName      : "1.8.6",
             buildToolsVersion: "23.0.3",
             compileSdkVersion: 23,
             minSdkVersion    : 15,
@@ -67,8 +67,8 @@ ext {
 
     keys = [
             UMENG_APP_KEY        : "55018d1dfd98c583330009fd",
-            WEIBO_APP_KEY        : "9938859001b934d378b01820",
-            WEIXIN_APP_ID_DEBUG  : "9938859001b934d378b01820",
-            WEIXIN_APP_ID_RELEASE: "9938859001b934d378b01820",
+            WEIBO_APP_KEY        : "2946702059",
+            WEIXIN_APP_ID_DEBUG  : "wxb38f35b29cf6703d",
+            WEIXIN_APP_ID_RELEASE: "wx6383bc21d7a89367",
     ]
 }
