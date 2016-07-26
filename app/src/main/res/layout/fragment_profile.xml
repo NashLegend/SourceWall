@@ -50,8 +50,10 @@
                 android:background="@color/splitter_color_grey" />
 
             <LinearLayout
+                android:id="@+id/layout_msg_center"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
+                android:background="?android:selectableItemBackground"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -73,8 +75,10 @@
                 android:background="@color/splitter_color_grey" />
 
             <LinearLayout
+                android:id="@+id/layout_my_favors"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
+                android:background="?android:selectableItemBackground"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -96,8 +100,10 @@
                 android:background="@color/splitter_color_grey" />
 
             <LinearLayout
+                android:id="@+id/layout_my_posts"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
+                android:background="?android:selectableItemBackground"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -119,8 +125,10 @@
                 android:background="@color/splitter_color_grey" />
 
             <LinearLayout
+                android:id="@+id/layout_my_replies"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
+                android:background="?android:selectableItemBackground"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -142,8 +150,10 @@
                 android:background="@color/splitter_color_grey" />
 
             <LinearLayout
+                android:id="@+id/layout_my_questions"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
+                android:background="?android:selectableItemBackground"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -167,6 +177,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
+                android:background="?android:selectableItemBackground"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -189,8 +200,10 @@
             android:background="@color/splitter_color_grey" />
 
         <LinearLayout
+            android:id="@+id/view_switch_to_day"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            android:background="?android:selectableItemBackground"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:visibility="gone"
@@ -215,8 +228,10 @@
 
 
         <LinearLayout
+            android:id="@+id/view_switch_to_night"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            android:background="?android:selectableItemBackground"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -238,8 +253,10 @@
             android:background="@color/splitter_color_grey" />
 
         <LinearLayout
+            android:id="@+id/layout_setting"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            android:background="?android:selectableItemBackground"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
