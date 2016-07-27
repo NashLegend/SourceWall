@@ -1,6 +1,6 @@
 package net.nashlegend.sourcewall.request.interceptors;
 
-import net.nashlegend.sourcewall.request.RequestObject.DetailedCallBack;
+import net.nashlegend.sourcewall.request.RequestObject.RequestCallBack;
 
 import java.io.IOException;
 
@@ -12,9 +12,9 @@ import okhttp3.Response;
  * 下载的Interceptor
  */
 public class DownloadProgressInterceptor implements Interceptor {
-    DetailedCallBack callBack;
+    RequestCallBack callBack;
 
-    public DownloadProgressInterceptor(DetailedCallBack callBack) {
+    public DownloadProgressInterceptor(RequestCallBack callBack) {
         this.callBack = callBack;
     }
 

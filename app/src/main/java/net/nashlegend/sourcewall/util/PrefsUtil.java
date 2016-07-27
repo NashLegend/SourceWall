@@ -10,10 +10,10 @@ import net.nashlegend.sourcewall.App;
 /**
  * Created by NashLegend on 2014/11/25 0025
  */
-public class SketchSharedUtil {
+public class PrefsUtil {
 
     // 本地xml文件名
-    private final static String SP_NAME = "sketch";
+    private final static String SP_NAME = "sourcewall";
 
     private static SharedPreferences mSharedPreferences;
     private static Editor mEditor;
@@ -40,8 +40,7 @@ public class SketchSharedUtil {
 
     // 写String
     public static void saveString(String key, String value) {
-        getEditor().putString(key, value);
-        getEditor().apply();
+        getEditor().putString(key, value).apply();
     }
 
     // 读Boolean

@@ -5,7 +5,7 @@ import net.nashlegend.sourcewall.db.gen.AskTag;
 import net.nashlegend.sourcewall.db.gen.AskTagDao;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.util.Consts;
-import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
+import net.nashlegend.sourcewall.util.PrefsUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +80,7 @@ public class AskTagHelper {
             tagDao.deleteAll();
             tagDao.insertInTx(myTags);
             App.getDaoSession().getDatabase().setTransactionSuccessful();
-            SharedPreferencesUtil.saveLong(Consts.Key_Last_Ask_Tags_Version, System.currentTimeMillis());
+            PrefsUtil.saveLong(Consts.Key_Last_Ask_Tags_Version, System.currentTimeMillis());
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -115,7 +115,7 @@ public class AskTagHelper {
     public static void clearAllMyTags() {
         AskTagDao tagDao = App.getDaoSession().getAskTagDao();
         tagDao.deleteAll();
-        SharedPreferencesUtil.saveLong(Consts.Key_Last_Ask_Tags_Version, System.currentTimeMillis());
+        PrefsUtil.saveLong(Consts.Key_Last_Ask_Tags_Version, System.currentTimeMillis());
     }
 
 }

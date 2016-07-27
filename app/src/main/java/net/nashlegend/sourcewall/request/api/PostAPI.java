@@ -9,6 +9,7 @@ import net.nashlegend.sourcewall.model.PrepareData;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.NetworkTask;
+import net.nashlegend.sourcewall.request.ParamsMap;
 import net.nashlegend.sourcewall.request.RequestBuilder;
 import net.nashlegend.sourcewall.request.RequestObject;
 import net.nashlegend.sourcewall.request.RequestObject.CallBack;
@@ -33,7 +34,6 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -49,7 +49,7 @@ public class PostAPI extends APIBase {
 
     public static Observable<ResponseObject<ArrayList<Post>>> getPostList(int type, String key, int offset, boolean useCache) {
         String url = "http://apis.guokr.com/group/post.json";
-        HashMap<String, String> pairs = new HashMap<>();
+        ParamsMap pairs = new ParamsMap();
         switch (type) {
             case SubItem.Type_Collections:
                 pairs.put("retrieve_type", "hot_post");
@@ -82,7 +82,7 @@ public class PostAPI extends APIBase {
      */
     public static void joinGroup(String id, CallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/group/member.json";
-        HashMap<String, String> pairs = new HashMap<>();
+        ParamsMap pairs = new ParamsMap();
         pairs.put("group_id", id);
         new RequestBuilder<Boolean>()
                 .post()
@@ -101,7 +101,7 @@ public class PostAPI extends APIBase {
      */
     public static void quitGroup(String id, CallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/group/member.json";
-        HashMap<String, String> pairs = new HashMap<>();
+        ParamsMap pairs = new ParamsMap();
         pairs.put("group_id", id);
         new RequestBuilder<Boolean>()
                 .delete()
@@ -209,7 +209,7 @@ public class PostAPI extends APIBase {
      */
     public static Observable<ResponseObject<ArrayList<UComment>>> getPostReplies(final String id, final int offset, int limit) {
         String url = "http://apis.guokr.com/group/post_reply.json";
-        HashMap<String, String> pairs = new HashMap<>();
+        ParamsMap pairs = new ParamsMap();
         pairs.put("retrieve_type", "by_post");
         pairs.put("post_id", id);
         pairs.put("limit", limit + "");
@@ -231,7 +231,7 @@ public class PostAPI extends APIBase {
      */
     public static NetworkTask<Boolean> likePost(String postID, CallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/group/post_liking.json";
-        HashMap<String, String> pairs = new HashMap<>();
+        ParamsMap pairs = new ParamsMap();
         pairs.put("post_id", postID);
         return new RequestBuilder<Boolean>()
                 .post()
@@ -252,7 +252,7 @@ public class PostAPI extends APIBase {
      */
     public static NetworkTask<String> replyPost(String id, String content, CallBack<String> callBack) {
         String url = "http://apis.guokr.com/group/post_reply.json";
-        HashMap<String, String> pairs = new HashMap<>();
+        ParamsMap pairs = new ParamsMap();
         pairs.put("post_id", id);
         pairs.put("content", content);
         return new RequestBuilder<String>()
@@ -370,7 +370,7 @@ public class PostAPI extends APIBase {
      */
     public static NetworkTask<Boolean> deleteMyComment(String id, CallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/group/post_reply.json";
-        HashMap<String, String> pairs = new HashMap<>();
+        ParamsMap pairs = new ParamsMap();
         pairs.put("reply_id", id);
         pairs.put("reason", id);
         return new RequestBuilder<Boolean>()
@@ -390,7 +390,7 @@ public class PostAPI extends APIBase {
      */
     public static NetworkTask<Boolean> likeComment(String id, CallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/group/post_reply_liking.json";
-        HashMap<String, String> pairs = new HashMap<>();
+        ParamsMap pairs = new ParamsMap();
         pairs.put("reply_id", id);
         return new RequestBuilder<Boolean>()
                 .post()
@@ -433,7 +433,7 @@ public class PostAPI extends APIBase {
      */
     public static NetworkTask<String> publishPost(String group_id, String csrf, String title, String body, String topic, CallBack<String> callBack) {
         String url = "http://www.guokr.com/group/" + group_id + "/post/edit/";
-        HashMap<String, String> pairs = new HashMap<>();
+        ParamsMap pairs = new ParamsMap();
         pairs.put("csrf_token", csrf);
         pairs.put("title", title);
         pairs.put("topic", topic);
@@ -459,7 +459,7 @@ public class PostAPI extends APIBase {
      */
     public static NetworkTask<Boolean> deletePost(String post_id, CallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/group/post.json";
-        HashMap<String, String> pairs = new HashMap<>();
+        ParamsMap pairs = new ParamsMap();
         pairs.put("reason", "");
         pairs.put("post_id", post_id);
         return new RequestBuilder<Boolean>()

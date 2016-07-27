@@ -17,7 +17,7 @@ import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.ArticleAPI;
 import net.nashlegend.sourcewall.util.Consts;
-import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
+import net.nashlegend.sourcewall.util.PrefsUtil;
 import net.nashlegend.sourcewall.util.StyleChecker;
 import net.nashlegend.sourcewall.view.common.WWebView;
 
@@ -60,7 +60,7 @@ public class ArticleView extends AceView<Article> {
     }
 
     private void initViews() {
-        if (SharedPreferencesUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
+        if (PrefsUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
             setBackgroundColor(getContext().getResources().getColor(R.color.page_background_night));
         } else {
             setBackgroundColor(getContext().getResources().getColor(R.color.page_background));

@@ -5,7 +5,7 @@ import net.nashlegend.sourcewall.db.gen.MyGroup;
 import net.nashlegend.sourcewall.db.gen.MyGroupDao;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.util.Consts;
-import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
+import net.nashlegend.sourcewall.util.PrefsUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +74,7 @@ public class GroupHelper {
             myGroupDao.deleteAll();
             myGroupDao.insertInTx(myGroups);
             App.getDaoSession().getDatabase().setTransactionSuccessful();
-            SharedPreferencesUtil.saveLong(Consts.Key_Last_Post_Groups_Version, System.currentTimeMillis());
+            PrefsUtil.saveLong(Consts.Key_Last_Post_Groups_Version, System.currentTimeMillis());
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -109,7 +109,7 @@ public class GroupHelper {
     public static void clearAllMyGroups() {
         MyGroupDao myGroupDao = App.getDaoSession().getMyGroupDao();
         myGroupDao.deleteAll();
-        SharedPreferencesUtil.saveLong(Consts.Key_Last_Post_Groups_Version, System.currentTimeMillis());
+        PrefsUtil.saveLong(Consts.Key_Last_Post_Groups_Version, System.currentTimeMillis());
     }
 
 }

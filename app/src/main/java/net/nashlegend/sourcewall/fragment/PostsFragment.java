@@ -46,7 +46,7 @@ import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Consts;
-import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
+import net.nashlegend.sourcewall.util.PrefsUtil;
 import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.view.PostListItemView;
 import net.nashlegend.sourcewall.view.common.LListView;
@@ -202,8 +202,8 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
         if (User_Has_Learned_Load_My_Groups) {
             return;
         }
-        if (!SharedPreferencesUtil.readBoolean(Consts.Key_User_Has_Learned_Load_My_Groups, false)) {
-            SharedPreferencesUtil.saveBoolean(Consts.Key_User_Has_Learned_Load_My_Groups, true);
+        if (!PrefsUtil.readBoolean(Consts.Key_User_Has_Learned_Load_My_Groups, false)) {
+            PrefsUtil.saveBoolean(Consts.Key_User_Has_Learned_Load_My_Groups, true);
             User_Has_Learned_Load_My_Groups = true;
             AlertDialog dialog = new AlertDialog.Builder(getActivity()).setTitle(R.string.hint).setMessage(R.string.hint_of_load_my_groups).setPositiveButton(R.string.ok_i_know, new DialogInterface.OnClickListener() {
                 @Override
@@ -283,11 +283,11 @@ public class PostsFragment extends ChannelsFragment implements LListView.OnRefre
             public void onAnimationEnd(Animator animation) {
                 if (isAdded()) {
                     if (GroupHelper.getMyGroupsNumber() > 0) {
-                        long lastDBVersion = SharedPreferencesUtil.readLong(Consts.Key_Last_Post_Groups_Version, 0);
+                        long lastDBVersion = PrefsUtil.readLong(Consts.Key_Last_Post_Groups_Version, 0);
                         if (currentDBVersion != lastDBVersion) {
                             getButtons();
                             initView();
-                            currentDBVersion = SharedPreferencesUtil.readLong(Consts.Key_Last_Post_Groups_Version, 0);
+                            currentDBVersion = PrefsUtil.readLong(Consts.Key_Last_Post_Groups_Version, 0);
                         }
                         manageButton.setVisibility(View.VISIBLE);
                     } else {

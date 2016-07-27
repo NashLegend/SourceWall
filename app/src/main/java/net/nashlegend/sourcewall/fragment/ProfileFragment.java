@@ -31,7 +31,7 @@ import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.ImageUtils;
 import net.nashlegend.sourcewall.util.Mob;
-import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
+import net.nashlegend.sourcewall.util.PrefsUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -119,7 +119,7 @@ public class ProfileFragment extends BaseFragment {
             userName.setText(R.string.click_to_login);
             loginLayout.setVisibility(View.GONE);
         }
-        if (SharedPreferencesUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
+        if (PrefsUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
             viewSwitchToDay.setVisibility(View.VISIBLE);
             viewSwitchToNight.setVisibility(View.GONE);
         } else {
@@ -168,7 +168,7 @@ public class ProfileFragment extends BaseFragment {
     }
 
     private void revertMode() {
-        SharedPreferencesUtil.saveBoolean(Consts.Key_Is_Night_Mode, !SharedPreferencesUtil.readBoolean(Consts.Key_Is_Night_Mode, false));
+        PrefsUtil.saveBoolean(Consts.Key_Is_Night_Mode, !PrefsUtil.readBoolean(Consts.Key_Is_Night_Mode, false));
         MobclickAgent.onEvent(getActivity(), Mob.Event_Switch_Day_Night_Mode);
         getActivity().recreate();
     }
@@ -225,9 +225,9 @@ public class ProfileFragment extends BaseFragment {
 
                 @Override
                 public void onSuccess(@NonNull UserInfo info, @NonNull ResponseObject<UserInfo> detailed) {
-                    SharedPreferencesUtil.saveString(Consts.Key_User_Name, info.getNickname());
-                    SharedPreferencesUtil.saveString(Consts.Key_User_ID, info.getId());
-                    SharedPreferencesUtil.saveString(Consts.Key_User_Avatar, info.getAvatar());
+                    PrefsUtil.saveString(Consts.Key_User_Name, info.getNickname());
+                    PrefsUtil.saveString(Consts.Key_User_ID, info.getId());
+                    PrefsUtil.saveString(Consts.Key_User_Avatar, info.getAvatar());
                     if (Config.shouldLoadImage()) {
                         ImageLoader.getInstance().displayImage(info.getAvatar(), imageAvatar, ImageUtils.avatarOptions);
                     } else {

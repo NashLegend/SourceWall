@@ -11,6 +11,7 @@ import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.JsonHandler;
 import net.nashlegend.sourcewall.request.NetworkTask;
+import net.nashlegend.sourcewall.request.ParamsMap;
 import net.nashlegend.sourcewall.request.RequestBuilder;
 import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
@@ -37,7 +38,6 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 
 import rx.Observable;
@@ -174,7 +174,7 @@ public class QuestionAPI extends APIBase {
      */
     public static Observable<ResponseObject<ArrayList<Question>>> getQuestionsByTag(String tag, int offset, boolean useCache) {
         String url = "http://apis.guokr.com/ask/question.json";
-        HashMap<String, String> pairs = new HashMap<>();
+        ParamsMap pairs = new ParamsMap();
         pairs.put("retrieve_type", "by_tag");
         pairs.put("tag_name", tag);
         pairs.put("limit", "20");
@@ -197,7 +197,7 @@ public class QuestionAPI extends APIBase {
      */
     public static Observable<ResponseObject<ArrayList<Question>>> getHotQuestions(int offset, boolean useCache) {
         String url = "http://apis.guokr.com/ask/question.json";
-        HashMap<String, String> pairs = new HashMap<>();
+        ParamsMap pairs = new ParamsMap();
         pairs.put("retrieve_type", "hot_question");
         pairs.put("limit", "20");
         pairs.put("offset", String.valueOf(offset));
@@ -254,7 +254,7 @@ public class QuestionAPI extends APIBase {
      */
     public static Observable<ResponseObject<ArrayList<Answer>>> getQuestionAnswers(final String id, final int offset) {
         String url = "http://apis.guokr.com/ask/answer.json";
-        HashMap<String, String> pairs = new HashMap<>();
+        ParamsMap pairs = new ParamsMap();
         pairs.put("retrieve_type", "by_question");
         pairs.put("question_id", id);
         pairs.put("limit", "20");
@@ -306,7 +306,7 @@ public class QuestionAPI extends APIBase {
      */
     public static NetworkTask<ArrayList<UComment>> getQuestionComments(String id, int offset, CallBack<ArrayList<UComment>> callBack) {
         String url = "http://www.guokr.com/apis/ask/question_reply.json";
-        HashMap<String, String> pairs = new HashMap<>();
+        ParamsMap pairs = new ParamsMap();
         pairs.put("retrieve_type", "by_question");
         pairs.put("question_id", id);
         pairs.put("limit", "20");
@@ -330,7 +330,7 @@ public class QuestionAPI extends APIBase {
      */
     public static NetworkTask<ArrayList<UComment>> getAnswerComments(String id, int offset, CallBack<ArrayList<UComment>> callBack) {
         String url = "http://www.guokr.com/apis/ask/answer_reply.json";
-        HashMap<String, String> pairs = new HashMap<>();
+        ParamsMap pairs = new ParamsMap();
         pairs.put("retrieve_type", "by_answer");
         pairs.put("answer_id", id);
         pairs.put("limit", "20");
@@ -353,7 +353,7 @@ public class QuestionAPI extends APIBase {
      */
     public static NetworkTask<String> answerQuestion(String id, String content, CallBack<String> callBack) {
         String url = "http://apis.guokr.com/ask/answer.json";
-        HashMap<String, String> pairs = new HashMap<>();
+        ParamsMap pairs = new ParamsMap();
         pairs.put("question_id", id);
         pairs.put("content", content);
         return new RequestBuilder<String>()
@@ -394,7 +394,7 @@ public class QuestionAPI extends APIBase {
      */
     private static void supportOrOpposeAnswer(String id, String opinion, CallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/ask/answer_polling.json";
-        HashMap<String, String> pairs = new HashMap<>();
+        ParamsMap pairs = new ParamsMap();
         pairs.put("answer_id", id);
         pairs.put("opinion", opinion);
         new RequestBuilder<Boolean>()
@@ -414,7 +414,7 @@ public class QuestionAPI extends APIBase {
      */
     public static void thankAnswer(String id, CallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/ask/answer_thanking.json";
-        HashMap<String, String> pairs = new HashMap<>();
+        ParamsMap pairs = new ParamsMap();
         pairs.put("v", System.currentTimeMillis() + "");
         pairs.put("answer_id", id);
         new RequestBuilder<Boolean>()
@@ -434,7 +434,7 @@ public class QuestionAPI extends APIBase {
      */
     public static void buryAnswer(String id, CallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/ask/answer_burying.json";
-        HashMap<String, String> pairs = new HashMap<>();
+        ParamsMap pairs = new ParamsMap();
         pairs.put("v", System.currentTimeMillis() + "");
         pairs.put("answer_id", id);
         new RequestBuilder<Boolean>()
@@ -454,7 +454,7 @@ public class QuestionAPI extends APIBase {
      */
     public static void unBuryAnswer(String id, CallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/ask/answer_burying.json";
-        HashMap<String, String> pairs = new HashMap<>();
+        ParamsMap pairs = new ParamsMap();
         pairs.put("answer_id", id);
         new RequestBuilder<Boolean>()
                 .delete()
@@ -487,7 +487,7 @@ public class QuestionAPI extends APIBase {
      */
     public static void followQuestion(String questionID, CallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/ask/question_follower.json";
-        HashMap<String, String> pairs = new HashMap<>();
+        ParamsMap pairs = new ParamsMap();
         pairs.put("question_id", questionID);
         pairs.put("retrieve_type", "by_question");
         new RequestBuilder<Boolean>()
@@ -507,7 +507,7 @@ public class QuestionAPI extends APIBase {
      */
     public static void unfollowQuestion(String questionID, CallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/ask/question_follower.json";
-        HashMap<String, String> pairs = new HashMap<>();
+        ParamsMap pairs = new ParamsMap();
         pairs.put("question_id", questionID);
         pairs.put("retrieve_type", "by_question");
         new RequestBuilder<Boolean>()
@@ -528,7 +528,7 @@ public class QuestionAPI extends APIBase {
      */
     public static NetworkTask<UComment> commentOnQuestion(String questionID, String comment, CallBack<UComment> callBack) {
         String url = "http://www.guokr.com/apis/ask/question_reply.json";
-        HashMap<String, String> pairs = new HashMap<>();
+        ParamsMap pairs = new ParamsMap();
         pairs.put("question_id", questionID);
         pairs.put("content", comment);
         pairs.put("retrieve_type", "by_question");
@@ -566,7 +566,7 @@ public class QuestionAPI extends APIBase {
      */
     public static NetworkTask<UComment> commentOnAnswer(String answerID, String comment, CallBack<UComment> callBack) {
         String url = "http://www.guokr.com/apis/ask/answer_reply.json";
-        HashMap<String, String> pairs = new HashMap<>();
+        ParamsMap pairs = new ParamsMap();
         pairs.put("answer_id", answerID);
         pairs.put("content", comment);
         pairs.put("retrieve_type", "by_answer");
@@ -621,7 +621,7 @@ public class QuestionAPI extends APIBase {
         try {
             String htmlDesc = MDUtil.Markdown2Html(annotation);
             htmlDesc += Config.getComplexReplyTail();
-            HashMap<String, String> pairs = new HashMap<>();
+            ParamsMap pairs = new ParamsMap();
             pairs.put("csrf_token", csrf);
             pairs.put("question", question);
             pairs.put("annotation", htmlDesc);

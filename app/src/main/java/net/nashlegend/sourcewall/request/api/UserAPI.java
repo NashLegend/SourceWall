@@ -10,14 +10,13 @@ import net.nashlegend.sourcewall.events.LoginStateChangedEvent;
 import net.nashlegend.sourcewall.model.UserInfo;
 import net.nashlegend.sourcewall.request.HttpUtil;
 import net.nashlegend.sourcewall.request.NetworkTask;
+import net.nashlegend.sourcewall.request.ParamsMap;
 import net.nashlegend.sourcewall.request.RequestBuilder;
 import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.parsers.BooleanParser;
 import net.nashlegend.sourcewall.request.parsers.UserInfoParser;
 import net.nashlegend.sourcewall.util.Consts;
-import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
-
-import java.util.HashMap;
+import net.nashlegend.sourcewall.util.PrefsUtil;
 
 import de.greenrobot.event.EventBus;
 
@@ -86,7 +85,7 @@ public class UserAPI extends APIBase {
         if (TextUtils.isEmpty(summary)) {
             summary = title;
         }
-        HashMap<String, String> pairs = new HashMap<>();
+        ParamsMap pairs = new ParamsMap();
         pairs.put("title", title);
         pairs.put("url", link);
         pairs.put("summary", summary);
@@ -106,11 +105,11 @@ public class UserAPI extends APIBase {
      */
     @SuppressWarnings("deprecation")
     public static void logout() {
-        SharedPreferencesUtil.remove(Consts.Key_Access_Token);
-        SharedPreferencesUtil.remove(Consts.Key_Ukey);
-        SharedPreferencesUtil.remove(Consts.Key_User_Avatar);
-        SharedPreferencesUtil.remove(Consts.Key_User_ID);
-        SharedPreferencesUtil.remove(Consts.Key_User_Name);
+        PrefsUtil.remove(Consts.Key_Access_Token);
+        PrefsUtil.remove(Consts.Key_Ukey);
+        PrefsUtil.remove(Consts.Key_User_Avatar);
+        PrefsUtil.remove(Consts.Key_User_ID);
+        PrefsUtil.remove(Consts.Key_User_Name);
         CookieSyncManager.createInstance(App.getApp());
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.removeAllCookie();
@@ -128,7 +127,7 @@ public class UserAPI extends APIBase {
      * @return 用户token，正确的话，64位长度
      */
     public static String getToken() {
-        return SharedPreferencesUtil.readString(Consts.Key_Access_Token, "");
+        return PrefsUtil.readString(Consts.Key_Access_Token, "");
     }
 
     /**
@@ -137,7 +136,7 @@ public class UserAPI extends APIBase {
      * @param token
      */
     public static void setToken(String token) {
-        SharedPreferencesUtil.saveString(Consts.Key_Access_Token, token);
+        PrefsUtil.saveString(Consts.Key_Access_Token, token);
     }
 
     /**
@@ -146,7 +145,7 @@ public class UserAPI extends APIBase {
      * @return 用户ukey，6位长度
      */
     public static String getUkey() {
-        return SharedPreferencesUtil.readString(Consts.Key_Ukey, "");
+        return PrefsUtil.readString(Consts.Key_Ukey, "");
     }
 
     /**
@@ -155,7 +154,7 @@ public class UserAPI extends APIBase {
      * @return 用户ukey，6位长度
      */
     public static void setUkey(String ukey) {
-        SharedPreferencesUtil.saveString(Consts.Key_Ukey, ukey);
+        PrefsUtil.saveString(Consts.Key_Ukey, ukey);
     }
 
     /**
@@ -164,7 +163,7 @@ public class UserAPI extends APIBase {
      * @return 用户id，一串数字
      */
     public static String getUserID() {
-        return SharedPreferencesUtil.readString(Consts.Key_User_ID, "");
+        return PrefsUtil.readString(Consts.Key_User_ID, "");
     }
 
     /**
@@ -173,7 +172,7 @@ public class UserAPI extends APIBase {
      * @return 用户id，一串数字
      */
     public static String getName() {
-        return SharedPreferencesUtil.readString(Consts.Key_User_Name, "");
+        return PrefsUtil.readString(Consts.Key_User_Name, "");
     }
 
     /**
@@ -182,7 +181,7 @@ public class UserAPI extends APIBase {
      * @return 头像地址为http链接
      */
     public static String getUserAvatar() {
-        return SharedPreferencesUtil.readString(Consts.Key_User_Avatar, "");
+        return PrefsUtil.readString(Consts.Key_User_Avatar, "");
     }
 
     /**
@@ -191,7 +190,7 @@ public class UserAPI extends APIBase {
      * @return 用户登录时保存下来的cookie，未使用
      */
     public static String getCookie() {
-        return SharedPreferencesUtil.readString(Consts.Key_Cookie, "");
+        return PrefsUtil.readString(Consts.Key_Cookie, "");
     }
 
     /**

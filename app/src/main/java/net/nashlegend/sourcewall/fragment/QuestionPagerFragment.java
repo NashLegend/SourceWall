@@ -32,7 +32,7 @@ import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.ChannelHelper;
 import net.nashlegend.sourcewall.util.Consts;
-import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
+import net.nashlegend.sourcewall.util.PrefsUtil;
 import net.nashlegend.sourcewall.util.SimpleAnimationListener;
 import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.view.common.shuffle.AskTagMovableButton;
@@ -221,11 +221,11 @@ public class QuestionPagerFragment extends BaseFragment {
                     return;
                 }
                 if (AskTagHelper.getAskTagsNumber() > 0) {
-                    long lastDBVersion = SharedPreferencesUtil.readLong(Consts.Key_Last_Ask_Tags_Version, 0);
+                    long lastDBVersion = PrefsUtil.readLong(Consts.Key_Last_Ask_Tags_Version, 0);
                     if (currentDBVersion != lastDBVersion) {
                         resetButtons(AskTagHelper.getAllMyTags());
                         initView();
-                        currentDBVersion = SharedPreferencesUtil.readLong(Consts.Key_Last_Ask_Tags_Version, 0);
+                        currentDBVersion = PrefsUtil.readLong(Consts.Key_Last_Ask_Tags_Version, 0);
                     }
                     manageButton.setVisibility(View.VISIBLE);
                 } else {

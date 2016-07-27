@@ -13,7 +13,7 @@ import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.ImageUtils;
-import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
+import net.nashlegend.sourcewall.util.PrefsUtil;
 import net.nashlegend.sourcewall.view.common.TTextView;
 
 /**
@@ -32,7 +32,7 @@ public class MediumListItemView extends AceView<UComment> {
 
     public MediumListItemView(Context context) {
         super(context);
-        if (SharedPreferencesUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
+        if (PrefsUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
             setBackgroundColor(getContext().getResources().getColor(R.color.page_background_night));
         } else {
             setBackgroundColor(getContext().getResources().getColor(R.color.page_background));

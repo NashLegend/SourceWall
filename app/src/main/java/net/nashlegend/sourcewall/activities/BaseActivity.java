@@ -8,7 +8,7 @@ import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.util.Consts;
-import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
+import net.nashlegend.sourcewall.util.PrefsUtil;
 import net.nashlegend.sourcewall.util.ToastUtil;
 import net.nashlegend.sourcewall.view.common.AAsyncTask;
 import net.nashlegend.sourcewall.view.common.IStackedAsyncTaskInterface;
@@ -25,7 +25,7 @@ public abstract class BaseActivity extends SwipeActivity implements IStackedAsyn
 
     @Override
     public void setTheme(int resid) {
-        if (SharedPreferencesUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
+        if (PrefsUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
             resid = R.style.AppThemeNight;
         } else {
             resid = R.style.AppTheme;

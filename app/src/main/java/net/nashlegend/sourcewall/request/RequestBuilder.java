@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringDef;
 import android.text.TextUtils;
 
-import net.nashlegend.sourcewall.request.RequestObject.DetailedCallBack;
+import net.nashlegend.sourcewall.request.RequestObject.RequestCallBack;
 import net.nashlegend.sourcewall.request.RequestObject.Method;
 import net.nashlegend.sourcewall.request.RequestObject.RequestType;
 import net.nashlegend.sourcewall.request.api.UserAPI;
@@ -139,6 +139,18 @@ public class RequestBuilder<T> {
     }
 
     /**
+     * 设置键值对请求参数，如果之前曾经设置过，则将会清空之前的参数
+     *
+     * @param params
+     * @return
+     */
+    public RequestBuilder<T> params(ParamsMap params) {
+        request.params.clear();
+        request.params.addAll(params.params);
+        return this;
+    }
+
+    /**
      * 在当前参数的基础上再添加几个键值对请求参数
      *
      * @param params
@@ -156,7 +168,7 @@ public class RequestBuilder<T> {
      * @param value
      * @return
      */
-    public RequestBuilder<T> addParam(String key, String value) {
+    public RequestBuilder<T> addParam(String key, Object value) {
         request.params.add(new Param(key, value));
         return this;
     }
@@ -355,7 +367,7 @@ public class RequestBuilder<T> {
      * @param callBack
      * @return
      */
-    public RequestBuilder<T> callback(DetailedCallBack<T> callBack) {
+    public RequestBuilder<T> callback(RequestCallBack<T> callBack) {
         request.callBack = callBack;
         return this;
     }

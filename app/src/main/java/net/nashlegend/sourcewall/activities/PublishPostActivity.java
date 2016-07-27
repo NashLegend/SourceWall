@@ -46,8 +46,8 @@ import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.FileUtil;
 import net.nashlegend.sourcewall.util.Mob;
-import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
-import net.nashlegend.sourcewall.util.SketchSharedUtil;
+import net.nashlegend.sourcewall.util.PrefsUtil;
+import net.nashlegend.sourcewall.util.SketchUtil;
 
 import org.apache.http.message.BasicNameValuePair;
 
@@ -118,8 +118,8 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
     private void tryRestoreReply() {
         String sketchTitle = "";
         String sketchContent = "";
-        sketchTitle = SketchSharedUtil.readString(Consts.Key_Sketch_Publish_Post_Title + "_" + subItem.getValue(), "");
-        sketchContent = SketchSharedUtil.readString(Consts.Key_Sketch_Publish_Post_Content + "_" + subItem.getValue(), "");
+        sketchTitle = SketchUtil.readString(Consts.Key_Sketch_Publish_Post_Title + "_" + subItem.getValue(), "");
+        sketchContent = SketchUtil.readString(Consts.Key_Sketch_Publish_Post_Content + "_" + subItem.getValue(), "");
         titleEditText.setText(sketchTitle);
         bodyEditText.setText(restore2Spanned(sketchContent));
     }
@@ -216,8 +216,8 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void tryClearSketch() {
-        SketchSharedUtil.remove(Consts.Key_Sketch_Publish_Post_Content + "_" + subItem.getValue());
-        SketchSharedUtil.remove(Consts.Key_Sketch_Publish_Post_Title + "_" + subItem.getValue());
+        SketchUtil.remove(Consts.Key_Sketch_Publish_Post_Content + "_" + subItem.getValue());
+        SketchUtil.remove(Consts.Key_Sketch_Publish_Post_Title + "_" + subItem.getValue());
     }
 
     private void saveSketch() {
@@ -225,8 +225,8 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
             if (!TextUtils.isEmpty(titleEditText.getText().toString().trim()) || !TextUtils.isEmpty(bodyEditText.getText().toString().trim())) {
                 String sketchTitle = titleEditText.getText().toString();
                 String sketchContent = bodyEditText.getText().toString();
-                SketchSharedUtil.saveString(Consts.Key_Sketch_Publish_Post_Title + "_" + subItem.getValue(), sketchTitle);
-                SketchSharedUtil.saveString(Consts.Key_Sketch_Publish_Post_Content + "_" + subItem.getValue(), sketchContent);
+                SketchUtil.saveString(Consts.Key_Sketch_Publish_Post_Title + "_" + subItem.getValue(), sketchTitle);
+                SketchUtil.saveString(Consts.Key_Sketch_Publish_Post_Content + "_" + subItem.getValue(), sketchContent);
             } else if (TextUtils.isEmpty(titleEditText.getText().toString().trim()) && TextUtils.isEmpty(bodyEditText.getText().toString().trim())) {
                 tryClearSketch();
             }
@@ -349,14 +349,14 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
         if (!new File(path).exists()) {
             toast(R.string.file_not_exists);
         }
-        if (!SharedPreferencesUtil.readBoolean(Consts.Key_User_Has_Learned_Add_Image, false)) {
+        if (!PrefsUtil.readBoolean(Consts.Key_User_Has_Learned_Add_Image, false)) {
             new AlertDialog.Builder(PublishPostActivity.this)
                     .setTitle(R.string.hint)
                     .setMessage(R.string.tip_of_user_learn_add_image)
                     .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            SharedPreferencesUtil.saveBoolean(Consts.Key_User_Has_Learned_Add_Image, true);
+                            PrefsUtil.saveBoolean(Consts.Key_User_Has_Learned_Add_Image, true);
                         }
                     }).create().show();
         }

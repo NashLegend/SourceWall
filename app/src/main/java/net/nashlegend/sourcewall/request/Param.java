@@ -9,6 +9,10 @@ public class Param {
     public final String key;
     public final String value;
 
+    public Param(String key, Object value) {
+        this(key, String.valueOf(value));
+    }
+
     public Param(String key, String value) {
         this.key = key;
         this.value = value;

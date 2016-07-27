@@ -1,6 +1,6 @@
 package net.nashlegend.sourcewall.request.interceptors;
 
-import net.nashlegend.sourcewall.request.RequestObject.DetailedCallBack;
+import net.nashlegend.sourcewall.request.RequestObject.RequestCallBack;
 
 import java.io.IOException;
 
@@ -14,9 +14,9 @@ import okhttp3.Response;
  */
 public class UploadProgressInterceptor implements Interceptor {
 
-    DetailedCallBack callBack;
+    RequestCallBack callBack;
 
-    public UploadProgressInterceptor(DetailedCallBack callBack) {
+    public UploadProgressInterceptor(RequestCallBack callBack) {
         this.callBack = callBack;
     }
 

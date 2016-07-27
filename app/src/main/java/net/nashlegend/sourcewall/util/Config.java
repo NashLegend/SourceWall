@@ -40,7 +40,7 @@ public class Config {
     }
 
     public static boolean shouldLoadHomepageImage() {
-        return !SharedPreferencesUtil.readBoolean(Consts.Key_Image_No_Load_Homepage, false);
+        return !PrefsUtil.readBoolean(Consts.Key_Image_No_Load_Homepage, false);
     }
 
     public static boolean isWifi() {
@@ -50,7 +50,7 @@ public class Config {
     }
 
     public static int getImageLoadMode() {
-        return SharedPreferencesUtil.readInt(Consts.Key_Image_Load_Mode, Consts.MODE_ALWAYS_LOAD);
+        return PrefsUtil.readInt(Consts.Key_Image_Load_Mode, Consts.MODE_ALWAYS_LOAD);
     }
 
     /**
@@ -69,7 +69,7 @@ public class Config {
      */
     public static String getComplexReplyTail() {
         String tail = "";
-        switch (SharedPreferencesUtil.readInt(Consts.key_Use_Tail_Type, Consts.Type_Use_Default_Tail)) {
+        switch (PrefsUtil.readInt(Consts.key_Use_Tail_Type, Consts.Type_Use_Default_Tail)) {
             case Consts.Type_Use_Default_Tail:
                 tail = getDefaultComplexTail();
                 break;
@@ -108,7 +108,7 @@ public class Config {
      * @return 参数化的尾巴
      */
     public static String getParametricCustomComplexTail() {
-        String tail = MDUtil.UBB2HtmlDumb(SharedPreferencesUtil.readString(Consts.key_Custom_Tail, ""));
+        String tail = MDUtil.UBB2HtmlDumb(PrefsUtil.readString(Consts.key_Custom_Tail, ""));
         if (TextUtils.isEmpty(tail)) {
             return "";
         } else {
@@ -123,7 +123,7 @@ public class Config {
      */
     public static String getSimpleReplyTail() {
         String tail = "";
-        switch (SharedPreferencesUtil.readInt(Consts.key_Use_Tail_Type, Consts.Type_Use_Default_Tail)) {
+        switch (PrefsUtil.readInt(Consts.key_Use_Tail_Type, Consts.Type_Use_Default_Tail)) {
             case Consts.Type_Use_Default_Tail:
                 tail = getDefaultSimpleTail();
                 break;
@@ -161,7 +161,7 @@ public class Config {
      * @return 自定义尾巴
      */
     public static String getParametricCustomSimpleTail() {
-        String tail = SharedPreferencesUtil.readString(Consts.key_Custom_Tail, "");
+        String tail = PrefsUtil.readString(Consts.key_Custom_Tail, "");
         if (TextUtils.isEmpty(tail)) {
             return "";
         } else {

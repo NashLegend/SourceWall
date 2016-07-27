@@ -22,7 +22,7 @@ import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Mob;
-import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
+import net.nashlegend.sourcewall.util.PrefsUtil;
 
 public class SettingActivity extends BaseActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     private TextView imageText;
@@ -100,7 +100,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             logText.setText(R.string.log_in);
         }
 
-        checkBox.setChecked(SharedPreferencesUtil.readBoolean(Consts.Key_Image_No_Load_Homepage, false));
+        checkBox.setChecked(PrefsUtil.readBoolean(Consts.Key_Image_No_Load_Homepage, false));
 
         int mode = Config.getImageLoadMode();
         switch (mode) {
@@ -121,7 +121,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 break;
         }
 
-        switch (SharedPreferencesUtil.readInt(Consts.key_Use_Tail_Type, Consts.Type_Use_Default_Tail)) {
+        switch (PrefsUtil.readInt(Consts.key_Use_Tail_Type, Consts.Type_Use_Default_Tail)) {
             case Consts.Type_Use_Default_Tail:
                 buttonDefault.setChecked(true);
                 tailText.setText(Config.getDefaultPlainTail());
@@ -134,7 +134,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 break;
             case Consts.Type_Use_Custom_Tail:
                 buttonCustom.setChecked(true);
-                tailText.setText(SharedPreferencesUtil.readString(Consts.key_Custom_Tail, ""));
+                tailText.setText(PrefsUtil.readString(Consts.key_Custom_Tail, ""));
                 tailText.setEnabled(true);
                 break;
         }
@@ -206,7 +206,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (buttonView.getId() == R.id.check_homepage) {
-            SharedPreferencesUtil.saveBoolean(Consts.Key_Image_No_Load_Homepage, isChecked);
+            PrefsUtil.saveBoolean(Consts.Key_Image_No_Load_Homepage, isChecked);
         } else {
             if (isChecked) {
                 switch (buttonView.getId()) {
@@ -219,7 +219,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                         tailText.setEnabled(false);
                         break;
                     case R.id.button_use_custom:
-                        String cus = SharedPreferencesUtil.readString(Consts.key_Custom_Tail, "");
+                        String cus = PrefsUtil.readString(Consts.key_Custom_Tail, "");
                         if (!TextUtils.isEmpty(cus)) {
                             tailText.setText(cus);
                         }
@@ -246,12 +246,12 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     protected void onPause() {
         String preTail = Config.getSimpleReplyTail();
         if (buttonDefault.isChecked()) {
-            SharedPreferencesUtil.saveInt(Consts.key_Use_Tail_Type, Consts.Type_Use_Default_Tail);
+            PrefsUtil.saveInt(Consts.key_Use_Tail_Type, Consts.Type_Use_Default_Tail);
         } else if (buttonPhone.isChecked()) {
-            SharedPreferencesUtil.saveInt(Consts.key_Use_Tail_Type, Consts.Type_Use_Phone_Tail);
+            PrefsUtil.saveInt(Consts.key_Use_Tail_Type, Consts.Type_Use_Phone_Tail);
         } else {
-            SharedPreferencesUtil.saveInt(Consts.key_Use_Tail_Type, Consts.Type_Use_Custom_Tail);
-            SharedPreferencesUtil.saveString(Consts.key_Custom_Tail, tailText.getText().toString());
+            PrefsUtil.saveInt(Consts.key_Use_Tail_Type, Consts.Type_Use_Custom_Tail);
+            PrefsUtil.saveString(Consts.key_Custom_Tail, tailText.getText().toString());
         }
         String crtTail = Config.getSimpleReplyTail();
 
@@ -260,11 +260,11 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         }
 
         if (buttonAlways.isChecked()) {
-            SharedPreferencesUtil.saveInt(Consts.Key_Image_Load_Mode, Consts.MODE_ALWAYS_LOAD);
+            PrefsUtil.saveInt(Consts.Key_Image_Load_Mode, Consts.MODE_ALWAYS_LOAD);
         } else if (buttonNever.isChecked()) {
-            SharedPreferencesUtil.saveInt(Consts.Key_Image_Load_Mode, Consts.MODE_NEVER_LOAD);
+            PrefsUtil.saveInt(Consts.Key_Image_Load_Mode, Consts.MODE_NEVER_LOAD);
         } else {
-            SharedPreferencesUtil.saveInt(Consts.Key_Image_Load_Mode, Consts.MODE_LOAD_WHEN_WIFI);
+            PrefsUtil.saveInt(Consts.Key_Image_Load_Mode, Consts.MODE_LOAD_WHEN_WIFI);
         }
         super.onPause();
     }

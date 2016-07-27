@@ -37,7 +37,7 @@ public class RequestObject<T> {
     public int interval = 0;//重试间隔
     public int requestType = RequestType.PLAIN;
     public final List<Param> params = new ArrayList<>();
-    public DetailedCallBack<T> callBack = null;
+    public RequestCallBack<T> callBack = null;
     public Parser<T> parser;
     public String uploadFileKey = "file";
     public MediaType mediaType = null;
@@ -130,7 +130,39 @@ public class RequestObject<T> {
      *
      * @param <T>
      */
-    public static abstract class CallBack<T> implements DetailedCallBack<T> {
+    public static class SimpleCallBack<T> implements RequestCallBack<T> {
+        @Override
+        public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<T> result) {
+
+        }
+
+        @Override
+        public void onSuccess(@NonNull T result, @NonNull ResponseObject<T> detailed) {
+            onSuccess(result);
+        }
+
+
+        @Override
+        public void onRequestProgress(long current, long total) {
+
+        }
+
+        @Override
+        public void onResponseProgress(long current, long total, boolean done) {
+
+        }
+
+        public void onSuccess(@NonNull T result) {
+
+        }
+    }
+
+    /**
+     * http 请求基本回调
+     *
+     * @param <T>
+     */
+    public static abstract class CallBack<T> implements RequestCallBack<T> {
         @Override
         public void onRequestProgress(long current, long total) {
 
@@ -147,7 +179,7 @@ public class RequestObject<T> {
      *
      * @param <T>
      */
-    public interface DetailedCallBack<T> {
+    public interface RequestCallBack<T> {
         /**
          * result不可能为空
          *

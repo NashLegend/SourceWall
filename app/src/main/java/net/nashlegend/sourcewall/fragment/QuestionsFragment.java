@@ -47,7 +47,7 @@ import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Mob;
-import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
+import net.nashlegend.sourcewall.util.PrefsUtil;
 import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.view.QuestionListItemView;
 import net.nashlegend.sourcewall.view.common.LListView;
@@ -208,8 +208,8 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
         if (User_Has_Learned_Load_My_Tags) {
             return;
         }
-        if (!SharedPreferencesUtil.readBoolean(Consts.Key_User_Has_Learned_Load_My_Tags, false)) {
-            SharedPreferencesUtil.saveBoolean(Consts.Key_User_Has_Learned_Load_My_Tags, true);
+        if (!PrefsUtil.readBoolean(Consts.Key_User_Has_Learned_Load_My_Tags, false)) {
+            PrefsUtil.saveBoolean(Consts.Key_User_Has_Learned_Load_My_Tags, true);
             User_Has_Learned_Load_My_Tags = true;
             AlertDialog dialog = new AlertDialog.Builder(getActivity()).setTitle(R.string.hint).setMessage(R.string.hint_of_load_my_tags).setPositiveButton(R.string.ok_i_know, new DialogInterface.OnClickListener() {
                 @Override
@@ -330,11 +330,11 @@ public class QuestionsFragment extends ChannelsFragment implements LListView.OnR
             public void onAnimationEnd(Animator animation) {
                 if (isAdded()) {
                     if (AskTagHelper.getAskTagsNumber() > 0) {
-                        long lastDBVersion = SharedPreferencesUtil.readLong(Consts.Key_Last_Ask_Tags_Version, 0);
+                        long lastDBVersion = PrefsUtil.readLong(Consts.Key_Last_Ask_Tags_Version, 0);
                         if (currentDBVersion != lastDBVersion) {
                             getButtons();
                             initView();
-                            currentDBVersion = SharedPreferencesUtil.readLong(Consts.Key_Last_Ask_Tags_Version, 0);
+                            currentDBVersion = PrefsUtil.readLong(Consts.Key_Last_Ask_Tags_Version, 0);
                         }
                         manageButton.setVisibility(View.VISIBLE);
                     } else {

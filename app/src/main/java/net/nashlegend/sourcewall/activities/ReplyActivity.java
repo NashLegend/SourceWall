@@ -48,8 +48,8 @@ import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.FileUtil;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.RegUtil;
-import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
-import net.nashlegend.sourcewall.util.SketchSharedUtil;
+import net.nashlegend.sourcewall.util.PrefsUtil;
+import net.nashlegend.sourcewall.util.SketchUtil;
 import net.nashlegend.sourcewall.util.UiUtil;
 
 import java.io.File;
@@ -176,11 +176,11 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
         if (!new File(path).exists()) {
             toast(R.string.file_not_exists);
         }
-        if (!SharedPreferencesUtil.readBoolean(Consts.Key_User_Has_Learned_Add_Image, false)) {
+        if (!PrefsUtil.readBoolean(Consts.Key_User_Has_Learned_Add_Image, false)) {
             new AlertDialog.Builder(ReplyActivity.this).setTitle(R.string.hint).setMessage(R.string.tip_of_user_learn_add_image).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    SharedPreferencesUtil.saveBoolean(Consts.Key_User_Has_Learned_Add_Image, true);
+                    PrefsUtil.saveBoolean(Consts.Key_User_Has_Learned_Add_Image, true);
                 }
             }).create().show();
         }
@@ -368,11 +368,11 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
         String content = "";
         if (aceModel != null) {
             if (aceModel instanceof Article) {
-                content = SketchSharedUtil.readString(Consts.Key_Sketch_Article_Reply + "_" + ((Article) aceModel).getId(), "");
+                content = SketchUtil.readString(Consts.Key_Sketch_Article_Reply + "_" + ((Article) aceModel).getId(), "");
             } else if (aceModel instanceof Post) {
-                content = SketchSharedUtil.readString(Consts.Key_Sketch_Post_Reply + "_" + ((Post) aceModel).getId(), "");
+                content = SketchUtil.readString(Consts.Key_Sketch_Post_Reply + "_" + ((Post) aceModel).getId(), "");
             } else if (aceModel instanceof Question) {
-                content = SketchSharedUtil.readString(Consts.Key_Sketch_Question_Answer + "_" + ((Question) aceModel).getId(), "");
+                content = SketchUtil.readString(Consts.Key_Sketch_Question_Answer + "_" + ((Question) aceModel).getId(), "");
             }
         }
         editText.setText(restore2Spanned(content));
@@ -472,11 +472,11 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
 
     private void tryClearSketch() {
         if (aceModel instanceof Article) {
-            SketchSharedUtil.remove(Consts.Key_Sketch_Article_Reply + "_" + ((Article) aceModel).getId());
+            SketchUtil.remove(Consts.Key_Sketch_Article_Reply + "_" + ((Article) aceModel).getId());
         } else if (aceModel instanceof Post) {
-            SketchSharedUtil.remove(Consts.Key_Sketch_Post_Reply + "_" + ((Post) aceModel).getId());
+            SketchUtil.remove(Consts.Key_Sketch_Post_Reply + "_" + ((Post) aceModel).getId());
         } else if (aceModel instanceof Question) {
-            SketchSharedUtil.remove(Consts.Key_Sketch_Question_Answer + "_" + ((Question) aceModel).getId());
+            SketchUtil.remove(Consts.Key_Sketch_Question_Answer + "_" + ((Question) aceModel).getId());
         }
     }
 
@@ -484,11 +484,11 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
         if (!replyOK && !TextUtils.isEmpty(editText.getText().toString().trim()) && aceModel != null) {
             String sketch = editText.getText().toString();
             if (aceModel instanceof Article) {
-                SketchSharedUtil.saveString(Consts.Key_Sketch_Article_Reply + "_" + ((Article) aceModel).getId(), sketch);
+                SketchUtil.saveString(Consts.Key_Sketch_Article_Reply + "_" + ((Article) aceModel).getId(), sketch);
             } else if (aceModel instanceof Post) {
-                SketchSharedUtil.saveString(Consts.Key_Sketch_Post_Reply + "_" + ((Post) aceModel).getId(), sketch);
+                SketchUtil.saveString(Consts.Key_Sketch_Post_Reply + "_" + ((Post) aceModel).getId(), sketch);
             } else if (aceModel instanceof Question) {
-                SketchSharedUtil.saveString(Consts.Key_Sketch_Question_Answer + "_" + ((Question) aceModel).getId(), sketch);
+                SketchUtil.saveString(Consts.Key_Sketch_Question_Answer + "_" + ((Question) aceModel).getId(), sketch);
             }
         } else if (!replyOK && TextUtils.isEmpty(editText.getText().toString().trim())) {
             tryClearSketch();

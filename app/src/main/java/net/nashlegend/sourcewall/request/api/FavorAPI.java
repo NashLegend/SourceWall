@@ -4,6 +4,7 @@ import net.nashlegend.sourcewall.model.Basket;
 import net.nashlegend.sourcewall.model.Category;
 import net.nashlegend.sourcewall.model.Favor;
 import net.nashlegend.sourcewall.request.NetworkTask;
+import net.nashlegend.sourcewall.request.ParamsMap;
 import net.nashlegend.sourcewall.request.RequestBuilder;
 import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
@@ -14,7 +15,6 @@ import net.nashlegend.sourcewall.request.parsers.CategoryListParser;
 import net.nashlegend.sourcewall.request.parsers.FavorListParser;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import rx.Observable;
 
@@ -33,7 +33,7 @@ public class FavorAPI extends APIBase {
      */
     public static Observable<ResponseObject<ArrayList<Favor>>> getFavorList(String basketId, int offset, boolean useCache) {
         String url = "http://apis.guokr.com/favorite/link.json";
-        HashMap<String, String> pairs = new HashMap<>();
+        ParamsMap pairs = new ParamsMap();
         pairs.put("retrieve_type", "by_basket");
         pairs.put("basket_id", basketId);
         pairs.put("limit", "20");
@@ -60,7 +60,7 @@ public class FavorAPI extends APIBase {
      */
     public static NetworkTask<Boolean> favorLink(String link, String title, Basket basket, CallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/favorite/link.json";
-        HashMap<String, String> params = new HashMap<>();
+        ParamsMap params = new ParamsMap();
         params.put("basket_id", basket.getId());
         params.put("url", link);
         params.put("title", title);
@@ -80,7 +80,7 @@ public class FavorAPI extends APIBase {
      */
     public static NetworkTask<ArrayList<Basket>> getBaskets(CallBack<ArrayList<Basket>> callBack) {
         String url = "http://www.guokr.com/apis/favorite/basket.json";
-        HashMap<String, String> pairs = new HashMap<>();
+        ParamsMap pairs = new ParamsMap();
         pairs.put("t", System.currentTimeMillis() + "");
         pairs.put("retrieve_type", "by_ukey");
         pairs.put("ukey", UserAPI.getUkey());
@@ -104,7 +104,7 @@ public class FavorAPI extends APIBase {
      */
     public static NetworkTask<Basket> createBasket(String title, String introduction, String category_id, CallBack<Basket> callBack) {
         String url = "http://www.guokr.com/apis/favorite/basket.json";
-        HashMap<String, String> params = new HashMap<>();
+        ParamsMap params = new ParamsMap();
         params.put("title", title);
         params.put("introduction", introduction);
         params.put("category_id", category_id);

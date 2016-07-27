@@ -23,7 +23,7 @@ public class ProgressResponseBody extends ResponseBody {
     private final ResponseBody responseBody;
     //进度回调接口
     @Nullable
-    private final RequestObject.DetailedCallBack callBack;
+    private final RequestObject.RequestCallBack callBack;
     //包装完成的BufferedSource
     private BufferedSource bufferedSource;
 
@@ -33,7 +33,7 @@ public class ProgressResponseBody extends ResponseBody {
      * @param responseBody 待包装的响应体
      * @param callBack
      */
-    public ProgressResponseBody(ResponseBody responseBody, @Nullable RequestObject.DetailedCallBack callBack) {
+    public ProgressResponseBody(ResponseBody responseBody, @Nullable RequestObject.RequestCallBack callBack) {
         this.responseBody = responseBody;
         this.callBack = callBack;
     }

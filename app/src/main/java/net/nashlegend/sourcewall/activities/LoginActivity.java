@@ -27,7 +27,7 @@ import net.nashlegend.sourcewall.request.HttpUtil;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Mob;
-import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
+import net.nashlegend.sourcewall.util.PrefsUtil;
 
 import de.greenrobot.event.EventBus;
 
@@ -119,7 +119,7 @@ public class LoginActivity extends BaseActivity {
                 // login ok
                 if (parseRawCookie(cookieStr)) {
                     webView.stopLoading();
-                    SharedPreferencesUtil.saveString(Consts.Key_Cookie, cookieStr);
+                    PrefsUtil.saveString(Consts.Key_Cookie, cookieStr);
                     setResult(RESULT_OK);
                     delayFinish();
                 } else {
@@ -168,7 +168,7 @@ public class LoginActivity extends BaseActivity {
             }
             if (parseRawCookie(cookieStr)) {
                 webView.stopLoading();
-                SharedPreferencesUtil.saveString(Consts.Key_Cookie, cookieStr);
+                PrefsUtil.saveString(Consts.Key_Cookie, cookieStr);
                 setResult(RESULT_OK);
                 delayFinish();
             } else {

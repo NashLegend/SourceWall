@@ -5,6 +5,7 @@ import net.nashlegend.sourcewall.model.Author;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.NetworkTask;
+import net.nashlegend.sourcewall.request.ParamsMap;
 import net.nashlegend.sourcewall.request.RequestBuilder;
 import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
@@ -23,7 +24,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -49,7 +49,7 @@ public class ArticleAPI extends APIBase {
      */
     public static Observable<ResponseObject<ArrayList<Article>>> getArticleList(int type, String key, int offset, boolean useCache) {
         String url = "http://www.guokr.com/apis/minisite/article.json";
-        HashMap<String, String> pairs = new HashMap<>();
+        ParamsMap pairs = new ParamsMap();
         switch (type) {
             case SubItem.Type_Collections:
                 pairs.put("retrieve_type", "by_subject");
@@ -103,7 +103,7 @@ public class ArticleAPI extends APIBase {
      */
     public static Observable<ResponseObject<ArrayList<UComment>>> getArticleReplies(final String id, final int offset, int limit) {
         String url = "http://apis.guokr.com/minisite/article_reply.json";
-        HashMap<String, String> pairs = new HashMap<>();
+        ParamsMap pairs = new ParamsMap();
         pairs.put("article_id", id);
         pairs.put("limit", String.valueOf(limit));
         pairs.put("offset", String.valueOf(offset));
@@ -164,12 +164,10 @@ public class ArticleAPI extends APIBase {
      */
     private static Observable<ResponseObject<Article>> getArticleSimpleByID(String article_id) {
         String url = "http://apis.guokr.com/minisite/article.json";
-        HashMap<String, String> pairs = new HashMap<>();
-        pairs.put("article_id", article_id);
         return new RequestBuilder<Article>()
                 .get()
                 .url(url)
-                .params(pairs)
+                .addParam("article_id", article_id)
                 .parser(new SimpleArticleParser())
                 .flatMap();
     }
@@ -279,12 +277,10 @@ public class ArticleAPI extends APIBase {
      */
     public static NetworkTask<Boolean> likeComment(String id, CallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/minisite/article_reply_liking.json";
-        HashMap<String, String> pairs = new HashMap<>();
-        pairs.put("reply_id", id);
         return new RequestBuilder<Boolean>()
                 .post()
                 .url(url)
-                .params(pairs)
+                .addParam("reply_id", id)
                 .parser(new BooleanParser())
                 .callback(callBack)
                 .post()
@@ -299,12 +295,10 @@ public class ArticleAPI extends APIBase {
      */
     public static NetworkTask<Boolean> deleteMyComment(String id, CallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/minisite/article_reply.json";
-        HashMap<String, String> pairs = new HashMap<>();
-        pairs.put("reply_id", id);
         return new RequestBuilder<Boolean>()
                 .delete()
                 .url(url)
-                .params(pairs)
+                .addParam("reply_id", id)
                 .parser(new BooleanParser())
                 .callback(callBack)
                 .requestAsync();
@@ -319,7 +313,7 @@ public class ArticleAPI extends APIBase {
      */
     public static NetworkTask<String> replyArticle(String id, String content, CallBack<String> callBack) {
         String url = "http://apis.guokr.com/minisite/article_reply.json";
-        HashMap<String, String> pairs = new HashMap<>();
+        ParamsMap pairs = new ParamsMap();
         pairs.put("article_id", id);
         pairs.put("content", content);
         return new RequestBuilder<String>()

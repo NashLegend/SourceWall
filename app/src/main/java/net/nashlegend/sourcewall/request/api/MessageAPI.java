@@ -5,6 +5,7 @@ import net.nashlegend.sourcewall.model.Notice;
 import net.nashlegend.sourcewall.model.Reminder;
 import net.nashlegend.sourcewall.model.ReminderNoticeNum;
 import net.nashlegend.sourcewall.request.NetworkTask;
+import net.nashlegend.sourcewall.request.ParamsMap;
 import net.nashlegend.sourcewall.request.RequestBuilder;
 import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.parsers.BooleanParser;
@@ -16,7 +17,6 @@ import net.nashlegend.sourcewall.request.parsers.ReminderListParser;
 import net.nashlegend.sourcewall.request.parsers.ReminderNoticeNumParser;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by NashLegend on 16/3/15.
@@ -31,7 +31,7 @@ public class MessageAPI extends APIBase {
      */
     public static NetworkTask<ReminderNoticeNum> getReminderAndNoticeNum(CallBack<ReminderNoticeNum> callBack) {
         String url = "http://www.guokr.com/apis/community/rn_num.json";
-        HashMap<String, String> pairs = new HashMap<>();
+        ParamsMap pairs = new ParamsMap();
         pairs.put("_", String.valueOf(System.currentTimeMillis()));
         return new RequestBuilder<ReminderNoticeNum>()
                 .get()
@@ -51,7 +51,7 @@ public class MessageAPI extends APIBase {
      */
     public static NetworkTask<ArrayList<Reminder>> getReminderList(int offset, CallBack<ArrayList<Reminder>> callBack) {
         String url = "http://www.guokr.com/apis/community/reminder.json";
-        HashMap<String, String> pairs = new HashMap<>();
+        ParamsMap pairs = new ParamsMap();
         pairs.put("_", System.currentTimeMillis() + "");
         pairs.put("limit", "20");
         pairs.put("offset", String.valueOf(offset));
@@ -72,7 +72,7 @@ public class MessageAPI extends APIBase {
      */
     public static NetworkTask<ArrayList<Notice>> getNoticeList(CallBack<ArrayList<Notice>> callBack) {
         String url = "http://www.guokr.com/apis/community/notice.json";
-        HashMap<String, String> pairs = new HashMap<>();
+        ParamsMap pairs = new ParamsMap();
         pairs.put("_", System.currentTimeMillis() + "");
         pairs.put("limit", "1024");
         pairs.put("offset", "0");
@@ -110,7 +110,7 @@ public class MessageAPI extends APIBase {
      */
     public static NetworkTask<ArrayList<Notice>> ignoreOneNotice(String noticeID, CallBack<ArrayList<Notice>> callBack) {
         String url = "http://www.guokr.com/apis/community/notice_ignore.json";
-        HashMap<String, String> pairs = new HashMap<>();
+        ParamsMap pairs = new ParamsMap();
         pairs.put("nid", noticeID);
         pairs.put("_", System.currentTimeMillis() + "");
         return new RequestBuilder<ArrayList<Notice>>()
@@ -140,7 +140,7 @@ public class MessageAPI extends APIBase {
      */
     public static NetworkTask<ArrayList<Message>> getMessageList(int offset, CallBack<ArrayList<Message>> callBack) {
         String url = "http://www.guokr.com/apis/community/user/message.json";
-        HashMap<String, String> pairs = new HashMap<>();
+        ParamsMap pairs = new ParamsMap();
         pairs.put("limit", "20");
         pairs.put("offset", String.valueOf(offset));
         return new RequestBuilder<ArrayList<Message>>()
