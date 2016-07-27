@@ -44,13 +44,13 @@ import net.nashlegend.sourcewall.request.NetworkTask;
 import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.APIBase;
-import net.nashlegend.sourcewall.util.CommonUtil;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.FileUtil;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.RegUtil;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 import net.nashlegend.sourcewall.util.SketchSharedUtil;
+import net.nashlegend.sourcewall.util.UiUtil;
 
 import java.io.File;
 import java.util.regex.Matcher;
@@ -303,13 +303,13 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
         final NetworkTask<String> task = APIBase.reply(aceModel, header + rep, new CallBack<String>() {
             @Override
             public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<String> result) {
-                CommonUtil.dismissDialog(progressDialog);
+                UiUtil.dismissDialog(progressDialog);
                 toast(R.string.reply_failed);
             }
 
             @Override
             public void onSuccess(@NonNull String result, @NonNull ResponseObject<String> detailed) {
-                CommonUtil.dismissDialog(progressDialog);
+                UiUtil.dismissDialog(progressDialog);
                 toast(R.string.reply_ok);
                 setResult(RESULT_OK);
                 replyOK = true;

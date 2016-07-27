@@ -137,4 +137,8 @@ public abstract class BaseActivity extends SwipeActivity implements IStackedAsyn
         }
     }
 
+    public void startActivity(Class clazz) {
+        Intent intent = new Intent(this, clazz);
+        startActivity(intent);
+    }
 }

@@ -31,10 +31,10 @@ import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.ChannelHelper;
-import net.nashlegend.sourcewall.util.CommonUtil;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 import net.nashlegend.sourcewall.util.SimpleAnimationListener;
+import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.view.common.shuffle.AskTagMovableButton;
 import net.nashlegend.sourcewall.view.common.shuffle.MovableButton;
 import net.nashlegend.sourcewall.view.common.shuffle.ShuffleDeskSimple;
@@ -342,17 +342,17 @@ public class QuestionPagerFragment extends BaseFragment {
                         .subscribe(new Observer<ArrayList<AskTag>>() {
                             @Override
                             public void onCompleted() {
-                                CommonUtil.cancelDialog(progressDialog);
+                                UiUtil.cancelDialog(progressDialog);
                             }
 
                             @Override
                             public void onError(Throwable e) {
-                                CommonUtil.cancelDialog(progressDialog);
+                                UiUtil.cancelDialog(progressDialog);
                             }
 
                             @Override
                             public void onNext(ArrayList<AskTag> askTagList) {
-                                CommonUtil.cancelDialog(progressDialog);
+                                UiUtil.cancelDialog(progressDialog);
                                 resetButtons(askTagList);
                                 initView();
                             }

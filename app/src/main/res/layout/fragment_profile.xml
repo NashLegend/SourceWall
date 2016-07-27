@@ -40,6 +40,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/layout_logged_in"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -58,6 +59,7 @@
                 android:orientation="horizontal">
 
                 <ImageView
+                    android:id="@+id/img_msg"
                     android:layout_width="60dp"
                     android:layout_height="match_parent"
                     android:scaleType="centerInside"

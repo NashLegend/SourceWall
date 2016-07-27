@@ -17,8 +17,8 @@ import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.PostAPI;
-import net.nashlegend.sourcewall.util.CommonUtil;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.view.PostListItemView;
 import net.nashlegend.sourcewall.view.common.LListView;
 import net.nashlegend.sourcewall.view.common.LoadingView;
@@ -263,7 +263,7 @@ public class Posts2Fragment extends BaseFragment implements LoadingView.ReloadLi
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (CommonUtil.shouldThrottle()) {
+        if (UiUtil.shouldThrottle()) {
             return;
         }
         if (view instanceof PostListItemView) {

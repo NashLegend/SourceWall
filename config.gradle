@@ -52,6 +52,7 @@ ext {
             MaterialSearchView : 'com.miguelcatalan:materialsearchview:1.4.0',
             SearchView         : 'com.lapism:searchview:2.2',
             BottomBar          : 'me.majiajie:pager-bottom-tab-strip:1.0.0',
+            BottomBar2         : 'com.roughike:bottom-bar:1.4.0.1',
             Logger             : 'com.orhanobut:logger:1.14',
     ]
 

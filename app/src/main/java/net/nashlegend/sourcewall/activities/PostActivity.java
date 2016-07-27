@@ -41,11 +41,11 @@ import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.AutoHideUtil;
 import net.nashlegend.sourcewall.util.AutoHideUtil.AutoHideListener;
-import net.nashlegend.sourcewall.util.CommonUtil;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.RegUtil;
 import net.nashlegend.sourcewall.util.ShareUtil;
+import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;
 import net.nashlegend.sourcewall.view.MediumListItemView;
 import net.nashlegend.sourcewall.view.common.LListView;
@@ -259,7 +259,7 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
 
     @Override
     public void onClick(View v) {
-        if (CommonUtil.shouldThrottle()) {
+        if (UiUtil.shouldThrottle()) {
             return;
         }
         switch (v.getId()) {

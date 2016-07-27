@@ -25,16 +25,17 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import net.nashlegend.sourcewall.R;
+import net.nashlegend.sourcewall.activities.PublishPostActivity;
 import net.nashlegend.sourcewall.db.GroupHelper;
 import net.nashlegend.sourcewall.db.gen.MyGroup;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.ChannelHelper;
-import net.nashlegend.sourcewall.util.CommonUtil;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
 import net.nashlegend.sourcewall.util.SimpleAnimationListener;
+import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.view.common.shuffle.GroupMovableButton;
 import net.nashlegend.sourcewall.view.common.shuffle.MovableButton;
 import net.nashlegend.sourcewall.view.common.shuffle.ShuffleDeskSimple;
@@ -59,6 +60,8 @@ public class PostPagerFragment extends BaseFragment {
     ViewPager viewPager;
     @BindView(R.id.show_more)
     ImageView showMore;
+    @BindView(R.id.button_write)
+    View btnWrite;
 
     @BindView(R.id.plastic_scroller)
     ScrollView scrollView;
@@ -135,13 +138,26 @@ public class PostPagerFragment extends BaseFragment {
         super.onResume();
         if (UserAPI.isLoggedIn()) {
             showMore.setVisibility(View.VISIBLE);
+            btnWrite.setVisibility(View.VISIBLE);
         } else {
             showMore.setVisibility(View.GONE);
+            btnWrite.setVisibility(View.GONE);
         }
     }
 
-    @OnClick(R.id.show_more)
-    public void toggleShowMore() {
+    @OnClick({R.id.show_more, R.id.button_write})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.show_more:
+                toggleShowMore();
+                break;
+            case R.id.button_write:
+                startActivity(PublishPostActivity.class);
+                break;
+        }
+    }
+
+    private void toggleShowMore() {
         if (isMoreSectionsButtonShowing) {
             hideMoreSections();
         } else {
@@ -344,17 +360,17 @@ public class PostPagerFragment extends BaseFragment {
                         .subscribe(new Observer<ArrayList<MyGroup>>() {
                             @Override
                             public void onCompleted() {
-                                CommonUtil.cancelDialog(progressDialog);
+                                UiUtil.cancelDialog(progressDialog);
                             }
 
                             @Override
                             public void onError(Throwable e) {
-                                CommonUtil.cancelDialog(progressDialog);
+                                UiUtil.cancelDialog(progressDialog);
                             }
 
                             @Override
                             public void onNext(ArrayList<MyGroup> myGroups) {
-                                CommonUtil.cancelDialog(progressDialog);
+                                UiUtil.cancelDialog(progressDialog);
                                 resetButtons(myGroups);
                                 initView();
                             }

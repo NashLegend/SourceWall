@@ -19,8 +19,8 @@ import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
-import net.nashlegend.sourcewall.util.CommonUtil;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.view.QuestionListItemView;
 import net.nashlegend.sourcewall.view.common.LListView;
 import net.nashlegend.sourcewall.view.common.LoadingView;
@@ -284,7 +284,7 @@ public class Questions2Fragment extends BaseFragment implements LoadingView.Relo
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (CommonUtil.shouldThrottle()) {
+        if (UiUtil.shouldThrottle()) {
             return;
         }
         if (view instanceof QuestionListItemView) {

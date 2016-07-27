@@ -23,8 +23,8 @@ import net.nashlegend.sourcewall.request.NetworkTask;
 import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.MessageAPI;
-import net.nashlegend.sourcewall.util.CommonUtil;
 import net.nashlegend.sourcewall.util.Mob;
+import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;
 import net.nashlegend.sourcewall.view.NoticeView;
 import net.nashlegend.sourcewall.view.common.LListView;
@@ -61,7 +61,7 @@ public class NoticesFragment extends BaseFragment implements IChannelsFragment, 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if (CommonUtil.shouldThrottle()) {
+                if (UiUtil.shouldThrottle()) {
                     return;
                 }
                 if (view instanceof NoticeView) {
@@ -162,13 +162,13 @@ public class NoticesFragment extends BaseFragment implements IChannelsFragment, 
         final NetworkTask ignoreNetworkTask = MessageAPI.ignoreAllNotice(new CallBack<Boolean>() {
             @Override
             public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
-                CommonUtil.dismissDialog(progressDialog);
+                UiUtil.dismissDialog(progressDialog);
                 toast("忽略未遂");
             }
 
             @Override
             public void onSuccess(@NonNull Boolean result, @NonNull ResponseObject<Boolean> detailed) {
-                CommonUtil.dismissDialog(progressDialog);
+                UiUtil.dismissDialog(progressDialog);
                 listView.setCanPullToRefresh(true);
                 listView.doneOperation();
                 adapter.clear();

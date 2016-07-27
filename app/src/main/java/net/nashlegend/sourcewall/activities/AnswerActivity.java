@@ -39,12 +39,12 @@ import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.MessageAPI;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
-import net.nashlegend.sourcewall.util.CommonUtil;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.ImageUtils;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.StyleChecker;
+import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.view.common.LoadingView;
 import net.nashlegend.sourcewall.view.common.SScrollView;
 import net.nashlegend.sourcewall.view.common.WWebView;
@@ -318,7 +318,7 @@ public class AnswerActivity extends BaseActivity implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        if (CommonUtil.shouldThrottle()) {
+        if (UiUtil.shouldThrottle()) {
             return;
         }
         switch (v.getId()) {

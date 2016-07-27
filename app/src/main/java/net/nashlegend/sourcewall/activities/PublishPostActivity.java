@@ -62,11 +62,11 @@ import java.util.regex.Pattern;
  */
 public class PublishPostActivity extends BaseActivity implements View.OnClickListener {
     private EditText titleEditText;
-    private EditText tagEditText;
     private EditText bodyEditText;
     private ImageButton imgButton;
     private ImageButton insertButton;
-    private Spinner spinner;
+    private Spinner groupSpinner;
+    private Spinner topicSpinner;
     private View uploadingProgress;
     private ProgressDialog progressDialog;
     private String tmpImagePath;
@@ -87,9 +87,9 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         titleEditText = (EditText) findViewById(R.id.text_post_title);
-        tagEditText = (EditText) findViewById(R.id.text_question_tag);
         bodyEditText = (EditText) findViewById(R.id.text_post_body);
-        spinner = (Spinner) findViewById(R.id.spinner_post_topic);
+        groupSpinner = (Spinner) findViewById(R.id.spinner_group);
+        topicSpinner = (Spinner) findViewById(R.id.spinner_post_topic);
         ImageButton publishButton = (ImageButton) findViewById(R.id.btn_publish);
         imgButton = (ImageButton) findViewById(R.id.btn_add_img);
         insertButton = (ImageButton) findViewById(R.id.btn_insert_img);
@@ -97,21 +97,12 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
         uploadingProgress = findViewById(R.id.prg_uploading_img);
         subItem = getIntent().getParcelableExtra(Consts.Extra_SubItem);
         if (subItem != null) {
-            if (subItem.getSection() == SubItem.Section_Post) {
-                String group_name = subItem.getName();
-                group_id = subItem.getValue();
-                setTitle(group_name + " -- " + getString(R.string.title_activity_publish_post));
-                spinner.setVisibility(View.VISIBLE);
-                tagEditText.setVisibility(View.GONE);
-                titleEditText.setHint(R.string.hint_input_post_title);
-                bodyEditText.setHint(R.string.hint_input_post_content);
-            } else {
-                setTitle(R.string.title_activity_publish_question);
-                spinner.setVisibility(View.GONE);
-                tagEditText.setVisibility(View.VISIBLE);
-                titleEditText.setHint(R.string.hint_input_question);
-                bodyEditText.setHint(R.string.hint_input_question_desc);
-            }
+            String group_name = subItem.getName();
+            group_id = subItem.getValue();
+            setTitle(group_name + " -- " + getString(R.string.title_activity_publish_post));
+            topicSpinner.setVisibility(View.VISIBLE);
+            titleEditText.setHint(R.string.hint_input_post_title);
+            bodyEditText.setHint(R.string.hint_input_post_content);
         } else {
             toast("No Data Received");
             finish();
@@ -127,10 +118,8 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
     private void tryRestoreReply() {
         String sketchTitle = "";
         String sketchContent = "";
-        if (isPost()) {
-            sketchTitle = SketchSharedUtil.readString(Consts.Key_Sketch_Publish_Post_Title + "_" + subItem.getValue(), "");
-            sketchContent = SketchSharedUtil.readString(Consts.Key_Sketch_Publish_Post_Content + "_" + subItem.getValue(), "");
-        }
+        sketchTitle = SketchSharedUtil.readString(Consts.Key_Sketch_Publish_Post_Title + "_" + subItem.getValue(), "");
+        sketchContent = SketchSharedUtil.readString(Consts.Key_Sketch_Publish_Post_Content + "_" + subItem.getValue(), "");
         titleEditText.setText(sketchTitle);
         bodyEditText.setText(restore2Spanned(sketchContent));
     }
@@ -227,14 +216,12 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void tryClearSketch() {
-        if (isPost()) {
-            SketchSharedUtil.remove(Consts.Key_Sketch_Publish_Post_Content + "_" + subItem.getValue());
-            SketchSharedUtil.remove(Consts.Key_Sketch_Publish_Post_Title + "_" + subItem.getValue());
-        }
+        SketchSharedUtil.remove(Consts.Key_Sketch_Publish_Post_Content + "_" + subItem.getValue());
+        SketchSharedUtil.remove(Consts.Key_Sketch_Publish_Post_Title + "_" + subItem.getValue());
     }
 
     private void saveSketch() {
-        if (!replyOK && isPost() && subItem != null) {
+        if (!replyOK && subItem != null) {
             if (!TextUtils.isEmpty(titleEditText.getText().toString().trim()) || !TextUtils.isEmpty(bodyEditText.getText().toString().trim())) {
                 String sketchTitle = titleEditText.getText().toString();
                 String sketchContent = bodyEditText.getText().toString();
@@ -250,10 +237,6 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
     protected void onDestroy() {
         saveSketch();
         super.onDestroy();
-    }
-
-    private boolean isPost() {
-        return subItem != null && subItem.getSection() == SubItem.Section_Post;
     }
 
     private void prepare() {
@@ -283,24 +266,19 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
                 onReceivePreparedData(result);
             }
         };
-        if (isPost()) {
-            PostAPI.getPostPrepareData(group_id, callBack);
-        }
-//        else {
-//            //TODO 提问的PrepareData，现在未完成
-//        }
+        PostAPI.getPostPrepareData(group_id, callBack);
     }
 
     private void onReceivePreparedData(PrepareData prepareData) {
         csrf = prepareData.getCsrf();
         topics = prepareData.getPairs();
-        if (isPost() && topic != null) {
+        if (topic != null) {
             String[] items = new String[topics.size()];
             for (int i = 0; i < topics.size(); i++) {
                 items[i] = topics.get(i).getName();
             }
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.simple_spinner_item, items);
-            spinner.setAdapter(arrayAdapter);
+            topicSpinner.setAdapter(arrayAdapter);
         }
 
     }
@@ -494,22 +472,21 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
             return;
         }
 
-        if (TextUtils.isEmpty(bodyEditText.getText().toString().trim()) && isPost()) {
+        if (TextUtils.isEmpty(bodyEditText.getText().toString().trim())) {
             toast(R.string.content_cannot_be_empty);
             return;
         }
 
         if (TextUtils.isEmpty(csrf)) {
-            new AlertDialog.Builder(PublishPostActivity.this).setTitle(R.string.hint).setMessage(R.string.validate_failed_try_again).setPositiveButton(R.string.ok, null).show();
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.hint)
+                    .setMessage(R.string.validate_failed_try_again)
+                    .setPositiveButton(R.string.ok, null)
+                    .show();
             return;
         }
 
-        if (isPost()) {
-            //不必检测越界行为
-            topic = topics.get(spinner.getSelectedItemPosition()).getValue();
-        } else {
-            topic = tagEditText.getText().toString();
-        }
+        topic = topics.get(topicSpinner.getSelectedItemPosition()).getValue();
         hideInput();
         String title = titleEditText.getText().toString();
         String body = bodyEditText.getText().toString();

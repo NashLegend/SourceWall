@@ -1,5 +1,6 @@
 package net.nashlegend.sourcewall.fragment;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 
 import net.nashlegend.sourcewall.util.ToastUtil;
@@ -97,6 +98,14 @@ public abstract class BaseFragment extends Fragment implements IStackedAsyncTask
 
     public boolean takeOverBackPress() {
         return false;
+    }
+
+    public void startActivity(Class clazz) {
+        if (getContext() == null) {
+            return;
+        }
+        Intent intent = new Intent(getContext(), clazz);
+        startActivity(intent);
     }
 
 }

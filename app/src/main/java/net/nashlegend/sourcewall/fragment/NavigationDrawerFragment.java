@@ -44,12 +44,12 @@ import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.MessageAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
-import net.nashlegend.sourcewall.util.CommonUtil;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.ImageUtils;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.SharedPreferencesUtil;
+import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.view.SubItemView;
 
 import butterknife.BindView;
@@ -340,7 +340,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
 
     @OnClick({R.id.layout_user, R.id.view_setting, R.id.view_switch_to_day, R.id.view_switch_to_night})
     public void onClick(View v) {
-        if (CommonUtil.shouldThrottle()) {
+        if (UiUtil.shouldThrottle()) {
             return;
         }
         switch (v.getId()) {

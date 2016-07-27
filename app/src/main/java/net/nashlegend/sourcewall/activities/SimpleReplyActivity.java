@@ -29,9 +29,9 @@ import net.nashlegend.sourcewall.request.RequestObject.CallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
-import net.nashlegend.sourcewall.util.CommonUtil;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Mob;
+import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.view.SimpleCommentItemView;
 import net.nashlegend.sourcewall.view.common.LListView;
 import net.nashlegend.sourcewall.view.common.LoadingView;
@@ -185,13 +185,13 @@ public class SimpleReplyActivity extends BaseActivity implements LListView.OnRef
                 CallBack<UComment> callBack = new CallBack<UComment>() {
                     @Override
                     public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<UComment> result) {
-                        CommonUtil.dismissDialog(progressDialog);
+                        UiUtil.dismissDialog(progressDialog);
                         toast("回复失败");
                     }
 
                     @Override
                     public void onSuccess(@NonNull UComment result, @NonNull ResponseObject<UComment> detailed) {
-                        CommonUtil.dismissDialog(progressDialog);
+                        UiUtil.dismissDialog(progressDialog);
                         mMenu.findItem(R.id.action_cancel_simple_reply).setVisible(false);
                         textReply.setHint(R.string.hint_reply);
                         textReply.setText("");

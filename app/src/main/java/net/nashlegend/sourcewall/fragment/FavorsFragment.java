@@ -19,8 +19,8 @@ import net.nashlegend.sourcewall.model.Favor;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.FavorAPI;
-import net.nashlegend.sourcewall.util.CommonUtil;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;
 import net.nashlegend.sourcewall.view.FavorListItemView;
 import net.nashlegend.sourcewall.view.common.LListView;
@@ -248,7 +248,7 @@ public class FavorsFragment extends ChannelsFragment implements LListView.OnRefr
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (CommonUtil.shouldThrottle()) {
+        if (UiUtil.shouldThrottle()) {
             return;
         }
         if (view instanceof FavorListItemView) {

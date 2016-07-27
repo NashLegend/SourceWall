@@ -19,11 +19,11 @@ import com.umeng.analytics.MobclickAgent;
 import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.ImageActivity;
-import net.nashlegend.sourcewall.util.CommonUtil;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.DisplayUtil;
 import net.nashlegend.sourcewall.util.Mob;
+import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;
 
 import org.jsoup.Jsoup;
@@ -128,7 +128,7 @@ public class WWebView extends WebView {
     }
 
     public void onImageClicked(String clickedUrl) {
-        if (CommonUtil.shouldThrottle()) {
+        if (UiUtil.shouldThrottle()) {
             return;
         }
         String html = primarySource;
