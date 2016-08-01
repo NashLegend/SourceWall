@@ -40,8 +40,7 @@ import net.nashlegend.sourcewall.events.PrepareOpenContentFragmentEvent;
 import net.nashlegend.sourcewall.model.ReminderNoticeNum;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.model.UserInfo;
-import net.nashlegend.sourcewall.request.RequestObject.CallBack;
-import net.nashlegend.sourcewall.request.ResponseObject;
+import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
 import net.nashlegend.sourcewall.request.api.MessageAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Config;
@@ -375,9 +374,9 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
             if (TextUtils.isEmpty(nameString)) {
                 userName.setText(R.string.loading);
             }
-            UserAPI.getUserInfoByUkey(UserAPI.getUkey(), new CallBack<UserInfo>() {
+            UserAPI.getUserInfoByUkey(UserAPI.getUkey(), new SimpleCallBack<UserInfo>() {
                 @Override
-                public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<UserInfo> result) {
+                public void onFailure() {
                     String nameString = UserAPI.getName();
                     if (TextUtils.isEmpty(nameString)) {
                         userName.setText(R.string.click_to_reload);
@@ -385,7 +384,7 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
                 }
 
                 @Override
-                public void onSuccess(@NonNull UserInfo result, @NonNull ResponseObject<UserInfo> detailed) {
+                public void onSuccess(@NonNull UserInfo result) {
                     setupUserInfo(result);
                 }
             });
@@ -406,14 +405,14 @@ public class NavigationDrawerFragment extends BaseFragment implements View.OnCli
     }
 
     private void loadMessages() {
-        MessageAPI.getReminderAndNoticeNum(new CallBack<ReminderNoticeNum>() {
+        MessageAPI.getReminderAndNoticeNum(new SimpleCallBack<ReminderNoticeNum>() {
             @Override
-            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<ReminderNoticeNum> result) {
+            public void onFailure() {
                 noticeView.setVisibility(View.GONE);
             }
 
             @Override
-            public void onSuccess(@NonNull ReminderNoticeNum result, @NonNull ResponseObject<ReminderNoticeNum> detailed) {
+            public void onSuccess(@NonNull ReminderNoticeNum result) {
                 if (result.getNotice_num() > 0) {
                     noticeView.setVisibility(View.VISIBLE);
                 } else {

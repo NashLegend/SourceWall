@@ -7,7 +7,7 @@ import net.nashlegend.sourcewall.model.ReminderNoticeNum;
 import net.nashlegend.sourcewall.request.NetworkTask;
 import net.nashlegend.sourcewall.request.ParamsMap;
 import net.nashlegend.sourcewall.request.RequestBuilder;
-import net.nashlegend.sourcewall.request.RequestObject.CallBack;
+import net.nashlegend.sourcewall.request.RequestObject.RequestCallBack;
 import net.nashlegend.sourcewall.request.parsers.BooleanParser;
 import net.nashlegend.sourcewall.request.parsers.IgnoreNoticeParser;
 import net.nashlegend.sourcewall.request.parsers.MessageListParser;
@@ -29,7 +29,7 @@ public class MessageAPI extends APIBase {
      * @param callBack
      * @return
      */
-    public static NetworkTask<ReminderNoticeNum> getReminderAndNoticeNum(CallBack<ReminderNoticeNum> callBack) {
+    public static NetworkTask<ReminderNoticeNum> getReminderAndNoticeNum(RequestCallBack<ReminderNoticeNum> callBack) {
         String url = "http://www.guokr.com/apis/community/rn_num.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("_", String.valueOf(System.currentTimeMillis()));
@@ -49,7 +49,7 @@ public class MessageAPI extends APIBase {
      * @param callBack
      * @return
      */
-    public static NetworkTask<ArrayList<Reminder>> getReminderList(int offset, CallBack<ArrayList<Reminder>> callBack) {
+    public static NetworkTask<ArrayList<Reminder>> getReminderList(int offset, RequestCallBack<ArrayList<Reminder>> callBack) {
         String url = "http://www.guokr.com/apis/community/reminder.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("_", System.currentTimeMillis() + "");
@@ -70,7 +70,7 @@ public class MessageAPI extends APIBase {
      * @param callBack
      * @return
      */
-    public static NetworkTask<ArrayList<Notice>> getNoticeList(CallBack<ArrayList<Notice>> callBack) {
+    public static NetworkTask<ArrayList<Notice>> getNoticeList(RequestCallBack<ArrayList<Notice>> callBack) {
         String url = "http://www.guokr.com/apis/community/notice.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("_", System.currentTimeMillis() + "");
@@ -91,7 +91,7 @@ public class MessageAPI extends APIBase {
      * @param callBack
      * @return
      */
-    public static NetworkTask<Boolean> ignoreAllNotice(CallBack<Boolean> callBack) {
+    public static NetworkTask<Boolean> ignoreAllNotice(RequestCallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/community/notice_ignore.json";
         return new RequestBuilder<Boolean>()
                 .put()
@@ -108,7 +108,7 @@ public class MessageAPI extends APIBase {
      * @param callBack
      * @return
      */
-    public static NetworkTask<ArrayList<Notice>> ignoreOneNotice(String noticeID, CallBack<ArrayList<Notice>> callBack) {
+    public static NetworkTask<ArrayList<Notice>> ignoreOneNotice(String noticeID, RequestCallBack<ArrayList<Notice>> callBack) {
         String url = "http://www.guokr.com/apis/community/notice_ignore.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("nid", noticeID);
@@ -138,7 +138,7 @@ public class MessageAPI extends APIBase {
      * @param callBack
      * @return RequestObject
      */
-    public static NetworkTask<ArrayList<Message>> getMessageList(int offset, CallBack<ArrayList<Message>> callBack) {
+    public static NetworkTask<ArrayList<Message>> getMessageList(int offset, RequestCallBack<ArrayList<Message>> callBack) {
         String url = "http://www.guokr.com/apis/community/user/message.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("limit", "20");
@@ -159,7 +159,7 @@ public class MessageAPI extends APIBase {
      * @param callBack
      * @return RequestObject
      */
-    public static NetworkTask<Message> getOneMessage(String id, CallBack<Message> callBack) {
+    public static NetworkTask<Message> getOneMessage(String id, RequestCallBack<Message> callBack) {
         String url = "http://www.guokr.com/apis/community/user/message/" + id + ".json";
         return new RequestBuilder<Message>()
                 .get()

@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -28,7 +27,7 @@ import net.nashlegend.sourcewall.dialogs.FavorDialog;
 import net.nashlegend.sourcewall.dialogs.InputDialog;
 import net.nashlegend.sourcewall.model.Answer;
 import net.nashlegend.sourcewall.model.Question;
-import net.nashlegend.sourcewall.request.RequestObject.CallBack;
+import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.MessageAPI;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
@@ -267,14 +266,14 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
     }
 
     private void confirmRecommend(String comment) {
-        QuestionAPI.recommendQuestion(question.getId(), question.getTitle(), question.getSummary(), comment, new CallBack<Boolean>() {
+        QuestionAPI.recommendQuestion(question.getId(), question.getTitle(), question.getSummary(), comment, new SimpleCallBack<Boolean>() {
             @Override
-            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
+            public void onFailure() {
                 toast(R.string.recommend_failed);
             }
 
             @Override
-            public void onSuccess(@NonNull Boolean result, @NonNull ResponseObject<Boolean> detailed) {
+            public void onSuccess(@NonNull Boolean result) {
                 toast(R.string.recommend_ok);
             }
         });
@@ -297,14 +296,14 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
 
 
     private void followQuestion() {
-        QuestionAPI.followQuestion(question.getId(), new CallBack<Boolean>() {
+        QuestionAPI.followQuestion(question.getId(), new SimpleCallBack<Boolean>() {
             @Override
-            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
+            public void onFailure() {
                 toast(R.string.follow_failed);
             }
 
             @Override
-            public void onSuccess(@NonNull Boolean result, @NonNull ResponseObject<Boolean> detailed) {
+            public void onSuccess() {
                 toast(R.string.follow_ok);
             }
         });
@@ -312,14 +311,14 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
 
     private void unfollowQuestion() {
         MobclickAgent.onEvent(QuestionActivity.this, Mob.Event_Unfollow_Question);
-        QuestionAPI.unfollowQuestion(question.getId(), new CallBack<Boolean>() {
+        QuestionAPI.unfollowQuestion(question.getId(), new SimpleCallBack<Boolean>() {
             @Override
-            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
+            public void onFailure() {
                 toast(R.string.unfollow_failed);
             }
 
             @Override
-            public void onSuccess(@NonNull Boolean result, @NonNull ResponseObject<Boolean> detailed) {
+            public void onSuccess() {
                 toast(R.string.unfollow_ok);
             }
         });

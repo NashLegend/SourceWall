@@ -9,8 +9,6 @@ import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -34,8 +32,8 @@ import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.model.UComment;
-import net.nashlegend.sourcewall.request.RequestObject.CallBack;
-import net.nashlegend.sourcewall.request.ResponseObject;
+import net.nashlegend.sourcewall.request.RequestObject.RequestCallBack;
+import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
 import net.nashlegend.sourcewall.request.api.ArticleAPI;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
@@ -435,14 +433,14 @@ public class SingleReplyActivity extends BaseActivity implements View.OnClickLis
             toastSingleton(R.string.has_liked_this);
             return;
         }
-        CallBack<Boolean> callBack = new CallBack<Boolean>() {
+        RequestCallBack<Boolean> callBack = new SimpleCallBack<Boolean>() {
             @Override
-            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
+            public void onFailure() {
                 toast("点赞未遂");
             }
 
             @Override
-            public void onSuccess(@NonNull Boolean result, @NonNull ResponseObject<Boolean> detailed) {
+            public void onSuccess() {
                 data.setHasLiked(true);
                 data.setLikeNum(data.getLikeNum() + 1);
                 supportText.setText(String.valueOf(data.getLikeNum()));
@@ -465,14 +463,14 @@ public class SingleReplyActivity extends BaseActivity implements View.OnClickLis
             notifyNeedLog();
             return;
         }
-        CallBack<Boolean> callBack = new CallBack<Boolean>() {
+        RequestCallBack<Boolean> callBack = new SimpleCallBack<Boolean>() {
             @Override
-            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
+            public void onFailure() {
                 toastSingleton("未能删除");
             }
 
             @Override
-            public void onSuccess(@NonNull Boolean result, @NonNull ResponseObject<Boolean> detailed) {
+            public void onSuccess() {
                 finish();
             }
         };

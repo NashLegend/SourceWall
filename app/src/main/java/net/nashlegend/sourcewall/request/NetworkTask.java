@@ -615,16 +615,14 @@ public class NetworkTask<T> {
                             if (request.parser != null) {
                                 responseObject.result = request.parser.parse(cachedResult, responseObject);
                             }
-                        } else {
-                            onRequestFailure(e, responseObject);
+                            callSuccess(responseObject);
+                            return;
                         }
                     } catch (Exception ignored) {
                         //缓存过的数据是不会出错的，除非是改版后parser发生了改变，一般这里走不到
-                        onRequestFailure(e, responseObject);
                     }
-                } else {
-                    onRequestFailure(e, responseObject);
                 }
+                onRequestFailure(e, responseObject);
             }
 
             @Override
@@ -664,11 +662,10 @@ public class NetworkTask<T> {
             public void onFailure(Call call, IOException e) {
                 final ResponseObject<T> responseObject = new ResponseObject<>();
                 responseObject.requestObject = request;
+                JsonHandler.handleRequestException(e, responseObject);
                 if (e != null && (e instanceof ConnectException || e instanceof UnknownHostException)) {
                     responseObject.message = "无法连接到网络";
                 }
-                responseObject.ok = false;
-                responseObject.throwable = e;
                 onRequestFailure(e, responseObject);
             }
 

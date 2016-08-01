@@ -2,7 +2,6 @@ package net.nashlegend.sourcewall.view;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +12,7 @@ import com.umeng.analytics.MobclickAgent;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.NoticeAdapter;
 import net.nashlegend.sourcewall.model.Notice;
-import net.nashlegend.sourcewall.request.RequestObject.CallBack;
-import net.nashlegend.sourcewall.request.ResponseObject;
+import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
 import net.nashlegend.sourcewall.request.api.MessageAPI;
 import net.nashlegend.sourcewall.util.Mob;
 
@@ -70,14 +68,10 @@ public class NoticeView extends AceView<Notice> implements View.OnClickListener 
 
     private void ignoreNotice(final Notice notice) {
         MobclickAgent.onEvent(getContext(), Mob.Event_Ignore_One_Notice);
-        MessageAPI.ignoreOneNotice(notice.getId(), new CallBack<ArrayList<Notice>>() {
-            @Override
-            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<ArrayList<Notice>> result) {
-
-            }
+        MessageAPI.ignoreOneNotice(notice.getId(), new SimpleCallBack<ArrayList<Notice>>() {
 
             @Override
-            public void onSuccess(@NonNull ArrayList<Notice> result, @NonNull ResponseObject<ArrayList<Notice>> detailed) {
+            public void onSuccess(@NonNull ArrayList<Notice> result) {
                 if (noticeAdapter != null && noticeAdapter.getList().remove(notice)) {
                     noticeAdapter.notifyDataSetChanged();
                 }

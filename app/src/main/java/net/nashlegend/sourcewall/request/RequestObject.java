@@ -133,7 +133,7 @@ public class RequestObject<T> {
     public static class SimpleCallBack<T> implements RequestCallBack<T> {
         @Override
         public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<T> result) {
-
+            onFailure(result);
         }
 
         @Override
@@ -153,6 +153,18 @@ public class RequestObject<T> {
         }
 
         public void onSuccess(@NonNull T result) {
+            onSuccess();
+        }
+
+        public void onSuccess() {
+
+        }
+
+        public void onFailure(@NonNull ResponseObject<T> result) {
+            onFailure();
+        }
+
+        public void onFailure() {
 
         }
     }

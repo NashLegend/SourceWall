@@ -20,8 +20,7 @@ import net.nashlegend.sourcewall.adapters.NoticeAdapter;
 import net.nashlegend.sourcewall.model.Notice;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.NetworkTask;
-import net.nashlegend.sourcewall.request.RequestObject.CallBack;
-import net.nashlegend.sourcewall.request.ResponseObject;
+import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
 import net.nashlegend.sourcewall.request.api.MessageAPI;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.UiUtil;
@@ -87,9 +86,9 @@ public class NoticesFragment extends BaseFragment implements IChannelsFragment, 
 
     private void loadData() {
         cancelPotentialTask();
-        networkTask = MessageAPI.getNoticeList(new CallBack<ArrayList<Notice>>() {
+        networkTask = MessageAPI.getNoticeList(new SimpleCallBack<ArrayList<Notice>>() {
             @Override
-            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<ArrayList<Notice>> result) {
+            public void onFailure() {
                 loadingView.onLoadFailed();
                 toast(R.string.load_failed);
                 listView.setCanPullToRefresh(true);
@@ -97,7 +96,7 @@ public class NoticesFragment extends BaseFragment implements IChannelsFragment, 
             }
 
             @Override
-            public void onSuccess(@NonNull ArrayList<Notice> result, @NonNull ResponseObject<ArrayList<Notice>> detailed) {
+            public void onSuccess(@NonNull ArrayList<Notice> result) {
                 loadingView.onLoadSuccess();
                 if (result.size() == 0) {
                     toast(R.string.no_notice);
@@ -159,15 +158,15 @@ public class NoticesFragment extends BaseFragment implements IChannelsFragment, 
     }
 
     private void ignoreAll() {
-        final NetworkTask ignoreNetworkTask = MessageAPI.ignoreAllNotice(new CallBack<Boolean>() {
+        final NetworkTask ignoreNetworkTask = MessageAPI.ignoreAllNotice(new SimpleCallBack<Boolean>() {
             @Override
-            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
+            public void onFailure() {
                 UiUtil.dismissDialog(progressDialog);
                 toast("忽略未遂");
             }
 
             @Override
-            public void onSuccess(@NonNull Boolean result, @NonNull ResponseObject<Boolean> detailed) {
+            public void onSuccess() {
                 UiUtil.dismissDialog(progressDialog);
                 listView.setCanPullToRefresh(true);
                 listView.doneOperation();

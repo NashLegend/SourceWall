@@ -14,7 +14,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -33,7 +32,7 @@ import net.nashlegend.sourcewall.adapters.PostDetailAdapter;
 import net.nashlegend.sourcewall.dialogs.FavorDialog;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.UComment;
-import net.nashlegend.sourcewall.request.RequestObject.CallBack;
+import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
 import net.nashlegend.sourcewall.request.ResponseCode;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.MessageAPI;
@@ -232,14 +231,9 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
             notifyNeedLog();
         } else {
             MobclickAgent.onEvent(this, Mob.Event_Like_Post);
-            PostAPI.likePost(post.getId(), new CallBack<Boolean>() {
+            PostAPI.likePost(post.getId(), new SimpleCallBack<Boolean>() {
                 @Override
-                public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
-
-                }
-
-                @Override
-                public void onSuccess(@NonNull Boolean result, @NonNull ResponseObject<Boolean> detailed) {
+                public void onSuccess() {
                     post.setLikeNum(post.getLikeNum() + 1);
                     adapter.notifyDataSetChanged();
                     toastSingleton("已赞");
@@ -377,16 +371,16 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
             return;
         }
         final UComment comment = mediumListItemView.getData();
-        PostAPI.likeComment(comment.getID(), new CallBack<Boolean>() {
+        PostAPI.likeComment(comment.getID(), new SimpleCallBack<Boolean>() {
             @Override
-            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
+            public void onFailure(@NonNull ResponseObject<Boolean> result) {
                 if (result.code == ResponseCode.CODE_ALREADY_LIKED) {
                     comment.setHasLiked(true);
                 }
             }
 
             @Override
-            public void onSuccess(@NonNull Boolean result, @NonNull ResponseObject<Boolean> detailed) {
+            public void onSuccess() {
                 comment.setHasLiked(true);
                 comment.setLikeNum(comment.getLikeNum() + 1);
                 if (mediumListItemView.getData() == comment) {
@@ -400,14 +394,14 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
         if (!UserAPI.isLoggedIn()) {
             notifyNeedLog();
         } else {
-            PostAPI.deleteMyComment(comment.getID(), new CallBack<Boolean>() {
+            PostAPI.deleteMyComment(comment.getID(), new SimpleCallBack<Boolean>() {
                 @Override
-                public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
+                public void onFailure() {
                     toastSingleton(getString(R.string.delete_failed));
                 }
 
                 @Override
-                public void onSuccess(@NonNull Boolean result, @NonNull ResponseObject<Boolean> detailed) {
+                public void onSuccess() {
                     if (post.getReplyNum() > 0) {
                         post.setReplyNum(post.getReplyNum() - 1);
                     }

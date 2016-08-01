@@ -17,7 +17,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -39,7 +38,7 @@ import net.nashlegend.sourcewall.dialogs.InputDialog;
 import net.nashlegend.sourcewall.model.PrepareData;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.NetworkTask;
-import net.nashlegend.sourcewall.request.RequestObject.CallBack;
+import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.APIBase;
 import net.nashlegend.sourcewall.request.api.PostAPI;
@@ -240,9 +239,9 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void prepare() {
-        CallBack<PrepareData> callBack = new CallBack<PrepareData>() {
+        SimpleCallBack<PrepareData> callBack = new SimpleCallBack<PrepareData>() {
             @Override
-            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<PrepareData> result) {
+            public void onFailure(@NonNull ResponseObject<PrepareData> result) {
                 if (result.statusCode == 403) {
                     new AlertDialog.Builder(PublishPostActivity.this)
                             .setTitle(R.string.hint)
@@ -261,7 +260,7 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
             }
 
             @Override
-            public void onSuccess(@NonNull PrepareData result, @NonNull ResponseObject<PrepareData> detailed) {
+            public void onSuccess(@NonNull PrepareData result) {
                 toast(getString(R.string.get_csrf_ok));
                 onReceivePreparedData(result);
             }
@@ -361,15 +360,15 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
                     }).create().show();
         }
         setImageButtonsUploading();
-        APIBase.uploadImage(path, new CallBack<String>() {
+        APIBase.uploadImage(path, new SimpleCallBack<String>() {
             @Override
-            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<String> result) {
+            public void onFailure() {
                 resetImageButtons();
                 toast(R.string.upload_failed);
             }
 
             @Override
-            public void onSuccess(@NonNull String result, @NonNull ResponseObject<String> detailed) {
+            public void onSuccess(@NonNull String result) {
                 toast(R.string.hint_click_to_add_image_to_editor);
                 doneUploadingImage(result);
                 if (tmpUploadFile != null && tmpUploadFile.exists()) {
@@ -523,15 +522,19 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
     }
 
     public void publishPost(String group_id, String csrf, String title, String body, String topic) {
-        NetworkTask task = PostAPI.publishPost(group_id, csrf, title, body, topic, new CallBack<String>() {
+        NetworkTask task = PostAPI.publishPost(group_id, csrf, title, body, topic, new SimpleCallBack<String>() {
             @Override
-            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<String> result) {
+            public void onFailure() {
                 MobclickAgent.onEvent(PublishPostActivity.this, Mob.Event_Publish_Post_Failed);
-                new AlertDialog.Builder(PublishPostActivity.this).setTitle(R.string.hint).setMessage(R.string.publish_post_failed).setPositiveButton(R.string.ok, null).show();
+                new AlertDialog.Builder(PublishPostActivity.this)
+                        .setTitle(R.string.hint)
+                        .setMessage(R.string.publish_post_failed)
+                        .setPositiveButton(R.string.ok, null)
+                        .show();
             }
 
             @Override
-            public void onSuccess(@NonNull String result, @NonNull ResponseObject<String> detailed) {
+            public void onSuccess() {
                 dismissDialog();
                 MobclickAgent.onEvent(PublishPostActivity.this, Mob.Event_Publish_Post_OK);
                 toast(R.string.publish_post_ok);

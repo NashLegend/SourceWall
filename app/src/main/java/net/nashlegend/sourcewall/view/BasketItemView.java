@@ -1,8 +1,6 @@
 package net.nashlegend.sourcewall.view;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +11,7 @@ import android.widget.TextView;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.model.Basket;
 import net.nashlegend.sourcewall.request.NetworkTask;
-import net.nashlegend.sourcewall.request.RequestObject.CallBack;
-import net.nashlegend.sourcewall.request.ResponseObject;
+import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
 import net.nashlegend.sourcewall.request.api.FavorAPI;
 
 import de.greenrobot.event.EventBus;
@@ -116,15 +113,15 @@ public class BasketItemView extends AceView<Basket> implements View.OnClickListe
         button.setEnabled(false);
         button.setVisibility(GONE);
         progressBar.setVisibility(VISIBLE);
-        networkTask = FavorAPI.favorLink(link, title, bas, new CallBack<Boolean>() {
+        networkTask = FavorAPI.favorLink(link, title, bas, new SimpleCallBack<Boolean>() {
             @Override
-            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
+            public void onFailure() {
                 bas.setFavoring(false);
                 postBasketChanged(bas);
             }
 
             @Override
-            public void onSuccess(@NonNull Boolean result, @NonNull ResponseObject<Boolean> detailed) {
+            public void onSuccess() {
                 bas.setFavoring(false);
                 bas.setHasFavored(true);
                 postBasketChanged(bas);

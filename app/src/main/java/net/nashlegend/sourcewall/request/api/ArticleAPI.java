@@ -7,7 +7,7 @@ import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.NetworkTask;
 import net.nashlegend.sourcewall.request.ParamsMap;
 import net.nashlegend.sourcewall.request.RequestBuilder;
-import net.nashlegend.sourcewall.request.RequestObject.CallBack;
+import net.nashlegend.sourcewall.request.RequestObject.RequestCallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.parsers.ArticleCommentListParser;
 import net.nashlegend.sourcewall.request.parsers.ArticleCommentParser;
@@ -264,7 +264,7 @@ public class ArticleAPI extends APIBase {
      * @param comment   推荐评语
      * @return ResponseObject
      */
-    public static NetworkTask<Boolean> recommendArticle(String articleID, String title, String summary, String comment, CallBack<Boolean> callBack) {
+    public static NetworkTask<Boolean> recommendArticle(String articleID, String title, String summary, String comment, RequestCallBack<Boolean> callBack) {
         String articleUrl = "http://www.guokr.com/article/" + articleID + "/";
         return UserAPI.recommendLink(articleUrl, title, summary, comment, callBack);
     }
@@ -275,7 +275,7 @@ public class ArticleAPI extends APIBase {
      * @param id 文章id
      * @return ResponseObject
      */
-    public static NetworkTask<Boolean> likeComment(String id, CallBack<Boolean> callBack) {
+    public static NetworkTask<Boolean> likeComment(String id, RequestCallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/minisite/article_reply_liking.json";
         return new RequestBuilder<Boolean>()
                 .post()
@@ -293,7 +293,7 @@ public class ArticleAPI extends APIBase {
      * @param id 评论id
      * @return ResponseObject
      */
-    public static NetworkTask<Boolean> deleteMyComment(String id, CallBack<Boolean> callBack) {
+    public static NetworkTask<Boolean> deleteMyComment(String id, RequestCallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/minisite/article_reply.json";
         return new RequestBuilder<Boolean>()
                 .delete()
@@ -311,7 +311,7 @@ public class ArticleAPI extends APIBase {
      * @param content 回复内容
      * @return ResponseObject.result is the reply_id if ok;
      */
-    public static NetworkTask<String> replyArticle(String id, String content, CallBack<String> callBack) {
+    public static NetworkTask<String> replyArticle(String id, String content, RequestCallBack<String> callBack) {
         String url = "http://apis.guokr.com/minisite/article_reply.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("article_id", id);

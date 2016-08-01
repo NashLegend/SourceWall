@@ -12,7 +12,7 @@ import net.nashlegend.sourcewall.request.NetworkTask;
 import net.nashlegend.sourcewall.request.ParamsMap;
 import net.nashlegend.sourcewall.request.RequestBuilder;
 import net.nashlegend.sourcewall.request.RequestObject;
-import net.nashlegend.sourcewall.request.RequestObject.CallBack;
+import net.nashlegend.sourcewall.request.RequestObject.RequestCallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.parsers.BooleanParser;
 import net.nashlegend.sourcewall.request.parsers.ContentValueForKeyParser;
@@ -80,7 +80,7 @@ public class PostAPI extends APIBase {
      * @param id 小组id
      * @return resultObject
      */
-    public static void joinGroup(String id, CallBack<Boolean> callBack) {
+    public static void joinGroup(String id, RequestCallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/group/member.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("group_id", id);
@@ -99,7 +99,7 @@ public class PostAPI extends APIBase {
      * @param id 小组id
      * @return resultObject
      */
-    public static void quitGroup(String id, CallBack<Boolean> callBack) {
+    public static void quitGroup(String id, RequestCallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/group/member.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("group_id", id);
@@ -229,7 +229,7 @@ public class PostAPI extends APIBase {
      * @param postID 帖子id
      * @return resultObject
      */
-    public static NetworkTask<Boolean> likePost(String postID, CallBack<Boolean> callBack) {
+    public static NetworkTask<Boolean> likePost(String postID, RequestCallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/group/post_liking.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("post_id", postID);
@@ -250,7 +250,7 @@ public class PostAPI extends APIBase {
      * @param content 回复内容
      * @return ResponseObject.result is the reply_id if ok;
      */
-    public static NetworkTask<String> replyPost(String id, String content, CallBack<String> callBack) {
+    public static NetworkTask<String> replyPost(String id, String content, RequestCallBack<String> callBack) {
         String url = "http://apis.guokr.com/group/post_reply.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("post_id", id);
@@ -272,7 +272,7 @@ public class PostAPI extends APIBase {
      * @param callBack
      * @return ResponseObject.result is the reply_id if ok;
      */
-    public static RequestObject<String> replyPostAnonymous(String id, String content, CallBack<String> callBack) {
+    public static RequestObject<String> replyPostAnonymous(String id, String content, RequestCallBack<String> callBack) {
         // TODO: 16/4/27
         return null;
     }
@@ -368,7 +368,7 @@ public class PostAPI extends APIBase {
      * @param id 评论id
      * @return resultObject
      */
-    public static NetworkTask<Boolean> deleteMyComment(String id, CallBack<Boolean> callBack) {
+    public static NetworkTask<Boolean> deleteMyComment(String id, RequestCallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/group/post_reply.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("reply_id", id);
@@ -388,7 +388,7 @@ public class PostAPI extends APIBase {
      * @param id 评论id
      * @return resultObject
      */
-    public static NetworkTask<Boolean> likeComment(String id, CallBack<Boolean> callBack) {
+    public static NetworkTask<Boolean> likeComment(String id, RequestCallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/group/post_reply_liking.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("reply_id", id);
@@ -408,7 +408,7 @@ public class PostAPI extends APIBase {
      * @param group_id 小组id
      * @return resultObject
      */
-    public static NetworkTask<PrepareData> getPostPrepareData(String group_id, CallBack<PrepareData> callBack) {
+    public static NetworkTask<PrepareData> getPostPrepareData(String group_id, RequestCallBack<PrepareData> callBack) {
         String url = "http://www.guokr.com/group/" + group_id + "/post/edit/";
         return new RequestBuilder<PrepareData>()
                 .get()
@@ -431,7 +431,7 @@ public class PostAPI extends APIBase {
      * @param topic    帖子主题
      * @return resultObject
      */
-    public static NetworkTask<String> publishPost(String group_id, String csrf, String title, String body, String topic, CallBack<String> callBack) {
+    public static NetworkTask<String> publishPost(String group_id, String csrf, String title, String body, String topic, RequestCallBack<String> callBack) {
         String url = "http://www.guokr.com/group/" + group_id + "/post/edit/";
         ParamsMap pairs = new ParamsMap();
         pairs.put("csrf_token", csrf);
@@ -457,7 +457,7 @@ public class PostAPI extends APIBase {
      * @param callBack
      * @return resultObject
      */
-    public static NetworkTask<Boolean> deletePost(String post_id, CallBack<Boolean> callBack) {
+    public static NetworkTask<Boolean> deletePost(String post_id, RequestCallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/group/post.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("reason", "");

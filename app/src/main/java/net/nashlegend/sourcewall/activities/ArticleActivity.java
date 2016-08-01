@@ -13,8 +13,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -35,7 +33,7 @@ import net.nashlegend.sourcewall.dialogs.FavorDialog;
 import net.nashlegend.sourcewall.dialogs.InputDialog;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.UComment;
-import net.nashlegend.sourcewall.request.RequestObject.CallBack;
+import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.ArticleAPI;
 import net.nashlegend.sourcewall.request.api.MessageAPI;
@@ -234,14 +232,14 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
     }
 
     private void confirmRecommend(String comment) {
-        ArticleAPI.recommendArticle(article.getId(), article.getTitle(), article.getSummary(), comment, new CallBack<Boolean>() {
+        ArticleAPI.recommendArticle(article.getId(), article.getTitle(), article.getSummary(), comment, new SimpleCallBack<Boolean>() {
             @Override
-            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
+            public void onFailure() {
                 toast(R.string.recommend_failed);
             }
 
             @Override
-            public void onSuccess(@NonNull Boolean result, @NonNull ResponseObject<Boolean> detailed) {
+            public void onSuccess() {
                 toast(R.string.recommend_ok);
             }
         });
@@ -320,14 +318,9 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
             return;
         }
         final UComment comment = mediumListItemView.getData();
-        ArticleAPI.likeComment(comment.getID(), new CallBack<Boolean>() {
+        ArticleAPI.likeComment(comment.getID(), new SimpleCallBack<Boolean>() {
             @Override
-            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
-
-            }
-
-            @Override
-            public void onSuccess(@NonNull Boolean result, @NonNull ResponseObject<Boolean> detailed) {
+            public void onSuccess() {
                 comment.setHasLiked(true);
                 comment.setLikeNum(comment.getLikeNum() + 1);
                 if (mediumListItemView.getData() == comment) {
@@ -335,8 +328,6 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
                 }
             }
         });
-
-
     }
 
     private void deleteComment(final UComment comment) {
@@ -344,14 +335,14 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
             notifyNeedLog();
             return;
         }
-        ArticleAPI.deleteMyComment(comment.getID(), new CallBack<Boolean>() {
+        ArticleAPI.deleteMyComment(comment.getID(), new SimpleCallBack<Boolean>() {
             @Override
-            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
+            public void onFailure() {
                 toastSingleton("删除失败~");
             }
 
             @Override
-            public void onSuccess(@NonNull Boolean result, @NonNull ResponseObject<Boolean> detailed) {
+            public void onSuccess() {
                 if (article.getCommentNum() > 0) {
                     article.setCommentNum(article.getCommentNum() - 1);
                 }

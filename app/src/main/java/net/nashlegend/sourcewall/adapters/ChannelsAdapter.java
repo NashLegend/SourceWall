@@ -2,7 +2,6 @@ package net.nashlegend.sourcewall.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
@@ -10,8 +9,7 @@ import android.widget.BaseExpandableListAdapter;
 import net.nashlegend.sourcewall.db.BasketHelper;
 import net.nashlegend.sourcewall.model.Basket;
 import net.nashlegend.sourcewall.model.SubItem;
-import net.nashlegend.sourcewall.request.RequestObject.CallBack;
-import net.nashlegend.sourcewall.request.ResponseObject;
+import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
 import net.nashlegend.sourcewall.request.api.FavorAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.ChannelHelper;
@@ -142,14 +140,9 @@ public class ChannelsAdapter extends BaseExpandableListAdapter {
     }
 
     private void loadBaskets() {
-        FavorAPI.getBaskets(new CallBack<ArrayList<Basket>>() {
+        FavorAPI.getBaskets(new SimpleCallBack<ArrayList<Basket>>() {
             @Override
-            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<ArrayList<Basket>> result) {
-
-            }
-
-            @Override
-            public void onSuccess(@NonNull ArrayList<Basket> result, @NonNull ResponseObject<ArrayList<Basket>> detailed) {
+            public void onSuccess(@NonNull ArrayList<Basket> result) {
                 onGetBaskets(result);
             }
         });

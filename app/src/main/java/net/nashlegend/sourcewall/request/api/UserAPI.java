@@ -12,7 +12,7 @@ import net.nashlegend.sourcewall.request.HttpUtil;
 import net.nashlegend.sourcewall.request.NetworkTask;
 import net.nashlegend.sourcewall.request.ParamsMap;
 import net.nashlegend.sourcewall.request.RequestBuilder;
-import net.nashlegend.sourcewall.request.RequestObject.CallBack;
+import net.nashlegend.sourcewall.request.RequestObject.RequestCallBack;
 import net.nashlegend.sourcewall.request.parsers.BooleanParser;
 import net.nashlegend.sourcewall.request.parsers.UserInfoParser;
 import net.nashlegend.sourcewall.util.Consts;
@@ -51,7 +51,7 @@ public class UserAPI extends APIBase {
      * @param ukey 用户ukey
      * @return ResponseObject
      */
-    public static NetworkTask<UserInfo> getUserInfoByUkey(String ukey, CallBack<UserInfo> callBack) {
+    public static NetworkTask<UserInfo> getUserInfoByUkey(String ukey, RequestCallBack<UserInfo> callBack) {
         String url = "http://apis.guokr.com/community/user/" + ukey + ".json";
         return new RequestBuilder<UserInfo>()
                 .get()
@@ -67,7 +67,7 @@ public class UserAPI extends APIBase {
      * @param id 用户id
      * @return ResponseObject
      */
-    public static NetworkTask<UserInfo> getUserInfoByID(String id, CallBack<UserInfo> callBack) {
+    public static NetworkTask<UserInfo> getUserInfoByID(String id, RequestCallBack<UserInfo> callBack) {
         return getUserInfoByUkey(base36Encode(Long.valueOf(id)), callBack);
     }
 
@@ -80,7 +80,7 @@ public class UserAPI extends APIBase {
      * @param comment 评语
      * @return ResponseObject
      */
-    public static NetworkTask<Boolean> recommendLink(String link, String title, String summary, String comment, CallBack<Boolean> callBack) {
+    public static NetworkTask<Boolean> recommendLink(String link, String title, String summary, String comment, RequestCallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/community/user/recommend.json";
         if (TextUtils.isEmpty(summary)) {
             summary = title;

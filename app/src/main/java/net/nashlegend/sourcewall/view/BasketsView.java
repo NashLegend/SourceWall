@@ -2,7 +2,6 @@ package net.nashlegend.sourcewall.view;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +21,7 @@ import net.nashlegend.sourcewall.model.Basket;
 import net.nashlegend.sourcewall.model.Category;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.Question;
-import net.nashlegend.sourcewall.request.RequestObject.CallBack;
-import net.nashlegend.sourcewall.request.ResponseObject;
+import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
 import net.nashlegend.sourcewall.request.api.FavorAPI;
 import net.nashlegend.sourcewall.util.ToastUtil;
 import net.nashlegend.sourcewall.view.common.AAsyncTask;
@@ -92,16 +90,16 @@ public class BasketsView extends FrameLayout implements View.OnClickListener, IS
     private void loadBasket() {
         progressBaskets.setVisibility(VISIBLE);
         listView.setVisibility(INVISIBLE);
-        FavorAPI.getBaskets(new CallBack<ArrayList<Basket>>() {
+        FavorAPI.getBaskets(new SimpleCallBack<ArrayList<Basket>>() {
             @Override
-            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<ArrayList<Basket>> result) {
+            public void onFailure() {
                 progressBaskets.setVisibility(INVISIBLE);
                 listView.setVisibility(VISIBLE);
                 ToastUtil.toast("加载果篮失败");
             }
 
             @Override
-            public void onSuccess(@NonNull ArrayList<Basket> baskets, @NonNull ResponseObject<ArrayList<Basket>> detailed) {
+            public void onSuccess(@NonNull ArrayList<Basket> baskets) {
                 adapter.clear();
                 if (baskets.size() > 0) {
                     adapter.setList(baskets);
@@ -114,14 +112,14 @@ public class BasketsView extends FrameLayout implements View.OnClickListener, IS
     }
 
     private void createBasket(String title, String introduction, String category_id) {
-        FavorAPI.createBasket(title, introduction, category_id, new CallBack<Basket>() {
+        FavorAPI.createBasket(title, introduction, category_id, new SimpleCallBack<Basket>() {
             @Override
-            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Basket> result) {
+            public void onFailure() {
                 ToastUtil.toast("创建失败");
             }
 
             @Override
-            public void onSuccess(@NonNull Basket basket, @NonNull ResponseObject<Basket> detailed) {
+            public void onSuccess(@NonNull Basket basket) {
                 ToastUtil.toast("创建成功");
                 adapter.add(basket);
                 adapter.notifyDataSetChanged();
@@ -131,14 +129,14 @@ public class BasketsView extends FrameLayout implements View.OnClickListener, IS
     }
 
     private void loadCategories() {
-        FavorAPI.getCategoryList(new CallBack<ArrayList<Category>>() {
+        FavorAPI.getCategoryList(new SimpleCallBack<ArrayList<Category>>() {
             @Override
-            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<ArrayList<Category>> result) {
+            public void onFailure() {
                 ToastUtil.toast("加载目录失败");
             }
 
             @Override
-            public void onSuccess(@NonNull ArrayList<Category> result, @NonNull ResponseObject<ArrayList<Category>> detailed) {
+            public void onSuccess(@NonNull ArrayList<Category> result) {
                 categories = result;
                 String[] items = new String[categories.size()];
                 for (int i = 0; i < categories.size(); i++) {

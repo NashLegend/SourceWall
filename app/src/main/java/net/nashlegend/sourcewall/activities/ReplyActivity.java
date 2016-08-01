@@ -17,7 +17,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -41,14 +40,13 @@ import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.NetworkTask;
-import net.nashlegend.sourcewall.request.RequestObject.CallBack;
-import net.nashlegend.sourcewall.request.ResponseObject;
+import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
 import net.nashlegend.sourcewall.request.api.APIBase;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.FileUtil;
 import net.nashlegend.sourcewall.util.Mob;
-import net.nashlegend.sourcewall.util.RegUtil;
 import net.nashlegend.sourcewall.util.PrefsUtil;
+import net.nashlegend.sourcewall.util.RegUtil;
 import net.nashlegend.sourcewall.util.SketchUtil;
 import net.nashlegend.sourcewall.util.UiUtil;
 
@@ -185,15 +183,15 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
             }).create().show();
         }
         setImageButtonsUploading();
-        APIBase.uploadImage(path, new CallBack<String>() {
+        APIBase.uploadImage(path, new SimpleCallBack<String>() {
             @Override
-            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<String> result) {
+            public void onFailure() {
                 resetImageButtons();
                 toast(R.string.upload_failed);
             }
 
             @Override
-            public void onSuccess(@NonNull String result, @NonNull ResponseObject<String> detailed) {
+            public void onSuccess(@NonNull String result) {
                 toast(getString(R.string.hint_click_to_add_image_to_editor));
                 doneUploadingImage(result);
                 if (tmpUploadFile != null && tmpUploadFile.exists()) {
@@ -300,15 +298,15 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
         if (comment != null) {
             header = "[blockquote]" + hostText.getText() + "[/blockquote]";
         }
-        final NetworkTask<String> task = APIBase.reply(aceModel, header + rep, new CallBack<String>() {
+        final NetworkTask<String> task = APIBase.reply(aceModel, header + rep, new SimpleCallBack<String>() {
             @Override
-            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<String> result) {
+            public void onFailure() {
                 UiUtil.dismissDialog(progressDialog);
                 toast(R.string.reply_failed);
             }
 
             @Override
-            public void onSuccess(@NonNull String result, @NonNull ResponseObject<String> detailed) {
+            public void onSuccess() {
                 UiUtil.dismissDialog(progressDialog);
                 toast(R.string.reply_ok);
                 setResult(RESULT_OK);

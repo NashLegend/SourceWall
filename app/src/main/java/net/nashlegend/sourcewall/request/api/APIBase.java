@@ -12,7 +12,7 @@ import net.nashlegend.sourcewall.request.HttpUtil;
 import net.nashlegend.sourcewall.request.JsonHandler;
 import net.nashlegend.sourcewall.request.NetworkTask;
 import net.nashlegend.sourcewall.request.RequestBuilder;
-import net.nashlegend.sourcewall.request.RequestObject.CallBack;
+import net.nashlegend.sourcewall.request.RequestObject.RequestCallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.parsers.ImageUploadParser;
 import net.nashlegend.sourcewall.util.Config;
@@ -45,7 +45,7 @@ public class APIBase {
      * @return ResponseObject
      */
     @Nullable
-    public static NetworkTask<String> reply(AceModel data, String content, CallBack<String> callBack) {
+    public static NetworkTask<String> reply(AceModel data, String content, RequestCallBack<String> callBack) {
         if (data instanceof Article) {
             return ArticleAPI.replyArticle(((Article) data).getId(), content + Config.getSimpleReplyTail(), callBack);
         } else if (data instanceof Post) {
@@ -63,7 +63,7 @@ public class APIBase {
      * @param path 要上传图片的路径
      * @return 返回ResponseObject，resultObject.result是上传后的图片地址，果壳并不会对图片进行压缩
      */
-    public static Subscription uploadImage(final String path, final CallBack<String> callBack) {
+    public static Subscription uploadImage(final String path, final RequestCallBack<String> callBack) {
         return Observable.just(path)
                 .map(new Func1<String, String>() {
                     @Override

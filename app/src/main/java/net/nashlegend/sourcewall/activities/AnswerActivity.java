@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -33,7 +32,8 @@ import com.umeng.analytics.MobclickAgent;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.model.Answer;
 import net.nashlegend.sourcewall.model.Question;
-import net.nashlegend.sourcewall.request.RequestObject.CallBack;
+import net.nashlegend.sourcewall.request.RequestObject.RequestCallBack;
+import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
 import net.nashlegend.sourcewall.request.ResponseCode;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.MessageAPI;
@@ -139,14 +139,14 @@ public class AnswerActivity extends BaseActivity implements View.OnClickListener
 
     private void loadDataByUri() {
         MessageAPI.ignoreOneNotice(notice_id);
-        QuestionAPI.getSingleAnswerFromRedirectUrl(redirectUri.toString(), new CallBack<Answer>() {
+        QuestionAPI.getSingleAnswerFromRedirectUrl(redirectUri.toString(), new SimpleCallBack<Answer>() {
             @Override
-            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Answer> result) {
+            public void onFailure() {
                 loadingView.onLoadFailed();
             }
 
             @Override
-            public void onSuccess(@NonNull Answer result, @NonNull ResponseObject<Answer> detailed) {
+            public void onSuccess(@NonNull Answer result) {
                 floatingActionsMenu.setVisibility(View.VISIBLE);
                 loadingView.onLoadSuccess();
                 answer = result;
@@ -387,14 +387,14 @@ public class AnswerActivity extends BaseActivity implements View.OnClickListener
     }
 
     private void supportOrNot(final boolean isSupport) {
-        CallBack<Boolean> callBack = new CallBack<Boolean>() {
+        RequestCallBack<Boolean> callBack = new SimpleCallBack<Boolean>() {
             @Override
-            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
+            public void onFailure() {
                 toast((isSupport ? "赞同" : "反对") + "未遂");
             }
 
             @Override
-            public void onSuccess(@NonNull Boolean result, @NonNull ResponseObject<Boolean> detailed) {
+            public void onSuccess() {
                 answer.setUpvoteNum(answer.getUpvoteNum() + 1);
                 supportText.setText(String.valueOf(answer.getUpvoteNum()));
                 answer.setHasDownVoted(!isSupport);
@@ -418,9 +418,9 @@ public class AnswerActivity extends BaseActivity implements View.OnClickListener
         }
         MobclickAgent.onEvent(AnswerActivity.this, Mob.Event_Bury_Answer);
         final boolean bury = !answer.isHasBuried();
-        CallBack<Boolean> callBack = new CallBack<Boolean>() {
+        RequestCallBack<Boolean> callBack = new SimpleCallBack<Boolean>() {
             @Override
-            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
+            public void onFailure(@NonNull ResponseObject<Boolean> result) {
                 if (bury && result.code == ResponseCode.CODE_ALREADY_BURIED) {
                     toastSingleton("已经标记过了");
                 } else {
@@ -429,7 +429,7 @@ public class AnswerActivity extends BaseActivity implements View.OnClickListener
             }
 
             @Override
-            public void onSuccess(@NonNull Boolean result, @NonNull ResponseObject<Boolean> detailed) {
+            public void onSuccess() {
                 if (bury) {
                     toast("已标记为\"不是答案\"");
                     answer.setHasBuried(true);
@@ -458,9 +458,9 @@ public class AnswerActivity extends BaseActivity implements View.OnClickListener
             return;
         }
         MobclickAgent.onEvent(AnswerActivity.this, Mob.Event_Thank_Answer);
-        QuestionAPI.thankAnswer(answer.getID(), new CallBack<Boolean>() {
+        QuestionAPI.thankAnswer(answer.getID(), new SimpleCallBack<Boolean>() {
             @Override
-            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<Boolean> result) {
+            public void onFailure(@NonNull ResponseObject<Boolean> result) {
                 if (result.code == ResponseCode.CODE_ALREADY_THANKED) {
                     toast("已经感谢过了");
                     answer.setHasThanked(true);
@@ -471,7 +471,7 @@ public class AnswerActivity extends BaseActivity implements View.OnClickListener
             }
 
             @Override
-            public void onSuccess(@NonNull Boolean result, @NonNull ResponseObject<Boolean> detailed) {
+            public void onSuccess() {
                 toast("感谢成功");
                 answer.setHasThanked(true);
                 thankButton.setIcon(R.drawable.heart);

@@ -13,7 +13,7 @@ import net.nashlegend.sourcewall.request.JsonHandler;
 import net.nashlegend.sourcewall.request.NetworkTask;
 import net.nashlegend.sourcewall.request.ParamsMap;
 import net.nashlegend.sourcewall.request.RequestBuilder;
-import net.nashlegend.sourcewall.request.RequestObject.CallBack;
+import net.nashlegend.sourcewall.request.RequestObject.RequestCallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.SimpleHttp;
 import net.nashlegend.sourcewall.request.parsers.AnswerCommentListParser;
@@ -274,7 +274,7 @@ public class QuestionAPI extends APIBase {
      * @param url 评论id
      * @return resultObject resultObject.result是UComment
      */
-    public static NetworkTask<Answer> getSingleAnswerFromRedirectUrl(String url, CallBack<Answer> callBack) {
+    public static NetworkTask<Answer> getSingleAnswerFromRedirectUrl(String url, RequestCallBack<Answer> callBack) {
         //http://www.guokr.com/answer/654321/redirect/
         //http://www.guokr.com/answer/654321/
         return getSingleAnswerByID(url.replaceAll("\\D+", ""), callBack);
@@ -286,7 +286,7 @@ public class QuestionAPI extends APIBase {
      * @param id 评论id
      * @return resultObject resultObject.result是UComment
      */
-    public static NetworkTask<Answer> getSingleAnswerByID(String id, CallBack<Answer> callBack) {
+    public static NetworkTask<Answer> getSingleAnswerByID(String id, RequestCallBack<Answer> callBack) {
         String url = "http://apis.guokr.com/ask/answer/" + id + ".json";
         return new RequestBuilder<Answer>()
                 .get()
@@ -304,7 +304,7 @@ public class QuestionAPI extends APIBase {
      * @param offset 从第几个开始加载
      * @return ResponseObject
      */
-    public static NetworkTask<ArrayList<UComment>> getQuestionComments(String id, int offset, CallBack<ArrayList<UComment>> callBack) {
+    public static NetworkTask<ArrayList<UComment>> getQuestionComments(String id, int offset, RequestCallBack<ArrayList<UComment>> callBack) {
         String url = "http://www.guokr.com/apis/ask/question_reply.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("retrieve_type", "by_question");
@@ -328,7 +328,7 @@ public class QuestionAPI extends APIBase {
      * @param offset 从第几个开始加载
      * @return ResponseObject
      */
-    public static NetworkTask<ArrayList<UComment>> getAnswerComments(String id, int offset, CallBack<ArrayList<UComment>> callBack) {
+    public static NetworkTask<ArrayList<UComment>> getAnswerComments(String id, int offset, RequestCallBack<ArrayList<UComment>> callBack) {
         String url = "http://www.guokr.com/apis/ask/answer_reply.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("retrieve_type", "by_answer");
@@ -351,7 +351,7 @@ public class QuestionAPI extends APIBase {
      * @param content 答案内容
      * @return ResponseObject.result is the reply_id if ok;
      */
-    public static NetworkTask<String> answerQuestion(String id, String content, CallBack<String> callBack) {
+    public static NetworkTask<String> answerQuestion(String id, String content, RequestCallBack<String> callBack) {
         String url = "http://apis.guokr.com/ask/answer.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("question_id", id);
@@ -371,7 +371,7 @@ public class QuestionAPI extends APIBase {
      * @param id 答案id
      * @return ResponseObject
      */
-    public static void supportAnswer(String id, CallBack<Boolean> callBack) {
+    public static void supportAnswer(String id, RequestCallBack<Boolean> callBack) {
         supportOrOpposeAnswer(id, "support", callBack);
     }
 
@@ -381,7 +381,7 @@ public class QuestionAPI extends APIBase {
      * @param id 答案id
      * @return ResponseObject
      */
-    public static void opposeAnswer(String id, CallBack<Boolean> callBack) {
+    public static void opposeAnswer(String id, RequestCallBack<Boolean> callBack) {
         supportOrOpposeAnswer(id, "oppose", callBack);
     }
 
@@ -392,7 +392,7 @@ public class QuestionAPI extends APIBase {
      * @param opinion 反对或者赞同，参数
      * @return ResponseObject
      */
-    private static void supportOrOpposeAnswer(String id, String opinion, CallBack<Boolean> callBack) {
+    private static void supportOrOpposeAnswer(String id, String opinion, RequestCallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/ask/answer_polling.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("answer_id", id);
@@ -412,7 +412,7 @@ public class QuestionAPI extends APIBase {
      * @param id 答案id
      * @return ResponseObject
      */
-    public static void thankAnswer(String id, CallBack<Boolean> callBack) {
+    public static void thankAnswer(String id, RequestCallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/ask/answer_thanking.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("v", System.currentTimeMillis() + "");
@@ -432,7 +432,7 @@ public class QuestionAPI extends APIBase {
      * @param id 答案id
      * @return ResponseObject
      */
-    public static void buryAnswer(String id, CallBack<Boolean> callBack) {
+    public static void buryAnswer(String id, RequestCallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/ask/answer_burying.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("v", System.currentTimeMillis() + "");
@@ -452,7 +452,7 @@ public class QuestionAPI extends APIBase {
      * @param id 答案id
      * @return ResponseObject
      */
-    public static void unBuryAnswer(String id, CallBack<Boolean> callBack) {
+    public static void unBuryAnswer(String id, RequestCallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/ask/answer_burying.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("answer_id", id);
@@ -474,7 +474,7 @@ public class QuestionAPI extends APIBase {
      * @param comment    推荐评语
      * @return ResponseObject
      */
-    public static NetworkTask<Boolean> recommendQuestion(String questionID, String title, String summary, String comment, CallBack<Boolean> callBack) {
+    public static NetworkTask<Boolean> recommendQuestion(String questionID, String title, String summary, String comment, RequestCallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/question/" + questionID + "/";
         return UserAPI.recommendLink(url, title, summary, comment, callBack);
     }
@@ -485,7 +485,7 @@ public class QuestionAPI extends APIBase {
      * @param questionID 问题id
      * @return ResponseObject
      */
-    public static void followQuestion(String questionID, CallBack<Boolean> callBack) {
+    public static void followQuestion(String questionID, RequestCallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/ask/question_follower.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("question_id", questionID);
@@ -505,7 +505,7 @@ public class QuestionAPI extends APIBase {
      * @param questionID 问题id
      * @return ResponseObject
      */
-    public static void unfollowQuestion(String questionID, CallBack<Boolean> callBack) {
+    public static void unfollowQuestion(String questionID, RequestCallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/ask/question_follower.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("question_id", questionID);
@@ -526,7 +526,7 @@ public class QuestionAPI extends APIBase {
      * @param comment    评论内容
      * @return ResponseObject
      */
-    public static NetworkTask<UComment> commentOnQuestion(String questionID, String comment, CallBack<UComment> callBack) {
+    public static NetworkTask<UComment> commentOnQuestion(String questionID, String comment, RequestCallBack<UComment> callBack) {
         String url = "http://www.guokr.com/apis/ask/question_reply.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("question_id", questionID);
@@ -547,7 +547,7 @@ public class QuestionAPI extends APIBase {
      * @param id 答案id
      * @return ResponseObject
      */
-    public static void deleteMyComment(String id, CallBack<Boolean> callBack) {
+    public static void deleteMyComment(String id, RequestCallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/ask/answer/" + id + ".json";
         new RequestBuilder<Boolean>()
                 .delete()
@@ -564,7 +564,7 @@ public class QuestionAPI extends APIBase {
      * @param comment  评论内容
      * @return ResponseObject
      */
-    public static NetworkTask<UComment> commentOnAnswer(String answerID, String comment, CallBack<UComment> callBack) {
+    public static NetworkTask<UComment> commentOnAnswer(String answerID, String comment, RequestCallBack<UComment> callBack) {
         String url = "http://www.guokr.com/apis/ask/answer_reply.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("answer_id", answerID);

@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -25,8 +24,8 @@ import net.nashlegend.sourcewall.model.Answer;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.NetworkTask;
-import net.nashlegend.sourcewall.request.RequestObject.CallBack;
-import net.nashlegend.sourcewall.request.ResponseObject;
+import net.nashlegend.sourcewall.request.RequestObject.RequestCallBack;
+import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Consts;
@@ -182,15 +181,15 @@ public class SimpleReplyActivity extends BaseActivity implements LListView.OnRef
                     MobclickAgent.onEvent(SimpleReplyActivity.this, Mob.Event_Comment_On_Answer);
                 }
 
-                CallBack<UComment> callBack = new CallBack<UComment>() {
+                RequestCallBack<UComment> callBack = new SimpleCallBack<UComment>() {
                     @Override
-                    public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<UComment> result) {
+                    public void onFailure() {
                         UiUtil.dismissDialog(progressDialog);
                         toast("回复失败");
                     }
 
                     @Override
-                    public void onSuccess(@NonNull UComment result, @NonNull ResponseObject<UComment> detailed) {
+                    public void onSuccess(@NonNull UComment result) {
                         UiUtil.dismissDialog(progressDialog);
                         mMenu.findItem(R.id.action_cancel_simple_reply).setVisible(false);
                         textReply.setHint(R.string.hint_reply);
@@ -254,16 +253,16 @@ public class SimpleReplyActivity extends BaseActivity implements LListView.OnRef
     }
 
     private void loadComments(final int offset) {
-        CallBack<ArrayList<UComment>> callBack = new CallBack<ArrayList<UComment>>() {
+        RequestCallBack<ArrayList<UComment>> callBack = new SimpleCallBack<ArrayList<UComment>>() {
             @Override
-            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<ArrayList<UComment>> result) {
+            public void onFailure() {
                 toast(R.string.load_failed);
                 loadingView.onLoadFailed();
                 listView.doneOperation();
             }
 
             @Override
-            public void onSuccess(@NonNull ArrayList<UComment> result, @NonNull ResponseObject<ArrayList<UComment>> detailed) {
+            public void onSuccess(@NonNull ArrayList<UComment> result) {
                 loadingView.onLoadSuccess();
                 if (offset == 0) {
                     //Refresh
