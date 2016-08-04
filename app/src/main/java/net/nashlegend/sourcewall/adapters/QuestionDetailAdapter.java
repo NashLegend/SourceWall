@@ -22,23 +22,7 @@ public class QuestionDetailAdapter extends AceAdapter<AceModel> {
     }
 
     @Override
-    public int getCount() {
-        return list.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return list.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
     public int getItemViewType(int position) {
-        //return list.get(position) instanceof Question ? Type_Question : Type_Answer;
         return position == 0 ? Type_Question : Type_Answer;
     }
 
