@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <net.nashlegend.sourcewall.view.common.LListView
+    <net.nashlegend.sourcewall.view.common.listview.LListView
         android:id="@+id/list_favors"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

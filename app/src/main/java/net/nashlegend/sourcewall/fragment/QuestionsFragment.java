@@ -50,7 +50,7 @@ import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.PrefsUtil;
 import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.view.QuestionListItemView;
-import net.nashlegend.sourcewall.view.common.LListView;
+import net.nashlegend.sourcewall.view.common.listview.LListView;
 import net.nashlegend.sourcewall.view.common.LoadingView;
 import net.nashlegend.sourcewall.view.common.shuffle.AskTagMovableButton;
 import net.nashlegend.sourcewall.view.common.shuffle.MovableButton;

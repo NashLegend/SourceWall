@@ -1,4 +1,4 @@
-package net.nashlegend.sourcewall.view.common;
+package net.nashlegend.sourcewall.view.common.listview;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
@@ -11,42 +11,40 @@ import android.widget.TextView;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.util.DisplayUtil;
 
-public class LListFooter extends FrameLayout {
+public class LListHeader extends FrameLayout {
     private int currentState = LListView.State_Normal;
     private int lastState = currentState;
     private LListView.OnRefreshListener onRefreshListener;
     private TextView tvHint;
-    private LListView listView;
     private ObjectAnimator heightAnimator;
-    private int Loading_Height_In_DP = 55;
+    private int Refreshing_Height_In_DP = 55;
     private int Release_Height_In_DP = 80;
-    private int Loading_Height = 200;
+    private int Refreshing_Height = 200;
     private int Release_Height = 300;
     private boolean layouted = false;
 
-    public LListFooter(Context context, LListView listView) {
+    public LListHeader(Context context) {
         super(context);
-        this.listView = listView;
         Release_Height = (int) (DisplayUtil.getPixelDensity(context) * Release_Height_In_DP);
-        Loading_Height = (int) (DisplayUtil.getPixelDensity(context) * Loading_Height_In_DP);
+        Refreshing_Height = (int) (DisplayUtil.getPixelDensity(context) * Refreshing_Height_In_DP);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.layout_footer_view, this);
-        tvHint = (TextView) findViewById(R.id.text_footer_hint);
+        inflater.inflate(R.layout.layout_header_view, this);
+        tvHint = (TextView) findViewById(R.id.text_header_hint);
         setClickable(true);
     }
 
     protected boolean handleMoveDistance(float dist) {
-        dist *= -1;
         if (dist < 0 && !isVisible()) {
             return false;
         }
-        if (currentState != LListView.State_Loading_More) {
+        if (currentState != LListView.State_Refreshing) {
+            // 这时只有两种可能的状态State_Release_To_Refresh和State_Pull_To_Refresh
             // 或许可以做更多
             if (isVisible()) {
                 if (isOverReleaseThreshold()) {
-                    currentState = LListView.State_Release_To_Load_More;
+                    currentState = LListView.State_Release_To_Refresh;
                 } else {
-                    currentState = LListView.State_Pull_Up_To_Load_More;
+                    currentState = LListView.State_Pull_Down_To_Refresh;
                 }
             } else {
                 currentState = LListView.State_Normal;
@@ -55,15 +53,16 @@ public class LListFooter extends FrameLayout {
 
         //这段表示状态之间的转换，不涉及状态内动作
         if (lastState != currentState) {
-            if (currentState == LListView.State_Pull_Up_To_Load_More) {
-                //有可能来自下拉从LListView.State_Normal变来也有可能来自上滑从State_Release_To_Load_More变来
+            // 在move状态下只有这两种可能
+            if (currentState == LListView.State_Pull_Down_To_Refresh) {
+                //有可能来自下拉从LListView.State_Normal变来也有可能来自上滑从State_Release_To_Refresh变来
                 if (lastState == LListView.State_Normal) {
                     normal2Pull();
-                } else if (lastState == LListView.State_Release_To_Load_More) {
+                } else if (lastState == LListView.State_Release_To_Refresh) {
                     release2Pull();
                 }
-            } else if (currentState == LListView.State_Release_To_Load_More) {
-                //只有可能从State_Pull_Up_To_Load_More变来
+            } else if (currentState == LListView.State_Release_To_Refresh) {
+                //可能从State_Pull_To_Refresh变来,极快的话也有可能是Normal，但是这在上面禁止了
                 pull2Release();
             }
         }
@@ -75,41 +74,32 @@ public class LListFooter extends FrameLayout {
     }
 
     protected void handleUpOperation() {
-        if (currentState == LListView.State_Release_To_Load_More) {
-            // start loading more
+        if (currentState == LListView.State_Release_To_Refresh) {
+            // start refresh
             if (onRefreshListener != null) {
-                release2Loading();
+                release2Refreshing();
             } else {
                 release2Normal();
             }
-        } else if (currentState == LListView.State_Loading_More) {
-            if (getActualHeight() > Release_Height) {
-                loading2Loading();
+        } else if (currentState == LListView.State_Refreshing) {
+            if (getHeight() > Release_Height) {
+                refreshing2Refreshing();
             }
         } else {
             pull2Normal();
         }
-        lastState = LListView.State_Normal;
+        lastState = currentState;
     }
 
-    private void setTopPadding() {
-        int[] listPos = {0, 0};
-        int[] footPos = {0, 0};
-        listView.getLocationOnScreen(listPos);
-        this.getLocationOnScreen(footPos);
-        int mt = listPos[1] + listView.getHeight() - footPos[1] - 1;
-        setPadding(0, mt, 0, 0);
-    }
-
-    private void normal2Loading() {
-        animateToHeight(Loading_Height);
-        tvHint.setText(R.string.loading);
-        currentState = LListView.State_Loading_More;
-        onRefreshListener.onStartLoadMore();
+    private void normal2Refreshing() {
+        animateToHeight(Refreshing_Height);
+        tvHint.setText(R.string.refreshing);
+        currentState = LListView.State_Refreshing;
+        onRefreshListener.onStartRefresh();
     }
 
     private void normal2Pull() {
-        tvHint.setText(R.string.pull_up_to_load_more);
+        tvHint.setText(R.string.pull_down_to_refresh);
     }
 
     private void pull2Normal() {
@@ -119,13 +109,13 @@ public class LListFooter extends FrameLayout {
     }
 
     private void pull2Release() {
-        currentState = LListView.State_Release_To_Load_More;
-        tvHint.setText(R.string.release_to_load_more);
+        currentState = LListView.State_Release_To_Refresh;
+        tvHint.setText(R.string.release_to_refresh);
     }
 
     private void release2Pull() {
-        currentState = LListView.State_Pull_Up_To_Load_More;
-        tvHint.setText(R.string.pull_up_to_load_more);
+        currentState = LListView.State_Pull_Down_To_Refresh;
+        tvHint.setText(R.string.pull_down_to_refresh);
     }
 
     private void release2Normal() {
@@ -134,53 +124,60 @@ public class LListFooter extends FrameLayout {
         animateToHeight(0);
     }
 
-    private void release2Loading() {
-        currentState = LListView.State_Loading_More;
-        animateToHeight(Loading_Height);
-        tvHint.setText(R.string.loading);
-        onRefreshListener.onStartLoadMore();
+    private void release2Refreshing() {
+        currentState = LListView.State_Refreshing;
+        animateToHeight(Refreshing_Height);
+        tvHint.setText(R.string.refreshing);
+        onRefreshListener.onStartRefresh();
     }
 
-    private void loading2Loading() {
-        animateToHeight(Loading_Height);
+    private void refreshing2Refreshing() {
+        animateToHeight(Refreshing_Height);
     }
 
-    private void loading2Normal() {
+    private void refreshing2Normal() {
+        //
         currentState = LListView.State_Normal;
         tvHint.setText(R.string.idling);
         animateToHeight(0);
     }
 
-    protected void handleMotion(float dist) {
+    /**
+     * 处理运动过程中的变化
+     * 假如说我想让header的高度是变化的，那么如果使用margin来控制的话无疑增加了麻烦的计算。
+     * 所以呢最好的方式是不用margin，而是使用直接改变高度的方式
+     *
+     * @param dist
+     */
+    private void handleMotion(float dist) {
         switch (currentState) {
             //TODO
-            case LListView.State_Pull_Up_To_Load_More:
+            case LListView.State_Pull_Down_To_Refresh:
 
                 break;
-            case LListView.State_Release_To_Load_More:
+            case LListView.State_Release_To_Refresh:
 
                 break;
-            case LListView.State_Loading_More:
+            case LListView.State_Refreshing:
 
                 break;
         }
-        if (getHeight() < getPaddingTop()) {
-            setHeight((int) (getHeight() + dist));
-        } else {
-            setHeight((int) (getHeight() + dist - getPaddingTop()));
-        }
+        setHeight((int) (getHeight() + dist));
     }
 
-    protected void doneLoading() {
-        loading2Normal();
+    protected void doneRefreshing() {
+        refreshing2Normal();
     }
 
-    protected void directlyStartLoading() {
-        normal2Loading();
+    /**
+     * 直接开始刷新，当然前提是当前状态是State_Normal，状态的检测由LListView负责
+     */
+    protected void directlyStartRefresh() {
+        normal2Refreshing();
     }
 
     private boolean isOverReleaseThreshold() {
-        return getActualHeight() > Release_Height;
+        return getHeight() > Release_Height;
     }
 
     @Override
@@ -188,12 +185,12 @@ public class LListFooter extends FrameLayout {
         super.onLayout(changed, left, top, right, bottom);
         if (!layouted) {
             layouted = true;
-            setHeight(0);
+            setHeight(1);
         }
     }
 
     private boolean isVisible() {
-        return getVisibility() == View.VISIBLE || getHeight() < 1;
+        return getVisibility() == View.VISIBLE;
     }
 
     protected int getState() {
@@ -213,25 +210,14 @@ public class LListFooter extends FrameLayout {
     private void animateToHeight(int height) {
         int duration = 300;
         cancelPotentialHeightAnimator();
-        heightAnimator = ObjectAnimator.ofInt(this, "height", getActualHeight(), height);
+        heightAnimator = ObjectAnimator.ofInt(this, "height", getHeight(), height);
         heightAnimator.setDuration(duration);
         heightAnimator.start();
     }
 
-    public int getActualHeight() {
-        if (getHeight() < getPaddingTop()) {
-            return getHeight();
-        } else {
-            return getHeight() - getPaddingTop();
-        }
-    }
-
     public void setHeight(int height) {
-        if (currentState == LListView.State_Loading_More && height < Loading_Height) {
-            height = Loading_Height;
-        }
-        if (height > 0) {
-            height += getPaddingTop();
+        if (currentState == LListView.State_Refreshing && height < Refreshing_Height) {
+            height = Refreshing_Height;
         }
         if (height < 1) {
             setVisibility(View.GONE);
@@ -241,19 +227,16 @@ public class LListFooter extends FrameLayout {
                 params.height = 0;
                 setLayoutParams(params);
             }
-            setPadding(0, 0, 0, 0);
         } else {
+            if (getVisibility() != View.VISIBLE) {
+                setVisibility(View.VISIBLE);
+                tvHint.setVisibility(VISIBLE);
+            }
             ViewGroup.LayoutParams params = getLayoutParams();
             if (params != null) {
                 params.height = height;
                 setLayoutParams(params);
             }
-            if (getVisibility() != View.VISIBLE) {
-                setVisibility(View.VISIBLE);
-                tvHint.setVisibility(VISIBLE);
-                setTopPadding();
-            }
         }
     }
-
 }

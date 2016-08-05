@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-package net.nashlegend.sourcewall.view.common;
+package net.nashlegend.sourcewall.util;
 
 import android.os.Handler;
 import android.os.Message;
 import android.os.Process;
+
+import net.nashlegend.sourcewall.view.common.IStackedAsyncTaskInterface;
 
 import java.util.ArrayDeque;
 import java.util.concurrent.BlockingQueue;

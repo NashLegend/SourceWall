@@ -47,7 +47,7 @@ import net.nashlegend.sourcewall.util.ShareUtil;
 import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;
 import net.nashlegend.sourcewall.view.MediumListItemView;
-import net.nashlegend.sourcewall.view.common.LListView;
+import net.nashlegend.sourcewall.view.common.listview.LListView;
 import net.nashlegend.sourcewall.view.common.LoadingView;
 
 import java.lang.reflect.Method;

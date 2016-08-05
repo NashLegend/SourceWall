@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <net.nashlegend.sourcewall.view.common.LListView
+    <net.nashlegend.sourcewall.view.common.listview.LListView
         android:id="@+id/list_questions"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

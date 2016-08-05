@@ -26,7 +26,7 @@
         android:layout_height="match_parent"
         android:layout_below="@id/app_bar">
 
-        <net.nashlegend.sourcewall.view.common.LListView
+        <net.nashlegend.sourcewall.view.common.listview.LListView
             android:id="@+id/list_posts"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

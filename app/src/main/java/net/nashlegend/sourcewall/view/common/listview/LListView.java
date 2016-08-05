@@ -1,4 +1,4 @@
-package net.nashlegend.sourcewall.view.common;
+package net.nashlegend.sourcewall.view.common.listview;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

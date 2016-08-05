@@ -26,7 +26,7 @@ import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;
 import net.nashlegend.sourcewall.view.NoticeView;
-import net.nashlegend.sourcewall.view.common.LListView;
+import net.nashlegend.sourcewall.view.common.listview.LListView;
 import net.nashlegend.sourcewall.view.common.LoadingView;
 
 import java.util.ArrayList;

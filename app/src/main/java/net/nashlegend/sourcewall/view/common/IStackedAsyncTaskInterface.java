@@ -1,5 +1,7 @@
 package net.nashlegend.sourcewall.view.common;
 
+import net.nashlegend.sourcewall.util.AAsyncTask;
+
 /**
  * Created by NashLegend on 2015/2/6 0006
  * 管理AsyncTask队列的接口，最好是使用一个自定义的AsyncTask，
