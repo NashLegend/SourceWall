@@ -20,8 +20,8 @@ import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.view.PostListItemView;
-import net.nashlegend.sourcewall.view.common.listview.LListView;
 import net.nashlegend.sourcewall.view.common.LoadingView;
+import net.nashlegend.sourcewall.view.common.listview.LListView;
 
 import java.util.ArrayList;
 

@@ -22,8 +22,8 @@ import net.nashlegend.sourcewall.request.api.ArticleAPI;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.view.ArticleListItemView;
-import net.nashlegend.sourcewall.view.common.listview.LListView;
 import net.nashlegend.sourcewall.view.common.LoadingView;
+import net.nashlegend.sourcewall.view.common.listview.LListView;
 
 import java.util.ArrayList;
 

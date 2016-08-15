@@ -3,18 +3,14 @@ package net.nashlegend.sourcewall.activities;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.net.http.SslError;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
-import android.webkit.HttpAuthHandler;
-import android.webkit.SslErrorHandler;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 

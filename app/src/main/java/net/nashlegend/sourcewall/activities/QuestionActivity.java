@@ -40,8 +40,8 @@ import net.nashlegend.sourcewall.util.ShareUtil;
 import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;
 import net.nashlegend.sourcewall.view.AnswerListItemView;
-import net.nashlegend.sourcewall.view.common.listview.LListView;
 import net.nashlegend.sourcewall.view.common.LoadingView;
+import net.nashlegend.sourcewall.view.common.listview.LListView;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;

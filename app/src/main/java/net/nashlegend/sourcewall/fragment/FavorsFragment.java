@@ -1,12 +1,8 @@
 package net.nashlegend.sourcewall.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -22,8 +18,8 @@ import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;
 import net.nashlegend.sourcewall.view.FavorListItemView;
-import net.nashlegend.sourcewall.view.common.listview.LListView;
 import net.nashlegend.sourcewall.view.common.LoadingView;
+import net.nashlegend.sourcewall.view.common.listview.LListView;
 
 import java.util.ArrayList;
 
@@ -37,7 +33,7 @@ import rx.functions.Action0;
 /**
  * Created by NashLegend on 2014/9/18 0018
  */
-public class FavorsFragment extends ChannelsFragment implements LListView.OnRefreshListener, LoadingView.ReloadListener, AdapterView.OnItemClickListener {
+public class FavorsFragment extends BaseFragment implements LListView.OnRefreshListener, LoadingView.ReloadListener, AdapterView.OnItemClickListener {
 
     View layoutView;
     @BindView(R.id.list_favors)
@@ -51,12 +47,6 @@ public class FavorsFragment extends ChannelsFragment implements LListView.OnRefr
     private SubItem subItem;
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        getActivity().invalidateOptionsMenu();
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (layoutView == null) {
             layoutView = inflater.inflate(R.layout.fragment_favors, container, false);
@@ -67,7 +57,6 @@ public class FavorsFragment extends ChannelsFragment implements LListView.OnRefr
             listView.setAdapter(adapter);
             listView.setOnRefreshListener(this);
             listView.setOnItemClickListener(this);
-            setTitle();
             loadOver();
         } else {
             if (layoutView.getParent() != null) {
@@ -77,11 +66,6 @@ public class FavorsFragment extends ChannelsFragment implements LListView.OnRefr
             resetData(mSubItem);
         }
         return layoutView;
-    }
-
-    @Override
-    public void setTitle() {
-        getActivity().setTitle(this.subItem.getName() + " -- 收藏");
     }
 
     private void loadOver() {
@@ -108,28 +92,6 @@ public class FavorsFragment extends ChannelsFragment implements LListView.OnRefr
         loadData(adapter.getCount());
     }
 
-    @Override
-    public int getFragmentMenu() {
-        return R.menu.menu_fragment_favor;
-    }
-
-    @Override
-    public boolean takeOverMenuInflate(MenuInflater inflater, Menu menu) {
-        inflater.inflate(getFragmentMenu(), menu);
-        return true;
-    }
-
-    @Override
-    public boolean takeOverOptionsItemSelect(MenuItem item) {
-        return true;
-    }
-
-    @Override
-    public boolean takeOverBackPressed() {
-        return false;
-    }
-
-    @Override
     public void resetData(SubItem subItem) {
         if (subItem.equals(this.subItem)) {
             loadingView.onLoadSuccess();
@@ -144,24 +106,10 @@ public class FavorsFragment extends ChannelsFragment implements LListView.OnRefr
             listView.setCanPullToLoadMore(false);
             loadOver();
         }
-        setTitle();
     }
 
-    @Override
     public void triggerRefresh() {
         listView.startRefreshing();
-    }
-
-    @Override
-    public void prepareLoading(SubItem sub) {
-        if (sub == null || !sub.equals(this.subItem)) {
-            loadingView.startLoading();
-        }
-    }
-
-    @Override
-    public void scrollToHead() {
-        listView.setSelection(0);
     }
 
     @Override

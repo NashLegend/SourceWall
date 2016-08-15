@@ -3,8 +3,8 @@ package net.nashlegend.sourcewall.fragment;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 
-import net.nashlegend.sourcewall.util.ToastUtil;
 import net.nashlegend.sourcewall.util.AAsyncTask;
+import net.nashlegend.sourcewall.util.ToastUtil;
 import net.nashlegend.sourcewall.view.common.IStackedAsyncTaskInterface;
 
 import java.util.ArrayList;

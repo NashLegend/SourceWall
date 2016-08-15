@@ -20,6 +20,9 @@
             android:layout_weight="1"
             android:background="?attr/colorPrimary"
             app:tabIndicatorColor="@android:color/white"
+            app:tabMinWidth="56dp"
+            app:tabPaddingEnd="8dp"
+            app:tabPaddingStart="8dp"
             app:tabSelectedTextColor="@android:color/white"
             app:tabTextColor="@android:color/white" />
 

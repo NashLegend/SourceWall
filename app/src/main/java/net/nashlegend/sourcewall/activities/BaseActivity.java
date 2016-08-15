@@ -7,10 +7,10 @@ import android.os.Bundle;
 import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.R;
+import net.nashlegend.sourcewall.util.AAsyncTask;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.PrefsUtil;
 import net.nashlegend.sourcewall.util.ToastUtil;
-import net.nashlegend.sourcewall.util.AAsyncTask;
 import net.nashlegend.sourcewall.view.common.IStackedAsyncTaskInterface;
 
 import java.util.ArrayList;
