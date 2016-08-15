@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,10 +9,10 @@
         android:id="@+id/list_articles"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="?attr/color_list_background"
         android:divider="@null"
-        android:paddingLeft="@dimen/list_standard_padding_horizontal"
-        android:paddingRight="@dimen/list_standard_padding_horizontal"
-        android:scrollbarStyle="outsideOverlay"
+        android:footerDividersEnabled="false"
+        android:headerDividersEnabled="false"
         tools:listitem="@layout/layout_article_item_view" />
 
     <ProgressBar
