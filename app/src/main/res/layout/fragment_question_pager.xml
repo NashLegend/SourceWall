@@ -15,16 +15,10 @@
 
         <android.support.design.widget.TabLayout
             android:id="@+id/question_tabs"
+            style="@style/TabStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="?attr/colorPrimary"
-            app:tabIndicatorColor="@android:color/white"
-            app:tabMinWidth="56dp"
-            app:tabPaddingEnd="8dp"
-            app:tabPaddingStart="8dp"
-            app:tabSelectedTextColor="@android:color/white"
-            app:tabTextColor="@android:color/white" />
+            android:layout_weight="1" />
 
         <ImageView
             android:id="@+id/show_more"

@@ -95,7 +95,6 @@ public class PostPagerFragment extends BaseFragment {
             adapter = new PostPagerAdapter(getFragmentManager());
             viewPager.setAdapter(adapter);
             tabLayout.setupWithViewPager(viewPager);
-            tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
 
             deskSimple = new ShuffleDeskSimple(getActivity(), scrollView);
             scrollView.addView(deskSimple);

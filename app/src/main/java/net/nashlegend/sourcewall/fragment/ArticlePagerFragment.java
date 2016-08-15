@@ -55,7 +55,6 @@ public class ArticlePagerFragment extends BaseFragment {
             adapter = new ArticlePagerAdapter(getFragmentManager());
             viewPager.setAdapter(adapter);
             tabLayout.setupWithViewPager(viewPager);
-            tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         } else {
             if (layoutView.getParent() != null) {
                 ((ViewGroup) layoutView.getParent()).removeView(layoutView);
