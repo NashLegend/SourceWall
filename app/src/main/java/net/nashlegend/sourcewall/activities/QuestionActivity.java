@@ -49,6 +49,7 @@ import java.util.ArrayList;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
+import rx.functions.Action1;
 
 
 public class QuestionActivity extends BaseActivity implements LListView.OnRefreshListener, View.OnClickListener, LoadingView.ReloadListener {
@@ -377,19 +378,9 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
         QuestionAPI
                 .getQuestionDetailByID(question.getId())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<ResponseObject<Question>>() {
+                .subscribe(new Action1<ResponseObject<Question>>() {
                     @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(ResponseObject<Question> result) {
+                    public void call(ResponseObject<Question> result) {
                         if (result.ok) {
                             progressBar.setVisibility(View.VISIBLE);
                             floatingActionsMenu.setVisibility(View.VISIBLE);
@@ -416,19 +407,9 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<ResponseObject<ArrayList<Answer>>>() {
+                .subscribe(new Action1<ResponseObject<ArrayList<Answer>>>() {
                     @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(ResponseObject<ArrayList<Answer>> result) {
+                    public void call(ResponseObject<ArrayList<Answer>> result) {
                         progressBar.setVisibility(View.GONE);
                         if (result.ok) {
                             loadingView.onLoadSuccess();

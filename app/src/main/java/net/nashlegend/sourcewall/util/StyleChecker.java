@@ -1,5 +1,7 @@
 package net.nashlegend.sourcewall.util;
 
+import net.nashlegend.sourcewall.App;
+
 /**
  * Created by NashLegend on 2014/12/9 0009
  * 果壳的样式变来变去，要不要加一个检查样式变化的类，发现变化后重新请求
@@ -8,7 +10,7 @@ package net.nashlegend.sourcewall.util;
 public class StyleChecker {
 
     public static String getArticleHtml(String content) {
-        boolean isNight = PrefsUtil.readBoolean(Consts.Key_Is_Night_Mode, false);
+        boolean isNight = App.isNightMode();
         String style;
         if (isNight) {
             style = "  <link rel=\"stylesheet\" href=\"file:///android_asset/night.static.guokr.com/apps/minisite/styles/f79e35f9.main.css\" /> \n" +
@@ -39,7 +41,7 @@ public class StyleChecker {
     }
 
     public static String getPostHtml(String content) {
-        boolean isNight = PrefsUtil.readBoolean(Consts.Key_Is_Night_Mode, false);
+        boolean isNight = App.isNightMode();
         String style;
         if (isNight) {
             style = "  <link rel=\"stylesheet\" href=\"file:///android_asset/night.static.guokr.com/apps/msite/styles/755794f4.m.css\" /> \n" +
@@ -67,7 +69,7 @@ public class StyleChecker {
     }
 
     public static String getQuestionHtml(String content) {
-        boolean isNight = PrefsUtil.readBoolean(Consts.Key_Is_Night_Mode, false);
+        boolean isNight = App.isNightMode();
         String style;
         if (isNight) {
             style = "  <link rel=\"stylesheet\" href=\"file:///android_asset/night.static.guokr.com/apps/ask/styles/3192ac2b.main.css\" /> \n" +
@@ -104,7 +106,7 @@ public class StyleChecker {
     }
 
     public static String getAnswerHtml(String content) {
-        boolean isNight = PrefsUtil.readBoolean(Consts.Key_Is_Night_Mode, false);
+        boolean isNight = App.isNightMode();
         String style;
         if (isNight) {
             style = "  <link rel=\"stylesheet\" href=\"file:///android_asset/night.static.guokr.com/apps/ask/styles/3192ac2b.main.css\" /> \n" +

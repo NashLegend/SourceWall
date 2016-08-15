@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/color_page_background"
+    android:background="@color/page_background"
     tools:context=".activities.PostListActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -30,7 +30,7 @@
             android:id="@+id/list_posts"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="?attr/color_list_background"
+            android:background="@color/list_background"
             android:footerDividersEnabled="false"
             android:headerDividersEnabled="false"
             tools:listitem="@layout/layout_post_item_view"/>

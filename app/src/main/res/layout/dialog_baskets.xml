@@ -44,18 +44,18 @@
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
-                android:background="?attr/color_dialog_button_background"
+                android:background="@color/dialog_button_background"
                 android:text="@string/action_invoke_create_basket"
-                android:textColor="?attr/drawable_dialog_button_text" />
+                android:textColor="@color/dialog_button_text_color" />
 
             <Button
                 android:id="@+id/button_favor_dialog_ok"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
-                android:background="?attr/color_dialog_button_background"
+                android:background="@color/dialog_button_background"
                 android:text="@string/action_done"
-                android:textColor="?attr/drawable_dialog_button_text" />
+                android:textColor="@color/dialog_button_text_color" />
         </LinearLayout>
     </LinearLayout>
 
@@ -76,8 +76,8 @@
             android:gravity="top"
             android:hint="@string/hint_input_basket_name"
             android:singleLine="true"
-            android:textColor="?attr/color_reply_input_text"
-            android:textColorHint="?attr/color_reply_hint"
+            android:textColor="@color/reply_input_text"
+            android:textColorHint="@color/reply_hint"
             android:textSize="@dimen/abc_text_size_small_material" />
 
         <Spinner
@@ -97,8 +97,8 @@
             android:gravity="top"
             android:hint="@string/hint_input_basket_introduction"
             android:minHeight="@dimen/input_dialog_input_height"
-            android:textColor="?attr/color_reply_input_text"
-            android:textColorHint="?attr/color_reply_hint"
+            android:textColor="@color/reply_input_text"
+            android:textColorHint="@color/reply_hint"
             android:textSize="@dimen/abc_text_size_small_material" />
 
         <LinearLayout
@@ -113,18 +113,18 @@
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
-                android:background="?attr/color_dialog_button_background"
+                android:background="@color/dialog_button_background"
                 android:text="@string/cancel"
-                android:textColor="?attr/drawable_dialog_button_text" />
+                android:textColor="@color/dialog_button_text_color" />
 
             <Button
                 android:id="@+id/button_create_basket"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
-                android:background="?attr/color_dialog_button_background"
+                android:background="@color/dialog_button_background"
                 android:text="@string/action_create_basket"
-                android:textColor="?attr/drawable_dialog_button_text" />
+                android:textColor="@color/dialog_button_text_color" />
         </LinearLayout>
     </LinearLayout>
 

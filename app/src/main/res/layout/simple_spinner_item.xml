@@ -9,6 +9,6 @@
     android:paddingLeft="8dp"
     android:paddingTop="6dp"
     android:singleLine="true"
-    android:textColor="?attr/color_dialog_list_text"
+    android:textColor="@color/dialog_list_text"
     android:textSize="16sp"
     tools:text="@string/sample_title" />

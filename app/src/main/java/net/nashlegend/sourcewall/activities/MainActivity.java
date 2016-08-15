@@ -2,6 +2,7 @@ package net.nashlegend.sourcewall.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 
 import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
@@ -10,6 +11,7 @@ import net.nashlegend.sourcewall.fragment.BaseFragment;
 import net.nashlegend.sourcewall.fragment.PostPagerFragment;
 import net.nashlegend.sourcewall.fragment.ProfileFragment;
 import net.nashlegend.sourcewall.fragment.QuestionPagerFragment;
+import net.nashlegend.sourcewall.util.Config;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -90,16 +92,26 @@ public class MainActivity extends BaseActivity {
         return fragment;
     }
 
+    boolean preparingToExit = false;
+
     @Override
     public void onBackPressed() {
-        if (wasTakenOver()) {
+        if (crtFragment != null && crtFragment.takeOverBackPress()) {
             return;
         }
-        super.onBackPressed();
-    }
 
-    private boolean wasTakenOver() {
-        return crtFragment != null && crtFragment.takeOverBackPress();
+        if (preparingToExit) {
+            super.onBackPressed();
+        } else {
+            preparingToExit = true;
+            toastSingleton(R.string.click_again_to_exit);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    preparingToExit = false;
+                }
+            }, Config.ExitTapsGap);
+        }
     }
 
     public static void open() {

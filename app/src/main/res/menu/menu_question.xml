@@ -24,18 +24,18 @@
         android:id="@+id/action_follow_question"
         android:orderInCategory="105"
         android:title="@string/action_follow_question"
-        android:icon="?attr/eye_open_icon"
+        android:icon="@drawable/ic_eye_open"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_unfollow_question"
         android:orderInCategory="106"
         android:title="@string/action_unfollow_question"
-        android:icon="?attr/eye_closed_icon"
+        android:icon="@drawable/ic_eye_closed"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_open_in_browser"
         android:title="@string/open_in_browser"
         android:orderInCategory="107"
-        android:icon="?attr/browser_icon"
+        android:icon="@drawable/ic_browser"
         app:showAsAction="never" />
 </menu>

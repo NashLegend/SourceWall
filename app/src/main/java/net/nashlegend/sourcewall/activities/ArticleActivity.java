@@ -58,6 +58,8 @@ import java.util.ArrayList;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
+import rx.functions.Action1;
+import rx.functions.Func0;
 
 public class ArticleActivity extends BaseActivity implements OnRefreshListener, OnClickListener, ReloadListener {
 
@@ -494,19 +496,9 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
         ArticleAPI
                 .getArticleDetail(article.getId())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<ResponseObject<Article>>() {
+                .subscribe(new Action1<ResponseObject<Article>>() {
                     @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(ResponseObject<Article> result) {
+                    public void call(ResponseObject<Article> result) {
                         if (result.ok) {
                             progressBar.setVisibility(View.VISIBLE);
                             floatingActionsMenu.setVisibility(View.VISIBLE);
@@ -557,19 +549,9 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<ResponseObject<ArrayList<UComment>>>() {
+                .subscribe(new Action1<ResponseObject<ArrayList<UComment>>>() {
                     @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(ResponseObject<ArrayList<UComment>> result) {
+                    public void call(ResponseObject<ArrayList<UComment>> result) {
                         progressBar.setVisibility(View.GONE);
                         if (result.ok) {
                             loadingView.onLoadSuccess();

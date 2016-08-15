@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
     android:foreground="@drawable/selectable_item_background"
-    app:cardBackgroundColor="?attr/cardBackgroundColor"
+    app:cardBackgroundColor="@color/card_background"
     app:cardUseCompatPadding="true">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:text="@string/sample_title"
-            android:textColor="?attr/color_article_title"
+            android:textColor="@color/article_title"
             android:textSize="@dimen/list_standard_title_font_size" />
 
         <LinearLayout
@@ -36,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="@string/sample_author"
-                android:textColor="?attr/color_author_color" />
+                android:textColor="@color/author_color" />
 
             <TextView
                 android:id="@+id/text_date"
@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/list_standard_item_text_text_gap"
                 tools:text="@string/sample_date"
-                android:textColor="?attr/color_author_color" />
+                android:textColor="@color/author_color" />
         </LinearLayout>
 
         <net.nashlegend.sourcewall.view.common.TTextView
@@ -69,7 +69,7 @@
                 android:layout_marginTop="1dp"
                 android:layout_width="@dimen/list_standard_item_reply_image_dimen"
                 android:layout_height="@dimen/list_standard_item_reply_image_dimen"
-                android:src="@drawable/comment" />
+                android:src="@drawable/ic_comment" />
 
             <TextView
                 android:id="@+id/text_replies_num"
@@ -79,7 +79,7 @@
                 android:padding="0dp"
                 android:singleLine="true"
                 tools:text="@string/sample_like_num"
-                android:textColor="?attr/color_author_color"
+                android:textColor="@color/author_color"
                 android:textSize="16sp" />
         </LinearLayout>
     </LinearLayout>

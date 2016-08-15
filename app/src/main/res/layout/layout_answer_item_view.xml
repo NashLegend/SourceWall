@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
     android:foreground="@drawable/selectable_item_background"
-    app:cardBackgroundColor="?attr/cardBackgroundColor"
+    app:cardBackgroundColor="@color/card_background"
     app:cardUseCompatPadding="true">
 
     <LinearLayout
@@ -38,7 +38,7 @@
                 android:layout_marginTop="5dp"
                 android:gravity="center"
                 tools:text="@string/sample_support_number"
-                android:textColor="?attr/color_author_color"
+                android:textColor="@color/author_color"
                 android:textSize="12sp" />
         </LinearLayout>
 
@@ -59,7 +59,7 @@
                     android:layout_height="wrap_content"
                     android:singleLine="true"
                     tools:text="@string/sample_author"
-                    android:textColor="?attr/color_author_color" />
+                    android:textColor="@color/author_color" />
 
                 <TextView
                     android:id="@+id/text_author_title"
@@ -68,7 +68,7 @@
                     android:layout_marginLeft="@dimen/list_standard_item_text_text_gap"
                     android:singleLine="true"
                     tools:text="@string/sample_author_title"
-                    android:textColor="?attr/color_author_color" />
+                    android:textColor="@color/author_color" />
             </LinearLayout>
 
             <TextView
@@ -76,7 +76,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="@string/sample_date"
-                android:textColor="?attr/color_author_color" />
+                android:textColor="@color/author_color" />
 
             <TextView
                 android:id="@+id/web_content"
@@ -85,7 +85,7 @@
                 android:ellipsize="end"
                 android:maxLines="3"
                 tools:text="@string/sample_summary"
-                android:textColor="?attr/color_list_summary"
+                android:textColor="@color/list_summary"
                 android:textSize="@dimen/list_standard_summary_font_size" />
         </LinearLayout>
     </LinearLayout>

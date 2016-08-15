@@ -21,7 +21,7 @@
             android:id="@+id/text_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="?attr/color_list_title"
+            android:textColor="@color/list_title"
             android:textSize="@dimen/list_standard_title_font_size"
             tools:text="@string/sample_title" />
 
@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
                 android:singleLine="true"
-                android:textColor="?attr/color_author_color"
+                android:textColor="@color/author_color"
                 tools:text="@string/sample_author" />
 
             <TextView
@@ -48,7 +48,7 @@
                 android:layout_marginLeft="@dimen/list_standard_item_text_text_gap"
                 android:layout_weight="0"
                 android:singleLine="true"
-                android:textColor="?attr/color_author_color"
+                android:textColor="@color/author_color"
                 tools:text="@string/sample_date" />
 
             <View
@@ -60,7 +60,7 @@
                 android:layout_width="@dimen/list_standard_item_reply_image_dimen"
                 android:layout_height="@dimen/list_standard_item_reply_image_dimen"
                 android:layout_weight="0"
-                android:src="@drawable/comment" />
+                android:src="@drawable/ic_comment" />
 
             <TextView
                 android:id="@+id/text_replies_num"
@@ -70,7 +70,7 @@
                 android:layout_weight="0"
                 android:maxLines="1"
                 android:paddingBottom="1.5dp"
-                android:textColor="?attr/color_author_color"
+                android:textColor="@color/author_color"
                 android:textSize="12sp"
                 tools:text="@string/sample_like_num" />
         </LinearLayout>
@@ -88,7 +88,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/list_standard_image_summary_span"
             android:lineSpacingExtra="@dimen/lineSpacingExtra"
-            android:textColor="?attr/color_list_summary"
+            android:textColor="@color/list_summary"
             tools:text="@string/sample_summary" />
     </LinearLayout>
 

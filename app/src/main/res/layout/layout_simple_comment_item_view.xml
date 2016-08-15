@@ -28,7 +28,7 @@
 
             <TextView
                 android:id="@+id/text_author"
-                android:textColor="?attr/color_author_dark_color"
+                android:textColor="@color/author_dark_color"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -38,7 +38,7 @@
                 android:id="@+id/text_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="?attr/color_author_color"
+                android:textColor="@color/author_color"
                 android:layout_marginLeft="@dimen/list_standard_item_text_text_gap"
                 android:layout_weight="0"
                 tools:text="@string/sample_date" />
@@ -49,7 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:lineSpacingExtra="@dimen/lineSpacingExtra"
-            android:textColor="?attr/color_author_color"
+            android:textColor="@color/author_color"
             android:layout_marginTop="5dp"
             tools:text="@string/sample_summary" />
     </LinearLayout>

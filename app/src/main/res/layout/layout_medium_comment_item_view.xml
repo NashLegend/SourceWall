@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:descendantFocusability="blocksDescendants"
     android:foreground="@drawable/selectable_item_background"
-    app:cardBackgroundColor="?attr/cardBackgroundColor"
+    app:cardBackgroundColor="@color/card_background"
     app:cardUseCompatPadding="true">
 
     <LinearLayout
@@ -42,7 +42,7 @@
                 <TextView
                     android:id="@+id/text_author"
                     android:layout_width="wrap_content"
-                    android:textColor="?attr/color_author_color"
+                    android:textColor="@color/author_color"
                     android:layout_height="wrap_content"
                     tools:text="@string/sample_author" />
 
@@ -52,7 +52,7 @@
 
                     <TextView
                         android:id="@+id/text_floor"
-                        android:textColor="?attr/color_author_color"
+                        android:textColor="@color/author_color"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         tools:text="@string/sample_floor" />
@@ -61,7 +61,7 @@
                         android:id="@+id/text_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="?attr/color_author_color"
+                        android:textColor="@color/author_color"
                         android:layout_marginLeft="@dimen/list_standard_item_text_text_gap"
                         tools:text="@string/sample_date" />
                 </LinearLayout>
@@ -82,7 +82,7 @@
                 android:id="@+id/text_like_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="?attr/color_author_color"
+                android:textColor="@color/author_color"
                 android:layout_marginLeft="@dimen/list_standard_item_text_icon_gap"
                 android:layout_weight="0"
                 tools:text="@string/sample_like_num" />
@@ -97,7 +97,7 @@
             android:textColorLink="@color/color_text_link"
             android:lineSpacingExtra="@dimen/lineSpacingExtra"
             android:layout_marginTop="@dimen/content_top_span_dimen"
-            android:textColor="?attr/color_list_summary"
+            android:textColor="@color/list_summary"
             android:paddingBottom="0dp"
             tools:text="@string/sample_summary" />
     </LinearLayout>

@@ -214,10 +214,7 @@ public class AnswerActivity extends BaseActivity implements View.OnClickListener
 
     private void loadHtml() {
         String html = StyleChecker.getAnswerHtml(answer.getContent());
-        Resources.Theme theme = getTheme();
-        TypedArray typedArray = theme.obtainStyledAttributes(new int[]{R.attr.color_webview_background});
-        int colorBack = typedArray.getColor(0, 0);
-        typedArray.recycle();
+        int colorBack = getResources().getColor(R.color.webview_background);
         webView.setBackgroundColor(colorBack);
 
         webView.getSettings().setDefaultTextEncodingName("UTF-8");

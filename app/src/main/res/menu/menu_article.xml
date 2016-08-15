@@ -22,19 +22,19 @@
         app:showAsAction="never" />
     <item
         android:id="@+id/action_load_desc"
-        android:icon="?attr/arrow_up_icon"
+        android:icon="@drawable/ic_arrow_up"
         android:orderInCategory="103"
         android:title="@string/action_load_desc"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_load_acs"
-        android:icon="?attr/arrow_down_icon"
+        android:icon="@drawable/ic_arrow_down"
         android:orderInCategory="104"
         android:title="@string/action_load_acs"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_open_in_browser"
-        android:icon="?attr/browser_icon"
+        android:icon="@drawable/ic_browser"
         android:orderInCategory="105"
         android:title="@string/open_in_browser"
         app:showAsAction="never" />

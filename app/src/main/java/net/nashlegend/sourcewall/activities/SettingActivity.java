@@ -24,6 +24,7 @@ import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.PrefsUtil;
+import net.nashlegend.sourcewall.util.UrlCheckUtil;
 
 import de.greenrobot.event.EventBus;
 
@@ -204,7 +205,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void showAboutApp() {
-        new AlertDialog.Builder(this).setTitle(R.string.about_app).setMessage(R.string.introduction_about_app).create().show();
+        UrlCheckUtil.openWithBrowser("https://github.com/NashLegend/SourceWall");
     }
 
     @Override

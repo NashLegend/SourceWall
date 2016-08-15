@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         tools:text="@string/sample_title"
-        android:textColor="?attr/color_dialog_list_text" />
+        android:textColor="@color/dialog_list_text" />
 
     <RelativeLayout
         android:layout_width="@dimen/basket_item_height"

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/color_page_background"
+    android:background="@color/page_background"
     tools:context=".activities.PublishPostActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -71,8 +71,8 @@
             android:background="@android:color/transparent"
             android:gravity="top"
             android:hint="@string/hint_input_post_content"
-            android:textColor="?attr/color_reply_input_text"
-            android:textColorHint="?attr/color_reply_hint" />
+            android:textColor="@color/reply_input_text"
+            android:textColorHint="@color/reply_hint" />
 
         <View
             android:layout_width="match_parent"

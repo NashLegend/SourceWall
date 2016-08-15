@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/post_item_title_margin_bottom"
             tools:text="@string/sample_title"
-            android:textColor="?attr/color_list_title"
+            android:textColor="@color/list_title"
             android:textSize="@dimen/list_standard_title_font_size" />
 
         <TextView
@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             tools:text="@string/sample_date"
-            android:textColor="?attr/color_author_color"
+            android:textColor="@color/author_color"
             android:textSize="@dimen/text_author_view_font_size_dimen" />
     </LinearLayout>
 

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/color_clear_page_background"
+    android:background="@color/page_clear_background"
     android:orientation="vertical"
     tools:context=".activities.SimpleReplyActivity">
 
@@ -57,8 +57,8 @@
             android:layout_weight="1"
             android:hint="@string/hint_reply"
             android:maxHeight="240dp"
-            android:textColor="?attr/color_reply_input_text"
-            android:textColorHint="?attr/color_reply_hint" />
+            android:textColor="@color/reply_input_text"
+            android:textColorHint="@color/reply_hint" />
 
         <ImageButton
             android:id="@+id/btn_publish"

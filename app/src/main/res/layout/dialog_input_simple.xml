@@ -17,8 +17,8 @@
             android:hint="@string/hint_input_image_url"
             android:padding="5dp"
             android:singleLine="true"
-            android:textColor="?attr/color_reply_input_text"
-            android:textColorHint="?attr/color_reply_hint" />
+            android:textColor="@color/reply_input_text"
+            android:textColorHint="@color/reply_hint" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,18 +31,18 @@
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
-                android:background="?attr/color_dialog_button_background"
+                android:background="@color/dialog_button_background"
                 android:text="@string/cancel"
-                android:textColor="?attr/drawable_dialog_button_text" />
+                android:textColor="@color/dialog_button_text_color" />
 
             <Button
                 android:id="@+id/button_dialog_input_ok"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
-                android:background="?attr/color_dialog_button_background"
+                android:background="@color/dialog_button_background"
                 android:text="@string/ok"
-                android:textColor="?attr/drawable_dialog_button_text" />
+                android:textColor="@color/dialog_button_text_color" />
         </LinearLayout>
 
     </LinearLayout>

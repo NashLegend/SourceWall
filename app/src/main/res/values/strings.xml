@@ -125,7 +125,6 @@
     <string name="log_out">退出登录</string>
     <string name="log_in">登录</string>
     <string name="about_app">关于本软件</string>
-    <string name="introduction_about_app">本应用是果壳网非官方客户端，为个人兴趣作品，目的是使壳友更方便的使用手机刷果壳。现提供果壳网三大版块（科学人、小组、问答）的全面功能。全部代码开源，源码地址：https://github.com/NashLegend/SourceWall</string>
 
     <string name="mode_always_load">始终加载</string>
     <string name="mode_never_load">从不加载</string>

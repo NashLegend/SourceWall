@@ -1,0 +1,167 @@
+<resources>
+
+    <style name="AppThemeDayNight" parent="BaseTheme">
+        <item name="toolbarTheme">@style/ToolbarStyle</item>
+        <item name="toolbarPopTheme">@style/ThemeOverlay.AppCompat.Dark</item>
+
+        <!--提示框背景-->
+        <item name="android:alertDialogTheme">@style/AlertDialogTheme</item>
+        <!--对话框背景-->
+        <item name="android:dialogTheme">@style/DialogTheme</item>
+        <!--ProgressBar样式-->
+        <item name="android:progressBarStyle">@style/Widget.AppCompat.ProgressBar</item>
+
+        <!--上面几行只在Night设置-->
+        <!--下面几行也在Day中一一对应-->
+
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark</item>
+        <item name="colorPrimaryBright">@color/color_primary_bright</item>
+        <item name="colorAccent">@color/color_accent</item>
+        <item name="android:colorBackground">@color/page_background</item>
+
+        <!--文本默认色-->
+        <item name="color_text_primary">@color/text_color_primary</item>
+        <!--正文标题颜色-->
+        <item name="color_article_title">@color/article_title</item>
+        <!--正文内容字体颜色-->
+        <item name="color_article_content_text">@color/article_content_text</item>
+        <!--正文背景色-->
+        <item name="color_article_text_background">@color/article_text_background</item>
+
+        <!--列表样式-->
+        <!--列表item的标题颜色-->
+        <item name="color_list_title">@color/list_title</item>
+        <!--列表item的简介颜色-->
+        <item name="color_list_summary">@color/list_summary</item>
+        <!--列表背景色-->
+        <item name="color_list_background">@color/list_background</item>
+
+        <!--答案页面-->
+        <!--AnswerActivity回答者背景-->
+        <item name="color_answer_author_background">@color/answer_author_background</item>
+        <!--AnswerActivity回答者字体-->
+        <item name="color_answer_author_text">@color/answer_author_text</item>
+        <item name="color_answer_author_sub_text">@color/answer_author_sub_text</item>
+        <!--AnswerActivity问题背景色-->
+        <item name="color_answer_question_title_background">
+            @color/answer_question_title_background
+        </item>
+        <item name="color_answer_question_title_background_pressed">
+            @color/answer_question_title_background_pressed
+        </item>
+        <!--AnswerActivity问题文字颜色-->
+        <item name="color_answer_question_title_text">@color/answer_question_title_text</item>
+
+        <!--回复页面-->
+        <item name="color_reply_quote_background">@color/reply_quote_background</item>
+        <item name="color_reply_quote_text">@color/reply_quote_text</item>
+        <item name="color_reply_input_text">@color/reply_input_text</item>
+        <item name="color_reply_hint">@color/reply_hint</item>
+        <item name="color_reply_operation_bar_background">
+            @color/reply_operation_bar_background
+        </item>
+
+        <!--对话框-->
+        <item name="color_dialog_button_background">@color/dialog_button_background</item>
+        <item name="drawable_dialog_button_text">@color/dialog_button_text_color</item>
+        <item name="color_dialog_button_text">@color/dialog_button_text</item>
+        <item name="color_dialog_button_text_pressed">@color/dialog_button_text_pressed</item>
+        <item name="color_dialog_title">@color/dialog_title</item>
+        <item name="color_dialog_list_text">@color/dialog_list_text</item>
+        <item name="color_dialog_text">@color/dialog_text</item>
+
+        <!--抽屉颜色-->
+        <item name="drawable_drawer_button_background">?android:attr/selectableItemBackground</item>
+        <item name="color_drawer_button_background">@color/drawer_button_background</item>
+        <item name="color_drawer_button_background_pressed">
+            @color/drawer_button_background_pressed
+        </item>
+        <item name="color_drawer_button_text">@color/drawer_button_text</item>
+        <item name="color_drawer_button_text_pressed">@color/drawer_button_text_pressed</item>
+        <item name="color_drawer_author">@color/drawer_author</item>
+        <item name="color_drawer_list_text">@color/drawer_list_text</item>
+        <item name="color_drawer_list_sub_text">@color/drawer_list_sub_text</item>
+        <item name="color_drawer_background">@color/drawer_background</item>
+
+        <!--Shuffle-->
+        <item name="color_shuffle_desk_background">@color/shuffle_desk_background</item>
+        <item name="color_shuffle_desk_title">@color/shuffle_desk_title</item>
+        <item name="color_shuffle_tip">@color/shuffle_tip_color</item>
+        <item name="color_shuffle_card_candidate_background">
+            @color/shuffle_card_candidate_background
+        </item>
+        <item name="color_shuffle_movable_button_text">@color/shuffle_movable_button_text
+        </item>
+        <item name="drawable_shuffle_movable_button_background">@drawable/bg_movable_button
+        </item>
+
+        <!--LListView-->
+        <item name="divider_color">@color/divider_color</item>
+        <item name="color_llist_foot_head_text">@color/llist_foot_head_text</item>
+        <item name="drawable_llist_header_button_background">@drawable/bg_header_button</item>
+    </style>
+
+    <style name="AppTheme" parent="AppThemeDayNight" />
+
+    <style name="ToolbarTextAppearance" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
+    <style name="actionMenuTextAppearance" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Menu">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <!--MainActivity的主题-->
+
+    <style name="DialogTheme" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowNoTitle">false</item>
+        <item name="android:textColor">@color/dialog_text</item>
+    </style>
+
+    <style name="AlertDialogTheme" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="ToolbarStyle" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="titleTextAppearance">@style/ToolbarTextAppearance</item>
+        <item name="actionMenuTextAppearance">@style/actionMenuTextAppearance</item>
+        <item name="actionModeBackground">@color/color_primary_dark</item>
+        <item name="actionMenuTextColor">@android:color/white</item>
+        <item name="colorControlNormal">@android:color/white</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark</item>
+        <item name="colorPrimary">@color/color_primary</item>
+    </style>
+
+    <!--MainActivity的夜间主题-->
+    <style name="BottomTheme" parent="AppTheme">
+        <item name="colorControlNormal">@android:color/white</item>
+        <item name="android:windowBackground">@android:color/black</item>
+        <item name="android:windowIsTranslucent">false</item>
+    </style>
+
+    <style name="TabStyle" parent="Widget.Design.TabLayout">
+        <item name="tabMode">scrollable</item>
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="tabIndicatorColor">@android:color/white</item>
+        <item name="tabPaddingStart">10dp</item>
+        <item name="tabPaddingEnd">10dp</item>
+        <item name="tabMinWidth">54dp</item>
+        <item name="tabSelectedTextColor">@android:color/white</item>
+        <item name="tabTextAppearance">@style/TabTextAppearance</item>
+    </style>
+
+    <style name="TabTextAppearance" parent="TextAppearance.AppCompat.Button">
+        <item name="android:textSize">14dp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="textAllCaps">false</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+</resources>

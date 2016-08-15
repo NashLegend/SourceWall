@@ -46,11 +46,6 @@ public class PostView extends AceView<Post> {
 
     public PostView(Context context) {
         super(context);
-        if (PrefsUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
-            setBackgroundColor(getContext().getResources().getColor(R.color.page_background_night));
-        } else {
-            setBackgroundColor(getContext().getResources().getColor(R.color.page_background));
-        }
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_post_view, this);
         titleView = (TextView) findViewById(R.id.text_title);

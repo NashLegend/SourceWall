@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="text_color_primary">#d0d0d0</color>
+    <color name="color_primary">#424242</color>
+    <color name="color_primary_dark">#3c3c3c</color>
+    <color name="color_primary_bright">#616161</color>
+    <color name="color_accent">#bdbdbd</color>
+
+    <color name="divider_color">#aaaaaa</color>
+
+    <color name="page_background">#424242</color>
+    <color name="page_clear_background">#424242</color>
+
+    <color name="webview_background">#424242</color>
+
+    <color name="card_background">#505050</color>
+
+    <color name="author_color">#cccccc</color>
+    <color name="author_dark_color">#dddddd</color>
+    <color name="author_sub_color">#aaaaaa</color>
+
+    <!--正文标题颜色-->
+    <color name="article_title">#e0e0e0</color>
+    <!--正文内容字体颜色-->
+    <color name="article_content_text">#d0d0d0</color>
+    <!--正文背景色-->
+    <color name="article_text_background">#424242</color>
+
+    <color name="list_title">#e0e0e0</color>
+    <color name="list_summary">#d0d0d0</color>
+    <color name="list_background">#424242</color>
+
+    <!--答案页面-->
+    <color name="answer_author_background">#464646</color>
+    <color name="answer_author_text">#d0d0d0</color>
+    <color name="answer_author_sub_text">#cccccc</color>
+    <color name="answer_question_title_background">#3e3e3e</color>
+    <color name="answer_question_title_background_pressed">#656565</color>
+    <color name="answer_question_title_text">#e0e0e0</color>
+
+    <!--回复页面-->
+    <color name="reply_quote_background">#454545</color>
+    <color name="reply_quote_text">#e0e0e0</color>
+    <color name="reply_input_text">#e0e0e0</color>
+    <color name="reply_hint">#7f7f7f</color>
+    <color name="reply_operation_bar_background">#757575</color>
+
+    <!--对话框-->
+    <color name="dialog_button_background">@android:color/transparent</color>
+    <color name="dialog_button_text">#e0e0e0</color>
+    <color name="dialog_button_text_pressed">#bdbdbd</color>
+    <color name="dialog_title">#eeeeee</color>
+    <color name="dialog_text">#dddddd</color>
+    <color name="dialog_list_text">#999999</color>
+
+    <!--抽屉颜色-->
+    <color name="drawer_button_background">#424242</color>
+    <color name="drawer_button_background_pressed">#757575</color>
+    <color name="drawer_button_text">#e0e0e0</color>
+    <color name="drawer_button_text_pressed">#acacac</color>
+    <color name="drawer_author">#eeeeee</color>
+    <color name="drawer_list_text">#e0e0e0</color>
+    <color name="drawer_list_sub_text">#cccccc</color>
+    <color name="drawer_background">#424242</color>
+
+    <!--Shuffle-->
+    <color name="shuffle_desk_background">#424242</color>
+    <color name="shuffle_desk_title">#aaaaaa</color>
+    <color name="shuffle_tip_color">#9c9c9c</color>
+    <color name="shuffle_card_candidate_background">#494949</color>
+    <color name="shuffle_movable_button_text">#b2b2b2</color>
+
+    <!--LListView-->
+    <color name="llist_foot_head_text">#777777</color>
+    <color name="llist_header_button_background">#515151</color>
+    <color name="llist_header_button_background_pressed">#717171</color>
+
+    <!-- 看图页面顶部下载按钮和文字的背景-->
+    <color name="image_header_color_bg">#66333333</color>
+    <color name="splitter_color_grey">#dddddd</color>
+
+</resources>

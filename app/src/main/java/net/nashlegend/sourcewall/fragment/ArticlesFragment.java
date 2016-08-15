@@ -33,6 +33,7 @@ import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
+import rx.functions.Action1;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -137,19 +138,9 @@ public class ArticlesFragment extends BaseFragment implements LoadingView.Reload
                         listView.doneOperation();
                     }
                 })
-                .subscribe(new Observer<ResponseObject<ArrayList<Article>>>() {
+                .subscribe(new Action1<ResponseObject<ArrayList<Article>>>() {
                     @Override
-                    public void onCompleted() {
-                        progressBar.setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(ResponseObject<ArrayList<Article>> result) {
+                    public void call(ResponseObject<ArrayList<Article>> result) {
                         if (result.isCached && offset == 0) {
                             if (result.ok) {
                                 ArrayList<Article> ars = result.result;

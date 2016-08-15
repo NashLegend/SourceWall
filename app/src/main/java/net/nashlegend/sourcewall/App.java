@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.support.v7.app.AppCompatDelegate;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -43,6 +45,10 @@ public class App extends Application {
 
     public static Application getApp() {
         return application;
+    }
+
+    public static boolean isNightMode() {
+        return (getApp().getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
     }
 
     public static DaoMaster getDaoMaster() {

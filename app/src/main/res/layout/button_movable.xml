@@ -13,7 +13,7 @@
         android:maxLines="2"
         android:minHeight="1dp"
         android:minWidth="1dp"
-        android:textColor="?attr/color_shuffle_movable_button_text"
+        android:textColor="@color/shuffle_movable_button_text"
         android:textSize="14sp" />
 
     <ImageView

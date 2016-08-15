@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/color_clear_page_background"
+    android:background="@color/page_clear_background"
     android:orientation="vertical"
     tools:context=".activities.SettingActivity">
 
@@ -27,6 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:layout_marginLeft="8dp"
         android:background="?android:attr/selectableItemBackground"
         android:clickable="true"
         android:paddingBottom="@dimen/setting_padding_vertical"
@@ -40,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:text="@string/image_load_mode"
-            android:textColor="?attr/color_text_primary"
+            android:textColor="@color/text_color_primary"
             android:textSize="16sp" />
 
         <TextView
@@ -65,10 +66,12 @@
         android:id="@+id/layout_modes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
         android:orientation="vertical"
         android:paddingBottom="@dimen/setting_padding_vertical"
         android:paddingLeft="@dimen/setting_padding_horizontal"
-        android:paddingRight="@dimen/setting_padding_horizontal">
+        android:paddingRight="@dimen/setting_padding_horizontal"
+        android:visibility="gone">
 
         <RadioGroup
             android:layout_width="match_parent"
@@ -116,6 +119,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -134,7 +138,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:text="@string/custom_tail"
-                android:textColor="?attr/color_text_primary"
+                android:textColor="@color/text_color_primary"
                 android:textSize="16sp" />
 
             <ImageView
@@ -153,7 +157,8 @@
             android:orientation="vertical"
             android:paddingBottom="@dimen/setting_padding_vertical"
             android:paddingLeft="@dimen/setting_padding_horizontal"
-            android:paddingRight="@dimen/setting_padding_horizontal">
+            android:paddingRight="@dimen/setting_padding_horizontal"
+            android:visibility="gone">
 
             <RadioGroup
                 android:layout_width="match_parent"
@@ -203,6 +208,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:layout_marginLeft="8dp"
         android:background="?android:attr/selectableItemBackground"
         android:clickable="true"
         android:paddingBottom="@dimen/setting_padding_vertical"
@@ -216,7 +222,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:text="@string/about_app"
-            android:textColor="?attr/color_text_primary"
+            android:textColor="@color/text_color_primary"
             android:textSize="16sp" />
 
         <ImageView
@@ -240,6 +246,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:layout_marginLeft="8dp"
         android:background="?android:attr/selectableItemBackground"
         android:clickable="true"
         android:paddingBottom="@dimen/setting_padding_vertical"
@@ -253,7 +260,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:text="@string/log_out"
-            android:textColor="?attr/color_text_primary"
+            android:textColor="@color/text_color_primary"
             android:textSize="16sp" />
 
         <ImageView
@@ -271,6 +278,5 @@
         android:layout_marginRight="@dimen/setting_padding_horizontal"
         android:layout_weight="0"
         android:background="@color/splitter_color_grey" />
-
 
 </LinearLayout>

@@ -228,7 +228,6 @@
             android:layout_height="@dimen/splitter_height"
             android:background="@color/splitter_color_grey" />
 
-
         <LinearLayout
             android:id="@+id/view_switch_to_night"
             android:layout_width="match_parent"

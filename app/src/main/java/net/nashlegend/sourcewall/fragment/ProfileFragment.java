@@ -2,9 +2,11 @@ package net.nashlegend.sourcewall.fragment;
 
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatDelegate;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.analytics.MobclickAgent;
 
+import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.LoginActivity;
 import net.nashlegend.sourcewall.activities.MessageCenterActivity;
@@ -105,7 +108,7 @@ public class ProfileFragment extends BaseFragment {
             userName.setText(R.string.click_to_login);
             loginLayout.setVisibility(View.GONE);
         }
-        if (PrefsUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
+        if (App.isNightMode()) {
             viewSwitchToDay.setVisibility(View.VISIBLE);
             viewSwitchToNight.setVisibility(View.GONE);
         } else {
@@ -155,7 +158,11 @@ public class ProfileFragment extends BaseFragment {
     }
 
     private void revertMode() {
-        PrefsUtil.saveBoolean(Consts.Key_Is_Night_Mode, !PrefsUtil.readBoolean(Consts.Key_Is_Night_Mode, false));
+        if (App.isNightMode()) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }
         MobclickAgent.onEvent(getActivity(), Mob.Event_Switch_Day_Night_Mode);
         getActivity().recreate();
     }

@@ -25,11 +25,6 @@ public abstract class BaseActivity extends SwipeActivity implements IStackedAsyn
 
     @Override
     public void setTheme(int resid) {
-        if (PrefsUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
-            resid = R.style.AppThemeNight;
-        } else {
-            resid = R.style.AppTheme;
-        }
         super.setTheme(resid);
     }
 

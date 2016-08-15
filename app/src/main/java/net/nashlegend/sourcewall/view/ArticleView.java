@@ -25,6 +25,7 @@ import java.util.ArrayList;
 
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 
 /**
  * Created by NashLegend on 2014/9/18 0018
@@ -60,12 +61,6 @@ public class ArticleView extends AceView<Article> {
     }
 
     private void initViews() {
-        if (PrefsUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
-            setBackgroundColor(getContext().getResources().getColor(R.color.page_background_night));
-        } else {
-            setBackgroundColor(getContext().getResources().getColor(R.color.page_background));
-        }
-
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_article_view, this);
         titleView = (TextView) findViewById(R.id.text_title);
@@ -122,19 +117,9 @@ public class ArticleView extends AceView<Article> {
         ArticleAPI
                 .getArticleReplies(article.getId(), article.getCommentNum(), 4999)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<ResponseObject<ArrayList<UComment>>>() {
+                .subscribe(new Action1<ResponseObject<ArrayList<UComment>>>() {
                     @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(ResponseObject<ArrayList<UComment>> result) {
+                    public void call(ResponseObject<ArrayList<UComment>> result) {
                         loadDesc.findViewById(R.id.text_header_load_hint).setVisibility(View.VISIBLE);
                         loadDesc.findViewById(R.id.progress_header_loading).setVisibility(View.INVISIBLE);
                         if (result.ok) {

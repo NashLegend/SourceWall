@@ -24,18 +24,18 @@
         android:id="@+id/action_load_desc"
         android:orderInCategory="105"
         android:title="@string/action_load_desc"
-        android:icon="?attr/arrow_up_icon"
+        android:icon="@drawable/ic_arrow_up"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_load_acs"
         android:orderInCategory="105"
         android:title="@string/action_load_acs"
-        android:icon="?attr/arrow_down_icon"
+        android:icon="@drawable/ic_arrow_down"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_open_in_browser"
         android:title="@string/open_in_browser"
         android:orderInCategory="106"
-        android:icon="?attr/browser_icon"
+        android:icon="@drawable/ic_browser"
         app:showAsAction="never" />
 </menu>

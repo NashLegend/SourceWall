@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/color_clear_page_background"
+    android:background="@color/page_clear_background"
     tools:context=".activities.ReplyActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -31,14 +31,14 @@
             android:id="@+id/text_reply_host"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/color_reply_quote_background"
+            android:background="@color/reply_quote_background"
             android:ellipsize="end"
             android:maxLines="3"
             android:paddingBottom="@dimen/abc_action_bar_subtitle_bottom_margin_material"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/abc_action_bar_subtitle_bottom_margin_material"
-            android:textColor="?attr/color_reply_quote_text"
+            android:textColor="@color/reply_quote_text"
             android:textSize="16sp"
             android:visibility="gone"
             tools:text="@string/sample_title" />
@@ -54,14 +54,14 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="8dp"
-            android:textColor="?attr/color_reply_input_text"
-            android:textColorHint="?attr/color_reply_hint" />
+            android:textColor="@color/reply_input_text"
+            android:textColorHint="@color/reply_hint" />
 
         <LinearLayout
             android:id="@+id/layout_reply_action"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/color_reply_operation_bar_background"
+            android:background="@color/reply_operation_bar_background"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingBottom="5dp"

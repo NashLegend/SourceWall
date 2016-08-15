@@ -5,14 +5,14 @@
     android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/color_webview_background"
+    android:background="@color/webview_background"
     tools:context=".activities.AnswerActivity">
 
     <net.nashlegend.sourcewall.view.common.SScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/color_webview_background"
+        android:background="@color/webview_background"
         android:paddingLeft="@dimen/list_standard_item_padding_horizontal"
         android:paddingRight="@dimen/list_standard_item_padding_horizontal"
         android:paddingTop="10dp">
@@ -61,7 +61,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/app_bar"
-        android:background="?attr/color_answer_question_title_background"
+        android:background="@color/answer_question_title_background"
         android:ellipsize="end"
         android:maxLines="3"
         android:paddingBottom="10dp"
@@ -69,7 +69,7 @@
         android:paddingRight="10dp"
         android:paddingTop="10dp"
         tools:text="@string/sample_title"
-        android:textColor="?attr/color_answer_question_title_text"
+        android:textColor="@color/answer_question_title_text"
         android:textSize="@dimen/text_title_size_dimen" />
 
     <LinearLayout
@@ -77,7 +77,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/text_title"
-        android:background="?attr/color_answer_author_background"
+        android:background="@color/answer_author_background"
         android:gravity="center_vertical"
         android:orientation="vertical">
 
@@ -107,14 +107,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     tools:text="@string/sample_author"
-                    android:textColor="?attr/color_answer_author_text" />
+                    android:textColor="@color/answer_author_text" />
 
                 <TextView
                     android:id="@+id/text_author_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     tools:text="@string/sample_author_title"
-                    android:textColor="?attr/color_answer_author_sub_text" />
+                    android:textColor="@color/answer_author_sub_text" />
             </LinearLayout>
 
             <LinearLayout
@@ -137,7 +137,7 @@
                     android:layout_marginLeft="@dimen/list_standard_item_text_icon_gap"
                     android:layout_weight="0"
                     tools:text="@string/sample_like_num"
-                    android:textColor="?attr/color_answer_author_sub_text" />
+                    android:textColor="@color/answer_author_sub_text" />
             </LinearLayout>
         </LinearLayout>
 

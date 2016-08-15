@@ -21,7 +21,7 @@
             android:id="@+id/text_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="?attr/color_list_title"
+            android:textColor="@color/list_title"
             android:textSize="@dimen/list_standard_title_font_size"
             tools:text="@string/sample_title" />
 
@@ -33,7 +33,7 @@
             android:ellipsize="end"
             android:lineSpacingExtra="@dimen/lineSpacingExtra"
             android:maxLines="3"
-            android:textColor="?attr/color_list_summary"
+            android:textColor="@color/list_summary"
             android:textSize="@dimen/list_standard_summary_font_size"
             tools:text="@string/sample_summary" />
     </LinearLayout>
@@ -43,5 +43,5 @@
         android:layout_height="0.5dp"
         android:layout_marginLeft="@dimen/list_standard_item_padding_horizontal"
         android:layout_marginRight="@dimen/list_standard_item_padding_horizontal"
-        android:background="?attr/divider_color" />
+        android:background="@color/divider_color" />
 </LinearLayout>

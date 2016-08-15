@@ -30,11 +30,6 @@ public class AnswerListItemView extends AceView<Answer> {
 
     public AnswerListItemView(Context context) {
         super(context);
-        if (PrefsUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
-            setBackgroundColor(getContext().getResources().getColor(R.color.page_background_night));
-        } else {
-            setBackgroundColor(getContext().getResources().getColor(R.color.page_background));
-        }
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_answer_item_view, this);
         contentView = (TextView) findViewById(R.id.web_content);

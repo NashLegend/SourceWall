@@ -14,7 +14,7 @@
         android:layout_marginLeft="24dp"
         android:ellipsize="end"
         android:singleLine="true"
-        android:textColor="?attr/color_drawer_list_sub_text"
+        android:textColor="@color/drawer_list_sub_text"
         tools:text="@string/sample_title"
         android:textSize="16sp" />
 </LinearLayout>
