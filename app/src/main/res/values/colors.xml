@@ -8,7 +8,7 @@
 
     <color name="divider_color">#dddddd</color>
 
-    <color name="page_background">#eeeeee</color>
+    <color name="page_background">#eaeef4</color>
     <color name="page_clear_background">#ffffff</color>
 
     <color name="webview_background">#ffffff</color>

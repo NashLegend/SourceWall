@@ -208,7 +208,7 @@ public class PostsFragment extends BaseFragment implements LoadingView.ReloadLis
 
                     @Override
                     public void onError(Throwable e) {
-
+                        progressBar.setVisibility(View.GONE);
                     }
 
                     @Override

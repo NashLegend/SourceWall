@@ -23,7 +23,8 @@
         android:layout_alignParentTop="true"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:visibility="visible" />
 
     <net.nashlegend.sourcewall.view.common.LoadingView
         android:id="@+id/article_progress_loading"

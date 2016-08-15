@@ -1,96 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
-    <android.support.v7.widget.CardView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        app:cardBackgroundColor="@color/card_background"
-        app:cardUseCompatPadding="true">
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/list_standard_item_padding_vertical"
+        android:paddingLeft="@dimen/list_standard_item_padding_horizontal"
+        android:paddingRight="@dimen/list_standard_item_padding_horizontal"
+        android:paddingTop="@dimen/list_standard_item_padding_vertical">
+
+        <TextView
+            android:id="@+id/text_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/post_view_title_margin_bottom"
+            android:textColor="@color/article_title"
+            android:textSize="@dimen/text_title_size_dimen"
+            tools:text="@string/sample_title" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:paddingBottom="@dimen/list_standard_item_padding_vertical"
-            android:paddingLeft="@dimen/list_standard_item_padding_horizontal"
-            android:paddingRight="@dimen/list_standard_item_padding_horizontal"
-            android:paddingTop="@dimen/list_standard_item_padding_vertical">
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="3dp"
+            android:paddingTop="3dp">
 
-            <TextView
-                android:id="@+id/text_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/post_view_title_margin_bottom"
-                tools:text="@string/sample_title"
-                android:textColor="@color/article_title"
-                android:textSize="@dimen/text_title_size_dimen" />
+            <ImageView
+                android:id="@+id/image_avatar"
+                android:layout_width="@dimen/list_standard_comment_avatar_dimen"
+                android:layout_height="@dimen/list_standard_comment_avatar_dimen"
+                android:layout_marginRight="@dimen/avatar_right_span_dimen"
+                android:layout_weight="0"
+                android:src="@drawable/default_avatar" />
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingBottom="3dp"
-                android:paddingTop="3dp">
+                android:layout_weight="0"
+                android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/image_avatar"
-                    android:layout_width="@dimen/list_standard_comment_avatar_dimen"
-                    android:layout_height="@dimen/list_standard_comment_avatar_dimen"
-                    android:layout_marginRight="@dimen/avatar_right_span_dimen"
-                    android:layout_weight="0"
-                    android:src="@drawable/default_avatar" />
+                <TextView
+                    android:id="@+id/text_author"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/author_color"
+                    tools:text="@string/sample_author" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/text_author"
+                        android:id="@+id/text_floor"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="@string/sample_author"
+                        android:text="@string/post_author"
                         android:textColor="@color/author_color" />
 
-                    <LinearLayout
+                    <TextView
+                        android:id="@+id/text_date"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:id="@+id/text_floor"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/post_author"
-                            android:textColor="@color/author_color" />
-
-                        <TextView
-                            android:id="@+id/text_date"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/list_standard_item_text_text_gap"
-                            tools:text="@string/sample_date"
-                            android:textColor="@color/author_color" />
-                    </LinearLayout>
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/list_standard_item_text_text_gap"
+                        android:textColor="@color/author_color"
+                        tools:text="@string/sample_date" />
                 </LinearLayout>
-
             </LinearLayout>
 
-            <net.nashlegend.sourcewall.view.common.WWebView
-                android:id="@+id/web_content"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scrollbars="none"
-                android:textSize="@dimen/text_content_font_size_dimen" />
         </LinearLayout>
-    </android.support.v7.widget.CardView>
+
+        <net.nashlegend.sourcewall.view.common.WWebView
+            android:id="@+id/web_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            android:textSize="@dimen/text_content_font_size_dimen" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginLeft="@dimen/list_standard_item_padding_horizontal"
+        android:layout_marginRight="@dimen/list_standard_item_padding_horizontal"
+        android:background="?attr/divider_color" />
 
     <RelativeLayout
         android:id="@+id/view_load_latest"

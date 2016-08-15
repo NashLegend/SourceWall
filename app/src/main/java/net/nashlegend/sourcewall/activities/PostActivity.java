@@ -544,6 +544,7 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
                 .getPostDetailByID(post.getId())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<ResponseObject<Post>>() {
+
                     @Override
                     public void call(ResponseObject<Post> result) {
                         if (result.ok) {
@@ -557,6 +558,7 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
                             loadReplies(0);
                         } else {
                             loadingView.onLoadFailed();
+                            progressBar.setVisibility(View.GONE);
                         }
                     }
                 });
@@ -585,10 +587,19 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<ResponseObject<ArrayList<UComment>>>() {
+                .subscribe(new Observer<ResponseObject<ArrayList<UComment>>>() {
                     @Override
-                    public void call(ResponseObject<ArrayList<UComment>> result) {
+                    public void onCompleted() {
                         progressBar.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        progressBar.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onNext(ResponseObject<ArrayList<UComment>> result) {
                         if (result.ok) {
                             loadingView.onLoadSuccess();
                             ArrayList<UComment> ars = result.result;

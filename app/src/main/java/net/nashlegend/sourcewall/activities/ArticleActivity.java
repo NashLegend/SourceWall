@@ -59,7 +59,6 @@ import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
-import rx.functions.Func0;
 
 public class ArticleActivity extends BaseActivity implements OnRefreshListener, OnClickListener, ReloadListener {
 
@@ -513,6 +512,7 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
                             adapter.notifyDataSetChanged();
                             loadReplies(0);
                         } else {
+                            progressBar.setVisibility(View.GONE);
                             loadingView.onLoadFailed();
                         }
                     }
@@ -549,10 +549,19 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<ResponseObject<ArrayList<UComment>>>() {
+                .subscribe(new Observer<ResponseObject<ArrayList<UComment>>>() {
                     @Override
-                    public void call(ResponseObject<ArrayList<UComment>> result) {
+                    public void onCompleted() {
                         progressBar.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        progressBar.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onNext(ResponseObject<ArrayList<UComment>> result) {
                         if (result.ok) {
                             loadingView.onLoadSuccess();
                             if (result.result.size() > 0) {

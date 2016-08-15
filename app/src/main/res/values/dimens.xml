@@ -26,8 +26,8 @@
     <dimen name="list_standard_image_author_span">8dp</dimen>
     <dimen name="list_standard_comment_avatar_dimen">36dp</dimen>
     <dimen name="list_standard_padding_horizontal">6dp</dimen>
-    <dimen name="list_standard_item_padding_horizontal">12dp</dimen>
-    <dimen name="list_standard_item_padding_vertical">12dp</dimen>
+    <dimen name="list_standard_item_padding_horizontal">16dp</dimen>
+    <dimen name="list_standard_item_padding_vertical">16dp</dimen>
     <dimen name="list_standard_item_like_image_dimen">16dp</dimen>
     <dimen name="list_standard_item_reply_image_dimen">16dp</dimen>
     <dimen name="list_standard_item_author_text_dimen">10dp</dimen>

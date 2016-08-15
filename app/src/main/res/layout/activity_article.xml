@@ -12,6 +12,7 @@
         android:layout_height="match_parent">
 
         <net.nashlegend.sourcewall.view.common.listview.LListView
+            android:background="@color/list_background"
             android:id="@+id/list_detail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -19,8 +20,6 @@
             android:footerDividersEnabled="false"
             android:headerDividersEnabled="false"
             android:overScrollMode="never"
-            android:paddingLeft="@dimen/list_standard_padding_horizontal"
-            android:paddingRight="@dimen/list_standard_padding_horizontal"
             android:scrollbarStyle="outsideOverlay"
             tools:listheader="@layout/layout_article_view"
             tools:listitem="@layout/layout_medium_comment_item_view" />

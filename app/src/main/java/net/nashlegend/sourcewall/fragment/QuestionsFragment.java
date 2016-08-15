@@ -230,7 +230,7 @@ public class QuestionsFragment extends BaseFragment implements LoadingView.Reloa
 
                     @Override
                     public void onError(Throwable e) {
-
+                        progressBar.setVisibility(View.GONE);
                     }
 
                     @Override
