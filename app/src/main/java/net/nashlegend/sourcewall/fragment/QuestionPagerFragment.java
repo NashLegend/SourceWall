@@ -384,7 +384,7 @@ public class QuestionPagerFragment extends BaseFragment {
 
         @Override
         public Fragment getItem(int position) {
-            return Questions2Fragment.newInstance(subItems.get(position));
+            return QuestionsFragment.newInstance(subItems.get(position));
         }
 
         @Override

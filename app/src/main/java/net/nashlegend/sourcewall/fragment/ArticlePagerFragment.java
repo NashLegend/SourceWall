@@ -77,7 +77,7 @@ public class ArticlePagerFragment extends BaseFragment {
 
         @Override
         public Fragment getItem(int position) {
-            return Articles2Fragment.newInstance(subItems.get(position));
+            return ArticlesFragment.newInstance(subItems.get(position));
         }
 
         @Override

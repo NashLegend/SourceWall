@@ -1,43 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/color_page_background"
-    android:orientation="vertical">
-
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar"
+    android:orientation="vertical"
+    tools:context=".activities.MainActivity">
+    
+    <FrameLayout
+        android:id="@+id/main2_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/action_bar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            android:theme="?attr/toolbarTheme"
-            app:popupTheme="?attr/toolbarPopTheme" />
-    </android.support.design.widget.AppBarLayout>
-
-    <android.support.v4.widget.DrawerLayout
-        android:id="@+id/drawer_layout"
+    <me.majiajie.pagerbottomtabstrip.PagerBottomTabLayout
+        android:id="@+id/bottom_bar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".activities.MainActivity">
-
-        <FrameLayout
-            android:id="@+id/container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <fragment
-            android:id="@+id/navigation_drawer"
-            android:name="net.nashlegend.sourcewall.fragment.NavigationDrawerFragment"
-            android:layout_width="@dimen/navigation_drawer_width"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            tools:layout="@layout/fragment_navigation_drawer" />
-
-    </android.support.v4.widget.DrawerLayout>
+        android:layout_height="wrap_content" />
 </LinearLayout>

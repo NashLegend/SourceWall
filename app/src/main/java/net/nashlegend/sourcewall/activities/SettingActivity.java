@@ -18,11 +18,14 @@ import android.widget.TextView;
 import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.R;
+import net.nashlegend.sourcewall.events.LoginStateChangedEvent;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.PrefsUtil;
+
+import de.greenrobot.event.EventBus;
 
 public class SettingActivity extends BaseActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     private TextView imageText;
@@ -189,6 +192,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                             UserAPI.logout();
                             MobclickAgent.onEvent(SettingActivity.this, Mob.Event_Logout);
                             logText.setText(R.string.log_in);
+                            EventBus.getDefault().post(new LoginStateChangedEvent());
                         }
                     })
                     .setNegativeButton(R.string.cancel, null)

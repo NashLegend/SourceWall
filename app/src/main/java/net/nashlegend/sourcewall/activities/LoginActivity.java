@@ -101,9 +101,6 @@ public class LoginActivity extends BaseActivity {
                 HttpUtil.setCookie(HttpUtil.getDefaultHttpClient());
             }
             boolean gotToken = !TextUtils.isEmpty(tmpUkey) && !TextUtils.isEmpty(tmpToken);
-            if (gotToken) {
-                EventBus.getDefault().post(new LoginStateChangedEvent());
-            }
             return gotToken;
         } catch (Exception e) {
             return false;
@@ -116,11 +113,9 @@ public class LoginActivity extends BaseActivity {
         @Override
         public boolean shouldOverrideUrlLoading(final WebView view, String url) {
             if (url.equals(Consts.SUCCESS_URL_1) || url.equals(Consts.SUCCESS_URL_2)) {
-                // login ok
                 if (parseRawCookie(cookieStr)) {
                     webView.stopLoading();
                     PrefsUtil.saveString(Consts.Key_Cookie, cookieStr);
-                    setResult(RESULT_OK);
                     delayFinish();
                 } else {
                     dialog = new AlertDialog.Builder(LoginActivity.this)
@@ -175,29 +170,12 @@ public class LoginActivity extends BaseActivity {
                 super.onPageFinished(view, url);
             }
         }
-
-        @Override
-        public void onReceivedSslError(WebView view, @NonNull SslErrorHandler handler, SslError error) {
-            super.onReceivedSslError(view, handler, error);
-        }
-
-        @Override
-        public void onReceivedLoginRequest(WebView view, String realm, String account, String args) {
-            super.onReceivedLoginRequest(view, realm, account, args);
-        }
-
-        @Override
-        public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-            super.onReceivedError(view, errorCode, description, failingUrl);
-        }
-
-        @Override
-        public void onReceivedHttpAuthRequest(WebView view, @NonNull HttpAuthHandler handler, String host, String realm) {
-            super.onReceivedHttpAuthRequest(view, handler, host, realm);
-        }
     };
 
     private void delayFinish() {
+        if (UserAPI.isLoggedIn()) {
+            EventBus.getDefault().post(new LoginStateChangedEvent());
+        }
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

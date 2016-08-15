@@ -107,5 +107,4 @@ public abstract class BaseFragment extends Fragment implements IStackedAsyncTask
         Intent intent = new Intent(getContext(), clazz);
         startActivity(intent);
     }
-
 }

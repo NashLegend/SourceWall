@@ -403,7 +403,7 @@ public class PostPagerFragment extends BaseFragment {
 
         @Override
         public Fragment getItem(int position) {
-            return Posts2Fragment.newInstance(subItems.get(position));
+            return PostsFragment.newInstance(subItems.get(position));
         }
 
         @Override

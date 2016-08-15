@@ -1,13 +1,11 @@
 package net.nashlegend.sourcewall.fragment;
 
-import android.content.Context;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -16,7 +14,6 @@ import android.widget.ProgressBar;
 import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.ArticleActivity;
-import net.nashlegend.sourcewall.activities.MainActivity;
 import net.nashlegend.sourcewall.adapters.ArticleAdapter;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.SubItem;
@@ -38,10 +35,11 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 
 /**
- * Created by NashLegend on 2014/9/18 0018
+ * A simple {@link Fragment} subclass.
+ * Use the {@link ArticlesFragment#newInstance} factory method to
+ * create an instance of this fragment.
  */
-public class ArticlesFragment extends ChannelsFragment implements LListView.OnRefreshListener, LoadingView.ReloadListener, AdapterView.OnItemClickListener {
-
+public class ArticlesFragment extends BaseFragment implements LoadingView.ReloadListener, LListView.OnRefreshListener, AdapterView.OnItemClickListener {
     View layoutView;
     @BindView(R.id.list_articles)
     LListView listView;
@@ -53,44 +51,38 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
     private ArticleAdapter adapter;
     private SubItem subItem;
 
+    public ArticlesFragment() {
+        // Required empty public constructor
+    }
+
+    public static ArticlesFragment newInstance(SubItem subItem) {
+        ArticlesFragment fragment = new ArticlesFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(Consts.Extra_SubItem, subItem);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        getActivity().invalidateOptionsMenu();
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            subItem = getArguments().getParcelable(Consts.Extra_SubItem);
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (layoutView == null) {
-            layoutView = inflater.inflate(R.layout.fragment_articles, container, false);
-            ButterKnife.bind(this, layoutView);
-            loadingView.setReloadListener(this);
-            subItem = getArguments().getParcelable(Consts.Extra_SubItem);
-            adapter = new ArticleAdapter(getActivity());
-            listView.setAdapter(adapter);
-            listView.setOnRefreshListener(this);
-            listView.setOnItemClickListener(this);
-            setTitle();
-            loadOver();
-        } else {
-            if (layoutView.getParent() != null) {
-                ((ViewGroup) layoutView.getParent()).removeView(layoutView);
-            }
-            SubItem mSubItem = getArguments().getParcelable(Consts.Extra_SubItem);
-            resetData(mSubItem);
-        }
+        layoutView = inflater.inflate(R.layout.fragment_articles, container, false);
+        ButterKnife.bind(this, layoutView);
+        loadingView.setReloadListener(this);
+        subItem = getArguments().getParcelable(Consts.Extra_SubItem);
+        adapter = new ArticleAdapter(getActivity());
+        listView.setAdapter(adapter);
+        listView.setOnRefreshListener(this);
+        listView.setOnItemClickListener(this);
+        loadOver();
         return layoutView;
-    }
-
-    @Override
-    public void setTitle() {
-        if (subItem.getType() == SubItem.Type_Collections) {
-            getActivity().setTitle("科学人");
-            ((MainActivity) getActivity()).getSupportActionBar().setTitle("科学人");
-        } else {
-            getActivity().setTitle(this.subItem.getName() + " -- 科学人");
-            ((MainActivity) getActivity()).getSupportActionBar().setTitle(this.subItem.getName() + " -- 科学人");
-        }
     }
 
     private void loadOver() {
@@ -117,58 +109,6 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
         loadData(adapter.getCount());
     }
 
-    @Override
-    public int getFragmentMenu() {
-        return R.menu.menu_fragment_article;
-    }
-
-    @Override
-    public boolean takeOverMenuInflate(MenuInflater inflater, Menu menu) {
-        inflater.inflate(getFragmentMenu(), menu);
-        return true;
-    }
-
-    @Override
-    public boolean takeOverOptionsItemSelect(MenuItem item) {
-        return true;
-    }
-
-    @Override
-    public boolean takeOverBackPressed() {
-        return false;
-    }
-
-    @Override
-    public void resetData(SubItem subItem) {
-        if (subItem.equals(this.subItem)) {
-            loadingView.onLoadSuccess();
-            if (adapter == null || adapter.getCount() == 0) {
-                triggerRefresh();
-            }
-        } else {
-            this.subItem = subItem;
-            adapter.clear();
-            adapter.notifyDataSetInvalidated();
-            listView.setCanPullToRefresh(false);
-            listView.setCanPullToLoadMore(false);
-            loadOver();
-        }
-        setTitle();
-    }
-
-    @Override
-    public void triggerRefresh() {
-        listView.startRefreshing();
-    }
-
-    @Override
-    public void prepareLoading(SubItem sub) {
-        if (sub == null || !sub.equals(this.subItem)) {
-            loadingView.startLoading();
-        }
-    }
-
-    @Override
     public void scrollToHead() {
         listView.setSelection(0);
     }
@@ -265,4 +205,5 @@ public class ArticlesFragment extends ChannelsFragment implements LListView.OnRe
             startActivity(intent);
         }
     }
+
 }

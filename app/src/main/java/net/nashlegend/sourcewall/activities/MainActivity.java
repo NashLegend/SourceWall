@@ -1,248 +1,117 @@
 package net.nashlegend.sourcewall.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
-import com.umeng.analytics.MobclickAgent;
-
-import net.nashlegend.sourcewall.BuildConfig;
+import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
-import net.nashlegend.sourcewall.events.OpenContentFragmentEvent;
-import net.nashlegend.sourcewall.events.PrepareOpenContentFragmentEvent;
-import net.nashlegend.sourcewall.fragment.ArticlesFragment;
-import net.nashlegend.sourcewall.fragment.ChannelsFragment;
-import net.nashlegend.sourcewall.fragment.FavorsFragment;
-import net.nashlegend.sourcewall.fragment.NavigationDrawerFragment;
-import net.nashlegend.sourcewall.fragment.PostsFragment;
-import net.nashlegend.sourcewall.fragment.QuestionsFragment;
-import net.nashlegend.sourcewall.model.SubItem;
-import net.nashlegend.sourcewall.request.cache.RequestCache;
-import net.nashlegend.sourcewall.util.Config;
-import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.fragment.ArticlePagerFragment;
+import net.nashlegend.sourcewall.fragment.BaseFragment;
+import net.nashlegend.sourcewall.fragment.PostPagerFragment;
+import net.nashlegend.sourcewall.fragment.ProfileFragment;
+import net.nashlegend.sourcewall.fragment.QuestionPagerFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import de.greenrobot.event.EventBus;
+import me.majiajie.pagerbottomtabstrip.Controller;
+import me.majiajie.pagerbottomtabstrip.PagerBottomTabLayout;
+import me.majiajie.pagerbottomtabstrip.listener.OnTabItemSelectListener;
 
 public class MainActivity extends BaseActivity {
-    @BindView(R.id.action_bar)
-    Toolbar toolbar;
-    @BindView(R.id.drawer_layout)
-    DrawerLayout drawerLayout;
-    @BindView(R.id.navigation_drawer)
-    View container;
-    private NavigationDrawerFragment mNavigationDrawerFragment;
-    private ArticlesFragment articlesFragment;
-    private PostsFragment postsFragment;
-    private QuestionsFragment questionsFragment;
-    private FavorsFragment favorsFragment;
-    public ChannelsFragment currentFragment;
+
+    @BindView(R.id.bottom_bar)
+    PagerBottomTabLayout bottomBar;
+
+    BaseFragment crtFragment;
+    ArticlePagerFragment articlePagerFragment;
+    PostPagerFragment postPagerFragment;
+    QuestionPagerFragment questionPagerFragment;
+    ProfileFragment profileFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setSwipeEnabled(false);
         ButterKnife.bind(this);
-        EventBus.getDefault().register(this);
-        MobclickAgent.setDebugMode(BuildConfig.DEBUG);
-        setSupportActionBar(toolbar);
+        setSwipeEnabled(false);
+        initPages();
+    }
 
-        toolbar.setOnClickListener(new View.OnClickListener() {
-            boolean preparingToScrollToHead = false;
+    private void initPages() {
+        Controller controller = bottomBar.builder()
+                .addTabItem(android.R.drawable.ic_menu_gallery, "科学人")
+                .addTabItem(android.R.drawable.ic_menu_manage, "小组")
+                .addTabItem(android.R.drawable.ic_search_category_default, "问答")
+                .addTabItem(android.R.drawable.ic_menu_always_landscape_portrait, "我")
+                .build();
+        controller.addTabItemClickListener(new OnTabItemSelectListener() {
+            @Override
+            public void onSelected(int index, Object tag) {
+                crtFragment = getFragmentByPosition(index);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.main2_content, crtFragment).commitAllowingStateLoss();
+            }
 
             @Override
-            public void onClick(View v) {
-                // STOPSHIP: 16/5/15
-                Main2Activity.open();
-                if (!mNavigationDrawerFragment.isDrawerOpen()) {
-                    if (preparingToScrollToHead) {
-                        if (currentFragment != null) {
-                            currentFragment.scrollToHead();
-                        }
-                    } else {
-                        preparingToScrollToHead = true;
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                preparingToScrollToHead = false;
-                            }
-                        }, 200);
-                    }
-                }
+            public void onRepeatClick(int index, Object tag) {
+
             }
         });
-        mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-        mNavigationDrawerFragment.setUp(container, drawerLayout, toolbar);
     }
 
-    @Override
-    protected void onPause() {
-        RequestCache.getInstance().flushCache();
-        super.onPause();
+    private BaseFragment getFragmentByPosition(int idx) {
+        BaseFragment fragment = null;
+        switch (idx) {
+            case 0:
+                if (articlePagerFragment == null) {
+                    articlePagerFragment = ArticlePagerFragment.newInstance();
+                }
+                fragment = articlePagerFragment;
+                break;
+            case 1:
+                if (postPagerFragment == null) {
+                    postPagerFragment = PostPagerFragment.newInstance();
+                }
+                fragment = postPagerFragment;
+                break;
+            case 2:
+                if (questionPagerFragment == null) {
+                    questionPagerFragment = QuestionPagerFragment.newInstance();
+                }
+                fragment = questionPagerFragment;
+                break;
+            case 3:
+                if (profileFragment == null) {
+                    profileFragment = ProfileFragment.newInstance();
+                }
+                fragment = profileFragment;
+                break;
+        }
+        return fragment;
     }
-
-    @Override
-    protected void onDestroy() {
-        RequestCache.getInstance().closeCache();
-        EventBus.getDefault().unregister(this);
-        super.onDestroy();
-    }
-
-    public void restoreActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        assert actionBar != null;
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(getTitle());
-    }
-
-    boolean preparingToExit = false;
 
     @Override
     public void onBackPressed() {
-        if (currentFragment != null && currentFragment.takeOverBackPressed()) {
+        if (wasTakenOver()) {
             return;
         }
-
-        if (isDrawerOpen()) {
-            mNavigationDrawerFragment.closeDrawer();
-            return;
-        }
-
-        if (preparingToExit) {
-            super.onBackPressed();
-        } else {
-            preparingToExit = true;
-            toastSingleton(R.string.click_again_to_exit);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    preparingToExit = false;
-                }
-            }, Config.ExitTapsGap);
-        }
+        super.onBackPressed();
     }
 
-    public boolean isDrawerOpen() {
-        return mNavigationDrawerFragment != null && mNavigationDrawerFragment.isDrawerOpen();
+    private boolean wasTakenOver() {
+        return crtFragment != null && crtFragment.takeOverBackPress();
+    }
+
+    public static void open() {
+        Intent intent = new Intent(App.getApp(), MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        App.getApp().startActivity(intent);
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (!mNavigationDrawerFragment.isDrawerOpen()) {
-            if (currentFragment == null || !currentFragment.takeOverMenuInflate(getMenuInflater(), menu)) {
-                getMenuInflater().inflate(R.menu.main, menu);
-            }
-            restoreActionBar();
-            initSearchView(menu);
-            return true;
-        }
-        return super.onCreateOptionsMenu(menu);
+    public void finish() {
+        finish(0, 0);
     }
-
-    private void initSearchView(final Menu menu) {
-        if (menu == null || menu.findItem(R.id.search) == null) {
-            return;
-        }
-        final MenuItem searchItem = menu.findItem(R.id.search);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        searchView.setIconifiedByDefault(true);
-        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                setItemsVisibility(menu, searchItem, false);
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                setItemsVisibility(menu, null, true);
-                invalidateOptionsMenu();
-                return true;
-            }
-        });
-    }
-
-    private void setItemsVisibility(Menu menu, MenuItem exception, boolean visible) {
-        for (int i = 0; i < menu.size(); ++i) {
-            MenuItem item = menu.getItem(i);
-            if (item != exception) item.setVisible(visible);
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return currentFragment != null
-                && currentFragment.takeOverOptionsItemSelect(item)
-                || super.onOptionsItemSelected(item);
-    }
-
-    public void replaceFragment(ChannelsFragment fragment, SubItem subItem) {
-        if (currentFragment == fragment) {
-            fragment.resetData(subItem);
-            invalidateOptionsMenu();
-        } else {
-            Bundle bundle = new Bundle();
-            bundle.putParcelable(Consts.Extra_SubItem, subItem);
-            fragment.setArguments(bundle);
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commitAllowingStateLoss();
-            currentFragment = fragment;
-        }
-    }
-
-    public void prepareFragment(SubItem subItem) {
-        if (currentFragment != null) {
-            currentFragment.prepareLoading(subItem);
-        }
-    }
-
-    public void onEventMainThread(OpenContentFragmentEvent event) {
-        SubItem subItem = event.subItem;
-        if (subItem == null) {
-            subItem = new SubItem(SubItem.Section_Article, SubItem.Type_Collections, "科学人", "");
-        }
-        switch (subItem.getSection()) {
-            case SubItem.Section_Article:
-                if (articlesFragment == null) {
-                    articlesFragment = new ArticlesFragment();
-                }
-                replaceFragment(articlesFragment, subItem);
-                break;
-            case SubItem.Section_Post:
-                if (postsFragment == null) {
-                    postsFragment = new PostsFragment();
-                }
-                replaceFragment(postsFragment, subItem);
-                break;
-            case SubItem.Section_Question:
-                if (questionsFragment == null) {
-                    questionsFragment = new QuestionsFragment();
-                }
-                replaceFragment(questionsFragment, subItem);
-                break;
-            case SubItem.Section_Favor:
-                if (favorsFragment == null) {
-                    favorsFragment = new FavorsFragment();
-                }
-                replaceFragment(favorsFragment, subItem);
-                break;
-        }
-    }
-
-    public void onEventMainThread(PrepareOpenContentFragmentEvent event) {
-        SubItem subItem = event.subItem;
-        if (subItem == null) {
-            subItem = new SubItem(SubItem.Section_Article, SubItem.Type_Collections, "科学人", "");
-        }
-        prepareFragment(subItem);
-    }
-
 }

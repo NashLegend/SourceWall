@@ -13,7 +13,6 @@ import android.widget.AdapterView;
 import android.widget.ProgressBar;
 
 import net.nashlegend.sourcewall.R;
-import net.nashlegend.sourcewall.activities.MainActivity;
 import net.nashlegend.sourcewall.adapters.FavorAdapter;
 import net.nashlegend.sourcewall.model.Favor;
 import net.nashlegend.sourcewall.model.SubItem;
@@ -83,7 +82,6 @@ public class FavorsFragment extends ChannelsFragment implements LListView.OnRefr
     @Override
     public void setTitle() {
         getActivity().setTitle(this.subItem.getName() + " -- 收藏");
-        ((MainActivity) getActivity()).getSupportActionBar().setTitle(this.subItem.getName() + " -- 收藏");
     }
 
     private void loadOver() {

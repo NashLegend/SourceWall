@@ -18,9 +18,9 @@ import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.LoginActivity;
+import net.nashlegend.sourcewall.activities.MessageCenterActivity;
 import net.nashlegend.sourcewall.activities.SettingActivity;
-import net.nashlegend.sourcewall.events.LoginEvent;
-import net.nashlegend.sourcewall.events.LogoutEvent;
+import net.nashlegend.sourcewall.events.LoginStateChangedEvent;
 import net.nashlegend.sourcewall.model.ReminderNoticeNum;
 import net.nashlegend.sourcewall.model.UserInfo;
 import net.nashlegend.sourcewall.request.RequestObject;
@@ -68,9 +68,6 @@ public class ProfileFragment extends BaseFragment {
     @BindView(R.id.img_msg)
     ImageView imgMsg;
 
-    private boolean currentLoginState = false;
-    private String currentUkey = "";
-
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -83,20 +80,9 @@ public class ProfileFragment extends BaseFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         ButterKnife.bind(this, view);
-        currentLoginState = UserAPI.isLoggedIn();
-        currentUkey = UserAPI.getUkey();
         EventBus.getDefault().register(this);
         initView();
         return view;
@@ -148,6 +134,7 @@ public class ProfileFragment extends BaseFragment {
                 }
                 break;
             case R.id.layout_msg_center:
+                startActivity(MessageCenterActivity.class);
                 break;
             case R.id.layout_my_favors:
                 break;
@@ -162,7 +149,7 @@ public class ProfileFragment extends BaseFragment {
                 revertMode();
                 break;
             case R.id.layout_setting:
-                startActivity(new Intent(getActivity(), SettingActivity.class));
+                startActivity(SettingActivity.class);
                 break;
         }
     }
@@ -191,14 +178,10 @@ public class ProfileFragment extends BaseFragment {
         });
     }
 
-    private void onLoadUserInfo() {
-        // TODO: 16/7/27
+    private void onLogin() {
         ImageLoader.getInstance().displayImage(UserAPI.getUserAvatar(), imageAvatar, ImageUtils.bigAvatarOptions);
         userName.setText(UserAPI.getName());
         loginLayout.setVisibility(View.VISIBLE);
-    }
-
-    private void onLogin() {
         loadUserInfo();
     }
 
@@ -239,12 +222,13 @@ public class ProfileFragment extends BaseFragment {
         }
     }
 
-    public void onEventMainThread(LoginEvent e) {
-        onLogin();
-    }
-
-    public void onEventMainThread(LogoutEvent e) {
-        onLogOut();
+    public void onEventMainThread(LoginStateChangedEvent e) {
+        System.out.println(UserAPI.isLoggedIn());
+        if (UserAPI.isLoggedIn()) {
+            onLogin();
+        } else {
+            onLogOut();
+        }
     }
 
 }
