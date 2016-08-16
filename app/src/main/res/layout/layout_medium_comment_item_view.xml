@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground"
+    android:background="@drawable/list_item_background"
     android:descendantFocusability="blocksDescendants"
     android:orientation="vertical"
     android:paddingBottom="@dimen/list_standard_item_padding_vertical"

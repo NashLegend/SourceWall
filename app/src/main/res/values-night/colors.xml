@@ -11,9 +11,9 @@
     <color name="page_background">#424242</color>
     <color name="page_clear_background">#424242</color>
 
-    <color name="webview_background">#424242</color>
+    <color name="pager_strip_background_color">#424242</color>
 
-    <color name="card_background">#505050</color>
+    <color name="webview_background">#424242</color>
 
     <color name="author_color">#cccccc</color>
     <color name="author_dark_color">#dddddd</color>
@@ -78,5 +78,10 @@
     <!-- 看图页面顶部下载按钮和文字的背景-->
     <color name="image_header_color_bg">#66333333</color>
     <color name="splitter_color_grey">#dddddd</color>
+
+    <!-- 列表背景-->
+    <color name="wide_divider_color">#424242</color>
+    <color name="list_item_color_normal">#484848</color>
+    <color name="list_item_color_pressed">#393939</color>
 
 </resources>

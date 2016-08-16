@@ -21,31 +21,14 @@
 
     <attr name="background_selectable_borderless" format="reference" />
 
-    <!--卡片-->
-    <attr name="color_card_background" format="color" />
     <!--ToolBar Theme-->
     <attr name="theme_toolbar" format="reference" />
 
     <!--作者名字颜色，同时还是日期、数量等的颜色，正文列表通用-->
     <attr name="color_author_color" format="color" />
-    <attr name="color_author_dark_color" format="color" />
-    <attr name="color_author_sub_color" format="color" />
 
     <!--正文标题颜色-->
     <attr name="color_text_primary" format="color" />
-    <!--正文标题颜色-->
-    <attr name="color_article_title" format="color" />
-    <!--正文内容字体颜色-->
-    <attr name="color_article_content_text" format="color" />
-    <!--正文背景色-->
-    <attr name="color_article_text_background" format="color" />
-
-    <!--列表item的标题颜色-->
-    <attr name="color_list_title" format="color" />
-    <!--列表item的简介颜色-->
-    <attr name="color_list_summary" format="color" />
-    <!--列表背景色-->
-    <attr name="color_list_background" format="color" />
 
     <!--问答-->
     <!--AnswerActivity回答者背景-->
@@ -64,35 +47,6 @@
     <attr name="color_reply_input_text" format="color" />
     <attr name="color_reply_hint" format="color" />
     <attr name="color_reply_operation_bar_background" format="color" />
-
-    <!--Dialog-->
-    <attr name="color_dialog_button_background" format="color" />
-    <attr name="drawable_dialog_button_text" format="reference" />
-    <attr name="color_dialog_button_text" format="color" />
-    <attr name="color_dialog_button_text_pressed" format="color" />
-    <attr name="color_dialog_title" format="color" />
-    <attr name="color_dialog_text" format="color" />
-    <attr name="color_dialog_list_text" format="color" />
-
-    <!--抽屉颜色-->
-    <attr name="drawable_drawer_button_background" format="reference" />
-    <attr name="color_drawer_button_background" format="color" />
-    <attr name="color_drawer_button_background_pressed" format="color" />
-    <attr name="color_drawer_button_text" format="color" />
-    <attr name="color_drawer_button_text_pressed" format="color" />
-    <attr name="color_drawer_author" format="color" />
-    <attr name="color_drawer_list_text" format="color" />
-    <attr name="color_drawer_list_sub_text" format="color" />
-    <attr name="color_drawer_background" format="color" />
-
-    <!--Shuffle-->
-    <attr name="color_shuffle_desk_background" format="color" />
-    <attr name="color_shuffle_desk_title" format="color" />
-    <attr name="color_shuffle_tip" format="color" />
-    <attr name="color_shuffle_movable_button_text" format="color" />
-    <attr name="color_shuffle_card_candidate_background" format="color" />
-    <attr name="drawable_shuffle_movable_button_background" format="reference" />
-
 
     <!--LListView-->
     <attr name="divider_color" format="color" />

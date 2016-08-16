@@ -3,97 +3,82 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground"
-    android:orientation="vertical">
+    android:background="@drawable/list_item_background"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/list_standard_item_padding_vertical"
+    android:paddingLeft="@dimen/list_standard_item_padding_horizontal"
+    android:paddingRight="@dimen/list_standard_item_padding_horizontal"
+    android:paddingTop="@dimen/list_standard_item_padding_vertical">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/avatar_right_span_dimen"
+        android:layout_weight="0"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/image_avatar"
+            android:layout_width="@dimen/list_standard_comment_avatar_dimen"
+            android:layout_height="@dimen/list_standard_comment_avatar_dimen"
+            android:src="@drawable/default_avatar" />
+
+        <TextView
+            android:id="@+id/text_num_support"
+            android:layout_width="@dimen/list_standard_comment_avatar_dimen"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:textColor="@color/author_color"
+            android:textSize="12sp"
+            tools:text="@string/sample_support_number" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:baselineAligned="false"
-        android:orientation="horizontal"
-        android:paddingBottom="@dimen/list_standard_item_padding_vertical"
-        android:paddingLeft="@dimen/list_standard_item_padding_horizontal"
-        android:paddingRight="@dimen/list_standard_item_padding_horizontal"
-        android:paddingTop="@dimen/list_standard_item_padding_vertical">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/avatar_right_span_dimen"
-            android:layout_weight="0"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/image_avatar"
-                android:layout_width="@dimen/list_standard_comment_avatar_dimen"
-                android:layout_height="@dimen/list_standard_comment_avatar_dimen"
-                android:src="@drawable/default_avatar" />
-
-            <TextView
-                android:id="@+id/text_num_support"
-                android:layout_width="@dimen/list_standard_comment_avatar_dimen"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:gravity="center"
-                android:textColor="@color/author_color"
-                android:textSize="12sp"
-                tools:text="@string/sample_support_number" />
-        </LinearLayout>
+        android:layout_weight="0"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/text_author"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:textColor="@color/author_color"
-                    tools:text="@string/sample_author" />
-
-                <TextView
-                    android:id="@+id/text_author_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/list_standard_item_text_text_gap"
-                    android:singleLine="true"
-                    android:textColor="@color/author_color"
-                    tools:text="@string/sample_author_title" />
-            </LinearLayout>
+            android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/text_date"
+                android:id="@+id/text_author"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:singleLine="true"
                 android:textColor="@color/author_color"
-                tools:text="@string/sample_date" />
+                tools:text="@string/sample_author" />
 
             <TextView
-                android:id="@+id/web_content"
+                android:id="@+id/text_author_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="3"
-                android:textColor="@color/list_summary"
-                android:textSize="@dimen/list_standard_summary_font_size"
-                tools:text="@string/sample_summary" />
+                android:layout_marginLeft="@dimen/list_standard_item_text_text_gap"
+                android:singleLine="true"
+                android:textColor="@color/author_color"
+                tools:text="@string/sample_author_title" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/text_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/author_color"
+            tools:text="@string/sample_date" />
+
+        <TextView
+            android:id="@+id/web_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:textColor="@color/list_summary"
+            android:textSize="@dimen/list_standard_summary_font_size"
+            tools:text="@string/sample_summary" />
     </LinearLayout>
-
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginLeft="@dimen/list_standard_item_padding_horizontal"
-        android:layout_marginRight="@dimen/list_standard_item_padding_horizontal"
-        android:background="?attr/divider_color" />
-
 </LinearLayout>
