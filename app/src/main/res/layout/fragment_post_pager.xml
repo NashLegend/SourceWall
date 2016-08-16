@@ -35,6 +35,12 @@
         android:layout_height="match_parent"
         android:layout_below="@id/pager_header" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/shadow_down_height"
+        android:layout_below="@id/pager_header"
+        android:background="@drawable/shadow_down" />
+
     <com.getbase.floatingactionbutton.FloatingActionButton
         android:id="@+id/button_write"
         android:layout_width="wrap_content"

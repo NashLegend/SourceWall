@@ -84,13 +84,6 @@
             android:textSize="@dimen/text_content_font_size_dimen" />
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginLeft="@dimen/list_standard_item_padding_horizontal"
-        android:layout_marginRight="@dimen/list_standard_item_padding_horizontal"
-        android:background="?attr/divider_color" />
-
     <RelativeLayout
         android:id="@+id/view_load_latest"
         android:layout_width="match_parent"

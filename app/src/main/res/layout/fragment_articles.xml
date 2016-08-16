@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/list_background"
-        android:divider="@null"
+        android:divider="@drawable/divider_wide"
+        android:dividerHeight="@dimen/divider_wide_height"
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="false"
         tools:listitem="@layout/layout_article_item_view" />

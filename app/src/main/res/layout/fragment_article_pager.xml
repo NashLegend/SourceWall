@@ -16,4 +16,9 @@
         android:layout_height="match_parent"
         android:layout_below="@id/article_tabs" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/shadow_down_height"
+        android:layout_below="@id/article_tabs"
+        android:background="@drawable/shadow_down" />
 </RelativeLayout>

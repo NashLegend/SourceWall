@@ -53,5 +53,9 @@
     <dimen name="setting_padding_vertical">16dp</dimen>
 
     <dimen name="splitter_height">0.5dp</dimen>
+    <dimen name="divider_wide_height">10dp</dimen>
+    <dimen name="divider_shade_bottom">8dp</dimen>
+    <dimen name="shadow_down_height">4dp</dimen>
+    <dimen name="shadow_up_height">2dp</dimen>
 
 </resources>
