@@ -12,12 +12,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -217,13 +216,13 @@ public class PostPagerFragment extends BaseFragment {
         }
         animatorSet = new AnimatorSet();
         ObjectAnimator layoutAnimator = ObjectAnimator.ofFloat(moreSectionsLayout, "translationY", moreSectionsLayout.getTranslationY(), 0);
-        layoutAnimator.setInterpolator(new DecelerateInterpolator());
+        layoutAnimator.setInterpolator(new FastOutSlowInInterpolator());
 
         ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(moreSectionsLayout, "alpha", 0.0f, 1);
-        alphaAnimator.setInterpolator(new AccelerateInterpolator());
+        alphaAnimator.setInterpolator(new FastOutSlowInInterpolator());
 
         ObjectAnimator imageAnimator = ObjectAnimator.ofFloat(showMore, "rotation", showMore.getRotation(), 180);
-        imageAnimator.setInterpolator(new DecelerateInterpolator());
+        imageAnimator.setInterpolator(new FastOutSlowInInterpolator());
 
         ArrayList<Animator> animators = new ArrayList<>();
         animators.add(layoutAnimator);
@@ -298,13 +297,13 @@ public class PostPagerFragment extends BaseFragment {
         animatorSet = new AnimatorSet();
         ObjectAnimator layoutAnimator = ObjectAnimator.ofFloat(moreSectionsLayout, "translationY",
                 moreSectionsLayout.getTranslationY(), -moreSectionsLayout.getHeight());
-        layoutAnimator.setInterpolator(new AccelerateInterpolator());
+        layoutAnimator.setInterpolator(new FastOutSlowInInterpolator());
 
         ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(moreSectionsLayout, "alpha", 1, 0.0f);
-        alphaAnimator.setInterpolator(new AccelerateInterpolator());
+        alphaAnimator.setInterpolator(new FastOutSlowInInterpolator());
 
         ObjectAnimator imageAnimator = ObjectAnimator.ofFloat(showMore, "rotation", showMore.getRotation(), 360);
-        imageAnimator.setInterpolator(new DecelerateInterpolator());
+        imageAnimator.setInterpolator(new FastOutSlowInInterpolator());
 
         ArrayList<Animator> animators = new ArrayList<>();
         animators.add(layoutAnimator);

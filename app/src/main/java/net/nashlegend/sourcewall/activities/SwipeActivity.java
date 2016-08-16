@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -330,7 +331,7 @@ public class SwipeActivity extends AppCompatActivity {
                 tmpDuration = 100;
             }
             animator.setDuration(tmpDuration);
-            animator.setInterpolator(new DecelerateInterpolator());
+            animator.setInterpolator(new FastOutSlowInInterpolator());
             animator.start();
         }
 
@@ -342,7 +343,7 @@ public class SwipeActivity extends AppCompatActivity {
                 tmpDuration = 100;
             }
             animator.setDuration(tmpDuration);
-            animator.setInterpolator(new DecelerateInterpolator());
+            animator.setInterpolator(new FastOutSlowInInterpolator());
             animator.addListener(new Animator.AnimatorListener() {
 
                 @Override
