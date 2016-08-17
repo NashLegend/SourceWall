@@ -47,7 +47,7 @@
         <item name="color_reply_operation_bar_background">
             @color/reply_operation_bar_background
         </item>
-        
+
         <!--LListView-->
         <item name="divider_color">@color/divider_color</item>
         <item name="color_llist_foot_head_text">@color/llist_foot_head_text</item>
@@ -91,7 +91,7 @@
     <!--MainActivity的夜间主题-->
     <style name="BottomTheme" parent="AppTheme">
         <item name="colorControlNormal">@android:color/white</item>
-        <item name="android:windowBackground">@android:color/black</item>
+        <item name="android:windowBackground">@color/color_primary</item>
         <item name="android:windowIsTranslucent">false</item>
     </style>
 

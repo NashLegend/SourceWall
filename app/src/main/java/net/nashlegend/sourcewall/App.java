@@ -14,7 +14,11 @@ import com.squareup.leakcanary.LeakCanary;
 import net.nashlegend.sourcewall.db.BaseDB;
 import net.nashlegend.sourcewall.db.gen.DaoMaster;
 import net.nashlegend.sourcewall.db.gen.DaoSession;
+import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.ImageUtils;
+import net.nashlegend.sourcewall.util.PrefsUtil;
+
+import static android.support.v7.app.AppCompatDelegate.setDefaultNightMode;
 
 /**
  * Created by NashLegend on 2014/9/24 0024
@@ -27,8 +31,13 @@ public class App extends Application {
 
     @Override
     public void onCreate() {
-        super.onCreate();
         application = this;
+        if (PrefsUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
+            setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+        super.onCreate();
         LeakCanary.install(this);
         initImageLoader(this);
     }
@@ -37,7 +46,7 @@ public class App extends Application {
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
                 .denyCacheImageMultipleSizesInMemory()
                 .defaultDisplayImageOptions(ImageUtils.defaultImageOptions)
-                .memoryCacheSizePercentage(33)
+                .memoryCacheSizePercentage(25)
                 .threadPoolSize(Runtime.getRuntime().availableProcessors() * 2 + 1)
                 .build();
         ImageLoader.getInstance().init(config);

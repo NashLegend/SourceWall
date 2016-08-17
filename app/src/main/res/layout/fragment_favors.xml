@@ -10,10 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@null"
-        android:paddingLeft="@dimen/list_standard_padding_horizontal"
-        tools:listitem="@layout/layout_favor_item_view"
-        android:paddingRight="@dimen/list_standard_padding_horizontal"
-        android:scrollbarStyle="outsideOverlay" />
+        android:scrollbarStyle="outsideOverlay"
+        tools:listitem="@layout/layout_favor_item_view" />
 
     <ProgressBar
         android:id="@+id/favors_loading"

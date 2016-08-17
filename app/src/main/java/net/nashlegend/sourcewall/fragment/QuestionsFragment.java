@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ProgressBar;
 
 import net.nashlegend.sourcewall.R;
@@ -23,7 +24,9 @@ import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.view.QuestionListItemView;
 import net.nashlegend.sourcewall.view.common.LoadingView;
+import net.nashlegend.sourcewall.view.common.LoadingView.ReloadListener;
 import net.nashlegend.sourcewall.view.common.listview.LListView;
+import net.nashlegend.sourcewall.view.common.listview.LListView.OnRefreshListener;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -40,7 +43,7 @@ import rx.functions.Action0;
  * Use the {@link QuestionsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class QuestionsFragment extends BaseFragment implements LoadingView.ReloadListener, LListView.OnRefreshListener, AdapterView.OnItemClickListener {
+public class QuestionsFragment extends BaseFragment implements ReloadListener, OnRefreshListener, OnItemClickListener {
     View layoutView;
     private final String HOTTEST = "hottest";
     private final String HIGHLIGHT = "highlight";

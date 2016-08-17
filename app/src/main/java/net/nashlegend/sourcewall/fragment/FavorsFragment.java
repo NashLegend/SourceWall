@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ProgressBar;
 
 import net.nashlegend.sourcewall.R;
@@ -19,7 +20,9 @@ import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;
 import net.nashlegend.sourcewall.view.FavorListItemView;
 import net.nashlegend.sourcewall.view.common.LoadingView;
+import net.nashlegend.sourcewall.view.common.LoadingView.ReloadListener;
 import net.nashlegend.sourcewall.view.common.listview.LListView;
+import net.nashlegend.sourcewall.view.common.listview.LListView.OnRefreshListener;
 
 import java.util.ArrayList;
 
@@ -33,7 +36,7 @@ import rx.functions.Action0;
 /**
  * Created by NashLegend on 2014/9/18 0018
  */
-public class FavorsFragment extends BaseFragment implements LListView.OnRefreshListener, LoadingView.ReloadListener, AdapterView.OnItemClickListener {
+public class FavorsFragment extends BaseFragment implements OnRefreshListener, ReloadListener, OnItemClickListener {
 
     View layoutView;
     @BindView(R.id.list_favors)
@@ -45,6 +48,22 @@ public class FavorsFragment extends BaseFragment implements LListView.OnRefreshL
 
     private FavorAdapter adapter;
     private SubItem subItem;
+
+    public static FavorsFragment newInstance(SubItem subItem) {
+        FavorsFragment fragment = new FavorsFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(Consts.Extra_SubItem, subItem);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            subItem = getArguments().getParcelable(Consts.Extra_SubItem);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

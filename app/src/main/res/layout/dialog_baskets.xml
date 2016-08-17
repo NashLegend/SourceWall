@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/favor_dialog_height"
-    android:paddingLeft="@dimen/list_standard_item_padding_horizontal"
-    android:paddingRight="@dimen/list_standard_item_padding_horizontal">
+    android:paddingLeft="@dimen/list_item_padding_horizontal"
+    android:paddingRight="@dimen/list_item_padding_horizontal">
 
     <LinearLayout
         android:id="@+id/layout_favor_dialog_list"

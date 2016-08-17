@@ -45,7 +45,7 @@ public class Article extends AceModel {
         article.setUrl(jo.optString("url"));
         article.setImageUrl(jo.optString("small_image"));
         article.setSummary(jo.optString("summary"));
-        article.setTitle(jo.optString("title"));
+        article.setTitle(jo.optString("title").trim());
         return article;
     }
 
@@ -82,7 +82,7 @@ public class Article extends AceModel {
         }
         // String num = doc.select(".cmts-title").select(".cmts-hide").get(0).getElementsByClass("gfl").get(0).text().replaceAll("\\D+", "");
         // article.setCommentNum(Integer.valueOf(num));
-        article.setTitle(doc.getElementById("articleTitle").text());
+        article.setTitle(doc.getElementById("articleTitle").text().trim());
         //            article.setLikeNum(likeNum);
         return article;
     }

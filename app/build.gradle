@@ -112,6 +112,7 @@ dependencies {
     compile deps.SearchView
     compile deps.BottomBar
     compile deps.Logger
+    compile deps.Router
 
     debugCompile deps.LeakCanaryDebug
     releaseCompile deps.LeakCanaryRelease

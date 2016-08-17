@@ -14,8 +14,8 @@
         android:layout_height="match_parent"
         android:background="@color/webview_background"
         android:overScrollMode="never"
-        android:paddingLeft="@dimen/list_standard_item_padding_horizontal"
-        android:paddingRight="@dimen/list_standard_item_padding_horizontal"
+        android:paddingLeft="@dimen/list_item_padding_horizontal"
+        android:paddingRight="@dimen/list_item_padding_horizontal"
         android:paddingTop="10dp"
         android:scrollbarStyle="outsideOverlay">
 
@@ -92,8 +92,8 @@
 
             <ImageView
                 android:id="@+id/image_avatar"
-                android:layout_width="@dimen/list_standard_comment_avatar_dimen"
-                android:layout_height="@dimen/list_standard_comment_avatar_dimen"
+                android:layout_width="@dimen/list_comment_avatar_dimen"
+                android:layout_height="@dimen/list_comment_avatar_dimen"
                 android:layout_marginRight="@dimen/avatar_right_span_dimen"
                 android:layout_weight="0"
                 android:src="@drawable/default_avatar" />
@@ -127,8 +127,8 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="@dimen/list_standard_item_like_image_dimen"
-                    android:layout_height="@dimen/list_standard_item_like_image_dimen"
+                    android:layout_width="@dimen/list_item_like_image_dimen"
+                    android:layout_height="@dimen/list_item_like_image_dimen"
                     android:layout_weight="0"
                     android:src="@drawable/like" />
 
@@ -136,7 +136,7 @@
                     android:id="@+id/text_num_support"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/list_standard_item_text_icon_gap"
+                    android:layout_marginLeft="@dimen/list_item_text_icon_gap"
                     android:layout_weight="0"
                     tools:text="@string/sample_like_num"
                     android:textColor="@color/answer_author_sub_text" />

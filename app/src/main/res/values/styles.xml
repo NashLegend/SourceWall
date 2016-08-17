@@ -78,7 +78,7 @@
     <!--MainActivity的主题-->
     <style name="BottomTheme" parent="AppTheme">
         <item name="colorControlNormal">@android:color/white</item>
-        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:windowBackground">@color/color_primary</item>
         <item name="android:windowIsTranslucent">false</item>
     </style>
 

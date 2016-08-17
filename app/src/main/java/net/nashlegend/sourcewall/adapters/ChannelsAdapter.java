@@ -116,7 +116,7 @@ public class ChannelsAdapter extends BaseExpandableListAdapter {
         cols.add(ChannelHelper.getQuestionSectionsByUserState());
         if (UserAPI.isLoggedIn()) {
             //添加收藏
-            ArrayList<SubItem> basketSubItems = getBasketSections();
+            ArrayList<SubItem> basketSubItems = ChannelHelper.getBaskets();
             if (basketSubItems.size() > 0) {
                 groups.add(ChannelHelper.getBasketGroup());
                 cols.add(basketSubItems);
@@ -127,16 +127,6 @@ public class ChannelsAdapter extends BaseExpandableListAdapter {
         setGroupList(groups);
         setSubLists(cols);
         notifyDataSetChanged();
-    }
-
-    private ArrayList<SubItem> getBasketSections() {
-        //重新加载标签数据库
-        ArrayList<SubItem> basketSubItems = new ArrayList<>();
-        if (BasketHelper.getBasketsNumber() > 0) {
-            //如果已经加载了栏目
-            basketSubItems.addAll(BasketHelper.getAllMyBasketsSubItems());
-        }
-        return basketSubItems;
     }
 
     private void loadBaskets() {

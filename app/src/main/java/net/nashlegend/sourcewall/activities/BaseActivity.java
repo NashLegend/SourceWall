@@ -96,12 +96,8 @@ public abstract class BaseActivity extends SwipeActivity implements IStackedAsyn
         super.onDestroy();
     }
 
-    public void notifyNeedLog() {
-        toastSingleton(getString(R.string.login_needed));
-    }
-
-    public void startLoginActivity() {
-        startActivity(new Intent(this, LoginActivity.class));
+    public void gotoLogin() {
+        startActivity(LoginActivity.class);
     }
 
     public boolean isActive() {

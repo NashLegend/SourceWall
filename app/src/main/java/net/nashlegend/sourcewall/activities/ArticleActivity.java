@@ -188,7 +188,7 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
 
     private void replyArticle(UComment comment) {
         if (!UserAPI.isLoggedIn()) {
-            notifyNeedLog();
+            gotoLogin();
         } else {
             Intent intent = new Intent(this, ReplyActivity.class);
             intent.putExtra(Consts.Extra_Ace_Model, article);
@@ -210,7 +210,7 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
 
     private void recommend() {
         if (!UserAPI.isLoggedIn()) {
-            notifyNeedLog();
+            gotoLogin();
         } else {
             MobclickAgent.onEvent(this, Mob.Event_Recommend_Article);
             InputDialog.Builder builder = new InputDialog.Builder(this);
@@ -248,7 +248,7 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
 
     private void favor() {
         if (!UserAPI.isLoggedIn()) {
-            notifyNeedLog();
+            gotoLogin();
         } else {
             // basket dialog
             MobclickAgent.onEvent(this, Mob.Event_Favor_Article);
@@ -311,7 +311,7 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
 
     private void likeComment(final MediumListItemView mediumListItemView) {
         if (!UserAPI.isLoggedIn()) {
-            notifyNeedLog();
+            gotoLogin();
             return;
         }
         if (mediumListItemView.getData().isHasLiked()) {
@@ -333,7 +333,7 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
 
     private void deleteComment(final UComment comment) {
         if (!UserAPI.isLoggedIn()) {
-            notifyNeedLog();
+            gotoLogin();
             return;
         }
         ArticleAPI.deleteMyComment(comment.getID(), new SimpleCallBack<Boolean>() {
@@ -512,8 +512,14 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
                             adapter.notifyDataSetChanged();
                             loadReplies(0);
                         } else {
-                            progressBar.setVisibility(View.GONE);
-                            loadingView.onLoadFailed();
+                            if (result.statusCode == 404) {
+                                toastSingleton(R.string.article_404);
+                                finish();
+                            } else {
+                                progressBar.setVisibility(View.GONE);
+                                toastSingleton(getString(R.string.load_failed));
+                                loadingView.onLoadFailed();
+                            }
                         }
                     }
                 });
@@ -577,7 +583,7 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
                                 hasLoadAll = false;
                             }
                             if (result.statusCode == 404) {
-                                toastSingleton(R.string.page_404);
+                                toastSingleton(R.string.article_404);
                                 finish();
                             } else {
                                 toastSingleton(getString(R.string.load_failed));

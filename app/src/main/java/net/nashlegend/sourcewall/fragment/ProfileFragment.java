@@ -22,6 +22,7 @@ import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.LoginActivity;
 import net.nashlegend.sourcewall.activities.MessageCenterActivity;
+import net.nashlegend.sourcewall.activities.MyFavorsActivity;
 import net.nashlegend.sourcewall.activities.SettingActivity;
 import net.nashlegend.sourcewall.events.LoginStateChangedEvent;
 import net.nashlegend.sourcewall.model.ReminderNoticeNum;
@@ -140,6 +141,7 @@ public class ProfileFragment extends BaseFragment {
                 startActivity(MessageCenterActivity.class);
                 break;
             case R.id.layout_my_favors:
+                startActivity(MyFavorsActivity.class);
                 break;
             case R.id.layout_my_posts:
                 break;
@@ -160,8 +162,10 @@ public class ProfileFragment extends BaseFragment {
     private void revertMode() {
         if (App.isNightMode()) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            PrefsUtil.saveBoolean(Consts.Key_Is_Night_Mode, false);
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            PrefsUtil.saveBoolean(Consts.Key_Is_Night_Mode, true);
         }
         MobclickAgent.onEvent(getActivity(), Mob.Event_Switch_Day_Night_Mode);
         getActivity().recreate();

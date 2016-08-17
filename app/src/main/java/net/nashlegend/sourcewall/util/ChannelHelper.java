@@ -3,6 +3,7 @@ package net.nashlegend.sourcewall.util;
 import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.db.AskTagHelper;
+import net.nashlegend.sourcewall.db.BasketHelper;
 import net.nashlegend.sourcewall.db.GroupHelper;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.api.UserAPI;
@@ -143,5 +144,15 @@ public class ChannelHelper {
             questionSubItems.addAll(ChannelHelper.getQuestions());
         }
         return questionSubItems;
+    }
+
+    public static ArrayList<SubItem> getBaskets() {
+        //重新加载标签数据库
+        ArrayList<SubItem> basketSubItems = new ArrayList<>();
+        if (BasketHelper.getBasketsNumber() > 0) {
+            //如果已经加载了栏目
+            basketSubItems.addAll(BasketHelper.getAllMyBasketsSubItems());
+        }
+        return basketSubItems;
     }
 }

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ProgressBar;
 
 import net.nashlegend.sourcewall.App;
@@ -23,7 +24,9 @@ import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.view.ArticleListItemView;
 import net.nashlegend.sourcewall.view.common.LoadingView;
+import net.nashlegend.sourcewall.view.common.LoadingView.ReloadListener;
 import net.nashlegend.sourcewall.view.common.listview.LListView;
+import net.nashlegend.sourcewall.view.common.listview.LListView.OnRefreshListener;
 
 import java.util.ArrayList;
 
@@ -39,7 +42,7 @@ import rx.functions.Action0;
  * Use the {@link ArticlesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ArticlesFragment extends BaseFragment implements LoadingView.ReloadListener, LListView.OnRefreshListener, AdapterView.OnItemClickListener {
+public class ArticlesFragment extends BaseFragment implements ReloadListener, OnRefreshListener, OnItemClickListener {
     View layoutView;
     @BindView(R.id.list_articles)
     LListView listView;

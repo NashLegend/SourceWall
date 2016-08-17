@@ -164,7 +164,7 @@ public class SimpleReplyActivity extends BaseActivity implements LListView.OnRef
     public void onClick(View v) {
         if (v.getId() == R.id.btn_publish) {
             if (!UserAPI.isLoggedIn()) {
-                notifyNeedLog();
+                gotoLogin();
                 return;
             }
             if (!TextUtils.isEmpty(textReply.getText().toString().trim())) {

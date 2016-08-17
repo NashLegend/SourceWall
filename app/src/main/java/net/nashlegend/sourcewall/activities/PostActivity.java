@@ -229,7 +229,7 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
 
     private void likePost() {
         if (!UserAPI.isLoggedIn()) {
-            notifyNeedLog();
+            gotoLogin();
         } else {
             MobclickAgent.onEvent(this, Mob.Event_Like_Post);
             PostAPI.likePost(post.getId(), new SimpleCallBack<Boolean>() {
@@ -245,7 +245,7 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
 
     private void favor() {
         if (!UserAPI.isLoggedIn()) {
-            notifyNeedLog();
+            gotoLogin();
         } else {
             MobclickAgent.onEvent(this, Mob.Event_Favor_Post);
             new FavorDialog.Builder(this).setTitle(R.string.action_favor).create(post).show();
@@ -338,7 +338,7 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
 
     private void replyPost(UComment comment) {
         if (!UserAPI.isLoggedIn()) {
-            notifyNeedLog();
+            gotoLogin();
         } else {
             Intent intent = new Intent(this, ReplyActivity.class);
             intent.putExtra(Consts.Extra_Ace_Model, post);
@@ -364,7 +364,7 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
 
     private void likeComment(final MediumListItemView mediumListItemView) {
         if (!UserAPI.isLoggedIn()) {
-            notifyNeedLog();
+            gotoLogin();
             return;
         }
         if (mediumListItemView.getData().isHasLiked()) {
@@ -393,7 +393,7 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
 
     private void deleteComment(final UComment comment) {
         if (!UserAPI.isLoggedIn()) {
-            notifyNeedLog();
+            gotoLogin();
         } else {
             PostAPI.deleteMyComment(comment.getID(), new SimpleCallBack<Boolean>() {
                 @Override
@@ -557,8 +557,14 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
                             adapter.notifyDataSetChanged();
                             loadReplies(0);
                         } else {
-                            loadingView.onLoadFailed();
-                            progressBar.setVisibility(View.GONE);
+                            if (result.statusCode == 404) {
+                                toastSingleton(R.string.post_404);
+                                finish();
+                            } else {
+                                loadingView.onLoadFailed();
+                                toastSingleton(getString(R.string.load_failed));
+                                progressBar.setVisibility(View.GONE);
+                            }
                         }
                     }
                 });
@@ -613,7 +619,7 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
                             }
                         } else {
                             if (result.statusCode == 404) {
-                                toastSingleton(R.string.page_404);
+                                toastSingleton(R.string.post_404);
                                 finish();
                             } else {
                                 toastSingleton(getString(R.string.load_failed));

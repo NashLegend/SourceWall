@@ -6,8 +6,6 @@ import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -362,7 +360,7 @@ public class AnswerActivity extends BaseActivity implements View.OnClickListener
 
     private void invokeOpinionDialog() {
         if (!UserAPI.isLoggedIn()) {
-            notifyNeedLog();
+            gotoLogin();
         } else {
             String[] operations = {getString(R.string.action_support), getString(R.string.action_oppose)};
             new AlertDialog.Builder(this).setTitle("").setItems(operations, new DialogInterface.OnClickListener() {
@@ -410,7 +408,7 @@ public class AnswerActivity extends BaseActivity implements View.OnClickListener
 
     private void buryAnswer() {
         if (!UserAPI.isLoggedIn()) {
-            notifyNeedLog();
+            gotoLogin();
             return;
         }
         MobclickAgent.onEvent(AnswerActivity.this, Mob.Event_Bury_Answer);
@@ -447,7 +445,7 @@ public class AnswerActivity extends BaseActivity implements View.OnClickListener
 
     private void thankAnswer() {
         if (!UserAPI.isLoggedIn()) {
-            notifyNeedLog();
+            gotoLogin();
             return;
         }
         if (answer.isHasThanked()) {

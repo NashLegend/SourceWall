@@ -46,7 +46,6 @@ import net.nashlegend.sourcewall.view.common.listview.LListView;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
-import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
@@ -235,7 +234,7 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
 
     private void favor() {
         if (!UserAPI.isLoggedIn()) {
-            notifyNeedLog();
+            gotoLogin();
         } else {
             MobclickAgent.onEvent(this, Mob.Event_Favor_Question);
             new FavorDialog.Builder(this).setTitle(R.string.action_favor).create(question).show();
@@ -244,7 +243,7 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
 
     private void recommend() {
         if (!UserAPI.isLoggedIn()) {
-            notifyNeedLog();
+            gotoLogin();
         } else {
             MobclickAgent.onEvent(this, Mob.Event_Recommend_Question);
             InputDialog.Builder builder = new InputDialog.Builder(this);
@@ -282,7 +281,7 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
 
     private void answerQuestion() {
         if (!UserAPI.isLoggedIn()) {
-            notifyNeedLog();
+            gotoLogin();
         } else {
             Intent intent = new Intent(this, ReplyActivity.class);
             intent.putExtra(Consts.Extra_Ace_Model, question);
@@ -390,7 +389,13 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
                             adapter.notifyDataSetChanged();
                             loadAnswers(0);
                         } else {
-                            loadingView.onLoadFailed();
+                            if (result.statusCode == 404) {
+                                toastSingleton(R.string.question_404);
+                                finish();
+                            } else {
+                                loadingView.onLoadFailed();
+                                toastSingleton(getString(R.string.load_failed));
+                            }
                         }
                     }
                 });
@@ -420,7 +425,7 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
                             }
                         } else {
                             if (result.statusCode == 404) {
-                                toastSingleton(R.string.page_404);
+                                toastSingleton(R.string.question_404);
                                 finish();
                             } else {
                                 toastSingleton(getString(R.string.load_failed));

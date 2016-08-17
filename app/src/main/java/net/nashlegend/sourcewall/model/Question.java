@@ -33,9 +33,9 @@ public class Question extends AceModel {
     private int followNum = 0;
     private int answerNum = 0;
 
-    private static int maxImageWidth = 240;
-    private static String prefix = "<div class=\"ZoomBox\"><div class=\"content-zoom ZoomIn\">";
-    private static String suffix = "</div></div>";
+    private static final int maxImageWidth = 240;
+    private static final String prefix = "<div class=\"ZoomBox\"><div class=\"content-zoom ZoomIn\">";
+    private static final String suffix = "</div></div>";
 
     public static Question fromJson(JSONObject result) throws Exception {
         Question question = new Question();
@@ -48,7 +48,7 @@ public class Question extends AceModel {
         question.setFollowNum(result.optInt("followers_count"));
         question.setId(result.getString("id"));
         question.setRecommendNum(result.optInt("recommends_count"));
-        question.setTitle(result.optString("question"));
+        question.setTitle(result.optString("question").trim());
         question.setUrl(result.optString("url"));
         question.setSummary(result.optString("summary"));
         return question;

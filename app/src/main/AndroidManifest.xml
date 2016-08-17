@@ -43,14 +43,6 @@
                 android:value=".activities.SettingActivity" />
         </activity>
         <activity
-            android:name=".activities.ShuffleGroupActivity"
-            android:label="@string/shuffle_groups"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activities.ShuffleTagActivity"
-            android:label="@string/shuffle_tags"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".activities.ArticleActivity"
             android:label="@string/article"
             android:screenOrientation="portrait" />
@@ -61,6 +53,10 @@
         <activity
             android:name=".activities.QuestionActivity"
             android:label="@string/question"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.MyFavorsActivity"
+            android:label="@string/my_favors"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.LoginActivity"
@@ -130,6 +126,7 @@
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="${CHANNEL_NAME}" />
+
     </application>
 
 </manifest>

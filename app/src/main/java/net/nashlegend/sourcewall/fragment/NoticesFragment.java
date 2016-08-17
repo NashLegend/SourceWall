@@ -27,7 +27,9 @@ import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;
 import net.nashlegend.sourcewall.view.NoticeView;
 import net.nashlegend.sourcewall.view.common.LoadingView;
+import net.nashlegend.sourcewall.view.common.LoadingView.ReloadListener;
 import net.nashlegend.sourcewall.view.common.listview.LListView;
+import net.nashlegend.sourcewall.view.common.listview.LListView.OnRefreshListener;
 
 import java.util.ArrayList;
 
@@ -37,7 +39,7 @@ import butterknife.ButterKnife;
 /**
  * Created by NashLegend on 2015/2/12 0012
  */
-public class NoticesFragment extends BaseFragment implements IChannelsFragment, LListView.OnRefreshListener, LoadingView.ReloadListener {
+public class NoticesFragment extends BaseFragment implements IChannelsFragment, OnRefreshListener, ReloadListener {
 
     @BindView(R.id.notice_list)
     LListView listView;

@@ -214,5 +214,8 @@
     <string name="my_questions">我的问题</string>
     <string name="my_answer">我的回答</string>
     <string name="my_reply">我的回复</string>
+    <string name="post_404">帖子不存在</string>
+    <string name="question_404">问题不存在</string>
+    <string name="article_404">文章不存在</string>
 
 </resources>

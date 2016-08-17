@@ -11,10 +11,9 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.util.Config;
-import net.nashlegend.sourcewall.util.Consts;
-import net.nashlegend.sourcewall.util.DisplayUtil;
 import net.nashlegend.sourcewall.util.ImageUtils;
-import net.nashlegend.sourcewall.util.PrefsUtil;
+
+import static net.nashlegend.sourcewall.util.DisplayUtil.getScreenWidth;
 
 /**
  * Created by NashLegend on 2014/9/18 0018
@@ -70,7 +69,7 @@ public class ArticleListItemView extends AceView<Article> {
             titleImage.setImageBitmap(null);
         } else {
             if (!TextUtils.isEmpty(article.getImageUrl()) && Config.shouldLoadImage() && Config.shouldLoadHomepageImage()) {
-                int width = (int) (DisplayUtil.getScreenWidth(getContext()) - getResources().getDimension(R.dimen.list_standard_padding_horizontal) * 2 - getResources().getDimension(R.dimen.list_standard_item_padding_horizontal) * 2);
+                int width = (int) (getScreenWidth(getContext()) - getResources().getDimension(R.dimen.list_item_padding_horizontal) * 2);
                 titleImage.setFixedWidth(width);
                 titleImage.setVisibility(VISIBLE);
                 ImageLoader.getInstance().displayImage(article.getImageUrl(), titleImage, ImageUtils.articleTitleImageOptions);

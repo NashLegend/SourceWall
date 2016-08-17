@@ -30,10 +30,10 @@
         android:layout_marginLeft="8dp"
         android:background="?android:attr/selectableItemBackground"
         android:clickable="true"
-        android:paddingBottom="@dimen/setting_padding_vertical"
-        android:paddingLeft="@dimen/setting_padding_horizontal"
-        android:paddingRight="@dimen/setting_padding_horizontal"
-        android:paddingTop="@dimen/setting_padding_vertical">
+        android:paddingBottom="@dimen/list_item_padding_vertical"
+        android:paddingLeft="@dimen/list_item_padding_horizontal"
+        android:paddingRight="@dimen/list_item_padding_horizontal"
+        android:paddingTop="@dimen/list_item_padding_vertical">
 
         <TextView
             android:id="@+id/text_image_mode_view"
@@ -68,9 +68,9 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/setting_padding_vertical"
-        android:paddingLeft="@dimen/setting_padding_horizontal"
-        android:paddingRight="@dimen/setting_padding_horizontal"
+        android:paddingBottom="@dimen/list_item_padding_vertical"
+        android:paddingLeft="@dimen/list_item_padding_horizontal"
+        android:paddingRight="@dimen/list_item_padding_horizontal"
         android:visibility="gone">
 
         <RadioGroup
@@ -111,8 +111,8 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/splitter_height"
-        android:layout_marginLeft="@dimen/setting_padding_horizontal"
-        android:layout_marginRight="@dimen/setting_padding_horizontal"
+        android:layout_marginLeft="@dimen/list_item_padding_horizontal"
+        android:layout_marginRight="@dimen/list_item_padding_horizontal"
         android:layout_weight="0"
         android:background="@color/splitter_color_grey" />
 
@@ -128,10 +128,10 @@
             android:layout_height="wrap_content"
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true"
-            android:paddingBottom="@dimen/setting_padding_vertical"
-            android:paddingLeft="@dimen/setting_padding_horizontal"
-            android:paddingRight="@dimen/setting_padding_horizontal"
-            android:paddingTop="@dimen/setting_padding_vertical">
+            android:paddingBottom="@dimen/list_item_padding_vertical"
+            android:paddingLeft="@dimen/list_item_padding_horizontal"
+            android:paddingRight="@dimen/list_item_padding_horizontal"
+            android:paddingTop="@dimen/list_item_padding_vertical">
 
             <TextView
                 android:layout_width="match_parent"
@@ -155,9 +155,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/setting_padding_vertical"
-            android:paddingLeft="@dimen/setting_padding_horizontal"
-            android:paddingRight="@dimen/setting_padding_horizontal"
+            android:paddingBottom="@dimen/list_item_padding_vertical"
+            android:paddingLeft="@dimen/list_item_padding_horizontal"
+            android:paddingRight="@dimen/list_item_padding_horizontal"
             android:visibility="gone">
 
             <RadioGroup
@@ -198,8 +198,8 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/splitter_height"
-        android:layout_marginLeft="@dimen/setting_padding_horizontal"
-        android:layout_marginRight="@dimen/setting_padding_horizontal"
+        android:layout_marginLeft="@dimen/list_item_padding_horizontal"
+        android:layout_marginRight="@dimen/list_item_padding_horizontal"
         android:layout_weight="0"
         android:background="@color/splitter_color_grey" />
 
@@ -211,10 +211,10 @@
         android:layout_marginLeft="8dp"
         android:background="?android:attr/selectableItemBackground"
         android:clickable="true"
-        android:paddingBottom="@dimen/setting_padding_vertical"
-        android:paddingLeft="@dimen/setting_padding_horizontal"
-        android:paddingRight="@dimen/setting_padding_horizontal"
-        android:paddingTop="@dimen/setting_padding_vertical">
+        android:paddingBottom="@dimen/list_item_padding_vertical"
+        android:paddingLeft="@dimen/list_item_padding_horizontal"
+        android:paddingRight="@dimen/list_item_padding_horizontal"
+        android:paddingTop="@dimen/list_item_padding_vertical">
 
         <TextView
             android:id="@+id/text_about_app"
@@ -236,8 +236,8 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/splitter_height"
-        android:layout_marginLeft="@dimen/setting_padding_horizontal"
-        android:layout_marginRight="@dimen/setting_padding_horizontal"
+        android:layout_marginLeft="@dimen/list_item_padding_horizontal"
+        android:layout_marginRight="@dimen/list_item_padding_horizontal"
         android:layout_weight="0"
         android:background="@color/splitter_color_grey" />
 
@@ -249,10 +249,10 @@
         android:layout_marginLeft="8dp"
         android:background="?android:attr/selectableItemBackground"
         android:clickable="true"
-        android:paddingBottom="@dimen/setting_padding_vertical"
-        android:paddingLeft="@dimen/setting_padding_horizontal"
-        android:paddingRight="@dimen/setting_padding_horizontal"
-        android:paddingTop="@dimen/setting_padding_vertical">
+        android:paddingBottom="@dimen/list_item_padding_vertical"
+        android:paddingLeft="@dimen/list_item_padding_horizontal"
+        android:paddingRight="@dimen/list_item_padding_horizontal"
+        android:paddingTop="@dimen/list_item_padding_vertical">
 
         <TextView
             android:id="@+id/text_log_in_out"
@@ -274,8 +274,8 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/splitter_height"
-        android:layout_marginLeft="@dimen/setting_padding_horizontal"
-        android:layout_marginRight="@dimen/setting_padding_horizontal"
+        android:layout_marginLeft="@dimen/list_item_padding_horizontal"
+        android:layout_marginRight="@dimen/list_item_padding_horizontal"
         android:layout_weight="0"
         android:background="@color/splitter_color_grey" />
 

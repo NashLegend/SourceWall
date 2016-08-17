@@ -47,7 +47,7 @@ public class Post extends AceModel {
         detail.setGroupName(groupName);
         detail.setAuthor(author);
         detail.setId(postID);
-        detail.setTitle(title);
+        detail.setTitle(title.trim());
         detail.setDate(APIBase.parseDate(date));
         detail.setContent(content);
         detail.setReplyNum(reply_num);

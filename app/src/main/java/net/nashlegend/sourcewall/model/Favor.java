@@ -16,14 +16,13 @@ public class Favor extends AceModel {
     private String createTime = "";
 
     public Favor() {
-        // TODO: 16/4/26
+
     }
 
     public static Favor fromJson(JSONObject jo) throws Exception {
-        // TODO: 16/5/5
         Favor favor = new Favor();
         favor.setId(jo.optString("id"));
-        favor.setTitle(jo.optString("title"));
+        favor.setTitle(jo.optString("title").trim());
         favor.setUrl(jo.optString("url"));
         favor.setCreateTime(APIBase.parseDate(jo.optString("date_created")));
         return favor;

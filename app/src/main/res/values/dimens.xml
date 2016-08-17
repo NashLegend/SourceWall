@@ -4,11 +4,6 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-    <!-- Per the design guidelines, navigation drawers should be between 240dp and 320dp:
-         https://developer.android.com/design/patterns/navigation-drawer.html -->
-
-    <dimen name="navigation_drawer_width">240dp</dimen>
-
     <!--dialog-->
     <dimen name="input_dialog_input_height">96dp</dimen>
     <dimen name="favor_dialog_height">300dp</dimen>
@@ -19,20 +14,23 @@
     <dimen name="content_top_span_dimen">12dp</dimen>
 
     <!--列表系列-->
-    <dimen name="list_standard_title_font_size">18sp</dimen>
-    <dimen name="list_standard_summary_font_size">14sp</dimen>
-    <dimen name="list_standard_title_author_span">8dp</dimen>
-    <dimen name="list_standard_image_summary_span">8dp</dimen>
-    <dimen name="list_standard_image_author_span">8dp</dimen>
-    <dimen name="list_standard_comment_avatar_dimen">36dp</dimen>
-    <dimen name="list_standard_padding_horizontal">6dp</dimen>
-    <dimen name="list_standard_item_padding_horizontal">16dp</dimen>
-    <dimen name="list_standard_item_padding_vertical">16dp</dimen>
-    <dimen name="list_standard_item_like_image_dimen">16dp</dimen>
-    <dimen name="list_standard_item_reply_image_dimen">16dp</dimen>
-    <dimen name="list_standard_item_author_text_dimen">10dp</dimen>
-    <dimen name="list_standard_item_text_text_gap">10dp</dimen>
-    <dimen name="list_standard_item_text_icon_gap">5dp</dimen>
+    <dimen name="list_title_font_size">18sp</dimen>
+    <dimen name="list_summary_font_size">14sp</dimen>
+    <dimen name="list_title_author_span">8dp</dimen>
+    <dimen name="list_image_summary_span">8dp</dimen>
+    <dimen name="list_image_author_span">8dp</dimen>
+    <dimen name="list_comment_avatar_dimen">36dp</dimen>
+    <dimen name="list_item_padding_horizontal">16dp</dimen>
+    <dimen name="list_item_padding_vertical">16dp</dimen>
+    <dimen name="list_item_like_image_dimen">16dp</dimen>
+    <dimen name="list_item_reply_image_dimen">16dp</dimen>
+    <dimen name="list_item_author_text_dimen">10dp</dimen>
+    <dimen name="list_item_text_text_gap">10dp</dimen>
+    <dimen name="list_item_text_icon_gap">5dp</dimen>
+
+    <dimen name="splitter_height">0.5dp</dimen>
+    <dimen name="divider_wide_height">10dp</dimen>
+    <dimen name="divider_shade_bottom">8dp</dimen>
 
     <!--正文系列-->
     <dimen name="text_title_size_dimen">18sp</dimen>
@@ -44,17 +42,7 @@
     <!--Post-->
     <dimen name="post_item_title_margin_bottom">7dp</dimen>
     <dimen name="post_view_title_margin_bottom">4dp</dimen>
-    <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="nav_header_vertical_spacing">16dp</dimen>
-    <dimen name="nav_header_height">160dp</dimen>
-    <dimen name="fab_margin">16dp</dimen>
 
-    <dimen name="setting_padding_horizontal">16dp</dimen>
-    <dimen name="setting_padding_vertical">16dp</dimen>
-
-    <dimen name="splitter_height">0.5dp</dimen>
-    <dimen name="divider_wide_height">10dp</dimen>
-    <dimen name="divider_shade_bottom">8dp</dimen>
     <dimen name="shadow_down_height">4dp</dimen>
     <dimen name="shadow_up_height">2dp</dimen>
 

@@ -4,8 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -423,7 +421,7 @@ public class SingleReplyActivity extends BaseActivity implements View.OnClickLis
 
     private void likeThis() {
         if (!UserAPI.isLoggedIn()) {
-            notifyNeedLog();
+            gotoLogin();
             return;
         }
         if (data.isHasLiked()) {
@@ -457,7 +455,7 @@ public class SingleReplyActivity extends BaseActivity implements View.OnClickLis
 
     private void deleteThis() {
         if (!UserAPI.isLoggedIn()) {
-            notifyNeedLog();
+            gotoLogin();
             return;
         }
         RequestCallBack<Boolean> callBack = new SimpleCallBack<Boolean>() {

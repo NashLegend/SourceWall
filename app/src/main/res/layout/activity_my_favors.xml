@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_my_favors"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/page_background"
+    android:orientation="vertical"
+    tools:context=".activities.MyFavorsActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:theme="?attr/toolbarTheme"
+        app:popupTheme="?attr/toolbarPopTheme" />
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/favor_tabs"
+        style="@style/TabStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/action_bar" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/favor_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/favor_tabs" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/shadow_down_height"
+        android:layout_below="@id/favor_tabs"
+        android:background="@drawable/shadow_down" />
+
+    <net.nashlegend.sourcewall.view.common.LoadingView
+        android:id="@+id/favor_progress_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+</RelativeLayout>

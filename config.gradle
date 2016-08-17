@@ -54,6 +54,7 @@ ext {
             BottomBar          : 'me.majiajie:pager-bottom-tab-strip:1.0.0',
             BottomBar2         : 'com.roughike:bottom-bar:1.4.0.1',
             Logger             : 'com.orhanobut:logger:1.14',
+            Router             : 'com.github.mzule.activityrouter:activityrouter:1.1.6',
     ]
 
     built = [

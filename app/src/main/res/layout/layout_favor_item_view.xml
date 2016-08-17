@@ -9,10 +9,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/list_standard_item_padding_vertical"
-        android:paddingLeft="@dimen/list_standard_item_padding_horizontal"
-        android:paddingRight="@dimen/list_standard_item_padding_horizontal"
-        android:paddingTop="@dimen/list_standard_item_padding_vertical">
+        android:paddingBottom="@dimen/list_item_padding_vertical"
+        android:paddingLeft="@dimen/list_item_padding_horizontal"
+        android:paddingRight="@dimen/list_item_padding_horizontal"
+        android:paddingTop="@dimen/list_item_padding_vertical">
 
         <TextView
             android:id="@+id/text_title"
@@ -21,7 +21,7 @@
             android:layout_marginBottom="@dimen/post_item_title_margin_bottom"
             tools:text="@string/sample_title"
             android:textColor="@color/list_title"
-            android:textSize="@dimen/list_standard_title_font_size" />
+            android:textSize="@dimen/list_title_font_size" />
 
         <TextView
             android:id="@+id/text_date"
@@ -36,7 +36,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:layout_marginLeft="@dimen/list_standard_item_padding_horizontal"
-        android:layout_marginRight="@dimen/list_standard_item_padding_horizontal"
+        android:layout_marginLeft="@dimen/list_item_padding_horizontal"
+        android:layout_marginRight="@dimen/list_item_padding_horizontal"
         android:background="?attr/divider_color" />
 </LinearLayout>
