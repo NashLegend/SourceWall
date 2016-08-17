@@ -12,7 +12,7 @@ import java.util.ArrayList;
 /**
  * Created by NashLegend on 16/5/2.
  */
-public class QuestionAnswerListParser implements Parser<ArrayList<Answer>> {
+public class AnswerListParser implements Parser<ArrayList<Answer>> {
     @Override
     public ArrayList<Answer> parse(String response, ResponseObject<ArrayList<Answer>> responseObject) throws Exception {
         ArrayList<Answer> answers = new ArrayList<>();

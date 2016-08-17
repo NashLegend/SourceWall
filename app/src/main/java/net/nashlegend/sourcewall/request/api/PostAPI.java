@@ -44,8 +44,21 @@ import rx.schedulers.Schedulers;
 
 public class PostAPI extends APIBase {
 
-    public static final String Key_Post_Hot_Posts = "post.hot.post";
-    public static final String Key_Post_My_Recent_Replies = "post.my.recent.replies";
+    public static NetworkTask<ArrayList<Post>> getPostListByUser(String ukey, int offset, RequestCallBack<ArrayList<Post>> callBack) {
+        String url = "http://apis.guokr.com/group/post.json";
+        ParamsMap pairs = new ParamsMap();
+        pairs.put("retrieve_type", "by_user");
+        pairs.put("ukey", ukey);
+        pairs.put("limit", "20");
+        pairs.put("offset", offset);
+        return new RequestBuilder<ArrayList<Post>>()
+                .get()
+                .url(url)
+                .params(pairs)
+                .callback(callBack)
+                .parser(new PostListParser())
+                .requestAsync();
+    }
 
     public static Observable<ResponseObject<ArrayList<Post>>> getPostList(int type, String key, int offset, boolean useCache) {
         String url = "http://apis.guokr.com/group/post.json";

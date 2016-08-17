@@ -21,7 +21,7 @@ import net.nashlegend.sourcewall.request.parsers.AnswerCommentParser;
 import net.nashlegend.sourcewall.request.parsers.AnswerParser;
 import net.nashlegend.sourcewall.request.parsers.BooleanParser;
 import net.nashlegend.sourcewall.request.parsers.ContentValueForKeyParser;
-import net.nashlegend.sourcewall.request.parsers.QuestionAnswerListParser;
+import net.nashlegend.sourcewall.request.parsers.AnswerListParser;
 import net.nashlegend.sourcewall.request.parsers.QuestionCommentListParser;
 import net.nashlegend.sourcewall.request.parsers.QuestionCommentParser;
 import net.nashlegend.sourcewall.request.parsers.QuestionHtmlListParser;
@@ -45,13 +45,40 @@ import rx.Subscriber;
 import rx.functions.Func1;
 
 public class QuestionAPI extends APIBase {
-    private static final String HOTTEST = "hottest";
-    private static final String HIGHLIGHT = "highlight";
-    private static int maxImageWidth = 240;
-    private static String prefix = "<div class=\"ZoomBox\"><div class=\"content-zoom ZoomIn\">";
-    private static String suffix = "</div></div>";
 
-    public static Observable<ArrayList<AskTag>> getAllMyTagsAndMerge(){
+    public static NetworkTask<ArrayList<Question>> getQuestionListByUser(String ukey, int offset, RequestCallBack<ArrayList<Question>> callBack) {
+        String url = "http://apis.guokr.com/ask/question.json";
+        ParamsMap pairs = new ParamsMap();
+        pairs.put("retrieve_type", "by_user");
+        pairs.put("ukey", ukey);
+        pairs.put("limit", "20");
+        pairs.put("offset", offset);
+        return new RequestBuilder<ArrayList<Question>>()
+                .get()
+                .url(url)
+                .params(pairs)
+                .callback(callBack)
+                .parser(new QuestionListParser())
+                .requestAsync();
+    }
+
+    public static NetworkTask<ArrayList<Answer>> getAnswerListByUser(String ukey, int offset, RequestCallBack<ArrayList<Answer>> callBack) {
+        String url = "http://apis.guokr.com/ask/answer.json";
+        ParamsMap pairs = new ParamsMap();
+        pairs.put("retrieve_type", "by_user");
+        pairs.put("ukey", ukey);
+        pairs.put("limit", "20");
+        pairs.put("offset", offset);
+        return new RequestBuilder<ArrayList<Answer>>()
+                .get()
+                .url(url)
+                .params(pairs)
+                .callback(callBack)
+                .parser(new AnswerListParser())
+                .requestAsync();
+    }
+
+    public static Observable<ArrayList<AskTag>> getAllMyTagsAndMerge() {
         return Observable
                 .create(new Observable.OnSubscribe<ResponseObject<ArrayList<SubItem>>>() {
                     @Override
@@ -264,7 +291,7 @@ public class QuestionAPI extends APIBase {
                 .url(url)
                 .params(pairs)
                 .useCacheIfFailed(offset == 0)
-                .parser(new QuestionAnswerListParser())
+                .parser(new AnswerListParser())
                 .flatMap();
     }
 
