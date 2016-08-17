@@ -2,28 +2,19 @@ package net.nashlegend.sourcewall.activities;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import net.nashlegend.sourcewall.R;
-import net.nashlegend.sourcewall.adapters.ChannelsAdapter;
 import net.nashlegend.sourcewall.db.BasketHelper;
-import net.nashlegend.sourcewall.db.gen.MyBasket;
-import net.nashlegend.sourcewall.fragment.ArticlePagerFragment;
-import net.nashlegend.sourcewall.fragment.ArticlesFragment;
 import net.nashlegend.sourcewall.fragment.FavorsFragment;
 import net.nashlegend.sourcewall.model.Basket;
 import net.nashlegend.sourcewall.model.SubItem;
-import net.nashlegend.sourcewall.request.NetworkTask;
-import net.nashlegend.sourcewall.request.RequestObject;
 import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
-import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.FavorAPI;
 import net.nashlegend.sourcewall.util.ChannelHelper;
 import net.nashlegend.sourcewall.util.ToastUtil;
@@ -69,10 +60,10 @@ public class MyFavorsActivity extends BaseActivity {
             }
         });
         loadingView.startLoading();
-        loadBaskets();
     }
 
     private void loadBaskets() {
+        loadingView.startLoading();
         FavorAPI.getBaskets(new SimpleCallBack<ArrayList<Basket>>() {
             @Override
             public void onFailure() {

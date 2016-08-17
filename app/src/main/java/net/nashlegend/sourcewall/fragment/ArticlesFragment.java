@@ -12,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ProgressBar;
 
-import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.ArticleActivity;
 import net.nashlegend.sourcewall.adapters.ArticleAdapter;
@@ -203,7 +202,7 @@ public class ArticlesFragment extends BaseFragment implements ReloadListener, On
         }
         if (view instanceof ArticleListItemView) {
             Intent intent = new Intent();
-            intent.setClass(App.getApp(), ArticleActivity.class);
+            intent.setClass(getContext(), ArticleActivity.class);
             intent.putExtra(Consts.Extra_Article, ((ArticleListItemView) view).getData());
             startActivity(intent);
         }

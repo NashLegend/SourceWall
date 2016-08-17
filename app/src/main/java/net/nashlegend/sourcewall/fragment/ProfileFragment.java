@@ -2,7 +2,6 @@ package net.nashlegend.sourcewall.fragment;
 
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,7 +21,10 @@ import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.LoginActivity;
 import net.nashlegend.sourcewall.activities.MessageCenterActivity;
+import net.nashlegend.sourcewall.activities.MyAnswersActivity;
 import net.nashlegend.sourcewall.activities.MyFavorsActivity;
+import net.nashlegend.sourcewall.activities.MyPostsActivity;
+import net.nashlegend.sourcewall.activities.MyQuestionsActivity;
 import net.nashlegend.sourcewall.activities.SettingActivity;
 import net.nashlegend.sourcewall.events.LoginStateChangedEvent;
 import net.nashlegend.sourcewall.model.ReminderNoticeNum;
@@ -125,7 +127,7 @@ public class ProfileFragment extends BaseFragment {
     }
 
     @OnClick({R.id.layout_msg_center, R.id.layout_my_favors, R.id.layout_my_posts,
-            R.id.layout_my_questions, R.id.view_switch_to_day,
+            R.id.layout_my_questions, R.id.view_switch_to_day, R.id.layout_my_answers,
             R.id.view_switch_to_night, R.id.layout_setting, R.id.profile_header})
     public void onClick(View view) {
         switch (view.getId()) {
@@ -142,8 +144,13 @@ public class ProfileFragment extends BaseFragment {
                 startActivity(MyFavorsActivity.class);
                 break;
             case R.id.layout_my_posts:
+                startActivity(MyPostsActivity.class);
                 break;
             case R.id.layout_my_questions:
+                startActivity(MyQuestionsActivity.class);
+                break;
+            case R.id.layout_my_answers:
+                startActivity(MyAnswersActivity.class);
                 break;
             case R.id.view_switch_to_day:
             case R.id.view_switch_to_night:

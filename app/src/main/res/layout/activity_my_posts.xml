@@ -1,9 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_my_posts"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.MyPostsActivity">
 
+    <net.nashlegend.sourcewall.view.common.listview.LListView
+        android:id="@+id/list_posts"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/list_background"
+        android:divider="@color/splitter_color_grey"
+        android:dividerHeight="@dimen/splitter_height"
+        android:headerDividersEnabled="false"
+        android:overScrollMode="never"
+        tools:listitem="@layout/layout_post_item_view" />
+
+    <net.nashlegend.sourcewall.view.common.LoadingView
+        android:id="@+id/post_progress_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/action_bar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:theme="?attr/toolbarTheme"
+            app:popupTheme="?attr/toolbarPopTheme" />
+    </android.support.design.widget.AppBarLayout>
 </RelativeLayout>

@@ -26,6 +26,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -34,6 +35,7 @@ import android.widget.Spinner;
 import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.R;
+import net.nashlegend.sourcewall.db.GroupHelper;
 import net.nashlegend.sourcewall.dialogs.InputDialog;
 import net.nashlegend.sourcewall.model.PrepareData;
 import net.nashlegend.sourcewall.model.SubItem;
@@ -52,6 +54,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -74,6 +77,7 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
     private String csrf = "";
     private String topic = "";
     private ArrayList<BasicNameValuePair> topics = new ArrayList<>();
+    List<SubItem> subItems = new ArrayList<>();
     private boolean replyOK;
 
     @Override
@@ -95,26 +99,69 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
         ImageButton linkButton = (ImageButton) findViewById(R.id.btn_link);
         uploadingProgress = findViewById(R.id.prg_uploading_img);
         subItem = getIntent().getParcelableExtra(Consts.Extra_SubItem);
+        prepareGroups();
         if (subItem != null) {
-            String group_name = subItem.getName();
-            group_id = subItem.getValue();
-            setTitle(group_name + " -- " + getString(R.string.title_activity_publish_post));
-            topicSpinner.setVisibility(View.VISIBLE);
-            titleEditText.setHint(R.string.hint_input_post_title);
-            bodyEditText.setHint(R.string.hint_input_post_content);
-        } else {
-            toast("No Data Received");
-            finish();
+            prepareSubItem(subItem);
         }
         publishButton.setOnClickListener(this);
         imgButton.setOnClickListener(this);
         insertButton.setOnClickListener(this);
         linkButton.setOnClickListener(this);
+    }
+
+    private void prepareSubItem(SubItem item) {
+        subItem = item;
+        String group_name = subItem.getName();
+        group_id = subItem.getValue();
+        csrf = "";
+        topic = "";
+        topics.clear();
+        setTitle(group_name + " -- " + getString(R.string.title_activity_publish_post));
+        topicSpinner.setVisibility(View.VISIBLE);
+        String[] items = new String[0];
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.simple_spinner_item, items);
+        topicSpinner.setAdapter(arrayAdapter);
+
+        titleEditText.setHint(R.string.hint_input_post_title);
+        bodyEditText.setHint(R.string.hint_input_post_content);
         prepare();
         tryRestoreReply();
     }
 
+    private void prepareGroups() {
+        topicSpinner.setVisibility(View.GONE);
+        subItems = GroupHelper.getAllMyGroupSubItems();
+        if (subItems == null || subItems.size() == 0) {
+            if (subItem == null) {
+                finish();
+            }
+            return;
+        }
+        String[] items = new String[subItems.size()];
+        for (int i = 0; i < subItems.size(); i++) {
+            items[i] = subItems.get(i).getName();
+        }
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.simple_spinner_item, items);
+        groupSpinner.setAdapter(arrayAdapter);
+        groupSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position < subItems.size()) {
+                    prepareSubItem(subItems.get(position));
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
     private void tryRestoreReply() {
+        if (subItem == null) {
+            return;
+        }
         String sketchTitle = "";
         String sketchContent = "";
         sketchTitle = SketchUtil.readString(Consts.Key_Sketch_Publish_Post_Title + "_" + subItem.getValue(), "");
@@ -279,7 +326,6 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.simple_spinner_item, items);
             topicSpinner.setAdapter(arrayAdapter);
         }
-
     }
 
     private void invokeImageDialog() {

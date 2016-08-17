@@ -17,7 +17,6 @@ public class AnswerListParser implements Parser<ArrayList<Answer>> {
     public ArrayList<Answer> parse(String response, ResponseObject<ArrayList<Answer>> responseObject) throws Exception {
         ArrayList<Answer> answers = new ArrayList<>();
         JSONArray comments = JsonHandler.getUniversalJsonArray(response, responseObject);
-        assert comments != null;
         for (int i = 0; i < comments.length(); i++) {
             JSONObject jo = comments.getJSONObject(i);
             Answer ans = Answer.fromListJson(jo);

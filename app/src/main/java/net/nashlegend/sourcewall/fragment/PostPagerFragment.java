@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -24,6 +25,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import net.nashlegend.sourcewall.R;
+import net.nashlegend.sourcewall.activities.BaseActivity;
 import net.nashlegend.sourcewall.activities.PublishPostActivity;
 import net.nashlegend.sourcewall.db.GroupHelper;
 import net.nashlegend.sourcewall.db.gen.MyGroup;
@@ -150,7 +152,20 @@ public class PostPagerFragment extends BaseFragment {
                 toggleShowMore();
                 break;
             case R.id.button_write:
-                startActivity(PublishPostActivity.class);
+                if (UserAPI.isLoggedIn()) {
+                    Intent intent = new Intent(getActivity(), PublishPostActivity.class);
+                    if (viewPager.getCurrentItem() >= subItems.size()) {
+                        return;
+                    }
+                    SubItem item = subItems.get(viewPager.getCurrentItem());
+                    if (item.getType() == SubItem.Type_Single_Channel) {
+                        intent.putExtra(Consts.Extra_SubItem, item);
+                    }
+                    startActivityForResult(intent, Consts.Code_Publish_Post);
+                    getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
+                } else {
+                    ((BaseActivity) getActivity()).gotoLogin();
+                }
                 break;
         }
     }

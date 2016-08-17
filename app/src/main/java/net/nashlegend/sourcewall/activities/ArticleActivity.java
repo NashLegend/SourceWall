@@ -103,33 +103,30 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
         progressBar = (ProgressBar) findViewById(R.id.article_loading);
         appbar = (AppBarLayout) findViewById(R.id.app_bar);
         listView = (LListView) findViewById(R.id.list_detail);
-
         MobclickAgent.onEvent(this, Mob.Event_Open_Article);
         loadingView.setReloadListener(this);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        if (toolbar != null) {
-            toolbar.setOnClickListener(new OnClickListener() {
+        toolbar.setOnClickListener(new OnClickListener() {
 
-                boolean preparingToScrollToHead = false;
+            boolean preparingToScrollToHead = false;
 
-                @Override
-                public void onClick(View v) {
-                    if (preparingToScrollToHead) {
-                        listView.setSelection(0);
-                    } else {
-                        preparingToScrollToHead = true;
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                preparingToScrollToHead = false;
-                            }
-                        }, 200);
-                    }
+            @Override
+            public void onClick(View v) {
+                if (preparingToScrollToHead) {
+                    listView.setSelection(0);
+                } else {
+                    preparingToScrollToHead = true;
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            preparingToScrollToHead = false;
+                        }
+                    }, 200);
                 }
-            });
-        }
+            }
+        });
         article = getIntent().getParcelableExtra(Consts.Extra_Article);
         notice_id = getIntent().getStringExtra(Consts.Extra_Notice_Id);
         if (!TextUtils.isEmpty(article.getSubjectName())) {
@@ -141,7 +138,6 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
         listView.setOnItemClickListener(onItemClickListener);
         listView.setCanPullToLoadMore(false);
         listView.setOnRefreshListener(this);
-
 
         if (replyButton != null) {
             replyButton.setOnClickListener(this);

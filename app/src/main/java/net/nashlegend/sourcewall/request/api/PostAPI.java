@@ -56,6 +56,7 @@ public class PostAPI extends APIBase {
                 .url(url)
                 .params(pairs)
                 .callback(callBack)
+                .useCacheIfFailed(true)
                 .parser(new PostListParser())
                 .requestAsync();
     }

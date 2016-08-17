@@ -42,17 +42,16 @@
 
             <Spinner
                 android:id="@+id/spinner_group"
-                android:layout_width="wrap_content"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="3dp"
                 android:layout_weight="0"
                 android:spinnerMode="dialog"
-                android:visibility="gone"
-                tools:visibility="visible" />
+                android:visibility="visible" />
 
             <Spinner
                 android:id="@+id/spinner_post_topic"
-                android:layout_width="wrap_content"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="3dp"
                 android:layout_marginLeft="15dp"
