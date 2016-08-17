@@ -57,8 +57,6 @@ public class ProfileFragment extends BaseFragment {
     LinearLayout layoutMyFavors;
     @BindView(R.id.layout_my_posts)
     LinearLayout layoutMyPosts;
-    @BindView(R.id.layout_my_replies)
-    LinearLayout layoutMyReplies;
     @BindView(R.id.layout_my_questions)
     LinearLayout layoutMyQuestions;
     @BindView(R.id.view_switch_to_day)
@@ -127,7 +125,7 @@ public class ProfileFragment extends BaseFragment {
     }
 
     @OnClick({R.id.layout_msg_center, R.id.layout_my_favors, R.id.layout_my_posts,
-            R.id.layout_my_replies, R.id.layout_my_questions, R.id.view_switch_to_day,
+            R.id.layout_my_questions, R.id.view_switch_to_day,
             R.id.view_switch_to_night, R.id.layout_setting, R.id.profile_header})
     public void onClick(View view) {
         switch (view.getId()) {
@@ -144,8 +142,6 @@ public class ProfileFragment extends BaseFragment {
                 startActivity(MyFavorsActivity.class);
                 break;
             case R.id.layout_my_posts:
-                break;
-            case R.id.layout_my_replies:
                 break;
             case R.id.layout_my_questions:
                 break;

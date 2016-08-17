@@ -109,7 +109,7 @@ public class Question extends AceModel {
 
     public void setUrl(String url) {
         if (url != null && url.startsWith("http://m.guokr.com")) {
-            url.replace("http://m.guokr.com", "http://www.guokr.com");
+            url = url.replace("http://m.guokr.com", "http://www.guokr.com");
         }
         this.url = url;
     }

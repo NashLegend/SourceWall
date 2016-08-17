@@ -74,7 +74,7 @@ public class ShuffleCardCandidate extends ShuffleCard {
         public void onClick(View v) {
             if (desk.getSenator().getList().size() < ShuffleDesk.maxButtons) {
                 banishButton((MovableButton) v);
-                desk.getSenator().getResident(((MovableButton) v).clone());
+                desk.getSenator().getResident(((MovableButton) v).cloneButton());
             } else {
                 ToastUtil.toastSingleton("订阅数不能超过" + ShuffleDesk.maxButtons + "个");
             }

@@ -13,8 +13,7 @@ public class AskTagMovableButton extends MovableButton<AskTag> {
         super(context);
     }
 
-    @Override
-    public MovableButton clone() {
+    public MovableButton cloneButton() {
         AskTagMovableButton button = new AskTagMovableButton(getContext());
         LayoutParams params = new LayoutParams(ShuffleDesk.buttonWidth, ShuffleDesk.buttonHeight);
         button.setLayoutParams(params);

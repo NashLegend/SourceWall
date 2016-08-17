@@ -38,7 +38,7 @@ import butterknife.ButterKnife;
 import static net.nashlegend.sourcewall.model.SubItem.Section_Favor;
 import static net.nashlegend.sourcewall.model.SubItem.Type_Single_Channel;
 
-public class MyFavorsActivity extends AppCompatActivity {
+public class MyFavorsActivity extends BaseActivity {
 
     ArrayList<SubItem> subItems = ChannelHelper.getBaskets();
 

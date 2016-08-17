@@ -117,7 +117,9 @@ public class RequestBuilder<T> {
      */
     public RequestBuilder<T> params(List<Param> params) {
         request.params.clear();
-        request.params.addAll(params);
+        if (params != null) {
+            request.params.addAll(params);
+        }
         return this;
     }
 
@@ -146,7 +148,9 @@ public class RequestBuilder<T> {
      */
     public RequestBuilder<T> params(ParamsMap params) {
         request.params.clear();
-        request.params.addAll(params.params);
+        if (params != null) {
+            request.params.addAll(params.params);
+        }
         return this;
     }
 
@@ -157,7 +161,9 @@ public class RequestBuilder<T> {
      * @return
      */
     public RequestBuilder<T> addParams(List<Param> params) {
-        request.params.addAll(params);
+        if (params != null) {
+            request.params.addAll(params);
+        }
         return this;
     }
 

@@ -127,6 +127,9 @@
             android:name="UMENG_CHANNEL"
             android:value="${CHANNEL_NAME}" />
 
+        <activity android:name=".activities.MyPostsActivity" />
+        <activity android:name=".activities.MyQuestionsActivity" />
+        <activity android:name=".activities.MyAnswersActivity"></activity>
     </application>
 
 </manifest>

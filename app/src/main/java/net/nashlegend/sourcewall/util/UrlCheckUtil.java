@@ -162,6 +162,7 @@ public class UrlCheckUtil {
                             App.getApp().startActivity(intent);
                         }
                     }
+                    break;
                 case "answer":
                     //http://www.guokr.com/answer/654321/redirect/
                     if (segments.size() == 3) {

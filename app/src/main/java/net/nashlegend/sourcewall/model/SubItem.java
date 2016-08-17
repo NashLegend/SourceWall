@@ -64,7 +64,7 @@ public class SubItem extends AceModel {
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof SubItem) {
+        if (o != null && o instanceof SubItem) {
             SubItem sb = (SubItem) o;
             return sb.getName().equals(getName()) && sb.getSection() == getSection() && sb.getType() == getType() && sb.getValue().equals(getValue());
         }

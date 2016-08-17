@@ -277,6 +277,7 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
         switch (id) {
             case android.R.id.home:
                 finish();
+                break;
             case R.id.action_load_acs:
                 startLoadAcs();
                 break;

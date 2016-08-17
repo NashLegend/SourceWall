@@ -245,7 +245,7 @@ public class ShuffleCardSenator extends ShuffleCard {
             if (list.size() > ShuffleDesk.minButtons) {
                 MovableButton button = (MovableButton) v;
                 banishButton(button);//
-                desk.getCandidate().getResident(button.clone());
+                desk.getCandidate().getResident(button.cloneButton());
             }
         }
     };

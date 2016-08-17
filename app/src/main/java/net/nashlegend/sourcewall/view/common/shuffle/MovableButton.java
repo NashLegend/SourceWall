@@ -145,7 +145,7 @@ public abstract class MovableButton<T> extends RelativeLayout {
         this.selected = selected;
     }
 
-    public abstract MovableButton clone();
+    public abstract MovableButton cloneButton();
 
     public abstract T getSection();
 

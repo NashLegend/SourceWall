@@ -101,8 +101,10 @@ public class ToastUtil {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                if (toast != null) {
-                    toast.cancel();
+                synchronized (ToastUtil.class) {
+                    if (toast != null) {
+                        toast.cancel();
+                    }
                 }
                 toast = new Toast(App.getApp());
                 LayoutInflater inflate = (LayoutInflater)

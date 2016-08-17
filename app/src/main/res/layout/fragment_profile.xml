@@ -127,31 +127,6 @@
                 android:background="@color/splitter_color_grey" />
 
             <LinearLayout
-                android:id="@+id/layout_my_replies"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:background="?android:selectableItemBackground"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/ic_reply_24dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/my_reply" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/splitter_height"
-                android:background="@color/splitter_color_grey" />
-
-            <LinearLayout
                 android:id="@+id/layout_my_questions"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
