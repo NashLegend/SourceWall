@@ -12,6 +12,7 @@ import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.DateTimeUtil;
 import net.nashlegend.sourcewall.util.ImageUtils;
 import net.nashlegend.sourcewall.util.PrefsUtil;
 import net.nashlegend.sourcewall.view.common.TTextView;
@@ -61,7 +62,7 @@ public class MediumListItemView extends AceView<UComment> {
         }
         comment = model;
         authorView.setText(comment.getAuthor().getName());
-        dateView.setText(comment.getDate());
+        dateView.setText(DateTimeUtil.time2HumanReadable(comment.getDate()));
         likesView.setText(String.valueOf(comment.getLikeNum() + ""));
         floorView.setText(comment.getFloor());
         contentView.loadHtml(comment.getContent());

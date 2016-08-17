@@ -21,6 +21,7 @@ import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.DateTimeUtil;
 import net.nashlegend.sourcewall.util.ImageUtils;
 import net.nashlegend.sourcewall.util.PrefsUtil;
 import net.nashlegend.sourcewall.util.StyleChecker;
@@ -76,7 +77,7 @@ public class PostView extends AceView<Post> {
             post = model;
             titleView.setText(post.getTitle());
             authorView.setText(post.getAuthor().getName());
-            dateView.setText(post.getDate());
+            dateView.setText(DateTimeUtil.time2HumanReadable(post.getDate()));
             String html = StyleChecker.getPostHtml(post.getContent());
             contentView.setPrimarySource(post.getContent());
             contentView.loadDataWithBaseURL(Consts.Base_Url, html, "text/html", "charset=UTF-8", null);

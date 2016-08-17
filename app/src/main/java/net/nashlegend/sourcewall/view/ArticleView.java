@@ -17,6 +17,7 @@ import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.ArticleAPI;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.DateTimeUtil;
 import net.nashlegend.sourcewall.util.PrefsUtil;
 import net.nashlegend.sourcewall.util.StyleChecker;
 import net.nashlegend.sourcewall.view.common.WWebView;
@@ -82,7 +83,7 @@ public class ArticleView extends AceView<Article> {
             article = model;
             titleView.setText(article.getTitle());
             authorView.setText(article.getAuthor().getName());
-            dateView.setText(article.getDate());
+            dateView.setText(DateTimeUtil.time2HumanReadable(article.getDate()));
             String html = StyleChecker.getArticleHtml(article.getContent());
             contentView.setPrimarySource(article.getContent());
             contentView.loadDataWithBaseURL(Consts.Base_Url, html, "text/html", "charset=UTF-8", null);

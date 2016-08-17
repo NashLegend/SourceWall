@@ -13,6 +13,7 @@ import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.SimpleReplyActivity;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.DateTimeUtil;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.PrefsUtil;
 import net.nashlegend.sourcewall.util.UiUtil;
@@ -68,7 +69,7 @@ public class QuestionView extends AceView<Question> {
             commentNumView.setText(String.valueOf(question.getCommentNum()));
             titleView.setText(question.getTitle());
             authorView.setText(question.getAuthor().getName());
-            dateView.setText(question.getDate());
+            dateView.setText(DateTimeUtil.time2HumanReadable(question.getDate()));
             contentView.loadHtml(question.getContent());
         }
     }

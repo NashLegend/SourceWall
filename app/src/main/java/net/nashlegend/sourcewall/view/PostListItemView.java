@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.model.Post;
+import net.nashlegend.sourcewall.util.DateTimeUtil;
 
 /**
  * Created by NashLegend on 2014/9/15 0015
@@ -47,7 +48,7 @@ public class PostListItemView extends AceView<Post> {
         mPost = model;
         titleView.setText(mPost.getTitle());
         authorView.setText(mPost.getAuthor().getName());
-        dateView.setText(mPost.getDate());
+        dateView.setText(DateTimeUtil.time2HumanReadable(mPost.getDate()));
         replyView.setText(String.valueOf(mPost.getReplyNum()));
         likesView.setText(String.valueOf(mPost.getLikeNum()));
         if (TextUtils.isEmpty(mPost.getAuthor().getName())) {

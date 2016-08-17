@@ -12,6 +12,7 @@ import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.model.Answer;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.DateTimeUtil;
 import net.nashlegend.sourcewall.util.ImageUtils;
 import net.nashlegend.sourcewall.util.RegUtil;
 import net.nashlegend.sourcewall.util.PrefsUtil;
@@ -54,7 +55,7 @@ public class AnswerListItemView extends AceView<Answer> {
         supportView.setText(String.valueOf(answer.getUpvoteNum()));
         authorView.setText(answer.getAuthor().getName());
         authorTitleView.setText(answer.getAuthor().getTitle());
-        dateView.setText(answer.getDate_created());
+        dateView.setText(DateTimeUtil.time2HumanReadable(answer.getDate_created()));
         if (Config.shouldLoadImage()) {
             ImageLoader.getInstance().displayImage(answer.getAuthor().getAvatar(), avatar, ImageUtils.avatarOptions);
         } else {

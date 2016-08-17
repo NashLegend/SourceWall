@@ -152,41 +152,7 @@ public class APIBase {
      * @param dateString 传入的时间字符串
      * @return 解析后的时间 yyyy-mm-dd hh:mm:ss
      */
-    @SuppressLint("SimpleDateFormat")
     public static String parseDate(String dateString) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String time = dateString.replace("T", " ").replaceAll("[\\+\\.]\\S+$", "");
-        try {
-            Date date = sdf.parse(time);
-            GregorianCalendar calendar = new GregorianCalendar();
-            calendar.setTime(date);
-            GregorianCalendar now = new GregorianCalendar();
-            int diff;
-            if (now.get(Calendar.YEAR) == calendar.get(Calendar.YEAR)) {
-                diff = calendar.get(Calendar.DAY_OF_YEAR) - now.get(Calendar.DAY_OF_YEAR);
-            } else {
-                int yearDiff = calendar.get(Calendar.YEAR) - now.get(Calendar.YEAR);
-                if (yearDiff == 1) {
-                    int max = now.isLeapYear(now.get(Calendar.YEAR)) ? 366 : 365;
-                    diff = calendar.get(Calendar.DAY_OF_YEAR) + max - now.get(Calendar.DAY_OF_YEAR);
-                } else if (yearDiff == -1) {
-                    int max = calendar.isLeapYear(calendar.get(Calendar.YEAR)) ? 366 : 365;
-                    diff = calendar.get(Calendar.DAY_OF_YEAR) - max - now.get(Calendar.DAY_OF_YEAR);
-                } else {
-                    diff = (int) (calendar.getTimeInMillis() / 86400000 - new GregorianCalendar().getTimeInMillis() / 86400000);
-                }
-            }
-            if (diff < -1 || diff > 0) {
-                sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-            } else if (diff == -1) {
-                sdf = new SimpleDateFormat("昨天HH:mm");
-            } else if (diff == 0) {
-                sdf = new SimpleDateFormat("今天HH:mm");
-            }
-            time = sdf.format(date.getTime());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return time;
+        return dateString.replace("T", " ").replaceAll("[\\+\\.]\\S+$", "");
     }
 }

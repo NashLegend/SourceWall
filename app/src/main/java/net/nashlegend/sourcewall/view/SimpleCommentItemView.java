@@ -11,6 +11,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.util.Config;
+import net.nashlegend.sourcewall.util.DateTimeUtil;
 import net.nashlegend.sourcewall.util.ImageUtils;
 
 /**
@@ -46,7 +47,7 @@ public class SimpleCommentItemView extends AceView<UComment> {
     public void setData(UComment model) {
         comment = model;
         authorView.setText(comment.getAuthor().getName());
-        dateView.setText(comment.getDate());
+        dateView.setText(DateTimeUtil.time2HumanReadable(comment.getDate()));
         contentView.setText(comment.getContent());
         if (Config.shouldLoadImage()) {
             ImageLoader.getInstance().displayImage(comment.getAuthor().getAvatar(), avatarImage, ImageUtils.avatarOptions);

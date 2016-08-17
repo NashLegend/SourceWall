@@ -11,6 +11,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.util.Config;
+import net.nashlegend.sourcewall.util.DateTimeUtil;
 import net.nashlegend.sourcewall.util.ImageUtils;
 
 import static net.nashlegend.sourcewall.util.DisplayUtil.getScreenWidth;
@@ -62,7 +63,7 @@ public class ArticleListItemView extends AceView<Article> {
         titleView.setText(article.getTitle());
         contentView.setText(article.getSummary());
         authorView.setText(article.getAuthor().getName());
-        dateView.setText(article.getDate());
+        dateView.setText(DateTimeUtil.time2HumanReadable(article.getDate()));
         replyView.setText(String.valueOf(article.getCommentNum()));
         if (TextUtils.isEmpty(article.getImageUrl())) {
             titleImage.setVisibility(GONE);
