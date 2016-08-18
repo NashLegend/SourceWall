@@ -3,6 +3,8 @@ package net.nashlegend.sourcewall.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
@@ -13,52 +15,44 @@ import net.nashlegend.sourcewall.fragment.ProfileFragment;
 import net.nashlegend.sourcewall.fragment.QuestionPagerFragment;
 import net.nashlegend.sourcewall.util.Config;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import me.majiajie.pagerbottomtabstrip.Controller;
-import me.majiajie.pagerbottomtabstrip.PagerBottomTabLayout;
-import me.majiajie.pagerbottomtabstrip.listener.OnTabItemSelectListener;
+import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity {
-
-    @BindView(R.id.bottom_bar)
-    PagerBottomTabLayout bottomBar;
 
     BaseFragment crtFragment;
     ArticlePagerFragment articlePagerFragment;
     PostPagerFragment postPagerFragment;
     QuestionPagerFragment questionPagerFragment;
     ProfileFragment profileFragment;
+    @BindView(R.id.layout_science)
+    LinearLayout layoutScience;
+    @BindView(R.id.layout_group)
+    LinearLayout layoutGroup;
+    @BindView(R.id.layout_questions)
+    LinearLayout layoutQuestions;
+    @BindView(R.id.layout_me)
+    LinearLayout layoutMe;
+    ArrayList<View> bars = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        bars.add(layoutScience);
+        bars.add(layoutGroup);
+        bars.add(layoutQuestions);
+        bars.add(layoutMe);
         setSwipeEnabled(false);
-        initPages();
-    }
 
-    private void initPages() {
-        Controller controller = bottomBar.builder()
-                .addTabItem(android.R.drawable.ic_menu_gallery, "科学人")
-                .addTabItem(android.R.drawable.ic_menu_manage, "小组")
-                .addTabItem(android.R.drawable.ic_search_category_default, "问答")
-                .addTabItem(android.R.drawable.ic_menu_always_landscape_portrait, "我")
-                .build();
-        controller.addTabItemClickListener(new OnTabItemSelectListener() {
-            @Override
-            public void onSelected(int index, Object tag) {
-                crtFragment = getFragmentByPosition(index);
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.main2_content, crtFragment).commitAllowingStateLoss();
-            }
-
-            @Override
-            public void onRepeatClick(int index, Object tag) {
-
-            }
-        });
+        layoutScience.setSelected(true);
+        crtFragment = getFragmentByPosition(0);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.main2_content, crtFragment).commitAllowingStateLoss();
     }
 
     private BaseFragment getFragmentByPosition(int idx) {
@@ -123,5 +117,49 @@ public class MainActivity extends BaseActivity {
     @Override
     public void finish() {
         finish(0, 0);
+    }
+
+    @OnClick({R.id.layout_science, R.id.layout_group, R.id.layout_questions, R.id.layout_me})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.layout_science:
+            case R.id.layout_group:
+            case R.id.layout_questions:
+            case R.id.layout_me:
+                onBarClick(view.getId());
+                break;
+        }
+    }
+
+    private void onBarClick(int id) {
+        BaseFragment fragment = null;
+        switch (id) {
+            case R.id.layout_science:
+                fragment = getFragmentByPosition(0);
+                break;
+            case R.id.layout_group:
+                fragment = getFragmentByPosition(1);
+                break;
+            case R.id.layout_questions:
+                fragment = getFragmentByPosition(2);
+                break;
+            case R.id.layout_me:
+                fragment = getFragmentByPosition(3);
+                break;
+        }
+        if (fragment == null || fragment == crtFragment) {
+            return;
+        } else {
+            crtFragment = fragment;
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.main2_content, crtFragment).commitAllowingStateLoss();
+        }
+        for (View bar : bars) {
+            if (id == bar.getId()) {
+                bar.setSelected(true);
+            } else {
+                bar.setSelected(false);
+            }
+        }
     }
 }

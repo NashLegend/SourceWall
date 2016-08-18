@@ -83,5 +83,8 @@
     <color name="wide_divider_color">#424242</color>
     <color name="list_item_color_normal">#484848</color>
     <color name="list_item_color_pressed">#393939</color>
+    
+    <color name="section_font_highlight_color">@color/text_color_primary</color>
+    <color name="section_font_normal_color">@color/splitter_color_grey</color>
 
 </resources>

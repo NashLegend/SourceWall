@@ -43,7 +43,6 @@ import net.nashlegend.sourcewall.view.AnswerListItemView;
 import net.nashlegend.sourcewall.view.common.LoadingView;
 import net.nashlegend.sourcewall.view.common.listview.LListView;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -130,15 +129,7 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_question, menu);
-        try {
-            Method m = menu.getClass().getDeclaredMethod("setOptionalIconsVisible", Boolean.TYPE);
-            m.setAccessible(true);
-            m.invoke(menu, true);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         if (!UserAPI.isLoggedIn()) {
             menu.findItem(R.id.action_follow_question).setVisible(false);
             menu.findItem(R.id.action_unfollow_question).setVisible(false);

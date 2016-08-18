@@ -85,4 +85,7 @@
     <color name="list_item_color_normal">#ffffff</color>
     <color name="list_item_color_pressed">#f1f1f1</color>
 
+    <color name="section_font_highlight_color">@color/text_color_primary</color>
+    <color name="section_font_normal_color">#b2b2b2</color>
+
 </resources>

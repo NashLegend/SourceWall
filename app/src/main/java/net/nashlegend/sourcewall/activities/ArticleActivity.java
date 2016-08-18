@@ -52,7 +52,6 @@ import net.nashlegend.sourcewall.view.common.LoadingView.ReloadListener;
 import net.nashlegend.sourcewall.view.common.listview.LListView;
 import net.nashlegend.sourcewall.view.common.listview.LListView.OnRefreshListener;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 import rx.Observer;
@@ -255,13 +254,6 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_article, menu);
-        try {
-            Method m = menu.getClass().getDeclaredMethod("setOptionalIconsVisible", Boolean.TYPE);
-            m.setAccessible(true);
-            m.invoke(menu, true);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         this.menu = menu;
         setMenuVisibility();
         return true;

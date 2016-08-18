@@ -4,37 +4,31 @@
     tools:context=".activities.ArticleActivity">
     <item
         android:id="@+id/action_share_to_wechat_circle"
-        android:icon="@drawable/weixin_circle_logo"
         android:orderInCategory="100"
         android:title="@string/action_share_to_wechat_circle"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_share_to_wechat_friends"
-        android:icon="@drawable/weixin_chat_logo"
         android:orderInCategory="101"
         android:title="@string/action_share_to_wechat_friends"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_share_to_weibo"
-        android:icon="@drawable/weibo_logo"
         android:orderInCategory="102"
         android:title="@string/action_share_to_weibo"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_load_desc"
-        android:icon="@drawable/ic_arrow_up"
         android:orderInCategory="103"
         android:title="@string/action_load_desc"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_load_acs"
-        android:icon="@drawable/ic_arrow_down"
         android:orderInCategory="104"
         android:title="@string/action_load_acs"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_open_in_browser"
-        android:icon="@drawable/ic_browser"
         android:orderInCategory="105"
         android:title="@string/open_in_browser"
         app:showAsAction="never" />

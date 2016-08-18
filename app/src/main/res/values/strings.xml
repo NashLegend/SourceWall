@@ -186,8 +186,8 @@
     <string name="hint_of_load_my_groups">点击右上角箭头可加载我关注的小组以及管理小组……</string>
     <string name="hint_of_load_my_tags">点击右上角箭头可加载我关注的问答标签以及管理标签……</string>
     <string name="ok_i_know">好了我知道了</string>
-    <string name="title_activity_image">ImageActivity</string>
-    <string name="title_activity_test">TestActivity</string>
+    <string name="title_activity_image">图片查看</string>
+    <string name="title_activity_test">测试页面</string>
 
     <!-- 分享-->
     <string name="ERR_OK">分享成功</string>
@@ -217,5 +217,6 @@
     <string name="post_404">帖子不存在</string>
     <string name="question_404">问题不存在</string>
     <string name="article_404">文章不存在</string>
+    <string name="me">我</string>
 
 </resources>

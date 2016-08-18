@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,11 +7,99 @@
     android:orientation="vertical"
     tools:context=".activities.MainActivity">
 
-    <me.majiajie.pagerbottomtabstrip.PagerBottomTabLayout
+    <LinearLayout
+        android:baselineAligned="false"
         android:id="@+id/bottom_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" />
+        android:layout_height="@dimen/bottom_bar_height"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/layout_science"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="@dimen/ic_section_icon_size"
+                android:layout_height="@dimen/ic_section_icon_size"
+                android:src="@drawable/ic_section_science" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/article"
+                android:textColor="@color/color_section_font"
+                android:textSize="@dimen/ic_section_font_size" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_group"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="@dimen/ic_section_icon_size"
+                android:layout_height="@dimen/ic_section_icon_size"
+                android:src="@drawable/ic_section_group" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/post"
+                android:textColor="@color/color_section_font"
+                android:textSize="@dimen/ic_section_font_size" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/layout_questions"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="@dimen/ic_section_icon_size"
+                android:layout_height="@dimen/ic_section_icon_size"
+                android:src="@drawable/ic_section_question" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/question"
+                android:textColor="@color/color_section_font"
+                android:textSize="@dimen/ic_section_font_size" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_me"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="@dimen/ic_section_icon_size"
+                android:layout_height="@dimen/ic_section_icon_size"
+                android:src="@drawable/ic_section_home" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/me"
+                android:textColor="@color/color_section_font"
+                android:textSize="@dimen/ic_section_font_size" />
+        </LinearLayout>
+    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/main2_content"

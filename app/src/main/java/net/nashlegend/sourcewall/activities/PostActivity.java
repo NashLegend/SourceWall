@@ -170,13 +170,6 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_post, menu);
-        try {
-            Method m = menu.getClass().getDeclaredMethod("setOptionalIconsVisible", Boolean.TYPE);
-            m.setAccessible(true);
-            m.invoke(menu, true);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         this.menu = menu;
         setMenuVisibility();
         return true;
