@@ -61,10 +61,8 @@ public class ProfileFragment extends BaseFragment {
     LinearLayout layoutMyPosts;
     @BindView(R.id.layout_my_questions)
     LinearLayout layoutMyQuestions;
-    @BindView(R.id.view_switch_to_day)
-    LinearLayout viewSwitchToDay;
-    @BindView(R.id.view_switch_to_night)
-    LinearLayout viewSwitchToNight;
+    @BindView(R.id.view_switch)
+    LinearLayout viewSwitchDayNight;
     @BindView(R.id.layout_setting)
     LinearLayout layoutSetting;
     @BindView(R.id.layout_logged_in)
@@ -109,13 +107,6 @@ public class ProfileFragment extends BaseFragment {
             userName.setText(R.string.click_to_login);
             loginLayout.setVisibility(View.GONE);
         }
-        if (App.isNightMode()) {
-            viewSwitchToDay.setVisibility(View.VISIBLE);
-            viewSwitchToNight.setVisibility(View.GONE);
-        } else {
-            viewSwitchToDay.setVisibility(View.GONE);
-            viewSwitchToNight.setVisibility(View.VISIBLE);
-        }
     }
 
     @Override
@@ -127,8 +118,8 @@ public class ProfileFragment extends BaseFragment {
     }
 
     @OnClick({R.id.layout_msg_center, R.id.layout_my_favors, R.id.layout_my_posts,
-            R.id.layout_my_questions, R.id.view_switch_to_day, R.id.layout_my_answers,
-            R.id.view_switch_to_night, R.id.layout_setting, R.id.profile_header})
+            R.id.layout_my_questions,  R.id.layout_my_answers,
+            R.id.view_switch, R.id.layout_setting, R.id.profile_header})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.profile_header:
@@ -152,8 +143,7 @@ public class ProfileFragment extends BaseFragment {
             case R.id.layout_my_answers:
                 startActivity(MyAnswersActivity.class);
                 break;
-            case R.id.view_switch_to_day:
-            case R.id.view_switch_to_night:
+            case R.id.view_switch:
                 revertMode();
                 break;
             case R.id.layout_setting:

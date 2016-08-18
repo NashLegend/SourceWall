@@ -98,8 +98,7 @@
     <string name="login_failed_for_other_reason">登录失败</string>
     <string name="unknown_error">未知错误</string>
     <string name="click_to_login">点击登录</string>
-    <string name="switch_to_night_mode">夜间模式</string>
-    <string name="switch_to_normal_mode">日间模式</string>
+    <string name="switch_day_night_mode">夜间模式</string>
     <string name="click_to_load_pre_page">点击加载上一页</string>
     <string name="click_to_load_latest_replies">点击加载最新回复</string>
     <string name="title_activity_publish_post">发帖</string>

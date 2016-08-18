@@ -176,39 +176,7 @@
             android:layout_height="12dp" />
 
         <LinearLayout
-            android:id="@+id/view_switch_to_day"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:background="@drawable/list_item_background"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                tools:visibility="visible">
-
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/day_mode" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/switch_to_normal_mode" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/splitter_height"
-                android:background="@color/splitter_color_grey" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/view_switch_to_night"
+            android:id="@+id/view_switch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -225,12 +193,12 @@
                     android:layout_width="60dp"
                     android:layout_height="match_parent"
                     android:scaleType="centerInside"
-                    android:src="@drawable/ic_moon_24dp" />
+                    android:src="@drawable/ic_day_night_24dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/switch_to_night_mode" />
+                    android:text="@string/switch_day_night_mode" />
             </LinearLayout>
 
             <View
