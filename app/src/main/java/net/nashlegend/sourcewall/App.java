@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatDelegate;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.squareup.leakcanary.LeakCanary;
 
 import net.nashlegend.sourcewall.db.BaseDB;
 import net.nashlegend.sourcewall.db.gen.DaoMaster;
@@ -38,7 +37,6 @@ public class App extends Application {
             setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
         super.onCreate();
-        LeakCanary.install(this);
         initImageLoader(this);
     }
 

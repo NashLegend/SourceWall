@@ -24,6 +24,7 @@ import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.PrefsUtil;
+import net.nashlegend.sourcewall.util.UiUtil;
 
 import de.greenrobot.event.EventBus;
 
@@ -104,43 +105,21 @@ public class LoginActivity extends BaseActivity {
     }
 
     AlertDialog dialog;
+    boolean tokenOk = false;
 
     WebViewClient webViewClient = new WebViewClient() {
+
         @Override
         public boolean shouldOverrideUrlLoading(final WebView view, String url) {
             if (url.equals(Consts.SUCCESS_URL_1) || url.equals(Consts.SUCCESS_URL_2)) {
                 if (parseRawCookie(cookieStr)) {
+                    tokenOk = true;
+                    UiUtil.dismissDialog(dialog);
                     webView.stopLoading();
                     PrefsUtil.saveString(Consts.Key_Cookie, cookieStr);
                     delayFinish();
                 } else {
-                    dialog = new AlertDialog.Builder(LoginActivity.this)
-                            .setTitle(R.string.hint)
-                            .setMessage(R.string.user_handle_login_message)
-                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    String lazyLoad = "http://m.guokr.com/sso/mobile/?suppress_prompt=1&lazy=y&success=http%3A%2F%2Fm.guokr.com%2F";
-                                    view.loadUrl(lazyLoad);
-                                }
-                            })
-                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                    setResult(RESULT_CANCELED);
-                                    delayFinish();
-                                }
-                            })
-                            .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                                @Override
-                                public void onCancel(DialogInterface dialog) {
-                                    dialog.cancel();
-                                    setResult(RESULT_CANCELED);
-                                    delayFinish();
-                                }
-                            }).create();
-                    dialog.show();
+                    delayPopTokenFailed();
                 }
             } else {
                 view.loadUrl(url);
@@ -167,6 +146,50 @@ public class LoginActivity extends BaseActivity {
             }
         }
     };
+
+    private void delayPopTokenFailed() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!tokenOk) {
+                    popTokenFailed();
+                }
+            }
+        }, 2000);
+    }
+
+    private void popTokenFailed() {
+        if (isFinishing()) {
+            return;
+        }
+        dialog = new AlertDialog.Builder(LoginActivity.this)
+                .setTitle(R.string.hint)
+                .setMessage(R.string.user_handle_login_message)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String lazyLoad = "http://m.guokr.com/sso/mobile/?suppress_prompt=1&lazy=y&success=http%3A%2F%2Fm.guokr.com%2F";
+                        webView.loadUrl(lazyLoad);
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        setResult(RESULT_CANCELED);
+                        delayFinish();
+                    }
+                })
+                .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        dialog.cancel();
+                        setResult(RESULT_CANCELED);
+                        delayFinish();
+                    }
+                }).create();
+        dialog.show();
+    }
 
     private void delayFinish() {
         if (UserAPI.isLoggedIn()) {

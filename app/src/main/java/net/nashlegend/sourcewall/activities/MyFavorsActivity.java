@@ -31,7 +31,7 @@ import static net.nashlegend.sourcewall.model.SubItem.Type_Single_Channel;
 
 public class MyFavorsActivity extends BaseActivity {
 
-    ArrayList<SubItem> subItems = ChannelHelper.getBaskets();
+    List<SubItem> subItems = ChannelHelper.getBaskets();
 
     @BindView(R.id.favor_tabs)
     TabLayout tabLayout;
@@ -98,6 +98,7 @@ public class MyFavorsActivity extends BaseActivity {
             ToastUtil.toastBigSingleton("您还没有创建果篮 0.0 ");
             finish();
         } else {
+            this.subItems = subItems;
             adapter.notifyDataSetChanged();
         }
     }
@@ -120,6 +121,7 @@ public class MyFavorsActivity extends BaseActivity {
 
         @Override
         public int getCount() {
+            System.out.println(subItems.size());
             return subItems.size();
         }
     }

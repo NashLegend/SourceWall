@@ -28,7 +28,6 @@ import net.nashlegend.sourcewall.util.AccessTokenKeeper;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.ShareUtil;
 
-
 public class WeiboShareActivity extends BaseActivity implements IWeiboHandler.Response {
 
     private IWeiboShareAPI mWeiboShareAPI;
