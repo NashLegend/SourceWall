@@ -1,6 +1,6 @@
 import java.text.SimpleDateFormat
 
-def supportVersion = "24.1.1"
+def supportVersion = "24.2.0"
 
 def releaseTime() {
     def format = new SimpleDateFormat("yyyyMMdd", Locale.CHINA);
@@ -46,23 +46,19 @@ ext {
             ZXing              : "com.google.zxing:core:3.2.1",
             Json               : "org.json:json:20160212",
             AndFix             : "com.alipay.euler:andfix:0.4.0@aar",
-            AutoService        : 'com.google.auto.service:auto-service:1.0-rc2',
-            AutoCommon         : 'com.google.auto:auto-common:0.6',
             Markdown4J         : 'org.commonjava.googlecode.markdown4j:markdown4j:2.2-cj-1.1',
             MaterialSearchView : 'com.miguelcatalan:materialsearchview:1.4.0',
             SearchView         : 'com.lapism:searchview:2.2',
-            BottomBar          : 'me.majiajie:pager-bottom-tab-strip:1.0.0',
-            BottomBar2         : 'com.roughike:bottom-bar:1.4.0.1',
             Logger             : 'com.orhanobut:logger:1.14',
             Router             : 'com.github.mzule.activityrouter:activityrouter:1.1.6',
     ]
 
     built = [
             applicationId    : "net.nashlegend.sourcewall",
-            versionCode      : 20160726,
-            versionName      : "1.8.6",
-            buildToolsVersion: "23.0.3",
-            compileSdkVersion: 23,
+            versionCode      : 20160818,
+            versionName      : "1.9.9",
+            buildToolsVersion: "24.0.1",
+            compileSdkVersion: 24,
             minSdkVersion    : 15,
             targetSdkVersion : 22
     ]

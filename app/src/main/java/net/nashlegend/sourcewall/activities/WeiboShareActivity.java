@@ -57,6 +57,15 @@ public class WeiboShareActivity extends BaseActivity implements IWeiboHandler.Re
     }
 
     public void shareToWeibo(String url, String title, String summary, Bitmap bitmap) {
+        if (summary == null) {
+            summary = "";
+        }
+        if (title == null) {
+            title = "";
+        }
+        if (url == null) {
+            url = "";
+        }
         if (summary.length() > 140) {
             summary = summary.substring(0, 135) + "...";
         }
