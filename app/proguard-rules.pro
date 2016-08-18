@@ -33,7 +33,7 @@
 
 -keep class org.apache.** { *; }
 
--keep class rg.markdown4j.** { *; }
+-keep class org.markdown4j.** { *; }
 
 #umeng
 -keepclassmembers class * {
