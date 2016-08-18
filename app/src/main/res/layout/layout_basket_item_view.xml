@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/basket_item_height"
-    xmlns:tools="http://schemas.android.com/tools"
     android:descendantFocusability="blocksDescendants"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingLeft="@dimen/abc_dropdownitem_text_padding_left"
-    android:paddingRight="@dimen/abc_dropdownitem_text_padding_right">
+    android:paddingLeft="@dimen/list_item_padding_horizontal"
+    android:paddingRight="@dimen/list_item_padding_horizontal">
 
     <TextView
         android:id="@+id/text_basket_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        tools:text="@string/sample_title"
-        android:textColor="@color/dialog_list_text" />
+        android:textColor="@color/dialog_list_text"
+        tools:text="@string/sample_title" />
 
     <RelativeLayout
         android:layout_width="@dimen/basket_item_height"
@@ -23,11 +23,11 @@
 
         <ProgressBar
             android:id="@+id/progress_adding_favor"
-            android:layout_centerInParent="true"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:visibility="gone"
-            android:background="@android:color/transparent" />
+            android:layout_centerInParent="true"
+            android:background="@android:color/transparent"
+            android:visibility="gone" />
 
         <ImageButton
             android:id="@+id/button_add_2_favor"

@@ -47,6 +47,7 @@
     <color name="reply_operation_bar_background">#dddddd</color>
 
     <!--对话框-->
+    <color name="dialog_background">#ffffff</color>
     <color name="dialog_button_background">@android:color/transparent</color>
     <color name="dialog_button_text">#33b5e5</color>
     <color name="dialog_button_text_pressed">#0099cc</color>
@@ -55,8 +56,6 @@
     <color name="dialog_list_text">#888888</color>
 
     <!--抽屉颜色-->
-    <color name="drawer_button_background">#ffffff</color>
-    <color name="drawer_button_background_pressed">#33b5e5</color>
     <color name="drawer_button_text">#424242</color>
     <color name="drawer_button_text_pressed">#000000</color>
     <color name="drawer_author">#000000</color>
@@ -87,5 +86,6 @@
 
     <color name="section_font_highlight_color">@color/text_color_primary</color>
     <color name="section_font_normal_color">#b2b2b2</color>
+    <color name="bottom_bar_background_color">#ffffff</color>
 
 </resources>

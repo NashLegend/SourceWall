@@ -112,6 +112,14 @@
         <item name="textAllCaps">false</item>
     </style>
 
+    <style name="DialogTheme" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowNoTitle">false</item>
+        <item name="android:textColor">@color/dialog_text</item>
+    </style>
+
+    <style name="AlertDialogTheme" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@color/dialog_background</item>
+    </style>
 
     <style name="ButtonStyle" parent="Widget.AppCompat.Button">
         <item name="android:minHeight">20dp</item>

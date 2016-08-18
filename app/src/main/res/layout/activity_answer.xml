@@ -108,15 +108,15 @@
                     android:id="@+id/text_author"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:text="@string/sample_author"
-                    android:textColor="@color/answer_author_text" />
+                    android:textColor="@color/answer_author_text"
+                    tools:text="@string/sample_author" />
 
                 <TextView
                     android:id="@+id/text_author_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:text="@string/sample_author_title"
-                    android:textColor="@color/answer_author_sub_text" />
+                    android:textColor="@color/answer_author_sub_text"
+                    tools:text="@string/sample_author_title" />
             </LinearLayout>
 
             <LinearLayout
@@ -138,8 +138,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/list_item_text_icon_gap"
                     android:layout_weight="0"
-                    tools:text="@string/sample_like_num"
-                    android:textColor="@color/answer_author_sub_text" />
+                    android:textColor="@color/answer_author_sub_text"
+                    tools:text="@string/sample_like_num" />
             </LinearLayout>
         </LinearLayout>
 

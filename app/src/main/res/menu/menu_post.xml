@@ -32,4 +32,9 @@
         android:title="@string/open_in_browser"
         android:orderInCategory="106"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_report"
+        android:orderInCategory="108"
+        android:title="@string/report"
+        app:showAsAction="never" />
 </menu>

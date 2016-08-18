@@ -46,6 +46,7 @@
     <color name="reply_operation_bar_background">#757575</color>
 
     <!--对话框-->
+    <color name="dialog_background">#3c3c3c</color>
     <color name="dialog_button_background">@android:color/transparent</color>
     <color name="dialog_button_text">#e0e0e0</color>
     <color name="dialog_button_text_pressed">#bdbdbd</color>
@@ -86,5 +87,6 @@
     
     <color name="section_font_highlight_color">@color/text_color_primary</color>
     <color name="section_font_normal_color">@color/splitter_color_grey</color>
+    <color name="bottom_bar_background_color">#3c3c3c</color>
 
 </resources>

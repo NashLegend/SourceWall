@@ -38,6 +38,11 @@ public class ArticleAPI extends APIBase {
 
     }
 
+    public static NetworkTask<Boolean> reportReply(String replyId, String reason, RequestCallBack<Boolean> callBack){
+        String url = "http://www.guokr.com/article/reply/"+replyId+"/";
+        return UserAPI.report(url,reason,callBack);
+    }
+
     /**
      * 返回文章列表
      *

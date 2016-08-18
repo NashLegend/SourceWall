@@ -44,6 +44,16 @@ import rx.schedulers.Schedulers;
 
 public class PostAPI extends APIBase {
 
+    public static NetworkTask<Boolean> reportPost(String postId, String reason, RequestCallBack<Boolean> callBack) {
+        String url = "http://www.guokr.com/post/" + postId + "/";
+        return UserAPI.report(url, reason, callBack);
+    }
+
+    public static NetworkTask<Boolean> reportReply(String replyId, String reason, RequestCallBack<Boolean> callBack) {
+        String url = "http://www.guokr.com/post/reply/" + replyId + "/";
+        return UserAPI.report(url, reason, callBack);
+    }
+
     public static NetworkTask<ArrayList<Post>> getPostListByUser(String ukey, int offset, RequestCallBack<ArrayList<Post>> callBack) {
         String url = "http://apis.guokr.com/group/post.json";
         ParamsMap pairs = new ParamsMap();

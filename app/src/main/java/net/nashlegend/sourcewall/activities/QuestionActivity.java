@@ -3,6 +3,7 @@ package net.nashlegend.sourcewall.activities;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.QuestionDetailAdapter;
 import net.nashlegend.sourcewall.dialogs.FavorDialog;
 import net.nashlegend.sourcewall.dialogs.InputDialog;
+import net.nashlegend.sourcewall.dialogs.ReportDialog;
 import net.nashlegend.sourcewall.model.Answer;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
@@ -37,6 +39,7 @@ import net.nashlegend.sourcewall.util.AutoHideUtil.AutoHideListener;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.ShareUtil;
+import net.nashlegend.sourcewall.util.ToastUtil;
 import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;
 import net.nashlegend.sourcewall.view.AnswerListItemView;
@@ -128,6 +131,37 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
         }
     }
 
+    private void reportQuestion() {
+        if (!UserAPI.isLoggedIn()) {
+            gotoLogin();
+            return;
+        }
+        if (question == null) {
+            return;
+        }
+        new ReportDialog.Builder(this)
+                .setTitle("举报")
+                .setReasonListener(new ReportDialog.ReportReasonListener() {
+                    @Override
+                    public void onGetReason(final Dialog dia, String reason) {
+                        QuestionAPI.reportQuestion(question.getId(), reason, new SimpleCallBack<Boolean>() {
+                            @Override
+                            public void onFailure() {
+                                ToastUtil.toastBigSingleton("举报未遂……");
+                            }
+
+                            @Override
+                            public void onSuccess() {
+                                UiUtil.dismissDialog(dia);
+                                ToastUtil.toastBigSingleton("举报成功");
+                            }
+                        });
+                    }
+                })
+                .create()
+                .show();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_question, menu);
@@ -140,9 +174,6 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         switch (id) {
             case android.R.id.home:
@@ -150,6 +181,9 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
                 break;
             case R.id.action_follow_question:
                 followQuestion();
+                break;
+            case R.id.action_report:
+                reportQuestion();
                 break;
             case R.id.action_unfollow_question:
                 unfollowQuestion();
@@ -371,7 +405,7 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
                 .subscribe(new Action1<ResponseObject<Question>>() {
                     @Override
                     public void call(ResponseObject<Question> result) {
-                        if (isFinishing()){
+                        if (isFinishing()) {
                             return;
                         }
                         if (result.ok) {
@@ -419,7 +453,7 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
 
                     @Override
                     public void onNext(ResponseObject<ArrayList<Answer>> result) {
-                        if (isFinishing()){
+                        if (isFinishing()) {
                             return;
                         }
                         progressBar.setVisibility(View.GONE);

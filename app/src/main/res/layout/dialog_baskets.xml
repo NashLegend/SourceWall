@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/favor_dialog_height"
-    android:paddingLeft="@dimen/list_item_padding_horizontal"
-    android:paddingRight="@dimen/list_item_padding_horizontal">
+    android:layout_height="@dimen/favor_dialog_height">
 
     <LinearLayout
         android:id="@+id/layout_favor_dialog_list"
@@ -29,7 +28,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="top"
-                android:minHeight="@dimen/input_dialog_input_height" />
+                android:minHeight="@dimen/input_dialog_input_height"
+                tools:listitem="@layout/layout_basket_item_view" />
         </RelativeLayout>
 
         <LinearLayout
@@ -37,7 +37,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:gravity="end"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/list_item_padding_horizontal"
+            android:paddingRight="@dimen/list_item_padding_horizontal">
 
             <Button
                 android:id="@+id/button_favor_dialog_invoke_create"

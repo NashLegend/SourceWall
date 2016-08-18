@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -31,6 +32,8 @@ import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.ArticleDetailAdapter;
 import net.nashlegend.sourcewall.dialogs.FavorDialog;
 import net.nashlegend.sourcewall.dialogs.InputDialog;
+import net.nashlegend.sourcewall.dialogs.ReportDialog;
+import net.nashlegend.sourcewall.dialogs.ReportDialog.ReportReasonListener;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
@@ -44,6 +47,7 @@ import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.RegUtil;
 import net.nashlegend.sourcewall.util.ShareUtil;
+import net.nashlegend.sourcewall.util.ToastUtil;
 import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;
 import net.nashlegend.sourcewall.view.MediumListItemView;
@@ -320,6 +324,34 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
         });
     }
 
+    private void reportComment(final UComment uComment) {
+        if (!UserAPI.isLoggedIn()) {
+            gotoLogin();
+            return;
+        }
+        new ReportDialog.Builder(this)
+                .setTitle("举报")
+                .setReasonListener(new ReportReasonListener() {
+                    @Override
+                    public void onGetReason(final Dialog dia, String reason) {
+                        ArticleAPI.reportReply(uComment.getID(), reason, new SimpleCallBack<Boolean>() {
+                            @Override
+                            public void onFailure() {
+                                ToastUtil.toastBigSingleton("举报未遂……");
+                            }
+
+                            @Override
+                            public void onSuccess() {
+                                UiUtil.dismissDialog(dia);
+                                ToastUtil.toastBigSingleton("举报成功");
+                            }
+                        });
+                    }
+                })
+                .create()
+                .show();
+    }
+
     private void deleteComment(final UComment comment) {
         if (!UserAPI.isLoggedIn()) {
             gotoLogin();
@@ -350,11 +382,14 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
     private void onReplyItemClick(final View view, int position, long id) {
         if (view instanceof MediumListItemView) {
             final UComment comment = ((MediumListItemView) view).getData();
-            ArrayList<String> ops = new ArrayList<>();
+            final ArrayList<String> ops = new ArrayList<>();
             ops.add(getString(R.string.action_reply));
             ops.add(getString(R.string.action_copy));
             if (!comment.isHasLiked()) {
                 ops.add(getString(R.string.action_like));
+            }
+            if (!comment.getAuthor().getId().equals(UserAPI.getUserID())) {
+                ops.add(getString(R.string.report));
             }
             if (comment.getAuthor().getId().equals(UserAPI.getUserID())) {
                 ops.add(getString(R.string.action_delete));
@@ -363,26 +398,29 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
             for (int i = 0; i < ops.size(); i++) {
                 operations[i] = ops.get(i);
             }
-            new AlertDialog.Builder(this).setTitle("").setItems(operations, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    UComment comment = ((MediumListItemView) view).getData();
-                    switch (which) {
-                        case 0:
-                            replyComment(comment);
-                            break;
-                        case 1:
-                            copyComment(comment);
-                            break;
-                        case 2:
-                            likeComment((MediumListItemView) view);
-                            break;
-                        case 3:
-                            deleteComment(comment);
-                            break;
-                    }
-                }
-            }).create().show();
+            new AlertDialog.Builder(this)
+                    .setItems(operations, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (which >= ops.size() || which < 0) {
+                                return;
+                            }
+                            String desc = ops.get(which);
+                            if (desc.equals(getString(R.string.action_reply))) {
+                                replyComment(comment);
+                            } else if (desc.equals(getString(R.string.action_copy))) {
+                                copyComment(comment);
+                            } else if (desc.equals(getString(R.string.action_like))) {
+                                likeComment((MediumListItemView) view);
+                            } else if (desc.equals(getString(R.string.action_delete))) {
+                                deleteComment(comment);
+                            } else if (desc.equals(getString(R.string.report))) {
+                                reportComment(comment);
+                            }
+                        }
+                    })
+                    .create()
+                    .show();
         }
     }
 
@@ -487,7 +525,7 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
                 .subscribe(new Action1<ResponseObject<Article>>() {
                     @Override
                     public void call(ResponseObject<Article> result) {
-                        if (isFinishing()){
+                        if (isFinishing()) {
                             return;
                         }
                         if (result.ok) {
@@ -560,7 +598,7 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
 
                     @Override
                     public void onNext(ResponseObject<ArrayList<UComment>> result) {
-                        if (isFinishing()){
+                        if (isFinishing()) {
                             return;
                         }
                         if (result.ok) {

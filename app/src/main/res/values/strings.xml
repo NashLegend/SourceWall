@@ -217,5 +217,12 @@
     <string name="question_404">问题不存在</string>
     <string name="article_404">文章不存在</string>
     <string name="me">我</string>
+    <string name="report_bad_ad">垃圾广告</string>
+    <string name="porn_messages">敏感或淫秽色情信息</string>
+    <string name="attack">人身攻击</string>
+    <string name="copy_right_problem">内容涉及抄袭及版权问题</string>
+    <string name="other_reason">其他理由</string>
+    <string name="hint_enter_reason_please">请输入举报理由</string>
+    <string name="report">举报</string>
 
 </resources>

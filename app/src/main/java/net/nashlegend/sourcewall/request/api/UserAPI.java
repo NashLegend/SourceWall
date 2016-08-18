@@ -41,6 +41,25 @@ public class UserAPI extends APIBase {
         return sb.toString().toLowerCase();
     }
 
+    /**
+     * 举报
+     *
+     * @param url
+     * @param reason
+     * @param callBack
+     * @return
+     */
+    public static NetworkTask<Boolean> report(String url, String reason, RequestCallBack<Boolean> callBack) {
+        return new RequestBuilder<Boolean>()
+                .post()
+                .url("http://www.guokr.com/apis/censor/report.json")
+                .addParam("url", url)
+                .addParam("reason", reason)
+                .parser(new BooleanParser())
+                .callback(callBack)
+                .requestAsync();
+    }
+
     public static String getUserInfoString() {
         return "用户名：" + UserAPI.getName() + "\n用户key：" + getUkey() + "\n用户ID：" + UserAPI.getUserID() + "\n";
     }

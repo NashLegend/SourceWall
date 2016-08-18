@@ -18,10 +18,10 @@ import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.SimpleHttp;
 import net.nashlegend.sourcewall.request.parsers.AnswerCommentListParser;
 import net.nashlegend.sourcewall.request.parsers.AnswerCommentParser;
+import net.nashlegend.sourcewall.request.parsers.AnswerListParser;
 import net.nashlegend.sourcewall.request.parsers.AnswerParser;
 import net.nashlegend.sourcewall.request.parsers.BooleanParser;
 import net.nashlegend.sourcewall.request.parsers.ContentValueForKeyParser;
-import net.nashlegend.sourcewall.request.parsers.AnswerListParser;
 import net.nashlegend.sourcewall.request.parsers.QuestionCommentListParser;
 import net.nashlegend.sourcewall.request.parsers.QuestionCommentParser;
 import net.nashlegend.sourcewall.request.parsers.QuestionHtmlListParser;
@@ -45,6 +45,16 @@ import rx.Subscriber;
 import rx.functions.Func1;
 
 public class QuestionAPI extends APIBase {
+
+    public static NetworkTask<Boolean> reportAnswer(String answerId, String reason, RequestCallBack<Boolean> callBack) {
+        String url = "http://www.guokr.com/answer/" + answerId + "/redirect/";
+        return UserAPI.report(url, reason, callBack);
+    }
+
+    public static NetworkTask<Boolean> reportQuestion(String questionId, String reason, RequestCallBack<Boolean> callBack) {
+        String url = "http://www.guokr.com/question/" + questionId + "/";
+        return UserAPI.report(url, reason, callBack);
+    }
 
     public static NetworkTask<ArrayList<Question>> getQuestionListByUser(String ukey, int offset, RequestCallBack<ArrayList<Question>> callBack) {
         String url = "http://apis.guokr.com/ask/question.json";

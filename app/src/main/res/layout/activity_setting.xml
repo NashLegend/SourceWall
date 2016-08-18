@@ -67,6 +67,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
+        tools:visibility="visible"
         android:orientation="vertical"
         android:paddingBottom="@dimen/list_item_padding_vertical"
         android:paddingLeft="@dimen/list_item_padding_horizontal"

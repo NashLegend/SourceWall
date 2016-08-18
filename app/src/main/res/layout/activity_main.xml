@@ -8,11 +8,12 @@
     tools:context=".activities.MainActivity">
 
     <LinearLayout
-        android:baselineAligned="false"
         android:id="@+id/bottom_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/bottom_bar_height"
         android:layout_alignParentBottom="true"
+        android:background="@color/bottom_bar_background_color"
+        android:baselineAligned="false"
         android:orientation="horizontal">
 
         <LinearLayout
