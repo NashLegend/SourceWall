@@ -11,20 +11,15 @@
     <color name="page_background">#424242</color>
     <color name="page_clear_background">#424242</color>
 
-    <color name="pager_strip_background_color">#424242</color>
-
     <color name="webview_background">#424242</color>
 
     <color name="author_color">#cccccc</color>
     <color name="author_dark_color">#dddddd</color>
-    <color name="author_sub_color">#aaaaaa</color>
 
     <!--正文标题颜色-->
     <color name="article_title">#e0e0e0</color>
     <!--正文内容字体颜色-->
-    <color name="article_content_text">#d0d0d0</color>
     <!--正文背景色-->
-    <color name="article_text_background">#424242</color>
 
     <color name="list_title">#e0e0e0</color>
     <color name="list_summary">#d0d0d0</color>
@@ -50,19 +45,13 @@
     <color name="dialog_button_background">@android:color/transparent</color>
     <color name="dialog_button_text">#e0e0e0</color>
     <color name="dialog_button_text_pressed">#bdbdbd</color>
-    <color name="dialog_title">#eeeeee</color>
     <color name="dialog_text">#dddddd</color>
     <color name="dialog_list_text">#999999</color>
 
     <!--抽屉颜色-->
-    <color name="drawer_button_background">#424242</color>
-    <color name="drawer_button_background_pressed">#757575</color>
     <color name="drawer_button_text">#e0e0e0</color>
-    <color name="drawer_button_text_pressed">#acacac</color>
-    <color name="drawer_author">#eeeeee</color>
     <color name="drawer_list_text">#e0e0e0</color>
     <color name="drawer_list_sub_text">#cccccc</color>
-    <color name="drawer_background">#424242</color>
 
     <!--Shuffle-->
     <color name="shuffle_desk_background">#424242</color>
@@ -84,7 +73,7 @@
     <color name="wide_divider_color">#424242</color>
     <color name="list_item_color_normal">#484848</color>
     <color name="list_item_color_pressed">#393939</color>
-    
+
     <color name="section_font_highlight_color">@color/text_color_primary</color>
     <color name="section_font_normal_color">@color/splitter_color_grey</color>
     <color name="bottom_bar_background_color">#3c3c3c</color>

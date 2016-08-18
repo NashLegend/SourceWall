@@ -69,12 +69,6 @@ public class ArticleView extends AceView<Article> {
         authorView = (TextView) findViewById(R.id.text_author);
         dateView = (TextView) findViewById(R.id.text_date);
         loadDesc = findViewById(R.id.view_load_latest);
-
-        Resources.Theme theme = getContext().getTheme();
-        TypedArray typedArray = theme.obtainStyledAttributes(new int[]{R.attr.cardBackgroundColor});
-        int colorBack = typedArray.getColor(0, 0);
-        typedArray.recycle();
-        contentView.setBackgroundColor(colorBack);
     }
 
     @Override

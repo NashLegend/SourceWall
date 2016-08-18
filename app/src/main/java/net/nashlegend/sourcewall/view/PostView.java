@@ -55,12 +55,6 @@ public class PostView extends AceView<Post> {
         dateView = (TextView) findViewById(R.id.text_date);
         avatarImage = (ImageView) findViewById(R.id.image_avatar);
         loadDesc = findViewById(R.id.view_load_latest);
-
-        Resources.Theme theme = getContext().getTheme();
-        TypedArray typedArray = theme.obtainStyledAttributes(new int[]{R.attr.cardBackgroundColor});
-        int colorBack = typedArray.getColor(0, 0);
-        typedArray.recycle();
-        contentView.setBackgroundColor(colorBack);
     }
 
     public PostView(Context context, AttributeSet attrs) {

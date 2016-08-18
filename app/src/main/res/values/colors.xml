@@ -11,21 +11,16 @@
     <color name="page_background">#eaeef4</color>
     <color name="page_clear_background">#ffffff</color>
 
-    <color name="pager_strip_background_color">#ffffff</color>
-
     <color name="webview_background">#ffffff</color>
 
 
     <color name="author_color">#888888</color>
     <color name="author_dark_color">#555555</color>
-    <color name="author_sub_color">#aaaaaa</color>
 
     <!--正文标题颜色-->
     <color name="article_title">#000000</color>
     <!--正文内容字体颜色-->
-    <color name="article_content_text">#555555</color>
     <!--正文背景色-->
-    <color name="article_text_background">#ffffff</color>
 
     <color name="list_title">#444444</color>
     <color name="list_summary">#777777</color>
@@ -51,17 +46,13 @@
     <color name="dialog_button_background">@android:color/transparent</color>
     <color name="dialog_button_text">#33b5e5</color>
     <color name="dialog_button_text_pressed">#0099cc</color>
-    <color name="dialog_title">#000000</color>
     <color name="dialog_text">#222222</color>
     <color name="dialog_list_text">#888888</color>
 
     <!--抽屉颜色-->
     <color name="drawer_button_text">#424242</color>
-    <color name="drawer_button_text_pressed">#000000</color>
-    <color name="drawer_author">#000000</color>
     <color name="drawer_list_text">#222222</color>
     <color name="drawer_list_sub_text">#333333</color>
-    <color name="drawer_background">#ffffff</color>
 
     <!--Shuffle-->
     <color name="shuffle_desk_background">#ffffff</color>

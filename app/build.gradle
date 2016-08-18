@@ -31,9 +31,19 @@ android {
     }
 
     buildTypes {
+//        debug {
+//            minifyEnabled true
+//            shrinkResources true
+//            manifestPlaceholders = [
+//                    WEIXIN_APP_ID: keys.WEIXIN_APP_ID_DEBUG,
+//                    WEIBO_APP_KEY: keys.WEIBO_APP_KEY,
+//                    UMENG_APP_KEY: keys.UMENG_APP_KEY,
+//            ]
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//        }
         release {
-            minifyEnabled false
-            shrinkResources true
+//            minifyEnabled true
+//            shrinkResources true
             manifestPlaceholders = [
                     WEIXIN_APP_ID: keys.WEIXIN_APP_ID_RELEASE,
                     WEIBO_APP_KEY: keys.WEIBO_APP_KEY,
@@ -90,7 +100,6 @@ dependencies {
     compile deps.SupportV4
     compile deps.SupportAppcompat
     compile deps.SupportDesign
-    compile deps.CardView
     compile deps.EventBus
     compile deps.GreenDAO
     compile deps.Umeng
@@ -109,8 +118,6 @@ dependencies {
     compile deps.RxBindingV7
     compile deps.Httpmime
     compile deps.Markdown4J
-    compile deps.SearchView
-    compile deps.BottomBar
     compile deps.Logger
     compile deps.Router
 

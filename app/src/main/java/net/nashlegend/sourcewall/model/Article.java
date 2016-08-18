@@ -57,10 +57,6 @@ public class Article extends AceModel {
         String articleContent = doc.getElementById("articleContent").outerHtml().replaceAll("line-height: normal;", "");
         String copyright = doc.getElementsByClass("copyright").outerHtml();
         article.setContent(articleContent + copyright);
-        int likeNum = Integer.valueOf(doc.getElementsByClass("recom-num").get(0).text().replaceAll("\\D+", ""));
-        // 其他数据已经在列表取得，按理说这里只要合过去就行了，
-        // 但是因为有可能从其他地方进入这个页面，所以下面的数据还是要取
-        // 但是可以尽量少取，因为很多数据基本已经用不到了
         article.setId(id);
         Elements infos = doc.getElementsByClass("content-th-info");
         if (infos != null && infos.size() == 1) {
@@ -69,9 +65,6 @@ public class Article extends AceModel {
             if (infoSubs != null && infoSubs.size() > 0) {
                 Author author = new Author();
                 author.setName(info.getElementsByTag("a").text());
-                //href有可能为空且id在article里面没有什么用，所以不解析了
-                //String authorId = info.getElementsByTag("a").attr("href").replaceAll("\\D+", "");
-                //article.setAuthorID(authorId);
                 article.setAuthor(author);
             }
             Elements meta = info.getElementsByTag("meta");
@@ -80,10 +73,7 @@ public class Article extends AceModel {
                 article.setDate(date);
             }
         }
-        // String num = doc.select(".cmts-title").select(".cmts-hide").get(0).getElementsByClass("gfl").get(0).text().replaceAll("\\D+", "");
-        // article.setCommentNum(Integer.valueOf(num));
         article.setTitle(doc.getElementById("articleTitle").text().trim());
-        //            article.setLikeNum(likeNum);
         return article;
     }
 
