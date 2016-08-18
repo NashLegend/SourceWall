@@ -38,6 +38,9 @@ public class MainActivity extends BaseActivity {
     LinearLayout layoutMe;
     ArrayList<View> bars = new ArrayList<>();
 
+    int crtIndex = 0;
+    String crtIndexKay = "crtIndex";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,10 +52,26 @@ public class MainActivity extends BaseActivity {
         bars.add(layoutMe);
         setSwipeEnabled(false);
 
-        layoutScience.setSelected(true);
-        crtFragment = getFragmentByPosition(0);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.main2_content, crtFragment).commitAllowingStateLoss();
+        if (savedInstanceState != null) {
+            crtIndex = savedInstanceState.getInt(crtIndexKay, 0);
+        } else {
+            crtIndex = 0;
+        }
+        if (crtIndex < 0 && crtIndex > 3) {
+            crtIndex = 0;
+        }
+        onBarClick(bars.get(crtIndex).getId());
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(crtIndexKay, crtIndex);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     private BaseFragment getFragmentByPosition(int idx) {
@@ -133,26 +152,29 @@ public class MainActivity extends BaseActivity {
 
     private void onBarClick(int id) {
         BaseFragment fragment = null;
+        int index = 0;
         switch (id) {
             case R.id.layout_science:
-                fragment = getFragmentByPosition(0);
+                index = 0;
                 break;
             case R.id.layout_group:
-                fragment = getFragmentByPosition(1);
+                index = 1;
                 break;
             case R.id.layout_questions:
-                fragment = getFragmentByPosition(2);
+                index = 2;
                 break;
             case R.id.layout_me:
-                fragment = getFragmentByPosition(3);
+                index = 3;
                 break;
         }
+        fragment = getFragmentByPosition(index);
         if (fragment == null || fragment == crtFragment) {
             return;
         } else {
+            crtIndex = index;
             crtFragment = fragment;
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.main2_content, crtFragment).commitAllowingStateLoss();
+                    .replace(R.id.main_content, crtFragment).commitAllowingStateLoss();
         }
         for (View bar : bars) {
             if (id == bar.getId()) {
