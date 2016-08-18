@@ -31,8 +31,8 @@
             <net.nashlegend.sourcewall.view.common.WWebView
                 android:id="@+id/web_content"
                 android:layout_width="match_parent"
-                android:scrollbars="none"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:scrollbars="none" />
 
             <View
                 android:id="@+id/footerHolder"
@@ -64,13 +64,10 @@
         android:background="@color/answer_question_title_background"
         android:ellipsize="end"
         android:maxLines="3"
-        android:paddingBottom="10dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="10dp"
-        tools:text="@string/sample_title"
+        android:padding="12dp"
         android:textColor="@color/answer_question_title_text"
-        android:textSize="@dimen/text_title_size_dimen" />
+        android:textSize="@dimen/text_title_size_dimen"
+        tools:text="@string/sample_title" />
 
     <LinearLayout
         android:id="@+id/layout_author"
@@ -79,7 +76,10 @@
         android:layout_below="@id/text_title"
         android:background="@color/answer_author_background"
         android:gravity="center_vertical"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:paddingTop="4dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -106,15 +106,15 @@
                     android:id="@+id/text_author"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:text="@string/sample_author"
-                    android:textColor="@color/answer_author_text" />
+                    android:textColor="@color/answer_author_text"
+                    tools:text="@string/sample_author" />
 
                 <TextView
                     android:id="@+id/text_author_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:text="@string/sample_author_title"
-                    android:textColor="@color/answer_author_sub_text" />
+                    android:textColor="@color/answer_author_sub_text"
+                    tools:text="@string/sample_author_title" />
             </LinearLayout>
 
             <LinearLayout
@@ -136,16 +136,16 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/list_item_text_icon_gap"
                     android:layout_weight="0"
-                    tools:text="@string/sample_like_num"
-                    android:textColor="@color/answer_author_sub_text" />
+                    android:textColor="@color/answer_author_sub_text"
+                    tools:text="@string/sample_like_num" />
             </LinearLayout>
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="0.4dp"
-            android:layout_weight="0"
-            android:background="@android:color/darker_gray" />
+            android:layout_height="@dimen/splitter_height"
+            android:layout_marginTop="4dp"
+            android:background="@color/splitter_color_grey" />
     </LinearLayout>
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu

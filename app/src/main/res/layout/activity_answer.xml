@@ -66,10 +66,7 @@
         android:background="@color/answer_question_title_background"
         android:ellipsize="end"
         android:maxLines="3"
-        android:paddingBottom="10dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="10dp"
+        android:padding="16dp"
         android:textColor="@color/answer_question_title_text"
         android:textSize="@dimen/text_title_size_dimen"
         tools:text="@string/sample_title" />
@@ -81,7 +78,10 @@
         android:layout_below="@id/text_title"
         android:background="@color/answer_author_background"
         android:gravity="center_vertical"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:paddingTop="4dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -146,6 +146,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.4dp"
+            android:layout_marginTop="4dp"
             android:layout_weight="0"
             android:background="@android:color/darker_gray" />
     </LinearLayout>
