@@ -1,14 +1,5 @@
 
 -ignorewarnings
-#
-#-dontwarn okhttp3.**
-#-dontwarn com.google.**
-#-dontwarn java.**
-#-dontwarn android.**
-#-dontwarn com.android.**
-#-dontwarn com.umeng.**
-#-dontwarn org.junit.**
-#-dontwarn org.**
 
 #greendao
 -keepclassmembers class * extends de.greenrobot.dao.AbstractDao {
@@ -34,6 +25,8 @@
 -keep class org.apache.** { *; }
 
 -keep class org.markdown4j.** { *; }
+
+-keep class net.nashlegend.** { *; }
 
 #umeng
 -keepclassmembers class * {
