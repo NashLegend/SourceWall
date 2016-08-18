@@ -12,10 +12,10 @@
             android:id="@+id/input_dialog_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:gravity="top"
             android:hint="@string/hint_input_url"
-            android:padding="5dp"
+            android:maxLines="1"
+            android:padding="16dp"
             android:singleLine="true"
             android:textColor="@color/reply_input_text"
             android:textColorHint="@color/reply_hint" />
@@ -24,10 +24,10 @@
             android:id="@+id/input_dialog_text2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:gravity="top"
             android:hint="@string/hint_input_title"
-            android:padding="5dp"
+            android:maxLines="1"
+            android:padding="16dp"
             android:singleLine="true"
             android:textColor="@color/reply_input_text"
             android:textColorHint="@color/reply_hint" />
@@ -40,18 +40,18 @@
 
             <Button
                 android:id="@+id/button_dialog_input_cancel"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="?android:attr/buttonBarButtonStyle"
                 android:background="@color/dialog_button_background"
                 android:text="@string/cancel"
                 android:textColor="@color/dialog_button_text_color" />
 
             <Button
                 android:id="@+id/button_dialog_input_ok"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="?android:attr/buttonBarButtonStyle"
                 android:background="@color/dialog_button_background"
                 android:text="@string/ok"
                 android:textColor="@color/dialog_button_text_color" />

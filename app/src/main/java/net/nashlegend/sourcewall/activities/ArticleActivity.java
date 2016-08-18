@@ -487,6 +487,9 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
                 .subscribe(new Action1<ResponseObject<Article>>() {
                     @Override
                     public void call(ResponseObject<Article> result) {
+                        if (isFinishing()){
+                            return;
+                        }
                         if (result.ok) {
                             progressBar.setVisibility(View.VISIBLE);
                             floatingActionsMenu.setVisibility(View.VISIBLE);
@@ -557,6 +560,9 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
 
                     @Override
                     public void onNext(ResponseObject<ArrayList<UComment>> result) {
+                        if (isFinishing()){
+                            return;
+                        }
                         if (result.ok) {
                             loadingView.onLoadSuccess();
                             if (result.result.size() > 0) {

@@ -45,6 +45,7 @@ import net.nashlegend.sourcewall.view.common.listview.LListView;
 
 import java.util.ArrayList;
 
+import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
@@ -370,6 +371,9 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
                 .subscribe(new Action1<ResponseObject<Question>>() {
                     @Override
                     public void call(ResponseObject<Question> result) {
+                        if (isFinishing()){
+                            return;
+                        }
                         if (result.ok) {
                             progressBar.setVisibility(View.VISIBLE);
                             floatingActionsMenu.setVisibility(View.VISIBLE);
@@ -402,9 +406,22 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<ResponseObject<ArrayList<Answer>>>() {
+                .subscribe(new Observer<ResponseObject<ArrayList<Answer>>>() {
                     @Override
-                    public void call(ResponseObject<ArrayList<Answer>> result) {
+                    public void onCompleted() {
+                        progressBar.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        progressBar.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onNext(ResponseObject<ArrayList<Answer>> result) {
+                        if (isFinishing()){
+                            return;
+                        }
                         progressBar.setVisibility(View.GONE);
                         if (result.ok) {
                             loadingView.onLoadSuccess();

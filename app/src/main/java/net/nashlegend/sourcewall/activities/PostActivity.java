@@ -540,6 +540,9 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
 
                     @Override
                     public void call(ResponseObject<Post> result) {
+                        if (isFinishing()){
+                            return;
+                        }
                         if (result.ok) {
                             progressBar.setVisibility(View.VISIBLE);
                             floatingActionsMenu.setVisibility(View.VISIBLE);
@@ -599,6 +602,9 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
 
                     @Override
                     public void onNext(ResponseObject<ArrayList<UComment>> result) {
+                        if (isFinishing()){
+                            return;
+                        }
                         if (result.ok) {
                             loadingView.onLoadSuccess();
                             ArrayList<UComment> ars = result.result;
