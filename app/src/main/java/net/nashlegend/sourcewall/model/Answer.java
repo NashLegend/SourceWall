@@ -32,12 +32,16 @@ public class Answer extends AceModel {
     private static String suffix = "</div></div>";
 
     public static Answer fromJson(JSONObject answerObject) throws Exception {
-        JSONObject questionObject = answerObject.optJSONObject("question");
         String hostTitle = "";
         String hostID = "";
-        if (questionObject != null) {
-            hostTitle = questionObject.optString("question");
+        if (answerObject.has("question_id")) {
             hostID = answerObject.optString("question_id");
+        } else {
+            JSONObject questionObject = answerObject.optJSONObject("question");
+            if (questionObject != null) {
+                hostID = questionObject.optString("id");
+                hostTitle = questionObject.optString("question");
+            }
         }
         String id = answerObject.optString("id");
         boolean current_user_has_supported = answerObject.optBoolean("current_user_has_supported");
@@ -72,7 +76,15 @@ public class Answer extends AceModel {
 
     public static Answer fromListJson(JSONObject answerObject) throws Exception {
         //取不到title
-        String hostID = answerObject.optString("question_id");
+        String hostID = "";
+        if (answerObject.has("question_id")) {
+            hostID = answerObject.optString("question_id");
+        } else {
+            JSONObject questionObject = answerObject.optJSONObject("question");
+            if (questionObject != null) {
+                hostID = questionObject.optString("id");
+            }
+        }
         String id = answerObject.optString("id");
         boolean current_user_has_supported = answerObject.optBoolean("current_user_has_supported");
         boolean current_user_has_buried = answerObject.optBoolean("current_user_has_buried");

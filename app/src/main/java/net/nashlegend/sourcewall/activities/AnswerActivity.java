@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -136,7 +137,9 @@ public class AnswerActivity extends BaseActivity implements View.OnClickListener
     }
 
     private void loadDataByUri() {
-        MessageAPI.ignoreOneNotice(notice_id);
+        if (!TextUtils.isEmpty(notice_id)) {
+            MessageAPI.ignoreOneNotice(notice_id);
+        }
         QuestionAPI.getSingleAnswerFromRedirectUrl(redirectUri.toString(), new SimpleCallBack<Answer>() {
             @Override
             public void onFailure() {

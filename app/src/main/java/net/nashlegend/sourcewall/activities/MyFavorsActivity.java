@@ -59,7 +59,7 @@ public class MyFavorsActivity extends BaseActivity {
                 loadBaskets();
             }
         });
-        loadingView.startLoading();
+        loadBaskets();
     }
 
     private void loadBaskets() {
@@ -85,7 +85,6 @@ public class MyFavorsActivity extends BaseActivity {
                     subItems.add(subItem);
                 }
                 onGetBaskets(subItems);
-                loadingView.onLoadSuccess();
             }
         });
     }
@@ -94,8 +93,9 @@ public class MyFavorsActivity extends BaseActivity {
         if (isFinishing()) {
             return;
         }
+        loadingView.onLoadSuccess();
         if (subItems == null || subItems.size() == 0) {
-            ToastUtil.toastBigSingleton("您尚未添加收藏!");
+            ToastUtil.toastBigSingleton("您还没有创建果篮 0.0 ");
             finish();
         } else {
             adapter.notifyDataSetChanged();
