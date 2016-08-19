@@ -101,8 +101,6 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp"
             android:weightSum="3">
 
             <RelativeLayout
@@ -114,7 +112,9 @@
                     android:id="@+id/btn_add_img"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="?attr/background_selectable_borderless"
+                    android:background="?attr/selectableItemBackground"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp"
                     android:src="@drawable/image_browse" />
 
                 <LinearLayout
@@ -140,7 +140,7 @@
                     android:id="@+id/btn_insert_img"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="?attr/background_selectable_borderless"
+                    android:background="?attr/selectableItemBackground"
                     android:src="@drawable/insert_image"
                     android:visibility="gone" />
             </RelativeLayout>
@@ -150,7 +150,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="?attr/background_selectable_borderless"
+                android:background="?attr/selectableItemBackground"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
                 android:src="@drawable/link" />
 
             <ImageButton
@@ -158,7 +160,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="?attr/background_selectable_borderless"
+                android:background="?attr/selectableItemBackground"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
                 android:src="@drawable/send" />
 
         </LinearLayout>
