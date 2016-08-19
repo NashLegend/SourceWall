@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/page_clear_background"
+    android:background="@color/page_background"
     tools:context=".activities.ReplyActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -34,14 +34,17 @@
             android:background="@color/reply_quote_background"
             android:ellipsize="end"
             android:maxLines="3"
-            android:paddingBottom="@dimen/abc_action_bar_subtitle_bottom_margin_material"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/abc_action_bar_subtitle_bottom_margin_material"
+            android:padding="12dp"
             android:textColor="@color/reply_quote_text"
             android:textSize="16sp"
             android:visibility="gone"
-            tools:text="@string/sample_title" />
+            tools:text="@string/sample_title"
+            tools:visibility="visible" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/splitter_height"
+            android:background="@color/splitter_color_grey" />
 
         <EditText
             android:id="@+id/text_reply"
@@ -51,24 +54,27 @@
             android:background="@android:color/transparent"
             android:gravity="top"
             android:hint="@string/hint_reply"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingBottom="8dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
             android:paddingTop="8dp"
             android:textColor="@color/reply_input_text"
-            android:textColorHint="@color/reply_hint" />
+            android:textColorHint="@color/reply_hint"
+            android:textSize="16dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/splitter_height"
+            android:background="@color/splitter_color_grey" />
 
         <LinearLayout
             android:id="@+id/layout_reply_action"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/reply_operation_bar_background"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingBottom="5dp"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="5dp"
-            android:weightSum="3.5">
+            android:paddingTop="5dp">
 
             <RelativeLayout
                 android:layout_width="0dp"
@@ -79,7 +85,6 @@
                     android:id="@+id/btn_add_img"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
                     android:background="?attr/background_selectable_borderless"
                     android:src="@drawable/image_browse" />
 
@@ -122,11 +127,11 @@
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1.5">
+                android:layout_weight="1">
 
                 <ImageButton
                     android:id="@+id/btn_publish"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerInParent="true"

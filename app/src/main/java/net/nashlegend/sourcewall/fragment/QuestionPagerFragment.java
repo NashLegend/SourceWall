@@ -339,17 +339,17 @@ public class QuestionPagerFragment extends BaseFragment {
                         .subscribe(new Observer<ArrayList<AskTag>>() {
                             @Override
                             public void onCompleted() {
-                                UiUtil.cancelDialog(progressDialog);
+                                UiUtil.dismissDialog(progressDialog);
                             }
 
                             @Override
                             public void onError(Throwable e) {
-                                UiUtil.cancelDialog(progressDialog);
+                                UiUtil.dismissDialog(progressDialog);
                             }
 
                             @Override
                             public void onNext(ArrayList<AskTag> askTagList) {
-                                UiUtil.cancelDialog(progressDialog);
+                                UiUtil.dismissDialog(progressDialog);
                                 resetButtons(askTagList);
                                 initView();
                             }

@@ -373,17 +373,17 @@ public class PostPagerFragment extends BaseFragment {
                         .subscribe(new Observer<ArrayList<MyGroup>>() {
                             @Override
                             public void onCompleted() {
-                                UiUtil.cancelDialog(progressDialog);
+                                UiUtil.dismissDialog(progressDialog);
                             }
 
                             @Override
                             public void onError(Throwable e) {
-                                UiUtil.cancelDialog(progressDialog);
+                                UiUtil.dismissDialog(progressDialog);
                             }
 
                             @Override
                             public void onNext(ArrayList<MyGroup> myGroups) {
-                                UiUtil.cancelDialog(progressDialog);
+                                UiUtil.dismissDialog(progressDialog);
                                 resetButtons(myGroups);
                                 initView();
                             }

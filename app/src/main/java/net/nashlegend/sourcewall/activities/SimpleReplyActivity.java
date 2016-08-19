@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -33,11 +34,13 @@ import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.view.SimpleCommentItemView;
 import net.nashlegend.sourcewall.view.common.LoadingView;
+import net.nashlegend.sourcewall.view.common.LoadingView.ReloadListener;
 import net.nashlegend.sourcewall.view.common.listview.LListView;
+import net.nashlegend.sourcewall.view.common.listview.LListView.OnRefreshListener;
 
 import java.util.ArrayList;
 
-public class SimpleReplyActivity extends BaseActivity implements LListView.OnRefreshListener, View.OnClickListener, LoadingView.ReloadListener {
+public class SimpleReplyActivity extends BaseActivity implements OnRefreshListener, OnClickListener, ReloadListener {
 
     private AceModel aceModel;
     private LListView listView;
@@ -60,7 +63,7 @@ public class SimpleReplyActivity extends BaseActivity implements LListView.OnRef
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        toolbar.setOnClickListener(new View.OnClickListener() {
+        toolbar.setOnClickListener(new OnClickListener() {
 
             boolean preparingToScrollToHead = false;
 

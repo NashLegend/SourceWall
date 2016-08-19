@@ -36,6 +36,7 @@ import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.db.GroupHelper;
+import net.nashlegend.sourcewall.db.gen.MyGroup;
 import net.nashlegend.sourcewall.dialogs.InputDialog;
 import net.nashlegend.sourcewall.model.PrepareData;
 import net.nashlegend.sourcewall.model.SubItem;
@@ -49,6 +50,7 @@ import net.nashlegend.sourcewall.util.FileUtil;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.PrefsUtil;
 import net.nashlegend.sourcewall.util.SketchUtil;
+import net.nashlegend.sourcewall.util.UiUtil;
 
 import org.apache.http.message.BasicNameValuePair;
 
@@ -57,6 +59,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import rx.Observable;
+import rx.Observer;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 
 /**
@@ -130,13 +139,66 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
 
     private void prepareGroups() {
         topicSpinner.setVisibility(View.GONE);
-        subItems = GroupHelper.getAllMyGroupSubItems();
-        if (subItems == null || subItems.size() == 0) {
+        List<SubItem> groupSubItems = GroupHelper.getAllMyGroupSubItems();
+        if (groupSubItems == null || groupSubItems.size() == 0) {
             if (subItem == null) {
-                finish();
+                final Subscription subscription = PostAPI
+                        .getAllMyGroupsAndMerge()
+                        .flatMap(new Func1<ArrayList<MyGroup>, Observable<List<SubItem>>>() {
+                            @Override
+                            public Observable<List<SubItem>> call(ArrayList<MyGroup> responseObject) {
+                                if (responseObject.size() > 0) {
+                                    return Observable.just(GroupHelper.getAllMyGroupSubItems());
+                                } else {
+                                    return Observable.error(new IllegalStateException("No Data Received"));
+                                }
+                            }
+                        })
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Observer<List<SubItem>>() {
+                            @Override
+                            public void onCompleted() {
+                                UiUtil.dismissDialog(progressDialog);
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                UiUtil.dismissDialog(progressDialog);
+                                finish();
+                            }
+
+                            @Override
+                            public void onNext(List<SubItem> myGroups) {
+                                UiUtil.dismissDialog(progressDialog);
+                                onGetGroups(myGroups);
+                            }
+                        });
+                UiUtil.dismissDialog(progressDialog);
+                progressDialog = new ProgressDialog(PublishPostActivity.this);
+                progressDialog.setCanceledOnTouchOutside(false);
+                progressDialog.setMessage(getString(R.string.message_wait_a_minute));
+                progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        if (!subscription.isUnsubscribed()) {
+                            subscription.unsubscribe();
+                        }
+                        finish();
+                    }
+                });
+                progressDialog.show();
+            } else {
+                groupSpinner.setVisibility(View.GONE);
             }
             return;
         }
+        onGetGroups(groupSubItems);
+
+    }
+
+    private void onGetGroups(List<SubItem> groupSubItems) {
+        this.subItems = groupSubItems;
         String[] items = new String[subItems.size()];
         for (int i = 0; i < subItems.size(); i++) {
             items[i] = subItems.get(i).getName();
@@ -581,7 +643,7 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
 
             @Override
             public void onSuccess() {
-                dismissDialog();
+                UiUtil.dismissDialog(progressDialog);
                 MobclickAgent.onEvent(PublishPostActivity.this, Mob.Event_Publish_Post_OK);
                 toast(R.string.publish_post_ok);
                 setResult(RESULT_OK);
@@ -594,6 +656,7 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void showDialog(final NetworkTask task) {
+        UiUtil.dismissDialog(progressDialog);
         progressDialog = new ProgressDialog(PublishPostActivity.this);
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setMessage(getString(R.string.message_wait_a_minute));

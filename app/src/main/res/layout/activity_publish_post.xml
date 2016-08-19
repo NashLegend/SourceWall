@@ -25,15 +25,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/app_bar"
-        android:orientation="vertical"
-        android:paddingTop="5dp">
+        android:orientation="vertical">
 
         <EditText
             android:id="@+id/text_post_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0"
-            android:hint="@string/hint_input_post_title" />
+            android:background="@android:color/transparent"
+            android:hint="@string/hint_input_post_title"
+            android:padding="12dp"
+            android:textSize="18dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/splitter_height"
+            android:background="@color/splitter_color_grey" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -44,8 +51,9 @@
                 android:id="@+id/spinner_group"
                 android:layout_width="120dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="3dp"
+                android:layout_marginLeft="12dp"
                 android:layout_weight="0"
+                android:minHeight="24dp"
                 android:spinnerMode="dialog"
                 android:visibility="visible" />
 
@@ -53,25 +61,34 @@
                 android:id="@+id/spinner_post_topic"
                 android:layout_width="120dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="3dp"
-                android:layout_marginLeft="15dp"
+                android:layout_marginLeft="12dp"
                 android:layout_weight="0"
+                android:minHeight="24dp"
                 android:spinnerMode="dialog"
                 android:visibility="gone"
                 tools:visibility="visible" />
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/splitter_height"
+            android:background="@color/splitter_color_grey" />
+
         <EditText
             android:id="@+id/text_post_body"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_margin="3dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:gravity="top"
             android:hint="@string/hint_input_post_content"
+            android:paddingBottom="8dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingTop="8dp"
             android:textColor="@color/reply_input_text"
-            android:textColorHint="@color/reply_hint" />
+            android:textColorHint="@color/reply_hint"
+            android:textSize="16dp" />
 
         <View
             android:layout_width="match_parent"
