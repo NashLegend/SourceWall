@@ -13,7 +13,6 @@
 
     <color name="webview_background">#ffffff</color>
 
-
     <color name="author_color">#888888</color>
     <color name="author_dark_color">#555555</color>
 
@@ -35,7 +34,7 @@
     <color name="answer_question_title_text">#222222</color>
 
     <!--回复页面-->
-    <color name="reply_quote_background">#eeeeee</color>
+    <color name="reply_quote_background">#eaeef4</color>
     <color name="reply_quote_text">#333333</color>
     <color name="reply_input_text">#000000</color>
     <color name="reply_hint">#808080</color>
