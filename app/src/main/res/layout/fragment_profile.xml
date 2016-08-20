@@ -71,10 +71,6 @@
                     android:text="@string/title_activity_message_center" />
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="12dp" />
-
             <LinearLayout
                 android:id="@+id/layout_my_favors"
                 android:layout_width="match_parent"
@@ -95,10 +91,6 @@
                     android:text="@string/my_favors" />
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/splitter_height"
-                android:background="@color/splitter_color_grey" />
 
             <LinearLayout
                 android:id="@+id/layout_my_posts"
@@ -120,11 +112,6 @@
                     android:text="@string/my_posts" />
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/splitter_height"
-                android:background="@color/splitter_color_grey" />
-
             <LinearLayout
                 android:id="@+id/layout_my_questions"
                 android:layout_width="match_parent"
@@ -144,11 +131,6 @@
                     android:layout_height="wrap_content"
                     android:text="@string/my_questions" />
             </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/splitter_height"
-                android:background="@color/splitter_color_grey" />
 
             <LinearLayout
                 android:id="@+id/layout_my_answers"
@@ -201,10 +183,6 @@
                     android:text="@string/switch_day_night_mode" />
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/splitter_height"
-                android:background="@color/splitter_color_grey" />
         </LinearLayout>
 
         <LinearLayout
@@ -226,11 +204,6 @@
                 android:layout_height="wrap_content"
                 android:text="@string/action_settings" />
         </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/splitter_height"
-            android:background="@color/splitter_color_grey" />
 
     </LinearLayout>
 </ScrollView>

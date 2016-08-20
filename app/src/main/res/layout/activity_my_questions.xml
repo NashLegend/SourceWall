@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/list_background"
-        android:divider="@color/splitter_color_grey"
+        android:divider="@drawable/divider_thin"
         android:dividerHeight="@dimen/splitter_height"
         android:headerDividersEnabled="false"
         android:overScrollMode="never"

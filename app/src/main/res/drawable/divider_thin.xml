@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:left="@dimen/list_item_padding_horizontal"
+        android:right="@dimen/list_item_padding_horizontal">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/splitter_color_grey" />
+        </shape>
+    </item>
+</layer-list>
