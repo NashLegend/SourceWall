@@ -176,6 +176,42 @@ public class ShuffleCardSimple extends ShuffleCard {
         }
     }
 
+    public void addButtonAtHead(MovableButton button, Point point) {
+        list.add(button);
+
+        if (computeHeight() > targetHeight) {
+            expand();
+        }
+
+        point.x = 0;
+        point.y = 0;
+        button.setPosition(point);
+        button.setSelected(false);
+        button.setTargetPosition(new Point(point.x, point.y));
+
+        button.setXX(point.x * ShuffleDesk.buttonCellWidth + ShuffleDesk.hGap);
+        button.setYY(point.y * ShuffleDesk.buttonCellHeight + ShuffleDesk.vGap);
+        button.setOnClickListener(clickListener);
+
+        this.addView(button);
+
+        setFinalPosition();
+    }
+
+
+    public void banishButton(MovableButton button) {
+        list.remove(button);
+        if ((targetHeight > standardMinHeight) && (computeHeight() < targetHeight)) {
+            shrink();
+        }
+        setupAnimator(animateAfter(button.getPosition().y, button.getPosition().x, false));
+        removeView(button);
+        setFinalPosition();
+        button.setOnLongClickListener(null);
+        button.setOnTouchListener(null);
+        button.setOnClickListener(null);
+    }
+
     public void setStandardMinHeight(int standardMinHeight) {
         this.standardMinHeight = standardMinHeight;
     }
@@ -187,7 +223,6 @@ public class ShuffleCardSimple extends ShuffleCard {
             if (v instanceof MovableButton) {
                 deskSimple.onButtonClicked((MovableButton) v);
             }
-
         }
     };
 
