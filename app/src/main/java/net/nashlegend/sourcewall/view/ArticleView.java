@@ -69,6 +69,7 @@ public class ArticleView extends AceView<Article> {
         authorView = (TextView) findViewById(R.id.text_author);
         dateView = (TextView) findViewById(R.id.text_date);
         loadDesc = findViewById(R.id.view_load_latest);
+        contentView.setBackgroundColor(0);
     }
 
     @Override

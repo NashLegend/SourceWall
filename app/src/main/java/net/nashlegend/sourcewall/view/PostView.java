@@ -55,6 +55,7 @@ public class PostView extends AceView<Post> {
         dateView = (TextView) findViewById(R.id.text_date);
         avatarImage = (ImageView) findViewById(R.id.image_avatar);
         loadDesc = findViewById(R.id.view_load_latest);
+        contentView.setBackgroundColor(0);
     }
 
     public PostView(Context context, AttributeSet attrs) {
