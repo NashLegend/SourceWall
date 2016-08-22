@@ -81,7 +81,7 @@
                 android:background="?attr/selectableItemBackground"
                 android:paddingBottom="5dp"
                 android:paddingTop="5dp"
-                android:src="@drawable/image_browse" />
+                android:src="@drawable/ic_image_36dp" />
 
             <LinearLayout
                 android:id="@+id/prg_uploading_img"
@@ -108,7 +108,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/background_selectable_borderless"
-                android:src="@drawable/insert_image"
+                android:src="@drawable/ic_insert_image_36dp"
                 android:visibility="gone" />
         </RelativeLayout>
 
@@ -120,7 +120,7 @@
             android:background="?attr/selectableItemBackground"
             android:paddingBottom="5dp"
             android:paddingTop="5dp"
-            android:src="@drawable/link" />
+            android:src="@drawable/ic_link_36dp" />
 
         <RelativeLayout
             android:layout_width="0dp"
@@ -138,7 +138,7 @@
                 android:paddingLeft="13dp"
                 android:paddingRight="13dp"
                 android:paddingTop="5dp"
-                android:src="@drawable/send" />
+                android:src="@drawable/ic_send_36dp" />
         </RelativeLayout>
 
     </LinearLayout>

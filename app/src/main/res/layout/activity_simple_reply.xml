@@ -66,6 +66,6 @@
             android:layout_height="28dp"
             android:layout_marginLeft="8dp"
             android:background="?android:attr/selectableItemBackground"
-            android:src="@drawable/send" />
+            android:src="@drawable/ic_send_36dp" />
     </LinearLayout>
 </LinearLayout>
