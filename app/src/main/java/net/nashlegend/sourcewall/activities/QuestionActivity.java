@@ -22,6 +22,7 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.umeng.analytics.MobclickAgent;
 
+import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.QuestionDetailAdapter;
 import net.nashlegend.sourcewall.dialogs.FavorDialog;
@@ -196,11 +197,11 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
                 break;
             case R.id.action_share_to_wechat_circle:
                 MobclickAgent.onEvent(this, Mob.Event_Share_Question_To_Wechat_Circle);
-                ShareUtil.shareToWeiXinCircle(this, question.getUrl(), question.getTitle(), question.getSummary(), null);
+                ShareUtil.shareToWeiXinCircle(App.getApp(), question.getUrl(), question.getTitle(), question.getSummary(), null);
                 break;
             case R.id.action_share_to_wechat_friends:
                 MobclickAgent.onEvent(this, Mob.Event_Share_Question_To_Wechat_friend);
-                ShareUtil.shareToWeiXinFriends(this, question.getUrl(), question.getTitle(), question.getSummary(), null);
+                ShareUtil.shareToWeiXinFriends(App.getApp(), question.getUrl(), question.getTitle(), question.getSummary(), null);
                 break;
             case R.id.action_share_to_weibo:
                 MobclickAgent.onEvent(this, Mob.Event_Share_Question_To_Weibo);

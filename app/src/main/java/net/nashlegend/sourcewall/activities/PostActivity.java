@@ -28,6 +28,7 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.umeng.analytics.MobclickAgent;
 
+import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.PostDetailAdapter;
 import net.nashlegend.sourcewall.dialogs.FavorDialog;
@@ -201,11 +202,11 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
                 break;
             case R.id.action_share_to_wechat_circle:
                 MobclickAgent.onEvent(this, Mob.Event_Share_Post_To_Wechat_Circle);
-                ShareUtil.shareToWeiXinCircle(this, post.getUrl(), post.getTitle(), post.getTitle(), null);
+                ShareUtil.shareToWeiXinCircle(App.getApp(), post.getUrl(), post.getTitle(), post.getTitle(), null);
                 break;
             case R.id.action_share_to_wechat_friends:
                 MobclickAgent.onEvent(this, Mob.Event_Share_Post_To_Wechat_friend);
-                ShareUtil.shareToWeiXinFriends(this, post.getUrl(), post.getTitle(), post.getTitle(), null);
+                ShareUtil.shareToWeiXinFriends(App.getApp(), post.getUrl(), post.getTitle(), post.getTitle(), null);
                 break;
             case R.id.action_share_to_weibo:
                 MobclickAgent.onEvent(this, Mob.Event_Share_Post_To_Weibo);

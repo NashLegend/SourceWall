@@ -28,6 +28,7 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.umeng.analytics.MobclickAgent;
 
+import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.ArticleDetailAdapter;
 import net.nashlegend.sourcewall.dialogs.FavorDialog;
@@ -278,11 +279,11 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
                 break;
             case R.id.action_share_to_wechat_circle:
                 MobclickAgent.onEvent(this, Mob.Event_Share_Article_To_Wechat_Circle);
-                ShareUtil.shareToWeiXinCircle(this, article.getUrl(), article.getTitle(), article.getSummary(), null);
+                ShareUtil.shareToWeiXinCircle(App.getApp(), article.getUrl(), article.getTitle(), article.getSummary(), null);
                 break;
             case R.id.action_share_to_wechat_friends:
                 MobclickAgent.onEvent(this, Mob.Event_Share_Article_To_Wechat_friend);
-                ShareUtil.shareToWeiXinFriends(this, article.getUrl(), article.getTitle(), article.getSummary(), null);
+                ShareUtil.shareToWeiXinFriends(App.getApp(), article.getUrl(), article.getTitle(), article.getSummary(), null);
                 break;
             case R.id.action_share_to_weibo:
                 MobclickAgent.onEvent(this, Mob.Event_Share_Article_To_Weibo);
