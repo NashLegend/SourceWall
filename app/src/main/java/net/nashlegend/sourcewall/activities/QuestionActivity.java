@@ -228,14 +228,11 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
     };
 
     private void onReplyItemClick(final View view) {
-        if (UiUtil.shouldThrottle()) {
-            return;
-        }
         if (view instanceof AnswerListItemView) {
             Intent intent = new Intent(this, AnswerActivity.class);
             intent.putExtra(Consts.Extra_Answer, ((AnswerListItemView) view).getData());
             intent.putExtra(Consts.Extra_Question, question);
-            startActivity(intent);
+            startOneActivity(intent);
         }
     }
 
@@ -310,7 +307,7 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
         } else {
             Intent intent = new Intent(this, ReplyActivity.class);
             intent.putExtra(Consts.Extra_Ace_Model, question);
-            startActivity(intent);
+            startOneActivity(intent);
         }
     }
 

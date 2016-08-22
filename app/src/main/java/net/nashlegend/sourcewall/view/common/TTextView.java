@@ -435,6 +435,9 @@ public class TTextView extends TextView {
                     }
                 }
                 if (images.size() > 0) {
+                    if (UiUtil.shouldThrottle()) {
+                        return;
+                    }
                     Intent intent = new Intent();
                     intent.putStringArrayListExtra(Consts.Extra_Image_String_Array, images);
                     intent.putExtra(Consts.Extra_Image_Current_Position, clickedPosition);

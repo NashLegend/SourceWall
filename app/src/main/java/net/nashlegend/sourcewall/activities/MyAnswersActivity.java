@@ -105,7 +105,7 @@ public class MyAnswersActivity extends BaseActivity {
                     intent.setClass(MyAnswersActivity.this, AnswerActivity.class);
                     Uri answerUri = Uri.parse("http://www.guokr.com/answer/" + ((AnswerListItemView) view).getData().getID() + "/redirect/");
                     intent.setData(answerUri);
-                    startActivity(intent);
+                    startOneActivity(intent);
                 }
             }
         });

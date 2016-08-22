@@ -200,7 +200,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                     .create();
             dialog.show();
         } else {
-            startActivity(new Intent(this, LoginActivity.class));
+            startOneActivity(new Intent(this, LoginActivity.class));
         }
     }
 

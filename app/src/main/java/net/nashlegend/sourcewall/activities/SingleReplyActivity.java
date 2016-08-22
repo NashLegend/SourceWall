@@ -384,7 +384,7 @@ public class SingleReplyActivity extends BaseActivity implements View.OnClickLis
                     intent.setClass(this, PostActivity.class);
                     intent.putExtra(Consts.Extra_Post, host);
                 }
-                startActivity(intent);
+                startOneActivity(intent);
                 break;
             case R.id.layout_opinion:
                 likeThis();
@@ -416,7 +416,7 @@ public class SingleReplyActivity extends BaseActivity implements View.OnClickLis
         if (data != null) {
             intent.putExtra(Consts.Extra_Simple_Comment, data);
         }
-        startActivity(intent);
+        startOneActivity(intent);
     }
 
     private void likeThis() {

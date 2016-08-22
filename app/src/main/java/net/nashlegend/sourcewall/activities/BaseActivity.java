@@ -11,6 +11,7 @@ import net.nashlegend.sourcewall.util.AAsyncTask;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.PrefsUtil;
 import net.nashlegend.sourcewall.util.ToastUtil;
+import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.view.common.IStackedAsyncTaskInterface;
 
 import java.util.ArrayList;
@@ -129,7 +130,6 @@ public abstract class BaseActivity extends SwipeActivity implements IStackedAsyn
     }
 
     public void startActivity(Class clazz) {
-        Intent intent = new Intent(this, clazz);
-        startActivity(intent);
+        startOneActivity(new Intent(this, clazz));
     }
 }

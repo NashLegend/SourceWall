@@ -23,6 +23,7 @@ import android.widget.FrameLayout;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.util.DisplayUtil;
+import net.nashlegend.sourcewall.util.UiUtil;
 
 /**
  * 滑动关闭页面基类，使用时继承此类并使用BlankTheme主题即可
@@ -106,6 +107,13 @@ public class SwipeActivity extends AppCompatActivity {
     public void finishDirectly() {
         swipeLayout.cancelPotentialAnimation();
         super.finish();
+    }
+
+    public void startOneActivity(Intent intent) {
+        if (UiUtil.shouldThrottle()) {
+            return;
+        }
+        startActivity(intent, R.anim.slide_in_right, 0);
     }
 
     @Override

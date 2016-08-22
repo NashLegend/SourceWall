@@ -47,6 +47,9 @@ public class DeviceUtil {
      */
     public static void openSetting(Activity activity) {
         try {
+            if (UiUtil.shouldThrottle()) {
+                return;
+            }
             Intent intent = new Intent(Settings.ACTION_SETTINGS);
             activity.startActivity(intent);
         } catch (Exception e) {

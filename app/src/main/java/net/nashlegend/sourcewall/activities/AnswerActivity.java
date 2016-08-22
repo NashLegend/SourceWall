@@ -327,7 +327,7 @@ public class AnswerActivity extends BaseActivity implements View.OnClickListener
                     Intent intent = new Intent();
                     intent.setClass(this, QuestionActivity.class);
                     intent.putExtra(Consts.Extra_Question, (question));
-                    startActivity(intent);
+                    startOneActivity(intent);
                 }
                 break;
             case R.id.layout_opinion:
@@ -358,7 +358,7 @@ public class AnswerActivity extends BaseActivity implements View.OnClickListener
         MobclickAgent.onEvent(this, Mob.Event_Open_Answer_Comment);
         Intent intent = new Intent(this, SimpleReplyActivity.class);
         intent.putExtra(Consts.Extra_Ace_Model, answer);
-        startActivity(intent);
+        startOneActivity(intent);
     }
 
     private void invokeOpinionDialog() {

@@ -95,14 +95,11 @@ public class MyQuestionsActivity extends BaseActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (UiUtil.shouldThrottle()) {
-                    return;
-                }
                 if (view instanceof QuestionListItemView) {
                     Intent intent = new Intent();
                     intent.setClass(MyQuestionsActivity.this, QuestionActivity.class);
                     intent.putExtra(Consts.Extra_Question, ((QuestionListItemView) view).getData());
-                    startActivity(intent);
+                    startOneActivity(intent);
                 }
             }
         });

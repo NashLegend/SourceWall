@@ -91,6 +91,9 @@ public class Browser extends BaseActivity {
     }
 
     public static void open(String url, String title, Context context) {
+        if (UiUtil.shouldThrottle()) {
+            return;
+        }
         if (context == null) {
             context = App.getApp();
         }

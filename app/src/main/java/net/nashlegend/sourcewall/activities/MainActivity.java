@@ -127,12 +127,6 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    public static void open() {
-        Intent intent = new Intent(App.getApp(), MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        App.getApp().startActivity(intent);
-    }
-
     @Override
     public void finish() {
         finish(0, 0);
