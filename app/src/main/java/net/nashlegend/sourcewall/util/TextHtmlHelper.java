@@ -181,7 +181,7 @@ public class TextHtmlHelper {
                 e.printStackTrace();
             }
             if (drawable == null) {
-                drawable = context.getResources().getDrawable(R.drawable.broken_image);
+                drawable = context.getResources().getDrawable(R.drawable.ic_broken_image_24dp);
                 if (drawable != null) {
                     int width = drawable.getIntrinsicWidth();
                     int height = drawable.getIntrinsicHeight();

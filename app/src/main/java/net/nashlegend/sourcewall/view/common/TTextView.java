@@ -248,7 +248,7 @@ public class TTextView extends TextView {
                 e.printStackTrace();
             }
             if (drawable == null) {
-                drawable = getContext().getResources().getDrawable(R.drawable.broken_image);
+                drawable = getContext().getResources().getDrawable(R.drawable.ic_broken_image_24dp);
                 if (drawable != null) {
                     int width = drawable.getIntrinsicWidth();
                     int height = drawable.getIntrinsicHeight();
