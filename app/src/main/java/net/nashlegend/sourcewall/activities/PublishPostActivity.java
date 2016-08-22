@@ -248,7 +248,7 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
             //matcher.group(5)表示匹配到的超链接地址字符串;
             if (!TextUtils.isEmpty(matcher.group(1))) {
                 //String imageUrl = matcher.group(2);
-                Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.default_text_image);
+                Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_txt_image_16dp);
                 ImageSpan imageSpan = getImageSpan("图片链接...", sourceBitmap);
                 spanned.setSpan(imageSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             } else {
@@ -257,7 +257,7 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
                 if (!linkUrl.startsWith("http")) {
                     linkUrl = "http://" + linkUrl;
                 }
-                Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.link_gray);
+                Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_link_16dp);
                 String displayed;
                 if (TextUtils.isEmpty(linkTitle.trim())) {
                     Uri uri = Uri.parse(linkUrl);
@@ -494,9 +494,12 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
      * 插入图片
      */
     private void insertImagePath(String url) {
+        if (TextUtils.isEmpty(url)) {
+            return;
+        }
         String imgTag = "![](" + url + ")";
         SpannableString spanned = new SpannableString(imgTag);
-        Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.default_text_image);
+        Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_txt_image_16dp);
         String displayed = "图片链接...";
         ImageSpan imageSpan = getImageSpan(displayed, sourceBitmap);
         spanned.setSpan(imageSpan, 0, imgTag.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -548,7 +551,7 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
                     String result = "[" + title + "](" + url + ")";
 
                     SpannableString spanned = new SpannableString(result);
-                    Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.link_gray);
+                    Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_link_16dp);
                     String displayed;
                     if (TextUtils.isEmpty(title.trim())) {
                         Uri uri = Uri.parse(url);

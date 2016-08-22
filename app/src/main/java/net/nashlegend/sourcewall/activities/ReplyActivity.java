@@ -210,9 +210,12 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
      * 插入图片
      */
     private void insertImagePath(String url) {
+        if (TextUtils.isEmpty(url)) {
+            return;
+        }
         String imgTag = "[image]" + url + "[/image]";
         SpannableString spanned = new SpannableString(imgTag);
-        Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.default_text_image);
+        Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_txt_image_16dp);
         String displayed = "图片链接...";
         ImageSpan imageSpan = getImageSpan(displayed, sourceBitmap);
         spanned.setSpan(imageSpan, 0, imgTag.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -263,7 +266,7 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
                     String title = d.InputString2;
                     String result = "[url=" + url + "]" + title + "[/url]";
                     SpannableString spanned = new SpannableString(result);
-                    Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.link_gray);
+                    Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_link_16dp);
                     String displayed;
                     if (TextUtils.isEmpty(title.trim())) {
                         Uri uri = Uri.parse(url);
@@ -378,7 +381,7 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
 
     public SpannableString restore2Spanned(String str) {
         SpannableString spanned = new SpannableString(str);
-        String regImageAndLinkString = "(\\[image\\]([^\\[\\]]+)\\[/image\\])|(\\[url=([^\\[\\]]*)\\]([^\\[\\]]*)\\[/url\\])";
+        String regImageAndLinkString = "(\\[image\\]([^\\[\\]]?)\\[/image\\])|(\\[url=([^\\[\\]]*)\\]([^\\[\\]]*)\\[/url\\])";
         Matcher matcher = Pattern.compile(regImageAndLinkString).matcher(str);
         while (matcher.find()) {
             int start = matcher.start();
@@ -395,7 +398,7 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
             //4和5与PublishPostActivity的顺序相反
             if (!TextUtils.isEmpty(matcher.group(1))) {
                 //String imageUrl = matcher.group(2);
-                Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.default_text_image);
+                Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_txt_image_16dp);
                 ImageSpan imageSpan = getImageSpan("图片链接...", sourceBitmap);
                 spanned.setSpan(imageSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             } else {
@@ -404,7 +407,7 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
                 if (!linkUrl.startsWith("http")) {
                     linkUrl = "http://" + linkUrl;
                 }
-                Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.link_gray);
+                Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_link_16dp);
                 String displayed;
                 if (TextUtils.isEmpty(linkTitle.trim())) {
                     Uri uri = Uri.parse(linkUrl);

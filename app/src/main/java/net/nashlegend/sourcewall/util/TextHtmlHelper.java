@@ -108,7 +108,7 @@ public class TextHtmlHelper {
                     drawable.setBounds(0, 0, width, height);
                 }
             } else {
-                drawable = context.getResources().getDrawable(R.drawable.default_text_image);
+                drawable = context.getResources().getDrawable(R.drawable.ic_txt_image_gray_16dp);
                 if (drawable != null) {
                     int width = drawable.getIntrinsicWidth();
                     int height = drawable.getIntrinsicHeight();
