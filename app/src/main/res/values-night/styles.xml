@@ -71,6 +71,7 @@
     <style name="DialogTheme" parent="Theme.AppCompat.Dialog">
         <item name="android:windowNoTitle">false</item>
         <item name="android:textColor">@color/dialog_text</item>
+        <item name="android:windowBackground">@color/dialog_background</item>
     </style>
 
     <style name="AlertDialogTheme" parent="Theme.AppCompat.Dialog">

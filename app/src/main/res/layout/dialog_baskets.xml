@@ -9,7 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="visible"
+        tools:visibility="gone">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -66,17 +67,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="gone"
+        tools:visibility="visible">
 
         <EditText
             android:id="@+id/text_create_basket_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="3dp"
             android:layout_weight="0"
             android:background="@android:color/transparent"
             android:gravity="top"
             android:hint="@string/hint_input_basket_name"
+            android:padding="10dp"
             android:singleLine="true"
             android:textColor="@color/reply_input_text"
             android:textColorHint="@color/reply_hint"
@@ -99,6 +101,7 @@
             android:gravity="top"
             android:hint="@string/hint_input_basket_introduction"
             android:minHeight="@dimen/input_dialog_input_height"
+            android:padding="10dp"
             android:textColor="@color/reply_input_text"
             android:textColorHint="@color/reply_hint"
             android:textSize="@dimen/abc_text_size_small_material" />
