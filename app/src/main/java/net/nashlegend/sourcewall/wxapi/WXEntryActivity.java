@@ -1,5 +1,6 @@
 package net.nashlegend.sourcewall.wxapi;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -13,13 +14,11 @@ import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.BaseActivity;
 import net.nashlegend.sourcewall.util.ShareUtil;
 
-public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler {
+public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_wxentry);
-        setSwipeEnabled(false);
         IWXAPI api = WXAPIFactory.createWXAPI(this, ShareUtil.getWeixinAppId(), false);
         api.registerApp(ShareUtil.getWeixinAppId());
         api.handleIntent(getIntent(), this);
