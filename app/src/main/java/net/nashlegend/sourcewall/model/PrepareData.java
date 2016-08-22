@@ -1,6 +1,6 @@
 package net.nashlegend.sourcewall.model;
 
-import org.apache.http.message.BasicNameValuePair;
+import net.nashlegend.sourcewall.request.Param;
 
 import java.util.ArrayList;
 
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class PrepareData {
 
     private String csrf = "";
-    private ArrayList<BasicNameValuePair> pairs = new ArrayList<>();
+    private ArrayList<Param> pairs = new ArrayList<>();
 
     public String getCsrf() {
         return csrf;
@@ -21,11 +21,11 @@ public class PrepareData {
         this.csrf = csrf;
     }
 
-    public ArrayList<BasicNameValuePair> getPairs() {
+    public ArrayList<Param> getPairs() {
         return pairs;
     }
 
-    public void setPairs(ArrayList<BasicNameValuePair> pairs) {
+    public void setPairs(ArrayList<Param> pairs) {
         this.pairs = pairs;
     }
 

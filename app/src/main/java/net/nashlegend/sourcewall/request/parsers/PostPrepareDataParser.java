@@ -3,9 +3,9 @@ package net.nashlegend.sourcewall.request.parsers;
 import android.text.TextUtils;
 
 import net.nashlegend.sourcewall.model.PrepareData;
+import net.nashlegend.sourcewall.request.Param;
 import net.nashlegend.sourcewall.request.ResponseObject;
 
-import org.apache.http.message.BasicNameValuePair;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -22,7 +22,7 @@ public class PostPrepareDataParser implements Parser<PrepareData> {
     public PrepareData parse(String str, ResponseObject<PrepareData> responseObject) throws Exception {
         Document doc = Jsoup.parse(str);
         Element selects = doc.getElementById("topic");
-        ArrayList<BasicNameValuePair> pairs = new ArrayList<>();
+        ArrayList<Param> pairs = new ArrayList<>();
         String csrf = doc.getElementById("csrf_token").attr("value");
         if (selects != null) {
             Elements elements = selects.getElementsByTag("option");
@@ -32,7 +32,7 @@ public class PostPrepareDataParser implements Parser<PrepareData> {
                     String name = topic.text();
                     String value = topic.attr("value");
                     if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(value)) {
-                        pairs.add(new BasicNameValuePair(name, value));
+                        pairs.add(new Param(name, value));
                     }
                 }
             }

@@ -109,7 +109,6 @@ dependencies {
     compile deps.RxBinding
     compile deps.RxBindingV4
     compile deps.RxBindingV7
-    compile deps.Httpmime
     compile deps.Markdown4J
     compile deps.Logger
     compile deps.Router

@@ -41,6 +41,7 @@ import net.nashlegend.sourcewall.dialogs.InputDialog;
 import net.nashlegend.sourcewall.model.PrepareData;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.NetworkTask;
+import net.nashlegend.sourcewall.request.Param;
 import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.APIBase;
@@ -51,8 +52,6 @@ import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.PrefsUtil;
 import net.nashlegend.sourcewall.util.SketchUtil;
 import net.nashlegend.sourcewall.util.UiUtil;
-
-import org.apache.http.message.BasicNameValuePair;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -85,7 +84,7 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
     private String group_id = "";
     private String csrf = "";
     private String topic = "";
-    private ArrayList<BasicNameValuePair> topics = new ArrayList<>();
+    private ArrayList<Param> topics = new ArrayList<>();
     List<SubItem> subItems = new ArrayList<>();
     private boolean replyOK;
 
@@ -382,7 +381,7 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
         if (topic != null) {
             String[] items = new String[topics.size()];
             for (int i = 0; i < topics.size(); i++) {
-                items[i] = topics.get(i).getName();
+                items[i] = topics.get(i).key;
             }
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.simple_spinner_item, items);
             topicSpinner.setAdapter(arrayAdapter);
@@ -592,7 +591,7 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
             return;
         }
 
-        topic = topics.get(topicSpinner.getSelectedItemPosition()).getValue();
+        topic = topics.get(topicSpinner.getSelectedItemPosition()).value;
         hideInput();
         String title = titleEditText.getText().toString();
         String body = bodyEditText.getText().toString();
