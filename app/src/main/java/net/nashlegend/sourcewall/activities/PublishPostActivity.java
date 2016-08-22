@@ -120,12 +120,11 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
 
     private void prepareSubItem(SubItem item) {
         subItem = item;
-        String group_name = subItem.getName();
         group_id = subItem.getValue();
         csrf = "";
         topic = "";
         topics.clear();
-        setTitle(group_name + " -- " + getString(R.string.title_activity_publish_post));
+        setTitle(subItem.getName());
         topicSpinner.setVisibility(View.VISIBLE);
         String[] items = new String[0];
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.simple_spinner_item, items);

@@ -72,7 +72,7 @@
     <string name="reply_ok">回复成功</string>
     <string name="reply_failed">回复失败</string>
     <string name="publish_post_ok">发帖成功</string>
-    <string name="publish_post_failed">发帖失败，请点击右上角“重新验证”按钮，验证成功后再次点击发表。如果仍然不能成功，请退出并重新登录，重新进入发贴页面。退出后系统会保存你的草稿，进入对应小组的发贴页面就会自动恢复草稿</string>
+    <string name="publish_post_failed">发帖失败，请点击右上角刷新按钮，验证成功后再次点击发表。如果仍然不能成功，请退出并重新登录，重新进入发贴页面。退出后系统会保存你的草稿，进入对应小组的发贴页面就会自动恢复草稿</string>
 
     <!-- Article -->
     <string name="recommend_ok">推荐成功 ^_^</string>
@@ -123,7 +123,7 @@
     <string name="get_csrf_ok">验证成功</string>
     <string name="have_not_join_this_group">尚未加入该小组~</string>
     <string name="get_csrf_failed">拉取验证失败</string>
-    <string name="hint_reload_csrf">拉取验证失败，请点击右上角重新加载验证~</string>
+    <string name="hint_reload_csrf">拉取验证失败，请点击右上角重新验证~</string>
     <string name="hint_input_your_tail">输入自定义尾巴，不输入则不添加尾巴~</string>
     <string name="load_failed">加载失败</string>
     <string name="reload_all_tags">重新加载标签</string>
@@ -166,11 +166,9 @@
     <string name="maybe_you_have_no_browsers">没能打开啊，难道没有浏览器？</string>
     <string name="hint_download_failed">下载失败~</string>
     <string name="hint_download_successfully_to">成功保存到：</string>
-    <string name="validate_failed_try_again">验证失败，请点击右上角“重新验证”，提示成功后再点击发贴……</string>
+    <string name="validate_failed_try_again">验证失败，请点击右上角刷新按钮，提示成功后再点击发贴……</string>
     <string name="title_activity_post_list">PostListActivity</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="my_favors">我的收藏</string>
     <string name="my_posts">我的帖子</string>
     <string name="my_questions">我的问题</string>

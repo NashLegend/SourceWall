@@ -1,9 +1,11 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_reply"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/page_clear_background"
+    android:orientation="vertical"
     tools:context=".activities.ReplyActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -19,134 +21,125 @@
             android:theme="?attr/toolbarTheme"
             app:popupTheme="?attr/toolbarPopTheme" />
     </android.support.design.widget.AppBarLayout>
+    
+    <TextView
+        android:id="@+id/text_reply_host"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/reply_quote_background"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:padding="12dp"
+        android:textColor="@color/reply_quote_text"
+        android:textSize="16sp"
+        android:visibility="gone"
+        tools:text="@string/sample_title"
+        tools:visibility="visible" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/splitter_height"
+        android:background="@color/splitter_color_grey" />
+
+    <EditText
+        android:id="@+id/text_reply"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@android:color/transparent"
+        android:gravity="top"
+        android:hint="@string/hint_reply"
+        android:paddingBottom="8dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:paddingTop="8dp"
+        android:textColor="@color/reply_input_text"
+        android:textColorHint="@color/reply_hint"
+        android:textSize="16dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/splitter_height"
+        android:background="@color/splitter_color_grey" />
 
     <LinearLayout
-        android:id="@+id/layout_reply"
+        android:id="@+id/layout_reply_action"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/app_bar"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/text_reply_host"
-            android:layout_width="match_parent"
+        <RelativeLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@color/reply_quote_background"
-            android:ellipsize="end"
-            android:maxLines="3"
-            android:padding="12dp"
-            android:textColor="@color/reply_quote_text"
-            android:textSize="16sp"
-            android:visibility="gone"
-            tools:text="@string/sample_title"
-            tools:visibility="visible" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/splitter_height"
-            android:background="@color/splitter_color_grey" />
-
-        <EditText
-            android:id="@+id/text_reply"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:gravity="top"
-            android:hint="@string/hint_reply"
-            android:paddingBottom="8dp"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp"
-            android:paddingTop="8dp"
-            android:textColor="@color/reply_input_text"
-            android:textColorHint="@color/reply_hint"
-            android:textSize="16dp" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/splitter_height"
-            android:background="@color/splitter_color_grey" />
-
-        <LinearLayout
-            android:id="@+id/layout_reply_action"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-
-                <ImageButton
-                    android:id="@+id/btn_add_img"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackground"
-                    android:paddingBottom="5dp"
-                    android:paddingTop="5dp"
-                    android:src="@drawable/image_browse" />
-
-                <LinearLayout
-                    android:id="@+id/prg_uploading_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:visibility="gone"
-                    tools:visibility="visible">
-
-                    <ProgressBar
-                        android:layout_width="24dp"
-                        android:layout_height="24dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/uploading" />
-                </LinearLayout>
-
-                <ImageButton
-                    android:id="@+id/btn_insert_img"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?attr/background_selectable_borderless"
-                    android:src="@drawable/insert_image"
-                    android:visibility="gone" />
-            </RelativeLayout>
+            android:layout_weight="1">
 
             <ImageButton
-                android:id="@+id/btn_link"
-                android:layout_width="0dp"
+                android:id="@+id/btn_add_img"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:background="?attr/selectableItemBackground"
                 android:paddingBottom="5dp"
                 android:paddingTop="5dp"
-                android:src="@drawable/link" />
+                android:src="@drawable/image_browse" />
 
-            <RelativeLayout
-                android:layout_width="0dp"
+            <LinearLayout
+                android:id="@+id/prg_uploading_img"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_centerInParent="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                tools:visibility="visible">
 
-                <ImageButton
-                    android:id="@+id/btn_publish"
-                    android:layout_width="match_parent"
+                <ProgressBar
+                    android:layout_width="24dp"
+                    android:layout_height="24dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerInParent="true"
-                    android:background="?attr/selectableItemBackground"
-                    android:paddingBottom="5dp"
-                    android:paddingLeft="13dp"
-                    android:paddingRight="13dp"
-                    android:paddingTop="5dp"
-                    android:src="@drawable/send" />
-            </RelativeLayout>
+                    android:text="@string/uploading" />
+            </LinearLayout>
 
-        </LinearLayout>
+            <ImageButton
+                android:id="@+id/btn_insert_img"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/background_selectable_borderless"
+                android:src="@drawable/insert_image"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+        <ImageButton
+            android:id="@+id/btn_link"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:src="@drawable/link" />
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <ImageButton
+                android:id="@+id/btn_publish"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:background="?attr/selectableItemBackground"
+                android:paddingBottom="5dp"
+                android:paddingLeft="13dp"
+                android:paddingRight="13dp"
+                android:paddingTop="5dp"
+                android:src="@drawable/send" />
+        </RelativeLayout>
+
     </LinearLayout>
-
-</RelativeLayout>
+</LinearLayout>

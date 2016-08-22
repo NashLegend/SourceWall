@@ -1,10 +1,11 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_reply"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/page_clear_background"
-    tools:context=".activities.PublishPostActivity">
+    android:orientation="vertical">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
@@ -20,152 +21,143 @@
             app:popupTheme="?attr/toolbarPopTheme" />
     </android.support.design.widget.AppBarLayout>
 
-    <LinearLayout
-        android:id="@+id/layout_reply"
+    <EditText
+        android:id="@+id/text_post_title"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/app_bar"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:background="@android:color/transparent"
+        android:hint="@string/hint_input_post_title"
+        android:padding="12dp"
+        android:textSize="18dp" />
 
-        <EditText
-            android:id="@+id/text_post_title"
-            android:layout_width="match_parent"
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/splitter_height"
+        android:background="@color/splitter_color_grey" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Spinner
+            android:id="@+id/spinner_group"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
             android:layout_weight="0"
-            android:background="@android:color/transparent"
-            android:hint="@string/hint_input_post_title"
-            android:padding="12dp"
-            android:textSize="18dp" />
+            android:minHeight="24dp"
+            android:spinnerMode="dialog"
+            android:visibility="visible" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/splitter_height"
-            android:background="@color/splitter_color_grey" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <Spinner
+            android:id="@+id/spinner_post_topic"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Spinner
-                android:id="@+id/spinner_group"
-                android:layout_width="120dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp"
-                android:layout_weight="0"
-                android:minHeight="24dp"
-                android:spinnerMode="dialog"
-                android:visibility="visible" />
-
-            <Spinner
-                android:id="@+id/spinner_post_topic"
-                android:layout_width="120dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp"
-                android:layout_weight="0"
-                android:minHeight="24dp"
-                android:spinnerMode="dialog"
-                android:visibility="gone"
-                tools:visibility="visible" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/splitter_height"
-            android:background="@color/splitter_color_grey" />
-
-        <EditText
-            android:id="@+id/text_post_body"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:gravity="top"
-            android:hint="@string/hint_input_post_content"
-            android:paddingBottom="8dp"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp"
-            android:paddingTop="8dp"
-            android:textColor="@color/reply_input_text"
-            android:textColorHint="@color/reply_hint"
-            android:textSize="16dp" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/splitter_height"
-            android:background="@color/splitter_color_grey" />
-
-        <LinearLayout
-            android:id="@+id/layout_reply_action"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:weightSum="3">
-
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-
-                <ImageButton
-                    android:id="@+id/btn_add_img"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackground"
-                    android:paddingBottom="5dp"
-                    android:paddingTop="5dp"
-                    android:src="@drawable/image_browse" />
-
-                <LinearLayout
-                    android:id="@+id/prg_uploading_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
-
-                    <ProgressBar
-                        android:layout_width="24dp"
-                        android:layout_height="24dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/uploading" />
-                </LinearLayout>
-
-                <ImageButton
-                    android:id="@+id/btn_insert_img"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackground"
-                    android:src="@drawable/insert_image"
-                    android:visibility="gone" />
-            </RelativeLayout>
-
-            <ImageButton
-                android:id="@+id/btn_link"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="?attr/selectableItemBackground"
-                android:paddingBottom="5dp"
-                android:paddingTop="5dp"
-                android:src="@drawable/link" />
-
-            <ImageButton
-                android:id="@+id/btn_publish"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="?attr/selectableItemBackground"
-                android:paddingBottom="5dp"
-                android:paddingTop="5dp"
-                android:src="@drawable/send" />
-
-        </LinearLayout>
+            android:layout_marginLeft="12dp"
+            android:layout_weight="0"
+            android:minHeight="24dp"
+            android:spinnerMode="dialog"
+            android:visibility="gone"
+            tools:visibility="visible" />
     </LinearLayout>
 
-</RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/splitter_height"
+        android:background="@color/splitter_color_grey" />
+
+    <EditText
+        android:id="@+id/text_post_body"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@android:color/transparent"
+        android:gravity="top"
+        android:hint="@string/hint_input_post_content"
+        android:paddingBottom="8dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:paddingTop="8dp"
+        android:textColor="@color/reply_input_text"
+        android:textColorHint="@color/reply_hint"
+        android:textSize="16dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/splitter_height"
+        android:background="@color/splitter_color_grey" />
+
+    <LinearLayout
+        android:id="@+id/layout_reply_action"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <ImageButton
+                android:id="@+id/btn_add_img"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:src="@drawable/image_browse" />
+
+            <LinearLayout
+                android:id="@+id/prg_uploading_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <ProgressBar
+                    android:layout_width="24dp"
+                    android:layout_height="24dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/uploading" />
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/btn_insert_img"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:src="@drawable/insert_image"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+        <ImageButton
+            android:id="@+id/btn_link"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:src="@drawable/link" />
+
+        <ImageButton
+            android:id="@+id/btn_publish"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:src="@drawable/send" />
+
+    </LinearLayout>
+</LinearLayout>
