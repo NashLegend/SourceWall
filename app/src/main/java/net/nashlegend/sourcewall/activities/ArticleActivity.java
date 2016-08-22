@@ -195,7 +195,7 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
             if (comment != null) {
                 intent.putExtra(Consts.Extra_Simple_Comment, comment);
             }
-            startActivityForResult(intent, Consts.Code_Reply_Article);
+            startOneActivityForResult(intent, Consts.Code_Reply_Article);
         }
     }
 
@@ -427,9 +427,6 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
 
     @Override
     public void onClick(View v) {
-        if (UiUtil.shouldThrottle()) {
-            return;
-        }
         switch (v.getId()) {
             case R.id.button_reply:
                 replyArticle();

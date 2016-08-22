@@ -239,9 +239,6 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
 
     @Override
     public void onClick(View v) {
-        if (UiUtil.shouldThrottle()) {
-            return;
-        }
         switch (v.getId()) {
             case R.id.button_reply:
                 answerQuestion();

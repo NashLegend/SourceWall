@@ -316,9 +316,6 @@ public class AnswerActivity extends BaseActivity implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        if (UiUtil.shouldThrottle()) {
-            return;
-        }
         switch (v.getId()) {
             case R.id.text_title:
                 if (fromHost) {

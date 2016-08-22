@@ -97,9 +97,6 @@ public class MyAnswersActivity extends BaseActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (UiUtil.shouldThrottle()) {
-                    return;
-                }
                 if (view instanceof AnswerListItemView) {
                     Intent intent = new Intent();
                     intent.setClass(MyAnswersActivity.this, AnswerActivity.class);

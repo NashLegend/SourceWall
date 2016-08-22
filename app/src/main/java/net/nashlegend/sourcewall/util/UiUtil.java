@@ -92,7 +92,9 @@ public class UiUtil {
      * @return
      */
     public static boolean shouldThrottle() {
+        System.out.println("***");
         long crtTime = System.currentTimeMillis();
+        System.out.println(crtTime - lastClickTime);
         boolean flag = Math.abs(crtTime - lastClickTime) <= Config.throttleSpan;
         lastClickTime = crtTime;
         return flag;

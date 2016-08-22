@@ -253,9 +253,6 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
 
     @Override
     public void onClick(View v) {
-        if (UiUtil.shouldThrottle()) {
-            return;
-        }
         switch (v.getId()) {
             case R.id.button_reply:
                 replyPost();
@@ -344,7 +341,7 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
             if (comment != null) {
                 intent.putExtra(Consts.Extra_Simple_Comment, comment);
             }
-            startActivityForResult(intent, Consts.Code_Reply_Post);
+            startOneActivityForResult(intent, Consts.Code_Reply_Post);
         }
     }
 

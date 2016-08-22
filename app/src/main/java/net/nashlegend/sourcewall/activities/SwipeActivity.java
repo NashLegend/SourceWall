@@ -126,6 +126,13 @@ public class SwipeActivity extends AppCompatActivity {
         overridePendingTransition(enterAnim, exitAnim);
     }
 
+    public void startOneActivityForResult(Intent intent, int requestCode) {
+        if (UiUtil.shouldThrottle()) {
+            return;
+        }
+        startActivityForResult(intent, requestCode);
+    }
+
     @Override
     public void startActivityForResult(Intent intent, int requestCode) {
         startActivityForResult(intent, requestCode, R.anim.slide_in_right, 0);

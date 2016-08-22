@@ -398,7 +398,7 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
                         Intent intent = new Intent();
                         intent.setType("image/*");
                         intent.setAction(Intent.ACTION_GET_CONTENT);
-                        startActivityForResult(intent, Consts.Code_Invoke_Image_Selector);
+                        startOneActivityForResult(intent, Consts.Code_Invoke_Image_Selector);
                         break;
                     case 1:
                         invokeCamera();
@@ -521,7 +521,7 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         Uri localUri = Uri.fromFile(tmpUploadFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, localUri);
-        startActivityForResult(intent, Consts.Code_Invoke_Camera);
+        startOneActivityForResult(intent, Consts.Code_Invoke_Camera);
     }
 
     /**
