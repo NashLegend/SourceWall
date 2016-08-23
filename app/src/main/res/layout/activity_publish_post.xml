@@ -47,16 +47,21 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="12dp"
             android:layout_weight="0"
+            android:drawableLeft="@drawable/ic_publish_group"
+            android:drawablePadding="6dp"
             android:gravity="center_vertical"
             android:minWidth="64dp"
             android:textColor="@color/text_color_primary"
             android:textSize="14dp"
+            android:textStyle="bold"
             android:visibility="visible"
             tools:text="谣言粉碎机" />
 
         <TextView
             android:id="@+id/spinner_post_topic"
             android:layout_width="wrap_content"
+            android:drawableLeft="@drawable/ic_publish_topic"
+            android:drawablePadding="6dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="12dp"
             android:layout_weight="0"
@@ -65,6 +70,7 @@
             android:spinnerMode="dialog"
             android:textColor="@color/text_color_primary"
             android:textSize="14dp"
+            android:textStyle="bold"
             android:visibility="gone"
             tools:text="求辟谣"
             tools:visibility="visible" />
