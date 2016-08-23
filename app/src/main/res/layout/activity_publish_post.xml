@@ -31,54 +31,57 @@
         android:padding="12dp"
         android:textSize="18dp" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/splitter_height"
-        android:background="@color/splitter_color_grey" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="32dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp">
 
         <TextView
             android:id="@+id/spinner_group"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="12dp"
             android:layout_weight="0"
             android:drawableLeft="@drawable/ic_publish_group"
             android:drawablePadding="6dp"
+            android:ellipsize="end"
             android:gravity="center_vertical"
+            android:maxLines="1"
+            android:maxWidth="200dp"
             android:minWidth="64dp"
             android:textColor="@color/text_color_primary"
             android:textSize="14dp"
             android:textStyle="bold"
             android:visibility="visible"
-            tools:text="谣言粉碎机" />
+            tools:text="十成个不可不知的生活常识" />
 
         <TextView
             android:id="@+id/spinner_post_topic"
             android:layout_width="wrap_content"
-            android:drawableLeft="@drawable/ic_publish_topic"
-            android:drawablePadding="6dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="12dp"
             android:layout_weight="0"
+            android:drawableLeft="@drawable/ic_publish_topic"
+            android:drawablePadding="6dp"
+            android:ellipsize="end"
             android:gravity="center_vertical"
+            android:maxLines="1"
             android:minWidth="64dp"
             android:spinnerMode="dialog"
             android:textColor="@color/text_color_primary"
             android:textSize="14dp"
             android:textStyle="bold"
             android:visibility="gone"
-            tools:text="求辟谣"
+            tools:text="求辟谣求辟谣求辟谣求辟谣"
             tools:visibility="visible" />
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/splitter_height"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
         android:background="@color/splitter_color_grey" />
 
     <EditText
@@ -105,29 +108,27 @@
     <LinearLayout
         android:id="@+id/layout_reply_action"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:weightSum="3">
 
         <RelativeLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1">
 
             <ImageButton
                 android:id="@+id/btn_add_img"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="?attr/selectableItemBackground"
-                android:paddingBottom="5dp"
-                android:paddingTop="5dp"
-                android:src="@drawable/ic_image_36dp" />
+                android:src="@drawable/ic_image_24dp" />
 
             <LinearLayout
                 android:id="@+id/prg_uploading_img"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_centerInParent="true"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
@@ -146,31 +147,27 @@
             <ImageButton
                 android:id="@+id/btn_insert_img"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="?attr/selectableItemBackground"
-                android:src="@drawable/ic_insert_image_36dp"
+                android:src="@drawable/ic_touch_24dp"
                 android:visibility="gone" />
         </RelativeLayout>
 
         <ImageButton
             android:id="@+id/btn_link"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="?attr/selectableItemBackground"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp"
-            android:src="@drawable/ic_link_36dp" />
+            android:src="@drawable/ic_insert_link_24dp" />
 
         <ImageButton
             android:id="@+id/btn_publish"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="?attr/selectableItemBackground"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp"
-            android:src="@drawable/ic_send_36dp" />
+            android:src="@drawable/ic_send_24dp" />
 
     </LinearLayout>
 </LinearLayout>

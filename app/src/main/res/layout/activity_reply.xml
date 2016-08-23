@@ -21,7 +21,7 @@
             android:theme="?attr/toolbarTheme"
             app:popupTheme="?attr/toolbarPopTheme" />
     </android.support.design.widget.AppBarLayout>
-    
+
     <TextView
         android:id="@+id/text_reply_host"
         android:layout_width="match_parent"
@@ -65,28 +65,26 @@
     <LinearLayout
         android:id="@+id/layout_reply_action"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <RelativeLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1">
 
             <ImageButton
                 android:id="@+id/btn_add_img"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="?attr/selectableItemBackground"
-                android:paddingBottom="5dp"
-                android:paddingTop="5dp"
-                android:src="@drawable/ic_image_36dp" />
+                android:src="@drawable/ic_image_24dp" />
 
             <LinearLayout
                 android:id="@+id/prg_uploading_img"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_centerInParent="true"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
@@ -106,40 +104,30 @@
             <ImageButton
                 android:id="@+id/btn_insert_img"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="?attr/background_selectable_borderless"
-                android:src="@drawable/ic_insert_image_36dp"
+                android:src="@drawable/ic_touch_24dp"
                 android:visibility="gone" />
         </RelativeLayout>
 
         <ImageButton
             android:id="@+id/btn_link"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="?attr/selectableItemBackground"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp"
-            android:src="@drawable/ic_link_36dp" />
+            android:src="@drawable/ic_insert_link_24dp" />
 
-        <RelativeLayout
+
+        <ImageButton
+            android:id="@+id/btn_publish"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <ImageButton
-                android:id="@+id/btn_publish"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerInParent="true"
-                android:background="?attr/selectableItemBackground"
-                android:paddingBottom="5dp"
-                android:paddingLeft="13dp"
-                android:paddingRight="13dp"
-                android:paddingTop="5dp"
-                android:src="@drawable/ic_send_36dp" />
-        </RelativeLayout>
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:paddingLeft="13dp"
+            android:paddingRight="13dp"
+            android:src="@drawable/ic_send_24dp" />
 
     </LinearLayout>
 </LinearLayout>

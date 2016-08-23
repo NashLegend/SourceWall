@@ -49,8 +49,8 @@
     <string name="action_support">赞同</string>
     <string name="action_oppose">反对</string>
     <string name="hint_reply">请输入回复</string>
-    <string name="hint_answer">在这里写下您的答案</string>
-    <string name="hint_input_post_content">在这里输入帖子正文</string>
+    <string name="hint_answer">写下您的答案</string>
+    <string name="hint_input_post_content">输入帖子正文</string>
     <string name="hint_recommend">顺便说点什么吧</string>
     <string name="message_wait_a_minute">稍等片刻……</string>
     <string name="message_loading_my_groups">稍等片刻……</string>
