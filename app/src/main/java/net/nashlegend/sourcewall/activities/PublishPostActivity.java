@@ -56,6 +56,7 @@ import net.nashlegend.sourcewall.util.UiUtil;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -106,11 +107,11 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
         insertButton = (ImageButton) findViewById(R.id.btn_insert_img);
         ImageButton linkButton = (ImageButton) findViewById(R.id.btn_link);
         uploadingProgress = findViewById(R.id.prg_uploading_img);
-        subItem = getIntent().getParcelableExtra(Consts.Extra_SubItem);
-        prepareGroups();
-        if (subItem != null) {
-            prepareSubItem(subItem);
+        SubItem tmpSubItem = getIntent().getParcelableExtra(Consts.Extra_SubItem);
+        if (tmpSubItem != null) {
+            prepareSubItem(tmpSubItem);
         }
+        prepareGroups();
         publishButton.setOnClickListener(this);
         imgButton.setOnClickListener(this);
         insertButton.setOnClickListener(this);
@@ -118,7 +119,10 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void prepareSubItem(SubItem item) {
-        subItem = item;
+        if (this.subItem != null && equals(this.subItem.getValue(), item.getValue())) {
+            return;
+        }
+        this.subItem = item;
         group_id = subItem.getValue();
         csrf = "";
         topic = "";
@@ -128,7 +132,6 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
         String[] items = new String[0];
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.simple_spinner_item, items);
         topicSpinner.setAdapter(arrayAdapter);
-
         titleEditText.setHint(R.string.hint_input_post_title);
         bodyEditText.setHint(R.string.hint_input_post_content);
         prepare();
@@ -136,7 +139,9 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void prepareGroups() {
-        topicSpinner.setVisibility(View.GONE);
+        if (this.subItem == null) {
+            topicSpinner.setVisibility(View.GONE);
+        }
         List<SubItem> groupSubItems = GroupHelper.getAllMyGroupSubItems();
         if (groupSubItems == null || groupSubItems.size() == 0) {
             if (subItem == null) {
@@ -192,10 +197,12 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
             return;
         }
         onGetGroups(groupSubItems);
-
     }
 
     private void onGetGroups(List<SubItem> groupSubItems) {
+        if (groupSubItems.size() == 0) {
+            return;
+        }
         this.subItems = groupSubItems;
         String[] items = new String[subItems.size()];
         for (int i = 0; i < subItems.size(); i++) {
@@ -216,6 +223,23 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
 
             }
         });
+        if (this.subItem == null) {
+            groupSpinner.setSelection(0);
+            prepareSubItem(subItems.get(0));
+        } else {
+            for (int i = 0; i < groupSubItems.size(); i++) {
+                SubItem subItem = groupSubItems.get(i);
+                if (equals(subItem.getValue(), this.subItem.getValue())) {
+                    groupSpinner.setSelection(i);
+                    break;
+                }
+            }
+        }
+    }
+
+
+    public static boolean equals(Object a, Object b) {
+        return (a == null) ? (b == null) : a.equals(b);
     }
 
     private void tryRestoreReply() {
