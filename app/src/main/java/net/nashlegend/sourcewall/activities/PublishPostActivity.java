@@ -26,11 +26,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.umeng.analytics.MobclickAgent;
 
@@ -38,6 +36,7 @@ import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.db.GroupHelper;
 import net.nashlegend.sourcewall.db.gen.MyGroup;
 import net.nashlegend.sourcewall.dialogs.InputDialog;
+import net.nashlegend.sourcewall.events.GroupFetchedEvent;
 import net.nashlegend.sourcewall.model.PrepareData;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.NetworkTask;
@@ -56,10 +55,10 @@ import net.nashlegend.sourcewall.util.UiUtil;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import de.greenrobot.event.EventBus;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscription;
@@ -76,8 +75,8 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
     private EditText bodyEditText;
     private ImageButton imgButton;
     private ImageButton insertButton;
-    private Spinner groupSpinner;
-    private Spinner topicSpinner;
+    private TextView groupSpinner;
+    private TextView topicSpinner;
     private View uploadingProgress;
     private ProgressDialog progressDialog;
     private String tmpImagePath;
@@ -85,8 +84,9 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
     private String group_id = "";
     private String csrf = "";
     private String topic = "";
-    private ArrayList<Param> topics = new ArrayList<>();
-    List<SubItem> subItems = new ArrayList<>();
+    private int topicIndex = -1;
+    private final ArrayList<Param> topics = new ArrayList<>();
+    private final List<SubItem> subItems = new ArrayList<>();
     private boolean replyOK;
 
     @Override
@@ -100,8 +100,8 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
         }
         titleEditText = (EditText) findViewById(R.id.text_post_title);
         bodyEditText = (EditText) findViewById(R.id.text_post_body);
-        groupSpinner = (Spinner) findViewById(R.id.spinner_group);
-        topicSpinner = (Spinner) findViewById(R.id.spinner_post_topic);
+        groupSpinner = (TextView) findViewById(R.id.spinner_group);
+        topicSpinner = (TextView) findViewById(R.id.spinner_post_topic);
         ImageButton publishButton = (ImageButton) findViewById(R.id.btn_publish);
         imgButton = (ImageButton) findViewById(R.id.btn_add_img);
         insertButton = (ImageButton) findViewById(R.id.btn_insert_img);
@@ -109,16 +109,23 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
         uploadingProgress = findViewById(R.id.prg_uploading_img);
         SubItem tmpSubItem = getIntent().getParcelableExtra(Consts.Extra_SubItem);
         if (tmpSubItem != null) {
-            prepareSubItem(tmpSubItem);
+            setGroup(tmpSubItem);
         }
         prepareGroups();
         publishButton.setOnClickListener(this);
         imgButton.setOnClickListener(this);
         insertButton.setOnClickListener(this);
         linkButton.setOnClickListener(this);
+        groupSpinner.setOnClickListener(this);
+        topicSpinner.setOnClickListener(this);
     }
 
-    private void prepareSubItem(SubItem item) {
+    private void setGroup(SubItem item) {
+        if (item == null) {
+            return;
+        }
+        groupSpinner.setText(item.getName());
+        groupSpinner.setVisibility(View.VISIBLE);
         if (this.subItem != null && equals(this.subItem.getValue(), item.getValue())) {
             return;
         }
@@ -128,14 +135,18 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
         topic = "";
         topics.clear();
         setTitle(subItem.getName());
-        topicSpinner.setVisibility(View.VISIBLE);
-        String[] items = new String[0];
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.simple_spinner_item, items);
-        topicSpinner.setAdapter(arrayAdapter);
         titleEditText.setHint(R.string.hint_input_post_title);
         bodyEditText.setHint(R.string.hint_input_post_content);
         prepare();
         tryRestoreReply();
+    }
+
+    private void setTopic(int i) {
+        if (i < topics.size()) {
+            topicSpinner.setText(topics.get(i).key);
+            topicIndex = i;
+            topicSpinner.setVisibility(View.VISIBLE);
+        }
     }
 
     private void prepareGroups() {
@@ -175,6 +186,7 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
                             public void onNext(List<SubItem> myGroups) {
                                 UiUtil.dismissDialog(progressDialog);
                                 onGetGroups(myGroups);
+                                EventBus.getDefault().post(new GroupFetchedEvent());
                             }
                         });
                 UiUtil.dismissDialog(progressDialog);
@@ -200,37 +212,18 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void onGetGroups(List<SubItem> groupSubItems) {
-        if (groupSubItems.size() == 0) {
+        if (groupSubItems == null || groupSubItems.size() == 0) {
             return;
         }
-        this.subItems = groupSubItems;
-        String[] items = new String[subItems.size()];
-        for (int i = 0; i < subItems.size(); i++) {
-            items[i] = subItems.get(i).getName();
-        }
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.simple_spinner_item, items);
-        groupSpinner.setAdapter(arrayAdapter);
-        groupSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position < subItems.size()) {
-                    prepareSubItem(subItems.get(position));
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+        this.subItems.clear();
+        this.subItems.addAll(groupSubItems);
         if (this.subItem == null) {
-            groupSpinner.setSelection(0);
-            prepareSubItem(subItems.get(0));
+            setGroup(subItems.get(0));
         } else {
             for (int i = 0; i < groupSubItems.size(); i++) {
                 SubItem subItem = groupSubItems.get(i);
                 if (equals(subItem.getValue(), this.subItem.getValue())) {
-                    groupSpinner.setSelection(i);
+                    setGroup(subItems.get(i));
                     break;
                 }
             }
@@ -401,15 +394,9 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
 
     private void onReceivePreparedData(PrepareData prepareData) {
         csrf = prepareData.getCsrf();
-        topics = prepareData.getPairs();
-        if (topic != null) {
-            String[] items = new String[topics.size()];
-            for (int i = 0; i < topics.size(); i++) {
-                items[i] = topics.get(i).key;
-            }
-            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.simple_spinner_item, items);
-            topicSpinner.setAdapter(arrayAdapter);
-        }
+        topics.clear();
+        topics.addAll(prepareData.getPairs());
+        setTopic(0);
     }
 
     private void invokeImageDialog() {
@@ -618,7 +605,7 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
             return;
         }
 
-        topic = topics.get(topicSpinner.getSelectedItemPosition()).value;
+        topic = topics.get(topicIndex).value;
         hideInput();
         String title = titleEditText.getText().toString();
         String body = bodyEditText.getText().toString();
@@ -651,7 +638,53 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
             case R.id.btn_link:
                 insertLink();
                 break;
+            case R.id.spinner_group:
+                popGroup();
+                break;
+            case R.id.spinner_post_topic:
+                popTopic();
+                break;
         }
+    }
+
+    private void popGroup() {
+        if (subItems.size() == 0) {
+            return;
+        }
+        String[] items = new String[subItems.size()];
+        for (int i = 0; i < subItems.size(); i++) {
+            items[i] = subItems.get(i).getName();
+        }
+        new AlertDialog.Builder(this)
+                .setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which < subItems.size()) {
+                            setGroup(subItems.get(which));
+                        }
+                    }
+                })
+                .create()
+                .show();
+    }
+
+    private void popTopic() {
+        if (topics.size() == 0) {
+            return;
+        }
+        final String[] items = new String[topics.size()];
+        for (int i = 0; i < topics.size(); i++) {
+            items[i] = topics.get(i).key;
+        }
+        new AlertDialog.Builder(this)
+                .setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        setTopic(which);
+                    }
+                })
+                .create()
+                .show();
     }
 
     public void publishPost(String group_id, String csrf, String title, String body, String topic) {

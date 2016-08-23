@@ -38,28 +38,35 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="32dp"
         android:orientation="horizontal">
 
-        <Spinner
+        <TextView
             android:id="@+id/spinner_group"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginLeft="12dp"
             android:layout_weight="0"
-            android:minHeight="24dp"
-            android:spinnerMode="dialog"
-            android:visibility="visible" />
+            android:gravity="center_vertical"
+            android:minWidth="64dp"
+            android:textColor="@color/text_color_primary"
+            android:textSize="14dp"
+            android:visibility="visible"
+            tools:text="谣言粉碎机" />
 
-        <Spinner
+        <TextView
             android:id="@+id/spinner_post_topic"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginLeft="12dp"
             android:layout_weight="0"
-            android:minHeight="24dp"
+            android:gravity="center_vertical"
+            android:minWidth="64dp"
             android:spinnerMode="dialog"
+            android:textColor="@color/text_color_primary"
+            android:textSize="14dp"
             android:visibility="gone"
+            tools:text="求辟谣"
             tools:visibility="visible" />
     </LinearLayout>
 

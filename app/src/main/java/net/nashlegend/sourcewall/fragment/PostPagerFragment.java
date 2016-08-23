@@ -29,6 +29,7 @@ import net.nashlegend.sourcewall.activities.BaseActivity;
 import net.nashlegend.sourcewall.activities.PublishPostActivity;
 import net.nashlegend.sourcewall.db.GroupHelper;
 import net.nashlegend.sourcewall.db.gen.MyGroup;
+import net.nashlegend.sourcewall.events.GroupFetchedEvent;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
@@ -47,6 +48,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.greenrobot.event.EventBus;
 import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -90,6 +92,7 @@ public class PostPagerFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        EventBus.getDefault().register(this);
         if (layoutView == null) {
             layoutView = inflater.inflate(R.layout.fragment_post_pager, container, false);
             ButterKnife.bind(this, layoutView);
@@ -131,6 +134,12 @@ public class PostPagerFragment extends BaseFragment {
             }
         }
         return layoutView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroyView();
     }
 
     @Override
@@ -400,6 +409,16 @@ public class PostPagerFragment extends BaseFragment {
             }
         });
         progressDialog.show();
+    }
+
+    public void onEventMainThread(GroupFetchedEvent event) {
+        if (!isAdded()) {
+            return;
+        }
+        subItems = ChannelHelper.getGroupSectionsByUserState();
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
     }
 
 
