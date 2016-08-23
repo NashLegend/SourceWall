@@ -205,7 +205,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void showAboutApp() {
-        UrlCheckUtil.openWithBrowser("https://github.com/NashLegend/SourceWall");
+        UrlCheckUtil.openWithBrowser("https://github.com/NashLegend/SourceWall/blob/master/README.md");
     }
 
     @Override
