@@ -186,7 +186,7 @@ public class PostPagerFragment extends BaseFragment {
                 }
                 break;
             case R.id.button_search:
-                startOneActivity(SearchActivity.class);
+                startActivity(SearchActivity.class);
                 break;
         }
     }
