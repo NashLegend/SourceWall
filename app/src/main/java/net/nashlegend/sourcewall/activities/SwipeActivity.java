@@ -104,7 +104,7 @@ public class SwipeActivity extends AppCompatActivity {
         overridePendingTransition(enterAnim, exitAnim);
     }
 
-    public void finishDirectly() {
+    public void finishDefaultTransition() {
         swipeLayout.cancelPotentialAnimation();
         super.finish();
     }
@@ -119,6 +119,10 @@ public class SwipeActivity extends AppCompatActivity {
     @Override
     public void startActivity(Intent intent) {
         startActivity(intent, R.anim.slide_in_right, 0);
+    }
+
+    public void startActivityDefaultTransition(Intent intent) {
+        super.startActivity(intent);
     }
 
     public void startActivity(Intent intent, int enterAnim, int exitAnim) {
