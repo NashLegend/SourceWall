@@ -386,7 +386,7 @@ public class SingleReplyActivity extends BaseActivity implements View.OnClickLis
                 }
                 startOneActivity(intent);
                 break;
-            case R.id.layout_opinion:
+            case R.id.layout_like:
                 likeThis();
                 break;
             case R.id.button_reply:
@@ -395,7 +395,7 @@ public class SingleReplyActivity extends BaseActivity implements View.OnClickLis
             case R.id.button_Delete:
                 deleteThis();
                 break;
-            case R.id.button_thank:
+            case R.id.button_like:
                 likeThis();
                 break;
             case R.id.layout_author:
