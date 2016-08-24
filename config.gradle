@@ -50,6 +50,7 @@ ext {
             SearchView         : 'com.lapism:searchview:2.2',
             Logger             : 'com.orhanobut:logger:1.14',
             Router             : 'com.github.mzule.activityrouter:activityrouter:1.1.6',
+            MediumTextView     : 'io.github.angebagui.mediumtextview:mediumtextview:1.0.1',
     ]
 
     built = [
