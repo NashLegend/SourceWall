@@ -4,6 +4,7 @@ import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.request.cache.RequestCache;
 import net.nashlegend.sourcewall.request.interceptors.RedirectInterceptor;
+import net.nashlegend.sourcewall.request.interceptors.UserAgentInterceptor;
 
 import java.io.File;
 import java.net.CookieManager;
@@ -54,6 +55,7 @@ public class HttpUtil {
         if (defaultHttpClient == null) {
             final File cacheDir = RequestCache.getDiskCacheDir(App.getApp(), "OkHttp.cache");
             defaultHttpClient = new OkHttpClient.Builder()
+                    .addInterceptor(new UserAgentInterceptor())
                     .addNetworkInterceptor(new RedirectInterceptor())
                     .cache(new Cache(cacheDir, DISK_CACHE_SIZE))
                     .connectTimeout(CONNECTION_TIMEOUT, TimeUnit.MILLISECONDS)

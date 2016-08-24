@@ -16,7 +16,7 @@ import static net.nashlegend.sourcewall.BuildConfig.VERSION_NAME;
  */
 public class UserAgentInterceptor implements Interceptor {
 
-    private static String userAgent = null;
+    volatile private static String userAgent = null;
 
     synchronized public static void resetUserAgent() {
         userAgent = null;
@@ -27,9 +27,13 @@ public class UserAgentInterceptor implements Interceptor {
      *
      * @return
      */
-    synchronized public static String getDefaultUserAgent() {
-        if (TextUtils.isEmpty(userAgent)) {
-            userAgent = "SourceWall/" + VERSION_NAME + "(" + VERSION_CODE + ")";
+    private String getDefaultUserAgent() {
+        if (userAgent == null) {
+            synchronized (UserAgentInterceptor.class) {
+                if (userAgent == null) {
+                    userAgent = "SourceWall/" + VERSION_NAME + "(" + VERSION_CODE + ")";
+                }
+            }
         }
         return userAgent;
     }
