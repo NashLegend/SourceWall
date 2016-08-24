@@ -184,5 +184,9 @@
     <string name="other_reason">其他理由</string>
     <string name="hint_enter_reason_please">请输入举报理由</string>
     <string name="report">举报</string>
+    <string name="search">搜索</string>
+    <string name="blog">日志</string>
+    <string name="all">全部</string>
+    <string name="hint_search">输入关键字</string>
 
 </resources>

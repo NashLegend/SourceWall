@@ -46,5 +46,6 @@
     <dimen name="ic_section_icon_size">24dp</dimen>
     <dimen name="ic_section_font_size">12dp</dimen>
     <dimen name="bottom_bar_height">52dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
 
 </resources>

@@ -266,14 +266,11 @@ public class PostsFragment extends BaseFragment implements ReloadListener, OnRef
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (UiUtil.shouldThrottle()) {
-            return;
-        }
         if (view instanceof PostListItemView) {
             Intent intent = new Intent();
             intent.setClass(getActivity(), PostActivity.class);
             intent.putExtra(Consts.Extra_Post, ((PostListItemView) view).getData());
-            startActivity(intent);
+            startOneActivity(intent);
         }
     }
 

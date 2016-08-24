@@ -20,6 +20,7 @@ import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.events.LoginStateChangedEvent;
 import net.nashlegend.sourcewall.request.HttpUtil;
+import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Mob;
@@ -62,7 +63,6 @@ public class LoginActivity extends BaseActivity {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         webView.loadUrl(Consts.LOGIN_URL);
-
     }
 
     @Override
@@ -97,8 +97,7 @@ public class LoginActivity extends BaseActivity {
                 }
                 HttpUtil.setCookie(HttpUtil.getDefaultHttpClient());
             }
-            boolean gotToken = !TextUtils.isEmpty(tmpUkey) && !TextUtils.isEmpty(tmpToken);
-            return gotToken;
+            return !TextUtils.isEmpty(tmpUkey) && !TextUtils.isEmpty(tmpToken);
         } catch (Exception e) {
             return false;
         }
@@ -109,6 +108,7 @@ public class LoginActivity extends BaseActivity {
 
     WebViewClient webViewClient = new WebViewClient() {
 
+        @SuppressWarnings("deprecation")
         @Override
         public boolean shouldOverrideUrlLoading(final WebView view, String url) {
             if (url.equals(Consts.SUCCESS_URL_1) || url.equals(Consts.SUCCESS_URL_2)) {
@@ -193,6 +193,7 @@ public class LoginActivity extends BaseActivity {
 
     private void delayFinish() {
         if (UserAPI.isLoggedIn()) {
+            PostAPI.getAllMyGroupsAndMergeAndNotify();
             EventBus.getDefault().post(new LoginStateChangedEvent());
         }
         new Handler().postDelayed(new Runnable() {

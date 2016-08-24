@@ -197,14 +197,11 @@ public class ArticlesFragment extends BaseFragment implements ReloadListener, On
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (UiUtil.shouldThrottle()) {
-            return;
-        }
         if (view instanceof ArticleListItemView) {
             Intent intent = new Intent();
             intent.setClass(getContext(), ArticleActivity.class);
             intent.putExtra(Consts.Extra_Article, ((ArticleListItemView) view).getData());
-            startActivity(intent);
+            startOneActivity(intent);
         }
     }
 

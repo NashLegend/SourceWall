@@ -41,16 +41,38 @@
         android:layout_below="@id/pager_header"
         android:background="@drawable/shadow_down" />
 
-    <com.getbase.floatingactionbutton.FloatingActionButton
-        android:id="@+id/button_write"
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/layout_operation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:paddingTop="10dp"
-        app:fab_colorNormal="?attr/colorPrimaryBright"
-        app:fab_colorPressed="?attr/colorPrimaryDark"
-        app:fab_icon="@drawable/pencil" />
+        app:fab_addButtonColorNormal="?attr/colorPrimaryBright"
+        app:fab_addButtonColorPressed="?attr/colorPrimaryDark"
+        app:fab_addButtonPlusIconColor="@android:color/white"
+        app:fab_expandDirection="up">
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/button_write"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            app:fab_colorNormal="?attr/colorPrimaryBright"
+            app:fab_colorPressed="?attr/colorPrimaryDark"
+            app:fab_icon="@drawable/pencil" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/button_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            app:fab_colorNormal="?attr/colorPrimaryBright"
+            app:fab_colorPressed="?attr/colorPrimaryDark"
+            app:fab_icon="@drawable/ic_search_24dp" />
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
     <FrameLayout
         android:id="@+id/layout_more_sections"

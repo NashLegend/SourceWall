@@ -1,6 +1,7 @@
 package net.nashlegend.sourcewall.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -12,13 +13,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import net.nashlegend.sourcewall.R;
+import net.nashlegend.sourcewall.activities.BaseActivity;
+import net.nashlegend.sourcewall.activities.PublishPostActivity;
+import net.nashlegend.sourcewall.activities.SearchActivity;
 import net.nashlegend.sourcewall.model.SubItem;
+import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.ChannelHelper;
+import net.nashlegend.sourcewall.util.Consts;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class ArticlePagerFragment extends BaseFragment {
     View layoutView;
@@ -61,6 +68,15 @@ public class ArticlePagerFragment extends BaseFragment {
             }
         }
         return layoutView;
+    }
+
+    @OnClick({R.id.button_search})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.button_search:
+                startActivity(SearchActivity.class);
+                break;
+        }
     }
 
     class ArticlePagerAdapter extends FragmentStatePagerAdapter {

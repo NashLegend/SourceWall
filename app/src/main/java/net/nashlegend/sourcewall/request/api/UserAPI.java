@@ -7,6 +7,7 @@ import android.webkit.CookieSyncManager;
 import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.db.BasketHelper;
 import net.nashlegend.sourcewall.events.LoginStateChangedEvent;
+import net.nashlegend.sourcewall.fragment.PostPagerFragment;
 import net.nashlegend.sourcewall.model.UserInfo;
 import net.nashlegend.sourcewall.request.HttpUtil;
 import net.nashlegend.sourcewall.request.NetworkTask;

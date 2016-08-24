@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 
 import net.nashlegend.sourcewall.util.AAsyncTask;
 import net.nashlegend.sourcewall.util.ToastUtil;
+import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.view.common.IStackedAsyncTaskInterface;
 
 import java.util.ArrayList;
@@ -100,11 +101,17 @@ public abstract class BaseFragment extends Fragment implements IStackedAsyncTask
         return false;
     }
 
+    public void startOneActivity(Intent intent) {
+        if (UiUtil.shouldThrottle()) {
+            return;
+        }
+        super.startActivity(intent);
+    }
+
     public void startActivity(Class clazz) {
         if (getContext() == null) {
             return;
         }
-        Intent intent = new Intent(getContext(), clazz);
-        startActivity(intent);
+        startOneActivity(new Intent(getContext(), clazz));
     }
 }

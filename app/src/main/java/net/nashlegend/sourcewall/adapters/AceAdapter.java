@@ -33,14 +33,23 @@ public abstract class AceAdapter<T> extends BaseAdapter {
     }
 
     public void addAll(ArrayList<? extends T> list) {
+        if (list == null) {
+            list = new ArrayList<>();
+        }
         this.list.addAll(list);
     }
 
     public void addAll(int index, ArrayList<? extends T> list) {
+        if (list == null) {
+            list = new ArrayList<>();
+        }
         this.list.addAll(index, list);
     }
 
     public void addAllReversely(ArrayList<? extends T> list) {
+        if (list == null) {
+            list = new ArrayList<>();
+        }
         if (list.size() > 0) {
             for (int i = list.size() - 1; i >= 0; i--) {
                 this.list.add(list.get(i));
@@ -49,6 +58,9 @@ public abstract class AceAdapter<T> extends BaseAdapter {
     }
 
     public void addAllReversely(ArrayList<? extends T> list, int index) {
+        if (list == null) {
+            list = new ArrayList<>();
+        }
         for (int i = 0; i < list.size(); i++) {
             this.list.add(index, list.get(i));
         }
@@ -79,6 +91,9 @@ public abstract class AceAdapter<T> extends BaseAdapter {
     }
 
     public void setList(ArrayList<T> list) {
+        if (list == null) {
+            list = new ArrayList<>();
+        }
         this.list.clear();
         this.list.addAll(list);
     }

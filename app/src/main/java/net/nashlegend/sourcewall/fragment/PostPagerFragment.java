@@ -8,6 +8,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -27,6 +28,7 @@ import android.widget.TextView;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.BaseActivity;
 import net.nashlegend.sourcewall.activities.PublishPostActivity;
+import net.nashlegend.sourcewall.activities.SearchActivity;
 import net.nashlegend.sourcewall.db.GroupHelper;
 import net.nashlegend.sourcewall.db.gen.MyGroup;
 import net.nashlegend.sourcewall.events.GroupFetchedEvent;
@@ -77,6 +79,8 @@ public class PostPagerFragment extends BaseFragment {
     private boolean isMoreSectionsButtonShowing;
 
     PostPagerAdapter adapter;
+
+    public static boolean shouldNotifyDataSetChanged = false;
 
     public PostPagerFragment() {
         // Required empty public constructor
@@ -133,6 +137,11 @@ public class PostPagerFragment extends BaseFragment {
                 ((ViewGroup) layoutView.getParent()).removeView(layoutView);
             }
         }
+        if (shouldNotifyDataSetChanged) {
+            subItems = ChannelHelper.getGroupSectionsByUserState();
+            adapter.notifyDataSetChanged();
+            shouldNotifyDataSetChanged = false;
+        }
         return layoutView;
     }
 
@@ -154,7 +163,7 @@ public class PostPagerFragment extends BaseFragment {
         }
     }
 
-    @OnClick({R.id.show_more, R.id.button_write})
+    @OnClick({R.id.show_more, R.id.button_write, R.id.button_search})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.show_more:
@@ -175,6 +184,9 @@ public class PostPagerFragment extends BaseFragment {
                 } else {
                     ((BaseActivity) getActivity()).gotoLogin();
                 }
+                break;
+            case R.id.button_search:
+                startOneActivity(SearchActivity.class);
                 break;
         }
     }
@@ -369,6 +381,7 @@ public class PostPagerFragment extends BaseFragment {
     private void update() {
         subItems = ChannelHelper.getGroupSectionsByUserState();
         adapter.notifyDataSetChanged();
+        shouldNotifyDataSetChanged = false;
     }
 
     ProgressDialog progressDialog;
@@ -418,6 +431,7 @@ public class PostPagerFragment extends BaseFragment {
         subItems = ChannelHelper.getGroupSectionsByUserState();
         if (adapter != null) {
             adapter.notifyDataSetChanged();
+            shouldNotifyDataSetChanged = false;
         }
     }
 

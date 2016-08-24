@@ -4,6 +4,8 @@ import android.net.Uri;
 
 import net.nashlegend.sourcewall.db.GroupHelper;
 import net.nashlegend.sourcewall.db.gen.MyGroup;
+import net.nashlegend.sourcewall.events.GroupFetchedEvent;
+import net.nashlegend.sourcewall.fragment.PostPagerFragment;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.PrepareData;
 import net.nashlegend.sourcewall.model.SubItem;
@@ -38,7 +40,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import de.greenrobot.event.EventBus;
 import rx.Observable;
+import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
@@ -204,6 +208,16 @@ public class PostAPI extends APIBase {
                         return newGroups;
                     }
                 });
+    }
+
+    public static void getAllMyGroupsAndMergeAndNotify() {
+        getAllMyGroupsAndMerge().subscribe(new Action1<ArrayList<MyGroup>>() {
+            @Override
+            public void call(ArrayList<MyGroup> myGroups) {
+                PostPagerFragment.shouldNotifyDataSetChanged = true;
+                EventBus.getDefault().post(new GroupFetchedEvent());
+            }
+        });
     }
 
     /**

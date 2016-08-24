@@ -185,6 +185,7 @@ public class NetworkTask<T> {
         if (call != null && !call.isCanceled()) {
             call.cancel();
         }
+        dismiss();
     }
 
     public boolean isCancelled() {

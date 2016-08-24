@@ -287,14 +287,11 @@ public class QuestionsFragment extends BaseFragment implements ReloadListener, O
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (UiUtil.shouldThrottle()) {
-            return;
-        }
         if (view instanceof QuestionListItemView) {
             Intent intent = new Intent();
             intent.setClass(getActivity(), QuestionActivity.class);
             intent.putExtra(Consts.Extra_Question, ((QuestionListItemView) view).getData());
-            startActivity(intent);
+            startOneActivity(intent);
         }
     }
 
