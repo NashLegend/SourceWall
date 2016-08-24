@@ -2,8 +2,6 @@ package net.nashlegend.sourcewall.view;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,13 +16,11 @@ import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.ArticleAPI;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.DateTimeUtil;
-import net.nashlegend.sourcewall.util.PrefsUtil;
 import net.nashlegend.sourcewall.util.StyleChecker;
 import net.nashlegend.sourcewall.view.common.WWebView;
 
 import java.util.ArrayList;
 
-import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
@@ -69,7 +65,7 @@ public class ArticleView extends AceView<Article> {
         authorView = (TextView) findViewById(R.id.text_author);
         dateView = (TextView) findViewById(R.id.text_date);
         loadDesc = findViewById(R.id.view_load_latest);
-        contentView.setBackgroundColor(0);
+        contentView.setBackgroundColor(getResources().getColor(R.color.list_background));
     }
 
     @Override

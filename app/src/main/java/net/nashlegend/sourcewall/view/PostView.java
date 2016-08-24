@@ -2,8 +2,6 @@ package net.nashlegend.sourcewall.view;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +21,6 @@ import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.DateTimeUtil;
 import net.nashlegend.sourcewall.util.ImageUtils;
-import net.nashlegend.sourcewall.util.PrefsUtil;
 import net.nashlegend.sourcewall.util.StyleChecker;
 import net.nashlegend.sourcewall.view.common.WWebView;
 
@@ -55,7 +52,7 @@ public class PostView extends AceView<Post> {
         dateView = (TextView) findViewById(R.id.text_date);
         avatarImage = (ImageView) findViewById(R.id.image_avatar);
         loadDesc = findViewById(R.id.view_load_latest);
-        contentView.setBackgroundColor(0);
+        contentView.setBackgroundColor(getResources().getColor(R.color.list_background));
     }
 
     public PostView(Context context, AttributeSet attrs) {
