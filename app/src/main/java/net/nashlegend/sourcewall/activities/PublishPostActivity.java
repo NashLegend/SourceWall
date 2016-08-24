@@ -37,6 +37,7 @@ import net.nashlegend.sourcewall.db.GroupHelper;
 import net.nashlegend.sourcewall.db.gen.MyGroup;
 import net.nashlegend.sourcewall.dialogs.InputDialog;
 import net.nashlegend.sourcewall.events.GroupFetchedEvent;
+import net.nashlegend.sourcewall.fragment.PostPagerFragment;
 import net.nashlegend.sourcewall.model.PrepareData;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.NetworkTask;
@@ -186,6 +187,7 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
                             public void onNext(List<SubItem> myGroups) {
                                 UiUtil.dismissDialog(progressDialog);
                                 onGetGroups(myGroups);
+                                PostPagerFragment.shouldNotifyDataSetChanged = true;
                                 EventBus.getDefault().post(new GroupFetchedEvent());
                             }
                         });
