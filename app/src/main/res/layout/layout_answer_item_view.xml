@@ -7,7 +7,6 @@
     android:baselineAligned="false"
     android:orientation="horizontal"
     android:paddingBottom="@dimen/list_item_padding_vertical"
-    android:paddingLeft="@dimen/list_item_padding_horizontal"
     android:paddingRight="@dimen/list_item_padding_horizontal"
     android:paddingTop="@dimen/list_item_padding_vertical">
 
@@ -15,6 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="@dimen/avatar_right_span_dimen"
+        android:layout_marginLeft="@dimen/avatar_right_span_dimen"
         android:layout_weight="0"
         android:orientation="vertical">
 
@@ -32,7 +32,7 @@
             android:gravity="center"
             android:textColor="@color/author_color"
             android:textSize="12sp"
-            tools:text="@string/sample_support_number" />
+            tools:text="999" />
     </LinearLayout>
 
     <LinearLayout
