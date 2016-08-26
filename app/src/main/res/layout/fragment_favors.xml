@@ -9,6 +9,7 @@
         android:id="@+id/list_favors"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/list_background"
         android:divider="@null"
         android:scrollbarStyle="outsideOverlay"
         tools:listitem="@layout/layout_favor_item_view" />
