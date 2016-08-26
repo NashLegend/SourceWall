@@ -9,7 +9,7 @@ import de.greenrobot.daogenerator.Schema;
  */
 public class SWDaoGenerator {
     public static void main(String[] args) throws Exception {
-        Schema schema = new Schema(1, "net.nashlegend.sourcewall.db.gen");
+        Schema schema = new Schema(2, "net.nashlegend.sourcewall.db.gen");
         addPostSubItem(schema);
         addQuestionSubItem(schema);
         addFavorSubItem(schema);
