@@ -40,6 +40,8 @@ import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.Consts.Extras;
+import net.nashlegend.sourcewall.util.Consts.Web;
 import net.nashlegend.sourcewall.util.ImageUtils;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.StyleChecker;
@@ -116,17 +118,17 @@ public class AnswerActivity extends BaseActivity implements View.OnClickListener
         thankButton.setOnClickListener(this);
         loadingView.setReloadListener(this);
 
-        if (getIntent().hasExtra(Consts.Extra_Answer)) {
+        if (getIntent().hasExtra(Extras.Extra_Answer)) {
             fromHost = true;
             loadingView.setVisibility(View.GONE);
-            answer = getIntent().getParcelableExtra(Consts.Extra_Answer);
-            question = getIntent().getParcelableExtra(Consts.Extra_Question);
+            answer = getIntent().getParcelableExtra(Extras.Extra_Answer);
+            question = getIntent().getParcelableExtra(Extras.Extra_Question);
             initData();
         } else {
             //来自其他地方的跳转
             fromHost = false;
             redirectUri = getIntent().getData();
-            notice_id = getIntent().getStringExtra(Consts.Extra_Notice_Id);
+            notice_id = getIntent().getStringExtra(Extras.Extra_Notice_Id);
             if (redirectUri != null) {
                 loadingView.setVisibility(View.VISIBLE);
                 loadDataByUri();
@@ -220,7 +222,7 @@ public class AnswerActivity extends BaseActivity implements View.OnClickListener
 
         webView.getSettings().setDefaultTextEncodingName("UTF-8");
         webView.setPrimarySource(answer.getContent());
-        webView.loadDataWithBaseURL(Consts.Base_Url, html, "text/html", "charset=UTF-8", null);
+        webView.loadDataWithBaseURL(Web.Base_Url, html, "text/html", "charset=UTF-8", null);
     }
 
 
@@ -323,7 +325,7 @@ public class AnswerActivity extends BaseActivity implements View.OnClickListener
                 } else {
                     Intent intent = new Intent();
                     intent.setClass(this, QuestionActivity.class);
-                    intent.putExtra(Consts.Extra_Question, (question));
+                    intent.putExtra(Extras.Extra_Question, (question));
                     startOneActivity(intent);
                 }
                 break;
@@ -354,7 +356,7 @@ public class AnswerActivity extends BaseActivity implements View.OnClickListener
     private void replyAnswer() {
         MobclickAgent.onEvent(this, Mob.Event_Open_Answer_Comment);
         Intent intent = new Intent(this, SimpleReplyActivity.class);
-        intent.putExtra(Consts.Extra_Ace_Model, answer);
+        intent.putExtra(Extras.Extra_Ace_Model, answer);
         startOneActivity(intent);
     }
 

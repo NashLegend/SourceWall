@@ -37,6 +37,8 @@ import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.Consts.Extras;
+import net.nashlegend.sourcewall.util.Consts.Web;
 import net.nashlegend.sourcewall.util.ImageUtils;
 import net.nashlegend.sourcewall.util.StyleChecker;
 import net.nashlegend.sourcewall.view.common.LoadingView;
@@ -118,7 +120,7 @@ public class SingleReplyActivity extends BaseActivity implements View.OnClickLis
 
         //来自其他地方的跳转
         redirectUri = getIntent().getData();
-        notice_id = getIntent().getStringExtra(Consts.Extra_Notice_Id);
+        notice_id = getIntent().getStringExtra(Extras.Extra_Notice_Id);
         if (redirectUri != null) {
             List<String> segments = redirectUri.getPathSegments();
             String hostString = redirectUri.getHost();
@@ -280,9 +282,8 @@ public class SingleReplyActivity extends BaseActivity implements View.OnClickLis
         webView.setBackgroundColor(colorBack);
         webView.getSettings().setDefaultTextEncodingName("UTF-8");
         webView.setPrimarySource(data.getContent());
-        webView.loadDataWithBaseURL(Consts.Base_Url, html, "text/html", "charset=UTF-8", null);
+        webView.loadDataWithBaseURL(Web.Base_Url, html, "text/html", "charset=UTF-8", null);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -379,10 +380,10 @@ public class SingleReplyActivity extends BaseActivity implements View.OnClickLis
                 Intent intent = new Intent();
                 if (host instanceof Article) {
                     intent.setClass(this, ArticleActivity.class);
-                    intent.putExtra(Consts.Extra_Article, host);
+                    intent.putExtra(Extras.Extra_Article, host);
                 } else if (host instanceof Post) {
                     intent.setClass(this, PostActivity.class);
-                    intent.putExtra(Consts.Extra_Post, host);
+                    intent.putExtra(Extras.Extra_Post, host);
                 }
                 startOneActivity(intent);
                 break;
@@ -412,9 +413,9 @@ public class SingleReplyActivity extends BaseActivity implements View.OnClickLis
 
     private void replyThis() {
         Intent intent = new Intent(this, ReplyActivity.class);
-        intent.putExtra(Consts.Extra_Ace_Model, host);
+        intent.putExtra(Extras.Extra_Ace_Model, host);
         if (data != null) {
-            intent.putExtra(Consts.Extra_Simple_Comment, data);
+            intent.putExtra(Extras.Extra_Simple_Comment, data);
         }
         startOneActivity(intent);
     }

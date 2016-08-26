@@ -37,6 +37,9 @@ import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.ChannelHelper;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.Consts.Extras;
+import net.nashlegend.sourcewall.util.Consts.Keys;
+import net.nashlegend.sourcewall.util.Consts.RequestCode;
 import net.nashlegend.sourcewall.util.PrefsUtil;
 import net.nashlegend.sourcewall.util.SimpleAnimationListener;
 import net.nashlegend.sourcewall.util.UiUtil;
@@ -177,9 +180,9 @@ public class PostPagerFragment extends BaseFragment {
                     }
                     SubItem item = subItems.get(viewPager.getCurrentItem());
                     if (item.getType() == SubItem.Type_Single_Channel) {
-                        intent.putExtra(Consts.Extra_SubItem, item);
+                        intent.putExtra(Extras.Extra_SubItem, item);
                     }
-                    startActivityForResult(intent, Consts.Code_Publish_Post);
+                    startActivityForResult(intent, RequestCode.Code_Publish_Post);
                     getActivity().overridePendingTransition(R.anim.slide_in_right, 0);
                 } else {
                     ((BaseActivity) getActivity()).gotoLogin();
@@ -273,11 +276,11 @@ public class PostPagerFragment extends BaseFragment {
                     return;
                 }
                 if (GroupHelper.getMyGroupsNumber() > 0) {
-                    long lastDBVersion = PrefsUtil.readLong(Consts.Key_Last_Post_Groups_Version, 0);
+                    long lastDBVersion = PrefsUtil.readLong(Keys.Key_Last_Post_Groups_Version, 0);
                     if (currentDBVersion != lastDBVersion) {
                         resetButtons(GroupHelper.getAllMyGroups());
                         initView();
-                        currentDBVersion = PrefsUtil.readLong(Consts.Key_Last_Post_Groups_Version, 0);
+                        currentDBVersion = PrefsUtil.readLong(Keys.Key_Last_Post_Groups_Version, 0);
                     }
                     manageButton.setVisibility(View.VISIBLE);
                 } else {

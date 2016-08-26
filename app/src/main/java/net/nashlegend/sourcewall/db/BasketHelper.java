@@ -6,6 +6,7 @@ import net.nashlegend.sourcewall.db.gen.MyBasketDao;
 import net.nashlegend.sourcewall.model.Basket;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.Consts.Keys;
 import net.nashlegend.sourcewall.util.PrefsUtil;
 
 import java.util.ArrayList;
@@ -90,7 +91,7 @@ public class BasketHelper {
             basketDao.deleteAll();
             basketDao.insertInTx(myBaskets);
             App.getDaoSession().getDatabase().setTransactionSuccessful();
-            PrefsUtil.saveLong(Consts.Key_Last_Basket_Version, System.currentTimeMillis());
+            PrefsUtil.saveLong(Keys.Key_Last_Basket_Version, System.currentTimeMillis());
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -125,7 +126,7 @@ public class BasketHelper {
     public static void clearAllMyBaskets() {
         MyBasketDao basketDao = App.getDaoSession().getMyBasketDao();
         basketDao.deleteAll();
-        PrefsUtil.saveLong(Consts.Key_Last_Basket_Version, System.currentTimeMillis());
+        PrefsUtil.saveLong(Keys.Key_Last_Basket_Version, System.currentTimeMillis());
     }
 
 }

@@ -22,6 +22,7 @@ import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.AutoHideUtil;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.Consts.Extras;
 import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.view.QuestionListItemView;
 import net.nashlegend.sourcewall.view.common.LoadingView;
@@ -98,7 +99,7 @@ public class MyQuestionsActivity extends BaseActivity {
                 if (view instanceof QuestionListItemView) {
                     Intent intent = new Intent();
                     intent.setClass(MyQuestionsActivity.this, QuestionActivity.class);
-                    intent.putExtra(Consts.Extra_Question, ((QuestionListItemView) view).getData());
+                    intent.putExtra(Extras.Extra_Question, ((QuestionListItemView) view).getData());
                     startOneActivity(intent);
                 }
             }

@@ -21,6 +21,7 @@ import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.Consts.Extras;
 import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.view.QuestionListItemView;
 import net.nashlegend.sourcewall.view.common.LoadingView;
@@ -67,7 +68,7 @@ public class QuestionsFragment extends BaseFragment implements ReloadListener, O
     public static QuestionsFragment newInstance(SubItem subItem) {
         QuestionsFragment fragment = new QuestionsFragment();
         Bundle args = new Bundle();
-        args.putParcelable(Consts.Extra_SubItem, subItem);
+        args.putParcelable(Extras.Extra_SubItem, subItem);
         fragment.setArguments(args);
         return fragment;
     }
@@ -76,7 +77,7 @@ public class QuestionsFragment extends BaseFragment implements ReloadListener, O
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            subItem = getArguments().getParcelable(Consts.Extra_SubItem);
+            subItem = getArguments().getParcelable(Extras.Extra_SubItem);
         }
     }
 
@@ -86,7 +87,7 @@ public class QuestionsFragment extends BaseFragment implements ReloadListener, O
         layoutView = inflater.inflate(R.layout.fragment_questions, container, false);
         ButterKnife.bind(this, layoutView);
         loadingView.setReloadListener(this);
-        subItem = getArguments().getParcelable(Consts.Extra_SubItem);
+        subItem = getArguments().getParcelable(Extras.Extra_SubItem);
         headerView = inflater.inflate(R.layout.layout_header_load_pre_page, null, false);
         adapter = new QuestionAdapter(getActivity());
         listView.setAdapter(adapter);
@@ -290,7 +291,7 @@ public class QuestionsFragment extends BaseFragment implements ReloadListener, O
         if (view instanceof QuestionListItemView) {
             Intent intent = new Intent();
             intent.setClass(getActivity(), QuestionActivity.class);
-            intent.putExtra(Consts.Extra_Question, ((QuestionListItemView) view).getData());
+            intent.putExtra(Extras.Extra_Question, ((QuestionListItemView) view).getData());
             startOneActivity(intent);
         }
     }

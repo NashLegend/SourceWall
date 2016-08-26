@@ -42,6 +42,7 @@ import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.ImageActivity;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.Consts.Extras;
 import net.nashlegend.sourcewall.util.DisplayUtil;
 import net.nashlegend.sourcewall.util.ImageSizeMap;
 import net.nashlegend.sourcewall.util.Mob;
@@ -436,8 +437,8 @@ public class TTextView extends TextView {
                 }
                 if (images.size() > 0) {
                     Intent intent = new Intent();
-                    intent.putStringArrayListExtra(Consts.Extra_Image_String_Array, images);
-                    intent.putExtra(Consts.Extra_Image_Current_Position, clickedPosition);
+                    intent.putStringArrayListExtra(Extras.Extra_Image_String_Array, images);
+                    intent.putExtra(Extras.Extra_Image_Current_Position, clickedPosition);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     Context context = textView.getContext();
                     MobclickAgent.onEvent(context, Mob.Event_Open_Image_From_TextView);

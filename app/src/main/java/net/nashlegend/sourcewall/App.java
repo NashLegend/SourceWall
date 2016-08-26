@@ -14,6 +14,7 @@ import net.nashlegend.sourcewall.db.BaseDB;
 import net.nashlegend.sourcewall.db.gen.DaoMaster;
 import net.nashlegend.sourcewall.db.gen.DaoSession;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.Consts.Keys;
 import net.nashlegend.sourcewall.util.ImageUtils;
 import net.nashlegend.sourcewall.util.PrefsUtil;
 
@@ -31,7 +32,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         application = this;
-        if (PrefsUtil.readBoolean(Consts.Key_Is_Night_Mode, false)) {
+        if (PrefsUtil.readBoolean(Keys.Key_Is_Night_Mode, false)) {
             setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         } else {
             setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);

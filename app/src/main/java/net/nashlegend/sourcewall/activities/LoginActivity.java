@@ -23,6 +23,8 @@ import net.nashlegend.sourcewall.request.HttpUtil;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.Consts.Keys;
+import net.nashlegend.sourcewall.util.Consts.Web;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.PrefsUtil;
 import net.nashlegend.sourcewall.util.UiUtil;
@@ -62,7 +64,7 @@ public class LoginActivity extends BaseActivity {
         webView.setWebViewClient(webViewClient);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
-        webView.loadUrl(Consts.LOGIN_URL);
+        webView.loadUrl(Web.LOGIN_URL);
     }
 
     @Override
@@ -87,10 +89,10 @@ public class LoginActivity extends BaseActivity {
                     }
                     String paramName = rawCookieParamNameAndValue[0].trim();
                     String paramValue = rawCookieParamNameAndValue[1].trim();
-                    if (Consts.Cookie_Token_Key.equals(paramName)) {
+                    if (Web.Cookie_Token_Key.equals(paramName)) {
                         UserAPI.setToken(paramValue);
                         tmpToken = paramValue;
-                    } else if (Consts.Cookie_Ukey_Key.equals(paramName)) {
+                    } else if (Web.Cookie_Ukey_Key.equals(paramName)) {
                         UserAPI.setUkey(paramValue);
                         tmpUkey = paramValue;
                     }
@@ -111,12 +113,12 @@ public class LoginActivity extends BaseActivity {
         @SuppressWarnings("deprecation")
         @Override
         public boolean shouldOverrideUrlLoading(final WebView view, String url) {
-            if (url.equals(Consts.SUCCESS_URL_1) || url.equals(Consts.SUCCESS_URL_2)) {
+            if (url.equals(Web.SUCCESS_URL_1) || url.equals(Web.SUCCESS_URL_2)) {
                 if (parseRawCookie(cookieStr)) {
                     tokenOk = true;
                     UiUtil.dismissDialog(dialog);
                     webView.stopLoading();
-                    PrefsUtil.saveString(Consts.Key_Cookie, cookieStr);
+                    PrefsUtil.saveString(Keys.Key_Cookie, cookieStr);
                     delayFinish();
                 } else {
                     delayPopTokenFailed();
@@ -132,13 +134,13 @@ public class LoginActivity extends BaseActivity {
             CookieManager cookieManager = CookieManager.getInstance();
             if (cookieManager != null) {
                 cookieStr = cookieManager.getCookie(url);
-                if (Consts.LOGIN_URL.equals(url)) {
+                if (Web.LOGIN_URL.equals(url)) {
                     webView.stopLoading();
                 }
             }
             if (parseRawCookie(cookieStr)) {
                 webView.stopLoading();
-                PrefsUtil.saveString(Consts.Key_Cookie, cookieStr);
+                PrefsUtil.saveString(Keys.Key_Cookie, cookieStr);
                 setResult(RESULT_OK);
                 delayFinish();
             } else {

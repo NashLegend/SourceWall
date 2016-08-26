@@ -7,6 +7,9 @@ import android.text.TextUtils;
 
 import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
+import net.nashlegend.sourcewall.util.Consts.ImageLoadMode;
+import net.nashlegend.sourcewall.util.Consts.Keys;
+import net.nashlegend.sourcewall.util.Consts.TailType;
 
 /**
  * Created by NashLegend on 2014/12/15 0015
@@ -26,13 +29,13 @@ public class Config {
         int mode = getImageLoadMode();
         boolean flag = true;
         switch (mode) {
-            case Consts.MODE_ALWAYS_LOAD:
+            case ImageLoadMode.MODE_ALWAYS_LOAD:
                 flag = true;
                 break;
-            case Consts.MODE_NEVER_LOAD:
+            case ImageLoadMode.MODE_NEVER_LOAD:
                 flag = false;
                 break;
-            case Consts.MODE_LOAD_WHEN_WIFI:
+            case ImageLoadMode.MODE_LOAD_WHEN_WIFI:
                 flag = isWifi();
                 break;
         }
@@ -40,7 +43,7 @@ public class Config {
     }
 
     public static boolean shouldLoadHomepageImage() {
-        return !PrefsUtil.readBoolean(Consts.Key_Image_No_Load_Homepage, false);
+        return !PrefsUtil.readBoolean(Keys.Key_Image_No_Load_Homepage, false);
     }
 
     public static boolean isWifi() {
@@ -50,7 +53,7 @@ public class Config {
     }
 
     public static int getImageLoadMode() {
-        return PrefsUtil.readInt(Consts.Key_Image_Load_Mode, Consts.MODE_ALWAYS_LOAD);
+        return PrefsUtil.readInt(Keys.Key_Image_Load_Mode, ImageLoadMode.MODE_ALWAYS_LOAD);
     }
 
     /**
@@ -69,14 +72,14 @@ public class Config {
      */
     public static String getComplexReplyTail() {
         String tail = "";
-        switch (PrefsUtil.readInt(Consts.key_Use_Tail_Type, Consts.Type_Use_Default_Tail)) {
-            case Consts.Type_Use_Default_Tail:
+        switch (PrefsUtil.readInt(Keys.Key_Use_Tail_Type, TailType.Type_Use_Default_Tail)) {
+            case TailType.Type_Use_Default_Tail:
                 tail = getDefaultComplexTail();
                 break;
-            case Consts.Type_Use_Phone_Tail:
+            case TailType.Type_Use_Phone_Tail:
                 tail = getPhoneComplexTail();
                 break;
-            case Consts.Type_Use_Custom_Tail:
+            case TailType.Type_Use_Custom_Tail:
                 tail = getParametricCustomComplexTail();
                 break;
         }
@@ -108,7 +111,7 @@ public class Config {
      * @return 参数化的尾巴
      */
     public static String getParametricCustomComplexTail() {
-        String tail = MDUtil.UBB2HtmlDumb(PrefsUtil.readString(Consts.key_Custom_Tail, ""));
+        String tail = MDUtil.UBB2HtmlDumb(PrefsUtil.readString(Keys.Key_Custom_Tail, ""));
         if (TextUtils.isEmpty(tail)) {
             return "";
         } else {
@@ -123,14 +126,14 @@ public class Config {
      */
     public static String getSimpleReplyTail() {
         String tail = "";
-        switch (PrefsUtil.readInt(Consts.key_Use_Tail_Type, Consts.Type_Use_Default_Tail)) {
-            case Consts.Type_Use_Default_Tail:
+        switch (PrefsUtil.readInt(Keys.Key_Use_Tail_Type, TailType.Type_Use_Default_Tail)) {
+            case TailType.Type_Use_Default_Tail:
                 tail = getDefaultSimpleTail();
                 break;
-            case Consts.Type_Use_Phone_Tail:
+            case TailType.Type_Use_Phone_Tail:
                 tail = getPhoneSimpleTail();
                 break;
-            case Consts.Type_Use_Custom_Tail:
+            case TailType.Type_Use_Custom_Tail:
                 tail = getParametricCustomSimpleTail();
                 break;
         }
@@ -161,7 +164,7 @@ public class Config {
      * @return 自定义尾巴
      */
     public static String getParametricCustomSimpleTail() {
-        String tail = PrefsUtil.readString(Consts.key_Custom_Tail, "");
+        String tail = PrefsUtil.readString(Keys.Key_Custom_Tail, "");
         if (TextUtils.isEmpty(tail)) {
             return "";
         } else {

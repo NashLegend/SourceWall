@@ -17,6 +17,7 @@ import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.ImageAdapter;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.Consts.Extras;
 import net.nashlegend.sourcewall.util.ErrorUtils;
 import net.nashlegend.sourcewall.util.ImageUtils;
 import net.nashlegend.sourcewall.util.Mob;
@@ -57,8 +58,8 @@ public class ImageActivity extends BaseActivity {
         downloadButton = (ImageButton) findViewById(R.id.btn_download);
         pager = (ViewPager) findViewById(R.id.image_pager);
         adapter = new ImageAdapter(this);
-        images = getIntent().getStringArrayListExtra(Consts.Extra_Image_String_Array);
-        int position = getIntent().getIntExtra(Consts.Extra_Image_Current_Position, 0);
+        images = getIntent().getStringArrayListExtra(Extras.Extra_Image_String_Array);
+        int position = getIntent().getIntExtra(Extras.Extra_Image_Current_Position, 0);
 
         if (images != null && images.size() > 0) {
             imageCount = images.size();

@@ -20,6 +20,7 @@ import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.ArticleAPI;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.Consts.Extras;
 import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.view.ArticleListItemView;
 import net.nashlegend.sourcewall.view.common.LoadingView;
@@ -60,7 +61,7 @@ public class ArticlesFragment extends BaseFragment implements ReloadListener, On
     public static ArticlesFragment newInstance(SubItem subItem) {
         ArticlesFragment fragment = new ArticlesFragment();
         Bundle args = new Bundle();
-        args.putParcelable(Consts.Extra_SubItem, subItem);
+        args.putParcelable(Extras.Extra_SubItem, subItem);
         fragment.setArguments(args);
         return fragment;
     }
@@ -69,7 +70,7 @@ public class ArticlesFragment extends BaseFragment implements ReloadListener, On
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            subItem = getArguments().getParcelable(Consts.Extra_SubItem);
+            subItem = getArguments().getParcelable(Extras.Extra_SubItem);
         }
     }
 
@@ -78,7 +79,7 @@ public class ArticlesFragment extends BaseFragment implements ReloadListener, On
         layoutView = inflater.inflate(R.layout.fragment_articles, container, false);
         ButterKnife.bind(this, layoutView);
         loadingView.setReloadListener(this);
-        subItem = getArguments().getParcelable(Consts.Extra_SubItem);
+        subItem = getArguments().getParcelable(Extras.Extra_SubItem);
         adapter = new ArticleAdapter(getActivity());
         listView.setAdapter(adapter);
         listView.setOnRefreshListener(this);
@@ -200,7 +201,7 @@ public class ArticlesFragment extends BaseFragment implements ReloadListener, On
         if (view instanceof ArticleListItemView) {
             Intent intent = new Intent();
             intent.setClass(getContext(), ArticleActivity.class);
-            intent.putExtra(Consts.Extra_Article, ((ArticleListItemView) view).getData());
+            intent.putExtra(Extras.Extra_Article, ((ArticleListItemView) view).getData());
             startOneActivity(intent);
         }
     }

@@ -38,6 +38,7 @@ import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.AutoHideUtil;
 import net.nashlegend.sourcewall.util.AutoHideUtil.AutoHideListener;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.Consts.Extras;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.ShareUtil;
 import net.nashlegend.sourcewall.util.ToastUtil;
@@ -99,8 +100,8 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
                 }
             }
         });
-        question = getIntent().getParcelableExtra(Consts.Extra_Question);
-        notice_id = getIntent().getStringExtra(Consts.Extra_Notice_Id);
+        question = getIntent().getParcelableExtra(Extras.Extra_Question);
+        notice_id = getIntent().getStringExtra(Extras.Extra_Notice_Id);
         listView = (LListView) findViewById(R.id.list_detail);
         adapter = new QuestionDetailAdapter(this);
         listView.setAdapter(adapter);
@@ -231,8 +232,8 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
     private void onReplyItemClick(final View view) {
         if (view instanceof AnswerListItemView) {
             Intent intent = new Intent(this, AnswerActivity.class);
-            intent.putExtra(Consts.Extra_Answer, ((AnswerListItemView) view).getData());
-            intent.putExtra(Consts.Extra_Question, question);
+            intent.putExtra(Extras.Extra_Answer, ((AnswerListItemView) view).getData());
+            intent.putExtra(Extras.Extra_Question, question);
             startOneActivity(intent);
         }
     }
@@ -304,7 +305,7 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
             gotoLogin();
         } else {
             Intent intent = new Intent(this, ReplyActivity.class);
-            intent.putExtra(Consts.Extra_Ace_Model, question);
+            intent.putExtra(Extras.Extra_Ace_Model, question);
             startOneActivity(intent);
         }
     }

@@ -19,6 +19,7 @@ import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.Consts.Extras;
 import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.view.PostListItemView;
 import net.nashlegend.sourcewall.view.common.LoadingView;
@@ -56,7 +57,7 @@ public class PostsFragment extends BaseFragment implements ReloadListener, OnRef
     public static PostsFragment newInstance(SubItem subItem) {
         PostsFragment fragment = new PostsFragment();
         Bundle args = new Bundle();
-        args.putParcelable(Consts.Extra_SubItem, subItem);
+        args.putParcelable(Extras.Extra_SubItem, subItem);
         fragment.setArguments(args);
         return fragment;
     }
@@ -65,7 +66,7 @@ public class PostsFragment extends BaseFragment implements ReloadListener, OnRef
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            subItem = getArguments().getParcelable(Consts.Extra_SubItem);
+            subItem = getArguments().getParcelable(Extras.Extra_SubItem);
         }
     }
 
@@ -74,7 +75,7 @@ public class PostsFragment extends BaseFragment implements ReloadListener, OnRef
                              Bundle savedInstanceState) {
         layoutView = inflater.inflate(R.layout.fragment_posts, container, false);
         ButterKnife.bind(this, layoutView);
-        subItem = getArguments().getParcelable(Consts.Extra_SubItem);
+        subItem = getArguments().getParcelable(Extras.Extra_SubItem);
         headerView = inflater.inflate(R.layout.layout_header_load_pre_page, null, false);
         loadingView.setReloadListener(this);
         adapter = new PostAdapter(getActivity());
@@ -269,7 +270,7 @@ public class PostsFragment extends BaseFragment implements ReloadListener, OnRef
         if (view instanceof PostListItemView) {
             Intent intent = new Intent();
             intent.setClass(getActivity(), PostActivity.class);
-            intent.putExtra(Consts.Extra_Post, ((PostListItemView) view).getData());
+            intent.putExtra(Extras.Extra_Post, ((PostListItemView) view).getData());
             startOneActivity(intent);
         }
     }

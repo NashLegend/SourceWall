@@ -15,6 +15,9 @@ import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.ArticleAPI;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.Consts.Actions;
+import net.nashlegend.sourcewall.util.Consts.Extras;
+import net.nashlegend.sourcewall.util.Consts.Web;
 import net.nashlegend.sourcewall.util.DateTimeUtil;
 import net.nashlegend.sourcewall.util.StyleChecker;
 import net.nashlegend.sourcewall.view.common.WWebView;
@@ -77,7 +80,7 @@ public class ArticleView extends AceView<Article> {
             dateView.setText(DateTimeUtil.time2HumanReadable(article.getDate()));
             String html = StyleChecker.getArticleHtml(article.getContent());
             contentView.setPrimarySource(article.getContent());
-            contentView.loadDataWithBaseURL(Consts.Base_Url, html, "text/html", "charset=UTF-8", null);
+            contentView.loadDataWithBaseURL(Web.Base_Url, html, "text/html", "charset=UTF-8", null);
         } else {
             article = model;
         }
@@ -101,7 +104,7 @@ public class ArticleView extends AceView<Article> {
 
     private void loadLatest() {
         Intent intent = new Intent();
-        intent.setAction(Consts.Action_Start_Loading_Latest);
+        intent.setAction(Actions.Action_Start_Loading_Latest);
         App.getApp().sendBroadcast(intent);
         loadDesc.findViewById(R.id.text_header_load_hint).setVisibility(View.INVISIBLE);
         loadDesc.findViewById(R.id.progress_header_loading).setVisibility(View.VISIBLE);
@@ -123,8 +126,8 @@ public class ArticleView extends AceView<Article> {
                             article.setCommentNum(article.getCommentNum() + ars.size());
                         }
                         Intent intent = new Intent();
-                        intent.setAction(Consts.Action_Finish_Loading_Latest);
-                        intent.putExtra(Consts.Extra_Activity_Hashcode, getContext().hashCode());
+                        intent.setAction(Actions.Action_Finish_Loading_Latest);
+                        intent.putExtra(Extras.Extra_Activity_Hashcode, getContext().hashCode());
                         App.getApp().sendBroadcast(intent);
                     }
                 });

@@ -22,6 +22,7 @@ import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.AutoHideUtil;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.Consts.Extras;
 import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.view.PostListItemView;
 import net.nashlegend.sourcewall.view.common.LoadingView;
@@ -98,7 +99,7 @@ public class MyPostsActivity extends BaseActivity {
                 if (view instanceof PostListItemView) {
                     Intent intent = new Intent();
                     intent.setClass(MyPostsActivity.this, PostActivity.class);
-                    intent.putExtra(Consts.Extra_Post, ((PostListItemView) view).getData());
+                    intent.putExtra(Extras.Extra_Post, ((PostListItemView) view).getData());
                     startOneActivity(intent);
                 }
             }

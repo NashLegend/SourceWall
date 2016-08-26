@@ -16,6 +16,7 @@ import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.FavorAPI;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.Consts.Extras;
 import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;
 import net.nashlegend.sourcewall.view.FavorListItemView;
@@ -52,7 +53,7 @@ public class FavorsFragment extends BaseFragment implements OnRefreshListener, R
     public static FavorsFragment newInstance(SubItem subItem) {
         FavorsFragment fragment = new FavorsFragment();
         Bundle args = new Bundle();
-        args.putParcelable(Consts.Extra_SubItem, subItem);
+        args.putParcelable(Extras.Extra_SubItem, subItem);
         fragment.setArguments(args);
         return fragment;
     }
@@ -61,7 +62,7 @@ public class FavorsFragment extends BaseFragment implements OnRefreshListener, R
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            subItem = getArguments().getParcelable(Consts.Extra_SubItem);
+            subItem = getArguments().getParcelable(Extras.Extra_SubItem);
         }
     }
 
@@ -71,7 +72,7 @@ public class FavorsFragment extends BaseFragment implements OnRefreshListener, R
             layoutView = inflater.inflate(R.layout.fragment_favors, container, false);
             ButterKnife.bind(this, layoutView);
             loadingView.setReloadListener(this);
-            subItem = getArguments().getParcelable(Consts.Extra_SubItem);
+            subItem = getArguments().getParcelable(Extras.Extra_SubItem);
             adapter = new FavorAdapter(getActivity());
             listView.setAdapter(adapter);
             listView.setOnRefreshListener(this);
@@ -81,7 +82,7 @@ public class FavorsFragment extends BaseFragment implements OnRefreshListener, R
             if (layoutView.getParent() != null) {
                 ((ViewGroup) layoutView.getParent()).removeView(layoutView);
             }
-            SubItem mSubItem = getArguments().getParcelable(Consts.Extra_SubItem);
+            SubItem mSubItem = getArguments().getParcelable(Extras.Extra_SubItem);
             resetData(mSubItem);
         }
         return layoutView;

@@ -26,6 +26,7 @@ import com.sina.weibo.sdk.utils.Utility;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.util.AccessTokenKeeper;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.Consts.Extras;
 import net.nashlegend.sourcewall.util.ShareUtil;
 
 public class WeiboShareActivity extends BaseActivity implements IWeiboHandler.Response {
@@ -49,9 +50,9 @@ public class WeiboShareActivity extends BaseActivity implements IWeiboHandler.Re
         if (savedInstanceState != null) {
             mWeiboShareAPI.handleWeiboResponse(getIntent(), this);
         }
-        String url = getIntent().getStringExtra(Consts.Extra_Shared_Url);
-        String title = getIntent().getStringExtra(Consts.Extra_Shared_Title);
-        String summary = getIntent().getStringExtra(Consts.Extra_Shared_Summary);
+        String url = getIntent().getStringExtra(Extras.Extra_Shared_Url);
+        String title = getIntent().getStringExtra(Extras.Extra_Shared_Title);
+        String summary = getIntent().getStringExtra(Extras.Extra_Shared_Summary);
         shareToWeibo(url, title, summary, null);
     }
 

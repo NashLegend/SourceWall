@@ -15,6 +15,7 @@ import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import net.nashlegend.sourcewall.BuildConfig;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.WeiboShareActivity;
+import net.nashlegend.sourcewall.util.Consts.Extras;
 
 import java.io.ByteArrayOutputStream;
 
@@ -71,9 +72,9 @@ public class ShareUtil {
 
     public static void shareToWeibo(Activity context, String url, String title, String summary, Bitmap bitmap) {
         Intent intent = new Intent(context, WeiboShareActivity.class);
-        intent.putExtra(Consts.Extra_Shared_Title, title);
-        intent.putExtra(Consts.Extra_Shared_Summary, summary);
-        intent.putExtra(Consts.Extra_Shared_Url, url);
+        intent.putExtra(Extras.Extra_Shared_Title, title);
+        intent.putExtra(Extras.Extra_Shared_Summary, summary);
+        intent.putExtra(Extras.Extra_Shared_Url, url);
         context.startActivity(intent);
     }
 

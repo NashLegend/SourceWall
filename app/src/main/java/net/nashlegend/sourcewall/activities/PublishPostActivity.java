@@ -47,6 +47,9 @@ import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.APIBase;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.Consts.Extras;
+import net.nashlegend.sourcewall.util.Consts.Keys;
+import net.nashlegend.sourcewall.util.Consts.RequestCode;
 import net.nashlegend.sourcewall.util.FileUtil;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.PrefsUtil;
@@ -108,7 +111,7 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
         insertButton = (ImageButton) findViewById(R.id.btn_insert_img);
         ImageButton linkButton = (ImageButton) findViewById(R.id.btn_link);
         uploadingProgress = findViewById(R.id.prg_uploading_img);
-        SubItem tmpSubItem = getIntent().getParcelableExtra(Consts.Extra_SubItem);
+        SubItem tmpSubItem = getIntent().getParcelableExtra(Extras.Extra_SubItem);
         if (tmpSubItem != null) {
             setGroup(tmpSubItem);
         }
@@ -243,8 +246,8 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
         }
         String sketchTitle = "";
         String sketchContent = "";
-        sketchTitle = SketchUtil.readString(Consts.Key_Sketch_Publish_Post_Title + "_" + subItem.getValue(), "");
-        sketchContent = SketchUtil.readString(Consts.Key_Sketch_Publish_Post_Content + "_" + subItem.getValue(), "");
+        sketchTitle = SketchUtil.readString(Keys.Key_Sketch_Publish_Post_Title + "_" + subItem.getValue(), "");
+        sketchContent = SketchUtil.readString(Keys.Key_Sketch_Publish_Post_Content + "_" + subItem.getValue(), "");
         titleEditText.setText(sketchTitle);
         bodyEditText.setText(restore2Spanned(sketchContent));
     }
@@ -341,8 +344,8 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void tryClearSketch() {
-        SketchUtil.remove(Consts.Key_Sketch_Publish_Post_Content + "_" + subItem.getValue());
-        SketchUtil.remove(Consts.Key_Sketch_Publish_Post_Title + "_" + subItem.getValue());
+        SketchUtil.remove(Keys.Key_Sketch_Publish_Post_Content + "_" + subItem.getValue());
+        SketchUtil.remove(Keys.Key_Sketch_Publish_Post_Title + "_" + subItem.getValue());
     }
 
     private void saveSketch() {
@@ -350,8 +353,8 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
             if (!TextUtils.isEmpty(titleEditText.getText().toString().trim()) || !TextUtils.isEmpty(bodyEditText.getText().toString().trim())) {
                 String sketchTitle = titleEditText.getText().toString();
                 String sketchContent = bodyEditText.getText().toString();
-                SketchUtil.saveString(Consts.Key_Sketch_Publish_Post_Title + "_" + subItem.getValue(), sketchTitle);
-                SketchUtil.saveString(Consts.Key_Sketch_Publish_Post_Content + "_" + subItem.getValue(), sketchContent);
+                SketchUtil.saveString(Keys.Key_Sketch_Publish_Post_Title + "_" + subItem.getValue(), sketchTitle);
+                SketchUtil.saveString(Keys.Key_Sketch_Publish_Post_Content + "_" + subItem.getValue(), sketchContent);
             } else if (TextUtils.isEmpty(titleEditText.getText().toString().trim()) && TextUtils.isEmpty(bodyEditText.getText().toString().trim())) {
                 tryClearSketch();
             }
@@ -411,7 +414,7 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
                         Intent intent = new Intent();
                         intent.setType("image/*");
                         intent.setAction(Intent.ACTION_GET_CONTENT);
-                        startOneActivityForResult(intent, Consts.Code_Invoke_Image_Selector);
+                        startOneActivityForResult(intent, RequestCode.Code_Invoke_Image_Selector);
                         break;
                     case 1:
                         invokeCamera();
@@ -467,14 +470,14 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
         if (!new File(path).exists()) {
             toast(R.string.file_not_exists);
         }
-        if (!PrefsUtil.readBoolean(Consts.Key_User_Has_Learned_Add_Image, false)) {
+        if (!PrefsUtil.readBoolean(Keys.Key_User_Has_Learned_Add_Image, false)) {
             new AlertDialog.Builder(PublishPostActivity.this)
                     .setTitle(R.string.hint)
                     .setMessage(R.string.tip_of_user_learn_add_image)
                     .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            PrefsUtil.saveBoolean(Consts.Key_User_Has_Learned_Add_Image, true);
+                            PrefsUtil.saveBoolean(Keys.Key_User_Has_Learned_Add_Image, true);
                         }
                     }).create().show();
         }
@@ -537,7 +540,7 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         Uri localUri = Uri.fromFile(tmpUploadFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, localUri);
-        startOneActivityForResult(intent, Consts.Code_Invoke_Camera);
+        startOneActivityForResult(intent, RequestCode.Code_Invoke_Camera);
     }
 
     /**
@@ -758,14 +761,14 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case Consts.Code_Invoke_Image_Selector:
+                case RequestCode.Code_Invoke_Image_Selector:
                     Uri uri = data.getData();
                     String path = FileUtil.getActualPath(this, uri);
                     if (!TextUtils.isEmpty(path)) {
                         uploadImage(path);
                     }
                     break;
-                case Consts.Code_Invoke_Camera:
+                case RequestCode.Code_Invoke_Camera:
                     if (tmpUploadFile != null) {
                         uploadImage(tmpUploadFile.getAbsolutePath());
                     }

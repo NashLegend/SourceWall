@@ -43,6 +43,9 @@ import net.nashlegend.sourcewall.request.NetworkTask;
 import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
 import net.nashlegend.sourcewall.request.api.APIBase;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.Consts.Extras;
+import net.nashlegend.sourcewall.util.Consts.Keys;
+import net.nashlegend.sourcewall.util.Consts.RequestCode;
 import net.nashlegend.sourcewall.util.FileUtil;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.PrefsUtil;
@@ -80,8 +83,8 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        aceModel = getIntent().getParcelableExtra(Consts.Extra_Ace_Model);
-        comment = getIntent().getParcelableExtra(Consts.Extra_Simple_Comment);
+        aceModel = getIntent().getParcelableExtra(Extras.Extra_Ace_Model);
+        comment = getIntent().getParcelableExtra(Extras.Extra_Simple_Comment);
         editText = (EditText) findViewById(R.id.text_reply);
         hostText = (TextView) findViewById(R.id.text_reply_host);
         if (comment != null) {
@@ -118,7 +121,7 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
                         Intent intent = new Intent();
                         intent.setType("image/*");
                         intent.setAction(Intent.ACTION_GET_CONTENT);
-                        startOneActivityForResult(intent, Consts.Code_Invoke_Image_Selector);
+                        startOneActivityForResult(intent, RequestCode.Code_Invoke_Image_Selector);
                         break;
                     case 1:
                         invokeCamera();
@@ -174,11 +177,11 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
         if (!new File(path).exists()) {
             toast(R.string.file_not_exists);
         }
-        if (!PrefsUtil.readBoolean(Consts.Key_User_Has_Learned_Add_Image, false)) {
+        if (!PrefsUtil.readBoolean(Keys.Key_User_Has_Learned_Add_Image, false)) {
             new AlertDialog.Builder(ReplyActivity.this).setTitle(R.string.hint).setMessage(R.string.tip_of_user_learn_add_image).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    PrefsUtil.saveBoolean(Consts.Key_User_Has_Learned_Add_Image, true);
+                    PrefsUtil.saveBoolean(Keys.Key_User_Has_Learned_Add_Image, true);
                 }
             }).create().show();
         }
@@ -240,7 +243,7 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         Uri localUri = Uri.fromFile(tmpUploadFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, localUri);
-        startOneActivityForResult(intent, Consts.Code_Invoke_Camera);
+        startOneActivityForResult(intent, RequestCode.Code_Invoke_Camera);
     }
 
     /**
@@ -369,11 +372,11 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
         String content = "";
         if (aceModel != null) {
             if (aceModel instanceof Article) {
-                content = SketchUtil.readString(Consts.Key_Sketch_Article_Reply + "_" + ((Article) aceModel).getId(), "");
+                content = SketchUtil.readString(Keys.Key_Sketch_Article_Reply + "_" + ((Article) aceModel).getId(), "");
             } else if (aceModel instanceof Post) {
-                content = SketchUtil.readString(Consts.Key_Sketch_Post_Reply + "_" + ((Post) aceModel).getId(), "");
+                content = SketchUtil.readString(Keys.Key_Sketch_Post_Reply + "_" + ((Post) aceModel).getId(), "");
             } else if (aceModel instanceof Question) {
-                content = SketchUtil.readString(Consts.Key_Sketch_Question_Answer + "_" + ((Question) aceModel).getId(), "");
+                content = SketchUtil.readString(Keys.Key_Sketch_Question_Answer + "_" + ((Question) aceModel).getId(), "");
             }
         }
         editText.setText(restore2Spanned(content));
@@ -473,11 +476,11 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
 
     private void tryClearSketch() {
         if (aceModel instanceof Article) {
-            SketchUtil.remove(Consts.Key_Sketch_Article_Reply + "_" + ((Article) aceModel).getId());
+            SketchUtil.remove(Keys.Key_Sketch_Article_Reply + "_" + ((Article) aceModel).getId());
         } else if (aceModel instanceof Post) {
-            SketchUtil.remove(Consts.Key_Sketch_Post_Reply + "_" + ((Post) aceModel).getId());
+            SketchUtil.remove(Keys.Key_Sketch_Post_Reply + "_" + ((Post) aceModel).getId());
         } else if (aceModel instanceof Question) {
-            SketchUtil.remove(Consts.Key_Sketch_Question_Answer + "_" + ((Question) aceModel).getId());
+            SketchUtil.remove(Keys.Key_Sketch_Question_Answer + "_" + ((Question) aceModel).getId());
         }
     }
 
@@ -485,11 +488,11 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
         if (!replyOK && !TextUtils.isEmpty(editText.getText().toString().trim()) && aceModel != null) {
             String sketch = editText.getText().toString();
             if (aceModel instanceof Article) {
-                SketchUtil.saveString(Consts.Key_Sketch_Article_Reply + "_" + ((Article) aceModel).getId(), sketch);
+                SketchUtil.saveString(Keys.Key_Sketch_Article_Reply + "_" + ((Article) aceModel).getId(), sketch);
             } else if (aceModel instanceof Post) {
-                SketchUtil.saveString(Consts.Key_Sketch_Post_Reply + "_" + ((Post) aceModel).getId(), sketch);
+                SketchUtil.saveString(Keys.Key_Sketch_Post_Reply + "_" + ((Post) aceModel).getId(), sketch);
             } else if (aceModel instanceof Question) {
-                SketchUtil.saveString(Consts.Key_Sketch_Question_Answer + "_" + ((Question) aceModel).getId(), sketch);
+                SketchUtil.saveString(Keys.Key_Sketch_Question_Answer + "_" + ((Question) aceModel).getId(), sketch);
             }
         } else if (!replyOK && TextUtils.isEmpty(editText.getText().toString().trim())) {
             tryClearSketch();
@@ -525,14 +528,14 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case Consts.Code_Invoke_Image_Selector:
+                case RequestCode.Code_Invoke_Image_Selector:
                     Uri uri = data.getData();
                     String path = FileUtil.getActualPath(this, uri);
                     if (!TextUtils.isEmpty(path)) {
                         uploadImage(path);
                     }
                     break;
-                case Consts.Code_Invoke_Camera:
+                case RequestCode.Code_Invoke_Camera:
                     if (tmpUploadFile != null) {
                         uploadImage(tmpUploadFile.getAbsolutePath());
                     }

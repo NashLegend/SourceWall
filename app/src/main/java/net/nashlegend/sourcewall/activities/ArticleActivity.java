@@ -45,6 +45,9 @@ import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.AutoHideUtil;
 import net.nashlegend.sourcewall.util.AutoHideUtil.AutoHideListener;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.Consts.Actions;
+import net.nashlegend.sourcewall.util.Consts.Extras;
+import net.nashlegend.sourcewall.util.Consts.RequestCode;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.RegUtil;
 import net.nashlegend.sourcewall.util.ShareUtil;
@@ -131,8 +134,8 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
                 }
             }
         });
-        article = getIntent().getParcelableExtra(Consts.Extra_Article);
-        notice_id = getIntent().getStringExtra(Consts.Extra_Notice_Id);
+        article = getIntent().getParcelableExtra(Extras.Extra_Article);
+        notice_id = getIntent().getStringExtra(Extras.Extra_Notice_Id);
         if (!TextUtils.isEmpty(article.getSubjectName())) {
             setTitle(article.getSubjectName() + " -- 科学人");
         }
@@ -160,8 +163,8 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
 
         receiver = new Receiver();
         IntentFilter filter = new IntentFilter();
-        filter.addAction(Consts.Action_Start_Loading_Latest);
-        filter.addAction(Consts.Action_Finish_Loading_Latest);
+        filter.addAction(Actions.Action_Start_Loading_Latest);
+        filter.addAction(Actions.Action_Finish_Loading_Latest);
         registerReceiver(receiver, filter);
     }
 
@@ -191,17 +194,17 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
             gotoLogin();
         } else {
             Intent intent = new Intent(this, ReplyActivity.class);
-            intent.putExtra(Consts.Extra_Ace_Model, article);
+            intent.putExtra(Extras.Extra_Ace_Model, article);
             if (comment != null) {
-                intent.putExtra(Consts.Extra_Simple_Comment, comment);
+                intent.putExtra(Extras.Extra_Simple_Comment, comment);
             }
-            startOneActivityForResult(intent, Consts.Code_Reply_Article);
+            startOneActivityForResult(intent, RequestCode.Code_Reply_Article);
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Consts.Code_Reply_Article && resultCode == RESULT_OK && !loadDesc) {
+        if (requestCode == RequestCode.Code_Reply_Article && resultCode == RESULT_OK && !loadDesc) {
             article.setCommentNum(article.getCommentNum() + 1);
             listView.startLoadingMore();
         }
@@ -702,10 +705,10 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (isActive() && intent.getIntExtra(Consts.Extra_Activity_Hashcode, 0) == ArticleActivity.this.hashCode()) {
-                if (Consts.Action_Start_Loading_Latest.equals(intent.getAction())) {
+            if (isActive() && intent.getIntExtra(Extras.Extra_Activity_Hashcode, 0) == ArticleActivity.this.hashCode()) {
+                if (Actions.Action_Start_Loading_Latest.equals(intent.getAction())) {
                     onStartLoadingLatest();
-                } else if (Consts.Action_Finish_Loading_Latest.equals(intent.getAction())) {
+                } else if (Actions.Action_Finish_Loading_Latest.equals(intent.getAction())) {
                     onFinishLoadingLatest();
                 }
             }

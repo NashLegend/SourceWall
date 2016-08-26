@@ -35,6 +35,8 @@ import net.nashlegend.sourcewall.request.api.MessageAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.Consts.Keys;
+import net.nashlegend.sourcewall.util.Consts.RequestCode;
 import net.nashlegend.sourcewall.util.ImageUtils;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.PrefsUtil;
@@ -125,7 +127,7 @@ public class ProfileFragment extends BaseFragment {
             case R.id.profile_header:
                 if (!UserAPI.isLoggedIn()) {
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
-                    startActivityForResult(intent, Consts.Code_Login);
+                    startActivityForResult(intent, RequestCode.Code_Login);
                 }
                 break;
             case R.id.layout_msg_center:
@@ -155,10 +157,10 @@ public class ProfileFragment extends BaseFragment {
     private void revertMode() {
         if (App.isNightMode()) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-            PrefsUtil.saveBoolean(Consts.Key_Is_Night_Mode, false);
+            PrefsUtil.saveBoolean(Keys.Key_Is_Night_Mode, false);
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-            PrefsUtil.saveBoolean(Consts.Key_Is_Night_Mode, true);
+            PrefsUtil.saveBoolean(Keys.Key_Is_Night_Mode, true);
         }
         MobclickAgent.onEvent(getActivity(), Mob.Event_Switch_Day_Night_Mode);
         getActivity().recreate();
@@ -212,9 +214,9 @@ public class ProfileFragment extends BaseFragment {
 
                 @Override
                 public void onSuccess(@NonNull UserInfo info, @NonNull ResponseObject<UserInfo> detailed) {
-                    PrefsUtil.saveString(Consts.Key_User_Name, info.getNickname());
-                    PrefsUtil.saveString(Consts.Key_User_ID, info.getId());
-                    PrefsUtil.saveString(Consts.Key_User_Avatar, info.getAvatar());
+                    PrefsUtil.saveString(Keys.Key_User_Name, info.getNickname());
+                    PrefsUtil.saveString(Keys.Key_User_ID, info.getId());
+                    PrefsUtil.saveString(Keys.Key_User_Avatar, info.getAvatar());
                     if (Config.shouldLoadImage()) {
                         ImageLoader.getInstance().displayImage(info.getAvatar(), imageAvatar, ImageUtils.avatarOptions);
                     } else {

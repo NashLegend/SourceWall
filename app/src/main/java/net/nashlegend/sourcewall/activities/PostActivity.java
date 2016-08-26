@@ -44,6 +44,9 @@ import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.AutoHideUtil;
 import net.nashlegend.sourcewall.util.AutoHideUtil.AutoHideListener;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.Consts.Actions;
+import net.nashlegend.sourcewall.util.Consts.Extras;
+import net.nashlegend.sourcewall.util.Consts.RequestCode;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.RegUtil;
 import net.nashlegend.sourcewall.util.ShareUtil;
@@ -123,8 +126,8 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
                 }
             }
         });
-        post = getIntent().getParcelableExtra(Consts.Extra_Post);
-        notice_id = getIntent().getStringExtra(Consts.Extra_Notice_Id);
+        post = getIntent().getParcelableExtra(Extras.Extra_Post);
+        notice_id = getIntent().getStringExtra(Extras.Extra_Notice_Id);
         if (!TextUtils.isEmpty(post.getGroupName())) {
             setTitle(post.getGroupName() + " -- 小组");
         }
@@ -151,8 +154,8 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
 
         receiver = new Receiver();
         IntentFilter filter = new IntentFilter();
-        filter.addAction(Consts.Action_Start_Loading_Latest);
-        filter.addAction(Consts.Action_Finish_Loading_Latest);
+        filter.addAction(Actions.Action_Start_Loading_Latest);
+        filter.addAction(Actions.Action_Finish_Loading_Latest);
         registerReceiver(receiver, filter);
     }
 
@@ -337,17 +340,17 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
             gotoLogin();
         } else {
             Intent intent = new Intent(this, ReplyActivity.class);
-            intent.putExtra(Consts.Extra_Ace_Model, post);
+            intent.putExtra(Extras.Extra_Ace_Model, post);
             if (comment != null) {
-                intent.putExtra(Consts.Extra_Simple_Comment, comment);
+                intent.putExtra(Extras.Extra_Simple_Comment, comment);
             }
-            startOneActivityForResult(intent, Consts.Code_Reply_Post);
+            startOneActivityForResult(intent, RequestCode.Code_Reply_Post);
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Consts.Code_Reply_Post && resultCode == RESULT_OK && !loadDesc) {
+        if (requestCode == RequestCode.Code_Reply_Post && resultCode == RESULT_OK && !loadDesc) {
             post.setReplyNum(post.getReplyNum() + 1);
             listView.startLoadingMore();
         }
@@ -586,10 +589,10 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (isActive() && intent.getIntExtra(Consts.Extra_Activity_Hashcode, 0) == PostActivity.this.hashCode()) {
-                if (Consts.Action_Start_Loading_Latest.equals(intent.getAction())) {
+            if (isActive() && intent.getIntExtra(Extras.Extra_Activity_Hashcode, 0) == PostActivity.this.hashCode()) {
+                if (Actions.Action_Start_Loading_Latest.equals(intent.getAction())) {
                     onStartLoadingLatest();
-                } else if (Consts.Action_Finish_Loading_Latest.equals(intent.getAction())) {
+                } else if (Actions.Action_Finish_Loading_Latest.equals(intent.getAction())) {
                     onFinishLoadingLatest();
                 }
             }

@@ -30,6 +30,7 @@ import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.Consts.Extras;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.view.SimpleCommentItemView;
@@ -84,7 +85,7 @@ public class SimpleReplyActivity extends BaseActivity implements OnRefreshListen
         });
         textReply = (EditText) findViewById(R.id.text_simple_reply);
         publishButton = (ImageButton) findViewById(R.id.btn_publish);
-        aceModel = getIntent().getParcelableExtra(Consts.Extra_Ace_Model);
+        aceModel = getIntent().getParcelableExtra(Extras.Extra_Ace_Model);
         listView = (LListView) findViewById(R.id.list_detail);
         adapter = new SimpleCommentAdapter(this);
         listView.setAdapter(adapter);

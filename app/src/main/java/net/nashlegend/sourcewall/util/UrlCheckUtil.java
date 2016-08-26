@@ -15,6 +15,7 @@ import net.nashlegend.sourcewall.activities.SingleReplyActivity;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.Question;
+import net.nashlegend.sourcewall.util.Consts.Extras;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -70,7 +71,7 @@ public class UrlCheckUtil {
             String secondSegment = segments.get(1);
             Intent intent = new Intent();
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra(Consts.Extra_Notice_Id, notice_id);
+            intent.putExtra(Extras.Extra_Notice_Id, notice_id);
             switch (section) {
                 case "article":
                     if (segments.size() == 2) {
@@ -92,7 +93,7 @@ public class UrlCheckUtil {
                             intent.setClass(App.getApp(), ArticleActivity.class);
                             Article article = new Article();
                             article.setId(secondSegment);
-                            intent.putExtra(Consts.Extra_Article, article);
+                            intent.putExtra(Extras.Extra_Article, article);
                             App.getApp().startActivity(intent);
                         }
                     } else if (segments.size() == 3) {
@@ -121,7 +122,7 @@ public class UrlCheckUtil {
                             intent.setClass(App.getApp(), PostActivity.class);
                             Post post = new Post();
                             post.setId(secondSegment);
-                            intent.putExtra(Consts.Extra_Post, post);
+                            intent.putExtra(Extras.Extra_Post, post);
                             App.getApp().startActivity(intent);
                         }
                     } else if (segments.size() == 3) {
@@ -158,7 +159,7 @@ public class UrlCheckUtil {
                             intent.setClass(App.getApp(), QuestionActivity.class);
                             Question question = new Question();
                             question.setId(secondSegment);
-                            intent.putExtra(Consts.Extra_Question, question);
+                            intent.putExtra(Extras.Extra_Question, question);
                             App.getApp().startActivity(intent);
                         }
                     }

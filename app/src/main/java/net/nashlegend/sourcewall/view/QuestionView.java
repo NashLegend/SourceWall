@@ -13,6 +13,7 @@ import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.SimpleReplyActivity;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.Consts.Extras;
 import net.nashlegend.sourcewall.util.DateTimeUtil;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.PrefsUtil;
@@ -48,7 +49,7 @@ public class QuestionView extends AceView<Question> {
                 }
                 MobclickAgent.onEvent(getContext(), Mob.Event_Open_Question_Comment);
                 Intent intent = new Intent(getContext(), SimpleReplyActivity.class);
-                intent.putExtra(Consts.Extra_Ace_Model, question);
+                intent.putExtra(Extras.Extra_Ace_Model, question);
                 getContext().startActivity(intent);
             }
         });

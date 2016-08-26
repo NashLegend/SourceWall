@@ -19,6 +19,9 @@ import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts;
+import net.nashlegend.sourcewall.util.Consts.Actions;
+import net.nashlegend.sourcewall.util.Consts.Extras;
+import net.nashlegend.sourcewall.util.Consts.Web;
 import net.nashlegend.sourcewall.util.DateTimeUtil;
 import net.nashlegend.sourcewall.util.ImageUtils;
 import net.nashlegend.sourcewall.util.StyleChecker;
@@ -72,7 +75,7 @@ public class PostView extends AceView<Post> {
             dateView.setText(DateTimeUtil.time2HumanReadable(post.getDate()));
             String html = StyleChecker.getPostHtml(post.getContent());
             contentView.setPrimarySource(post.getContent());
-            contentView.loadDataWithBaseURL(Consts.Base_Url, html, "text/html", "charset=UTF-8", null);
+            contentView.loadDataWithBaseURL(Web.Base_Url, html, "text/html", "charset=UTF-8", null);
             if (Config.shouldLoadImage()) {
                 ImageLoader.getInstance().displayImage(post.getAuthor().getAvatar(), avatarImage, ImageUtils.avatarOptions);
             } else {
@@ -104,7 +107,7 @@ public class PostView extends AceView<Post> {
         }
 
         Intent intent = new Intent();
-        intent.setAction(Consts.Action_Start_Loading_Latest);
+        intent.setAction(Actions.Action_Start_Loading_Latest);
         App.getApp().sendBroadcast(intent);
         loadDesc.findViewById(R.id.text_header_load_hint).setVisibility(View.INVISIBLE);
         loadDesc.findViewById(R.id.progress_header_loading).setVisibility(View.VISIBLE);
@@ -121,8 +124,8 @@ public class PostView extends AceView<Post> {
                     @Override
                     public void onError(Throwable e) {
                         Intent intent = new Intent();
-                        intent.setAction(Consts.Action_Finish_Loading_Latest);
-                        intent.putExtra(Consts.Extra_Activity_Hashcode, getContext().hashCode());
+                        intent.setAction(Actions.Action_Finish_Loading_Latest);
+                        intent.putExtra(Extras.Extra_Activity_Hashcode, getContext().hashCode());
                         App.getApp().sendBroadcast(intent);
                     }
 
@@ -139,8 +142,8 @@ public class PostView extends AceView<Post> {
                             post.setReplyNum(post.getReplyNum() + ars.size());
                         }
                         Intent intent = new Intent();
-                        intent.setAction(Consts.Action_Finish_Loading_Latest);
-                        intent.putExtra(Consts.Extra_Activity_Hashcode, getContext().hashCode());
+                        intent.setAction(Actions.Action_Finish_Loading_Latest);
+                        intent.putExtra(Extras.Extra_Activity_Hashcode, getContext().hashCode());
                         App.getApp().sendBroadcast(intent);
                     }
                 });
