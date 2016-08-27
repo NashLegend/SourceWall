@@ -66,7 +66,7 @@
     <color name="llist_header_button_background_pressed">#dddddd</color>
 
     <!-- 看图页面顶部下载按钮和文字的背景-->
-    <color name="image_header_color_bg">#66333333</color>
+    <color name="image_header_color_bg">#66111111</color>
     <color name="splitter_color_grey">#dddddd</color>
 
     <!-- 列表背景-->
