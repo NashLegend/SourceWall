@@ -67,11 +67,12 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
         gestureDetector = new GestureDetector(getContext(), gestureListener);
         imageView = (ScalingImage) findViewById(R.id.zoom_image);
         gifImageView = (GifImageView) findViewById(R.id.gifImage);
-        gifImageView.setVisibility(VISIBLE);
+        gifImageView.setVisibility(GONE);
         imageView.setVisibility(GONE);
         imageView.setMinimumDpi(doubleTapZoomDpi);
         imageView.setDoubleTapZoomDpi(doubleTapZoomDpi);
         loadingView = (LoadingView) findViewById(R.id.image_loading);
+        loadingView.findViewById(R.id.rootView).setBackgroundColor(0);
         imageView.setOnClickListener(this);
         gifImageView.setOnTouchListener(touchListener);
         this.setOnTouchListener(touchListener);
@@ -91,8 +92,6 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
                 String encodedBitmap = url.replaceAll("data:image/\\w{3,4};base64,", "");
                 byte[] data = Base64.decode(encodedBitmap, Base64.DEFAULT);
                 Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                gifImageView.setVisibility(GONE);
-                imageView.setVisibility(VISIBLE);
                 imageView.setImage(ImageSource.bitmap(bitmap));
                 properScale(bitmap);
                 loadingView.onLoadSuccess();
@@ -102,10 +101,20 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
         }
     }
 
-    public void unload() {
-        if (task != null && task.getStatus() == AsyncTask.Status.RUNNING) {
-            task.cancel(true);
+    private void unload() {
+        try {
+            if (task != null && task.getStatus() == AsyncTask.Status.RUNNING) {
+                task.cancel(true);
+            }
+        } catch (Exception ignored) {
+
         }
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        unload();
     }
 
     @Override

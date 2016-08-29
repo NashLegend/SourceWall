@@ -34,7 +34,6 @@ public class ImageAdapter extends PagerAdapter {
     public void destroyItem(ViewGroup container, int position, Object object) {
         try {
             if (object instanceof ImageViewer) {
-                ((ImageViewer) object).unload();
                 container.removeView((View) object);
             }
         } catch (Exception e) {
