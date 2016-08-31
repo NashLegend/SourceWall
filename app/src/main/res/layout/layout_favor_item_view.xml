@@ -1,42 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/list_item_padding_vertical"
+    android:paddingLeft="@dimen/list_item_padding_horizontal"
+    android:paddingRight="@dimen/list_item_padding_horizontal"
+    android:paddingTop="@dimen/list_item_padding_vertical">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/text_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/list_item_padding_vertical"
-        android:paddingLeft="@dimen/list_item_padding_horizontal"
-        android:paddingRight="@dimen/list_item_padding_horizontal"
-        android:paddingTop="@dimen/list_item_padding_vertical">
+        android:layout_marginBottom="@dimen/post_item_title_margin_bottom"
+        android:textColor="@color/list_title"
+        android:textSize="@dimen/list_title_font_size"
+        tools:text="@string/sample_title" />
 
-        <TextView
-            android:id="@+id/text_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/post_item_title_margin_bottom"
-            tools:text="@string/sample_title"
-            android:textColor="@color/list_title"
-            android:textSize="@dimen/list_title_font_size" />
-
-        <TextView
-            android:id="@+id/text_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
-            tools:text="@string/sample_date"
-            android:textColor="@color/author_color"
-            android:textSize="@dimen/text_author_view_font_size_dimen" />
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_marginLeft="@dimen/list_item_padding_horizontal"
-        android:layout_marginRight="@dimen/list_item_padding_horizontal"
-        android:background="?attr/divider_color" />
+    <TextView
+        android:id="@+id/text_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:textColor="@color/author_color"
+        android:textSize="@dimen/text_author_view_font_size_dimen"
+        tools:text="@string/sample_date" />
 </LinearLayout>

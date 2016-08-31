@@ -31,9 +31,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/list_background"
+            android:divider="@drawable/divider_thin"
+            android:dividerHeight="@dimen/splitter_height"
             android:footerDividersEnabled="false"
             android:headerDividersEnabled="false"
-            tools:listitem="@layout/layout_post_item_view"/>
+            tools:listitem="@layout/layout_post_item_view" />
 
         <net.nashlegend.sourcewall.view.common.LoadingView
             android:id="@+id/post_progress_loading"

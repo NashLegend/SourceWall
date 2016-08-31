@@ -9,6 +9,8 @@
         android:id="@+id/notice_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:divider="@drawable/divider_thin"
+        android:dividerHeight="@dimen/splitter_height"
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="false"
         tools:listitem="@layout/layout_notice_view" />

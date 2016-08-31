@@ -28,6 +28,8 @@
                 android:id="@+id/list_favor_dialog"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:divider="@drawable/divider_thin"
+                android:dividerHeight="@dimen/splitter_height"
                 android:gravity="top"
                 android:minHeight="@dimen/input_dialog_input_height"
                 tools:listitem="@layout/layout_basket_item_view" />
