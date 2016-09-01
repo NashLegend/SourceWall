@@ -29,6 +29,8 @@ import net.nashlegend.sourcewall.view.common.ScalingImage;
 
 import java.io.File;
 import java.net.URLDecoder;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageView;
@@ -37,7 +39,7 @@ import pl.droidsonroids.gif.GifImageView;
  * Created by NashLegend on 2015/3/31 0031
  */
 public class ImageViewer extends FrameLayout implements LoadingView.ReloadListener, View.OnClickListener {
-    ScalingImage imageView;
+    ScalingImage scalingImage;
     GifImageView gifImageView;
     LoadingView loadingView;
     LoaderTask task;
@@ -65,15 +67,15 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_image_viewer, this);
         gestureDetector = new GestureDetector(getContext(), gestureListener);
-        imageView = (ScalingImage) findViewById(R.id.zoom_image);
+        scalingImage = (ScalingImage) findViewById(R.id.zoom_image);
         gifImageView = (GifImageView) findViewById(R.id.gifImage);
         gifImageView.setVisibility(GONE);
-        imageView.setVisibility(GONE);
-        imageView.setMinimumDpi(doubleTapZoomDpi);
-        imageView.setDoubleTapZoomDpi(doubleTapZoomDpi);
+        scalingImage.setVisibility(GONE);
+        scalingImage.setMinimumDpi(doubleTapZoomDpi);
+        scalingImage.setDoubleTapZoomDpi(doubleTapZoomDpi);
         loadingView = (LoadingView) findViewById(R.id.image_loading);
         loadingView.findViewById(R.id.rootView).setBackgroundColor(0);
-        imageView.setOnClickListener(this);
+        scalingImage.setOnClickListener(this);
         gifImageView.setOnTouchListener(touchListener);
         this.setOnTouchListener(touchListener);
         gifImageView.setOnClickListener(this);
@@ -83,6 +85,13 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
     public void load(String imageUrl) {
         loadingView.startLoading();
         url = imageUrl;
+
+        String reg = ".+/w/(\\d+)/h/(\\d+)";
+        Matcher matcher = Pattern.compile(reg).matcher(url);
+        if (matcher.find()) {
+            url = url.replaceAll("\\?.*$", "");
+        }
+
         if (url.startsWith("http")) {
             task = new LoaderTask();
             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
@@ -92,7 +101,7 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
                 String encodedBitmap = url.replaceAll("data:image/\\w{3,4};base64,", "");
                 byte[] data = Base64.decode(encodedBitmap, Base64.DEFAULT);
                 Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                imageView.setImage(ImageSource.bitmap(bitmap));
+                scalingImage.setImage(ImageSource.bitmap(bitmap));
                 properScale(bitmap);
                 loadingView.onLoadSuccess();
             } catch (Exception e) {
@@ -143,7 +152,7 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
         if (point != null) {
             properScale(point.x, point.y);
         } else {
-            imageView.setDoubleTapZoomDpi(doubleTapZoomDpi);
+            scalingImage.setDoubleTapZoomDpi(doubleTapZoomDpi);
         }
     }
 
@@ -154,11 +163,11 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
             float minDensity = doubleTapZoomDpi / 160;
             if (sw <= width * density / minDensity) {
                 //如果默认情况下图片双击会超过屏幕，那么就不让他超过
-                imageView.setDoubleTapZoomScale(sw / width);
+                scalingImage.setDoubleTapZoomScale(sw / width);
                 return;
             }
         }
-        imageView.setDoubleTapZoomDpi(doubleTapZoomDpi);
+        scalingImage.setDoubleTapZoomDpi(doubleTapZoomDpi);
     }
 
     class LoaderTask extends AsyncTask<String, Integer, ResponseObject<File>> {
@@ -198,7 +207,7 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
                 }
                 if ("gif".equalsIgnoreCase(suffix)) {
                     gifImageView.setVisibility(VISIBLE);
-                    imageView.setVisibility(GONE);
+                    scalingImage.setVisibility(GONE);
                     try {
                         GifDrawable gifDrawable = new GifDrawable(result.result);
                         int initWidth = gifDrawable.getIntrinsicWidth();
@@ -223,8 +232,8 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
                     }
                 } else {
                     gifImageView.setVisibility(GONE);
-                    imageView.setVisibility(VISIBLE);
-                    imageView.setImage(ImageSource.uri(Uri.fromFile(result.result)));
+                    scalingImage.setVisibility(VISIBLE);
+                    scalingImage.setImage(ImageSource.uri(Uri.fromFile(result.result)));
                     properScale(result.result);
                 }
             } else {
