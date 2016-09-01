@@ -27,7 +27,7 @@ public class MDUtil {
     public static String Markdown2Html(String text) {
         try {
             Markdown4jProcessor processor = new Markdown4jProcessor();
-            processor.addStyleClass("max-width:100%;", "img");
+            processor.addStyleClass("max-width:100%; height:auto;", "img");
             return processor.process(text);
         } catch (IOException e) {
             return Markdown2HtmlDumb(text);
