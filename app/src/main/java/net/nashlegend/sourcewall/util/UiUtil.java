@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
 public class UiUtil {
 
 
-    public static void ensureWebView(WebView webView){
+    public static void ensureWebView(WebView webView) {
         fixedAccessibilityInjectorException(webView);
         disableAccessibility();
     }

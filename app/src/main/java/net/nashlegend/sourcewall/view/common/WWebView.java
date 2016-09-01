@@ -20,7 +20,6 @@ import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.ImageActivity;
 import net.nashlegend.sourcewall.util.Config;
-import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Consts.Extras;
 import net.nashlegend.sourcewall.util.DisplayUtil;
 import net.nashlegend.sourcewall.util.Mob;

@@ -1,12 +1,8 @@
 package net.nashlegend.sourcewall.request.parsers;
 
-import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.SearchItem;
-import net.nashlegend.sourcewall.request.JsonHandler;
 import net.nashlegend.sourcewall.request.ResponseObject;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;

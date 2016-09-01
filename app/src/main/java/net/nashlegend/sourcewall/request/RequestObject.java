@@ -1,6 +1,5 @@
 package net.nashlegend.sourcewall.request;
 
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -59,12 +58,6 @@ public class RequestObject<T> {
      */
     protected long cacheTimeOut = -1;
     /*果壳貌似本身并没有Cache-Control，或者Cache-Control的max-age=0 所以这里的缓存是本地缓存*/
-
-    /**
-     * 下面部分均标为过时，请求逐步改为上面的Rx请求方式
-     */
-    protected boolean ignoreHandler = false;
-    protected Handler handler;
 
     public RequestObject() {
         this.method = Method.GET;

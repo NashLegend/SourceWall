@@ -22,7 +22,6 @@ import net.nashlegend.sourcewall.events.LoginStateChangedEvent;
 import net.nashlegend.sourcewall.request.HttpUtil;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
-import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Consts.Keys;
 import net.nashlegend.sourcewall.util.Consts.Web;
 import net.nashlegend.sourcewall.util.Mob;

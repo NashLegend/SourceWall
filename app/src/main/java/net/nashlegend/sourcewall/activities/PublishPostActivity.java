@@ -46,7 +46,6 @@ import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.APIBase;
 import net.nashlegend.sourcewall.request.api.PostAPI;
-import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Consts.Extras;
 import net.nashlegend.sourcewall.util.Consts.Keys;
 import net.nashlegend.sourcewall.util.Consts.RequestCode;

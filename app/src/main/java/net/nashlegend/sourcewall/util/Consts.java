@@ -96,12 +96,19 @@ public class Consts {
         public static final String Base_Url2 = "file:///android_asset/";
     }
 
-
     public static final class ImageLoadMode {
         //图片加载模式
         public static final int MODE_ALWAYS_LOAD = 0;
         public static final int MODE_NEVER_LOAD = 1;
         public static final int MODE_LOAD_WHEN_WIFI = 2;
+    }
+
+    public static final class ZipMode {
+        //图片压缩模式
+        public static final int Low = 0;
+        public static final int Medium = 1;
+        public static final int High = 2;
+        public static final int Original = 3;
     }
 
     public static final class TailType {

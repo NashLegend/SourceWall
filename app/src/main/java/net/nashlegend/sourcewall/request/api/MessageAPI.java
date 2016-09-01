@@ -1,7 +1,5 @@
 package net.nashlegend.sourcewall.request.api;
 
-import android.text.TextUtils;
-
 import net.nashlegend.sourcewall.model.Message;
 import net.nashlegend.sourcewall.model.Notice;
 import net.nashlegend.sourcewall.model.Reminder;

@@ -47,3 +47,5 @@
 #RxJava
 -dontwarn rx.**
 -keep class rx.** { *; }
+
+-dontwarn okio.**

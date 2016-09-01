@@ -1,6 +1,5 @@
 package net.nashlegend.sourcewall.request.api;
 
-import android.annotation.SuppressLint;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
@@ -16,15 +15,10 @@ import net.nashlegend.sourcewall.request.RequestObject.RequestCallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.parsers.ImageUploadParser;
 import net.nashlegend.sourcewall.util.Config;
+import net.nashlegend.sourcewall.util.Consts.ZipMode;
 import net.nashlegend.sourcewall.util.ImageUtils;
 
 import org.json.JSONObject;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
 import okhttp3.MediaType;
 import okhttp3.Request;
@@ -63,12 +57,22 @@ public class APIBase {
      * @param path 要上传图片的路径
      * @return 返回ResponseObject，resultObject.result是上传后的图片地址，果壳并不会对图片进行压缩
      */
-    public static Subscription uploadImage(final String path, final RequestCallBack<String> callBack) {
+    public static Subscription uploadImage(String path, RequestCallBack<String> callBack) {
+        return uploadImage(path, ZipMode.Low, callBack);
+    }
+
+    /**
+     * 上传图片
+     *
+     * @param path 要上传图片的路径
+     * @return 返回ResponseObject，resultObject.result是上传后的图片地址，果壳并不会对图片进行压缩
+     */
+    public static Subscription uploadImage(final String path, final int mode, final RequestCallBack<String> callBack) {
         return Observable.just(path)
                 .map(new Func1<String, String>() {
                     @Override
                     public String call(String path) {
-                        return ImageUtils.compressImage(path);
+                        return ImageUtils.compressImage(path, mode);
                     }
                 })
                 .map(new Func1<String, ResponseObject<String>>() {

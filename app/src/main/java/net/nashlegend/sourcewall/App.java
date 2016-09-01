@@ -13,7 +13,6 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import net.nashlegend.sourcewall.db.BaseDB;
 import net.nashlegend.sourcewall.db.gen.DaoMaster;
 import net.nashlegend.sourcewall.db.gen.DaoSession;
-import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Consts.Keys;
 import net.nashlegend.sourcewall.util.ImageUtils;
 import net.nashlegend.sourcewall.util.PrefsUtil;

@@ -23,7 +23,8 @@ public class RaceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public int getItemCount() {
         return 0;
     }
-    class Helder extends RecyclerView.ViewHolder{
+
+    class Helder extends RecyclerView.ViewHolder {
 
         public Helder(View itemView) {
             super(itemView);

@@ -14,7 +14,6 @@ import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.ArticleAPI;
-import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Consts.Actions;
 import net.nashlegend.sourcewall.util.Consts.Extras;
 import net.nashlegend.sourcewall.util.Consts.Web;

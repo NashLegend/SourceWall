@@ -23,8 +23,8 @@ import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
 import net.nashlegend.sourcewall.request.api.FavorAPI;
-import net.nashlegend.sourcewall.util.ToastUtil;
 import net.nashlegend.sourcewall.util.AAsyncTask;
+import net.nashlegend.sourcewall.util.ToastUtil;
 import net.nashlegend.sourcewall.view.common.IStackedAsyncTaskInterface;
 
 import java.util.ArrayList;

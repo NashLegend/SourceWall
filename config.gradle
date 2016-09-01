@@ -55,9 +55,9 @@ ext {
 
     built = [
             applicationId    : "net.nashlegend.sourcewall",
-            versionCode      : 20160818,
+            versionCode      : 20160901,
             versionName      : "1.9.9",
-            buildToolsVersion: "24.0.1",
+            buildToolsVersion: "24.0.2",
             compileSdkVersion: 24,
             minSdkVersion    : 15,
             targetSdkVersion : 22

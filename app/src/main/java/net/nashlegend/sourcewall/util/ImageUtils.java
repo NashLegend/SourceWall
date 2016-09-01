@@ -19,6 +19,7 @@ import com.nostra13.universalimageloader.core.display.CircleBitmapDisplayer;
 
 import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
+import net.nashlegend.sourcewall.util.Consts.ZipMode;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -73,11 +74,33 @@ public class ImageUtils {
      * @return 是否成功压缩
      * @throws IOException
      */
-    public static String compressImage(String path) {
+    public static String compressImage(final String path, int mode) {
         if (FileUtil.getFileSuffix(new File(path)).equals("gif")) {
             return path;
         }
-        float maxSize = Config.getUploadImageSizeRestrict();//将其中一边至少压缩到maxSize，而不是两边都压缩到maxSize，否则有可能图片很不清楚
+        if (mode == ZipMode.Original) {
+            return path;
+        }
+
+        int quality = 80;
+        //将其中一边至少压缩到maxSize，而不是两边都压缩到maxSize，否则有可能图片很不清楚
+        float maxSize = 720;
+
+        switch (mode) {
+            case ZipMode.Low:
+                quality = 80;
+                maxSize = 720;
+                break;
+            case ZipMode.Medium:
+                quality = 95;
+                maxSize = 1280;
+                break;
+            case ZipMode.High:
+                quality = 100;
+                maxSize = 1280;
+                break;
+        }
+
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(path, options);
@@ -93,13 +116,17 @@ public class ImageUtils {
             options.inJustDecodeBounds = false;
             options.inSampleSize = sample;
             Bitmap finalBitmap = BitmapFactory.decodeFile(path, options);
-            int finalWidth = finalBitmap.getWidth();
-            int finalHeight = finalBitmap.getHeight();
-            float scale = (finalWidth < finalHeight) ? maxSize / finalWidth : maxSize / finalHeight;
-            Matrix matrix = new Matrix();
-            matrix.setScale(scale, scale);
-            Bitmap compressedBitmap = Bitmap.createBitmap(finalBitmap, 0, 0, finalWidth, finalHeight, matrix, false);
-
+            if (mode != ZipMode.High) {
+                int finalWidth = finalBitmap.getWidth();
+                int finalHeight = finalBitmap.getHeight();
+                float scale = (finalWidth < finalHeight) ? maxSize / finalWidth : maxSize / finalHeight;
+                if (scale > 1) {
+                    scale = 1;
+                }
+                Matrix matrix = new Matrix();
+                matrix.setScale(scale, scale);
+                finalBitmap = Bitmap.createBitmap(finalBitmap, 0, 0, finalWidth, finalHeight, matrix, false);
+            }
             String parentPath;
             File pFile = null;
             if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
@@ -114,7 +141,7 @@ public class ImageUtils {
             boolean ok = false;
             try {
                 outputStream = new FileOutputStream(cachePath);
-                compressedBitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream);//jpg速度远快于png，并且体积要小
+                finalBitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);//jpg速度远快于png，并且体积要小
                 outputStream.flush();
                 ok = true;
             } catch (IOException e) {
@@ -136,6 +163,17 @@ public class ImageUtils {
         } else {
             return path;
         }
+    }
+
+    /**
+     * 压缩图片，jpg格式差不多可以压缩到100k左右
+     *
+     * @param path 要压缩的图片路径
+     * @return 是否成功压缩
+     * @throws IOException
+     */
+    public static String compressImage(String path) {
+        return compressImage(path, ZipMode.Low);
     }
 
     /**

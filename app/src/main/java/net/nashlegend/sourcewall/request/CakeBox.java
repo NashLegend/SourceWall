@@ -1,7 +1,5 @@
 package net.nashlegend.sourcewall.request;
 
-import android.util.Log;
-
 import java.io.IOException;
 import java.net.CookieHandler;
 import java.net.HttpCookie;
@@ -37,10 +35,9 @@ public final class CakeBox implements CookieJar {
             }
             Map<String, List<String>> multimap = Collections.singletonMap("Set-Cookie", cookieStrings);
             try {
-                cookieHandler.put(URI.create("http://"+url.host()), multimap);
-//                cookieHandler.put(url.uri(), multimap);
+                cookieHandler.put(URI.create("http://" + url.host()), multimap);
             } catch (IOException e) {
-                Log.w("CakeBox", "Saving cookies failed for " + url.resolve("/..."), e);
+                System.err.println("Saving cookies failed for " + url.resolve("/...") + " " + e.getMessage());
             }
         }
     }
@@ -51,10 +48,9 @@ public final class CakeBox implements CookieJar {
         Map<String, List<String>> headers = Collections.emptyMap();
         Map<String, List<String>> cookieHeaders;
         try {
-            cookieHeaders = cookieHandler.get(URI.create("http://"+url.host()), headers);
-//            cookieHeaders = cookieHandler.get(url.uri(), headers);
+            cookieHeaders = cookieHandler.get(URI.create("http://" + url.host()), headers);
         } catch (IOException e) {
-            Log.w("CakeBox", "Loading cookies failed for " + url.resolve("/..."), e);
+            System.err.println("Loading cookies failed for " + url.resolve("/...") + " " + e.getMessage());
             return Collections.emptyList();
         }
 

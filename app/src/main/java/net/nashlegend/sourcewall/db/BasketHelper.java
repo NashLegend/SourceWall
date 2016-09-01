@@ -5,7 +5,6 @@ import net.nashlegend.sourcewall.db.gen.MyBasket;
 import net.nashlegend.sourcewall.db.gen.MyBasketDao;
 import net.nashlegend.sourcewall.model.Basket;
 import net.nashlegend.sourcewall.model.SubItem;
-import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Consts.Keys;
 import net.nashlegend.sourcewall.util.PrefsUtil;
 

@@ -1,13 +1,10 @@
 package net.nashlegend.sourcewall.request;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringDef;
-import android.text.TextUtils;
 
-import net.nashlegend.sourcewall.request.RequestObject.RequestCallBack;
 import net.nashlegend.sourcewall.request.RequestObject.Method;
+import net.nashlegend.sourcewall.request.RequestObject.RequestCallBack;
 import net.nashlegend.sourcewall.request.RequestObject.RequestType;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.request.parsers.Parser;
@@ -34,13 +31,6 @@ public class RequestBuilder<T> {
     @StringDef({Method.GET, Method.POST, Method.PUT, Method.DELETE, Method.HEAD, Method.PATCH})
     public @interface MethodDef {
     }
-
-    /**
-     * 有handler就在handler上执行callback
-     * 没有的话,如果：
-     * 一、在主线程发起，如果ignoreHandler为false则在主线程上执行callback，否则该在哪就在哪
-     * 二、后台线程发起，该在哪就在哪
-     */
 
     private RequestObject<T> request = new RequestObject<>();
 
@@ -389,41 +379,6 @@ public class RequestBuilder<T> {
         return this;
     }
 
-    /**
-     * 在主线程执行回调.
-     * 如果请求在主线程发起，默认就在主线程发起回调
-     *
-     * @return
-     */
-    public RequestBuilder<T> runCallbackOnMainThread() {
-        request.ignoreHandler = false;
-        request.handler = new Handler(Looper.getMainLooper());
-        return this;
-    }
-
-    /**
-     * 设置在哪个线程执行回调
-     *
-     * @param looper
-     * @return
-     */
-    public RequestBuilder<T> runCallbackOn(Looper looper) {
-        request.ignoreHandler = false;
-        request.handler = new Handler(looper);
-        return this;
-    }
-
-    /**
-     * 不指定回调执行线程，在主线程发起请求也将不在主线程回调
-     *
-     * @return
-     */
-    public RequestBuilder<T> runCallbackWhatever() {
-        request.ignoreHandler = true;
-        request.handler = null;
-        return this;
-    }
-
     public RequestBuilder<T> upload(String filePath) {
         request.uploadFilePath = filePath;
         request.method = Method.POST;
@@ -440,7 +395,7 @@ public class RequestBuilder<T> {
     private void addExtras() {
         if (useToken) {
             String token = UserAPI.getToken();
-            if (!TextUtils.isEmpty(token)) {
+            if (!Utils.isEmpty(token)) {
                 request.params.add(new Param("access_token", token));
             }
         }

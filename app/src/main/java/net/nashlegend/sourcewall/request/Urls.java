@@ -1,7 +1,5 @@
 package net.nashlegend.sourcewall.request;
 
-import android.text.TextUtils;
-
 import java.util.List;
 
 import okhttp3.HttpUrl;
@@ -50,7 +48,7 @@ public class Urls {
         StringBuilder paramString = new StringBuilder("");
         if (params != null && params.size() > 0) {
             for (Param param : params) {
-                if (TextUtils.isEmpty(param.key) || TextUtils.isEmpty(param.value)) {
+                if (Utils.isEmpty(param.key) || Utils.isEmpty(param.value)) {
                     continue;
                 }
                 paramString.append(param.key).append("=").append(param.value).append("&");

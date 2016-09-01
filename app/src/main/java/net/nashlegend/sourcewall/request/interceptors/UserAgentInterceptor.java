@@ -1,7 +1,5 @@
 package net.nashlegend.sourcewall.request.interceptors;
 
-import android.text.TextUtils;
-
 import java.io.IOException;
 
 import okhttp3.Interceptor;

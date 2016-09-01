@@ -1,7 +1,6 @@
 package net.nashlegend.sourcewall.request;
 
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 
 /**
  * Created by NashLegend on 2014/9/23 0023
@@ -55,7 +54,7 @@ public class ResponseObject<T> {
         err.append("code").append(":").append(code).append("\n");
         err.append("message").append(":").append(message).append("\n");
         err.append("result").append(":").append(result).append("\n");
-        if (!TextUtils.isEmpty(body)) {
+        if (!Utils.isEmpty(body)) {
             err.append("\n").append("body:  ").append(body).append("\n");
         }
         if (requestObject != null) {

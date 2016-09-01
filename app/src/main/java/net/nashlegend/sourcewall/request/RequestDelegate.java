@@ -1,7 +1,6 @@
 package net.nashlegend.sourcewall.request;
 
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 
 import net.nashlegend.sourcewall.request.RequestObject.Method;
 
@@ -185,7 +184,7 @@ public class RequestDelegate {
         StringBuilder paramString = new StringBuilder("");
         if (params != null && params.size() > 0) {
             for (Param param : params) {
-                if (TextUtils.isEmpty(param.key) || TextUtils.isEmpty(param.value)) {
+                if (Utils.isEmpty(param.key) || Utils.isEmpty(param.value)) {
                     continue;
                 }
                 paramString.append(param.key).append("=").append(param.value).append("&");
@@ -205,7 +204,7 @@ public class RequestDelegate {
         FormBody.Builder builder = new FormBody.Builder();
         if (params != null && params.size() > 0) {
             for (Param param : params) {
-                if (TextUtils.isEmpty(param.key) || TextUtils.isEmpty(param.value)) {
+                if (Utils.isEmpty(param.key) || Utils.isEmpty(param.value)) {
                     continue;
                 }
                 builder.add(param.key, param.value);
@@ -224,7 +223,7 @@ public class RequestDelegate {
         MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
         if (fileParams != null && fileParams.size() > 0) {
             for (Param param : fileParams) {
-                if (TextUtils.isEmpty(param.key) || TextUtils.isEmpty(param.value)) {
+                if (Utils.isEmpty(param.key) || Utils.isEmpty(param.value)) {
                     continue;
                 }
                 File file = new File(param.value);
@@ -235,7 +234,7 @@ public class RequestDelegate {
         }
         if (params != null && params.size() > 0) {
             for (Param param : params) {
-                if (TextUtils.isEmpty(param.key) || TextUtils.isEmpty(param.value)) {
+                if (Utils.isEmpty(param.key) || Utils.isEmpty(param.value)) {
                     continue;
                 }
                 builder.addFormDataPart(param.key, param.value);

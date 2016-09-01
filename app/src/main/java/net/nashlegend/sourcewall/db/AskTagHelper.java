@@ -4,7 +4,6 @@ import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.db.gen.AskTag;
 import net.nashlegend.sourcewall.db.gen.AskTagDao;
 import net.nashlegend.sourcewall.model.SubItem;
-import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Consts.Keys;
 import net.nashlegend.sourcewall.util.PrefsUtil;
 
@@ -27,7 +26,7 @@ public class AskTagHelper {
         AskTagDao tagDao = App.getDaoSession().getAskTagDao();
         QueryBuilder<AskTag> builder = tagDao.queryBuilder().
                 orderAsc(AskTagDao.Properties.Order);
-        List<AskTag> list =  builder.list();
+        List<AskTag> list = builder.list();
         return list;
     }
 
@@ -35,7 +34,7 @@ public class AskTagHelper {
         AskTagDao tagDao = App.getDaoSession().getAskTagDao();
         QueryBuilder<AskTag> builder = tagDao.queryBuilder().
                 orderAsc(AskTagDao.Properties.Order);
-        List<AskTag> askTags =  builder.list();
+        List<AskTag> askTags = builder.list();
         ArrayList<SubItem> subItems = new ArrayList<>();
         for (int i = 0; i < askTags.size(); i++) {
             AskTag tag = askTags.get(i);

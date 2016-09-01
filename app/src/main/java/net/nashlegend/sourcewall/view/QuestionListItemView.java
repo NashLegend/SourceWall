@@ -7,8 +7,6 @@ import android.widget.TextView;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.model.Question;
-import net.nashlegend.sourcewall.util.Consts;
-import net.nashlegend.sourcewall.util.PrefsUtil;
 
 /**
  * Created by NashLegend on 2014/9/15 0015

@@ -57,15 +57,6 @@ public class Config {
     }
 
     /**
-     * 上传图片尺寸
-     *
-     * @return 返回图片最小边的尺寸限制
-     */
-    public static int getUploadImageSizeRestrict() {
-        return 720;
-    }
-
-    /**
      * 返回尾巴，html格式
      *
      * @return html格式的尾巴，发贴时带，但是评论答案和评论问题不带

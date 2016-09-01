@@ -1,11 +1,6 @@
 package net.nashlegend.sourcewall.request;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.WorkerThread;
-import android.text.TextUtils;
 
 import net.nashlegend.sourcewall.request.RequestObject.Method;
 import net.nashlegend.sourcewall.request.RequestObject.RequestType;
@@ -17,16 +12,12 @@ import net.nashlegend.sourcewall.request.interceptors.UploadProgressInterceptor;
 import net.nashlegend.sourcewall.util.ErrorUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InterruptedIOException;
-import java.net.ConnectException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
 import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
 import okio.BufferedSink;
@@ -113,7 +104,7 @@ public class NetworkTask<T> {
                     if (request.params.size() > 0) {
                         ArrayList<Param> entryArrayList = new ArrayList<>();
                         for (Param param : request.params) {
-                            if (TextUtils.isEmpty(param.key)) {
+                            if (Utils.isEmpty(param.key)) {
                                 continue;
                             }
                             entryArrayList.add(param);
@@ -426,8 +417,8 @@ public class NetworkTask<T> {
     /**
      * 通过RxJava的方式执行请求，与requestAsync一样，CallBack执行在主线程上
      */
-    private Subscription handleResponseObservable(@NonNull Observable<ResponseObject<T>> observable) {
-        subscription = observable
+    public Subscription requestRx() {
+        subscription = flatMap()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<ResponseObject<T>>() {
                     @Override
@@ -460,8 +451,9 @@ public class NetworkTask<T> {
     /**
      * 通过RxJava的方式执行请求，与requestAsync一样，CallBack执行在主线程上
      */
-    public Subscription requestRx() {
-        return handleResponseObservable(flatMap());
+    public NetworkTask<T> startRequestAsync() {
+        requestRx();
+        return this;
     }
 
     private boolean shouldHandNotifier(Throwable exception, ResponseObject responseObject) {
@@ -523,240 +515,8 @@ public class NetworkTask<T> {
         }
     }
 
-    /**
-     * 重新请求
-     */
-    public NetworkTask<T> startRequestAsync() {
-        switch (request.requestType) {
-            case RequestType.PLAIN:
-                requestAsync();
-                break;
-            case RequestType.UPLOAD:
-                uploadAsync();
-                break;
-            case RequestType.DOWNLOAD:
-                downloadAsync();
-                break;
-            default:
-                requestAsync();
-                break;
-        }
-        return this;
-    }
-
-    /**
-     * 异步上传
-     */
-    private void uploadAsync() {
-        prepareHandler();
-        getDelegate().uploadAsync(request, getInnerCallback());
-    }
-
-    /**
-     * 异步下载
-     */
-    private void downloadAsync() {
-        prepareHandler();
-        requestAsync(getInnerDownloadCallback());
-    }
-
-    /**
-     * 异步请求，如果在enqueue执行之前就执行了cancel，那么将不会有callback执行，用户将不知道已经取消了请求。
-     * 我们在请求中已经添加了synchronized，所以不考虑这种情况了
-     */
-    private void requestAsync() {
-        requestAsync(getInnerCallback());
-    }
-
-    /**
-     * 异步请求，如果在enqueue执行之前就执行了cancel，那么将不会有callback执行，用户将不知道已经取消了请求。
-     * 我们在请求中已经添加了synchronized，所以不考虑这种情况了
-     */
-    private void requestAsync(Callback callback) {
-        prepareHandler();
-        switch (request.method) {
-            case Method.GET:
-                call = getDelegate().getAsync(request, callback);
-                break;
-            case Method.PUT:
-                call = getDelegate().putAsync(request, callback);
-                break;
-            case Method.DELETE:
-                call = getDelegate().deleteAsync(request, callback);
-                break;
-            default:
-                call = getDelegate().postAsync(request, callback);
-                break;
-        }
-    }
-
-    private void prepareHandler() {
-        if (Thread.currentThread().getId() == 1) {
-            //是果是在主线程请求,且handler为null，则将其置为在主线程执行callback
-            if (!request.ignoreHandler && request.handler == null) {
-                request.handler = new Handler(Looper.getMainLooper());
-            }
-        }
-    }
-
-    private Callback getInnerCallback() {
-        return new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                final ResponseObject<T> responseObject = new ResponseObject<>();
-                responseObject.requestObject = request;
-                JsonHandler.handleRequestException(e, responseObject);
-                if ((call == null || !call.isCanceled()) && request.useCachedIfFailed) {
-                    //只有在此处才可，其他地方有可能只是别的错误而非请求错误
-                    try {
-                        String cachedResult = readFromCache();
-                        if (cachedResult != null) {
-                            responseObject.isCached = true;
-                            responseObject.body = cachedResult;
-                            if (request.parser != null) {
-                                responseObject.result = request.parser.parse(cachedResult, responseObject);
-                            }
-                            callSuccess(responseObject);
-                            return;
-                        }
-                    } catch (Exception ignored) {
-                        //缓存过的数据是不会出错的，除非是改版后parser发生了改变，一般这里走不到
-                    }
-                }
-                onRequestFailure(e, responseObject);
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                final ResponseObject<T> responseObject = new ResponseObject<>();
-                responseObject.requestObject = request;
-                if (request.callBack != null && request.parser != null) {
-                    Throwable throwable = null;
-                    try {
-                        int statusCode = response.code();
-                        String result = response.body().string();
-                        responseObject.statusCode = statusCode;
-                        responseObject.body = result;
-                        if (request.parser != null) {
-                            responseObject.result = request.parser.parse(result, responseObject);
-                        }
-                        if (responseObject.ok && response.isSuccessful()) {
-                            saveToCache(result);
-                        }
-                    } catch (final Exception e) {
-                        JsonHandler.handleRequestException(e, responseObject);
-                        throwable = e;
-                    }
-                    if (responseObject.ok) {
-                        callSuccess(responseObject);
-                    } else {
-                        onRequestFailure(throwable, responseObject);
-                    }
-                }
-            }
-        };
-    }
-
-    private Callback getInnerDownloadCallback() {
-        return new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                final ResponseObject<T> responseObject = new ResponseObject<>();
-                responseObject.requestObject = request;
-                JsonHandler.handleRequestException(e, responseObject);
-                if (e != null && (e instanceof ConnectException || e instanceof UnknownHostException)) {
-                    responseObject.message = "无法连接到网络";
-                }
-                onRequestFailure(e, responseObject);
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                final ResponseObject<T> responseObject = new ResponseObject<>();
-                responseObject.requestObject = request;
-                if (request.callBack != null) {
-                    Throwable throwable = null;
-                    File downloadedFile = new File(request.downloadFilePath);
-                    BufferedSink sink = null;
-                    try {
-                        sink = Okio.buffer(Okio.sink(downloadedFile));
-                        sink.writeAll(response.body().source());
-                        responseObject.ok = true;
-                        if (request.parser != null) {
-                            request.parser.parse(request.downloadFilePath, responseObject);
-                        }
-                    } catch (Exception e) {
-                        responseObject.ok = false;
-                        throwable = e;
-                    } finally {
-                        if (sink != null) {
-                            sink.close();
-                        }
-                    }
-                    if (responseObject.ok) {
-                        callSuccess(responseObject);
-                    } else {
-                        onRequestFailure(throwable, responseObject);
-                    }
-                }
-            }
-        };
-    }
-
-    /**
-     * 异步请求出错
-     *
-     * @param e
-     * @param result
-     */
-    @WorkerThread
-    private void onRequestFailure(final Throwable e, final ResponseObject<T> result) {
-        if (call != null && request.requestType == RequestType.PLAIN && shouldHandNotifier(e, result)) {
-            try {
-                Thread.sleep(request.interval);
-            } catch (InterruptedException e1) {
-                e1.printStackTrace();
-            } finally {
-                startRequestAsync();
-            }
-            notifyAction();
-        } else {
-            if (call != null && call.isCanceled()) {
-                result.error = ResponseError.CANCELLED;
-                result.isCancelled = true;
-            }
-            callFailure(e, result);
-        }
-    }
-
-    private void callSuccess(@NonNull final ResponseObject<T> responseObject) {
-        if (!dismissed && request.callBack != null) {
-            if (request.handler != null) {
-                request.handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        request.callBack.onSuccess(responseObject.result, responseObject);
-                    }
-                });
-            } else {
-                request.callBack.onSuccess(responseObject.result, responseObject);
-            }
-        }
-    }
-
-    private void callFailure(@Nullable final Throwable e, @NonNull final ResponseObject<T> responseObject) {
-        if (!dismissed && request.callBack != null) {
-            if (request.handler != null) {
-                request.handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        request.callBack.onFailure(e, responseObject);
-                    }
-                });
-            } else {
-                request.callBack.onFailure(e, responseObject);
-            }
-        }
+    public Subscription getSubscription() {
+        return subscription;
     }
 
     public class RxRetryHandler implements Func1<Observable<? extends Throwable>, Observable<?>> {

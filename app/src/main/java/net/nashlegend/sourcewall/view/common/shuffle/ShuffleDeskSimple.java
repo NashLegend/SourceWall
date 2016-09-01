@@ -91,7 +91,7 @@ public class ShuffleDeskSimple extends RelativeLayout {
         }
     }
 
-    public boolean hasChanged(){
+    public boolean hasChanged() {
         return false;
     }
 

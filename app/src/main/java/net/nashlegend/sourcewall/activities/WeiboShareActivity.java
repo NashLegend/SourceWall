@@ -25,7 +25,6 @@ import com.sina.weibo.sdk.utils.Utility;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.util.AccessTokenKeeper;
-import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Consts.Extras;
 import net.nashlegend.sourcewall.util.ShareUtil;
 

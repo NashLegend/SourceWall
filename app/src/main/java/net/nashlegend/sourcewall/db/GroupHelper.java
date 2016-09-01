@@ -4,7 +4,6 @@ import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.db.gen.MyGroup;
 import net.nashlegend.sourcewall.db.gen.MyGroupDao;
 import net.nashlegend.sourcewall.model.SubItem;
-import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Consts.Keys;
 import net.nashlegend.sourcewall.util.PrefsUtil;
 
@@ -27,7 +26,7 @@ public class GroupHelper {
         MyGroupDao myGroupDao = App.getDaoSession().getMyGroupDao();
         QueryBuilder<MyGroup> builder = myGroupDao.queryBuilder().
                 orderAsc(MyGroupDao.Properties.Order);
-        List<MyGroup> list =  builder.list();
+        List<MyGroup> list = builder.list();
         return list;
     }
 
