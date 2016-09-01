@@ -1,25 +1,19 @@
 package net.nashlegend.sourcewall.fragment;
 
-
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import net.nashlegend.sourcewall.R;
-import net.nashlegend.sourcewall.activities.BaseActivity;
-import net.nashlegend.sourcewall.activities.PublishPostActivity;
 import net.nashlegend.sourcewall.activities.SearchActivity;
+import net.nashlegend.sourcewall.adapters.FakeFragmentStatePagerAdapter;
 import net.nashlegend.sourcewall.model.SubItem;
-import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.ChannelHelper;
-import net.nashlegend.sourcewall.util.Consts;
 
 import java.util.ArrayList;
 
@@ -79,9 +73,18 @@ public class ArticlePagerFragment extends BaseFragment {
         }
     }
 
-    class ArticlePagerAdapter extends FragmentStatePagerAdapter {
+    @Override
+    public boolean reTap() {
+        if (adapter == null) {
+            return false;
+        }
+        Fragment fragment = adapter.getFragmentAt(viewPager.getCurrentItem());
+        return fragment instanceof ArticlesFragment && ((ArticlesFragment) fragment).reTap();
+    }
 
-        public ArticlePagerAdapter(FragmentManager fm) {
+    class ArticlePagerAdapter extends FakeFragmentStatePagerAdapter {
+
+        ArticlePagerAdapter(FragmentManager fm) {
             super(fm);
         }
 

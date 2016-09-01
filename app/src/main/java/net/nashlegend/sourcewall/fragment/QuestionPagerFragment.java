@@ -6,12 +6,10 @@ import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.view.LayoutInflater;
@@ -25,16 +23,14 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import net.nashlegend.sourcewall.R;
-import net.nashlegend.sourcewall.activities.BaseActivity;
-import net.nashlegend.sourcewall.activities.PublishPostActivity;
 import net.nashlegend.sourcewall.activities.SearchActivity;
+import net.nashlegend.sourcewall.adapters.FakeFragmentStatePagerAdapter;
 import net.nashlegend.sourcewall.db.AskTagHelper;
 import net.nashlegend.sourcewall.db.gen.AskTag;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.ChannelHelper;
-import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Consts.Keys;
 import net.nashlegend.sourcewall.util.PrefsUtil;
 import net.nashlegend.sourcewall.util.SimpleAnimationListener;
@@ -384,9 +380,18 @@ public class QuestionPagerFragment extends BaseFragment {
         progressDialog.show();
     }
 
-    class QuestionPagerAdapter extends FragmentStatePagerAdapter {
+    @Override
+    public boolean reTap() {
+        if (adapter == null) {
+            return false;
+        }
+        Fragment fragment = adapter.getFragmentAt(viewPager.getCurrentItem());
+        return fragment instanceof QuestionsFragment && ((QuestionsFragment) fragment).reTap();
+    }
 
-        public QuestionPagerAdapter(FragmentManager fm) {
+    class QuestionPagerAdapter extends FakeFragmentStatePagerAdapter {
+
+        QuestionPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 

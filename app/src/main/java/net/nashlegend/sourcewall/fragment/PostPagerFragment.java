@@ -8,11 +8,9 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.view.LayoutInflater;
@@ -29,6 +27,7 @@ import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.BaseActivity;
 import net.nashlegend.sourcewall.activities.PublishPostActivity;
 import net.nashlegend.sourcewall.activities.SearchActivity;
+import net.nashlegend.sourcewall.adapters.FakeFragmentStatePagerAdapter;
 import net.nashlegend.sourcewall.db.GroupHelper;
 import net.nashlegend.sourcewall.db.gen.MyGroup;
 import net.nashlegend.sourcewall.events.GroupFetchedEvent;
@@ -36,7 +35,6 @@ import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.ChannelHelper;
-import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Consts.Extras;
 import net.nashlegend.sourcewall.util.Consts.Keys;
 import net.nashlegend.sourcewall.util.Consts.RequestCode;
@@ -438,10 +436,19 @@ public class PostPagerFragment extends BaseFragment {
         }
     }
 
+    @Override
+    public boolean reTap() {
+        if (adapter == null) {
+            return false;
+        }
+        Fragment fragment = adapter.getFragmentAt(viewPager.getCurrentItem());
+        return fragment instanceof PostsFragment && ((PostsFragment) fragment).reTap();
+    }
 
-    class PostPagerAdapter extends FragmentStatePagerAdapter {
 
-        public PostPagerAdapter(FragmentManager fm) {
+    class PostPagerAdapter extends FakeFragmentStatePagerAdapter {
+
+        PostPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 

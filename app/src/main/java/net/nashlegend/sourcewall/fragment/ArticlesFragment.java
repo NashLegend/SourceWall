@@ -19,9 +19,7 @@ import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.ArticleAPI;
-import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Consts.Extras;
-import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.view.ArticleListItemView;
 import net.nashlegend.sourcewall.view.common.LoadingView;
 import net.nashlegend.sourcewall.view.common.LoadingView.ReloadListener;
@@ -206,4 +204,16 @@ public class ArticlesFragment extends BaseFragment implements ReloadListener, On
         }
     }
 
+    @Override
+    public boolean reTap() {
+        if (listView == null) {
+            return false;
+        }
+        if (listView.getFirstVisiblePosition() <= 1 && listView.getChildAt(0).getY() == 0) {
+            listView.startRefreshing();
+        } else {
+            listView.smoothScrollByOffset(-Integer.MAX_VALUE);
+        }
+        return true;
+    }
 }

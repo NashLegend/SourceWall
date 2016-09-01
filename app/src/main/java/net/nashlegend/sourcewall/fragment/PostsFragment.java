@@ -18,9 +18,7 @@ import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.PostAPI;
-import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Consts.Extras;
-import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.view.PostListItemView;
 import net.nashlegend.sourcewall.view.common.LoadingView;
 import net.nashlegend.sourcewall.view.common.LoadingView.ReloadListener;
@@ -275,4 +273,13 @@ public class PostsFragment extends BaseFragment implements ReloadListener, OnRef
         }
     }
 
+    @Override
+    public boolean reTap() {
+        if (listView.getFirstVisiblePosition() <= 1 && listView.getChildAt(0).getY() == 0) {
+            listView.startRefreshing();
+        } else {
+            listView.smoothScrollByOffset(-Integer.MAX_VALUE);
+        }
+        return true;
+    }
 }

@@ -1,12 +1,10 @@
 package net.nashlegend.sourcewall.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.fragment.ArticlePagerFragment;
 import net.nashlegend.sourcewall.fragment.BaseFragment;
@@ -39,7 +37,7 @@ public class MainActivity extends BaseActivity {
     ArrayList<View> bars = new ArrayList<>();
 
     int crtIndex = 0;
-    String crtIndexKay = "crtIndex";
+    String crtIndexKey = "crtIndex";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +51,7 @@ public class MainActivity extends BaseActivity {
         setSwipeEnabled(false);
 
         if (savedInstanceState != null) {
-            crtIndex = savedInstanceState.getInt(crtIndexKay, 0);
+            crtIndex = savedInstanceState.getInt(crtIndexKey, 0);
         } else {
             crtIndex = 0;
         }
@@ -65,7 +63,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putInt(crtIndexKay, crtIndex);
+        outState.putInt(crtIndexKey, crtIndex);
         super.onSaveInstanceState(outState);
     }
 
@@ -105,6 +103,25 @@ public class MainActivity extends BaseActivity {
         return fragment;
     }
 
+    private int getIndexById(int id) {
+        int index = 0;
+        switch (id) {
+            case R.id.layout_science:
+                index = 0;
+                break;
+            case R.id.layout_group:
+                index = 1;
+                break;
+            case R.id.layout_questions:
+                index = 2;
+                break;
+            case R.id.layout_me:
+                index = 3;
+                break;
+        }
+        return index;
+    }
+
     boolean preparingToExit = false;
 
     @Override
@@ -112,7 +129,6 @@ public class MainActivity extends BaseActivity {
         if (crtFragment != null && crtFragment.takeOverBackPress()) {
             return;
         }
-
         if (preparingToExit) {
             super.onBackPressed();
         } else {
@@ -145,30 +161,15 @@ public class MainActivity extends BaseActivity {
     }
 
     private void onBarClick(int id) {
-        BaseFragment fragment = null;
-        int index = 0;
-        switch (id) {
-            case R.id.layout_science:
-                index = 0;
-                break;
-            case R.id.layout_group:
-                index = 1;
-                break;
-            case R.id.layout_questions:
-                index = 2;
-                break;
-            case R.id.layout_me:
-                index = 3;
-                break;
-        }
-        fragment = getFragmentByPosition(index);
-        if (fragment == null || fragment == crtFragment) {
+        int index = getIndexById(id);
+        BaseFragment fragment = getFragmentByPosition(index);
+        if (fragment == null) {
             return;
+        }
+        if (fragment == crtFragment) {
+            onRepeatClick(index);
         } else {
-            crtIndex = index;
-            crtFragment = fragment;
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.main_content, crtFragment).commitAllowingStateLoss();
+            onNewClick(index);
         }
         for (View bar : bars) {
             if (id == bar.getId()) {
@@ -176,6 +177,19 @@ public class MainActivity extends BaseActivity {
             } else {
                 bar.setSelected(false);
             }
+        }
+    }
+
+    private void onNewClick(int position) {
+        crtIndex = position;
+        crtFragment = getFragmentByPosition(crtIndex);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.main_content, crtFragment).commitAllowingStateLoss();
+    }
+
+    private void onRepeatClick(int position) {
+        if (crtFragment != null) {
+            crtFragment.reTap();
         }
     }
 }

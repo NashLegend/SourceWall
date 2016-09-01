@@ -101,6 +101,10 @@ public abstract class BaseFragment extends Fragment implements IStackedAsyncTask
         return false;
     }
 
+    public boolean reTap() {
+        return false;
+    }
+
     public void startOneActivity(Intent intent) {
         if (UiUtil.shouldThrottle()) {
             return;

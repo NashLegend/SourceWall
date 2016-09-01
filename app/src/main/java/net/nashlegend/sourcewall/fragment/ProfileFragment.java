@@ -34,7 +34,6 @@ import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.MessageAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.Config;
-import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Consts.Keys;
 import net.nashlegend.sourcewall.util.Consts.RequestCode;
 import net.nashlegend.sourcewall.util.ImageUtils;
@@ -120,7 +119,7 @@ public class ProfileFragment extends BaseFragment {
     }
 
     @OnClick({R.id.layout_msg_center, R.id.layout_my_favors, R.id.layout_my_posts,
-            R.id.layout_my_questions,  R.id.layout_my_answers,
+            R.id.layout_my_questions, R.id.layout_my_answers,
             R.id.view_switch, R.id.layout_setting, R.id.profile_header})
     public void onClick(View view) {
         switch (view.getId()) {
@@ -237,4 +236,8 @@ public class ProfileFragment extends BaseFragment {
         }
     }
 
+    @Override
+    public boolean reTap() {
+        return false;
+    }
 }

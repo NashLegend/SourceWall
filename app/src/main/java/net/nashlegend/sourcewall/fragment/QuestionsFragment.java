@@ -1,6 +1,5 @@
 package net.nashlegend.sourcewall.fragment;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,9 +19,7 @@ import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
-import net.nashlegend.sourcewall.util.Consts;
 import net.nashlegend.sourcewall.util.Consts.Extras;
-import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.view.QuestionListItemView;
 import net.nashlegend.sourcewall.view.common.LoadingView;
 import net.nashlegend.sourcewall.view.common.LoadingView.ReloadListener;
@@ -296,4 +293,13 @@ public class QuestionsFragment extends BaseFragment implements ReloadListener, O
         }
     }
 
+    @Override
+    public boolean reTap() {
+        if (listView.getFirstVisiblePosition() <= 1 && listView.getChildAt(0).getY() == 0) {
+            listView.startRefreshing();
+        } else {
+            listView.smoothScrollByOffset(-Integer.MAX_VALUE);
+        }
+        return true;
+    }
 }
