@@ -1,8 +1,5 @@
 package net.nashlegend.sourcewall.util;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.text.TextUtils;
 
 import net.nashlegend.sourcewall.App;
@@ -36,7 +33,7 @@ public class Config {
                 flag = false;
                 break;
             case ImageLoadMode.MODE_LOAD_WHEN_WIFI:
-                flag = isWifi();
+                flag = DeviceUtil.isWifiConnected();
                 break;
         }
         return flag;
@@ -44,12 +41,6 @@ public class Config {
 
     public static boolean shouldLoadHomepageImage() {
         return !PrefsUtil.readBoolean(Keys.Key_Image_No_Load_Homepage, false);
-    }
-
-    public static boolean isWifi() {
-        ConnectivityManager manager = (ConnectivityManager) App.getApp().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo info = manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        return info != null && info.getState() == NetworkInfo.State.CONNECTED;
     }
 
     public static int getImageLoadMode() {

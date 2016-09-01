@@ -122,7 +122,6 @@ public class APIBase {
      * @param text 要转换的文本内容
      * @return ResponseObject
      */
-    @Deprecated
     public static ResponseObject<String> parseMarkdownByGitHub(String text) {
         ResponseObject<String> resultObject = new ResponseObject<>();
         if (TextUtils.isEmpty(text)) {

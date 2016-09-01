@@ -650,7 +650,6 @@ public class QuestionAPI extends APIBase {
      * @param annotation 补充
      * @param tags       标签
      * @return ResponseObject
-     * @deprecated
      */
     public static ResponseObject<String> publishQuestion(String csrf, String question, String annotation, String[] tags) {
         ResponseObject<String> resultObject = new ResponseObject<>();

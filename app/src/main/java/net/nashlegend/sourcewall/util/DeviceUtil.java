@@ -1,13 +1,16 @@
 package net.nashlegend.sourcewall.util;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.provider.Settings;
 
 import net.nashlegend.sourcewall.App;
+
+import static android.content.Context.CONNECTIVITY_SERVICE;
+import static android.net.ConnectivityManager.TYPE_MOBILE;
+import static android.net.ConnectivityManager.TYPE_WIFI;
 
 /**
  * Created by NashLegend on 2015/9/23 0023.
@@ -20,22 +23,22 @@ public class DeviceUtil {
      *
      * @return
      */
-    public static boolean isConnectionOK() {
+    public static boolean isNetworkOK() {
         return isWifiConnected() || isMobileNetworkConnected();
     }
 
-    @SuppressWarnings("deprecation")
     public static boolean isWifiConnected() {
-        ConnectivityManager manager = (ConnectivityManager) App.getApp().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo info = manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        return info != null && info.isConnected();
+        return isNetworkConnectedByType(TYPE_WIFI);
     }
 
-    @SuppressWarnings("deprecation")
     public static boolean isMobileNetworkConnected() {
-        ConnectivityManager manager = (ConnectivityManager) App.getApp().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo info = manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-        return info != null && info.isConnected();
+        return isNetworkConnectedByType(TYPE_MOBILE);
+    }
+
+    public static boolean isNetworkConnectedByType(int type) {
+        ConnectivityManager manager = (ConnectivityManager) App.getApp().getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo info = manager.getActiveNetworkInfo();
+        return info != null && info.isConnected() && info.getType() == type;
     }
 
     public static void openNetwork(Activity activity) {
