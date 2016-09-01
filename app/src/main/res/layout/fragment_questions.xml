@@ -11,6 +11,8 @@
         android:background="@color/list_background"
         android:divider="@drawable/divider_thin"
         android:dividerHeight="@dimen/splitter_height"
+        android:footerDividersEnabled="false"
+        android:headerDividersEnabled="false"
         tools:listitem="@layout/layout_question_item_view" />
 
     <ProgressBar

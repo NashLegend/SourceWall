@@ -95,7 +95,12 @@ public class LListHeader extends FrameLayout {
         animateToHeight(Refreshing_Height);
         tvHint.setText(R.string.refreshing);
         currentState = LListView.State_Refreshing;
-        onRefreshListener.onStartRefresh();
+        postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                onRefreshListener.onStartRefresh();
+            }
+        }, 300);
     }
 
     private void normal2Pull() {
@@ -216,9 +221,6 @@ public class LListHeader extends FrameLayout {
     }
 
     public void setHeight(int height) {
-        if (currentState == LListView.State_Refreshing && height < Refreshing_Height) {
-            height = Refreshing_Height;
-        }
         if (height < 1) {
             setVisibility(View.GONE);
             tvHint.setVisibility(GONE);
