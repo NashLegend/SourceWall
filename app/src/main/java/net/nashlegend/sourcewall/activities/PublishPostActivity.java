@@ -701,6 +701,7 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
                         .setMessage(R.string.publish_post_failed)
                         .setPositiveButton(R.string.ok, null)
                         .show();
+                UiUtil.dismissDialog(progressDialog);
             }
 
             @Override
