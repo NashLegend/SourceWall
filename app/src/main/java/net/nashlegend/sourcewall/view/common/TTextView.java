@@ -92,6 +92,12 @@ public class TTextView extends TextView {
         setMovementMethod(LocalLinkMovementMethod.getInstance());
     }
 
+    @Override
+    protected void onDetachedFromWindow() {
+        cancelPotentialTask();
+        super.onDetachedFromWindow();
+    }
+
     public void loadHtml(String content) {
         cancelPotentialTask();
         maxWidth = getMaxImageWidth();

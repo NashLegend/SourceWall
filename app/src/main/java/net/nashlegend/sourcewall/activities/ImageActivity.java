@@ -58,6 +58,16 @@ public class ImageActivity extends BaseActivity {
         pager = (ViewPager) findViewById(R.id.image_pager);
         adapter = new ImageAdapter(this);
         images = getIntent().getStringArrayListExtra(Extras.Extra_Image_String_Array);
+        //处理url
+        for (int i = 0; i < images.size(); i++) {
+            String url = images.get(i);
+            String reg = ".+/w/(\\d+)/h/(\\d+)";
+            Matcher matcher = Pattern.compile(reg).matcher(url);
+            if (matcher.find()) {
+                url = url.replaceAll("\\?.*$", "");
+                images.set(i, url);
+            }
+        }
         int position = getIntent().getIntExtra(Extras.Extra_Image_Current_Position, 0);
 
         if (images != null && images.size() > 0) {

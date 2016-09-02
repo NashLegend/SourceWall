@@ -85,13 +85,6 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
     public void load(String imageUrl) {
         loadingView.startLoading();
         url = imageUrl;
-
-        String reg = ".+/w/(\\d+)/h/(\\d+)";
-        Matcher matcher = Pattern.compile(reg).matcher(url);
-        if (matcher.find()) {
-            url = url.replaceAll("\\?.*$", "");
-        }
-
         if (url.startsWith("http")) {
             task = new LoaderTask();
             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
