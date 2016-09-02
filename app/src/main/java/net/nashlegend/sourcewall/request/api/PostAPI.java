@@ -97,7 +97,7 @@ public class PostAPI extends APIBase {
                 .url(url)
                 .params(pairs)
                 .useCacheFirst(useCache)
-                .cacheTimeOut(300000)
+                .cacheTimeOut(600000)
                 .parser(new PostListParser())
                 .flatMap();
     }

@@ -44,7 +44,7 @@ public class FavorAPI extends APIBase {
                 .params(pairs)
                 .withToken(false)
                 .useCacheFirst(useCache)
-                .cacheTimeOut(300000)
+                .cacheTimeOut(600000)
                 .parser(new FavorListParser())
                 .flatMap();
     }

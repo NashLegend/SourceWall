@@ -76,7 +76,7 @@ public class ArticleAPI extends APIBase {
                 .withToken(false)
                 .params(pairs)
                 .useCacheFirst(useCache)
-                .cacheTimeOut(300000)
+                .cacheTimeOut(600000)
                 .parser(new ArticleListParser())
                 .flatMap();
     }

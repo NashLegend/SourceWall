@@ -220,8 +220,8 @@ public class QuestionAPI extends APIBase {
                 .get()
                 .url(url)
                 .params(pairs)
-                .cacheTimeOut(300000)
                 .useCacheFirst(useCache)
+                .cacheTimeOut(600000)
                 .parser(new QuestionListParser())
                 .flatMap();
     }
@@ -242,8 +242,8 @@ public class QuestionAPI extends APIBase {
                 .get()
                 .url(url)
                 .params(pairs)
-                .cacheTimeOut(300000)
                 .useCacheFirst(useCache)
+                .cacheTimeOut(600000)
                 .parser(new QuestionListParser())
                 .flatMap();
     }
@@ -259,8 +259,8 @@ public class QuestionAPI extends APIBase {
         return new RequestBuilder<ArrayList<Question>>()
                 .get()
                 .url(url)
-                .cacheTimeOut(300000)
                 .useCacheFirst(useCache)
+                .cacheTimeOut(600000)
                 .parser(new QuestionHtmlListParser())
                 .flatMap();
     }

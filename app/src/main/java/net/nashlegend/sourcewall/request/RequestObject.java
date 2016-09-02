@@ -56,7 +56,7 @@ public class RequestObject<T> {
     /**
      * 缓存时间，如果上次保存的缓存时间与本次请求的时间差相差超过了cacheTimeOut，则重新请求一次
      */
-    protected long cacheTimeOut = -1;
+    protected long cacheTimeOut = -1;//如果是-1则表示永不超时
     /*果壳貌似本身并没有Cache-Control，或者Cache-Control的max-age=0 所以这里的缓存是本地缓存*/
 
     public RequestObject() {

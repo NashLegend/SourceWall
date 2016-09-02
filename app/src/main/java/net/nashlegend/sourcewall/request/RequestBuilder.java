@@ -335,7 +335,7 @@ public class RequestBuilder<T> {
      * 是否优先使用缓存，如果缓存使用失败才加载网络数据
      * 仅在使用Rx时有效，与useCacheIfFailed互斥
      *
-     * @param useCache
+     * @param useCache 是否优先使用缓存,默认超时时间为永不超时
      * @return
      */
     public RequestBuilder<T> useCacheFirst(boolean useCache) {
@@ -343,6 +343,23 @@ public class RequestBuilder<T> {
         if (useCache) {
             request.useCachedIfFailed = false;
         }
+        return this;
+    }
+
+    /**
+     * 是否优先使用缓存，如果缓存使用失败才加载网络数据
+     * 仅在使用Rx时有效，与useCacheIfFailed互斥
+     *
+     * @param useCache 是否优化使用缓存
+     * @param timeOut  缓存超时时间,小于0表示永不超时,如果超时,可能会按次序返回两次结果
+     * @return
+     */
+    public RequestBuilder<T> useCacheFirst(boolean useCache, long timeOut) {
+        request.useCachedFirst = useCache;
+        if (useCache) {
+            request.useCachedIfFailed = false;
+        }
+        request.cacheTimeOut = timeOut;
         return this;
     }
 

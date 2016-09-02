@@ -131,7 +131,11 @@ public class NetworkTask<T> {
     }
 
     private boolean isOutOfDate() {
-        return System.currentTimeMillis() - CacheHeaderUtil.readTime(getCachedKey()) > request.cacheTimeOut;
+        if (request.cacheTimeOut < 0) {
+            return false;
+        } else {
+            return System.currentTimeMillis() - CacheHeaderUtil.readTime(getCachedKey()) > request.cacheTimeOut;
+        }
     }
 
     /**
@@ -156,7 +160,7 @@ public class NetworkTask<T> {
     }
 
     /**
-     * 将数据存入缓存
+     * 清除缓存
      *
      * @return
      */
@@ -266,7 +270,6 @@ public class NetworkTask<T> {
                             if (cachedResult != null) {
                                 subscriber.onNext(cachedResult);
                                 if (isOutOfDate()) {
-                                    CacheHeaderUtil.removeOld();
                                     //如果缓存的数据超过了缓存期，则仍然要读取一次网络
                                     subscriber.onNext(null);
                                 }
@@ -287,7 +290,12 @@ public class NetworkTask<T> {
                         } else {
                             try {
                                 responseObject.result = request.parser.parse(s, responseObject);
-                                return responseObject;
+                                if (responseObject.ok) {
+                                    return responseObject;
+                                } else {
+                                    removeCache();
+                                    return null;
+                                }
                             } catch (Exception e) {
                                 return null;
                             }
