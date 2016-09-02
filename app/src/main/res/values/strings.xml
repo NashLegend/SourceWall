@@ -189,5 +189,8 @@
     <string name="all">全部</string>
     <string name="hint_search">输入关键字</string>
     <string name="anon">匿名</string>
+    <string name="reply_mode">回贴方式</string>
+    <string name="use_simple_reply">使用简单回复</string>
+    <string name="hint_simple_reply">此选项用于回复科学人与小组帖子。使用简单回复时,发贴人或者被回复对象可能无法获得你已回帖的通知,但是此种方式较省流量(大约省10k);不使用简单模式时,你可以使用markdown语法进行回帖,以及在小组中使用匿名回帖。</string>
 
 </resources>

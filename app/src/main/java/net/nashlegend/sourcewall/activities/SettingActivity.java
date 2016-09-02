@@ -35,13 +35,17 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     private TextView logText;
     private View tailsView;
     private View modesView;
+    private View replyView;
     private ImageView tailArrow;
     private ImageView modeArrow;
+    private ImageView replyArrow;
 
     private RadioButton buttonAlways;
     private RadioButton buttonNever;
     private RadioButton buttonWifi;
     private CheckBox checkBox;
+
+    private CheckBox checkSimple;
 
     private RadioButton buttonDefault;
     private RadioButton buttonPhone;
@@ -58,6 +62,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         View imageModeView = findViewById(R.id.layout_image_mode);
+        View replyModeView = findViewById(R.id.layout_reply_mode);
         View customTailView = findViewById(R.id.layout_custom_tail);
         View logInOutView = findViewById(R.id.layout_log_in_out);
         View aboutView = findViewById(R.id.layout_about_app);
@@ -65,8 +70,10 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         logText = (TextView) findViewById(R.id.text_log_in_out);
         tailsView = findViewById(R.id.layout_tails);
         modesView = findViewById(R.id.layout_modes);
+        replyView = findViewById(R.id.layout_reply_modes);
         tailArrow = (ImageView) findViewById(R.id.image_tail_arrow);
         modeArrow = (ImageView) findViewById(R.id.image_mode_arrow);
+        replyArrow = (ImageView) findViewById(R.id.reply_mode_arrow);
 
         buttonDefault = (RadioButton) findViewById(R.id.button_use_default);
         buttonPhone = (RadioButton) findViewById(R.id.button_use_phone);
@@ -77,6 +84,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         buttonNever = (RadioButton) findViewById(R.id.button_never_load);
         buttonWifi = (RadioButton) findViewById(R.id.button_wifi_only);
         checkBox = (CheckBox) findViewById(R.id.check_homepage);
+        checkSimple = (CheckBox) findViewById(R.id.check_simple);
 
         buttonDefault.setOnCheckedChangeListener(this);
         buttonPhone.setOnCheckedChangeListener(this);
@@ -87,8 +95,10 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         buttonWifi.setOnCheckedChangeListener(this);
 
         checkBox.setOnCheckedChangeListener(this);
+        checkSimple.setOnCheckedChangeListener(this);
 
         imageModeView.setOnClickListener(this);
+        replyModeView.setOnClickListener(this);
         customTailView.setOnClickListener(this);
         logInOutView.setOnClickListener(this);
         aboutView.setOnClickListener(this);
@@ -127,6 +137,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 break;
         }
 
+        checkSimple.setChecked(PrefsUtil.readBoolean(Keys.Key_Reply_With_Simple, true));
+
         switch (PrefsUtil.readInt(Keys.Key_Use_Tail_Type, TailType.Type_Use_Default_Tail)) {
             case TailType.Type_Use_Default_Tail:
                 buttonDefault.setChecked(true);
@@ -152,6 +164,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             case R.id.layout_image_mode:
                 popupImageMode();
                 break;
+            case R.id.layout_reply_mode:
+                popupReplyMode();
+                break;
             case R.id.layout_custom_tail:
                 toggleCustomTailLayout();
                 break;
@@ -171,6 +186,16 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         } else {
             modesView.setVisibility(View.VISIBLE);
             modeArrow.setRotation(-90);
+        }
+    }
+
+    private void popupReplyMode() {
+        if (replyView.getVisibility() == View.VISIBLE) {
+            replyView.setVisibility(View.GONE);
+            replyArrow.setRotation(0);
+        } else {
+            replyView.setVisibility(View.VISIBLE);
+            replyArrow.setRotation(-90);
         }
     }
 
@@ -214,6 +239,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (buttonView.getId() == R.id.check_homepage) {
             PrefsUtil.saveBoolean(Keys.Key_Image_No_Load_Homepage, isChecked);
+        } else if (buttonView.getId() == R.id.check_simple) {
+            PrefsUtil.saveBoolean(Keys.Key_Reply_With_Simple, isChecked);
         } else {
             if (isChecked) {
                 switch (buttonView.getId()) {

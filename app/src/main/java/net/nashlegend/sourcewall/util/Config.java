@@ -28,17 +28,8 @@ public class Config {
      *
      * @return
      */
-    public static boolean shouldReplyComplex() {
-        return PrefsUtil.readBoolean(Keys.Key_Reply_With_Html, false);
-    }
-
-    /**
-     * 是否使用Html方式回复
-     *
-     * @return
-     */
     public static Class<? extends BaseActivity> getReplyActivity() {
-        return PrefsUtil.readBoolean(Keys.Key_Reply_With_Html, false)? Reply2Activity.class : ReplyActivity.class;
+        return PrefsUtil.readBoolean(Keys.Key_Reply_With_Simple, true) ? ReplyActivity.class : Reply2Activity.class;
     }
 
     public static boolean shouldLoadImage() {
