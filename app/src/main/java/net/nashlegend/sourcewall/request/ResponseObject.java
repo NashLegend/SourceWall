@@ -31,6 +31,7 @@ public class ResponseObject<T> {
         if (object.requestObject != null) {
             requestObject.copyPartFrom(object.requestObject);
         }
+        ok = object.ok;
         error = object.error;
         statusCode = object.statusCode;
         error = object.error;
