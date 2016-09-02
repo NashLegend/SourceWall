@@ -87,6 +87,7 @@
         <item name="colorControlNormal">@android:color/white</item>
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
         <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorAccent">#ffffff</item>
     </style>
 
     <!--MainActivity的夜间主题-->

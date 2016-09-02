@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activities.ReplyActivity">
+    <item
+        android:id="@+id/action_anon"
+        android:checkable="true"
+        android:title="@string/anon"
+        app:actionViewClass="android.widget.CheckBox"
+        app:showAsAction="always" />
+</menu>

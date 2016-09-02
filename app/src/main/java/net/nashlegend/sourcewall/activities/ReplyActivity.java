@@ -548,7 +548,7 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_reply_article, menu);
+        getMenuInflater().inflate(R.menu.menu_reply, menu);
         return true;
     }
 

@@ -303,7 +303,7 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
         if (!UserAPI.isLoggedIn()) {
             gotoLogin();
         } else {
-            Intent intent = new Intent(this, ReplyActivity.class);
+            Intent intent = new Intent(this, Reply2Activity.class);
             intent.putExtra(Extras.Extra_Ace_Model, question);
             startOneActivity(intent);
         }

@@ -26,6 +26,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -44,11 +45,12 @@ import net.nashlegend.sourcewall.request.api.APIBase;
 import net.nashlegend.sourcewall.util.Consts.Extras;
 import net.nashlegend.sourcewall.util.Consts.Keys;
 import net.nashlegend.sourcewall.util.Consts.RequestCode;
+import net.nashlegend.sourcewall.util.DisplayUtil;
 import net.nashlegend.sourcewall.util.FileUtil;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.PrefsUtil;
 import net.nashlegend.sourcewall.util.RegUtil;
-import net.nashlegend.sourcewall.util.SketchUtil;
+import net.nashlegend.sourcewall.util.Sketch2Util;
 import net.nashlegend.sourcewall.util.UiUtil;
 
 import java.io.File;
@@ -72,6 +74,7 @@ public class Reply2Activity extends BaseActivity implements View.OnClickListener
     private ProgressDialog progressDialog;
     private String tmpImagePath;
     private UComment comment;
+    private CheckBox checkBox;
     private boolean replyOK;
 
     @Override
@@ -302,25 +305,26 @@ public class Reply2Activity extends BaseActivity implements View.OnClickListener
         }
         String header = "";
         if (comment != null) {
-            header = ">" + hostText.getText() + "\n\n";
+            header += ">" + hostText.getText().toString().replaceAll("\n", "") + "\n\n\n";
         }
-        final Subscription task = APIBase.replyHtml(aceModel, header + rep, false, new SimpleCallBack<Boolean>() {
-            @Override
-            public void onFailure() {
-                UiUtil.dismissDialog(progressDialog);
-                toast(R.string.reply_failed);
-            }
+        final Subscription task = APIBase.replyHtml(aceModel, header + rep,
+                checkBox != null && checkBox.isChecked(), new SimpleCallBack<Boolean>() {
+                    @Override
+                    public void onFailure() {
+                        UiUtil.dismissDialog(progressDialog);
+                        toast(R.string.reply_failed);
+                    }
 
-            @Override
-            public void onSuccess() {
-                UiUtil.dismissDialog(progressDialog);
-                toast(R.string.reply_ok);
-                setResult(RESULT_OK);
-                replyOK = true;
-                tryClearSketch();
-                finish();
-            }
-        });
+                    @Override
+                    public void onSuccess() {
+                        UiUtil.dismissDialog(progressDialog);
+                        toast(R.string.reply_ok);
+                        setResult(RESULT_OK);
+                        replyOK = true;
+                        tryClearSketch();
+                        finish();
+                    }
+                });
         if (task != null) {
             progressDialog = new ProgressDialog(Reply2Activity.this);
             progressDialog.setCanceledOnTouchOutside(false);
@@ -374,11 +378,11 @@ public class Reply2Activity extends BaseActivity implements View.OnClickListener
         String content = "";
         if (aceModel != null) {
             if (aceModel instanceof Article) {
-                content = SketchUtil.readString(Keys.Key_Sketch_Article_Reply + "_" + ((Article) aceModel).getId(), "");
+                content = Sketch2Util.readString(Keys.Key_Sketch_Article_Reply + "_" + ((Article) aceModel).getId(), "");
             } else if (aceModel instanceof Post) {
-                content = SketchUtil.readString(Keys.Key_Sketch_Post_Reply + "_" + ((Post) aceModel).getId(), "");
+                content = Sketch2Util.readString(Keys.Key_Sketch_Post_Reply + "_" + ((Post) aceModel).getId(), "");
             } else if (aceModel instanceof Question) {
-                content = SketchUtil.readString(Keys.Key_Sketch_Question_Answer + "_" + ((Question) aceModel).getId(), "");
+                content = Sketch2Util.readString(Keys.Key_Sketch_Question_Answer + "_" + ((Question) aceModel).getId(), "");
             }
         }
         editText.setText(restore2Spanned(content));
@@ -478,11 +482,11 @@ public class Reply2Activity extends BaseActivity implements View.OnClickListener
 
     private void tryClearSketch() {
         if (aceModel instanceof Article) {
-            SketchUtil.remove(Keys.Key_Sketch_Article_Reply + "_" + ((Article) aceModel).getId());
+            Sketch2Util.remove(Keys.Key_Sketch_Article_Reply + "_" + ((Article) aceModel).getId());
         } else if (aceModel instanceof Post) {
-            SketchUtil.remove(Keys.Key_Sketch_Post_Reply + "_" + ((Post) aceModel).getId());
+            Sketch2Util.remove(Keys.Key_Sketch_Post_Reply + "_" + ((Post) aceModel).getId());
         } else if (aceModel instanceof Question) {
-            SketchUtil.remove(Keys.Key_Sketch_Question_Answer + "_" + ((Question) aceModel).getId());
+            Sketch2Util.remove(Keys.Key_Sketch_Question_Answer + "_" + ((Question) aceModel).getId());
         }
     }
 
@@ -490,11 +494,11 @@ public class Reply2Activity extends BaseActivity implements View.OnClickListener
         if (!replyOK && !TextUtils.isEmpty(editText.getText().toString().trim()) && aceModel != null) {
             String sketch = editText.getText().toString();
             if (aceModel instanceof Article) {
-                SketchUtil.saveString(Keys.Key_Sketch_Article_Reply + "_" + ((Article) aceModel).getId(), sketch);
+                Sketch2Util.saveString(Keys.Key_Sketch_Article_Reply + "_" + ((Article) aceModel).getId(), sketch);
             } else if (aceModel instanceof Post) {
-                SketchUtil.saveString(Keys.Key_Sketch_Post_Reply + "_" + ((Post) aceModel).getId(), sketch);
+                Sketch2Util.saveString(Keys.Key_Sketch_Post_Reply + "_" + ((Post) aceModel).getId(), sketch);
             } else if (aceModel instanceof Question) {
-                SketchUtil.saveString(Keys.Key_Sketch_Question_Answer + "_" + ((Question) aceModel).getId(), sketch);
+                Sketch2Util.saveString(Keys.Key_Sketch_Question_Answer + "_" + ((Question) aceModel).getId(), sketch);
             }
         } else if (!replyOK && TextUtils.isEmpty(editText.getText().toString().trim())) {
             tryClearSketch();
@@ -551,7 +555,15 @@ public class Reply2Activity extends BaseActivity implements View.OnClickListener
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_reply_article, menu);
+        getMenuInflater().inflate(R.menu.menu_reply2, menu);
+        if (aceModel != null && aceModel instanceof Post) {
+            menu.findItem(R.id.action_anon).setVisible(true);
+            int padding = DisplayUtil.dip2px(6, this);
+            checkBox = (CheckBox) menu.findItem(R.id.action_anon).getActionView();
+            checkBox.setPadding(padding, 0, padding, 0);
+        } else {
+            menu.findItem(R.id.action_anon).setVisible(false);
+        }
         return true;
     }
 

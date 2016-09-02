@@ -60,11 +60,11 @@ public class APIBase {
     @Nullable
     public static Subscription replyHtml(AceModel data, String content, boolean is_anon, RequestCallBack<Boolean> callBack) {
         if (data instanceof Article) {
-            return ArticleAPI.replyArticleHtml(((Article) data).getId(), content + Config.getSimpleReplyTail(), callBack);
+            return ArticleAPI.replyArticleHtml(((Article) data).getId(), content, callBack);
         } else if (data instanceof Post) {
-            return PostAPI.replyPostHtml(((Post) data).getId(), content + Config.getSimpleReplyTail(), is_anon, callBack);
+            return PostAPI.replyPostHtml(((Post) data).getId(), content, is_anon, callBack);
         } else if (data instanceof Question) {
-            return QuestionAPI.answerQuestionHtml(((Question) data).getId(), content + Config.getSimpleReplyTail(), callBack);
+            return QuestionAPI.answerQuestionHtml(((Question) data).getId(), content, callBack);
         } else {
             return null;
         }

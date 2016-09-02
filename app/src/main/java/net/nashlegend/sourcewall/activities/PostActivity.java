@@ -338,7 +338,7 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
         if (!UserAPI.isLoggedIn()) {
             gotoLogin();
         } else {
-            Intent intent = new Intent(this, ReplyActivity.class);
+            Intent intent = new Intent(this, Reply2Activity.class);
             intent.putExtra(Extras.Extra_Ace_Model, post);
             if (comment != null) {
                 intent.putExtra(Extras.Extra_Simple_Comment, comment);
