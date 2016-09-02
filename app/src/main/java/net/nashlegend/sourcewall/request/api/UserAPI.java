@@ -124,7 +124,9 @@ public class UserAPI extends APIBase {
      */
     @SuppressWarnings("deprecation")
     public static void logout() {
+        PrefsUtil.remove(Keys.Key_Cookie);
         PrefsUtil.remove(Keys.Key_Access_Token);
+        PrefsUtil.remove(Keys.Key_Access_Token_2);
         PrefsUtil.remove(Keys.Key_Ukey);
         PrefsUtil.remove(Keys.Key_User_Avatar);
         PrefsUtil.remove(Keys.Key_User_ID);
@@ -156,6 +158,25 @@ public class UserAPI extends APIBase {
      */
     public static void setToken(String token) {
         PrefsUtil.saveString(Keys.Key_Access_Token, token);
+    }
+
+
+    /**
+     * 获取保存的用户token
+     *
+     * @return 用户token，正确的话，64位长度
+     */
+    public static String getToken2() {
+        return PrefsUtil.readString(Keys.Key_Access_Token_2, "");
+    }
+
+    /**
+     * 保存用户token
+     *
+     * @param token
+     */
+    public static void setToken2(String token) {
+        PrefsUtil.saveString(Keys.Key_Access_Token_2, token);
     }
 
     /**

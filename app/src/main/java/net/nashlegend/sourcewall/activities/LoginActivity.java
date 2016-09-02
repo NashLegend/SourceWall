@@ -78,6 +78,7 @@ public class LoginActivity extends BaseActivity {
     private boolean parseRawCookie(String rawCookie) {
         try {
             String tmpToken = "";
+            String tmpToken2 = "";
             String tmpUkey = "";
             if (!TextUtils.isEmpty(rawCookie)) {
                 String[] rawCookieParams = rawCookie.split(";");
@@ -88,17 +89,28 @@ public class LoginActivity extends BaseActivity {
                     }
                     String paramName = rawCookieParamNameAndValue[0].trim();
                     String paramValue = rawCookieParamNameAndValue[1].trim();
+
                     if (Web.Cookie_Token_Key.equals(paramName)) {
                         UserAPI.setToken(paramValue);
                         tmpToken = paramValue;
-                    } else if (Web.Cookie_Ukey_Key.equals(paramName)) {
+                        continue;
+                    }
+
+                    if (Web.Cookie_Ukey_Key.equals(paramName)) {
                         UserAPI.setUkey(paramValue);
                         tmpUkey = paramValue;
+                        continue;
+                    }
+
+                    if (Web.Cookie_Token_Key_2.equals(paramName)) {
+                        UserAPI.setToken2(paramValue);
+                        tmpToken2 = paramValue;
                     }
                 }
-                HttpUtil.setCookie(HttpUtil.getDefaultHttpClient());
             }
-            return !TextUtils.isEmpty(tmpUkey) && !TextUtils.isEmpty(tmpToken);
+            return !TextUtils.isEmpty(tmpUkey)
+                    && !TextUtils.isEmpty(tmpToken)
+                    && !TextUtils.isEmpty(tmpToken2);
         } catch (Exception e) {
             return false;
         }
@@ -112,16 +124,13 @@ public class LoginActivity extends BaseActivity {
         @SuppressWarnings("deprecation")
         @Override
         public boolean shouldOverrideUrlLoading(final WebView view, String url) {
-            if (url.equals(Web.SUCCESS_URL_1) || url.equals(Web.SUCCESS_URL_2)) {
-                if (parseRawCookie(cookieStr)) {
-                    tokenOk = true;
-                    UiUtil.dismissDialog(dialog);
-                    webView.stopLoading();
-                    PrefsUtil.saveString(Keys.Key_Cookie, cookieStr);
-                    delayFinish();
-                } else {
-                    delayPopTokenFailed();
-                }
+            if (parseRawCookie(cookieStr)) {
+                tokenOk = true;
+                UiUtil.dismissDialog(dialog);
+                webView.stopLoading();
+                PrefsUtil.saveString(Keys.Key_Cookie, cookieStr);
+                HttpUtil.setCookie(HttpUtil.getDefaultHttpClient(), cookieStr);
+                delayFinish();
             } else {
                 view.loadUrl(url);
             }
@@ -140,6 +149,7 @@ public class LoginActivity extends BaseActivity {
             if (parseRawCookie(cookieStr)) {
                 webView.stopLoading();
                 PrefsUtil.saveString(Keys.Key_Cookie, cookieStr);
+                HttpUtil.setCookie(HttpUtil.getDefaultHttpClient(), cookieStr);
                 setResult(RESULT_OK);
                 delayFinish();
             } else {

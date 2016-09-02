@@ -1,5 +1,7 @@
 package net.nashlegend.sourcewall.request;
 
+import android.text.TextUtils;
+
 import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.request.cache.RequestCache;
@@ -63,7 +65,7 @@ public class HttpUtil {
                     .writeTimeout(WRITE_TIMEOUT, TimeUnit.MILLISECONDS)
                     .cookieJar(getCookieJar())
                     .build();
-            setCookie(defaultHttpClient);
+            setCookie(defaultHttpClient, UserAPI.getCookie());
         }
         return defaultHttpClient;
     }
@@ -86,16 +88,22 @@ public class HttpUtil {
     /**
      * @param client
      */
-    synchronized public static void setCookie(OkHttpClient client) {
+    synchronized public static void setCookie(OkHttpClient client, String rawCookie) {
         List<Cookie> cookies = new ArrayList<>();
-        cookies.add(new Cookie.Builder().domain("guokr.com").name("_32353_access_token").value(UserAPI.getToken()).build());
-        cookies.add(new Cookie.Builder().domain("guokr.com").name("_32353_ukey").value(UserAPI.getUkey()).build());
-        try {
+        if (!TextUtils.isEmpty(rawCookie)) {
+            String[] rawCookieParams = rawCookie.split(";");
+            for (String rawCookieParam : rawCookieParams) {
+                String rawCookieParamNameAndValue[] = rawCookieParam.trim().split("=");
+                if (rawCookieParamNameAndValue.length != 2) {
+                    continue;
+                }
+                String paramName = rawCookieParamNameAndValue[0].trim();
+                String paramValue = rawCookieParamNameAndValue[1].trim();
+                cookies.add(new Cookie.Builder().domain("guokr.com").name(paramName).value(paramValue).build());
+            }
             client.cookieJar().saveFromResponse(HttpUrl.parse("http://www.guokr.com/"), cookies);
             client.cookieJar().saveFromResponse(HttpUrl.parse("http://apis.guokr.com/"), cookies);
             client.cookieJar().saveFromResponse(HttpUrl.parse("http://m.guokr.com/"), cookies);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 

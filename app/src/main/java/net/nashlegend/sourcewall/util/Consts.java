@@ -41,6 +41,7 @@ public class Consts {
         // 保存SharedPreferences的Key
         public static final String Key_Cookie = "sourcewall.key.cookie";
         public static final String Key_Access_Token = "sourcewall.key.access.token";
+        public static final String Key_Access_Token_2 = "sourcewall.key.access.token.2";
         public static final String Key_Ukey = "sourcewall.key.ukey";
         public static final String Key_User_Name = "sourcewall.key.user.name";
         public static final String Key_User_ID = "sourcewall.key.user.id";
@@ -90,6 +91,8 @@ public class Consts {
         public static final String SUCCESS_URL_2 = "http://www.guokr.com/";
         public static final String Cookie_Token_Key = "_32353_access_token";
         public static final String Cookie_Ukey_Key = "_32353_ukey";
+        public static final String Cookie_Token_Key_2 = "_32382_access_token";
+        public static final String Cookie_Ukey_Key_2 = "_32382_ukey";
 
         //webview
         public static final String Base_Url = "http://www.guokr.com/";
