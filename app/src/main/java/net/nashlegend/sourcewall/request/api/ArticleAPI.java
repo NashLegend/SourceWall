@@ -15,8 +15,11 @@ import net.nashlegend.sourcewall.request.parsers.ArticleHtmlParser;
 import net.nashlegend.sourcewall.request.parsers.ArticleListParser;
 import net.nashlegend.sourcewall.request.parsers.BooleanParser;
 import net.nashlegend.sourcewall.request.parsers.ContentValueForKeyParser;
+import net.nashlegend.sourcewall.request.parsers.Parser;
 import net.nashlegend.sourcewall.request.parsers.SimpleArticleParser;
 import net.nashlegend.sourcewall.request.parsers.StringParser;
+import net.nashlegend.sourcewall.util.Config;
+import net.nashlegend.sourcewall.util.MDUtil;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -28,6 +31,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import rx.Observable;
+import rx.Observer;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.functions.Func2;
 import rx.schedulers.Schedulers;
@@ -328,5 +334,88 @@ public class ArticleAPI extends APIBase {
                 .parser(new ContentValueForKeyParser("id"))
                 .callback(callBack)
                 .requestAsync();
+    }
+
+    /**
+     * 回复一个文章，模拟网页请求回复
+     *
+     * @param id      帖子id
+     * @param content 回复内容
+     * @return ResponseObject.result is the reply_id if ok;
+     */
+    public static Subscription replyArticleHtml(String id, final String content, final RequestCallBack<Boolean> callBack) {
+        final String url = "http://www.guokr.com/article/" + id + "/";
+        return new RequestBuilder<String>()
+                .get()
+                .url(url)
+                .parser(new Parser<String>() {
+                    @Override
+                    public String parse(String response, ResponseObject<String> responseObject) throws Exception {
+                        String str = Jsoup.parse(response).getElementById("csrf_token").attr("value");
+                        responseObject.ok = true;
+                        return str;
+                    }
+                })
+                .flatMap()
+                .flatMap(new Func1<ResponseObject<String>, Observable<ResponseObject<Boolean>>>() {
+                    @Override
+                    public Observable<ResponseObject<Boolean>> call(ResponseObject<String> response) {
+                        if (response.ok) {
+                            final ParamsMap pairs = new ParamsMap();
+                            pairs.put("csrf_token", response.result);
+                            pairs.put("reply", MDUtil.Markdown2Html(content) + Config.getComplexReplyTail());
+                            pairs.put("captcha", "");
+                            return new RequestBuilder<Boolean>()
+                                    .post()
+                                    .url(url)
+                                    .params(pairs)
+                                    .parser(new Parser<Boolean>() {
+                                        @Override
+                                        public Boolean parse(String response, ResponseObject<Boolean> responseObject) throws Exception {
+                                            try {
+                                                Document document = Jsoup.parse(response);
+                                                String url = document.getElementsByTag("a").get(0).text();
+                                                Matcher matcher = Pattern.compile("/article/(\\d+)/").matcher(url);
+                                                responseObject.ok = matcher.find();
+                                            } catch (Exception e) {
+                                                if (response.contains("Redirecting")) {
+                                                    responseObject.ok = true;
+                                                } else {
+                                                    throw e;
+                                                }
+                                            }
+                                            return responseObject.ok;
+                                        }
+                                    })
+                                    .flatMap();
+                        } else {
+                            ResponseObject<Boolean> fakeResponse = new ResponseObject<Boolean>();
+                            fakeResponse.copyPartFrom(response);
+                            return Observable.just(fakeResponse);
+                        }
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ResponseObject<Boolean>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        callBack.onFailure(e, new ResponseObject<Boolean>());
+                    }
+
+                    @Override
+                    public void onNext(ResponseObject<Boolean> response) {
+                        if (response.ok) {
+                            callBack.onSuccess(true, response);
+                        } else {
+                            callBack.onFailure(response.throwable, response);
+                        }
+                    }
+                });
     }
 }

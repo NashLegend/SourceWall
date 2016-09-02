@@ -23,11 +23,15 @@ public class RedirectInterceptor implements Interceptor {
             String post_reply_reg = "^http://(www|m).guokr.com/post/reply/\\d+/$";//http://www.guokr.com/post/reply/6148664/
             //上面两条，只有通知才会跳到
             String publish_post_reg = "http://www.guokr.com/group/\\d+/post/edit/";//这是发贴的链接跳转
-            String reply_post_reg = "http://(www|m).guokr.com/post/\\d+/";//这是回贴的链接跳转http://www.guokr.com/post/754909/
+            String reply_post_reg = "http://(www|m).guokr.com/post/\\d+/";//这是回贴子的链接跳转http://www.guokr.com/post/754909/
+            String reply_article_reg = "http://(www|m).guokr.com/article/\\d+/";//这是回文章的链接跳转http://www.guokr.com/article/441704/
+            String answer_question_reg = "http://(www|m).guokr.com/question/\\d+/";//这是回答问题的链接跳转http://www.guokr.com/question/647230/
             boolean flag = tmpUrl.matches(article_reply_reg)
                     || tmpUrl.matches(post_reply_reg)
                     || tmpUrl.matches(publish_post_reg)
-                    || tmpUrl.matches(reply_post_reg) && "POST".endsWith(request.method());
+                    || tmpUrl.matches(reply_post_reg) && "POST".endsWith(request.method())
+                    || tmpUrl.matches(reply_article_reg) && "POST".endsWith(request.method())
+                    || tmpUrl.matches(answer_question_reg) && "POST".endsWith(request.method());
             if (flag) {
                 //匹配上了，要重定向，将code设置成200
                 response = response.newBuilder().code(HttpURLConnection.HTTP_OK).build();
