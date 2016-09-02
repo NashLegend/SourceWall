@@ -36,9 +36,13 @@ public class DeviceUtil {
     }
 
     public static boolean isNetworkConnectedByType(int type) {
-        ConnectivityManager manager = (ConnectivityManager) App.getApp().getSystemService(CONNECTIVITY_SERVICE);
-        NetworkInfo info = manager.getActiveNetworkInfo();
-        return info != null && info.isConnected() && info.getType() == type;
+        try {
+            ConnectivityManager manager = (ConnectivityManager) App.getApp().getSystemService(CONNECTIVITY_SERVICE);
+            NetworkInfo info = manager.getActiveNetworkInfo();
+            return info != null && info.isConnected() && info.getType() == type;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public static void openNetwork(Activity activity) {

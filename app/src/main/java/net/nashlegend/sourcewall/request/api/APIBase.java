@@ -16,6 +16,7 @@ import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.parsers.ImageUploadParser;
 import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts.ZipMode;
+import net.nashlegend.sourcewall.util.DeviceUtil;
 import net.nashlegend.sourcewall.util.ImageUtils;
 
 import org.json.JSONObject;
@@ -58,7 +59,7 @@ public class APIBase {
      * @return 返回ResponseObject，resultObject.result是上传后的图片地址，果壳并不会对图片进行压缩
      */
     public static Subscription uploadImage(String path, RequestCallBack<String> callBack) {
-        return uploadImage(path, ZipMode.Low, callBack);
+        return uploadImage(path, DeviceUtil.isWifiConnected() ? ZipMode.High : ZipMode.Low, callBack);
     }
 
     /**
