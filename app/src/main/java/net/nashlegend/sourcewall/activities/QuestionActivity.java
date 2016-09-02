@@ -37,6 +37,7 @@ import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.AutoHideUtil;
 import net.nashlegend.sourcewall.util.AutoHideUtil.AutoHideListener;
+import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.Consts.Extras;
 import net.nashlegend.sourcewall.util.Mob;
 import net.nashlegend.sourcewall.util.ShareUtil;
@@ -303,7 +304,7 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
         if (!UserAPI.isLoggedIn()) {
             gotoLogin();
         } else {
-            Intent intent = new Intent(this, Reply2Activity.class);
+            Intent intent = new Intent(this, Config.getReplyActivity());
             intent.putExtra(Extras.Extra_Ace_Model, question);
             startOneActivity(intent);
         }

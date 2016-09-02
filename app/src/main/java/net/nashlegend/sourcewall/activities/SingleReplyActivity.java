@@ -411,7 +411,7 @@ public class SingleReplyActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void replyThis() {
-        Intent intent = new Intent(this, ReplyActivity.class);
+        Intent intent = new Intent(this, Config.getReplyActivity());
         intent.putExtra(Extras.Extra_Ace_Model, host);
         if (data != null) {
             intent.putExtra(Extras.Extra_Simple_Comment, data);

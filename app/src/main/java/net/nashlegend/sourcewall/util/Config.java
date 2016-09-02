@@ -4,6 +4,9 @@ import android.text.TextUtils;
 
 import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
+import net.nashlegend.sourcewall.activities.BaseActivity;
+import net.nashlegend.sourcewall.activities.Reply2Activity;
+import net.nashlegend.sourcewall.activities.ReplyActivity;
 import net.nashlegend.sourcewall.util.Consts.ImageLoadMode;
 import net.nashlegend.sourcewall.util.Consts.Keys;
 import net.nashlegend.sourcewall.util.Consts.TailType;
@@ -19,6 +22,24 @@ public class Config {
     public final static String defaultDisplayName = "果壳的壳";
     public final static String defaultUrl = "https://github.com/NashLegend/SourceWall/blob/master/README.md";
     public final static String altUrl = "http://www.guokr.com/blog/798434/";
+
+    /**
+     * 是否使用Html方式回复
+     *
+     * @return
+     */
+    public static boolean shouldReplyComplex() {
+        return PrefsUtil.readBoolean(Keys.Key_Reply_With_Html, false);
+    }
+
+    /**
+     * 是否使用Html方式回复
+     *
+     * @return
+     */
+    public static Class<? extends BaseActivity> getReplyActivity() {
+        return PrefsUtil.readBoolean(Keys.Key_Reply_With_Html, false)? Reply2Activity.class : ReplyActivity.class;
+    }
 
     public static boolean shouldLoadImage() {
         //略微有点耗时，最多可耗时3ms，最低0.3ms
