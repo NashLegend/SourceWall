@@ -3,21 +3,17 @@ package net.nashlegend.sourcewall.activities;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 import com.umeng.analytics.MobclickAgent;
 
-import net.nashlegend.sourcewall.util.AAsyncTask;
 import net.nashlegend.sourcewall.util.ToastUtil;
-import net.nashlegend.sourcewall.view.common.IStackedAsyncTaskInterface;
-
-import java.util.ArrayList;
 
 /**
  * Created by NashLegend on 2014/9/15 0015
  */
-public abstract class BaseActivity extends SwipeActivity implements IStackedAsyncTaskInterface {
+public abstract class BaseActivity extends SwipeActivity {
 
-    private final ArrayList<AAsyncTask> stackedTasks = new ArrayList<>();
     private boolean isActive = false;
 
     @Override
@@ -47,50 +43,6 @@ public abstract class BaseActivity extends SwipeActivity implements IStackedAsyn
         isActive = false;
         MobclickAgent.onPause(this);
         super.onPause();
-    }
-
-    /**
-     * 将AsyncTask添加到队列，在AsyncTask.onPreExecute中执行
-     *
-     * @param task 要添加的AsyncTask
-     */
-    @Override
-    public void addToStackedTasks(AAsyncTask task) {
-        stackedTasks.add(task);
-    }
-
-    /**
-     * 将AsyncTask从队列中删除，有可能从AsyncTask.onCancelled或者AsyncTask.onPostExecute里面调用
-     * 由于stopAllTasks会调用AsyncTask.cancel，所以最后会多执行一次，我擦
-     *
-     * @param task 要清除的AsyncTask
-     */
-    @Override
-    public void removeFromStackedTasks(AAsyncTask task) {
-        stackedTasks.remove(task);
-    }
-
-    @Override
-    public void flushAllTasks() {
-        stackedTasks.clear();
-    }
-
-    @Override
-    public void stopAllTasks() {
-        isActive = false;
-        for (int i = 0; i < stackedTasks.size(); i++) {
-            AAsyncTask task = stackedTasks.get(i);
-            if (task != null && task.getStatus() == AAsyncTask.Status.RUNNING) {
-                task.cancel(true);
-            }
-        }
-        stackedTasks.clear();
-    }
-
-    @Override
-    protected void onDestroy() {
-        stopAllTasks();
-        super.onDestroy();
     }
 
     public void gotoLogin() {
@@ -127,5 +79,55 @@ public abstract class BaseActivity extends SwipeActivity implements IStackedAsyn
 
     public void startActivity(Class clazz) {
         startOneActivity(new Intent(this, clazz));
+    }
+
+    @Override
+    public void startActivity(Intent intent) {
+        if (!intent.hasExtra("requestFrom")) {
+            intent.putExtra("requestFrom", getClass().getCanonicalName());
+        }
+        super.startActivity(intent);
+    }
+
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode) {
+        if (!intent.hasExtra("requestCode")) {
+            intent.putExtra("requestCode", requestCode);
+        }
+        if (!intent.hasExtra("requestFrom")) {
+            intent.putExtra("requestFrom", getClass().getCanonicalName());
+        }
+        super.startActivityForResult(intent, requestCode);
+    }
+
+    /**
+     * 返回发起请求的类
+     *
+     * @return
+     */
+    @NonNull
+    public String getRequestFrom() {
+        String from = "";
+        try {
+            from = getIntent().getStringExtra("requestFrom");
+        } catch (Exception e) {
+            return "";
+        }
+        return from == null ? "" : from;
+    }
+
+    /**
+     * 返回发起请求的requestCode
+     *
+     * @return
+     */
+    public int getRequestCode() {
+        int code = -1;
+        try {
+            code = getIntent().getIntExtra("requestCode", -1);
+        } catch (Exception e) {
+            code = -1;
+        }
+        return code;
     }
 }

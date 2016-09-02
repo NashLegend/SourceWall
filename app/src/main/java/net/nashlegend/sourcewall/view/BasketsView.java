@@ -23,16 +23,14 @@ import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
 import net.nashlegend.sourcewall.request.api.FavorAPI;
-import net.nashlegend.sourcewall.util.AAsyncTask;
 import net.nashlegend.sourcewall.util.ToastUtil;
-import net.nashlegend.sourcewall.view.common.IStackedAsyncTaskInterface;
 
 import java.util.ArrayList;
 
 /**
  * Created by NashLegend on 2014/12/2 0002
  */
-public class BasketsView extends FrameLayout implements View.OnClickListener, IStackedAsyncTaskInterface {
+public class BasketsView extends FrameLayout implements View.OnClickListener {
 
     ListView listView;
     ProgressBar progressBaskets;
@@ -184,37 +182,8 @@ public class BasketsView extends FrameLayout implements View.OnClickListener, IS
         }
     }
 
-    private final ArrayList<AAsyncTask> stackedTasks = new ArrayList<>();
-
-    @Override
-    public void addToStackedTasks(AAsyncTask task) {
-        stackedTasks.add(task);
-    }
-
-    @Override
-    public void removeFromStackedTasks(AAsyncTask task) {
-        stackedTasks.remove(task);
-    }
-
-    @Override
-    public void flushAllTasks() {
-        stackedTasks.clear();
-    }
-
-    @Override
-    public void stopAllTasks() {
-        for (int i = 0; i < stackedTasks.size(); i++) {
-            AAsyncTask task = stackedTasks.get(i);
-            if (task != null && task.getStatus() == AAsyncTask.Status.RUNNING) {
-                task.cancel(true);
-            }
-        }
-        stackedTasks.clear();
-    }
-
     @Override
     protected void onDetachedFromWindow() {
-        stopAllTasks();
         super.onDetachedFromWindow();
     }
 }
