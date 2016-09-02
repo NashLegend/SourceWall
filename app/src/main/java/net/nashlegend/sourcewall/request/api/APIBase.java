@@ -53,6 +53,24 @@ public class APIBase {
     }
 
     /**
+     * 统一回复，回复主题站、帖子、问题,html形式
+     *
+     * @return ResponseObject
+     */
+    @Nullable
+    public static Subscription replyHtml(AceModel data, String content, boolean is_anon, RequestCallBack<Boolean> callBack) {
+        if (data instanceof Article) {
+            return ArticleAPI.replyArticleHtml(((Article) data).getId(), content + Config.getSimpleReplyTail(), callBack);
+        } else if (data instanceof Post) {
+            return PostAPI.replyPostHtml(((Post) data).getId(), content + Config.getSimpleReplyTail(), is_anon, callBack);
+        } else if (data instanceof Question) {
+            return QuestionAPI.answerQuestionHtml(((Question) data).getId(), content + Config.getSimpleReplyTail(), callBack);
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * 上传图片
      *
      * @param path 要上传图片的路径

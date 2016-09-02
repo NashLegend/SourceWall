@@ -3,6 +3,9 @@ package net.nashlegend.sourcewall.util;
 import android.graphics.BitmapFactory;
 
 import org.junit.Test;
+import org.markdown4j.Markdown4jProcessor;
+
+import java.io.IOException;
 
 import static org.junit.Assert.*;
 
@@ -24,6 +27,14 @@ public class ImageUtilsTest {
         System.out.println(sample);
         System.out.println(outWidth / sample);
         System.out.println(outHeight / sample);
+
+        try {
+            String str = new Markdown4jProcessor().process(">uuu" +
+                    "\nasndkjasndsads\n\ndfdsf");
+            System.out.println(str);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
