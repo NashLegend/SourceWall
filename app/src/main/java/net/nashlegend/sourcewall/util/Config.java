@@ -29,7 +29,7 @@ public class Config {
      * @return
      */
     public static Class<? extends BaseActivity> getReplyActivity() {
-        return PrefsUtil.readBoolean(Keys.Key_Reply_With_Simple, true) ? ReplyActivity.class : Reply2Activity.class;
+        return PrefsUtil.readBoolean(Keys.Key_Reply_With_Simple, false) ? ReplyActivity.class : Reply2Activity.class;
     }
 
     public static boolean shouldLoadImage() {

@@ -64,6 +64,7 @@ public class LoginActivity extends BaseActivity {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         webView.loadUrl(Web.LOGIN_URL);
+        setSwipeEnabled(false);
     }
 
     @Override

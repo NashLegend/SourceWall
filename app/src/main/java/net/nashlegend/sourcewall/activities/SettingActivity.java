@@ -141,7 +141,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 break;
         }
 
-        checkSimple.setChecked(PrefsUtil.readBoolean(Keys.Key_Reply_With_Simple, true));
+        checkSimple.setChecked(PrefsUtil.readBoolean(Keys.Key_Reply_With_Simple, false));
         checkGroup.setChecked(PrefsUtil.readBoolean(Keys.Key_Show_Group_First_Homepage, false));
 
         switch (PrefsUtil.readInt(Keys.Key_Use_Tail_Type, TailType.Type_Use_Default_Tail)) {

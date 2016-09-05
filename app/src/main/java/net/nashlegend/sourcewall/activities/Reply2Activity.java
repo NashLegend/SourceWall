@@ -560,7 +560,9 @@ public class Reply2Activity extends BaseActivity implements View.OnClickListener
             menu.findItem(R.id.action_anon).setVisible(true);
             int padding = DisplayUtil.dip2px(6, this);
             checkBox = (CheckBox) menu.findItem(R.id.action_anon).getActionView();
-            checkBox.setPadding(padding, 0, padding, 0);
+            checkBox.setPadding(padding, 0, padding * 2, 0);
+            checkBox.setText(R.string.anon);
+            checkBox.setTextColor(Color.parseColor("#ffffff"));
         } else {
             menu.findItem(R.id.action_anon).setVisible(false);
         }
