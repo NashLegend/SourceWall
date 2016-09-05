@@ -32,19 +32,19 @@ public class Mob {
     public static final String Event_Load_My_Groups = "Event_Load_My_Groups";//加载关注的小组
     public static final String Event_Load_My_Groups_OK = "Event_Load_My_Groups_OK";//加载关注小组成功
     public static final String Event_Load_My_Groups_Failed = "Event_Load_My_Groups_Failed";//加载关注小组失败
-    public static final String Event_Open_Post = "Event_Open_Post";//打开帖子
-    public static final String Event_Reverse_Read_Post = "Event_Reverse_Read_Post";//倒序查看帖子
-    public static final String Event_Normal_Read_Post = "Event_Normal_Read_Post";//正序查看帖子
-    public static final String Event_Like_Post = "Event_Like_Post";//赞帖子
-    public static final String Event_Favor_Post = "Event_Favor_Post";//收藏帖子
-    public static final String Event_Reply_Post = "Event_Reply_Post";//回复帖子
-    public static final String Event_Share_Post_To_Wechat_Circle = "Event_Share_Post_To_Wechat_Circle";//分享帖子到朋友圈
-    public static final String Event_Share_Post_To_Wechat_friend = "Event_Share_Post_To_Wechat_friend";//分享帖子到微信好友
-    public static final String Event_Share_Post_To_Weibo = "Event_Share_Post_To_Weibo";//分享帖子到新浪微博
-    public static final String Event_Open_Post_In_Browser = "Event_Open_Post_In_Browser";//打浏览器中打开帖子
-    public static final String Event_Publish_Post = "Event_Publish_Post";//用户发帖
-    public static final String Event_Publish_Post_OK = "Event_Publish_Post_OK";//发表帖子成功
-    public static final String Event_Publish_Post_Failed = "Event_Publish_Post_Failed";//发表帖子失败
+    public static final String Event_Open_Post = "Event_Open_Post";//打开贴子
+    public static final String Event_Reverse_Read_Post = "Event_Reverse_Read_Post";//倒序查看贴子
+    public static final String Event_Normal_Read_Post = "Event_Normal_Read_Post";//正序查看贴子
+    public static final String Event_Like_Post = "Event_Like_Post";//赞贴子
+    public static final String Event_Favor_Post = "Event_Favor_Post";//收藏贴子
+    public static final String Event_Reply_Post = "Event_Reply_Post";//回复贴子
+    public static final String Event_Share_Post_To_Wechat_Circle = "Event_Share_Post_To_Wechat_Circle";//分享贴子到朋友圈
+    public static final String Event_Share_Post_To_Wechat_friend = "Event_Share_Post_To_Wechat_friend";//分享贴子到微信好友
+    public static final String Event_Share_Post_To_Weibo = "Event_Share_Post_To_Weibo";//分享贴子到新浪微博
+    public static final String Event_Open_Post_In_Browser = "Event_Open_Post_In_Browser";//打浏览器中打开贴子
+    public static final String Event_Publish_Post = "Event_Publish_Post";//用户发贴
+    public static final String Event_Publish_Post_OK = "Event_Publish_Post_OK";//发表贴子成功
+    public static final String Event_Publish_Post_Failed = "Event_Publish_Post_Failed";//发表贴子失败
 
     //问答
     public static final String Event_Load_My_Tags = "Event_Load_My_Tags";//加载关注问答标签

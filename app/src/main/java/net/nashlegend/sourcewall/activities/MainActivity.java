@@ -12,12 +12,15 @@ import net.nashlegend.sourcewall.fragment.PostPagerFragment;
 import net.nashlegend.sourcewall.fragment.ProfileFragment;
 import net.nashlegend.sourcewall.fragment.QuestionPagerFragment;
 import net.nashlegend.sourcewall.util.Config;
+import net.nashlegend.sourcewall.util.PrefsUtil;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static net.nashlegend.sourcewall.util.Consts.Keys.Key_Show_Group_First_Homepage;
 
 public class MainActivity extends BaseActivity {
 
@@ -58,7 +61,8 @@ public class MainActivity extends BaseActivity {
         if (crtIndex < 0 && crtIndex > 3) {
             crtIndex = 0;
         }
-        onBarClick(bars.get(crtIndex).getId());
+        int index = PrefsUtil.readBoolean(Key_Show_Group_First_Homepage, false) ? 1 : 0;
+        onBarClick(bars.get(index).getId());
     }
 
     @Override

@@ -97,6 +97,8 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
         if (aceModel instanceof Question) {
             setTitle("回答问题");
             editText.setHint(R.string.hint_answer);
+        }else if (aceModel instanceof Post){
+            editText.setHint(R.string.hint_in_simple_reply);
         }
         publishButton = (ImageButton) findViewById(R.id.btn_publish);
         imgButton = (ImageButton) findViewById(R.id.btn_add_img);

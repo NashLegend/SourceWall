@@ -225,9 +225,9 @@ public class PostAPI extends APIBase {
     }
 
     /**
-     * 根据帖子id获取帖子内容，json格式
+     * 根据贴子id获取贴子内容，json格式
      *
-     * @param id，帖子id
+     * @param id，贴子id
      * @return resultObject
      */
     public static Observable<ResponseObject<Post>> getPostDetailByID(String id) {
@@ -266,9 +266,9 @@ public class PostAPI extends APIBase {
     }
 
     /**
-     * 赞一个帖子
+     * 赞一个贴子
      *
-     * @param postID 帖子id
+     * @param postID 贴子id
      * @return resultObject
      */
     public static NetworkTask<Boolean> likePost(String postID, RequestCallBack<Boolean> callBack) {
@@ -285,10 +285,10 @@ public class PostAPI extends APIBase {
     }
 
     /**
-     * 回复一个帖子，使用json请求，所以格式简单
-     * 回复一个评论不过是在回复帖子的时候@了这个人而已
+     * 回复一个贴子，使用json请求，所以格式简单
+     * 回复一个评论不过是在回复贴子的时候@了这个人而已
      *
-     * @param id      帖子id
+     * @param id      贴子id
      * @param content 回复内容
      * @return ResponseObject.result is the reply_id if ok;
      */
@@ -307,9 +307,9 @@ public class PostAPI extends APIBase {
     }
 
     /**
-     * 回复一个帖子，模拟网页请求回复
+     * 回复一个贴子，模拟网页请求回复
      *
-     * @param id      帖子id
+     * @param id      贴子id
      * @param content 回复内容
      * @return ResponseObject.result is the reply_id if ok;
      */
@@ -395,7 +395,7 @@ public class PostAPI extends APIBase {
     /**
      * 匿名回复
      *
-     * @param id       帖子id
+     * @param id       贴子id
      * @param content  回复内容
      * @param callBack
      * @return ResponseObject.result is the reply_id if ok;
@@ -530,7 +530,7 @@ public class PostAPI extends APIBase {
     }
 
     /**
-     * 获取发帖所需的csrf和topic列表
+     * 获取发贴所需的csrf和topic列表
      * resultObject.result是PostPrepareData
      *
      * @param group_id 小组id
@@ -547,7 +547,7 @@ public class PostAPI extends APIBase {
     }
 
     /**
-     * 发帖
+     * 发贴
      * 有Json方式的删贴，有空加上。
      * http://www.guokr.com/apis/group/post.json?reason={}&post_id={}&access_token={}  //
      * request method = delete/put
@@ -555,8 +555,8 @@ public class PostAPI extends APIBase {
      * @param group_id 小组id
      * @param csrf     csrf_token
      * @param title    标题
-     * @param body     帖子内容   html格式
-     * @param topic    帖子主题
+     * @param body     贴子内容   html格式
+     * @param topic    贴子主题
      * @return resultObject
      */
     public static NetworkTask<String> publishPost(String group_id, String csrf, String title, String body, String topic, RequestCallBack<String> callBack) {

@@ -79,7 +79,7 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
     private AppBarLayout appbar;
     private int headerHeight = 112;
     /**
-     * 是否倒序加载已经加载完成了所有的回帖
+     * 是否倒序加载已经加载完成了所有的回贴
      */
     private boolean hasLoadAll = false;
     private ProgressBar progressBar;

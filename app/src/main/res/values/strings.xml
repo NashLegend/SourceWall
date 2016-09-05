@@ -50,7 +50,7 @@
     <string name="action_oppose">反对</string>
     <string name="hint_reply">请输入回复</string>
     <string name="hint_answer">写下您的答案</string>
-    <string name="hint_input_post_content">输入帖子正文</string>
+    <string name="hint_input_post_content">输入贴子正文</string>
     <string name="hint_recommend">顺便说点什么吧</string>
     <string name="message_wait_a_minute">稍等片刻……</string>
     <string name="message_loading_my_groups">稍等片刻……</string>
@@ -71,8 +71,8 @@
     <string name="title_cannot_be_empty">标题不能为空</string>
     <string name="reply_ok">回复成功</string>
     <string name="reply_failed">回复失败</string>
-    <string name="publish_post_ok">发帖成功</string>
-    <string name="publish_post_failed">发帖失败，请点击右上角刷新按钮，验证成功后再次点击发表。如果仍然不能成功，请退出并重新登录，重新进入发贴页面。退出后系统会保存你的草稿，进入对应小组的发贴页面就会自动恢复草稿</string>
+    <string name="publish_post_ok">发贴成功</string>
+    <string name="publish_post_failed">发贴失败，请点击右上角刷新按钮，验证成功后再次点击发表。如果仍然不能成功，请退出并重新登录，重新进入发贴页面。退出后系统会保存你的草稿，进入对应小组的发贴页面就会自动恢复草稿</string>
 
     <!-- Article -->
     <string name="recommend_ok">推荐成功 ^_^</string>
@@ -88,8 +88,8 @@
     <string name="switch_day_night_mode">夜间模式</string>
     <string name="click_to_load_pre_page">点击加载上一页</string>
     <string name="click_to_load_latest_replies">点击加载最新回复</string>
-    <string name="title_activity_publish_post">发帖</string>
-    <string name="hint_input_post_title">输入帖子标题</string>
+    <string name="title_activity_publish_post">发贴</string>
+    <string name="hint_input_post_title">输入贴子标题</string>
     <string name="selected_groups">首页左侧常用小组</string>
     <string name="selected_section_tip">点击增删，长按排序</string>
     <string name="more_unselected_groups">首页顶部小组们</string>
@@ -170,10 +170,10 @@
     <string name="title_activity_post_list">PostListActivity</string>
 
     <string name="my_favors">我的收藏</string>
-    <string name="my_posts">我的帖子</string>
+    <string name="my_posts">我的贴子</string>
     <string name="my_questions">我的问题</string>
     <string name="my_answer">我的回答</string>
-    <string name="post_404">帖子不存在</string>
+    <string name="post_404">贴子不存在</string>
     <string name="question_404">问题不存在</string>
     <string name="article_404">文章不存在</string>
     <string name="me">我</string>
@@ -191,6 +191,8 @@
     <string name="anon">匿名</string>
     <string name="reply_mode">回贴方式</string>
     <string name="use_simple_reply">使用简单回复</string>
-    <string name="hint_simple_reply">此选项用于回复科学人与小组帖子。使用简单回复时,发贴人或者被回复对象可能无法获得你已回帖的通知,但是此种方式较省流量(大约省10k);不使用简单模式时,你可以使用markdown语法进行回帖,以及在小组中使用匿名回帖。</string>
+    <string name="hint_simple_reply">此选项用于回复科学人与小组贴子。使用简单回复时,发贴人或者被回复对象可能无法获得你已回贴的通知,但是此种方式较省流量(大约省10k);不使用简单模式时,你可以使用markdown语法进行回贴,以及在小组中使用匿名回贴。</string>
+    <string name="display_group_first">打开首页时进入小组页面</string>
+    <string name="hint_in_simple_reply">输入您的回复\n\n\n(当前处于简单回贴模式,使用简单模式回贴,略省流量,但被回贴人可能无法收到你的回贴圈人通知,你也无法使用匿名回贴,可以在设置中切换回贴模式)</string>
 
 </resources>

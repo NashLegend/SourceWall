@@ -52,6 +52,7 @@ public class Consts {
         public static final String Key_Last_Basket_Version = "sourcewall.key.last.basket.groups.version";
         public static final String Key_Image_Load_Mode = "sourcewall.key.image.load.mode";
         public static final String Key_Image_No_Load_Homepage = "sourcewall.key.image.no.load.homepage";
+        public static final String Key_Show_Group_First_Homepage = "sourcewall.key.show.group.first.homepage";
         public static final String Key_Reply_With_Simple = "sourcewall.key.reply.with.simple";
         public static final String Key_Use_Tail_Type = "sourcewall.key.use.tail.type";
         public static final String Key_Custom_Tail = "sourcewall.key.custom.tail";

@@ -36,7 +36,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="8dp"
                 android:background="?android:attr/selectableItemBackground"
                 android:clickable="true"
                 android:paddingBottom="@dimen/list_item_padding_vertical"
@@ -75,7 +74,6 @@
                 android:id="@+id/layout_modes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
                 android:orientation="vertical"
                 android:paddingBottom="@dimen/list_item_padding_vertical"
                 android:paddingLeft="@dimen/list_item_padding_horizontal"
@@ -131,7 +129,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="8dp"
                 android:background="?android:attr/selectableItemBackground"
                 android:clickable="true"
                 android:paddingBottom="@dimen/list_item_padding_vertical"
@@ -170,7 +167,6 @@
                 android:id="@+id/layout_reply_modes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
                 android:orientation="vertical"
                 android:paddingBottom="@dimen/list_item_padding_vertical"
                 android:paddingLeft="@dimen/list_item_padding_horizontal"
@@ -205,7 +201,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
                 android:orientation="vertical">
 
                 <RelativeLayout
@@ -277,11 +272,53 @@
                     <EditText
                         android:id="@+id/text_tail"
                         android:layout_width="match_parent"
-                        android:textSize="16dp"
                         android:layout_height="wrap_content"
-                        android:hint="@string/hint_input_your_tail" />
+                        android:hint="@string/hint_input_your_tail"
+                        android:textSize="16dp" />
                 </LinearLayout>
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/splitter_height"
+                android:layout_marginLeft="@dimen/list_item_padding_horizontal"
+                android:layout_marginRight="@dimen/list_item_padding_horizontal"
+                android:layout_weight="0"
+                android:background="@color/splitter_color_grey" />
+
+            <RelativeLayout
+                android:id="@+id/layout_group_first"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:paddingLeft="@dimen/list_item_padding_horizontal"
+                android:paddingRight="@dimen/list_item_padding_horizontal">
+
+                <TextView
+                    android:id="@+id/text_group_first"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginBottom="@dimen/list_item_padding_vertical"
+                    android:layout_marginTop="@dimen/list_item_padding_vertical"
+                    android:gravity="center_vertical"
+                    android:minHeight="24dp"
+                    android:text="@string/display_group_first"
+                    android:textColor="@color/text_color_primary"
+                    android:textSize="16dp" />
+
+                <CheckBox
+                    android:id="@+id/check_group_first"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:maxLines="1" />
+            </RelativeLayout>
+
 
             <View
                 android:layout_width="match_parent"
@@ -296,7 +333,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="8dp"
                 android:background="?android:attr/selectableItemBackground"
                 android:clickable="true"
                 android:paddingBottom="@dimen/list_item_padding_vertical"
@@ -334,7 +370,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="8dp"
                 android:background="?android:attr/selectableItemBackground"
                 android:clickable="true"
                 android:paddingBottom="@dimen/list_item_padding_vertical"

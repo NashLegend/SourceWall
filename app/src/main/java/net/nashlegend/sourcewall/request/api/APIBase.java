@@ -35,7 +35,7 @@ import rx.schedulers.Schedulers;
 public class APIBase {
 
     /**
-     * 统一回复，回复主题站、帖子、问题
+     * 统一回复，回复主题站、贴子、问题
      *
      * @return ResponseObject
      */
@@ -53,7 +53,7 @@ public class APIBase {
     }
 
     /**
-     * 统一回复，回复主题站、帖子、问题,html形式
+     * 统一回复，回复主题站、贴子、问题,html形式
      *
      * @return ResponseObject
      */

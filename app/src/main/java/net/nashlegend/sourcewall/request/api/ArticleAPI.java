@@ -339,7 +339,7 @@ public class ArticleAPI extends APIBase {
     /**
      * 回复一个文章，模拟网页请求回复
      *
-     * @param id      帖子id
+     * @param id      贴子id
      * @param content 回复内容
      * @return ResponseObject.result is the reply_id if ok;
      */

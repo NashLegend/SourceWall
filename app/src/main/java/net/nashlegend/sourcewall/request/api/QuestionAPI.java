@@ -273,9 +273,9 @@ public class QuestionAPI extends APIBase {
     }
 
     /**
-     * 根据帖子id获取问题内容，json格式
+     * 根据贴子id获取问题内容，json格式
      *
-     * @param id，帖子id
+     * @param id，贴子id
      * @return resultObject
      */
     public static Observable<ResponseObject<Question>> getQuestionDetailByID(String id) {
