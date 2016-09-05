@@ -10,7 +10,6 @@ import org.json.JSONObject;
  * Created by NashLegend on 2014/9/16 0016
  */
 public class UComment extends AceModel {
-
     private String content = "";
     private String date = "";
     private Author author;
@@ -18,9 +17,12 @@ public class UComment extends AceModel {
     private String ID = "";
     private String hostID = "";
     private String hostTitle = "";
+    private boolean isHostAuthor = false;
     private int likeNum = 0;
-
     private boolean hasLiked = false;
+
+    public UComment() {
+    }
 
     /**
      * 缺少articleId与articleTitle
@@ -94,6 +96,14 @@ public class UComment extends AceModel {
         comment.setID(jsonObject.optString("id"));
         comment.setHostID(jsonObject.optString("question_id"));
         return comment;
+    }
+
+    public boolean isHostAuthor() {
+        return isHostAuthor;
+    }
+
+    public void setHostAuthor(boolean hostAuthor) {
+        isHostAuthor = hostAuthor;
     }
 
     public String getContent() {
@@ -180,16 +190,14 @@ public class UComment extends AceModel {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.content);
         dest.writeString(this.date);
-        dest.writeParcelable(this.author, 0);
+        dest.writeParcelable(this.author, flags);
         dest.writeString(this.floor);
         dest.writeString(this.ID);
         dest.writeString(this.hostID);
         dest.writeString(this.hostTitle);
+        dest.writeByte(this.isHostAuthor ? (byte) 1 : (byte) 0);
         dest.writeInt(this.likeNum);
-        dest.writeByte(hasLiked ? (byte) 1 : (byte) 0);
-    }
-
-    public UComment() {
+        dest.writeByte(this.hasLiked ? (byte) 1 : (byte) 0);
     }
 
     protected UComment(Parcel in) {
@@ -200,15 +208,18 @@ public class UComment extends AceModel {
         this.ID = in.readString();
         this.hostID = in.readString();
         this.hostTitle = in.readString();
+        this.isHostAuthor = in.readByte() != 0;
         this.likeNum = in.readInt();
         this.hasLiked = in.readByte() != 0;
     }
 
     public static final Creator<UComment> CREATOR = new Creator<UComment>() {
+        @Override
         public UComment createFromParcel(Parcel source) {
             return new UComment(source);
         }
 
+        @Override
         public UComment[] newArray(int size) {
             return new UComment[size];
         }

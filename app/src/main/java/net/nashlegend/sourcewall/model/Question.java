@@ -221,13 +221,13 @@ public class Question extends AceModel {
         dest.writeString(this.id);
         dest.writeString(this.title);
         dest.writeString(this.url);
-        dest.writeParcelable(this.author, 0);
+        dest.writeParcelable(this.author, flags);
         dest.writeString(this.tag);
         dest.writeString(this.content);
         dest.writeString(this.date);
         dest.writeString(this.summary);
-        dest.writeByte(answerable ? (byte) 1 : (byte) 0);
-        dest.writeByte(featured ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.answerable ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.featured ? (byte) 1 : (byte) 0);
         dest.writeInt(this.commentNum);
         dest.writeInt(this.recommendNum);
         dest.writeInt(this.followNum);
@@ -252,10 +252,12 @@ public class Question extends AceModel {
     }
 
     public static final Creator<Question> CREATOR = new Creator<Question>() {
+        @Override
         public Question createFromParcel(Parcel source) {
             return new Question(source);
         }
 
+        @Override
         public Question[] newArray(int size) {
             return new Question[size];
         }

@@ -194,6 +194,9 @@ public class Post extends AceModel {
         this.desc = desc;
     }
 
+    public Post() {
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -205,7 +208,7 @@ public class Post extends AceModel {
         dest.writeString(this.title);
         dest.writeString(this.url);
         dest.writeString(this.titleImageUrl);
-        dest.writeParcelable(this.author, 0);
+        dest.writeParcelable(this.author, flags);
         dest.writeString(this.groupName);
         dest.writeString(this.groupID);
         dest.writeString(this.tag);
@@ -213,13 +216,10 @@ public class Post extends AceModel {
         dest.writeInt(this.replyNum);
         dest.writeString(this.content);
         dest.writeString(this.date);
-        dest.writeByte(featured ? (byte) 1 : (byte) 0);
-        dest.writeByte(desc ? (byte) 1 : (byte) 0);
-        dest.writeTypedList(hotComments);
-        dest.writeTypedList(comments);
-    }
-
-    public Post() {
+        dest.writeByte(this.featured ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.desc ? (byte) 1 : (byte) 0);
+        dest.writeTypedList(this.hotComments);
+        dest.writeTypedList(this.comments);
     }
 
     protected Post(Parcel in) {
@@ -242,10 +242,12 @@ public class Post extends AceModel {
     }
 
     public static final Creator<Post> CREATOR = new Creator<Post>() {
+        @Override
         public Post createFromParcel(Parcel source) {
             return new Post(source);
         }
 
+        @Override
         public Post[] newArray(int size) {
             return new Post[size];
         }

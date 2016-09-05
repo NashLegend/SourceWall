@@ -11,6 +11,9 @@ public class Image implements Parcelable {
     private int width = 0;
     private int height = 0;
 
+    public Image() {
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -23,20 +26,19 @@ public class Image implements Parcelable {
         dest.writeInt(this.height);
     }
 
-    public Image() {
-    }
-
     protected Image(Parcel in) {
         this.url = in.readString();
         this.width = in.readInt();
         this.height = in.readInt();
     }
 
-    public static final Parcelable.Creator<Image> CREATOR = new Parcelable.Creator<Image>() {
+    public static final Creator<Image> CREATOR = new Creator<Image>() {
+        @Override
         public Image createFromParcel(Parcel source) {
             return new Image(source);
         }
 
+        @Override
         public Image[] newArray(int size) {
             return new Image[size];
         }

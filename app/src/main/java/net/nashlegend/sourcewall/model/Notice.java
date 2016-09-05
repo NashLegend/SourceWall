@@ -77,6 +77,9 @@ public class Notice extends AceModel {
     }
 
 
+    public Notice() {
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -87,12 +90,9 @@ public class Notice extends AceModel {
         dest.writeString(this.content);
         dest.writeLong(this.date_last_updated);
         dest.writeString(this.id);
-        dest.writeByte(is_read ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.is_read ? (byte) 1 : (byte) 0);
         dest.writeString(this.ukey);
         dest.writeString(this.url);
-    }
-
-    public Notice() {
     }
 
     protected Notice(Parcel in) {
@@ -105,10 +105,12 @@ public class Notice extends AceModel {
     }
 
     public static final Creator<Notice> CREATOR = new Creator<Notice>() {
+        @Override
         public Notice createFromParcel(Parcel source) {
             return new Notice(source);
         }
 
+        @Override
         public Notice[] newArray(int size) {
             return new Notice[size];
         }

@@ -238,6 +238,9 @@ public class Answer extends AceModel {
         this.question = question;
     }
 
+    public Answer() {
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -248,21 +251,18 @@ public class Answer extends AceModel {
         dest.writeString(this.content);
         dest.writeString(this.date_created);
         dest.writeString(this.date_modified);
-        dest.writeParcelable(this.author, 0);
+        dest.writeParcelable(this.author, flags);
         dest.writeString(this.ID);
         dest.writeString(this.questionID);
         dest.writeString(this.question);
         dest.writeInt(this.commentNum);
         dest.writeInt(this.upvoteNum);
         dest.writeInt(this.downvoteNum);
-        dest.writeByte(hasUpVoted ? (byte) 1 : (byte) 0);
-        dest.writeByte(hasDownVoted ? (byte) 1 : (byte) 0);
-        dest.writeByte(hasBuried ? (byte) 1 : (byte) 0);
-        dest.writeByte(hasThanked ? (byte) 1 : (byte) 0);
-        dest.writeByte(isContentComplex ? (byte) 1 : (byte) 0);
-    }
-
-    public Answer() {
+        dest.writeByte(this.hasUpVoted ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.hasDownVoted ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.hasBuried ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.hasThanked ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.isContentComplex ? (byte) 1 : (byte) 0);
     }
 
     protected Answer(Parcel in) {
@@ -284,10 +284,12 @@ public class Answer extends AceModel {
     }
 
     public static final Creator<Answer> CREATOR = new Creator<Answer>() {
+        @Override
         public Answer createFromParcel(Parcel source) {
             return new Answer(source);
         }
 
+        @Override
         public Answer[] newArray(int size) {
             return new Answer[size];
         }

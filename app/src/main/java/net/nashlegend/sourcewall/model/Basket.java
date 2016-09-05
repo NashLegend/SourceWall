@@ -111,8 +111,8 @@ public class Basket extends AceModel {
         dest.writeString(this.name);
         dest.writeString(this.introduction);
         dest.writeInt(this.links_count);
-        dest.writeByte(hasFavored ? (byte) 1 : (byte) 0);
-        dest.writeByte(isFavoring ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.hasFavored ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.isFavoring ? (byte) 1 : (byte) 0);
     }
 
     protected Basket(Parcel in) {
@@ -127,10 +127,12 @@ public class Basket extends AceModel {
     }
 
     public static final Creator<Basket> CREATOR = new Creator<Basket>() {
+        @Override
         public Basket createFromParcel(Parcel source) {
             return new Basket(source);
         }
 
+        @Override
         public Basket[] newArray(int size) {
             return new Basket[size];
         }

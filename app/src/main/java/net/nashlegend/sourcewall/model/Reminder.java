@@ -78,6 +78,9 @@ public class Reminder extends AceModel {
         this.group = group;
     }
 
+    public Reminder() {
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -93,9 +96,6 @@ public class Reminder extends AceModel {
         dest.writeString(this.url);
     }
 
-    public Reminder() {
-    }
-
     protected Reminder(Parcel in) {
         this.content = in.readString();
         this.date_created = in.readLong();
@@ -106,10 +106,12 @@ public class Reminder extends AceModel {
     }
 
     public static final Creator<Reminder> CREATOR = new Creator<Reminder>() {
+        @Override
         public Reminder createFromParcel(Parcel source) {
             return new Reminder(source);
         }
 
+        @Override
         public Reminder[] newArray(int size) {
             return new Reminder[size];
         }

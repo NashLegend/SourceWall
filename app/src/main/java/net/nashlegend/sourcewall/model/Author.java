@@ -74,6 +74,9 @@ public class Author extends AceModel {
         this.exists = exists;
     }
 
+    public Author() {
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -85,10 +88,7 @@ public class Author extends AceModel {
         dest.writeString(this.name);
         dest.writeString(this.title);
         dest.writeString(this.avatar);
-        dest.writeByte(exists ? (byte) 1 : (byte) 0);
-    }
-
-    public Author() {
+        dest.writeByte(this.exists ? (byte) 1 : (byte) 0);
     }
 
     protected Author(Parcel in) {
@@ -100,10 +100,12 @@ public class Author extends AceModel {
     }
 
     public static final Creator<Author> CREATOR = new Creator<Author>() {
+        @Override
         public Author createFromParcel(Parcel source) {
             return new Author(source);
         }
 
+        @Override
         public Author[] newArray(int size) {
             return new Author[size];
         }

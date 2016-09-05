@@ -59,7 +59,7 @@ public class MediumListItemView extends AceView<UComment> {
             return;
         }
         comment = model;
-        authorView.setText(comment.getAuthor().getName());
+        authorView.setText((comment.isHostAuthor() ? "(楼主)" : "") + comment.getAuthor().getName());
         dateView.setText(DateTimeUtil.time2HumanReadable(comment.getDate()));
         likesView.setText(String.valueOf(comment.getLikeNum() + ""));
         floorView.setText(comment.getFloor());

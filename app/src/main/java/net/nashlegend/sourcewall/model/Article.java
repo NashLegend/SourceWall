@@ -223,7 +223,7 @@ public class Article extends AceModel {
         dest.writeString(this.title);
         dest.writeString(this.url);
         dest.writeString(this.imageUrl);
-        dest.writeParcelable(this.author, 0);
+        dest.writeParcelable(this.author, flags);
         dest.writeString(this.subjectName);
         dest.writeString(this.subjectKey);
         dest.writeString(this.date);
@@ -231,9 +231,9 @@ public class Article extends AceModel {
         dest.writeInt(this.likeNum);
         dest.writeString(this.summary);
         dest.writeString(this.content);
-        dest.writeTypedList(hotComments);
-        dest.writeTypedList(comments);
-        dest.writeByte(desc ? (byte) 1 : (byte) 0);
+        dest.writeTypedList(this.hotComments);
+        dest.writeTypedList(this.comments);
+        dest.writeByte(this.desc ? (byte) 1 : (byte) 0);
     }
 
     protected Article(Parcel in) {
@@ -255,10 +255,12 @@ public class Article extends AceModel {
     }
 
     public static final Creator<Article> CREATOR = new Creator<Article>() {
+        @Override
         public Article createFromParcel(Parcel source) {
             return new Article(source);
         }
 
+        @Override
         public Article[] newArray(int size) {
             return new Article[size];
         }

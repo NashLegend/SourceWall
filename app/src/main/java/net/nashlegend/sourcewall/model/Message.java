@@ -112,6 +112,9 @@ public class Message extends AceModel {
         this.ukey = ukey;
     }
 
+    public Message() {
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -122,15 +125,12 @@ public class Message extends AceModel {
         dest.writeString(this.id);
         dest.writeString(this.content);
         dest.writeString(this.direction);
-        dest.writeByte(is_read ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.is_read ? (byte) 1 : (byte) 0);
         dest.writeString(this.dateCreated);
         dest.writeString(this.ukey);
         dest.writeString(this.another_ukey);
         dest.writeInt(this.unread_count);
         dest.writeInt(this.total);
-    }
-
-    public Message() {
     }
 
     protected Message(Parcel in) {
@@ -146,10 +146,12 @@ public class Message extends AceModel {
     }
 
     public static final Creator<Message> CREATOR = new Creator<Message>() {
+        @Override
         public Message createFromParcel(Parcel source) {
             return new Message(source);
         }
 
+        @Override
         public Message[] newArray(int size) {
             return new Message[size];
         }

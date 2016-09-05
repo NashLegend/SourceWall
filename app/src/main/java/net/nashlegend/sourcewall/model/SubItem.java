@@ -92,10 +92,12 @@ public class SubItem extends AceModel {
     }
 
     public static final Creator<SubItem> CREATOR = new Creator<SubItem>() {
+        @Override
         public SubItem createFromParcel(Parcel source) {
             return new SubItem(source);
         }
 
+        @Override
         public SubItem[] newArray(int size) {
             return new SubItem[size];
         }

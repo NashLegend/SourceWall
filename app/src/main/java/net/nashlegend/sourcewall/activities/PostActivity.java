@@ -63,6 +63,7 @@ import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
+import rx.functions.Func1;
 
 public class PostActivity extends BaseActivity implements LListView.OnRefreshListener, View.OnClickListener, LoadingView.ReloadListener {
     private LListView listView;
@@ -658,6 +659,19 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
                     public void call() {
                         loadingView.onLoadSuccess();
                         listView.doneOperation();
+                    }
+                })
+                .map(new Func1<ResponseObject<ArrayList<UComment>>, ResponseObject<ArrayList<UComment>>>() {
+                    @Override
+                    public ResponseObject<ArrayList<UComment>> call(ResponseObject<ArrayList<UComment>> responseObject) {
+                        if (responseObject.ok && responseObject.result != null) {
+                            for (UComment comment : responseObject.result) {
+                                String cid = comment.getAuthor().isExists() ? comment.getAuthor().getId() : null;
+                                String hid = post == null ? null : post.getAuthor().getId();
+                                comment.setHostAuthor(cid != null && cid.length() > 3 && cid.equals(hid));
+                            }
+                        }
+                        return responseObject;
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())

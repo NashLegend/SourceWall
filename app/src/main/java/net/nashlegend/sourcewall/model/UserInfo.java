@@ -98,6 +98,9 @@ public class UserInfo extends AceModel {
         this.url = url;
     }
 
+    public UserInfo() {
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -115,9 +118,6 @@ public class UserInfo extends AceModel {
         dest.writeString(this.url);
     }
 
-    public UserInfo() {
-    }
-
     protected UserInfo(Parcel in) {
         this.id = in.readString();
         this.ukey = in.readString();
@@ -130,10 +130,12 @@ public class UserInfo extends AceModel {
     }
 
     public static final Creator<UserInfo> CREATOR = new Creator<UserInfo>() {
+        @Override
         public UserInfo createFromParcel(Parcel source) {
             return new UserInfo(source);
         }
 
+        @Override
         public UserInfo[] newArray(int size) {
             return new UserInfo[size];
         }
