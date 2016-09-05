@@ -31,7 +31,7 @@
             android:layout_marginTop="5dp"
             android:gravity="center"
             android:textColor="@color/author_color"
-            android:textSize="12sp"
+            android:textSize="12dp"
             tools:text="999" />
     </LinearLayout>
 

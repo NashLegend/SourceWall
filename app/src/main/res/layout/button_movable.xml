@@ -14,7 +14,7 @@
         android:minHeight="1dp"
         android:minWidth="1dp"
         android:textColor="@color/shuffle_movable_button_text"
-        android:textSize="14sp" />
+        android:textSize="14dp" />
 
     <ImageView
         android:id="@+id/section_new_hint"

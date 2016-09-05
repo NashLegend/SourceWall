@@ -51,7 +51,7 @@
                     android:layout_centerVertical="true"
                     android:text="@string/image_load_mode"
                     android:textColor="@color/text_color_primary"
-                    android:textSize="16sp" />
+                    android:textSize="16dp" />
 
                 <TextView
                     android:id="@+id/text_image_mode"
@@ -60,7 +60,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="16dp"
                     android:layout_toRightOf="@id/text_image_mode_view"
-                    android:textSize="12sp" />
+                    android:textSize="12dp" />
 
                 <ImageView
                     android:id="@+id/image_mode_arrow"
@@ -93,21 +93,21 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/mode_always_load"
-                        android:textSize="16sp" />
+                        android:textSize="16dp" />
 
                     <RadioButton
                         android:id="@+id/button_never_load"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/mode_never_load"
-                        android:textSize="16sp" />
+                        android:textSize="16dp" />
 
                     <RadioButton
                         android:id="@+id/button_wifi_only"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/mode_load_load_when_wifi"
-                        android:textSize="16sp" />
+                        android:textSize="16dp" />
                 </RadioGroup>
 
                 <CheckBox
@@ -146,7 +146,7 @@
                     android:layout_centerVertical="true"
                     android:text="@string/reply_mode"
                     android:textColor="@color/text_color_primary"
-                    android:textSize="16sp" />
+                    android:textSize="16dp" />
 
                 <TextView
                     android:id="@+id/text_reply_mode"
@@ -155,7 +155,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="16dp"
                     android:layout_toRightOf="@id/text_reply_mode_view"
-                    android:textSize="12sp" />
+                    android:textSize="12dp" />
 
                 <ImageView
                     android:id="@+id/reply_mode_arrow"
@@ -225,7 +225,7 @@
                         android:layout_centerVertical="true"
                         android:text="@string/custom_tail"
                         android:textColor="@color/text_color_primary"
-                        android:textSize="16sp" />
+                        android:textSize="16dp" />
 
                     <ImageView
                         android:id="@+id/image_tail_arrow"
@@ -257,21 +257,21 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/use_default_tail"
-                            android:textSize="16sp" />
+                            android:textSize="16dp" />
 
                         <RadioButton
                             android:id="@+id/button_use_phone"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/use_phone_as_tail"
-                            android:textSize="16sp" />
+                            android:textSize="16dp" />
 
                         <RadioButton
                             android:id="@+id/button_use_custom"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/use_custom_tail"
-                            android:textSize="16sp" />
+                            android:textSize="16dp" />
                     </RadioGroup>
 
                     <EditText
@@ -311,7 +311,7 @@
                     android:layout_centerVertical="true"
                     android:text="@string/about_app"
                     android:textColor="@color/text_color_primary"
-                    android:textSize="16sp" />
+                    android:textSize="16dp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -349,7 +349,7 @@
                     android:layout_centerVertical="true"
                     android:text="@string/log_out"
                     android:textColor="@color/text_color_primary"
-                    android:textSize="16sp" />
+                    android:textSize="16dp" />
 
                 <ImageView
                     android:layout_width="wrap_content"

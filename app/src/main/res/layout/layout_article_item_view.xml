@@ -64,7 +64,7 @@
             android:maxLines="1"
             android:paddingBottom="1.5dp"
             android:textColor="@color/author_color"
-            android:textSize="12sp"
+            android:textSize="12dp"
             tools:text="@string/sample_like_num" />
     </LinearLayout>
 

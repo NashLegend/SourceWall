@@ -13,5 +13,5 @@
         android:layout_height="wrap_content"
         tools:text="@string/sample_title"
         android:textColor="@color/drawer_list_text"
-        android:textSize="20sp" />
+        android:textSize="20dp" />
 </LinearLayout>

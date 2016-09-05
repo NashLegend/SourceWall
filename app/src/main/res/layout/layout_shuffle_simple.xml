@@ -29,7 +29,7 @@
             android:layout_weight="0"
             android:text="@string/tip_of_more_groups"
             android:textColor="@color/shuffle_tip_color"
-            android:textSize="16sp" />
+            android:textSize="16dp" />
 
         <View
             android:layout_width="0dp"
@@ -49,7 +49,7 @@
             android:paddingLeft="6dp"
             android:paddingRight="6dp"
             android:textColor="@color/dialog_button_text_color"
-            android:textSize="16sp" />
+            android:textSize="16dp" />
     </LinearLayout>
 
     <net.nashlegend.sourcewall.view.common.shuffle.ShuffleCardSimple

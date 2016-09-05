@@ -30,7 +30,7 @@
                 android:layout_marginLeft="2dp"
                 android:text="@string/selected_groups"
                 android:textColor="@color/shuffle_desk_title"
-                android:textSize="18sp"
+                android:textSize="18dp"
                 android:textStyle="bold" />
 
             <TextView
@@ -39,7 +39,7 @@
                 android:layout_marginLeft="10dp"
                 android:text="@string/selected_section_tip"
                 android:textColor="@color/shuffle_tip_color"
-                android:textSize="14sp" />
+                android:textSize="14dp" />
         </LinearLayout>
 
         <net.nashlegend.sourcewall.view.common.shuffle.ShuffleCardSenator
@@ -77,7 +77,7 @@
                 android:layout_marginLeft="2dp"
                 android:text="@string/more_unselected_groups"
                 android:textColor="@color/shuffle_desk_title"
-                android:textSize="18sp"
+                android:textSize="18dp"
                 android:textStyle="bold" />
 
             <TextView
@@ -86,7 +86,7 @@
                 android:layout_marginLeft="10dp"
                 android:text="@string/unselected_section_tip"
                 android:textColor="@color/shuffle_tip_color"
-                android:textSize="14sp" />
+                android:textSize="14dp" />
         </LinearLayout>
 
         <ScrollView

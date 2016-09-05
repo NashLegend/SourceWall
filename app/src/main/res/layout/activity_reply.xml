@@ -31,7 +31,7 @@
         android:maxLines="3"
         android:padding="12dp"
         android:textColor="@color/reply_quote_text"
-        android:textSize="16sp"
+        android:textSize="16dp"
         android:visibility="gone"
         tools:text="@string/sample_title"
         tools:visibility="visible" />

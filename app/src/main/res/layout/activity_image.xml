@@ -30,7 +30,7 @@
             android:text="0/0"
             android:textColor="#FFFFFF"
             android:textIsSelectable="true"
-            android:textSize="20sp" />
+            android:textSize="20dp" />
 
         <View
             android:layout_width="0dp"
