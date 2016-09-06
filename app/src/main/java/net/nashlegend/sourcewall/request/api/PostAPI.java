@@ -173,6 +173,18 @@ public class PostAPI extends APIBase {
                         return Observable.error(new IllegalStateException("error occurred"));
                     }
                 })
+                .map(new Func1<ArrayList<SubItem>, ArrayList<SubItem>>() {
+                    @Override
+                    public ArrayList<SubItem> call(ArrayList<SubItem> subItems) {
+                        Collections.sort(subItems, new Comparator<SubItem>() {
+                            @Override
+                            public int compare(SubItem o1, SubItem o2) {
+                                return o1.getName().compareTo(o2.getName());
+                            }
+                        });
+                        return subItems;
+                    }
+                })
                 .map(new Func1<ArrayList<SubItem>, ArrayList<MyGroup>>() {
                     @Override
                     public ArrayList<MyGroup> call(ArrayList<SubItem> subItems) {

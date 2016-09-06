@@ -112,6 +112,18 @@ public class QuestionAPI extends APIBase {
                         return Observable.error(new IllegalStateException("error occurred"));
                     }
                 })
+                .map(new Func1<ArrayList<SubItem>, ArrayList<SubItem>>() {
+                    @Override
+                    public ArrayList<SubItem> call(ArrayList<SubItem> subItems) {
+                        Collections.sort(subItems, new Comparator<SubItem>() {
+                            @Override
+                            public int compare(SubItem o1, SubItem o2) {
+                                return o1.getName().compareTo(o2.getName());
+                            }
+                        });
+                        return subItems;
+                    }
+                })
                 .map(new Func1<ArrayList<SubItem>, ArrayList<AskTag>>() {
                     @Override
                     public ArrayList<AskTag> call(ArrayList<SubItem> subItems) {
@@ -413,8 +425,8 @@ public class QuestionAPI extends APIBase {
     /**
      * 回复一个文章，模拟网页请求回复
      *
-     * @param id      问题id
-     * @param content 回复内容
+     * @param id       问题id
+     * @param content  回复内容
      * @param callBack
      * @return ResponseObject.result is the reply_id if ok;
      */

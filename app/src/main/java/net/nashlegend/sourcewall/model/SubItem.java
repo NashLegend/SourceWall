@@ -39,6 +39,9 @@ public class SubItem extends AceModel {
     }
 
     public String getName() {
+        if (name == null) {
+            name = "";
+        }
         return name;
     }
 
