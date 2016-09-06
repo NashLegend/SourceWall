@@ -12,6 +12,7 @@
         android:clickable="false"
         android:maxLines="2"
         android:minHeight="1dp"
+        android:lineSpacingExtra="0dp"
         android:minWidth="1dp"
         android:textColor="@color/shuffle_movable_button_text"
         android:textSize="14dp" />
