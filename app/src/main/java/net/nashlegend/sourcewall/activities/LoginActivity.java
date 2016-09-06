@@ -100,18 +100,19 @@ public class LoginActivity extends BaseActivity {
                     if (Web.Cookie_Ukey_Key.equals(paramName)) {
                         UserAPI.setUkey(paramValue);
                         tmpUkey = paramValue;
-                        continue;
                     }
-
-                    if (Web.Cookie_Token_Key_2.equals(paramName)) {
-                        UserAPI.setToken2(paramValue);
-                        tmpToken2 = paramValue;
-                    }
+//
+//                    if (Web.Cookie_Token_Key_2.equals(paramName)) {
+//                        UserAPI.setToken2(paramValue);
+//                        tmpToken2 = paramValue;
+//                    }
                 }
             }
+//            return !TextUtils.isEmpty(tmpUkey)
+//                    && !TextUtils.isEmpty(tmpToken)
+//                    && !TextUtils.isEmpty(tmpToken2);
             return !TextUtils.isEmpty(tmpUkey)
-                    && !TextUtils.isEmpty(tmpToken)
-                    && !TextUtils.isEmpty(tmpToken2);
+                    && !TextUtils.isEmpty(tmpToken);
         } catch (Exception e) {
             return false;
         }

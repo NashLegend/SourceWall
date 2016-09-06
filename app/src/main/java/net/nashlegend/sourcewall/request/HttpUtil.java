@@ -90,6 +90,8 @@ public class HttpUtil {
      */
     synchronized public static void setCookie(OkHttpClient client, String rawCookie) {
         List<Cookie> cookies = new ArrayList<>();
+        boolean hasToken = false;
+        boolean hasUkey = false;
         if (!TextUtils.isEmpty(rawCookie)) {
             String[] rawCookieParams = rawCookie.split(";");
             for (String rawCookieParam : rawCookieParams) {
@@ -99,12 +101,23 @@ public class HttpUtil {
                 }
                 String paramName = rawCookieParamNameAndValue[0].trim();
                 String paramValue = rawCookieParamNameAndValue[1].trim();
+                if ("_32353_access_token".equals(paramName) && paramValue.length() > 0) {
+                    hasToken = true;
+                } else if ("_32353_ukey".equals(paramName) && paramValue.length() > 0) {
+                    hasUkey = true;
+                }
                 cookies.add(new Cookie.Builder().domain("guokr.com").name(paramName).value(paramValue).build());
             }
-            client.cookieJar().saveFromResponse(HttpUrl.parse("http://www.guokr.com/"), cookies);
-            client.cookieJar().saveFromResponse(HttpUrl.parse("http://apis.guokr.com/"), cookies);
-            client.cookieJar().saveFromResponse(HttpUrl.parse("http://m.guokr.com/"), cookies);
         }
+        if (!hasToken) {
+            cookies.add(new Cookie.Builder().domain("guokr.com").name("_32353_access_token").value(UserAPI.getToken()).build());
+        }
+        if (!hasUkey) {
+            cookies.add(new Cookie.Builder().domain("guokr.com").name("_32353_ukey").value(UserAPI.getUkey()).build());
+        }
+        client.cookieJar().saveFromResponse(HttpUrl.parse("http://www.guokr.com/"), cookies);
+        client.cookieJar().saveFromResponse(HttpUrl.parse("http://apis.guokr.com/"), cookies);
+        client.cookieJar().saveFromResponse(HttpUrl.parse("http://m.guokr.com/"), cookies);
     }
 
     /**
