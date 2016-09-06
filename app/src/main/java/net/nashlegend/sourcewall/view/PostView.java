@@ -13,6 +13,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.PostDetailAdapter;
+import net.nashlegend.sourcewall.events.PostFinishLoadingLatestRepliesEvent;
+import net.nashlegend.sourcewall.events.PostStartLoadingLatestRepliesEvent;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.ResponseObject;
@@ -28,6 +30,7 @@ import net.nashlegend.sourcewall.view.common.WWebView;
 
 import java.util.ArrayList;
 
+import de.greenrobot.event.EventBus;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -105,9 +108,8 @@ public class PostView extends AceView<Post> {
             return;
         }
 
-        Intent intent = new Intent();
-        intent.setAction(Actions.Action_Start_Loading_Latest);
-        App.getApp().sendBroadcast(intent);
+        EventBus.getDefault().post(new PostStartLoadingLatestRepliesEvent(post));
+
         loadDesc.findViewById(R.id.text_header_load_hint).setVisibility(View.INVISIBLE);
         loadDesc.findViewById(R.id.progress_header_loading).setVisibility(View.VISIBLE);
 
@@ -117,15 +119,12 @@ public class PostView extends AceView<Post> {
                 .subscribe(new Observer<ResponseObject<ArrayList<UComment>>>() {
                     @Override
                     public void onCompleted() {
-
+                        EventBus.getDefault().post(new PostFinishLoadingLatestRepliesEvent(post));
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Intent intent = new Intent();
-                        intent.setAction(Actions.Action_Finish_Loading_Latest);
-                        intent.putExtra(Extras.Extra_Activity_Hashcode, getContext().hashCode());
-                        App.getApp().sendBroadcast(intent);
+                        EventBus.getDefault().post(new PostFinishLoadingLatestRepliesEvent(post));
                     }
 
                     @Override
@@ -140,10 +139,6 @@ public class PostView extends AceView<Post> {
                             }
                             post.setReplyNum(post.getReplyNum() + ars.size());
                         }
-                        Intent intent = new Intent();
-                        intent.setAction(Actions.Action_Finish_Loading_Latest);
-                        intent.putExtra(Extras.Extra_Activity_Hashcode, getContext().hashCode());
-                        App.getApp().sendBroadcast(intent);
                     }
                 });
     }

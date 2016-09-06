@@ -5,13 +5,10 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
@@ -35,6 +32,8 @@ import net.nashlegend.sourcewall.dialogs.FavorDialog;
 import net.nashlegend.sourcewall.dialogs.InputDialog;
 import net.nashlegend.sourcewall.dialogs.ReportDialog;
 import net.nashlegend.sourcewall.dialogs.ReportDialog.ReportReasonListener;
+import net.nashlegend.sourcewall.events.ArticleFinishLoadingLatestRepliesEvent;
+import net.nashlegend.sourcewall.events.ArticleStartLoadingLatestRepliesEvent;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
@@ -45,7 +44,6 @@ import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.AutoHideUtil;
 import net.nashlegend.sourcewall.util.AutoHideUtil.AutoHideListener;
 import net.nashlegend.sourcewall.util.Config;
-import net.nashlegend.sourcewall.util.Consts.Actions;
 import net.nashlegend.sourcewall.util.Consts.Extras;
 import net.nashlegend.sourcewall.util.Consts.RequestCode;
 import net.nashlegend.sourcewall.util.Mob;
@@ -54,6 +52,7 @@ import net.nashlegend.sourcewall.util.ShareUtil;
 import net.nashlegend.sourcewall.util.ToastUtil;
 import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;
+import net.nashlegend.sourcewall.util.Utils;
 import net.nashlegend.sourcewall.view.MediumListItemView;
 import net.nashlegend.sourcewall.view.common.LoadingView;
 import net.nashlegend.sourcewall.view.common.LoadingView.ReloadListener;
@@ -62,6 +61,7 @@ import net.nashlegend.sourcewall.view.common.listview.LListView.OnRefreshListene
 
 import java.util.ArrayList;
 
+import de.greenrobot.event.EventBus;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
@@ -78,7 +78,6 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
     private FloatingActionsMenu floatingActionsMenu;
     private ProgressBar progressBar;
     private boolean loadDesc = false;
-    private Receiver receiver;
     private Menu menu;
     private AppBarLayout appbar;
     private int headerHeight = 112;
@@ -161,17 +160,25 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
         floatingActionsMenu.setVisibility(View.GONE);
         loadData(-1);
 
-        receiver = new Receiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Actions.Action_Start_Loading_Latest);
-        filter.addAction(Actions.Action_Finish_Loading_Latest);
-        registerReceiver(receiver, filter);
+        EventBus.getDefault().register(this);
     }
 
     @Override
     protected void onDestroy() {
-        unregisterReceiver(receiver);
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
+    }
+
+    public void onEventMainThread(ArticleStartLoadingLatestRepliesEvent event) {
+        if (event.article != null && article != null && Utils.equals(event.article.getId(), article.getId())) {
+            onStartLoadingLatest();
+        }
+    }
+
+    public void onEventMainThread(ArticleFinishLoadingLatestRepliesEvent event) {
+        if (event.article != null && article != null && Utils.equals(event.article.getId(), article.getId())) {
+            onFinishLoadingLatest();
+        }
     }
 
     /**
@@ -700,19 +707,4 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
             }
         }
     };
-
-    class Receiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (isActive() && intent.getIntExtra(Extras.Extra_Activity_Hashcode, 0) == ArticleActivity.this.hashCode()) {
-                if (Actions.Action_Start_Loading_Latest.equals(intent.getAction())) {
-                    onStartLoadingLatest();
-                } else if (Actions.Action_Finish_Loading_Latest.equals(intent.getAction())) {
-                    onFinishLoadingLatest();
-                }
-            }
-
-        }
-    }
 }

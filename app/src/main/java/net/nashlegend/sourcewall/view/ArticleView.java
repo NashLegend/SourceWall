@@ -1,21 +1,19 @@
 package net.nashlegend.sourcewall.view;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.ArticleDetailAdapter;
+import net.nashlegend.sourcewall.events.ArticleFinishLoadingLatestRepliesEvent;
+import net.nashlegend.sourcewall.events.ArticleStartLoadingLatestRepliesEvent;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.ArticleAPI;
-import net.nashlegend.sourcewall.util.Consts.Actions;
-import net.nashlegend.sourcewall.util.Consts.Extras;
 import net.nashlegend.sourcewall.util.Consts.Web;
 import net.nashlegend.sourcewall.util.DateTimeUtil;
 import net.nashlegend.sourcewall.util.StyleChecker;
@@ -23,8 +21,9 @@ import net.nashlegend.sourcewall.view.common.WWebView;
 
 import java.util.ArrayList;
 
+import de.greenrobot.event.EventBus;
+import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 
 /**
  * Created by NashLegend on 2014/9/18 0018
@@ -102,18 +101,26 @@ public class ArticleView extends AceView<Article> {
 
 
     private void loadLatest() {
-        Intent intent = new Intent();
-        intent.setAction(Actions.Action_Start_Loading_Latest);
-        App.getApp().sendBroadcast(intent);
+        EventBus.getDefault().post(new ArticleStartLoadingLatestRepliesEvent(article));
         loadDesc.findViewById(R.id.text_header_load_hint).setVisibility(View.INVISIBLE);
         loadDesc.findViewById(R.id.progress_header_loading).setVisibility(View.VISIBLE);
 
         ArticleAPI
                 .getArticleReplies(article.getId(), article.getCommentNum(), 4999)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<ResponseObject<ArrayList<UComment>>>() {
+                .subscribe(new Observer<ResponseObject<ArrayList<UComment>>>() {
                     @Override
-                    public void call(ResponseObject<ArrayList<UComment>> result) {
+                    public void onCompleted() {
+                        EventBus.getDefault().post(new ArticleFinishLoadingLatestRepliesEvent(article));
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        EventBus.getDefault().post(new ArticleFinishLoadingLatestRepliesEvent(article));
+                    }
+
+                    @Override
+                    public void onNext(ResponseObject<ArrayList<UComment>> result) {
                         loadDesc.findViewById(R.id.text_header_load_hint).setVisibility(View.VISIBLE);
                         loadDesc.findViewById(R.id.progress_header_loading).setVisibility(View.INVISIBLE);
                         if (result.ok) {
@@ -124,10 +131,6 @@ public class ArticleView extends AceView<Article> {
                             }
                             article.setCommentNum(article.getCommentNum() + ars.size());
                         }
-                        Intent intent = new Intent();
-                        intent.setAction(Actions.Action_Finish_Loading_Latest);
-                        intent.putExtra(Extras.Extra_Activity_Hashcode, getContext().hashCode());
-                        App.getApp().sendBroadcast(intent);
                     }
                 });
     }
