@@ -13,7 +13,7 @@
     <dimen name="content_top_span_dimen">12dp</dimen>
 
     <!--列表系列-->
-    <dimen name="list_title_font_size">18sp</dimen>
+    <dimen name="list_title_font_size">16sp</dimen>
     <dimen name="list_summary_font_size">14sp</dimen>
     <dimen name="list_title_author_span">8dp</dimen>
     <dimen name="list_image_summary_span">8dp</dimen>

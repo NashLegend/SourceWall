@@ -14,6 +14,8 @@
         android:id="@+id/text_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="3"
         android:textColor="@color/list_title"
         android:textSize="@dimen/list_title_font_size"
         tools:text="@string/sample_title" />
