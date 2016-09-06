@@ -34,7 +34,7 @@
     <dimen name="text_title_size_dimen">18sp</dimen>
     <dimen name="text_content_font_size_dimen">16sp</dimen>
     <dimen name="basket_item_height">48dp</dimen>
-    <dimen name="lineSpacingExtra">3dp</dimen>
+    <dimen name="lineSpacingExtra">6dp</dimen>
 
     <!--Post-->
     <dimen name="post_item_title_margin_bottom">7dp</dimen>

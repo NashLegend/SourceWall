@@ -13,8 +13,8 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="@dimen/avatar_right_span_dimen"
         android:layout_marginLeft="@dimen/avatar_right_span_dimen"
+        android:layout_marginRight="@dimen/avatar_right_span_dimen"
         android:layout_weight="0"
         android:orientation="vertical">
 
@@ -50,7 +50,7 @@
                 android:id="@+id/text_author"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
+                android:maxLines="1"
                 android:textColor="@color/author_color"
                 tools:text="@string/sample_author" />
 
@@ -59,7 +59,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/list_item_text_text_gap"
-                android:singleLine="true"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:textColor="@color/author_color"
                 tools:text="@string/sample_author_title" />
         </LinearLayout>
@@ -75,6 +76,7 @@
             android:id="@+id/web_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:ellipsize="end"
             android:maxLines="3"
             android:textColor="@color/list_summary"

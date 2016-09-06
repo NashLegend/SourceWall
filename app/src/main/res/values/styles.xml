@@ -7,6 +7,7 @@
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="actionBarSize">@dimen/actionbar_height</item>
+        <item name="android:lineSpacingExtra">@dimen/lineSpacingExtra</item>
     </style>
 
     <style name="AppThemeDayNight" parent="BaseTheme">
