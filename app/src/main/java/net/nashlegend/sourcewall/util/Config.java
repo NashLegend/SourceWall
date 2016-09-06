@@ -85,7 +85,7 @@ public class Config {
      *
      * @return 默认尾巴
      */
-    private static String getDefaultComplexTail() {
+    public static String getDefaultComplexTail() {
         return "<p></p><p>来自 <a href=\"" + getUrl() + "\" target=\"_blank\">" + defaultDisplayName + "</a></p>";
     }
 

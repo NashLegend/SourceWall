@@ -1,6 +1,7 @@
 package net.nashlegend.sourcewall.request.api;
 
 import android.net.Uri;
+import android.text.TextUtils;
 
 import net.nashlegend.sourcewall.db.GroupHelper;
 import net.nashlegend.sourcewall.db.gen.MyGroup;
@@ -27,7 +28,6 @@ import net.nashlegend.sourcewall.request.parsers.PostParser;
 import net.nashlegend.sourcewall.request.parsers.PostPrepareDataParser;
 import net.nashlegend.sourcewall.request.parsers.PublishPostParser;
 import net.nashlegend.sourcewall.request.parsers.StringParser;
-import net.nashlegend.sourcewall.util.Config;
 import net.nashlegend.sourcewall.util.MDUtil;
 
 import org.jsoup.Jsoup;
@@ -49,6 +49,9 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
+
+import static net.nashlegend.sourcewall.util.Config.getComplexReplyTail;
+import static net.nashlegend.sourcewall.util.Config.getDefaultComplexTail;
 
 public class PostAPI extends APIBase {
 
@@ -338,7 +341,11 @@ public class PostAPI extends APIBase {
                             if (is_anon) {
                                 pairs.put("is_anon", "y");
                             }
-                            pairs.put("body", MDUtil.Markdown2Html(content) + Config.getComplexReplyTail());
+                            String tail = getComplexReplyTail();
+                            if (is_anon && !TextUtils.isEmpty(tail)) {
+                                tail = getDefaultComplexTail();
+                            }
+                            pairs.put("body", MDUtil.Markdown2Html(content) + tail);
                             pairs.put("captcha", "");
                             return new RequestBuilder<Boolean>()
                                     .post()
@@ -567,7 +574,7 @@ public class PostAPI extends APIBase {
         pairs.put("csrf_token", csrf);
         pairs.put("title", title);
         pairs.put("topic", topic);
-        pairs.put("body", MDUtil.Markdown2Html(body) + Config.getComplexReplyTail());
+        pairs.put("body", MDUtil.Markdown2Html(body) + getComplexReplyTail());
         pairs.put("captcha", "");
         pairs.put("share_opts", "activity");
 
