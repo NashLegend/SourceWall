@@ -82,12 +82,14 @@ public class PostAPI extends APIBase {
     public static Observable<ResponseObject<ArrayList<Post>>> getPostList(int type, String key, int offset, boolean useCache) {
         String url = "http://apis.guokr.com/group/post.json";
         ParamsMap pairs = new ParamsMap();
+        long timeout = 600000;
         switch (type) {
             case SubItem.Type_Collections:
                 pairs.put("retrieve_type", "hot_post");
                 break;
             case SubItem.Type_Private_Channel:
                 pairs.put("retrieve_type", "recent_replies");
+                timeout = 5000;
                 break;
             case SubItem.Type_Single_Channel:
                 pairs.put("retrieve_type", "by_group");
@@ -101,7 +103,7 @@ public class PostAPI extends APIBase {
                 .url(url)
                 .params(pairs)
                 .useCacheFirst(useCache)
-                .cacheTimeOut(600000)
+                .cacheTimeOut(timeout)
                 .parser(new PostListParser())
                 .flatMap();
     }
