@@ -175,7 +175,10 @@ public class QuestionPagerFragment extends BaseFragment {
         for (int i = 0; i < subItems.size(); i++) {
             if (subItems.get(i).getValue().equals(subItem.getValue())) {
                 viewPager.setCurrentItem(i, false);
-                tabLayout.getTabAt(i).select();
+                TabLayout.Tab tab = tabLayout.getTabAt(i);
+                if (tab != null) {
+                    tab.select();
+                }
                 break;
             }
         }
@@ -336,8 +339,31 @@ public class QuestionPagerFragment extends BaseFragment {
     }
 
     private void update() {
+        SubItem subItem = null;
+        if (viewPager.getCurrentItem() < subItems.size()) {
+            subItem = subItems.get(viewPager.getCurrentItem());
+        }
+
         subItems = ChannelHelper.getQuestionSectionsByUserState();
         adapter.notifyDataSetChanged();
+
+        if (subItem != null) {
+            for (int i = 0; i < subItems.size(); i++) {
+                if (subItems.get(i).getValue().equals(subItem.getValue())) {
+                    viewPager.setCurrentItem(i, false);
+                    break;
+                }
+            }
+        }
+        viewPager.post(new Runnable() {
+            @Override
+            public void run() {
+                TabLayout.Tab tab = tabLayout.getTabAt(viewPager.getCurrentItem());
+                if (tab != null) {
+                    tab.select();
+                }
+            }
+        });
     }
 
     ProgressDialog progressDialog;
