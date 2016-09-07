@@ -11,12 +11,15 @@ import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.NoticeAdapter;
+import net.nashlegend.sourcewall.events.NoticeNumChangedEvent;
 import net.nashlegend.sourcewall.model.Notice;
 import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
 import net.nashlegend.sourcewall.request.api.MessageAPI;
 import net.nashlegend.sourcewall.data.Mob;
 
 import java.util.ArrayList;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by NashLegend on 2015/2/12 0012
@@ -74,6 +77,7 @@ public class NoticeView extends AceView<Notice> implements View.OnClickListener 
             public void onSuccess(@NonNull ArrayList<Notice> result) {
                 if (noticeAdapter != null && noticeAdapter.getList().remove(notice)) {
                     noticeAdapter.notifyDataSetChanged();
+                    EventBus.getDefault().post(new NoticeNumChangedEvent(noticeAdapter.getList().size()));
                 }
             }
         });

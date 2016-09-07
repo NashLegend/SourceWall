@@ -103,9 +103,9 @@ public class NoticesFragment extends BaseFragment implements IChannelsFragment, 
             public void onSuccess(@NonNull ArrayList<Notice> result) {
                 loadingView.onLoadSuccess();
                 if (result.size() == 0) {
-                    EventBus.getDefault().post(new NoticeNumChangedEvent(0));
                     toast(R.string.no_notice);
                 }
+                EventBus.getDefault().post(new NoticeNumChangedEvent(result.size()));
                 adapter.setList(result);
                 adapter.notifyDataSetInvalidated();
                 listView.setCanPullToRefresh(true);
@@ -177,6 +177,7 @@ public class NoticesFragment extends BaseFragment implements IChannelsFragment, 
                 listView.doneOperation();
                 adapter.clear();
                 adapter.notifyDataSetInvalidated();
+                EventBus.getDefault().post(new NoticeNumChangedEvent(0));
             }
         });
 
