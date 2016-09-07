@@ -380,11 +380,12 @@ public class SingleReplyActivity extends BaseActivity implements View.OnClickLis
                 if (host instanceof Article) {
                     intent.setClass(this, ArticleActivity.class);
                     intent.putExtra(Extras.Extra_Article, host);
+                    startOneActivity(intent);
                 } else if (host instanceof Post) {
                     intent.setClass(this, PostActivity.class);
                     intent.putExtra(Extras.Extra_Post, host);
+                    startOneActivity(intent);
                 }
-                startOneActivity(intent);
                 break;
             case R.id.layout_like:
                 likeThis();
