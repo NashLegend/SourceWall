@@ -17,6 +17,7 @@ import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.NoticeAdapter;
+import net.nashlegend.sourcewall.events.NoticeNumChangedEvent;
 import net.nashlegend.sourcewall.model.Notice;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.NetworkTask;
@@ -35,6 +36,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by NashLegend on 2015/2/12 0012
@@ -101,6 +103,7 @@ public class NoticesFragment extends BaseFragment implements IChannelsFragment, 
             public void onSuccess(@NonNull ArrayList<Notice> result) {
                 loadingView.onLoadSuccess();
                 if (result.size() == 0) {
+                    EventBus.getDefault().post(new NoticeNumChangedEvent(0));
                     toast(R.string.no_notice);
                 }
                 adapter.setList(result);

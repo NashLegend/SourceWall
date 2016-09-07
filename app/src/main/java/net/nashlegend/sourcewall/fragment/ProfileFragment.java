@@ -27,9 +27,11 @@ import net.nashlegend.sourcewall.activities.MyPostsActivity;
 import net.nashlegend.sourcewall.activities.MyQuestionsActivity;
 import net.nashlegend.sourcewall.activities.SettingActivity;
 import net.nashlegend.sourcewall.events.LoginStateChangedEvent;
+import net.nashlegend.sourcewall.events.NoticeNumChangedEvent;
 import net.nashlegend.sourcewall.model.ReminderNoticeNum;
 import net.nashlegend.sourcewall.model.UserInfo;
 import net.nashlegend.sourcewall.request.RequestObject;
+import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.MessageAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
@@ -166,21 +168,25 @@ public class ProfileFragment extends BaseFragment {
     }
 
     private void checkUnread() {
-        MessageAPI.getReminderAndNoticeNum(new RequestObject.CallBack<ReminderNoticeNum>() {
+        MessageAPI.getReminderAndNoticeNum(new SimpleCallBack<ReminderNoticeNum>() {
             @Override
-            public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<ReminderNoticeNum> result) {
-                imgMsg.setImageResource(R.drawable.ic_notifications_none_24dp);
+            public void onFailure() {
+                EventBus.getDefault().post(new NoticeNumChangedEvent(0));
             }
 
             @Override
-            public void onSuccess(@NonNull ReminderNoticeNum result, @NonNull ResponseObject<ReminderNoticeNum> detailed) {
-                if (result.getNotice_num() > 0) {
-                    imgMsg.setImageResource(R.drawable.ic_notifications_active_24dp);
-                } else {
-                    imgMsg.setImageResource(R.drawable.ic_notifications_none_24dp);
-                }
+            public void onSuccess(@NonNull ReminderNoticeNum result) {
+                EventBus.getDefault().post(new NoticeNumChangedEvent(result.getNotice_num()));
             }
         });
+    }
+
+    public void onEventMainThread(NoticeNumChangedEvent event) {
+        if (event.num > 0) {
+            imgMsg.setImageResource(R.drawable.ic_notifications_active_24dp);
+        } else {
+            imgMsg.setImageResource(R.drawable.ic_notifications_none_24dp);
+        }
     }
 
     private void onLogin() {

@@ -2,16 +2,21 @@ package net.nashlegend.sourcewall.activities;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.view.View;
-import android.widget.LinearLayout;
 
 import net.nashlegend.sourcewall.R;
+import net.nashlegend.sourcewall.data.Config;
+import net.nashlegend.sourcewall.events.NoticeNumChangedEvent;
 import net.nashlegend.sourcewall.fragment.ArticlePagerFragment;
 import net.nashlegend.sourcewall.fragment.BaseFragment;
 import net.nashlegend.sourcewall.fragment.PostPagerFragment;
 import net.nashlegend.sourcewall.fragment.ProfileFragment;
 import net.nashlegend.sourcewall.fragment.QuestionPagerFragment;
-import net.nashlegend.sourcewall.data.Config;
+import net.nashlegend.sourcewall.model.ReminderNoticeNum;
+import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
+import net.nashlegend.sourcewall.request.api.MessageAPI;
+import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.PrefsUtil;
 
 import java.util.ArrayList;
@@ -19,6 +24,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.greenrobot.event.EventBus;
 
 import static net.nashlegend.sourcewall.data.Consts.Keys.Key_Show_Group_First_Homepage;
 
@@ -30,13 +36,15 @@ public class MainActivity extends BaseActivity {
     QuestionPagerFragment questionPagerFragment;
     ProfileFragment profileFragment;
     @BindView(R.id.layout_science)
-    LinearLayout layoutScience;
+    View layoutScience;
     @BindView(R.id.layout_group)
-    LinearLayout layoutGroup;
+    View layoutGroup;
     @BindView(R.id.layout_questions)
-    LinearLayout layoutQuestions;
+    View layoutQuestions;
     @BindView(R.id.layout_me)
-    LinearLayout layoutMe;
+    View layoutMe;
+    @BindView(R.id.view_badge)
+    View badge;
     ArrayList<View> bars = new ArrayList<>();
 
     int crtIndex = 0;
@@ -56,13 +64,51 @@ public class MainActivity extends BaseActivity {
         if (savedInstanceState != null) {
             crtIndex = savedInstanceState.getInt(crtIndexKey, 0);
         } else {
-            crtIndex = 0;
+            crtIndex = PrefsUtil.readBoolean(Key_Show_Group_First_Homepage, false) ? 1 : 0;
         }
         if (crtIndex < 0 && crtIndex > 3) {
             crtIndex = 0;
         }
-        int index = PrefsUtil.readBoolean(Key_Show_Group_First_Homepage, false) ? 1 : 0;
-        onBarClick(bars.get(index).getId());
+        onBarClick(bars.get(crtIndex).getId());
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (UserAPI.isLoggedIn()) {
+            if (crtFragment != profileFragment) {
+                checkUnread();
+            }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
+
+    private void checkUnread() {
+        MessageAPI.getReminderAndNoticeNum(new SimpleCallBack<ReminderNoticeNum>() {
+            @Override
+            public void onFailure() {
+                EventBus.getDefault().post(new NoticeNumChangedEvent(0));
+            }
+
+            @Override
+            public void onSuccess(@NonNull ReminderNoticeNum result) {
+                EventBus.getDefault().post(new NoticeNumChangedEvent(result.getNotice_num()));
+            }
+        });
+    }
+
+    public void onEventMainThread(NoticeNumChangedEvent event) {
+        if (event.num > 0) {
+            badge.setVisibility(View.VISIBLE);
+        } else {
+            badge.setVisibility(View.GONE);
+        }
     }
 
     @Override
