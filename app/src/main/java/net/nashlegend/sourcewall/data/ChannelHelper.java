@@ -1,10 +1,10 @@
-package net.nashlegend.sourcewall.util;
+package net.nashlegend.sourcewall.data;
 
 import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
-import net.nashlegend.sourcewall.db.AskTagHelper;
-import net.nashlegend.sourcewall.db.BasketHelper;
-import net.nashlegend.sourcewall.db.GroupHelper;
+import net.nashlegend.sourcewall.data.database.AskTagHelper;
+import net.nashlegend.sourcewall.data.database.BasketHelper;
+import net.nashlegend.sourcewall.data.database.GroupHelper;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 

@@ -10,7 +10,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.model.Answer;
-import net.nashlegend.sourcewall.util.Config;
+import net.nashlegend.sourcewall.data.Config;
 import net.nashlegend.sourcewall.util.DateTimeUtil;
 import net.nashlegend.sourcewall.util.ImageUtils;
 import net.nashlegend.sourcewall.util.RegUtil;

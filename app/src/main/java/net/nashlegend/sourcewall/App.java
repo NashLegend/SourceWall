@@ -10,10 +10,10 @@ import android.support.v7.app.AppCompatDelegate;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
-import net.nashlegend.sourcewall.db.BaseDB;
-import net.nashlegend.sourcewall.db.gen.DaoMaster;
-import net.nashlegend.sourcewall.db.gen.DaoSession;
-import net.nashlegend.sourcewall.util.Consts.Keys;
+import net.nashlegend.sourcewall.data.database.BaseDB;
+import net.nashlegend.sourcewall.data.database.gen.DaoMaster;
+import net.nashlegend.sourcewall.data.database.gen.DaoSession;
+import net.nashlegend.sourcewall.data.Consts.Keys;
 import net.nashlegend.sourcewall.util.ImageUtils;
 import net.nashlegend.sourcewall.util.PrefsUtil;
 

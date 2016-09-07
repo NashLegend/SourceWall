@@ -21,6 +21,7 @@ import com.nostra13.universalimageloader.core.assist.ImageSize;
 
 import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
+import net.nashlegend.sourcewall.data.Config;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

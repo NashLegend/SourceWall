@@ -40,11 +40,11 @@ import com.umeng.analytics.MobclickAgent;
 import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.ImageActivity;
-import net.nashlegend.sourcewall.util.Config;
-import net.nashlegend.sourcewall.util.Consts.Extras;
+import net.nashlegend.sourcewall.data.Config;
+import net.nashlegend.sourcewall.data.Consts.Extras;
 import net.nashlegend.sourcewall.util.DisplayUtil;
 import net.nashlegend.sourcewall.util.ImageSizeMap;
-import net.nashlegend.sourcewall.util.Mob;
+import net.nashlegend.sourcewall.data.Mob;
 import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;
 

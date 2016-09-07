@@ -18,13 +18,14 @@ import android.widget.TextView;
 import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.R;
+import net.nashlegend.sourcewall.data.Tail;
 import net.nashlegend.sourcewall.events.LoginStateChangedEvent;
 import net.nashlegend.sourcewall.request.api.UserAPI;
-import net.nashlegend.sourcewall.util.Config;
-import net.nashlegend.sourcewall.util.Consts.ImageLoadMode;
-import net.nashlegend.sourcewall.util.Consts.Keys;
-import net.nashlegend.sourcewall.util.Consts.TailType;
-import net.nashlegend.sourcewall.util.Mob;
+import net.nashlegend.sourcewall.data.Config;
+import net.nashlegend.sourcewall.data.Consts.ImageLoadMode;
+import net.nashlegend.sourcewall.data.Consts.Keys;
+import net.nashlegend.sourcewall.data.Consts.TailType;
+import net.nashlegend.sourcewall.data.Mob;
 import net.nashlegend.sourcewall.util.PrefsUtil;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;
 
@@ -147,12 +148,12 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         switch (PrefsUtil.readInt(Keys.Key_Use_Tail_Type, TailType.Type_Use_Default_Tail)) {
             case TailType.Type_Use_Default_Tail:
                 buttonDefault.setChecked(true);
-                tailText.setText(Config.getDefaultPlainTail());
+                tailText.setText(Tail.getDefaultPlainTail());
                 tailText.setEnabled(false);
                 break;
             case TailType.Type_Use_Phone_Tail:
                 buttonPhone.setChecked(true);
-                tailText.setText(Config.getPhonePlainTail());
+                tailText.setText(Tail.getPhonePlainTail());
                 tailText.setEnabled(false);
                 break;
             case TailType.Type_Use_Custom_Tail:
@@ -252,11 +253,11 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             if (isChecked) {
                 switch (buttonView.getId()) {
                     case R.id.button_use_default:
-                        tailText.setText(Config.getDefaultPlainTail());
+                        tailText.setText(Tail.getDefaultPlainTail());
                         tailText.setEnabled(false);
                         break;
                     case R.id.button_use_phone:
-                        tailText.setText(Config.getPhonePlainTail());
+                        tailText.setText(Tail.getPhonePlainTail());
                         tailText.setEnabled(false);
                         break;
                     case R.id.button_use_custom:
@@ -285,7 +286,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     protected void onPause() {
-        String preTail = Config.getSimpleReplyTail();
+        String preTail = Tail.getSimpleReplyTail();
         if (buttonDefault.isChecked()) {
             PrefsUtil.saveInt(Keys.Key_Use_Tail_Type, TailType.Type_Use_Default_Tail);
         } else if (buttonPhone.isChecked()) {
@@ -294,7 +295,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             PrefsUtil.saveInt(Keys.Key_Use_Tail_Type, TailType.Type_Use_Custom_Tail);
             PrefsUtil.saveString(Keys.Key_Custom_Tail, tailText.getText().toString());
         }
-        String crtTail = Config.getSimpleReplyTail();
+        String crtTail = Tail.getSimpleReplyTail();
 
         if (crtTail.equals(preTail)) {
             MobclickAgent.onEvent(this, Mob.Event_Modify_Tail);

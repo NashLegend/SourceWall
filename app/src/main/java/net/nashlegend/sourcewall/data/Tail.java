@@ -1,63 +1,21 @@
-package net.nashlegend.sourcewall.util;
+package net.nashlegend.sourcewall.data;
 
 import android.text.TextUtils;
 
 import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
-import net.nashlegend.sourcewall.activities.BaseActivity;
-import net.nashlegend.sourcewall.activities.Reply2Activity;
-import net.nashlegend.sourcewall.activities.ReplyActivity;
-import net.nashlegend.sourcewall.util.Consts.ImageLoadMode;
-import net.nashlegend.sourcewall.util.Consts.Keys;
-import net.nashlegend.sourcewall.util.Consts.TailType;
+import net.nashlegend.sourcewall.util.MDUtil;
+import net.nashlegend.sourcewall.util.PrefsUtil;
 
 /**
- * Created by NashLegend on 2014/12/15 0015
+ * Created by NashLegend on 16/9/7.
  */
-public class Config {
 
-    public final static long throttleSpan = 500;
-    public final static float longImageRatio = 2f;//长宽比超过此值，则认为是超长图
-    public final static int ExitTapsGap = 1200;
+public class Tail {
+
     public final static String defaultDisplayName = "果壳的壳";
     public final static String defaultUrl = "https://github.com/NashLegend/SourceWall/blob/master/README.md";
     public final static String altUrl = "http://www.guokr.com/blog/798434/";
-
-    /**
-     * 是否使用Html方式回复
-     *
-     * @return
-     */
-    public static Class<? extends BaseActivity> getReplyActivity() {
-        return PrefsUtil.readBoolean(Keys.Key_Reply_With_Simple, false) ? ReplyActivity.class : Reply2Activity.class;
-    }
-
-    public static boolean shouldLoadImage() {
-        //略微有点耗时，最多可耗时3ms，最低0.3ms
-        //可以监听网络状态变化，记录状态，而不是直接读ConnectivityManager和SharedPreference
-        int mode = getImageLoadMode();
-        boolean flag = true;
-        switch (mode) {
-            case ImageLoadMode.MODE_ALWAYS_LOAD:
-                flag = true;
-                break;
-            case ImageLoadMode.MODE_NEVER_LOAD:
-                flag = false;
-                break;
-            case ImageLoadMode.MODE_LOAD_WHEN_WIFI:
-                flag = DeviceUtil.isWifiConnected();
-                break;
-        }
-        return flag;
-    }
-
-    public static boolean shouldLoadHomepageImage() {
-        return !PrefsUtil.readBoolean(Keys.Key_Image_No_Load_Homepage, false);
-    }
-
-    public static int getImageLoadMode() {
-        return PrefsUtil.readInt(Keys.Key_Image_Load_Mode, ImageLoadMode.MODE_ALWAYS_LOAD);
-    }
 
     /**
      * 返回尾巴，html格式
@@ -66,14 +24,14 @@ public class Config {
      */
     public static String getComplexReplyTail() {
         String tail = "";
-        switch (PrefsUtil.readInt(Keys.Key_Use_Tail_Type, TailType.Type_Use_Default_Tail)) {
-            case TailType.Type_Use_Default_Tail:
+        switch (PrefsUtil.readInt(Consts.Keys.Key_Use_Tail_Type, Consts.TailType.Type_Use_Default_Tail)) {
+            case Consts.TailType.Type_Use_Default_Tail:
                 tail = getDefaultComplexTail();
                 break;
-            case TailType.Type_Use_Phone_Tail:
+            case Consts.TailType.Type_Use_Phone_Tail:
                 tail = getPhoneComplexTail();
                 break;
-            case TailType.Type_Use_Custom_Tail:
+            case Consts.TailType.Type_Use_Custom_Tail:
                 tail = getParametricCustomComplexTail();
                 break;
         }
@@ -86,7 +44,7 @@ public class Config {
      * @return 默认尾巴
      */
     public static String getDefaultComplexTail() {
-        return "<p></p><p>来自 <a href=\"" + getUrl() + "\" target=\"_blank\">" + defaultDisplayName + "</a></p>";
+        return "<p>   </p><blockquote><p>来自 <a href=\"" + getUrl() + "\" target=\"_blank\">" + defaultDisplayName + "</a></p></blockquote>";
     }
 
     /**
@@ -96,7 +54,7 @@ public class Config {
      */
     private static String getPhoneComplexTail() {
         String mTypeString = android.os.Build.MODEL == null ? App.getApp().getString(R.string.unknown_phone) : android.os.Build.MODEL;
-        return "<p></p><p>来自 <a href=\"" + getUrl() + "\" target=\"_blank\">" + mTypeString + "</a></p>";
+        return "<p/>  </p><blockquote><p>来自 <a href=\"" + getUrl() + "\" target=\"_blank\">" + mTypeString + "</a></p></blockquote>";
     }
 
     /**
@@ -105,11 +63,11 @@ public class Config {
      * @return 参数化的尾巴
      */
     public static String getParametricCustomComplexTail() {
-        String tail = MDUtil.UBB2HtmlDumb(PrefsUtil.readString(Keys.Key_Custom_Tail, ""));
+        String tail = MDUtil.UBB2HtmlDumb(PrefsUtil.readString(Consts.Keys.Key_Custom_Tail, ""));
         if (TextUtils.isEmpty(tail)) {
             return "";
         } else {
-            return "<p></p>" + tail;
+            return "<p>   </p><blockquote>" + tail + "</blockquote>";
         }
     }
 
@@ -120,14 +78,14 @@ public class Config {
      */
     public static String getSimpleReplyTail() {
         String tail = "";
-        switch (PrefsUtil.readInt(Keys.Key_Use_Tail_Type, TailType.Type_Use_Default_Tail)) {
-            case TailType.Type_Use_Default_Tail:
+        switch (PrefsUtil.readInt(Consts.Keys.Key_Use_Tail_Type, Consts.TailType.Type_Use_Default_Tail)) {
+            case Consts.TailType.Type_Use_Default_Tail:
                 tail = getDefaultSimpleTail();
                 break;
-            case TailType.Type_Use_Phone_Tail:
+            case Consts.TailType.Type_Use_Phone_Tail:
                 tail = getPhoneSimpleTail();
                 break;
-            case TailType.Type_Use_Custom_Tail:
+            case Consts.TailType.Type_Use_Custom_Tail:
                 tail = getParametricCustomSimpleTail();
                 break;
         }
@@ -158,7 +116,7 @@ public class Config {
      * @return 自定义尾巴
      */
     public static String getParametricCustomSimpleTail() {
-        String tail = PrefsUtil.readString(Keys.Key_Custom_Tail, "");
+        String tail = PrefsUtil.readString(Consts.Keys.Key_Custom_Tail, "");
         if (TextUtils.isEmpty(tail)) {
             return "";
         } else {

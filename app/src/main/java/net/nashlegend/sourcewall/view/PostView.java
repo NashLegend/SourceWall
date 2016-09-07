@@ -1,7 +1,6 @@
 package net.nashlegend.sourcewall.view;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +9,6 @@ import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.PostDetailAdapter;
 import net.nashlegend.sourcewall.events.PostFinishLoadingLatestRepliesEvent;
@@ -19,10 +17,8 @@ import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.PostAPI;
-import net.nashlegend.sourcewall.util.Config;
-import net.nashlegend.sourcewall.util.Consts.Actions;
-import net.nashlegend.sourcewall.util.Consts.Extras;
-import net.nashlegend.sourcewall.util.Consts.Web;
+import net.nashlegend.sourcewall.data.Config;
+import net.nashlegend.sourcewall.data.Consts.Web;
 import net.nashlegend.sourcewall.util.DateTimeUtil;
 import net.nashlegend.sourcewall.util.ImageUtils;
 import net.nashlegend.sourcewall.util.StyleChecker;

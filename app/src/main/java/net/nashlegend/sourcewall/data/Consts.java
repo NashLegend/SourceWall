@@ -1,4 +1,4 @@
-package net.nashlegend.sourcewall.util;
+package net.nashlegend.sourcewall.data;
 
 /**
  * Created by NashLegend on 2014/9/23 0023

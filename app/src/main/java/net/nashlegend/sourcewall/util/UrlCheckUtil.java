@@ -15,7 +15,7 @@ import net.nashlegend.sourcewall.activities.SingleReplyActivity;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.Question;
-import net.nashlegend.sourcewall.util.Consts.Extras;
+import net.nashlegend.sourcewall.data.Consts.Extras;
 
 import java.util.List;
 import java.util.regex.Matcher;

@@ -25,7 +25,7 @@ import com.sina.weibo.sdk.utils.Utility;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.util.AccessTokenKeeper;
-import net.nashlegend.sourcewall.util.Consts.Extras;
+import net.nashlegend.sourcewall.data.Consts.Extras;
 import net.nashlegend.sourcewall.util.ShareUtil;
 
 public class WeiboShareActivity extends BaseActivity implements IWeiboHandler.Response {

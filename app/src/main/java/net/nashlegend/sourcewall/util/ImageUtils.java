@@ -19,7 +19,7 @@ import com.nostra13.universalimageloader.core.display.CircleBitmapDisplayer;
 
 import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
-import net.nashlegend.sourcewall.util.Consts.ZipMode;
+import net.nashlegend.sourcewall.data.Consts.ZipMode;
 
 import java.io.File;
 import java.io.FileOutputStream;

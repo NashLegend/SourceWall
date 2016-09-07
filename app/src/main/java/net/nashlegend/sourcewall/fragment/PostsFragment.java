@@ -18,7 +18,7 @@ import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.PostAPI;
-import net.nashlegend.sourcewall.util.Consts.Extras;
+import net.nashlegend.sourcewall.data.Consts.Extras;
 import net.nashlegend.sourcewall.view.PostListItemView;
 import net.nashlegend.sourcewall.view.common.LoadingView;
 import net.nashlegend.sourcewall.view.common.LoadingView.ReloadListener;

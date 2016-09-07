@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
 
 import net.nashlegend.sourcewall.App;
+import net.nashlegend.sourcewall.data.Config;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

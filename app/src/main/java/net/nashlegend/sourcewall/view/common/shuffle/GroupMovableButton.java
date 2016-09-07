@@ -2,7 +2,7 @@ package net.nashlegend.sourcewall.view.common.shuffle;
 
 import android.content.Context;
 
-import net.nashlegend.sourcewall.db.gen.MyGroup;
+import net.nashlegend.sourcewall.data.database.gen.MyGroup;
 
 /**
  * Created by NashLegend on 2015/1/20 0020

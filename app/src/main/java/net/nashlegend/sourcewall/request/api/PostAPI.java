@@ -3,8 +3,8 @@ package net.nashlegend.sourcewall.request.api;
 import android.net.Uri;
 import android.text.TextUtils;
 
-import net.nashlegend.sourcewall.db.GroupHelper;
-import net.nashlegend.sourcewall.db.gen.MyGroup;
+import net.nashlegend.sourcewall.data.database.GroupHelper;
+import net.nashlegend.sourcewall.data.database.gen.MyGroup;
 import net.nashlegend.sourcewall.events.GroupFetchedEvent;
 import net.nashlegend.sourcewall.fragment.PostPagerFragment;
 import net.nashlegend.sourcewall.model.Post;
@@ -50,8 +50,8 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-import static net.nashlegend.sourcewall.util.Config.getComplexReplyTail;
-import static net.nashlegend.sourcewall.util.Config.getDefaultComplexTail;
+import static net.nashlegend.sourcewall.data.Tail.getComplexReplyTail;
+import static net.nashlegend.sourcewall.data.Tail.getDefaultComplexTail;
 
 public class PostAPI extends APIBase {
 

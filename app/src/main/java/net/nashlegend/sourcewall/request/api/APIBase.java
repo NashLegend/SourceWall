@@ -3,6 +3,7 @@ package net.nashlegend.sourcewall.request.api;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import net.nashlegend.sourcewall.data.Tail;
 import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.Post;
@@ -14,8 +15,8 @@ import net.nashlegend.sourcewall.request.RequestBuilder;
 import net.nashlegend.sourcewall.request.RequestObject.RequestCallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.parsers.ImageUploadParser;
-import net.nashlegend.sourcewall.util.Config;
-import net.nashlegend.sourcewall.util.Consts.ZipMode;
+import net.nashlegend.sourcewall.data.Config;
+import net.nashlegend.sourcewall.data.Consts.ZipMode;
 import net.nashlegend.sourcewall.util.DeviceUtil;
 import net.nashlegend.sourcewall.util.ImageUtils;
 
@@ -42,11 +43,11 @@ public class APIBase {
     @Nullable
     public static NetworkTask<String> reply(AceModel data, String content, RequestCallBack<String> callBack) {
         if (data instanceof Article) {
-            return ArticleAPI.replyArticle(((Article) data).getId(), content + Config.getSimpleReplyTail(), callBack);
+            return ArticleAPI.replyArticle(((Article) data).getId(), content + Tail.getSimpleReplyTail(), callBack);
         } else if (data instanceof Post) {
-            return PostAPI.replyPost(((Post) data).getId(), content + Config.getSimpleReplyTail(), callBack);
+            return PostAPI.replyPost(((Post) data).getId(), content + Tail.getSimpleReplyTail(), callBack);
         } else if (data instanceof Question) {
-            return QuestionAPI.answerQuestion(((Question) data).getId(), content + Config.getSimpleReplyTail(), callBack);
+            return QuestionAPI.answerQuestion(((Question) data).getId(), content + Tail.getSimpleReplyTail(), callBack);
         } else {
             return null;
         }

@@ -9,7 +9,7 @@ import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.fragment.NoticesFragment;
-import net.nashlegend.sourcewall.util.Mob;
+import net.nashlegend.sourcewall.data.Mob;
 
 public class MessageCenterActivity extends BaseActivity {
 

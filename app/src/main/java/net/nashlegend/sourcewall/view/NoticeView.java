@@ -14,7 +14,7 @@ import net.nashlegend.sourcewall.adapters.NoticeAdapter;
 import net.nashlegend.sourcewall.model.Notice;
 import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
 import net.nashlegend.sourcewall.request.api.MessageAPI;
-import net.nashlegend.sourcewall.util.Mob;
+import net.nashlegend.sourcewall.data.Mob;
 
 import java.util.ArrayList;
 

@@ -14,7 +14,7 @@ import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.ArticleAPI;
-import net.nashlegend.sourcewall.util.Consts.Web;
+import net.nashlegend.sourcewall.data.Consts.Web;
 import net.nashlegend.sourcewall.util.DateTimeUtil;
 import net.nashlegend.sourcewall.util.StyleChecker;
 import net.nashlegend.sourcewall.view.common.WWebView;

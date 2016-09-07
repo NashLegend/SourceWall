@@ -1,4 +1,4 @@
-package net.nashlegend.sourcewall.db.gen;
+package net.nashlegend.sourcewall.data.database.gen;
 
 import android.database.sqlite.SQLiteDatabase;
 

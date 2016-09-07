@@ -1,10 +1,10 @@
-package net.nashlegend.sourcewall.db;
+package net.nashlegend.sourcewall.data.database;
 
 import net.nashlegend.sourcewall.App;
-import net.nashlegend.sourcewall.db.gen.AskTag;
-import net.nashlegend.sourcewall.db.gen.AskTagDao;
+import net.nashlegend.sourcewall.data.database.gen.AskTag;
+import net.nashlegend.sourcewall.data.database.gen.AskTagDao;
 import net.nashlegend.sourcewall.model.SubItem;
-import net.nashlegend.sourcewall.util.Consts.Keys;
+import net.nashlegend.sourcewall.data.Consts.Keys;
 import net.nashlegend.sourcewall.util.PrefsUtil;
 
 import java.util.ArrayList;

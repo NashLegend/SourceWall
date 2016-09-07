@@ -2,8 +2,9 @@ package net.nashlegend.sourcewall.request.api;
 
 import android.text.TextUtils;
 
-import net.nashlegend.sourcewall.db.AskTagHelper;
-import net.nashlegend.sourcewall.db.gen.AskTag;
+import net.nashlegend.sourcewall.data.Tail;
+import net.nashlegend.sourcewall.data.database.AskTagHelper;
+import net.nashlegend.sourcewall.data.database.gen.AskTag;
 import net.nashlegend.sourcewall.model.Answer;
 import net.nashlegend.sourcewall.model.PrepareData;
 import net.nashlegend.sourcewall.model.Question;
@@ -28,7 +29,7 @@ import net.nashlegend.sourcewall.request.parsers.QuestionCommentParser;
 import net.nashlegend.sourcewall.request.parsers.QuestionHtmlListParser;
 import net.nashlegend.sourcewall.request.parsers.QuestionListParser;
 import net.nashlegend.sourcewall.request.parsers.QuestionParser;
-import net.nashlegend.sourcewall.util.Config;
+import net.nashlegend.sourcewall.data.Config;
 import net.nashlegend.sourcewall.util.MDUtil;
 
 import org.jsoup.Jsoup;
@@ -450,7 +451,7 @@ public class QuestionAPI extends APIBase {
                         if (response.ok) {
                             final ParamsMap pairs = new ParamsMap();
                             pairs.put("csrf_token", response.result);
-                            pairs.put("content", MDUtil.Markdown2Html(content) + Config.getComplexReplyTail());
+                            pairs.put("content", MDUtil.Markdown2Html(content) + Tail.getComplexReplyTail());
                             pairs.put("captcha", "");
                             return new RequestBuilder<Boolean>()
                                     .post()
@@ -760,7 +761,7 @@ public class QuestionAPI extends APIBase {
         String url = "http://www.guokr.com/questions/new/";
         try {
             String htmlDesc = MDUtil.Markdown2Html(annotation);
-            htmlDesc += Config.getComplexReplyTail();
+            htmlDesc += Tail.getComplexReplyTail();
             ParamsMap pairs = new ParamsMap();
             pairs.put("csrf_token", csrf);
             pairs.put("question", question);

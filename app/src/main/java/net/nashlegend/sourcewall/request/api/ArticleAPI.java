@@ -1,5 +1,6 @@
 package net.nashlegend.sourcewall.request.api;
 
+import net.nashlegend.sourcewall.data.Tail;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.Author;
 import net.nashlegend.sourcewall.model.SubItem;
@@ -18,7 +19,7 @@ import net.nashlegend.sourcewall.request.parsers.ContentValueForKeyParser;
 import net.nashlegend.sourcewall.request.parsers.Parser;
 import net.nashlegend.sourcewall.request.parsers.SimpleArticleParser;
 import net.nashlegend.sourcewall.request.parsers.StringParser;
-import net.nashlegend.sourcewall.util.Config;
+import net.nashlegend.sourcewall.data.Config;
 import net.nashlegend.sourcewall.util.MDUtil;
 
 import org.jsoup.Jsoup;
@@ -363,7 +364,7 @@ public class ArticleAPI extends APIBase {
                         if (response.ok) {
                             final ParamsMap pairs = new ParamsMap();
                             pairs.put("csrf_token", response.result);
-                            pairs.put("reply", MDUtil.Markdown2Html(content) + Config.getComplexReplyTail());
+                            pairs.put("reply", MDUtil.Markdown2Html(content) + Tail.getComplexReplyTail());
                             pairs.put("captcha", "");
                             return new RequestBuilder<Boolean>()
                                     .post()

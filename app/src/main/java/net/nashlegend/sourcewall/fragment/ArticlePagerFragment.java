@@ -13,7 +13,7 @@ import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.SearchActivity;
 import net.nashlegend.sourcewall.adapters.FakeFragmentStatePagerAdapter;
 import net.nashlegend.sourcewall.model.SubItem;
-import net.nashlegend.sourcewall.util.ChannelHelper;
+import net.nashlegend.sourcewall.data.ChannelHelper;
 
 import java.util.ArrayList;
 
