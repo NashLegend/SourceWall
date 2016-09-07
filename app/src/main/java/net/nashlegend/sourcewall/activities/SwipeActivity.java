@@ -23,6 +23,7 @@ import android.widget.FrameLayout;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.util.DisplayUtil;
+import net.nashlegend.sourcewall.util.ErrorUtils;
 import net.nashlegend.sourcewall.util.UiUtil;
 
 /**
@@ -126,7 +127,11 @@ public class SwipeActivity extends AppCompatActivity {
     }
 
     public void startActivity(Intent intent, int enterAnim, int exitAnim) {
-        super.startActivity(intent);
+        try {
+            super.startActivity(intent);
+        } catch (Exception e) {
+            ErrorUtils.onException(e);
+        }
         overridePendingTransition(enterAnim, exitAnim);
     }
 
@@ -143,7 +148,11 @@ public class SwipeActivity extends AppCompatActivity {
     }
 
     public void startActivityForResult(Intent intent, int requestCode, int enterAnim, int exitAnim) {
-        super.startActivityForResult(intent, requestCode);
+        try {
+            super.startActivityForResult(intent, requestCode);
+        } catch (Exception e) {
+            ErrorUtils.onException(e);
+        }
         overridePendingTransition(enterAnim, exitAnim);
     }
 

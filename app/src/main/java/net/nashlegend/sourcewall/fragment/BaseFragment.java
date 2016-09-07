@@ -3,6 +3,7 @@ package net.nashlegend.sourcewall.fragment;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 
+import net.nashlegend.sourcewall.util.ErrorUtils;
 import net.nashlegend.sourcewall.util.ToastUtil;
 import net.nashlegend.sourcewall.util.UiUtil;
 
@@ -68,13 +69,6 @@ public abstract class BaseFragment extends Fragment {
         return false;
     }
 
-    public void startOneActivity(Intent intent) {
-        if (UiUtil.shouldThrottle()) {
-            return;
-        }
-        super.startActivity(intent);
-    }
-
     public void startActivity(Class clazz) {
         if (getContext() == null) {
             return;
@@ -82,12 +76,23 @@ public abstract class BaseFragment extends Fragment {
         startOneActivity(new Intent(getContext(), clazz));
     }
 
+    public void startOneActivity(Intent intent) {
+        if (UiUtil.shouldThrottle()) {
+            return;
+        }
+        startActivity(intent);
+    }
+
     @Override
     public void startActivity(Intent intent) {
         if (!intent.hasExtra("requestFrom")) {
             intent.putExtra("requestFrom", getClass().getCanonicalName());
         }
-        super.startActivity(intent);
+        try {
+            super.startActivity(intent);
+        } catch (Exception e) {
+            ErrorUtils.onException(e);
+        }
     }
 
     @Override
@@ -98,7 +103,11 @@ public abstract class BaseFragment extends Fragment {
         if (!intent.hasExtra("requestFrom")) {
             intent.putExtra("requestFrom", getClass().getCanonicalName());
         }
-        super.startActivityForResult(intent, requestCode);
+        try {
+            super.startActivityForResult(intent, requestCode);
+        } catch (Exception e) {
+            ErrorUtils.onException(e);
+        }
     }
 
 }
