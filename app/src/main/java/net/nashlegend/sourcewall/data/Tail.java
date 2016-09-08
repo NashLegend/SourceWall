@@ -44,7 +44,7 @@ public class Tail {
      * @return 默认尾巴
      */
     public static String getDefaultComplexTail() {
-        return "<p>   </p><blockquote><p>来自 <a href=\"" + getUrl() + "\" target=\"_blank\">" + defaultDisplayName + "</a></p></blockquote>";
+        return "<p>   </p><blockquote>来自 <a href=\"" + getUrl() + "\" target=\"_blank\">" + defaultDisplayName + "</a></blockquote>";
     }
 
     /**
@@ -54,7 +54,7 @@ public class Tail {
      */
     private static String getPhoneComplexTail() {
         String mTypeString = android.os.Build.MODEL == null ? App.getApp().getString(R.string.unknown_phone) : android.os.Build.MODEL;
-        return "<p/>  </p><blockquote><p>来自 <a href=\"" + getUrl() + "\" target=\"_blank\">" + mTypeString + "</a></p></blockquote>";
+        return "<p/>  </p><blockquote>来自 <a href=\"" + getUrl() + "\" target=\"_blank\">" + mTypeString + "</a></blockquote>";
     }
 
     /**

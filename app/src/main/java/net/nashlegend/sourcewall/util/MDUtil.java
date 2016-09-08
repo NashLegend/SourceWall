@@ -40,10 +40,14 @@ public class MDUtil {
     public static String UBB2HtmlDumb(String text) {
         StringBuilder sb = new StringBuilder();
         String[] paragraphs = text.split("\n");
-        for (String paragraph : paragraphs) {
-            sb.append("<p>").append(UBB2HtmlLink(UBB2HtmlImage(paragraph))).append("</p>");
+        if (paragraphs.length == 1) {
+            return UBB2HtmlLink(UBB2HtmlImage(paragraphs[0]));
+        } else {
+            for (String paragraph : paragraphs) {
+                sb.append("<p>").append(UBB2HtmlLink(UBB2HtmlImage(paragraph))).append("</p>");
+            }
+            return sb.toString();
         }
-        return sb.toString();
     }
 
     /**
