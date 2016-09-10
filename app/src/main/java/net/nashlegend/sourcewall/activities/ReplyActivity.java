@@ -25,7 +25,6 @@ import android.text.style.ImageSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -336,22 +335,12 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
         }
     }
 
-    private void hideInput() {
-        try {
-            if (getCurrentFocus() != null) {
-                ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_publish:
                 if (!TextUtils.isEmpty(editText.getText().toString().trim())) {
-                    hideInput();
+                    UiUtil.hideIME(this);
                     publishReply(editText.getText().toString());
                 } else {
                     toast(R.string.content_cannot_be_empty);

@@ -179,7 +179,7 @@ public class TextHtmlHelper {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                ErrorUtils.onException(e);
             }
             if (drawable == null) {
                 drawable = context.getResources().getDrawable(R.drawable.ic_broken_image_24dp);

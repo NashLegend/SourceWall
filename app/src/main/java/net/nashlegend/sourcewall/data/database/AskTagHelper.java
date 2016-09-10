@@ -5,6 +5,7 @@ import net.nashlegend.sourcewall.data.Consts.Keys;
 import net.nashlegend.sourcewall.data.database.gen.AskTag;
 import net.nashlegend.sourcewall.data.database.gen.AskTagDao;
 import net.nashlegend.sourcewall.model.SubItem;
+import net.nashlegend.sourcewall.util.ErrorUtils;
 import net.nashlegend.sourcewall.util.PrefsUtil;
 
 import java.util.ArrayList;
@@ -82,7 +83,7 @@ public class AskTagHelper {
             App.getDaoSession().getDatabase().setTransactionSuccessful();
             PrefsUtil.saveLong(Keys.Key_Last_Ask_Tags_Version, System.currentTimeMillis());
         } catch (Exception e) {
-            e.printStackTrace();
+            ErrorUtils.onException(e);
         } finally {
             App.getDaoSession().getDatabase().endTransaction();
         }
@@ -106,7 +107,7 @@ public class AskTagHelper {
             tagDao.insertInTx(tags);
             App.getDaoSession().getDatabase().setTransactionSuccessful();
         } catch (Exception e) {
-            e.printStackTrace();
+            ErrorUtils.onException(e);
         } finally {
             App.getDaoSession().getDatabase().endTransaction();
         }

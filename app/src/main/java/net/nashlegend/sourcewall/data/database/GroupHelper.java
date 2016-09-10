@@ -5,6 +5,7 @@ import net.nashlegend.sourcewall.data.Consts.Keys;
 import net.nashlegend.sourcewall.data.database.gen.MyGroup;
 import net.nashlegend.sourcewall.data.database.gen.MyGroupDao;
 import net.nashlegend.sourcewall.model.SubItem;
+import net.nashlegend.sourcewall.util.ErrorUtils;
 import net.nashlegend.sourcewall.util.PrefsUtil;
 
 import java.util.ArrayList;
@@ -76,7 +77,7 @@ public class GroupHelper {
             App.getDaoSession().getDatabase().setTransactionSuccessful();
             PrefsUtil.saveLong(Keys.Key_Last_Post_Groups_Version, System.currentTimeMillis());
         } catch (Exception e) {
-            e.printStackTrace();
+            ErrorUtils.onException(e);
         } finally {
             App.getDaoSession().getDatabase().endTransaction();
         }
@@ -100,7 +101,7 @@ public class GroupHelper {
             myGroupDao.insertInTx(groups);
             App.getDaoSession().getDatabase().setTransactionSuccessful();
         } catch (Exception e) {
-            e.printStackTrace();
+            ErrorUtils.onException(e);
         } finally {
             App.getDaoSession().getDatabase().endTransaction();
         }

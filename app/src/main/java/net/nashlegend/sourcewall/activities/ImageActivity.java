@@ -204,7 +204,7 @@ public class ImageActivity extends BaseActivity {
             outputStream.flush();
             outputStream.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            ErrorUtils.onException(e);
         }
     }
 
@@ -226,7 +226,7 @@ public class ImageActivity extends BaseActivity {
             }
         } catch (Exception e) {
             copyOK = false;
-            e.printStackTrace();
+            ErrorUtils.onException(e);
         } finally {
             try {
                 if (inputStream != null) {
@@ -237,7 +237,7 @@ public class ImageActivity extends BaseActivity {
                 }
             } catch (Exception e) {
                 copyOK = false;
-                e.printStackTrace();
+                ErrorUtils.onException(e);
             }
         }
 

@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.util.LruCache;
 
 import net.nashlegend.sourcewall.App;
+import net.nashlegend.sourcewall.util.ErrorUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -119,14 +120,14 @@ public class RequestCache {
                         out.close();
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    ErrorUtils.onException(e);
                 } finally {
                     try {
                         if (out != null) {
                             out.close();
                         }
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        ErrorUtils.onException(e);
                     }
                 }
             }
@@ -170,14 +171,14 @@ public class RequestCache {
                         out.close();
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    ErrorUtils.onException(e);
                 } finally {
                     try {
                         if (out != null) {
                             out.close();
                         }
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        ErrorUtils.onException(e);
                     }
                 }
             }
@@ -209,14 +210,14 @@ public class RequestCache {
                         snapshot.getInputStream(DISK_CACHE_INDEX).close();
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    ErrorUtils.onException(e);
                 } finally {
                     try {
                         if (out != null) {
                             out.close();
                         }
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        ErrorUtils.onException(e);
                     }
                 }
             }
@@ -238,7 +239,7 @@ public class RequestCache {
                 try {
                     mDiskCacheLock.wait();
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    ErrorUtils.onException(e);
                 }
             }
             if (mDiskLruCache != null) {
@@ -248,7 +249,7 @@ public class RequestCache {
                         request = snapshot.getString(DISK_CACHE_INDEX);
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    ErrorUtils.onException(e);
                 }
             }
             return request;
@@ -262,7 +263,7 @@ public class RequestCache {
                     mDiskLruCache.remove(hashKeyForDisk(data));
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                ErrorUtils.onException(e);
             }
         }
     }
@@ -277,7 +278,7 @@ public class RequestCache {
                 try {
                     mDiskLruCache.delete();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    ErrorUtils.onException(e);
                 }
                 mDiskLruCache = null;
                 initDiskCache();
@@ -295,7 +296,7 @@ public class RequestCache {
                 try {
                     mDiskLruCache.flush();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    ErrorUtils.onException(e);
                 }
             }
         }
@@ -314,7 +315,7 @@ public class RequestCache {
                         mDiskLruCache = null;
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    ErrorUtils.onException(e);
                 }
             }
         }

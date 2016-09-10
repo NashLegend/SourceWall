@@ -44,6 +44,7 @@ import net.nashlegend.sourcewall.data.Config;
 import net.nashlegend.sourcewall.data.Consts.Extras;
 import net.nashlegend.sourcewall.data.Mob;
 import net.nashlegend.sourcewall.util.DisplayUtil;
+import net.nashlegend.sourcewall.util.ErrorUtils;
 import net.nashlegend.sourcewall.util.ImageSizeMap;
 import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;
@@ -251,7 +252,7 @@ public class TTextView extends TextView {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                ErrorUtils.onException(e);
             }
             if (drawable == null) {
                 drawable = getContext().getResources().getDrawable(R.drawable.ic_broken_image_24dp);

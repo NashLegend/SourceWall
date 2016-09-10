@@ -20,6 +20,7 @@ import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
+import net.nashlegend.sourcewall.util.ErrorUtils;
 import net.nashlegend.sourcewall.view.QuestionListItemView;
 import net.nashlegend.sourcewall.view.common.LoadingView;
 import net.nashlegend.sourcewall.view.common.LoadingView.ReloadListener;
@@ -140,7 +141,7 @@ public class QuestionsFragment extends BaseFragment implements ReloadListener, O
         try {
             loadQuestions(offset);
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            ErrorUtils.onException(e);
         }
     }
 

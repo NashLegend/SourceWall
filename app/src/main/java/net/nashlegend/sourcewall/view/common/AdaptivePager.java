@@ -5,6 +5,8 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
+import net.nashlegend.sourcewall.util.ErrorUtils;
+
 /**
  * Created by NashLegend on 2015/10/16 0016.
  */
@@ -22,7 +24,7 @@ public class AdaptivePager extends ViewPager {
         try {
             return super.onTouchEvent(ev);
         } catch (IllegalArgumentException ex) {
-            ex.printStackTrace();
+            ErrorUtils.onException(ex);
         }
         return false;
     }
@@ -32,7 +34,7 @@ public class AdaptivePager extends ViewPager {
         try {
             return super.onInterceptTouchEvent(ev);
         } catch (IllegalArgumentException ex) {
-            ex.printStackTrace();
+            ErrorUtils.onException(ex);
         }
         return false;
     }

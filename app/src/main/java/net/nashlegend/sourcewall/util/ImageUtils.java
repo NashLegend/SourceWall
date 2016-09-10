@@ -152,7 +152,7 @@ public class ImageUtils {
                         outputStream.close();
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    ErrorUtils.onException(e);
                 }
             }
             if (ok) {

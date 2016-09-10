@@ -47,6 +47,7 @@ import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
 import net.nashlegend.sourcewall.request.api.APIBase;
 import net.nashlegend.sourcewall.util.DisplayUtil;
+import net.nashlegend.sourcewall.util.ErrorUtils;
 import net.nashlegend.sourcewall.util.FileUtil;
 import net.nashlegend.sourcewall.util.PrefsUtil;
 import net.nashlegend.sourcewall.util.RegUtil;
@@ -347,7 +348,7 @@ public class Reply2Activity extends BaseActivity implements View.OnClickListener
                 ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            ErrorUtils.onException(e);
         }
     }
 

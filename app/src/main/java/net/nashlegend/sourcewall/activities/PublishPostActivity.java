@@ -50,6 +50,7 @@ import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.APIBase;
 import net.nashlegend.sourcewall.request.api.PostAPI;
+import net.nashlegend.sourcewall.util.ErrorUtils;
 import net.nashlegend.sourcewall.util.FileUtil;
 import net.nashlegend.sourcewall.util.PrefsUtil;
 import net.nashlegend.sourcewall.util.SketchUtil;
@@ -623,7 +624,7 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
                 ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            ErrorUtils.onException(e);
         }
     }
 

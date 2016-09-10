@@ -14,6 +14,7 @@ import net.nashlegend.sourcewall.data.Consts.Keys;
 import net.nashlegend.sourcewall.data.database.BaseDB;
 import net.nashlegend.sourcewall.data.database.gen.DaoMaster;
 import net.nashlegend.sourcewall.data.database.gen.DaoSession;
+import net.nashlegend.sourcewall.util.ErrorUtils;
 import net.nashlegend.sourcewall.util.ImageUtils;
 import net.nashlegend.sourcewall.util.PrefsUtil;
 
@@ -79,7 +80,7 @@ public class App extends Application {
             PackageInfo pi = pm.getPackageInfo(getApp().getPackageName(), 0);
             return pi.versionCode;
         } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+            ErrorUtils.onException(e);
         }
         return 1;
     }

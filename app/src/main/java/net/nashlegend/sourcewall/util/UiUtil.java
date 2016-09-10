@@ -64,13 +64,13 @@ public class UiUtil {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            ErrorUtils.onException(e);
         }
     }
 
     public static void hideIME(Activity activity) {
         try {
-            if (activity.getCurrentFocus() == null) {
+            if (activity == null || activity.getCurrentFocus() == null) {
                 return;
             }
             ((InputMethodManager) activity.getSystemService

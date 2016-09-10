@@ -105,7 +105,7 @@ public class ShareUtil {
         try {
             output.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            ErrorUtils.onException(e);
         }
 
         return result;

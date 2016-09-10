@@ -31,6 +31,7 @@ import net.nashlegend.sourcewall.request.RequestObject.RequestCallBack;
 import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
+import net.nashlegend.sourcewall.util.ErrorUtils;
 import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.view.SimpleCommentItemView;
 import net.nashlegend.sourcewall.view.common.LoadingView;
@@ -228,25 +229,13 @@ public class SimpleReplyActivity extends BaseActivity implements OnRefreshListen
         }
     }
 
-    //    private void hideInput(EditText editText) {
-    //        try {
-    //            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(
-    //                    INPUT_METHOD_SERVICE);
-    //            if (inputMethodManager != null && inputMethodManager.isActive(editText)) {
-    //                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-    //            }
-    //        } catch (Exception e) {
-    //            e.printStackTrace();
-    //        }
-    //    }
-
     private void hideInput() {
         try {
             if (getCurrentFocus() != null) {
                 ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            ErrorUtils.onException(e);
         }
     }
 

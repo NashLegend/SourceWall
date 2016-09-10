@@ -2,6 +2,7 @@ package net.nashlegend.sourcewall.request;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.request.api.UserAPI;
+import net.nashlegend.sourcewall.util.ErrorUtils;
 import net.nashlegend.sourcewall.util.ToastUtil;
 
 import org.json.JSONArray;
@@ -146,7 +147,7 @@ public class JsonHandler {
         if (e == null) {
             responseObject.error_message = "unknown";
         } else {
-            e.printStackTrace();
+            ErrorUtils.onException(e);
             responseObject.error_message = e.getMessage();
             if (e instanceof IOException) {
                 if (e instanceof SocketTimeoutException) {

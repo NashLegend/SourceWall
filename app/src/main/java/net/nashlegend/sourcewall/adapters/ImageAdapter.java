@@ -5,6 +5,7 @@ import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
+import net.nashlegend.sourcewall.util.ErrorUtils;
 import net.nashlegend.sourcewall.view.ImageViewer;
 
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class ImageAdapter extends PagerAdapter {
                 container.removeView((View) object);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            ErrorUtils.onException(e);
         }
     }
 

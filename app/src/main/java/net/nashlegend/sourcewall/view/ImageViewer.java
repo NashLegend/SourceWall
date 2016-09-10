@@ -23,6 +23,7 @@ import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.data.Config;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.util.DisplayUtil;
+import net.nashlegend.sourcewall.util.ErrorUtils;
 import net.nashlegend.sourcewall.util.ImageUtils;
 import net.nashlegend.sourcewall.view.common.LoadingView;
 import net.nashlegend.sourcewall.view.common.ScalingImage;
@@ -219,7 +220,7 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
                         }
                         gifImageView.setImageDrawable(gifDrawable);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        ErrorUtils.onException(e);
                     }
                 } else {
                     gifImageView.setVisibility(GONE);

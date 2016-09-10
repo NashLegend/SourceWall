@@ -27,7 +27,6 @@ import java.util.Locale;
  * Created by NashLegend on 16/7/5.
  */
 
-@SuppressWarnings("ResultOfMethodCallIgnored")
 public class ErrorUtils {
 
     public static void onException(Throwable e) {
@@ -35,7 +34,7 @@ public class ErrorUtils {
     }
 
     public static void onException(Throwable e, String message) {
-        if (BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG && e != null && message != null) {
             Logger.e(e, message);
         }
     }

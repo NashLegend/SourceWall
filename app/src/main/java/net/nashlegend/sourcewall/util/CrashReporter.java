@@ -103,7 +103,7 @@ public class CrashReporter implements UncaughtExceptionHandler {
             out.write(info);
             out.flush();
         } catch (Exception e) {
-            e.printStackTrace();
+            ErrorUtils.onException(e);
         } finally {
             try {
                 if (out != null) {
@@ -113,7 +113,7 @@ public class CrashReporter implements UncaughtExceptionHandler {
                     writer.close();
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                ErrorUtils.onException(e);
             }
         }
     }
@@ -138,14 +138,14 @@ public class CrashReporter implements UncaughtExceptionHandler {
                 fis.close();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            ErrorUtils.onException(e);
         } finally {
             try {
                 if (fis != null) {
                     fis.close();
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                ErrorUtils.onException(e);
             }
         }
 
