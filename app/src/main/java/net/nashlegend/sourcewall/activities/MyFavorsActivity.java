@@ -10,13 +10,13 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 
 import net.nashlegend.sourcewall.R;
+import net.nashlegend.sourcewall.data.ChannelHelper;
 import net.nashlegend.sourcewall.data.database.BasketHelper;
 import net.nashlegend.sourcewall.fragment.FavorsFragment;
 import net.nashlegend.sourcewall.model.Basket;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
 import net.nashlegend.sourcewall.request.api.FavorAPI;
-import net.nashlegend.sourcewall.data.ChannelHelper;
 import net.nashlegend.sourcewall.util.ToastUtil;
 import net.nashlegend.sourcewall.view.common.LoadingView;
 

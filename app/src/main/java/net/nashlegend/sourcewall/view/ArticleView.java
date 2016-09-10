@@ -8,13 +8,13 @@ import android.widget.TextView;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.ArticleDetailAdapter;
+import net.nashlegend.sourcewall.data.Consts.Web;
 import net.nashlegend.sourcewall.events.ArticleFinishLoadingLatestRepliesEvent;
 import net.nashlegend.sourcewall.events.ArticleStartLoadingLatestRepliesEvent;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.ArticleAPI;
-import net.nashlegend.sourcewall.data.Consts.Web;
 import net.nashlegend.sourcewall.util.DateTimeUtil;
 import net.nashlegend.sourcewall.util.StyleChecker;
 import net.nashlegend.sourcewall.view.common.WWebView;

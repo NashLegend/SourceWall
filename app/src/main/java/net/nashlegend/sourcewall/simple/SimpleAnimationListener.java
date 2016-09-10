@@ -1,4 +1,4 @@
-package net.nashlegend.sourcewall.util;
+package net.nashlegend.sourcewall.simple;
 
 import android.animation.Animator;
 

@@ -8,8 +8,8 @@ import android.view.MenuItem;
 import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.R;
-import net.nashlegend.sourcewall.fragment.NoticesFragment;
 import net.nashlegend.sourcewall.data.Mob;
+import net.nashlegend.sourcewall.fragment.NoticesFragment;
 
 public class MessageCenterActivity extends BaseActivity {
 

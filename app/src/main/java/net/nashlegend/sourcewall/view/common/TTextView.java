@@ -42,9 +42,9 @@ import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.ImageActivity;
 import net.nashlegend.sourcewall.data.Config;
 import net.nashlegend.sourcewall.data.Consts.Extras;
+import net.nashlegend.sourcewall.data.Mob;
 import net.nashlegend.sourcewall.util.DisplayUtil;
 import net.nashlegend.sourcewall.util.ImageSizeMap;
-import net.nashlegend.sourcewall.data.Mob;
 import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;
 

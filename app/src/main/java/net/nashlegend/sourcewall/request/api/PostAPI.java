@@ -28,6 +28,7 @@ import net.nashlegend.sourcewall.request.parsers.PostParser;
 import net.nashlegend.sourcewall.request.parsers.PostPrepareDataParser;
 import net.nashlegend.sourcewall.request.parsers.PublishPostParser;
 import net.nashlegend.sourcewall.request.parsers.StringParser;
+import net.nashlegend.sourcewall.simple.SimpleSubscriber;
 import net.nashlegend.sourcewall.util.MDUtil;
 
 import org.jsoup.Jsoup;
@@ -46,7 +47,6 @@ import rx.Observable;
 import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
@@ -232,9 +232,9 @@ public class PostAPI extends APIBase {
     }
 
     public static void getAllMyGroupsAndMergeAndNotify() {
-        getAllMyGroupsAndMerge().subscribe(new Action1<ArrayList<MyGroup>>() {
+        getAllMyGroupsAndMerge().subscribe(new SimpleSubscriber<ArrayList<MyGroup>>() {
             @Override
-            public void call(ArrayList<MyGroup> myGroups) {
+            public void onNext(ArrayList<MyGroup> myGroups) {
                 PostPagerFragment.shouldNotifyDataSetChanged = true;
                 EventBus.getDefault().post(new GroupFetchedEvent());
             }

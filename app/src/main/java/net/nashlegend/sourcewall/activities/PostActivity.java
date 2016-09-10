@@ -28,6 +28,10 @@ import com.umeng.analytics.MobclickAgent;
 import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.PostDetailAdapter;
+import net.nashlegend.sourcewall.data.Config;
+import net.nashlegend.sourcewall.data.Consts.Extras;
+import net.nashlegend.sourcewall.data.Consts.RequestCode;
+import net.nashlegend.sourcewall.data.Mob;
 import net.nashlegend.sourcewall.dialogs.FavorDialog;
 import net.nashlegend.sourcewall.dialogs.ReportDialog;
 import net.nashlegend.sourcewall.events.PostFinishLoadingLatestRepliesEvent;
@@ -40,12 +44,9 @@ import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.MessageAPI;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
+import net.nashlegend.sourcewall.simple.SimpleSubscriber;
 import net.nashlegend.sourcewall.util.AutoHideUtil;
 import net.nashlegend.sourcewall.util.AutoHideUtil.AutoHideListener;
-import net.nashlegend.sourcewall.data.Config;
-import net.nashlegend.sourcewall.data.Consts.Extras;
-import net.nashlegend.sourcewall.data.Consts.RequestCode;
-import net.nashlegend.sourcewall.data.Mob;
 import net.nashlegend.sourcewall.util.RegUtil;
 import net.nashlegend.sourcewall.util.ShareUtil;
 import net.nashlegend.sourcewall.util.ToastUtil;
@@ -62,7 +63,6 @@ import de.greenrobot.event.EventBus;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
-import rx.functions.Action1;
 import rx.functions.Func1;
 
 public class PostActivity extends BaseActivity implements LListView.OnRefreshListener, View.OnClickListener, LoadingView.ReloadListener {
@@ -601,10 +601,10 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
         PostAPI
                 .getPostDetailByID(post.getId())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<ResponseObject<Post>>() {
+                .subscribe(new SimpleSubscriber<ResponseObject<Post>>() {
 
                     @Override
-                    public void call(ResponseObject<Post> result) {
+                    public void onNext(ResponseObject<Post> result) {
                         if (isFinishing()) {
                             return;
                         }

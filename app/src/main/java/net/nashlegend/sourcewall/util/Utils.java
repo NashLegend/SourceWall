@@ -1,7 +1,5 @@
 package net.nashlegend.sourcewall.util;
 
-import java.util.Objects;
-
 /**
  * Created by NashLegend on 16/9/6.
  */

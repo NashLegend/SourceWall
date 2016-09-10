@@ -6,12 +6,12 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
 import net.nashlegend.sourcewall.App;
+import net.nashlegend.sourcewall.simple.SimpleSubscriber;
 
 import java.util.Map;
 
 import rx.Observable;
 import rx.Subscriber;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -84,9 +84,9 @@ public class CacheHeaderUtil {
                     }
                 })
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Action1<String>() {
+                .subscribe(new SimpleSubscriber<String>() {
                     @Override
-                    public void call(String s) {
+                    public void onNext(String s) {
 
                     }
                 });

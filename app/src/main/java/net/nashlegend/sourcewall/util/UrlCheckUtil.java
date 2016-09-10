@@ -12,10 +12,10 @@ import net.nashlegend.sourcewall.activities.ArticleActivity;
 import net.nashlegend.sourcewall.activities.PostActivity;
 import net.nashlegend.sourcewall.activities.QuestionActivity;
 import net.nashlegend.sourcewall.activities.SingleReplyActivity;
+import net.nashlegend.sourcewall.data.Consts.Extras;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.Question;
-import net.nashlegend.sourcewall.data.Consts.Extras;
 
 import java.util.List;
 import java.util.regex.Matcher;

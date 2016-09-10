@@ -29,7 +29,6 @@ import net.nashlegend.sourcewall.request.parsers.QuestionCommentParser;
 import net.nashlegend.sourcewall.request.parsers.QuestionHtmlListParser;
 import net.nashlegend.sourcewall.request.parsers.QuestionListParser;
 import net.nashlegend.sourcewall.request.parsers.QuestionParser;
-import net.nashlegend.sourcewall.data.Config;
 import net.nashlegend.sourcewall.util.MDUtil;
 
 import org.jsoup.Jsoup;

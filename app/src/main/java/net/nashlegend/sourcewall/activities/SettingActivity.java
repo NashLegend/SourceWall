@@ -18,14 +18,14 @@ import android.widget.TextView;
 import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.R;
-import net.nashlegend.sourcewall.data.Tail;
-import net.nashlegend.sourcewall.events.LoginStateChangedEvent;
-import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.data.Config;
 import net.nashlegend.sourcewall.data.Consts.ImageLoadMode;
 import net.nashlegend.sourcewall.data.Consts.Keys;
 import net.nashlegend.sourcewall.data.Consts.TailType;
 import net.nashlegend.sourcewall.data.Mob;
+import net.nashlegend.sourcewall.data.Tail;
+import net.nashlegend.sourcewall.events.LoginStateChangedEvent;
+import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.PrefsUtil;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;
 

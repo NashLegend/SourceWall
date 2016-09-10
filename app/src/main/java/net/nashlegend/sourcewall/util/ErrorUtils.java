@@ -30,11 +30,11 @@ import java.util.Locale;
 @SuppressWarnings("ResultOfMethodCallIgnored")
 public class ErrorUtils {
 
-    public static void onException(Exception e) {
+    public static void onException(Throwable e) {
         onException(e, "default no message");
     }
 
-    public static void onException(Exception e, String message) {
+    public static void onException(Throwable e, String message) {
         if (BuildConfig.DEBUG) {
             Logger.e(e, message);
         }

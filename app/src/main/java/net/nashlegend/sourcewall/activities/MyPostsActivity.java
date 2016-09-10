@@ -15,13 +15,13 @@ import android.widget.AdapterView;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.PostAdapter;
+import net.nashlegend.sourcewall.data.Consts.Extras;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.AutoHideUtil;
-import net.nashlegend.sourcewall.data.Consts.Extras;
 import net.nashlegend.sourcewall.view.PostListItemView;
 import net.nashlegend.sourcewall.view.common.LoadingView;
 import net.nashlegend.sourcewall.view.common.listview.LListView;

@@ -5,6 +5,7 @@ import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
 import net.nashlegend.sourcewall.App;
+import net.nashlegend.sourcewall.data.Consts.Keys;
 import net.nashlegend.sourcewall.data.database.BasketHelper;
 import net.nashlegend.sourcewall.events.LoginStateChangedEvent;
 import net.nashlegend.sourcewall.model.UserInfo;
@@ -15,7 +16,6 @@ import net.nashlegend.sourcewall.request.RequestBuilder;
 import net.nashlegend.sourcewall.request.RequestObject.RequestCallBack;
 import net.nashlegend.sourcewall.request.parsers.BooleanParser;
 import net.nashlegend.sourcewall.request.parsers.UserInfoParser;
-import net.nashlegend.sourcewall.data.Consts.Keys;
 import net.nashlegend.sourcewall.util.PrefsUtil;
 
 import de.greenrobot.event.EventBus;

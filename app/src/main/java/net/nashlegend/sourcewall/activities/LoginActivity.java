@@ -18,13 +18,13 @@ import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
+import net.nashlegend.sourcewall.data.Consts.Keys;
+import net.nashlegend.sourcewall.data.Consts.Web;
+import net.nashlegend.sourcewall.data.Mob;
 import net.nashlegend.sourcewall.events.LoginStateChangedEvent;
 import net.nashlegend.sourcewall.request.HttpUtil;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
-import net.nashlegend.sourcewall.data.Consts.Keys;
-import net.nashlegend.sourcewall.data.Consts.Web;
-import net.nashlegend.sourcewall.data.Mob;
 import net.nashlegend.sourcewall.util.PrefsUtil;
 import net.nashlegend.sourcewall.util.UiUtil;
 

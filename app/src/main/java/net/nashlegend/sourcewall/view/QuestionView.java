@@ -11,10 +11,10 @@ import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.SimpleReplyActivity;
-import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.data.Consts.Extras;
-import net.nashlegend.sourcewall.util.DateTimeUtil;
 import net.nashlegend.sourcewall.data.Mob;
+import net.nashlegend.sourcewall.model.Question;
+import net.nashlegend.sourcewall.util.DateTimeUtil;
 import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.view.common.TTextView;
 

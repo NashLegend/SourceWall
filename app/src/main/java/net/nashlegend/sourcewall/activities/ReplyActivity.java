@@ -33,6 +33,10 @@ import android.widget.TextView;
 import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.R;
+import net.nashlegend.sourcewall.data.Consts.Extras;
+import net.nashlegend.sourcewall.data.Consts.Keys;
+import net.nashlegend.sourcewall.data.Consts.RequestCode;
+import net.nashlegend.sourcewall.data.Mob;
 import net.nashlegend.sourcewall.dialogs.InputDialog;
 import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Article;
@@ -42,11 +46,7 @@ import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.NetworkTask;
 import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
 import net.nashlegend.sourcewall.request.api.APIBase;
-import net.nashlegend.sourcewall.data.Consts.Extras;
-import net.nashlegend.sourcewall.data.Consts.Keys;
-import net.nashlegend.sourcewall.data.Consts.RequestCode;
 import net.nashlegend.sourcewall.util.FileUtil;
-import net.nashlegend.sourcewall.data.Mob;
 import net.nashlegend.sourcewall.util.PrefsUtil;
 import net.nashlegend.sourcewall.util.RegUtil;
 import net.nashlegend.sourcewall.util.SketchUtil;
@@ -97,7 +97,7 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
         if (aceModel instanceof Question) {
             setTitle("回答问题");
             editText.setHint(R.string.hint_answer);
-        }else if (aceModel instanceof Post){
+        } else if (aceModel instanceof Post) {
             editText.setHint(R.string.hint_in_simple_reply);
         }
         publishButton = (ImageButton) findViewById(R.id.btn_publish);

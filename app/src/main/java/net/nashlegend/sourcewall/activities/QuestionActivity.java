@@ -25,6 +25,8 @@ import com.umeng.analytics.MobclickAgent;
 import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.QuestionDetailAdapter;
+import net.nashlegend.sourcewall.data.Consts.Extras;
+import net.nashlegend.sourcewall.data.Mob;
 import net.nashlegend.sourcewall.dialogs.FavorDialog;
 import net.nashlegend.sourcewall.dialogs.InputDialog;
 import net.nashlegend.sourcewall.dialogs.ReportDialog;
@@ -35,10 +37,9 @@ import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.MessageAPI;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
+import net.nashlegend.sourcewall.simple.SimpleSubscriber;
 import net.nashlegend.sourcewall.util.AutoHideUtil;
 import net.nashlegend.sourcewall.util.AutoHideUtil.AutoHideListener;
-import net.nashlegend.sourcewall.data.Consts.Extras;
-import net.nashlegend.sourcewall.data.Mob;
 import net.nashlegend.sourcewall.util.ShareUtil;
 import net.nashlegend.sourcewall.util.ToastUtil;
 import net.nashlegend.sourcewall.util.UiUtil;
@@ -52,7 +53,6 @@ import java.util.ArrayList;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
-import rx.functions.Action1;
 
 public class QuestionActivity extends BaseActivity implements LListView.OnRefreshListener, View.OnClickListener, LoadingView.ReloadListener {
 
@@ -397,9 +397,9 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
         QuestionAPI
                 .getQuestionDetailByID(question.getId())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<ResponseObject<Question>>() {
+                .subscribe(new SimpleSubscriber<ResponseObject<Question>>() {
                     @Override
-                    public void call(ResponseObject<Question> result) {
+                    public void onNext(ResponseObject<Question> result) {
                         if (isFinishing()) {
                             return;
                         }

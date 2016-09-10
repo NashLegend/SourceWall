@@ -3,6 +3,7 @@ package net.nashlegend.sourcewall.request.api;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import net.nashlegend.sourcewall.data.Consts.ZipMode;
 import net.nashlegend.sourcewall.data.Tail;
 import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Article;
@@ -15,8 +16,6 @@ import net.nashlegend.sourcewall.request.RequestBuilder;
 import net.nashlegend.sourcewall.request.RequestObject.RequestCallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.parsers.ImageUploadParser;
-import net.nashlegend.sourcewall.data.Config;
-import net.nashlegend.sourcewall.data.Consts.ZipMode;
 import net.nashlegend.sourcewall.util.DeviceUtil;
 import net.nashlegend.sourcewall.util.ImageUtils;
 

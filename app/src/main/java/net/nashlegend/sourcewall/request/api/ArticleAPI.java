@@ -19,7 +19,6 @@ import net.nashlegend.sourcewall.request.parsers.ContentValueForKeyParser;
 import net.nashlegend.sourcewall.request.parsers.Parser;
 import net.nashlegend.sourcewall.request.parsers.SimpleArticleParser;
 import net.nashlegend.sourcewall.request.parsers.StringParser;
-import net.nashlegend.sourcewall.data.Config;
 import net.nashlegend.sourcewall.util.MDUtil;
 
 import org.jsoup.Jsoup;

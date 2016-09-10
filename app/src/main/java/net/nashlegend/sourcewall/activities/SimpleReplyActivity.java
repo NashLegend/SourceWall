@@ -20,6 +20,8 @@ import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.SimpleCommentAdapter;
+import net.nashlegend.sourcewall.data.Consts.Extras;
+import net.nashlegend.sourcewall.data.Mob;
 import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Answer;
 import net.nashlegend.sourcewall.model.Question;
@@ -29,8 +31,6 @@ import net.nashlegend.sourcewall.request.RequestObject.RequestCallBack;
 import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
-import net.nashlegend.sourcewall.data.Consts.Extras;
-import net.nashlegend.sourcewall.data.Mob;
 import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.view.SimpleCommentItemView;
 import net.nashlegend.sourcewall.view.common.LoadingView;

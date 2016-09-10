@@ -1,17 +1,11 @@
 package net.nashlegend.sourcewall.data;
 
-import android.text.TextUtils;
-
-import net.nashlegend.sourcewall.App;
-import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.BaseActivity;
 import net.nashlegend.sourcewall.activities.Reply2Activity;
 import net.nashlegend.sourcewall.activities.ReplyActivity;
 import net.nashlegend.sourcewall.data.Consts.ImageLoadMode;
 import net.nashlegend.sourcewall.data.Consts.Keys;
-import net.nashlegend.sourcewall.data.Consts.TailType;
 import net.nashlegend.sourcewall.util.DeviceUtil;
-import net.nashlegend.sourcewall.util.MDUtil;
 import net.nashlegend.sourcewall.util.PrefsUtil;
 
 /**
@@ -22,6 +16,7 @@ public class Config {
     public final static long throttleSpan = 500;
     public final static float longImageRatio = 2f;//长宽比超过此值，则认为是超长图
     public final static int ExitTapsGap = 1200;
+
     /**
      * 是否使用Html方式回复
      *
