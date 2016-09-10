@@ -65,17 +65,8 @@ android {
     }
 
     productFlavors {
-        qihu360 {
-            manifestPlaceholders = [CHANNEL_NAME: "360"]
-        }
-        baidu {
-            manifestPlaceholders = [CHANNEL_NAME: "baidu"]
-        }
         xiaomi {
             manifestPlaceholders = [CHANNEL_NAME: "xiaomi"]
-        }
-        meizu {
-            manifestPlaceholders = [CHANNEL_NAME: "meizu"]
         }
         github {
             manifestPlaceholders = [CHANNEL_NAME: "github"]
