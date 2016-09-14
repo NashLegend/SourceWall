@@ -164,6 +164,7 @@ public class ProfileFragment extends BaseFragment {
             PrefsUtil.saveBoolean(Keys.Key_Is_Night_Mode, true);
         }
         MobclickAgent.onEvent(getActivity(), Mob.Event_Switch_Day_Night_Mode);
+        getActivity().getWindow().setWindowAnimations(R.style.WindowAnimationFadeInOut);
         getActivity().recreate();
     }
 
