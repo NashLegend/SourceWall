@@ -121,7 +121,6 @@ public class MyFavorsActivity extends BaseActivity {
 
         @Override
         public int getCount() {
-            System.out.println(subItems.size());
             return subItems.size();
         }
     }

@@ -28,10 +28,6 @@ android {
                 WEIBO_APP_KEY: keys.WEIBO_APP_KEY,
                 UMENG_APP_KEY: keys.UMENG_APP_KEY,
         ]
-        resConfigs "zh-rCN"
-        ndk {
-            abiFilters "armeabi"
-        }
     }
 
     buildTypes {
@@ -67,6 +63,10 @@ android {
     productFlavors {
         xiaomi {
             manifestPlaceholders = [CHANNEL_NAME: "xiaomi"]
+            resConfigs "zh-rCN"
+            ndk {
+                abiFilters "armeabi"
+            }
         }
         github {
             manifestPlaceholders = [CHANNEL_NAME: "github"]

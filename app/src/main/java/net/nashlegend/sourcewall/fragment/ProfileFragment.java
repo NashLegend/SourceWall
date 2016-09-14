@@ -235,7 +235,6 @@ public class ProfileFragment extends BaseFragment {
     }
 
     public void onEventMainThread(LoginStateChangedEvent e) {
-        System.out.println(UserAPI.isLoggedIn());
         if (UserAPI.isLoggedIn()) {
             onLogin();
         } else {
