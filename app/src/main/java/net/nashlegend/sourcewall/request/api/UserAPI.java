@@ -75,6 +75,7 @@ public class UserAPI extends APIBase {
         return new RequestBuilder<UserInfo>()
                 .get()
                 .url(url)
+                .useCacheFirst(true, 1200000)
                 .parser(new UserInfoParser())
                 .callback(callBack)
                 .requestAsync();

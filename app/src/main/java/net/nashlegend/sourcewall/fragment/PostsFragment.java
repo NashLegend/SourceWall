@@ -238,10 +238,9 @@ public class PostsFragment extends BaseFragment implements ReloadListener, OnRef
                                     listView.setSelection(0);
                                 } else {
                                     //没有数据，页码不变
-                                    toast("没有加载到数据");
                                 }
                             } else {
-                                toast(R.string.load_failed);
+                                toastSingleton(R.string.load_failed);
                                 loadingView.onLoadFailed();
                             }
                             if (currentPage > 0) {

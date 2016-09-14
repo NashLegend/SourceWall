@@ -73,6 +73,8 @@ public class ProfileFragment extends BaseFragment {
     @BindView(R.id.img_msg)
     ImageView imgMsg;
 
+    View layoutView;
+
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -86,11 +88,17 @@ public class ProfileFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_profile, container, false);
-        ButterKnife.bind(this, view);
-        EventBus.getDefault().register(this);
-        initView();
-        return view;
+        if (layoutView == null) {
+            layoutView = inflater.inflate(R.layout.fragment_profile, container, false);
+            ButterKnife.bind(this, layoutView);
+            EventBus.getDefault().register(this);
+            initView();
+        } else {
+            if (layoutView.getParent() != null) {
+                ((ViewGroup) layoutView.getParent()).removeView(layoutView);
+            }
+        }
+        return layoutView;
     }
 
     @Override

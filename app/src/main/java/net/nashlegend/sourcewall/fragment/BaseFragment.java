@@ -38,25 +38,25 @@ public abstract class BaseFragment extends Fragment {
     }
 
     public void toast(int msgID) {
-        if (isActive()) {
+        if (isActive() && getUserVisibleHint()) {
             ToastUtil.toast(msgID);
         }
     }
 
     public void toast(String msg) {
-        if (isActive()) {
+        if (isActive() && getUserVisibleHint()) {
             ToastUtil.toast(msg);
         }
     }
 
     public void toastSingleton(int msgID) {
-        if (isActive()) {
+        if (isActive() && getUserVisibleHint()) {
             ToastUtil.toastSingleton(msgID);
         }
     }
 
     public void toastSingleton(String msg) {
-        if (isActive()) {
+        if (isActive() && getUserVisibleHint()) {
             ToastUtil.toastSingleton(msg);
         }
     }

@@ -92,7 +92,7 @@ public class PostAPI extends APIBase {
                 break;
             case SubItem.Type_Private_Channel:
                 pairs.put("retrieve_type", "recent_replies");
-                timeout = 5000;
+                timeout = 60000;
                 break;
             case SubItem.Type_Single_Channel:
                 pairs.put("retrieve_type", "by_group");

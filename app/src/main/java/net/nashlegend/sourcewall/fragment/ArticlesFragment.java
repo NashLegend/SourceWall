@@ -179,7 +179,7 @@ public class ArticlesFragment extends BaseFragment implements ReloadListener, On
                                     }
                                 }
                             } else {
-                                toast(R.string.load_failed);
+                                toastSingleton(R.string.load_failed);
                                 loadingView.onLoadFailed();
                             }
                             if (adapter.getCount() > 0) {

@@ -259,10 +259,10 @@ public class QuestionsFragment extends BaseFragment implements ReloadListener, O
                                     adapter.notifyDataSetChanged();
                                     listView.setSelection(0);
                                 } else {
-                                    toast("没有加载到数据");
+                                    //没有数据，页码不变
                                 }
                             } else {
-                                toast(R.string.load_failed);
+                                toastSingleton(R.string.load_failed);
                                 loadingView.onLoadFailed();
                             }
                             if (currentPage > 0) {
