@@ -171,7 +171,6 @@
                 android:paddingBottom="@dimen/list_item_padding_vertical"
                 android:paddingLeft="@dimen/setting_padding_left"
                 android:paddingRight="@dimen/list_item_padding_horizontal"
-                android:paddingTop="@dimen/list_item_padding_vertical"
                 android:visibility="gone"
                 tools:visibility="visible">
 
@@ -186,6 +185,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
+                    android:layout_marginLeft="6dp"
                     android:lineSpacingExtra="@dimen/lineSpacingExtra"
                     android:text="@string/hint_simple_reply" />
             </LinearLayout>
