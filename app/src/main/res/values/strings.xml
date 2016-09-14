@@ -194,5 +194,6 @@
     <string name="hint_simple_reply">此选项用于回复科学人与小组贴子。使用简单回复时，发贴人或者被回复对象可能无法获得你已回贴的通知，但是此种方式较省流量(大约省10k);不使用简单模式时，你可以使用markdown语法进行回贴，以及在小组中使用匿名回贴。</string>
     <string name="display_group_first">打开首页时进入小组页面</string>
     <string name="hint_in_simple_reply">输入您的回复\n\n\n(当前处于简单回贴模式，略省流量，但被回贴人可能无法收到通知，你也无法使用匿名回贴，可以在设置中切换回贴模式)</string>
+    <string name="i_hate_badge">有消息时首页不显示红点</string>
 
 </resources>

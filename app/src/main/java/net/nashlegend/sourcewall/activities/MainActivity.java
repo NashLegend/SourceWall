@@ -7,6 +7,7 @@ import android.view.View;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.data.Config;
+import net.nashlegend.sourcewall.data.Consts.Keys;
 import net.nashlegend.sourcewall.events.NoticeNumChangedEvent;
 import net.nashlegend.sourcewall.fragment.ArticlePagerFragment;
 import net.nashlegend.sourcewall.fragment.BaseFragment;
@@ -77,7 +78,7 @@ public class MainActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         if (UserAPI.isLoggedIn()) {
-            if (crtFragment != profileFragment) {
+            if (crtFragment != profileFragment && !PrefsUtil.readBoolean(Keys.Key_I_Hate_Badge, false)) {
                 checkUnread();
             }
         }

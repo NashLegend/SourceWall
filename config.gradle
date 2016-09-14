@@ -1,6 +1,6 @@
 import java.text.SimpleDateFormat
 
-def supportVersion = "24.2.0"
+def supportVersion = "24.2.1"
 
 def releaseTime() {
     def format = new SimpleDateFormat("yyyyMMdd", Locale.CHINA);

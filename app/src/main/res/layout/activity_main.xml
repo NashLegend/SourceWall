@@ -106,12 +106,14 @@
 
             <View
                 android:id="@+id/view_badge"
-                android:layout_width="6dp"
-                android:layout_height="6dp"
-                android:visibility="gone"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
                 android:layout_alignRight="@id/img_home"
                 android:layout_alignTop="@id/img_home"
-                android:background="@drawable/ic_badge" />
+                android:layout_marginRight="-2dp"
+                android:layout_marginTop="-2dp"
+                android:background="@drawable/ic_badge"
+                android:visibility="gone" />
         </RelativeLayout>
     </LinearLayout>
 

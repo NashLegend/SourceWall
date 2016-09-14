@@ -48,6 +48,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
     private CheckBox checkSimple;
     private CheckBox checkGroup;
+    private CheckBox checkBadge;
 
     private RadioButton buttonDefault;
     private RadioButton buttonPhone;
@@ -89,6 +90,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         checkBox = (CheckBox) findViewById(R.id.check_homepage);
         checkSimple = (CheckBox) findViewById(R.id.check_simple);
         checkGroup = (CheckBox) findViewById(R.id.check_group_first);
+        checkBadge = (CheckBox) findViewById(R.id.check_badge_fucker);
 
         buttonDefault.setOnCheckedChangeListener(this);
         buttonPhone.setOnCheckedChangeListener(this);
@@ -101,6 +103,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         checkBox.setOnCheckedChangeListener(this);
         checkSimple.setOnCheckedChangeListener(this);
         checkGroup.setOnCheckedChangeListener(this);
+        checkBadge.setOnCheckedChangeListener(this);
 
         imageModeView.setOnClickListener(this);
         replyModeView.setOnClickListener(this);
@@ -144,6 +147,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
         checkSimple.setChecked(PrefsUtil.readBoolean(Keys.Key_Reply_With_Simple, false));
         checkGroup.setChecked(PrefsUtil.readBoolean(Keys.Key_Show_Group_First_Homepage, false));
+        checkBadge.setChecked(PrefsUtil.readBoolean(Keys.Key_I_Hate_Badge, false));
 
         switch (PrefsUtil.readInt(Keys.Key_Use_Tail_Type, TailType.Type_Use_Default_Tail)) {
             case TailType.Type_Use_Default_Tail:
@@ -249,6 +253,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             PrefsUtil.saveBoolean(Keys.Key_Reply_With_Simple, isChecked);
         } else if (buttonView.getId() == R.id.check_group_first) {
             PrefsUtil.saveBoolean(Keys.Key_Show_Group_First_Homepage, isChecked);
+        } else if (buttonView.getId() == R.id.check_badge_fucker) {
+            PrefsUtil.saveBoolean(Keys.Key_I_Hate_Badge, isChecked);
         } else {
             if (isChecked) {
                 switch (buttonView.getId()) {
