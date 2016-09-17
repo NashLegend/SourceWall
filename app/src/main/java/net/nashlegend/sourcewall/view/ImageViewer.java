@@ -150,9 +150,9 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
 
     private void properScale(int width, int height) {
         if (width > 0 && height > 0 && (height + 0.0) / width > Config.longImageRatio) {
-            int sw = DisplayUtil.getScreenWidth(getContext());
+            float sw = DisplayUtil.getScreenWidth(getContext());
             float density = DisplayUtil.getPixelDensity(getContext());
-            float minDensity = doubleTapZoomDpi / 160;
+            float minDensity = doubleTapZoomDpi / 160.0f;
             if (sw <= width * density / minDensity) {
                 //如果默认情况下图片双击会超过屏幕，那么就不让他超过
                 scalingImage.setDoubleTapZoomScale(sw / width);
