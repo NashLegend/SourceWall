@@ -75,8 +75,8 @@ public class Reply2Activity extends BaseActivity implements View.OnClickListener
     private ProgressDialog progressDialog;
     private String tmpImagePath;
     private UComment comment;
-    private CheckBox checkBox;
     private boolean replyOK;
+    private CheckBox checkBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

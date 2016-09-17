@@ -129,7 +129,7 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
         post = getIntent().getParcelableExtra(Extras.Extra_Post);
         notice_id = getIntent().getStringExtra(Extras.Extra_Notice_Id);
         if (!TextUtils.isEmpty(post.getGroupName())) {
-            setTitle(post.getGroupName() + " -- 小组");
+            setTitle(post.getGroupName());
         }
         listView = (LListView) findViewById(R.id.list_detail);
         listView.setAdapter(adapter);

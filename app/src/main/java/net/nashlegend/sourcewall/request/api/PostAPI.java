@@ -580,15 +580,19 @@ public class PostAPI extends APIBase {
      * @param topic    贴子主题
      * @return resultObject
      */
-    public static NetworkTask<String> publishPost(String group_id, String csrf, String title, String body, String topic, RequestCallBack<String> callBack) {
+    public static NetworkTask<String> publishPost(String group_id, String csrf, String title,
+                                                  String body, String topic, boolean is_anon, RequestCallBack<String> callBack) {
         String url = "http://www.guokr.com/group/" + group_id + "/post/edit/";
         ParamsMap pairs = new ParamsMap();
         pairs.put("csrf_token", csrf);
         pairs.put("title", title);
         pairs.put("topic", topic);
         pairs.put("body", MDUtil.Markdown2Html(body) + getComplexReplyTail());
-        pairs.put("captcha", "");
         pairs.put("share_opts", "activity");
+        if (is_anon) {
+            pairs.put("is_anon", "y");
+        }
+        pairs.put("captcha", "");
 
         return new RequestBuilder<String>()
                 .post()

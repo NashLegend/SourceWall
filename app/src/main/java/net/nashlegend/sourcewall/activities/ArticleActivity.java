@@ -136,7 +136,7 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
         article = getIntent().getParcelableExtra(Extras.Extra_Article);
         notice_id = getIntent().getStringExtra(Extras.Extra_Notice_Id);
         if (!TextUtils.isEmpty(article.getSubjectName())) {
-            setTitle(article.getSubjectName() + " -- 科学人");
+            setTitle(article.getSubjectName());
         }
         adapter = new ArticleDetailAdapter(this);
         listView.setAdapter(adapter);

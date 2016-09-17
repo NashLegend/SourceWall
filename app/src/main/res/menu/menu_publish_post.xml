@@ -3,6 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".activities.PublishPostActivity">
     <item
+        android:id="@+id/action_anon"
+        android:checkable="true"
+        android:title="@string/anon"
+        app:actionViewClass="android.widget.CheckBox"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/action_reload_csrf"
         android:title="@string/reload_csrf_token"
         android:orderInCategory="100"

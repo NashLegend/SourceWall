@@ -178,12 +178,17 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
             toast(R.string.file_not_exists);
         }
         if (!PrefsUtil.readBoolean(Keys.Key_User_Has_Learned_Add_Image, false)) {
-            new AlertDialog.Builder(ReplyActivity.this).setTitle(R.string.hint).setMessage(R.string.tip_of_user_learn_add_image).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    PrefsUtil.saveBoolean(Keys.Key_User_Has_Learned_Add_Image, true);
-                }
-            }).create().show();
+            new AlertDialog.Builder(ReplyActivity.this)
+                    .setTitle(R.string.hint)
+                    .setMessage(R.string.tip_of_user_learn_add_image)
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            PrefsUtil.saveBoolean(Keys.Key_User_Has_Learned_Add_Image, true);
+                        }
+                    })
+                    .create()
+                    .show();
         }
         setImageButtonsUploading();
         APIBase.uploadImage(path, new SimpleCallBack<String>() {

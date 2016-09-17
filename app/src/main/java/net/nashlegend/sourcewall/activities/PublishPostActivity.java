@@ -26,6 +26,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -50,6 +51,7 @@ import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.APIBase;
 import net.nashlegend.sourcewall.request.api.PostAPI;
+import net.nashlegend.sourcewall.util.DisplayUtil;
 import net.nashlegend.sourcewall.util.ErrorUtils;
 import net.nashlegend.sourcewall.util.FileUtil;
 import net.nashlegend.sourcewall.util.PrefsUtil;
@@ -69,6 +71,8 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
+
+import static android.view.inputmethod.InputMethodManager.HIDE_NOT_ALWAYS;
 
 
 /**
@@ -92,6 +96,7 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
     private final ArrayList<Param> topics = new ArrayList<>();
     private final List<SubItem> subItems = new ArrayList<>();
     private boolean replyOK;
+    private CheckBox checkBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,7 +143,6 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
         csrf = "";
         topic = "";
         topics.clear();
-        setTitle(subItem.getName());
         titleEditText.setHint(R.string.hint_input_post_title);
         bodyEditText.setHint(R.string.hint_input_post_content);
         prepare();
@@ -406,25 +410,29 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
 
     private void invokeImageDialog() {
         String[] ways = {getString(R.string.add_image_from_disk), getString(R.string.add_image_from_camera), getString(R.string.add_image_from_link)};
-        new AlertDialog.Builder(this).setTitle(R.string.way_to_add_image).setItems(ways, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case 0:
-                        Intent intent = new Intent();
-                        intent.setType("image/*");
-                        intent.setAction(Intent.ACTION_GET_CONTENT);
-                        startOneActivityForResult(intent, RequestCode.Code_Invoke_Image_Selector);
-                        break;
-                    case 1:
-                        invokeCamera();
-                        break;
-                    case 2:
-                        invokeImageUrlDialog();
-                        break;
-                }
-            }
-        }).create().show();
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.way_to_add_image)
+                .setItems(ways, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 0:
+                                Intent intent = new Intent();
+                                intent.setType("image/*");
+                                intent.setAction(Intent.ACTION_GET_CONTENT);
+                                startOneActivityForResult(intent, RequestCode.Code_Invoke_Image_Selector);
+                                break;
+                            case 1:
+                                invokeCamera();
+                                break;
+                            case 2:
+                                invokeImageUrlDialog();
+                                break;
+                        }
+                    }
+                })
+                .create()
+                .show();
     }
 
     private String getPossibleUrlFromClipBoard() {
@@ -621,7 +629,8 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
     private void hideInput() {
         try {
             if (getCurrentFocus() != null) {
-                ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
+                        .hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), HIDE_NOT_ALWAYS);
             }
         } catch (Exception e) {
             ErrorUtils.onException(e);
@@ -693,29 +702,30 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
     }
 
     public void publishPost(String group_id, String csrf, String title, String body, String topic) {
-        NetworkTask task = PostAPI.publishPost(group_id, csrf, title, body, topic, new SimpleCallBack<String>() {
-            @Override
-            public void onFailure() {
-                MobclickAgent.onEvent(PublishPostActivity.this, Mob.Event_Publish_Post_Failed);
-                new AlertDialog.Builder(PublishPostActivity.this)
-                        .setTitle(R.string.hint)
-                        .setMessage(R.string.publish_post_failed)
-                        .setPositiveButton(R.string.ok, null)
-                        .show();
-                UiUtil.dismissDialog(progressDialog);
-            }
+        NetworkTask task = PostAPI.publishPost(group_id, csrf, title, body, topic,
+                checkBox != null && checkBox.isChecked(), new SimpleCallBack<String>() {
+                    @Override
+                    public void onFailure() {
+                        MobclickAgent.onEvent(PublishPostActivity.this, Mob.Event_Publish_Post_Failed);
+                        new AlertDialog.Builder(PublishPostActivity.this)
+                                .setTitle(R.string.hint)
+                                .setMessage(R.string.publish_post_failed)
+                                .setPositiveButton(R.string.ok, null)
+                                .show();
+                        UiUtil.dismissDialog(progressDialog);
+                    }
 
-            @Override
-            public void onSuccess() {
-                UiUtil.dismissDialog(progressDialog);
-                MobclickAgent.onEvent(PublishPostActivity.this, Mob.Event_Publish_Post_OK);
-                toast(R.string.publish_post_ok);
-                setResult(RESULT_OK);
-                replyOK = true;
-                tryClearSketch();
-                finish();
-            }
-        });
+                    @Override
+                    public void onSuccess() {
+                        UiUtil.dismissDialog(progressDialog);
+                        MobclickAgent.onEvent(PublishPostActivity.this, Mob.Event_Publish_Post_OK);
+                        toast(R.string.publish_post_ok);
+                        setResult(RESULT_OK);
+                        replyOK = true;
+                        tryClearSketch();
+                        finish();
+                    }
+                });
         showDialog(task);
     }
 
@@ -784,6 +794,12 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_publish_post, menu);
+        menu.findItem(R.id.action_anon).setVisible(true);
+        int padding = DisplayUtil.dip2px(6, this);
+        checkBox = (CheckBox) menu.findItem(R.id.action_anon).getActionView();
+        checkBox.setPadding(padding, 0, padding * 2, 0);
+        checkBox.setText(R.string.anon);
+        checkBox.setTextColor(Color.parseColor("#ffffff"));
         return true;
     }
 
