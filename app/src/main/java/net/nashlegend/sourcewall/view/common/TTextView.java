@@ -37,7 +37,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.umeng.analytics.MobclickAgent;
 
-import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.ImageActivity;
 import net.nashlegend.sourcewall.data.Config;
@@ -60,17 +59,30 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static net.nashlegend.sourcewall.App.getApp;
+
 /**
  * Created by NashLegend on 2015/1/13 0013
  * http://www.cnblogs.com/TerryBlog/archive/2013/04/02/2994815.html
  */
 public class TTextView extends TextView {
+    private static final float ImageDensity = 2.0f;//图片显示的像素密度
+    private static int guessWidth = 0;
     boolean noConsumeNonUrlClicks = true;
     boolean linkHit;
-    private double maxWidth;
-    private HtmlLoaderTask htmlTask;
-    private static final float ImageDensity = 2.0f;//图片显示的像素密度
     String html = "";
+    private double maxWidth;
+    /**
+     * 空emptyImageGetter，用于获取图片前的尺寸准备或者无图模式下返回一个图标
+     */
+    Html.ImageGetter emptyImageGetter = new Html.ImageGetter() {
+        @Override
+        public Drawable getDrawable(String source) {
+            //这是图片格式
+            return getEmptyDrawable(source);
+        }
+    };
+    private HtmlLoaderTask htmlTask;
 
     public TTextView(Context context) {
         super(context);
@@ -91,6 +103,99 @@ public class TTextView extends TextView {
     public TTextView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         setMovementMethod(LocalLinkMovementMethod.getInstance());
+    }
+
+    /**
+     * 消除Html尾部空白
+     *
+     * @param s 要处理的html span
+     * @return 处理过的span
+     */
+    public static CharSequence trimEnd(CharSequence s) {
+        int start = 0;
+        int end = s.length();
+        while (end > start && Character.isWhitespace(s.charAt(end - 1))) {
+            end--;
+        }
+        return s.subSequence(start, end);
+    }
+
+    /**
+     * 解决相对路径的问题
+     *
+     * @param spannedText 要处理的span
+     * @return 处理过的span
+     */
+    public static Spanned correctLinkPaths(Spanned spannedText) {
+        Object[] spans = spannedText.getSpans(0, spannedText.length(), Object.class);
+        for (Object span : spans) {
+            int start = spannedText.getSpanStart(span);
+            int end = spannedText.getSpanEnd(span);
+            int flags = spannedText.getSpanFlags(span);
+            if (span instanceof URLSpan) {
+                URLSpan urlSpan = (URLSpan) span;
+                if (!urlSpan.getURL().startsWith("http")) {
+                    if (urlSpan.getURL().startsWith("/")) {
+                        urlSpan = new URLSpan("http://www.guokr.com" + urlSpan.getURL());
+                    } else {
+                        urlSpan = new URLSpan("http://www.guokr.com/" + urlSpan.getURL());
+                    }
+                }
+                ((Spannable) spannedText).removeSpan(span);
+                ((Spannable) spannedText).setSpan(urlSpan, start, end, flags);
+            }
+        }
+        return spannedText;
+    }
+
+    private static void handleURLSpanClick(URLSpan urlSpan) {
+        UrlCheckUtil.redirectRequest(urlSpan.getURL());
+    }
+
+    private static void handleImageSpanClick(TextView textView, ImageSpan imageSpan) {
+        if (UiUtil.shouldThrottle()) {
+            return;
+        }
+        if (textView instanceof TTextView) {
+            String html = ((TTextView) textView).html;
+            String clickedUrl = imageSpan.getSource();
+            if (isImageSrcValid(clickedUrl) && !TextUtils.isEmpty(html)) {
+                Document doc = Jsoup.parse(html);
+                Elements elements = doc.getElementsByTag("img");
+                ArrayList<String> images = new ArrayList<>();
+                int clickedPosition = 0;
+                for (int i = 0; i < elements.size(); i++) {
+                    Element element = elements.get(i);
+                    String src = element.attr("src");
+                    if (isImageSrcValid(src)) {
+                        if (src.equals(clickedUrl)) {
+                            clickedPosition = images.size();
+                        }
+                        images.add(src);
+                    }
+                }
+                if (images.size() > 0) {
+                    Intent intent = new Intent();
+                    intent.putStringArrayListExtra(Extras.Extra_Image_String_Array, images);
+                    intent.putExtra(Extras.Extra_Image_Current_Position, clickedPosition);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    Context context = textView.getContext();
+                    MobclickAgent.onEvent(context, Mob.Event_Open_Image_From_TextView);
+                    if (context != null && context instanceof Activity) {
+                        intent.setClass(context, ImageActivity.class);
+                        ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(getApp(), R.anim.scale_in_center, 0);
+                        ActivityCompat.startActivity((Activity) context, intent, options.toBundle());
+                    } else {
+                        intent.setClass(getApp(), ImageActivity.class);
+                        getApp().startActivity(intent);
+                    }
+                }
+            }
+        }
+    }
+
+    private static boolean isImageSrcValid(String src) {
+        return !TextUtils.isEmpty(src) && src.startsWith("http") || src.startsWith("data:image/");
     }
 
     @Override
@@ -128,9 +233,148 @@ public class TTextView extends TextView {
         }
     }
 
+    /**
+     * 获取空白的图片，在图片加载完成前或者无图模式下用
+     *
+     * @param source
+     * @return
+     */
+    private Drawable getEmptyDrawable(String source) {
+        //这是图片格式
+        //http://2.im.guokr.com/xxxx.jpg?imageView2/1/w/480/h/329
+        float stretch = DisplayUtil.getPixelDensity(getApp());
+        maxWidth = getMaxImageWidth();
+        Drawable drawable;
+        if (source.startsWith("http")) {
+            int width = 0;
+            int height = 0;
+            String reg = ".+/w/(\\d+)/h/(\\d+)";
+            Matcher matcher = Pattern.compile(reg).matcher(source);
+            if (matcher.find()) {
+                width = (int) (Integer.valueOf(matcher.group(1)) * stretch);
+                height = (int) (Integer.valueOf(matcher.group(2)) * stretch);
+            } else {
+                Point point = ImageSizeMap.get(source);
+                if (point != null) {
+                    width = point.x;
+                    height = point.y;
+                }
+            }
+            if (width > 0 && height > 0) {
+                if (width > maxWidth) {
+                    height *= (maxWidth / width);
+                    width = (int) maxWidth;
+                }
+                drawable = new ColorDrawable(Color.parseColor("#dbdbdb"));//透明
+                drawable.setBounds(0, 0, width, height);
+            } else {
+                drawable = getContext().getResources().getDrawable(R.drawable.default_image);
+                if (drawable != null) {
+                    width = drawable.getIntrinsicWidth();
+                    height = drawable.getIntrinsicHeight();
+                    drawable.setBounds(0, 0, width, height);
+                }
+            }
+        } else {
+            drawable = getContext().getResources().getDrawable(R.drawable.default_image);
+            if (drawable != null) {
+                int width = drawable.getIntrinsicWidth();
+                int height = drawable.getIntrinsicHeight();
+                drawable.setBounds(0, 0, width, height);
+            }
+        }
+        return drawable;
+    }
+
+    private double getMaxImageWidth() {
+        int rawWidth = getWidth();
+        if (rawWidth > 0) {
+            guessWidth = rawWidth;
+        } else {
+            if (guessWidth > 0) {
+                rawWidth = guessWidth;
+            } else {
+                rawWidth = (int) (DisplayUtil.getScreenWidth(getContext()) - getApp().getResources().getDimension(R.dimen.list_item_padding_horizontal) * 2);
+                guessWidth = rawWidth;
+            }
+        }
+        int result = rawWidth - getPaddingLeft() - getPaddingRight();
+        if (result > 4096) {
+            result = 4096;
+        }
+        return result;
+    }
+
+    public static class LocalLinkMovementMethod extends LinkMovementMethod {
+        static LocalLinkMovementMethod sInstance;
+
+        public static LocalLinkMovementMethod getInstance() {
+            if (sInstance == null) {
+                sInstance = new LocalLinkMovementMethod();
+            }
+            return sInstance;
+        }
+
+        @Override
+        public boolean onTouchEvent(@NonNull TextView widget, @NonNull Spannable spannable, @NonNull MotionEvent event) {
+            int action = event.getAction();
+            if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_DOWN) {
+                int x = (int) event.getX();
+                int y = (int) event.getY();
+                x -= widget.getTotalPaddingLeft();
+                y -= widget.getTotalPaddingTop();
+                x += widget.getScrollX();
+                y += widget.getScrollY();
+                Layout layout = widget.getLayout();
+                int line = layout.getLineForVertical(y);
+                int off = layout.getOffsetForHorizontal(line, x);
+                URLSpan[] link = spannable.getSpans(off, off, URLSpan.class);
+                if (link.length > 0) {
+                    if (action == MotionEvent.ACTION_UP) {
+                        handleURLSpanClick(link[0]);
+                    } else {
+                        Selection.setSelection(spannable, spannable.getSpanStart(link[0]), spannable.getSpanEnd(link[0]));
+                    }
+                    if (widget instanceof TTextView) {
+                        ((TTextView) widget).linkHit = true;
+                    }
+                    return true;
+                } else {
+                    Selection.removeSelection(spannable);
+                    ImageSpan[] images = spannable.getSpans(off, off, ImageSpan.class);
+                    if (images.length > 0) {
+                        ImageSpan span = images[images.length - 1];//0貌似有时不太管用，images[images.length-1]应该可以解决
+                        if (action == MotionEvent.ACTION_UP) {
+                            handleImageSpanClick(widget, span);
+                        }
+                        if (widget instanceof TTextView) {
+                            ((TTextView) widget).linkHit = true;
+                        }
+                        return true;
+                    } else {
+                        Touch.onTouchEvent(widget, spannable, event);
+                        return false;
+                    }
+                }
+            }
+            return Touch.onTouchEvent(widget, spannable, event);
+        }
+    }
+
     class HtmlLoaderTask extends AsyncTask<String, Integer, CharSequence> {
 
         boolean someImageLoaded = false;//是否有图片加载出来
+        Html.ImageGetter imageGetter = new Html.ImageGetter() {
+            @Override
+            public Drawable getDrawable(String source) {
+                if (Config.shouldLoadImage()) {
+                    return getOnlineOrCachedDrawable(source);
+                } else {
+                    //无图模式下要这样的话，如果完全没有图，那么也会加载两遍
+                    return getEmptyOrCachedDrawable(source);
+                }
+            }
+        };
 
         @Override
         protected void onPreExecute() {
@@ -156,18 +400,6 @@ public class TTextView extends TextView {
             }
         }
 
-        Html.ImageGetter imageGetter = new Html.ImageGetter() {
-            @Override
-            public Drawable getDrawable(String source) {
-                if (Config.shouldLoadImage()) {
-                    return getOnlineOrCachedDrawable(source);
-                } else {
-                    //无图模式下要这样的话，如果完全没有图，那么也会加载两遍
-                    return getEmptyOrCachedDrawable(source);
-                }
-            }
-        };
-
         /**
          * 获取在线或者缓存的图片，有图模式用
          *
@@ -176,7 +408,7 @@ public class TTextView extends TextView {
          */
         private Drawable getOnlineOrCachedDrawable(String source) {
             someImageLoaded = true;
-            float stretch = DisplayUtil.getPixelDensity(App.getApp());
+            float stretch = DisplayUtil.getPixelDensity(getApp());
             Drawable drawable = null;
             try {
                 if (source.startsWith("http")) {
@@ -289,235 +521,6 @@ public class TTextView extends TextView {
                 return getEmptyDrawable(source);
             }
 
-        }
-    }
-
-    /**
-     * 消除Html尾部空白
-     *
-     * @param s 要处理的html span
-     * @return 处理过的span
-     */
-    public static CharSequence trimEnd(CharSequence s) {
-        int start = 0;
-        int end = s.length();
-        while (end > start && Character.isWhitespace(s.charAt(end - 1))) {
-            end--;
-        }
-        return s.subSequence(start, end);
-    }
-
-    /**
-     * 解决相对路径的问题
-     *
-     * @param spannedText 要处理的span
-     * @return 处理过的span
-     */
-    public static Spanned correctLinkPaths(Spanned spannedText) {
-        Object[] spans = spannedText.getSpans(0, spannedText.length(), Object.class);
-        for (Object span : spans) {
-            int start = spannedText.getSpanStart(span);
-            int end = spannedText.getSpanEnd(span);
-            int flags = spannedText.getSpanFlags(span);
-            if (span instanceof URLSpan) {
-                URLSpan urlSpan = (URLSpan) span;
-                if (!urlSpan.getURL().startsWith("http")) {
-                    if (urlSpan.getURL().startsWith("/")) {
-                        urlSpan = new URLSpan("http://www.guokr.com" + urlSpan.getURL());
-                    } else {
-                        urlSpan = new URLSpan("http://www.guokr.com/" + urlSpan.getURL());
-                    }
-                }
-                ((Spannable) spannedText).removeSpan(span);
-                ((Spannable) spannedText).setSpan(urlSpan, start, end, flags);
-            }
-        }
-        return spannedText;
-    }
-
-    /**
-     * 空emptyImageGetter，用于获取图片前的尺寸准备或者无图模式下返回一个图标
-     */
-    Html.ImageGetter emptyImageGetter = new Html.ImageGetter() {
-        @Override
-        public Drawable getDrawable(String source) {
-            //这是图片格式
-            return getEmptyDrawable(source);
-        }
-    };
-
-    /**
-     * 获取空白的图片，在图片加载完成前或者无图模式下用
-     *
-     * @param source
-     * @return
-     */
-    private Drawable getEmptyDrawable(String source) {
-        //这是图片格式
-        //http://2.im.guokr.com/xxx.jpg?imageView2/1/w/480/h/329
-        float stretch = DisplayUtil.getPixelDensity(App.getApp());
-        maxWidth = getMaxImageWidth();
-        Drawable drawable;
-        if (source.startsWith("http")) {
-            int width = 0;
-            int height = 0;
-            String reg = ".+/w/(\\d+)/h/(\\d+)";
-            Matcher matcher = Pattern.compile(reg).matcher(source);
-            if (matcher.find()) {
-                width = (int) (Integer.valueOf(matcher.group(1)) * stretch);
-                height = (int) (Integer.valueOf(matcher.group(2)) * stretch);
-            } else {
-                Point point = ImageSizeMap.get(source);
-                if (point != null) {
-                    width = point.x;
-                    height = point.y;
-                }
-            }
-            if (width > 0 && height > 0) {
-                if (width > maxWidth) {
-                    height *= (maxWidth / width);
-                    width = (int) maxWidth;
-                }
-                drawable = new ColorDrawable(Color.parseColor("#dbdbdb"));//透明
-                drawable.setBounds(0, 0, width, height);
-            } else {
-                drawable = getContext().getResources().getDrawable(R.drawable.default_image);
-                if (drawable != null) {
-                    width = drawable.getIntrinsicWidth();
-                    height = drawable.getIntrinsicHeight();
-                    drawable.setBounds(0, 0, width, height);
-                }
-            }
-        } else {
-            drawable = getContext().getResources().getDrawable(R.drawable.default_image);
-            if (drawable != null) {
-                int width = drawable.getIntrinsicWidth();
-                int height = drawable.getIntrinsicHeight();
-                drawable.setBounds(0, 0, width, height);
-            }
-        }
-        return drawable;
-    }
-
-    private double getMaxImageWidth() {
-        int w = getWidth() - getPaddingLeft() - getPaddingRight();
-        double result = 0;
-        if (getWidth() > 0) {
-            if (w > 0) {
-                result = w;
-            }
-        } else {
-            result = DisplayUtil.getScreenWidth(getContext()) * 0.8;
-        }
-        if (result > 4096) {
-            result = 4096;
-        }
-        return result;
-    }
-
-    private static void handleURLSpanClick(URLSpan urlSpan) {
-        UrlCheckUtil.redirectRequest(urlSpan.getURL());
-    }
-
-    private static void handleImageSpanClick(TextView textView, ImageSpan imageSpan) {
-        if (UiUtil.shouldThrottle()) {
-            return;
-        }
-        if (textView instanceof TTextView) {
-            String html = ((TTextView) textView).html;
-            String clickedUrl = imageSpan.getSource();
-            if (isImageSrcValid(clickedUrl) && !TextUtils.isEmpty(html)) {
-                Document doc = Jsoup.parse(html);
-                Elements elements = doc.getElementsByTag("img");
-                ArrayList<String> images = new ArrayList<>();
-                int clickedPosition = 0;
-                for (int i = 0; i < elements.size(); i++) {
-                    Element element = elements.get(i);
-                    String src = element.attr("src");
-                    if (isImageSrcValid(src)) {
-                        if (src.equals(clickedUrl)) {
-                            clickedPosition = images.size();
-                        }
-                        images.add(src);
-                    }
-                }
-                if (images.size() > 0) {
-                    Intent intent = new Intent();
-                    intent.putStringArrayListExtra(Extras.Extra_Image_String_Array, images);
-                    intent.putExtra(Extras.Extra_Image_Current_Position, clickedPosition);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    Context context = textView.getContext();
-                    MobclickAgent.onEvent(context, Mob.Event_Open_Image_From_TextView);
-                    if (context != null && context instanceof Activity) {
-                        intent.setClass(context, ImageActivity.class);
-                        ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(App.getApp(), R.anim.scale_in_center, 0);
-                        ActivityCompat.startActivity((Activity) context, intent, options.toBundle());
-                    } else {
-                        intent.setClass(App.getApp(), ImageActivity.class);
-                        App.getApp().startActivity(intent);
-                    }
-                }
-            }
-        }
-    }
-
-    private static boolean isImageSrcValid(String src) {
-        return !TextUtils.isEmpty(src) && src.startsWith("http") || src.startsWith("data:image/");
-    }
-
-    public static class LocalLinkMovementMethod extends LinkMovementMethod {
-        static LocalLinkMovementMethod sInstance;
-
-        public static LocalLinkMovementMethod getInstance() {
-            if (sInstance == null) {
-                sInstance = new LocalLinkMovementMethod();
-            }
-            return sInstance;
-        }
-
-        @Override
-        public boolean onTouchEvent(@NonNull TextView widget, @NonNull Spannable spannable, @NonNull MotionEvent event) {
-            int action = event.getAction();
-            if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_DOWN) {
-                int x = (int) event.getX();
-                int y = (int) event.getY();
-                x -= widget.getTotalPaddingLeft();
-                y -= widget.getTotalPaddingTop();
-                x += widget.getScrollX();
-                y += widget.getScrollY();
-                Layout layout = widget.getLayout();
-                int line = layout.getLineForVertical(y);
-                int off = layout.getOffsetForHorizontal(line, x);
-                URLSpan[] link = spannable.getSpans(off, off, URLSpan.class);
-                if (link.length > 0) {
-                    if (action == MotionEvent.ACTION_UP) {
-                        handleURLSpanClick(link[0]);
-                    } else {
-                        Selection.setSelection(spannable, spannable.getSpanStart(link[0]), spannable.getSpanEnd(link[0]));
-                    }
-                    if (widget instanceof TTextView) {
-                        ((TTextView) widget).linkHit = true;
-                    }
-                    return true;
-                } else {
-                    Selection.removeSelection(spannable);
-                    ImageSpan[] images = spannable.getSpans(off, off, ImageSpan.class);
-                    if (images.length > 0) {
-                        ImageSpan span = images[images.length - 1];//0貌似有时不太管用，images[images.length-1]应该可以解决
-                        if (action == MotionEvent.ACTION_UP) {
-                            handleImageSpanClick(widget, span);
-                        }
-                        if (widget instanceof TTextView) {
-                            ((TTextView) widget).linkHit = true;
-                        }
-                        return true;
-                    } else {
-                        Touch.onTouchEvent(widget, spannable, event);
-                        return false;
-                    }
-                }
-            }
-            return Touch.onTouchEvent(widget, spannable, event);
         }
     }
 }
