@@ -183,16 +183,16 @@ public class ArticleAPI extends APIBase {
                 .flatMap();
     }
 
-    public static Observable<UComment> getSingleComment(String url) {
+    public static Observable<ResponseObject<UComment>> getSingleComment(String url) {
         return new RequestBuilder<String>()
                 .get()
                 .url(url)
-                .withToken(false)// FIXME: 16/7/8 为啥来着
+                .withToken(false)
                 .parser(new StringParser())
                 .flatMap()
-                .flatMap(new Func1<ResponseObject<String>, Observable<UComment>>() {
+                .flatMap(new Func1<ResponseObject<String>, Observable<ResponseObject<UComment>>>() {
                     @Override
-                    public Observable<UComment> call(ResponseObject<String> response) {
+                    public Observable<ResponseObject<UComment>> call(ResponseObject<String> response) {
                         Document document = Jsoup.parse(response.result);
                         Elements elements = document.getElementsByTag("a");
                         if (elements.size() == 1) {
@@ -201,30 +201,33 @@ public class ArticleAPI extends APIBase {
                                 String article_id = matcher.group(1);
                                 String reply_id = matcher.group(2);
                                 return Observable.zip(getArticleSimpleByID(article_id), getSingleCommentByID(reply_id),
-                                        new Func2<ResponseObject<Article>, ResponseObject<UComment>, UComment>() {
+                                        new Func2<ResponseObject<Article>, ResponseObject<UComment>, ResponseObject<UComment>>() {
                                             @Override
-                                            public UComment call(ResponseObject<Article> article, ResponseObject<UComment> comment) {
+                                            public ResponseObject<UComment> call(ResponseObject<Article> article, ResponseObject<UComment> comment) {
                                                 if (article.ok && comment.ok) {
                                                     UComment uComment = comment.result;
                                                     uComment.setHostID(article.result.getId());
                                                     uComment.setHostTitle(article.result.getTitle());
-                                                    return uComment;
+                                                } else {
+                                                    if (!article.ok) {
+                                                        comment.statusCode = article.statusCode;
+                                                    }
                                                 }
-                                                return null;
+                                                return comment;
                                             }
                                         });
+                            } else {
+                                ResponseObject<UComment> comment = new ResponseObject<>();
+                                comment.copyPartFrom(response);
+                                comment.ok = false;
+                                return Observable.just(comment);
                             }
+                        } else {
+                            ResponseObject<UComment> comment = new ResponseObject<>();
+                            comment.copyPartFrom(response);
+                            comment.ok = false;
+                            return Observable.just(comment);
                         }
-                        return Observable.error(new IllegalStateException("not a correct redirect content"));
-                    }
-                })
-                .flatMap(new Func1<UComment, Observable<UComment>>() {
-                    @Override
-                    public Observable<UComment> call(UComment uComment) {
-                        if (uComment != null) {
-                            return Observable.just(uComment);
-                        }
-                        return Observable.error(new IllegalStateException("not a correct redirect content"));
                     }
                 })
                 .subscribeOn(Schedulers.io());
@@ -241,12 +244,12 @@ public class ArticleAPI extends APIBase {
      * @param notice_id 通知id
      * @return resultObject resultObject.result是UComment
      */
-    public static Observable<UComment> getSingleCommentByNoticeID(String notice_id) {
+    public static Observable<ResponseObject<UComment>> getSingleCommentByNoticeID(String notice_id) {
         String notice_url = "http://www.guokr.com/user/notice/" + notice_id + "/";
         return getSingleComment(notice_url);
     }
 
-    public static Observable<UComment> getSingleCommentFromRedirectUrl(String reply_url) {
+    public static Observable<ResponseObject<UComment>> getSingleCommentFromRedirectUrl(String reply_url) {
         return getSingleComment(reply_url);
     }
 

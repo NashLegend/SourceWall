@@ -14,7 +14,6 @@ import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.NetworkTask;
 import net.nashlegend.sourcewall.request.ParamsMap;
 import net.nashlegend.sourcewall.request.RequestBuilder;
-import net.nashlegend.sourcewall.request.RequestObject;
 import net.nashlegend.sourcewall.request.RequestObject.RequestCallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.parsers.BooleanParser;
@@ -414,19 +413,6 @@ public class PostAPI extends APIBase {
     }
 
     /**
-     * 匿名回复
-     *
-     * @param id       贴子id
-     * @param content  回复内容
-     * @param callBack
-     * @return ResponseObject.result is the reply_id if ok;
-     */
-    public static RequestObject<String> replyPostAnonymous(String id, String content, RequestCallBack<String> callBack) {
-        // TODO: 16/4/27
-        return null;
-    }
-
-    /**
      * 根据一条通知的id获取所有内容
      * 先是：http://www.guokr.com/user/notice/8738252/
      * 跳到：http://www.guokr.com/post/reply/654321/
@@ -434,7 +420,7 @@ public class PostAPI extends APIBase {
      * @param notice_id 通知id
      * @return resultObject resultObject.result是UComment
      */
-    public static Observable<UComment> getSingleCommentByNotice(String notice_id) {
+    public static Observable<ResponseObject<UComment>> getSingleCommentByNotice(String notice_id) {
         String notice_url = "http://www.guokr.com/user/notice/" + notice_id + "/";
         return new RequestBuilder<String>()
                 .get()
@@ -457,9 +443,9 @@ public class PostAPI extends APIBase {
                         return Observable.error(new IllegalStateException("not a correct redirect content"));
                     }
                 })
-                .flatMap(new Func1<String, Observable<UComment>>() {
+                .flatMap(new Func1<String, Observable<ResponseObject<UComment>>>() {
                     @Override
-                    public Observable<UComment> call(String id) {
+                    public Observable<ResponseObject<UComment>> call(String id) {
                         return getSingleCommentByID(id);
                     }
                 })
@@ -472,7 +458,7 @@ public class PostAPI extends APIBase {
      * @param url 评论id
      * @return resultObject resultObject.result是UComment
      */
-    public static Observable<UComment> getSingleCommentFromRedirectUrl(String url) {
+    public static Observable<ResponseObject<UComment>> getSingleCommentFromRedirectUrl(String url) {
         //url sample：http://www.guokr.com/post/reply/6224695/
         //uri http://www.guokr.com/post/666281/reply/6224695/
         Uri uri = Uri.parse(url);
@@ -490,7 +476,7 @@ public class PostAPI extends APIBase {
      * @param id 评论id
      * @return resultObject resultObject.result是UComment
      */
-    public static Observable<UComment> getSingleCommentByID(String id) {
+    public static Observable<ResponseObject<UComment>> getSingleCommentByID(String id) {
 //        String url = "http://www.guokr.com/apis/group/post_reply.json";
         String url = "http://www.guokr.com/apis/group/post_reply/" + id + ".json";
         //这样后面就不必带reply_id参数了
@@ -498,17 +484,7 @@ public class PostAPI extends APIBase {
                 .get()
                 .url(url)
                 .parser(new PostCommentParser())
-                .flatMap()
-                .flatMap(new Func1<ResponseObject<UComment>, Observable<UComment>>() {
-                    @Override
-                    public Observable<UComment> call(ResponseObject<UComment> responseObject) {
-                        if (responseObject.ok) {
-                            return Observable.just(responseObject.result);
-                        } else {
-                            return Observable.error(new IllegalStateException("Error Found"));
-                        }
-                    }
-                });
+                .flatMap();
     }
 
     /**

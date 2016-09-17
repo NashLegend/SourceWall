@@ -35,6 +35,7 @@ import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.RequestObject.RequestCallBack;
 import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
+import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.ArticleAPI;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
@@ -148,7 +149,7 @@ public class SingleReplyActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void load() {
-        Observable<UComment> observable = null;
+        Observable<ResponseObject<UComment>> observable = null;
         if (TextUtils.isEmpty(notice_id)) {
             switch (hostSection) {
                 case SubItem.Section_Article:
@@ -178,7 +179,7 @@ public class SingleReplyActivity extends BaseActivity implements View.OnClickLis
         observable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<UComment>() {
+                .subscribe(new Observer<ResponseObject<UComment>>() {
                     @Override
                     public void onCompleted() {
 
@@ -190,29 +191,39 @@ public class SingleReplyActivity extends BaseActivity implements View.OnClickLis
                     }
 
                     @Override
-                    public void onNext(UComment uComment) {
-                        floatingActionsMenu.setVisibility(View.VISIBLE);
-                        loadingView.onLoadSuccess();
-                        data = uComment;
-                        if (UserAPI.getUserID().equals(data.getAuthor().getId())) {
-                            deleteButton.setVisibility(View.VISIBLE);
+                    public void onNext(ResponseObject<UComment> response) {
+                        if (response.ok) {
+                            floatingActionsMenu.setVisibility(View.VISIBLE);
+                            loadingView.onLoadSuccess();
+                            data = response.result;
+                            if (UserAPI.getUserID().equals(data.getAuthor().getId())) {
+                                deleteButton.setVisibility(View.VISIBLE);
+                            } else {
+                                deleteButton.setVisibility(View.GONE);
+                            }
+                            if (hostSection == SubItem.Section_Article) {
+                                Article article = new Article();
+                                article.setTitle(data.getHostTitle());
+                                article.setId(data.getHostID());
+                                host = article;
+                            } else if (hostSection == SubItem.Section_Post) {
+                                Post post = new Post();
+                                post.setTitle(data.getHostTitle());
+                                post.setId(data.getHostID());
+                                host = post;
+                            } else {
+                                toast("Something Happened");
+                            }
+                            initData();
                         } else {
-                            deleteButton.setVisibility(View.GONE);
+                            if (response.statusCode == 404) {
+                                toastSingleton(R.string.page_404);
+                                finish();
+                            } else {
+                                loadingView.onLoadFailed();
+                            }
                         }
-                        if (hostSection == SubItem.Section_Article) {
-                            Article article = new Article();
-                            article.setTitle(data.getHostTitle());
-                            article.setId(data.getHostID());
-                            host = article;
-                        } else if (hostSection == SubItem.Section_Post) {
-                            Post post = new Post();
-                            post.setTitle(data.getHostTitle());
-                            post.setId(data.getHostID());
-                            host = post;
-                        } else {
-                            toast("Something Happened");
-                        }
-                        initData();
+
                     }
                 });
     }

@@ -42,7 +42,7 @@ public class RegUtil {
      * @return
      */
     public static String html2PlainText(String content) {
-        return Html.fromHtml(content).toString().replaceAll("\n", "");
+        return Html.fromHtml(content).toString().replaceAll(OBJ, "").replaceAll("\n", "");
     }
 
     /**

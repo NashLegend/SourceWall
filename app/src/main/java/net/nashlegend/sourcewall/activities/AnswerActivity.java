@@ -142,8 +142,12 @@ public class AnswerActivity extends BaseActivity implements View.OnClickListener
         }
         QuestionAPI.getSingleAnswerFromRedirectUrl(redirectUri.toString(), new SimpleCallBack<Answer>() {
             @Override
-            public void onFailure() {
+            public void onFailure(@NonNull ResponseObject<Answer> result) {
                 loadingView.onLoadFailed();
+                if (result.statusCode == 404) {
+                    toastSingleton(R.string.article_404);
+                    finish();
+                }
             }
 
             @Override
