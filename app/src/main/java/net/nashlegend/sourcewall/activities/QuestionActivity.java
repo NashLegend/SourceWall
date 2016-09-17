@@ -316,6 +316,7 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
 
 
     private void followQuestion() {
+        MobclickAgent.onEvent(QuestionActivity.this, Mob.Event_Follow_Question);
         QuestionAPI.followQuestion(question.getId(), new SimpleCallBack<Boolean>() {
             @Override
             public void onFailure() {
