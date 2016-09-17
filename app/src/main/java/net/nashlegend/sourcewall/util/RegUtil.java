@@ -7,6 +7,8 @@ import android.text.Html;
  */
 public class RegUtil {
 
+    public static final String OBJ = String.valueOf((char)65532);
+
     public static String tryGetStringByLength(String str, int len) {
         if (str.length() > len) {
             return str.substring(0, len) + "...";
@@ -30,7 +32,7 @@ public class RegUtil {
      * @return
      */
     public static String html2PlainTextWithImageTag(String content) {
-        return Html.fromHtml(content.replaceAll("<img .*?/>|<img.*?>.*?</img>", "[图片]")).toString().replaceAll("\n", "");
+        return Html.fromHtml(content.replaceAll("<img .*?/>|<img.*?>.*?</img>", "[图片]")).toString().replaceAll(OBJ, "").replaceAll("\n", "");
     }
 
     /**

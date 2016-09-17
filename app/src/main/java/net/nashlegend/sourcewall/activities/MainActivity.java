@@ -105,10 +105,12 @@ public class MainActivity extends BaseActivity {
     }
 
     public void onEventMainThread(NoticeNumChangedEvent event) {
-        if (event.num > 0) {
-            badge.setVisibility(View.VISIBLE);
-        } else {
-            badge.setVisibility(View.GONE);
+        if (!PrefsUtil.readBoolean(Keys.Key_I_Hate_Badge, false)) {
+            if (event.num > 0) {
+                badge.setVisibility(View.VISIBLE);
+            } else {
+                badge.setVisibility(View.GONE);
+            }
         }
     }
 
