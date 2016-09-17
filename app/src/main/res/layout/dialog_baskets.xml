@@ -82,13 +82,13 @@
             android:hint="@string/hint_input_basket_name"
             android:maxLines="1"
             android:paddingBottom="5dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="5dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingTop="12dp"
             android:singleLine="true"
             android:textColor="@color/reply_input_text"
             android:textColorHint="@color/reply_hint"
-            android:textSize="@dimen/abc_text_size_small_material" />
+            android:textSize="16dp" />
 
         <Spinner
             android:id="@+id/spinner_categories"
