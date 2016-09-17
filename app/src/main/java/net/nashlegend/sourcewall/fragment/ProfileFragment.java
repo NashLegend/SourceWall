@@ -49,7 +49,6 @@ import de.greenrobot.event.EventBus;
 
 public class ProfileFragment extends BaseFragment {
 
-
     @BindView(R.id.image_avatar)
     ImageView imageAvatar;
     @BindView(R.id.user_name)

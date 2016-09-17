@@ -176,6 +176,7 @@
     <string name="post_404">贴子不存在</string>
     <string name="question_404">问题不存在</string>
     <string name="article_404">文章不存在</string>
+    <string name="page_404">页面不存在</string>
     <string name="me">我</string>
     <string name="report_bad_ad">垃圾广告</string>
     <string name="porn_messages">敏感或淫秽色情信息</string>
@@ -195,6 +196,5 @@
     <string name="display_group_first">打开首页时进入小组页面</string>
     <string name="hint_in_simple_reply">输入您的回复\n\n\n(当前处于简单回贴模式，略省流量，但被回贴人可能无法收到通知，你也无法使用匿名回贴，可以在设置中切换回贴模式)</string>
     <string name="i_hate_badge">有消息时首页不显示红点</string>
-    <string name="page_404">页面不存在</string>
 
 </resources>

@@ -660,7 +660,7 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
                             for (UComment comment : responseObject.result) {
                                 String cid = comment.getAuthor().isExists() ? comment.getAuthor().getId() : null;
                                 String hid = post == null ? null : post.getAuthor().getId();
-                                comment.setHostAuthor(cid != null && cid.length() > 3 && cid.equals(hid));
+                                comment.setHostAuthor(!"蒙面超人".equals(comment.getAuthor().getName()) && cid != null && cid.length() > 3 && cid.equals(hid));
                             }
                         }
                         return responseObject;
