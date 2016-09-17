@@ -26,7 +26,6 @@ import android.widget.TextView;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.data.Config;
@@ -82,7 +81,7 @@ public class AnswerActivity extends BaseActivity implements View.OnClickListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_answer);
-        MobclickAgent.onEvent(this, Mob.Event_Open_Answer);
+        Mob.onEvent(Mob.Event_Open_Answer);
         handler = new Handler();
         rootView = findViewById(R.id.rootView);
         appbar = (AppBarLayout) findViewById(R.id.app_bar);
@@ -356,7 +355,7 @@ public class AnswerActivity extends BaseActivity implements View.OnClickListener
     }
 
     private void replyAnswer() {
-        MobclickAgent.onEvent(this, Mob.Event_Open_Answer_Comment);
+        Mob.onEvent(Mob.Event_Open_Answer_Comment);
         Intent intent = new Intent(this, SimpleReplyActivity.class);
         intent.putExtra(Extras.Extra_Ace_Model, answer);
         startOneActivity(intent);
@@ -402,10 +401,10 @@ public class AnswerActivity extends BaseActivity implements View.OnClickListener
             }
         };
         if (isSupport) {
-            MobclickAgent.onEvent(AnswerActivity.this, Mob.Event_Support_Answer);
+            Mob.onEvent(Mob.Event_Support_Answer);
             QuestionAPI.supportAnswer(answer.getID(), callBack);
         } else {
-            MobclickAgent.onEvent(AnswerActivity.this, Mob.Event_Oppose_Answer);
+            Mob.onEvent(Mob.Event_Oppose_Answer);
             QuestionAPI.opposeAnswer(answer.getID(), callBack);
         }
     }
@@ -415,7 +414,7 @@ public class AnswerActivity extends BaseActivity implements View.OnClickListener
             gotoLogin();
             return;
         }
-        MobclickAgent.onEvent(AnswerActivity.this, Mob.Event_Bury_Answer);
+        Mob.onEvent(Mob.Event_Bury_Answer);
         final boolean bury = !answer.isHasBuried();
         RequestCallBack<Boolean> callBack = new SimpleCallBack<Boolean>() {
             @Override
@@ -456,7 +455,7 @@ public class AnswerActivity extends BaseActivity implements View.OnClickListener
             toastSingleton("已经感谢过");
             return;
         }
-        MobclickAgent.onEvent(AnswerActivity.this, Mob.Event_Thank_Answer);
+        Mob.onEvent(Mob.Event_Thank_Answer);
         QuestionAPI.thankAnswer(answer.getID(), new SimpleCallBack<Boolean>() {
             @Override
             public void onFailure(@NonNull ResponseObject<Boolean> result) {

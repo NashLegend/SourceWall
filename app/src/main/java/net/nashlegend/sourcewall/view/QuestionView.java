@@ -7,8 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import com.umeng.analytics.MobclickAgent;
-
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.SimpleReplyActivity;
 import net.nashlegend.sourcewall.data.Consts.Extras;
@@ -45,7 +43,7 @@ public class QuestionView extends AceView<Question> {
                 if (UiUtil.shouldThrottle()) {
                     return;
                 }
-                MobclickAgent.onEvent(getContext(), Mob.Event_Open_Question_Comment);
+                Mob.onEvent(Mob.Event_Open_Question_Comment);
                 Intent intent = new Intent(getContext(), SimpleReplyActivity.class);
                 intent.putExtra(Extras.Extra_Ace_Model, question);
                 getContext().startActivity(intent);

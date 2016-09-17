@@ -7,8 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import com.umeng.analytics.MobclickAgent;
-
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.NoticeAdapter;
 import net.nashlegend.sourcewall.data.Mob;
@@ -70,7 +68,7 @@ public class NoticeView extends AceView<Notice> implements View.OnClickListener 
     }
 
     private void ignoreNotice(final Notice notice) {
-        MobclickAgent.onEvent(getContext(), Mob.Event_Ignore_One_Notice);
+        Mob.onEvent(Mob.Event_Ignore_One_Notice);
         MessageAPI.ignoreOneNotice(notice.getId(), new SimpleCallBack<ArrayList<Notice>>() {
 
             @Override

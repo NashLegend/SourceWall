@@ -35,7 +35,6 @@ import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
-import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.ImageActivity;
@@ -180,7 +179,7 @@ public class TTextView extends TextView {
                     intent.putExtra(Extras.Extra_Image_Current_Position, clickedPosition);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     Context context = textView.getContext();
-                    MobclickAgent.onEvent(context, Mob.Event_Open_Image_From_TextView);
+                    Mob.onEvent(Mob.Event_Open_Image_From_TextView);
                     if (context != null && context instanceof Activity) {
                         intent.setClass(context, ImageActivity.class);
                         ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(getApp(), R.anim.scale_in_center, 0);

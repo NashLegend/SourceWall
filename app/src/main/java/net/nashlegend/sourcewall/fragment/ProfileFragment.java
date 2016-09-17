@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
@@ -170,7 +169,7 @@ public class ProfileFragment extends BaseFragment {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
             PrefsUtil.saveBoolean(Keys.Key_Is_Night_Mode, true);
         }
-        MobclickAgent.onEvent(getActivity(), Mob.Event_Switch_Day_Night_Mode);
+        Mob.onEvent(Mob.Event_Switch_Day_Night_Mode);
         getActivity().getWindow().setWindowAnimations(R.style.WindowAnimationFadeInOut);
         getActivity().recreate();
     }

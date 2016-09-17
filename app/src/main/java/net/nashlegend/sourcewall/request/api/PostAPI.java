@@ -3,6 +3,7 @@ package net.nashlegend.sourcewall.request.api;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import net.nashlegend.sourcewall.data.Mob;
 import net.nashlegend.sourcewall.data.database.GroupHelper;
 import net.nashlegend.sourcewall.data.database.gen.MyGroup;
 import net.nashlegend.sourcewall.events.GroupFetchedEvent;
@@ -350,6 +351,7 @@ public class PostAPI extends APIBase {
                             final ParamsMap pairs = new ParamsMap();
                             pairs.put("csrf_token", response.result);
                             if (is_anon) {
+                                Mob.onEvent(Mob.Event_Reply_Post_Anon);
                                 pairs.put("is_anon", "y");
                             }
                             String tail = getComplexReplyTail();
@@ -566,6 +568,7 @@ public class PostAPI extends APIBase {
         pairs.put("body", MDUtil.Markdown2Html(body) + getComplexReplyTail());
         pairs.put("share_opts", "activity");
         if (is_anon) {
+            Mob.onEvent(Mob.Event_Publish_Post_Anon);
             pairs.put("is_anon", "y");
         }
         pairs.put("captcha", "");

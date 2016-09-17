@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.AceAdapter;
+import net.nashlegend.sourcewall.data.Mob;
 import net.nashlegend.sourcewall.model.Answer;
 import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
@@ -51,6 +52,7 @@ public class MyAnswersActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_answers);
+        Mob.onEvent(Mob.Event_Open_My_Answers);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         toolbar.setOnClickListener(new View.OnClickListener() {

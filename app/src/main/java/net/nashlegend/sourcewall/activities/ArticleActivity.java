@@ -23,7 +23,6 @@ import android.widget.ProgressBar;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
-import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
@@ -109,7 +108,7 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
         progressBar = (ProgressBar) findViewById(R.id.article_loading);
         appbar = (AppBarLayout) findViewById(R.id.app_bar);
         listView = (LListView) findViewById(R.id.list_detail);
-        MobclickAgent.onEvent(this, Mob.Event_Open_Article);
+        Mob.onEvent(Mob.Event_Open_Article);
         loadingView.setReloadListener(this);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -222,7 +221,7 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
         if (!UserAPI.isLoggedIn()) {
             gotoLogin();
         } else {
-            MobclickAgent.onEvent(this, Mob.Event_Recommend_Article);
+            Mob.onEvent(Mob.Event_Recommend_Article);
             InputDialog.Builder builder = new InputDialog.Builder(this);
             builder.setTitle(R.string.recommend_article);
             builder.setCancelable(true);
@@ -261,7 +260,7 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
             gotoLogin();
         } else {
             // basket dialog
-            MobclickAgent.onEvent(this, Mob.Event_Favor_Article);
+            Mob.onEvent(Mob.Event_Favor_Article);
             new FavorDialog.Builder(this).setTitle(R.string.action_favor).create(article).show();
         }
     }
@@ -288,20 +287,20 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
                 startLoadDesc();
                 break;
             case R.id.action_share_to_wechat_circle:
-                MobclickAgent.onEvent(this, Mob.Event_Share_Article_To_Wechat_Circle);
+                Mob.onEvent(Mob.Event_Share_Article_To_Wechat_Circle);
                 ShareUtil.shareToWeiXinCircle(App.getApp(), article.getUrl(), article.getTitle(), article.getSummary(), null);
                 break;
             case R.id.action_share_to_wechat_friends:
-                MobclickAgent.onEvent(this, Mob.Event_Share_Article_To_Wechat_friend);
+                Mob.onEvent(Mob.Event_Share_Article_To_Wechat_friend);
                 ShareUtil.shareToWeiXinFriends(App.getApp(), article.getUrl(), article.getTitle(), article.getSummary(), null);
                 break;
             case R.id.action_share_to_weibo:
-                MobclickAgent.onEvent(this, Mob.Event_Share_Article_To_Weibo);
+                Mob.onEvent(Mob.Event_Share_Article_To_Weibo);
                 ShareUtil.shareToWeibo(this, article.getUrl(), article.getTitle(), article.getSummary(), null);
                 break;
             case R.id.action_open_in_browser:
                 if (!TextUtils.isEmpty(article.getUrl())) {
-                    MobclickAgent.onEvent(this, Mob.Event_Open_Article_In_Browser);
+                    Mob.onEvent(Mob.Event_Open_Article_In_Browser);
                     UrlCheckUtil.openWithBrowser(article.getUrl());
                 }
                 break;
@@ -470,7 +469,7 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
      * 倒序查看
      */
     public void startLoadDesc() {
-        MobclickAgent.onEvent(this, Mob.Event_Reverse_Read_Article);
+        Mob.onEvent(Mob.Event_Reverse_Read_Article);
         loadDesc = true;
         loadingView.startLoading();
         listView.setCanPullToLoadMore(false);
@@ -492,7 +491,7 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
      * 正序查看
      */
     private void startLoadAcs() {
-        MobclickAgent.onEvent(this, Mob.Event_Normal_Read_Article);
+        Mob.onEvent(Mob.Event_Normal_Read_Article);
         loadDesc = false;
         loadingView.startLoading();
         listView.setCanPullToLoadMore(false);

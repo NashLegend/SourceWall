@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.AceAdapter;
+import net.nashlegend.sourcewall.data.Mob;
 import net.nashlegend.sourcewall.model.SearchItem;
 import net.nashlegend.sourcewall.request.NetworkTask;
 import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
@@ -62,6 +63,7 @@ public class SearchActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+        Mob.onEvent(Mob.Event_Open_Search);
         ButterKnife.bind(this);
         adapter = new SearchAdapter(this);
         listSearch.setAdapter(adapter);
@@ -138,6 +140,9 @@ public class SearchActivity extends BaseActivity {
     }
 
     private void search(String type, final int page) {
+        if (page == 1) {
+            Mob.onEvent(Mob.Event_Action_Search);
+        }
         if (searchText.getText().toString().trim().length() == 0) {
             return;
         }

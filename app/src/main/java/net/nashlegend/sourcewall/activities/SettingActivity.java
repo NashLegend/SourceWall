@@ -15,8 +15,6 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import com.umeng.analytics.MobclickAgent;
-
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.data.Config;
 import net.nashlegend.sourcewall.data.Consts.ImageLoadMode;
@@ -59,6 +57,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
+        Mob.onEvent(Mob.Event_Open_Setting);
         Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
@@ -228,7 +227,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             UserAPI.logout();
-                            MobclickAgent.onEvent(SettingActivity.this, Mob.Event_Logout);
+                            Mob.onEvent(Mob.Event_Logout);
                             logText.setText(R.string.log_in);
                             EventBus.getDefault().post(new LoginStateChangedEvent());
                         }
@@ -304,7 +303,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         String crtTail = Tail.getSimpleReplyTail();
 
         if (crtTail.equals(preTail)) {
-            MobclickAgent.onEvent(this, Mob.Event_Modify_Tail);
+            Mob.onEvent(Mob.Event_Modify_Tail);
         }
 
         if (buttonAlways.isChecked()) {

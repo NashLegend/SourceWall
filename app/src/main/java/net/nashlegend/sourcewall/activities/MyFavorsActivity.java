@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.data.ChannelHelper;
+import net.nashlegend.sourcewall.data.Mob;
 import net.nashlegend.sourcewall.data.database.BasketHelper;
 import net.nashlegend.sourcewall.fragment.FavorsFragment;
 import net.nashlegend.sourcewall.model.Basket;
@@ -48,6 +49,7 @@ public class MyFavorsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_favors);
+        Mob.onEvent(Mob.Event_Open_My_Favors);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         adapter = new FavorPagerAdapter(getSupportFragmentManager());

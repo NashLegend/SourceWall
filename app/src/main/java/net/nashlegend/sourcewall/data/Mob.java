@@ -1,5 +1,9 @@
 package net.nashlegend.sourcewall.data;
 
+import com.umeng.analytics.MobclickAgent;
+
+import net.nashlegend.sourcewall.App;
+
 /**
  * Created by NashLegend on 2015/3/12 0012
  * 用户统计
@@ -35,11 +39,13 @@ public class Mob {
     public static final String Event_Like_Post = "Event_Like_Post";//赞贴子
     public static final String Event_Favor_Post = "Event_Favor_Post";//收藏贴子
     public static final String Event_Reply_Post = "Event_Reply_Post";//回复贴子
+    public static final String Event_Reply_Post_Anon = "Event_Reply_Post_Anon";//匿名回复贴子
     public static final String Event_Share_Post_To_Wechat_Circle = "Event_Share_Post_To_Wechat_Circle";//分享贴子到朋友圈
     public static final String Event_Share_Post_To_Wechat_friend = "Event_Share_Post_To_Wechat_friend";//分享贴子到微信好友
     public static final String Event_Share_Post_To_Weibo = "Event_Share_Post_To_Weibo";//分享贴子到新浪微博
     public static final String Event_Open_Post_In_Browser = "Event_Open_Post_In_Browser";//打浏览器中打开贴子
     public static final String Event_Publish_Post = "Event_Publish_Post";//用户发贴
+    public static final String Event_Publish_Post_Anon = "Event_Publish_Post_Anon";//用户匿名发贴
     public static final String Event_Publish_Post_OK = "Event_Publish_Post_OK";//发表贴子成功
     public static final String Event_Publish_Post_Failed = "Event_Publish_Post_Failed";//发表贴子失败
 
@@ -69,4 +75,21 @@ public class Mob {
     public static final String Event_Open_One_Notice = "Event_Open_One_Notice";//打开一条通知
     public static final String Event_Ignore_One_Notice = "Event_Ignore_One_Notice";//忽略一条通知
     public static final String Event_Ignore_All_Notice = "Event_Ignore_All_Notice";//忽略所有通知
+
+    //搜索
+    public static final String Event_Open_Search = "Event_Open_Search";//打开搜索
+    public static final String Event_Action_Search = "Event_Action_Search";//执行搜索
+
+    //设置
+    public static final String Event_Open_Setting = "Event_Open_Setting";//打开设置
+
+    //个人中心
+    public static final String Event_Open_My_Favors = "Event_Open_My_Favors";//打开我的收藏
+    public static final String Event_Open_My_Posts = "Event_Open_My_Posts";//打开我的帖子
+    public static final String Event_Open_My_Questions = "Event_Open_My_Questions";//打开我的问题
+    public static final String Event_Open_My_Answers = "Event_Open_My_Answers";//打开我的答案
+
+    public static void onEvent(String event) {
+        MobclickAgent.onEvent(App.getApp(), event);
+    }
 }

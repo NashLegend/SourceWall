@@ -13,8 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
-import com.umeng.analytics.MobclickAgent;
-
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.NoticeAdapter;
 import net.nashlegend.sourcewall.data.Mob;
@@ -69,7 +67,7 @@ public class NoticesFragment extends BaseFragment implements IChannelsFragment, 
                 }
                 if (view instanceof NoticeView) {
                     //这里要做两个请求，但是可以直接请求notice地址，让系统主动删除请求 TODO
-                    MobclickAgent.onEvent(getActivity(), Mob.Event_Open_One_Notice);
+                    Mob.onEvent(Mob.Event_Open_One_Notice);
                     Notice notice = ((NoticeView) view).getData();
                     if (!UrlCheckUtil.redirectRequest(notice.getUrl(), notice.getId())) {
                         MessageAPI.ignoreOneNotice(notice.getId());
@@ -153,7 +151,7 @@ public class NoticesFragment extends BaseFragment implements IChannelsFragment, 
         switch (id) {
             case R.id.action_ignore_all:
                 if (adapter.getCount() > 0) {
-                    MobclickAgent.onEvent(getActivity(), Mob.Event_Ignore_All_Notice);
+                    Mob.onEvent(Mob.Event_Ignore_All_Notice);
                     cancelPotentialTask();
                     ignoreAll();
                 }

@@ -7,7 +7,7 @@ import android.text.Html;
  */
 public class RegUtil {
 
-    public static final String OBJ = String.valueOf((char)65532);
+    public static final String OBJ = String.valueOf((char) 65532);
 
     public static String tryGetStringByLength(String str, int len) {
         if (str.length() > len) {

@@ -23,7 +23,6 @@ import android.widget.ProgressBar;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
-import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
@@ -97,7 +96,7 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
-        MobclickAgent.onEvent(this, Mob.Event_Open_Post);
+        Mob.onEvent(Mob.Event_Open_Post);
         loadingView = (LoadingView) findViewById(R.id.post_progress_loading);
         loadingView.setReloadListener(this);
         progressBar = (ProgressBar) findViewById(R.id.post_loading);
@@ -207,20 +206,20 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
                 break;
             case R.id.action_open_in_browser:
                 if (!TextUtils.isEmpty(post.getUrl())) {
-                    MobclickAgent.onEvent(this, Mob.Event_Open_Post_In_Browser);
+                    Mob.onEvent(Mob.Event_Open_Post_In_Browser);
                     UrlCheckUtil.openWithBrowser(post.getUrl());
                 }
                 break;
             case R.id.action_share_to_wechat_circle:
-                MobclickAgent.onEvent(this, Mob.Event_Share_Post_To_Wechat_Circle);
+                Mob.onEvent(Mob.Event_Share_Post_To_Wechat_Circle);
                 ShareUtil.shareToWeiXinCircle(App.getApp(), post.getUrl(), post.getTitle(), post.getTitle(), null);
                 break;
             case R.id.action_share_to_wechat_friends:
-                MobclickAgent.onEvent(this, Mob.Event_Share_Post_To_Wechat_friend);
+                Mob.onEvent(Mob.Event_Share_Post_To_Wechat_friend);
                 ShareUtil.shareToWeiXinFriends(App.getApp(), post.getUrl(), post.getTitle(), post.getTitle(), null);
                 break;
             case R.id.action_share_to_weibo:
-                MobclickAgent.onEvent(this, Mob.Event_Share_Post_To_Weibo);
+                Mob.onEvent(Mob.Event_Share_Post_To_Weibo);
                 ShareUtil.shareToWeibo(this, post.getUrl(), post.getTitle(), post.getTitle(), null);
                 break;
         }
@@ -241,7 +240,7 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
         if (!UserAPI.isLoggedIn()) {
             gotoLogin();
         } else {
-            MobclickAgent.onEvent(this, Mob.Event_Like_Post);
+            Mob.onEvent(Mob.Event_Like_Post);
             PostAPI.likePost(post.getId(), new SimpleCallBack<Boolean>() {
                 @Override
                 public void onSuccess() {
@@ -257,7 +256,7 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
         if (!UserAPI.isLoggedIn()) {
             gotoLogin();
         } else {
-            MobclickAgent.onEvent(this, Mob.Event_Favor_Post);
+            Mob.onEvent(Mob.Event_Favor_Post);
             new FavorDialog.Builder(this).setTitle(R.string.action_favor).create(post).show();
         }
     }
@@ -287,7 +286,7 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
      * 倒序查看
      */
     public void startLoadDesc() {
-        MobclickAgent.onEvent(this, Mob.Event_Reverse_Read_Post);
+        Mob.onEvent(Mob.Event_Reverse_Read_Post);
         loadDesc = true;
         loadingView.startLoading();
         listView.setCanPullToLoadMore(false);
@@ -309,7 +308,7 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
      * 正序查看
      */
     private void startLoadAcs() {
-        MobclickAgent.onEvent(this, Mob.Event_Normal_Read_Post);
+        Mob.onEvent(Mob.Event_Normal_Read_Post);
         loadDesc = false;
         loadingView.startLoading();
         listView.setCanPullToLoadMore(false);

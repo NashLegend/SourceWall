@@ -31,8 +31,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.umeng.analytics.MobclickAgent;
-
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.data.Consts.Extras;
 import net.nashlegend.sourcewall.data.Consts.Keys;
@@ -623,7 +621,7 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
         String title = titleEditText.getText().toString();
         String body = bodyEditText.getText().toString();
         publishPost(group_id, csrf, title, body, topic);
-        MobclickAgent.onEvent(this, Mob.Event_Publish_Post);
+        Mob.onEvent(Mob.Event_Publish_Post);
     }
 
     private void hideInput() {
@@ -706,7 +704,7 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
                 checkBox != null && checkBox.isChecked(), new SimpleCallBack<String>() {
                     @Override
                     public void onFailure() {
-                        MobclickAgent.onEvent(PublishPostActivity.this, Mob.Event_Publish_Post_Failed);
+                        Mob.onEvent(Mob.Event_Publish_Post_Failed);
                         new AlertDialog.Builder(PublishPostActivity.this)
                                 .setTitle(R.string.hint)
                                 .setMessage(R.string.publish_post_failed)
@@ -718,7 +716,7 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
                     @Override
                     public void onSuccess() {
                         UiUtil.dismissDialog(progressDialog);
-                        MobclickAgent.onEvent(PublishPostActivity.this, Mob.Event_Publish_Post_OK);
+                        Mob.onEvent(Mob.Event_Publish_Post_OK);
                         toast(R.string.publish_post_ok);
                         setResult(RESULT_OK);
                         replyOK = true;

@@ -20,7 +20,6 @@ import android.widget.ProgressBar;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
-import com.umeng.analytics.MobclickAgent;
 
 import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
@@ -70,7 +69,7 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question);
-        MobclickAgent.onEvent(this, Mob.Event_Open_Question);
+        Mob.onEvent(Mob.Event_Open_Question);
         loadingView = (LoadingView) findViewById(R.id.question_progress_loading);
         loadingView.setReloadListener(this);
         progressBar = (ProgressBar) findViewById(R.id.question_loading);
@@ -191,20 +190,20 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
                 break;
             case R.id.action_open_in_browser:
                 if (!TextUtils.isEmpty(question.getUrl())) {
-                    MobclickAgent.onEvent(this, Mob.Event_Open_Question_In_Browser);
+                    Mob.onEvent(Mob.Event_Open_Question_In_Browser);
                     UrlCheckUtil.openWithBrowser(question.getUrl());
                 }
                 break;
             case R.id.action_share_to_wechat_circle:
-                MobclickAgent.onEvent(this, Mob.Event_Share_Question_To_Wechat_Circle);
+                Mob.onEvent(Mob.Event_Share_Question_To_Wechat_Circle);
                 ShareUtil.shareToWeiXinCircle(App.getApp(), question.getUrl(), question.getTitle(), question.getSummary(), null);
                 break;
             case R.id.action_share_to_wechat_friends:
-                MobclickAgent.onEvent(this, Mob.Event_Share_Question_To_Wechat_friend);
+                Mob.onEvent(Mob.Event_Share_Question_To_Wechat_friend);
                 ShareUtil.shareToWeiXinFriends(App.getApp(), question.getUrl(), question.getTitle(), question.getSummary(), null);
                 break;
             case R.id.action_share_to_weibo:
-                MobclickAgent.onEvent(this, Mob.Event_Share_Question_To_Weibo);
+                Mob.onEvent(Mob.Event_Share_Question_To_Weibo);
                 ShareUtil.shareToWeibo(this, question.getUrl(), question.getTitle(), question.getSummary(), null);
                 break;
         }
@@ -256,7 +255,7 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
         if (!UserAPI.isLoggedIn()) {
             gotoLogin();
         } else {
-            MobclickAgent.onEvent(this, Mob.Event_Favor_Question);
+            Mob.onEvent(Mob.Event_Favor_Question);
             new FavorDialog.Builder(this).setTitle(R.string.action_favor).create(question).show();
         }
     }
@@ -265,7 +264,7 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
         if (!UserAPI.isLoggedIn()) {
             gotoLogin();
         } else {
-            MobclickAgent.onEvent(this, Mob.Event_Recommend_Question);
+            Mob.onEvent(Mob.Event_Recommend_Question);
             InputDialog.Builder builder = new InputDialog.Builder(this);
             builder.setTitle(R.string.recommend_question);
             builder.setCancelable(true);
@@ -316,7 +315,7 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
 
 
     private void followQuestion() {
-        MobclickAgent.onEvent(QuestionActivity.this, Mob.Event_Follow_Question);
+        Mob.onEvent(Mob.Event_Follow_Question);
         QuestionAPI.followQuestion(question.getId(), new SimpleCallBack<Boolean>() {
             @Override
             public void onFailure() {
@@ -331,7 +330,7 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
     }
 
     private void unfollowQuestion() {
-        MobclickAgent.onEvent(QuestionActivity.this, Mob.Event_Unfollow_Question);
+        Mob.onEvent(Mob.Event_Unfollow_Question);
         QuestionAPI.unfollowQuestion(question.getId(), new SimpleCallBack<Boolean>() {
             @Override
             public void onFailure() {

@@ -14,8 +14,6 @@ import android.webkit.CookieSyncManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.umeng.analytics.MobclickAgent;
-
 import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.data.Consts.Keys;
@@ -46,7 +44,7 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        MobclickAgent.onEvent(this, Mob.Event_Login);
+        Mob.onEvent(Mob.Event_Login);
         Toolbar toolbar = (Toolbar) findViewById(R.id.action_bar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {

@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.QuestionAdapter;
 import net.nashlegend.sourcewall.data.Consts.Extras;
+import net.nashlegend.sourcewall.data.Mob;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
@@ -49,6 +50,7 @@ public class MyQuestionsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_questions);
+        Mob.onEvent(Mob.Event_Open_My_Questions);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         toolbar.setOnClickListener(new View.OnClickListener() {

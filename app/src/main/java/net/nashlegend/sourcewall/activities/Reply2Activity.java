@@ -31,8 +31,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.umeng.analytics.MobclickAgent;
-
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.data.Consts.Extras;
 import net.nashlegend.sourcewall.data.Consts.Keys;
@@ -298,11 +296,11 @@ public class Reply2Activity extends BaseActivity implements View.OnClickListener
 
     private void publishReply(String rep) {
         if (aceModel instanceof Article) {
-            MobclickAgent.onEvent(Reply2Activity.this, Mob.Event_Reply_Article);
+            Mob.onEvent(Mob.Event_Reply_Article);
         } else if (aceModel instanceof Post) {
-            MobclickAgent.onEvent(Reply2Activity.this, Mob.Event_Reply_Post);
+            Mob.onEvent(Mob.Event_Reply_Post);
         } else if (aceModel instanceof Question) {
-            MobclickAgent.onEvent(Reply2Activity.this, Mob.Event_Answer_Question);
+            Mob.onEvent(Mob.Event_Answer_Question);
         }
         String header = "";
         if (comment != null) {

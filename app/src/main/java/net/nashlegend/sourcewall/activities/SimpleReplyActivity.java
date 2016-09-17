@@ -16,8 +16,6 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
-import com.umeng.analytics.MobclickAgent;
-
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.SimpleCommentAdapter;
 import net.nashlegend.sourcewall.data.Consts.Extras;
@@ -180,9 +178,9 @@ public class SimpleReplyActivity extends BaseActivity implements OnRefreshListen
                 }
 
                 if (aceModel instanceof Question) {
-                    MobclickAgent.onEvent(SimpleReplyActivity.this, Mob.Event_Comment_On_Question);
+                    Mob.onEvent(Mob.Event_Comment_On_Question);
                 } else if (aceModel instanceof Answer) {
-                    MobclickAgent.onEvent(SimpleReplyActivity.this, Mob.Event_Comment_On_Answer);
+                    Mob.onEvent(Mob.Event_Comment_On_Answer);
                 }
 
                 RequestCallBack<UComment> callBack = new SimpleCallBack<UComment>() {
