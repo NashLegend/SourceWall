@@ -431,14 +431,9 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
         Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         textPaint.setColor(Color.BLUE);
         textPaint.setTextSize(size);
-        float textFrom = (float) (size * 1.2);
+        float textFrom = (float) (size * 1.5);
         float textEndSpan = (float) (size * 0.3);
-        float[] widths = new float[displayed.length()];
-        textPaint.getTextWidths(displayed, 0, displayed.length(), widths);
-        float totalWidth = 0;
-        for (float width : widths) {
-            totalWidth += width;
-        }
+        float totalWidth = textPaint.measureText(displayed);
 
         //生成对应尺寸的bitmap
         Bitmap bitmap = Bitmap.createBitmap((int) (totalWidth + textFrom + textEndSpan), height, Bitmap.Config.ARGB_8888);
@@ -462,7 +457,9 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
         canvas.drawBitmap(sourceBitmap, matrix, paint);
 
         //画文字
-        canvas.drawText(displayed, textFrom, -textPaint.getFontMetrics().ascent, textPaint);
+        float actualHeight = textPaint.getFontMetrics().descent - textPaint.getFontMetrics().ascent;
+        float line = (height - actualHeight) / 2 - textPaint.getFontMetrics().ascent;
+        canvas.drawText(displayed, textFrom, line, textPaint);
 
         return new ImageSpan(this, bitmap, ImageSpan.ALIGN_BOTTOM);
     }
