@@ -23,6 +23,7 @@ import net.nashlegend.sourcewall.request.parsers.GroupListParser;
 import net.nashlegend.sourcewall.request.parsers.Parser;
 import net.nashlegend.sourcewall.request.parsers.PostCommentListParser;
 import net.nashlegend.sourcewall.request.parsers.PostCommentParser;
+import net.nashlegend.sourcewall.request.parsers.PostHtmlListParser;
 import net.nashlegend.sourcewall.request.parsers.PostListParser;
 import net.nashlegend.sourcewall.request.parsers.PostParser;
 import net.nashlegend.sourcewall.request.parsers.PostPrepareDataParser;
@@ -82,7 +83,7 @@ public class PostAPI extends APIBase {
                 .requestAsync();
     }
 
-    public static Observable<ResponseObject<ArrayList<Post>>> getPostList(int type, String key, int offset, boolean useCache) {
+    public static Observable<ResponseObject<ArrayList<Post>>> getPostList(int type, String key, int page, boolean useCache) {
         String url = "http://apis.guokr.com/group/post.json";
         ParamsMap pairs = new ParamsMap();
         long timeout = 600000;
@@ -100,7 +101,7 @@ public class PostAPI extends APIBase {
                 break;
         }
         pairs.put("limit", "20");
-        pairs.put("offset", String.valueOf(offset));
+        pairs.put("offset", String.valueOf(page * 20));
         return new RequestBuilder<ArrayList<Post>>()
                 .get()
                 .url(url)
@@ -110,6 +111,71 @@ public class PostAPI extends APIBase {
                 .parser(new PostListParser())
                 .flatMap();
     }
+
+    /**
+     * 与getPostList相同,只是加载热门时使用Html加载
+     *
+     * @param type
+     * @param key
+     * @param page     从0开始
+     * @param useCache
+     * @return
+     */
+    public static Observable<ResponseObject<ArrayList<Post>>> getPostListHotHtml(int type, String key, int page, boolean useCache) {
+        String url = "http://apis.guokr.com/group/post.json";
+        ParamsMap pairs = new ParamsMap();
+        Parser<ArrayList<Post>> parser = new PostListParser();
+        long timeout = 600000;
+        switch (type) {
+            case SubItem.Type_Collections:
+                url = "http://m.guokr.com/group/hot_posts/";
+                pairs.put("page", page + 1);
+                parser = new PostHtmlListParser();
+                break;
+            case SubItem.Type_Private_Channel:
+                pairs.put("retrieve_type", "recent_replies");
+                pairs.put("retrieve_type", "hot_post");
+                pairs.put("offset", String.valueOf(page * 20));
+                timeout = 60000;
+                break;
+            case SubItem.Type_Single_Channel:
+                pairs.put("retrieve_type", "by_group");
+                pairs.put("group_id", key);
+                pairs.put("limit", "20");
+                pairs.put("offset", String.valueOf(page * 20));
+                break;
+        }
+        return new RequestBuilder<ArrayList<Post>>()
+                .get()
+                .url(url)
+                .params(pairs)
+                .useCacheFirst(useCache)
+                .cacheTimeOut(timeout)
+                .parser(parser)
+                .flatMap();
+    }
+
+    /**
+     * 如果碰到热贴,先取html的,失败后才取json的,暂不用
+     *
+     * @param type
+     * @param key
+     * @param page
+     * @param useCache
+     * @return
+     */
+    public static Observable<ResponseObject<ArrayList<Post>>> getPostListMerge(int type, String key, int page, boolean useCache) {
+        Observable<ResponseObject<ArrayList<Post>>> html = getPostListHotHtml(type, key, page, useCache);
+        Observable<ResponseObject<ArrayList<Post>>> json = getPostList(type, key, page, useCache);
+        return Observable.concat(html, json)
+                .first(new Func1<ResponseObject<ArrayList<Post>>, Boolean>() {
+                    @Override
+                    public Boolean call(ResponseObject<ArrayList<Post>> arrayListResponseObject) {
+                        return arrayListResponseObject.ok;
+                    }
+                });
+    }
+
 
     /**
      * 加入小组

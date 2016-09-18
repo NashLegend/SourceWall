@@ -180,7 +180,7 @@ public class PostsFragment extends BaseFragment implements ReloadListener, OnRef
     private void loadPosts(final int loadedPage) {
         boolean useCache = loadedPage == 0 && adapter.getList().size() == 0;
         Observable<ResponseObject<ArrayList<Post>>> observable =
-                PostAPI.getPostList(subItem.getType(), subItem.getValue(), loadedPage * 20, useCache);
+                PostAPI.getPostList(subItem.getType(), subItem.getValue(), loadedPage, useCache);
         observable
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnUnsubscribe(new Action0() {
