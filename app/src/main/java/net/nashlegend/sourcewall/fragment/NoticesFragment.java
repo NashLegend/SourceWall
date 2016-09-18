@@ -49,6 +49,8 @@ public class NoticesFragment extends BaseFragment implements IChannelsFragment, 
     private NoticeAdapter adapter;
     private ProgressDialog progressDialog;
 
+    private int resumeTime = 0;
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notice_list, container, false);
@@ -81,6 +83,7 @@ public class NoticesFragment extends BaseFragment implements IChannelsFragment, 
     @Override
     public void onResume() {
         super.onResume();
+        resumeTime++;
         loadData();
     }
 
@@ -100,7 +103,7 @@ public class NoticesFragment extends BaseFragment implements IChannelsFragment, 
             @Override
             public void onSuccess(@NonNull ArrayList<Notice> result) {
                 loadingView.onLoadSuccess();
-                if (result.size() == 0) {
+                if (result.size() == 0 && resumeTime == 1) {
                     toast(R.string.no_notice);
                 }
                 EventBus.getDefault().post(new NoticeNumChangedEvent(result.size()));
