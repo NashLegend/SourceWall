@@ -74,6 +74,7 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
         scalingImage.setDoubleTapZoomDpi(doubleTapZoomDpi);
         loadingView = (LoadingView) findViewById(R.id.image_loading);
         loadingView.findViewById(R.id.rootView).setBackgroundColor(0);
+        loadingView.setReloadListener(this);
         scalingImage.setOnClickListener(this);
         gifImageView.setOnTouchListener(touchListener);
         this.setOnTouchListener(touchListener);
