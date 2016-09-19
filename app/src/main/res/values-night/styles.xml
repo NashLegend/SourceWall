@@ -5,11 +5,11 @@
         <item name="toolbarPopTheme">@style/ThemeOverlay.AppCompat.Dark</item>
 
         <!--提示框背景-->
-        <item name="android:alertDialogTheme">@style/AlertDialogTheme</item>
+        <item name="alertDialogTheme">@style/AlertDialogTheme</item>
         <!--对话框背景-->
-        <item name="android:dialogTheme">@style/DialogTheme</item>
+        <item name="dialogTheme">@style/DialogTheme</item>
         <!--ProgressBar样式-->
-        <item name="android:progressBarStyle">@style/Widget.AppCompat.ProgressBar</item>
+        <item name="progressBarStyle">@style/Widget.AppCompat.ProgressBar</item>
 
         <!--上面几行只在Night设置-->
         <!--下面几行也在Day中一一对应-->
