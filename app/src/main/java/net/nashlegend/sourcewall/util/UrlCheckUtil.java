@@ -9,13 +9,17 @@ import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.AnswerActivity;
 import net.nashlegend.sourcewall.activities.ArticleActivity;
+import net.nashlegend.sourcewall.activities.LoginActivity;
 import net.nashlegend.sourcewall.activities.PostActivity;
+import net.nashlegend.sourcewall.activities.PostListActivity;
 import net.nashlegend.sourcewall.activities.QuestionActivity;
 import net.nashlegend.sourcewall.activities.SingleReplyActivity;
 import net.nashlegend.sourcewall.data.Consts.Extras;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.Question;
+import net.nashlegend.sourcewall.model.SubItem;
+import net.nashlegend.sourcewall.request.api.UserAPI;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -66,9 +70,8 @@ public class UrlCheckUtil {
         String host = uri.getHost();
         String url = uri.toString();
         List<String> segments = uri.getPathSegments();
-        if ((host.equals("www.guokr.com") || host.equals("m.guokr.com")) && (segments != null && segments.size() >= 2)) {
+        if ((host.equals("www.guokr.com") || host.equals("m.guokr.com")) && (segments != null && segments.size() >= 1)) {
             String section = segments.get(0);
-            String secondSegment = segments.get(1);
             Intent intent = new Intent();
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra(Extras.Extra_Notice_Id, notice_id);
@@ -92,7 +95,7 @@ public class UrlCheckUtil {
                             //url.matches("^http://(www|m).guokr.com/article/\\d+.*"),http://www.guokr.com/article/438683/#comments
                             intent.setClass(App.getApp(), ArticleActivity.class);
                             Article article = new Article();
-                            article.setId(secondSegment);
+                            article.setId(segments.get(1));
                             intent.putExtra(Extras.Extra_Article, article);
                             App.getApp().startActivity(intent);
                         }
@@ -121,7 +124,7 @@ public class UrlCheckUtil {
                             //http://www.guokr.com/post/123456/
                             intent.setClass(App.getApp(), PostActivity.class);
                             Post post = new Post();
-                            post.setId(secondSegment);
+                            post.setId(segments.get(1));
                             intent.putExtra(Extras.Extra_Post, post);
                             App.getApp().startActivity(intent);
                         }
@@ -142,6 +145,40 @@ public class UrlCheckUtil {
                         }
                     }
                     break;
+                case "group":
+                    if (segments.size() == 1) {
+                        intent.setClass(App.getApp(), PostListActivity.class);
+                        SubItem subItem = new SubItem(SubItem.Section_Post, SubItem.Type_Collections, "小组热贴", "hot_posts");
+                        intent.putExtra(Extras.Extra_SubItem, subItem);
+                        App.getApp().startActivity(intent);
+                    } else if (segments.size() == 2) {
+                        if (url.matches("^http://(www|m).guokr.com/group/(\\d+)/?$")) {
+                            //http://www.guokr.com/group/63/
+                            String groupId = segments.get(1);
+                            intent.setClass(App.getApp(), PostListActivity.class);
+                            intent.putExtra(Extras.Extra_SubItem_ID, groupId);
+                            App.getApp().startActivity(intent);
+                        } else if (url.matches("^http://(www|m).guokr.com/group/hot_posts/?$")) {
+                            //http://www.guokr.com/group/hot_posts/
+                            intent.setClass(App.getApp(), PostListActivity.class);
+                            SubItem subItem = new SubItem(SubItem.Section_Post, SubItem.Type_Collections, "小组热贴", "hot_posts");
+                            intent.putExtra(Extras.Extra_SubItem, subItem);
+                            App.getApp().startActivity(intent);
+                        }
+                    } else if (segments.size() == 3) {
+                        if (url.matches("^http://(www|m).guokr.com/group/user/recent_replies/?$")) {
+                            if (UserAPI.isLoggedIn()) {
+                                intent.setClass(App.getApp(), PostListActivity.class);
+                                SubItem subItem = new SubItem(SubItem.Section_Post, SubItem.Type_Collections, "我的小组", "hot_posts");
+                                intent.putExtra(Extras.Extra_SubItem, subItem);
+                                App.getApp().startActivity(intent);
+                            } else {
+                                intent.setClass(App.getApp(), LoginActivity.class);
+                                App.getApp().startActivity(intent);
+                            }
+                        }
+                    }
+                    break;
                 case "question":
                     if (segments.size() == 2) {
                         if (url.matches("^http://(www|m).guokr.com/question/(\\d+)/.*answer(\\d+)$")) {
@@ -158,7 +195,7 @@ public class UrlCheckUtil {
                             //http://www.guokr.com/question/123456
                             intent.setClass(App.getApp(), QuestionActivity.class);
                             Question question = new Question();
-                            question.setId(secondSegment);
+                            question.setId(segments.get(1));
                             intent.putExtra(Extras.Extra_Question, question);
                             App.getApp().startActivity(intent);
                         }

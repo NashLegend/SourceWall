@@ -17,13 +17,14 @@ public class Consts {
 
     public static final class Extras {
         // 用于Intent传值时的Extra_Key
-        public static final String Extra_Ace_Model = "sourcewall.extra.ace.model.id";
-        public static final String Extra_Article = "sourcewall.extra.article.id";
-        public static final String Extra_Simple_Comment = "sourcewall.extra.simple.comment.id";
-        public static final String Extra_Post = "sourcewall.extra.post.id";
-        public static final String Extra_Question = "sourcewall.extra.question.id";
-        public static final String Extra_Answer = "sourcewall.extra.answer.id";
-        public static final String Extra_SubItem = "sourcewall.extra.subitem.id";
+        public static final String Extra_Ace_Model = "sourcewall.extra.ace.model";
+        public static final String Extra_Article = "sourcewall.extra.article";
+        public static final String Extra_Simple_Comment = "sourcewall.extra.simple.comment";
+        public static final String Extra_Post = "sourcewall.extra.post";
+        public static final String Extra_Question = "sourcewall.extra.question";
+        public static final String Extra_Answer = "sourcewall.extra.answer";
+        public static final String Extra_SubItem = "sourcewall.extra.subitem";
+        public static final String Extra_SubItem_ID = "sourcewall.extra.subitem.id";
         public static final String Extra_Should_Invalidate_Menu = "sourcewall.extra.should.invalidate.menu";
         public static final String Extra_Should_Load_Before_Shuffle = "sourcewall.extra.should.load.before.shuffle";
         public static final String Extra_Redirect_Uri = "sourcewall.extra.redirect.url";//通知的跳转链接

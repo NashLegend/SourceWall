@@ -56,6 +56,25 @@ import static net.nashlegend.sourcewall.data.Tail.getDefaultComplexTail;
 
 public class PostAPI extends APIBase {
 
+
+    public static NetworkTask<String> getGroupNameById(String id, RequestCallBack<String> callBack) {
+        String url = "http://m.guokr.com/group/" + id.trim() + "/";
+        return new RequestBuilder<String>()
+                .get()
+                .url(url)
+                .callback(callBack)
+                .useCacheFirst(true, Integer.MAX_VALUE)
+                .parser(new Parser<String>() {
+                    @Override
+                    public String parse(String response, ResponseObject<String> responseObject) throws Exception {
+                        String name = Jsoup.parse(response).getElementsByClass("group-name").text().trim();
+                        responseObject.ok = true;
+                        return name;
+                    }
+                })
+                .requestAsync();
+    }
+
     public static NetworkTask<Boolean> reportPost(String postId, String reason, RequestCallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/post/" + postId + "/";
         return UserAPI.report(url, reason, callBack);

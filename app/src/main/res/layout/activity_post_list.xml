@@ -1,10 +1,10 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/page_background"
+    android:orientation="vertical"
     tools:context=".activities.PostListActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -21,39 +21,8 @@
             app:popupTheme="?attr/toolbarPopTheme" />
     </android.support.design.widget.AppBarLayout>
 
-    <RelativeLayout
+    <FrameLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/app_bar">
-
-        <net.nashlegend.sourcewall.view.common.listview.LListView
-            android:id="@+id/list_posts"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/list_background"
-            android:divider="@drawable/divider_thin"
-            android:dividerHeight="@dimen/splitter_height"
-            android:footerDividersEnabled="false"
-            android:headerDividersEnabled="false"
-            tools:listitem="@layout/layout_post_item_view" />
-
-        <net.nashlegend.sourcewall.view.common.LoadingView
-            android:id="@+id/post_progress_loading"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone" />
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/button_reply"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            fab:fab_colorNormal="?attr/colorPrimaryBright"
-            fab:fab_colorPressed="?attr/colorPrimaryDark"
-            fab:fab_icon="@drawable/pencil" />
-
-    </RelativeLayout>
-
-</RelativeLayout>
+        android:layout_height="match_parent" />
+</LinearLayout>
