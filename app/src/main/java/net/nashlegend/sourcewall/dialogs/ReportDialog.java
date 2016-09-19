@@ -60,7 +60,7 @@ public class ReportDialog extends Dialog {
         }
 
         public ReportDialog create() {
-            dialog = new ReportDialog(mContext, R.style.AlertDialogTheme);
+            dialog = new ReportDialog(mContext);
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Service.LAYOUT_INFLATER_SERVICE);
             View layout = inflater.inflate(resID, null);
             dialog.setContentView(layout, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
