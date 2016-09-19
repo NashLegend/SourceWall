@@ -98,17 +98,7 @@ public class PostAPI extends APIBase {
                 .params(pairs)
                 .callback(callBack)
                 .useCacheIfFailed(true)
-                .parser(new Parser<ArrayList<Post>>() {
-                    @Override
-                    public ArrayList<Post> parse(String response, ResponseObject<ArrayList<Post>> responseObject) throws Exception {
-                        PostListParser parser = new PostListParser();
-                        ArrayList<Post> posts = parser.parse(response, responseObject);
-                        for (Post post : posts) {
-                            post.setFeatured(false);
-                        }
-                        return posts;
-                    }
-                })
+                .parser(new PostListParser())
                 .requestAsync();
     }
 
@@ -142,9 +132,9 @@ public class PostAPI extends APIBase {
                     public ArrayList<Post> parse(String response, ResponseObject<ArrayList<Post>> responseObject) throws Exception {
                         PostListParser parser = new PostListParser();
                         ArrayList<Post> posts = parser.parse(response, responseObject);
-                        if (type != SubItem.Type_Single_Channel) {
+                        if (type == SubItem.Type_Single_Channel) {
                             for (Post post : posts) {
-                                post.setFeatured(false);
+                                post.setFeatured(true);
                             }
                         }
                         return posts;
@@ -200,9 +190,9 @@ public class PostAPI extends APIBase {
                             parser = new PostListParser();
                         }
                         ArrayList<Post> posts = parser.parse(response, responseObject);
-                        if (type != SubItem.Type_Single_Channel) {
+                        if (type == SubItem.Type_Single_Channel) {
                             for (Post post : posts) {
-                                post.setFeatured(false);
+                                post.setFeatured(true);
                             }
                         }
                         return posts;

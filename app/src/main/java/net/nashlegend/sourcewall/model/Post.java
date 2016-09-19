@@ -24,7 +24,7 @@ public class Post extends AceModel {
     private int replyNum = 0;
     private String content = "";
     private String date = "";
-    private boolean featured = true;//是否展现在集合列表还是单个小组。true表示展示在单个小组列表中
+    private boolean featured = false;//是否展现在集合列表还是单个小组。true表示展示在单个小组列表中
     private boolean desc = false;
 
     private ArrayList<UComment> hotComments = new ArrayList<>();
