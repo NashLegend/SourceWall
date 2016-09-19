@@ -104,7 +104,7 @@ public class DateTimeUtil {
                 }
             }
 
-            SimpleDateFormat formatOutput = new SimpleDateFormat("M月d日 HH:mm", Locale.CHINA);
+            SimpleDateFormat formatOutput = new SimpleDateFormat("M月d日", Locale.CHINA);
             if (diff == -1) {
                 formatOutput = new SimpleDateFormat("昨天 HH:mm", Locale.CHINA);
             } else if (diff == -2) {

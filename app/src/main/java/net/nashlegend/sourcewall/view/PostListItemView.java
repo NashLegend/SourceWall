@@ -65,8 +65,12 @@ public class PostListItemView extends AceView<Post> {
 
         if (mPost.isFeatured()) {
             groupView.setText("");
+            groupView.setVisibility(GONE);
+            dateView.setVisibility(VISIBLE);
         } else {
             groupView.setText(mPost.getGroupName());
+            groupView.setVisibility(VISIBLE);
+            dateView.setVisibility(GONE);
         }
 
     }

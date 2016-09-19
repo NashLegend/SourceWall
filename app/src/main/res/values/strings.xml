@@ -29,11 +29,12 @@
     <string name="sample_floor">1楼</string>
     <string name="sample_like_num">22</string>
     <string name="sample_reply_num">38</string>
-    <string name="sample_group">万有引力</string>
+    <string name="sample_group">美丽也是技术活</string>
     <string name="sample_title">弹涂鱼：上岸本领哪里来？</string>
-    <string name="sample_author">无名氏</string>
+    <string name="sample_author">奥黛丽-玛丽莲-赫本</string>
     <string name="sample_author_title">叫兽</string>
-    <string name="sample_date">2014–12–05 22:45:51</string>
+    <string name="sample_date">2014–12–05</string>
+    <string name="sample_date_time">2014–12–05 22:45:51</string>
     <string name="sample_summary">泥盆纪生物从水生到陆生的转变，是脊椎动物演化史中最重要的事件。这种转变最终导致了四足动物的出现。许多后来出现的两栖硬骨鱼在适应陆地生活的过程中演化出了用来行走的胸鳍、更佳的视力和对氨的耐受力。然而此前，人们对这些演化的基因和分子基础还知之甚少。</string>
 
     <!-- user -->
