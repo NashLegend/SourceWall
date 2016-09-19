@@ -75,7 +75,7 @@
     </style>
 
     <style name="AlertDialogTheme" parent="Theme.AppCompat.Dialog">
-        <item name="android:windowBackground">@color/dialog_background</item>
+        <item name="android:windowBackground">@color/bg_alert_dialog_night</item>
     </style>
 
     <style name="ToolbarStyle" parent="@style/Theme.AppCompat.Light.DarkActionBar">

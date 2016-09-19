@@ -41,6 +41,7 @@
     <color name="reply_operation_bar_background">#757575</color>
 
     <!--对话框-->
+    <color name="bg_alert_dialog_night">@android:color/transparent</color>
     <color name="dialog_background">#3c3c3c</color>
     <color name="dialog_button_background">@android:color/transparent</color>
     <color name="dialog_button_text">#e0e0e0</color>
