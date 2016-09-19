@@ -10,9 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 
 import net.nashlegend.sourcewall.R;
-import net.nashlegend.sourcewall.data.ChannelHelper;
 import net.nashlegend.sourcewall.data.Mob;
-import net.nashlegend.sourcewall.data.database.BasketHelper;
 import net.nashlegend.sourcewall.fragment.FavorsFragment;
 import net.nashlegend.sourcewall.model.Basket;
 import net.nashlegend.sourcewall.model.SubItem;
@@ -32,7 +30,7 @@ import static net.nashlegend.sourcewall.model.SubItem.Type_Single_Channel;
 
 public class MyFavorsActivity extends BaseActivity {
 
-    List<SubItem> subItems = ChannelHelper.getBaskets();
+    final List<SubItem> subItems = new ArrayList<>();
 
     @BindView(R.id.favor_tabs)
     TabLayout tabLayout;
@@ -69,38 +67,33 @@ public class MyFavorsActivity extends BaseActivity {
         FavorAPI.getBaskets(new SimpleCallBack<ArrayList<Basket>>() {
             @Override
             public void onFailure() {
-                List<SubItem> subItems = BasketHelper.getAllMyBasketsSubItems();
-                if (subItems.size() > 0) {
-                    onGetBaskets(subItems);
-                } else {
-                    loadingView.onLoadFailed();
-                }
+                loadingView.onLoadFailed();
             }
 
             @Override
             public void onSuccess(@NonNull ArrayList<Basket> result) {
-                BasketHelper.putAllBaskets(result);
-                ArrayList<SubItem> subItems = new ArrayList<>();
+                ArrayList<SubItem> fetchedSubItems = new ArrayList<>();
                 for (int i = 0; i < result.size(); i++) {
                     Basket basket = result.get(i);
                     SubItem subItem = new SubItem(Section_Favor, Type_Single_Channel, basket.getName(), basket.getId());
-                    subItems.add(subItem);
+                    fetchedSubItems.add(subItem);
                 }
-                onGetBaskets(subItems);
+                onGetBaskets(fetchedSubItems);
             }
         });
     }
 
-    private void onGetBaskets(List<SubItem> subItems) {
+    private void onGetBaskets(List<SubItem> fetchedSubItems) {
         if (isFinishing()) {
             return;
         }
         loadingView.onLoadSuccess();
-        if (subItems == null || subItems.size() == 0) {
-            ToastUtil.toastBigSingleton("您还没有创建果篮 0.0 ");
+        if (fetchedSubItems == null || fetchedSubItems.size() == 0) {
+            ToastUtil.toastBigSingleton("还没有创建果篮 0.0 ");
             finish();
         } else {
-            this.subItems = subItems;
+            subItems.clear();
+            subItems.addAll(fetchedSubItems);
             adapter.notifyDataSetChanged();
         }
     }
