@@ -4,8 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.data.Consts;
@@ -59,10 +57,12 @@ public class PostListActivity extends BaseActivity {
             public void onFailure(@NonNull ResponseObject<String> result) {
                 if (result.statusCode == 404) {
                     toastSingleton("小组不存在");
+                    finish();
                 } else {
+                    SubItem subItem = new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, "某小组", subId);
+                    onGetSubItem(subItem);
                     toastSingleton("获取小组信息失败");
                 }
-                finish();
             }
 
             @Override
