@@ -98,11 +98,21 @@ public class PostAPI extends APIBase {
                 .params(pairs)
                 .callback(callBack)
                 .useCacheIfFailed(true)
-                .parser(new PostListParser())
+                .parser(new Parser<ArrayList<Post>>() {
+                    @Override
+                    public ArrayList<Post> parse(String response, ResponseObject<ArrayList<Post>> responseObject) throws Exception {
+                        PostListParser parser = new PostListParser();
+                        ArrayList<Post> posts = parser.parse(response, responseObject);
+                        for (Post post : posts) {
+                            post.setFeatured(false);
+                        }
+                        return posts;
+                    }
+                })
                 .requestAsync();
     }
 
-    public static Observable<ResponseObject<ArrayList<Post>>> getPostList(int type, String key, int page, boolean useCache) {
+    public static Observable<ResponseObject<ArrayList<Post>>> getPostList(final int type, String key, int page, boolean useCache) {
         String url = "http://apis.guokr.com/group/post.json";
         ParamsMap pairs = new ParamsMap();
         long timeout = 600000;
@@ -127,7 +137,19 @@ public class PostAPI extends APIBase {
                 .params(pairs)
                 .useCacheFirst(useCache)
                 .cacheTimeOut(timeout)
-                .parser(new PostListParser())
+                .parser(new Parser<ArrayList<Post>>() {
+                    @Override
+                    public ArrayList<Post> parse(String response, ResponseObject<ArrayList<Post>> responseObject) throws Exception {
+                        PostListParser parser = new PostListParser();
+                        ArrayList<Post> posts = parser.parse(response, responseObject);
+                        if (type != SubItem.Type_Single_Channel) {
+                            for (Post post : posts) {
+                                post.setFeatured(false);
+                            }
+                        }
+                        return posts;
+                    }
+                })
                 .flatMap();
     }
 
@@ -140,16 +162,14 @@ public class PostAPI extends APIBase {
      * @param useCache
      * @return
      */
-    public static Observable<ResponseObject<ArrayList<Post>>> getPostListHotHtml(int type, String key, int page, boolean useCache) {
+    public static Observable<ResponseObject<ArrayList<Post>>> getPostListHotHtml(final int type, String key, int page, boolean useCache) {
         String url = "http://apis.guokr.com/group/post.json";
         ParamsMap pairs = new ParamsMap();
-        Parser<ArrayList<Post>> parser = new PostListParser();
         long timeout = 600000;
         switch (type) {
             case SubItem.Type_Collections:
                 url = "http://m.guokr.com/group/hot_posts/";
                 pairs.put("page", page + 1);
-                parser = new PostHtmlListParser();
                 break;
             case SubItem.Type_Private_Channel:
                 pairs.put("retrieve_type", "recent_replies");
@@ -170,7 +190,24 @@ public class PostAPI extends APIBase {
                 .params(pairs)
                 .useCacheFirst(useCache)
                 .cacheTimeOut(timeout)
-                .parser(parser)
+                .parser(new Parser<ArrayList<Post>>() {
+                    @Override
+                    public ArrayList<Post> parse(String response, ResponseObject<ArrayList<Post>> responseObject) throws Exception {
+                        Parser<ArrayList<Post>> parser = null;
+                        if (type == SubItem.Type_Collections) {
+                            parser = new PostHtmlListParser();
+                        } else {
+                            parser = new PostListParser();
+                        }
+                        ArrayList<Post> posts = parser.parse(response, responseObject);
+                        if (type != SubItem.Type_Single_Channel) {
+                            for (Post post : posts) {
+                                post.setFeatured(false);
+                            }
+                        }
+                        return posts;
+                    }
+                })
                 .flatMap();
     }
 
