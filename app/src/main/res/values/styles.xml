@@ -65,9 +65,14 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
+    <style name="cabOverFlow" parent="@style/Widget.AppCompat.PopupMenu.Overflow">
+        <item name="android:popupBackground">@color/color_primary</item>
+    </style>
+
     <style name="ToolbarStyle" parent="@style/Theme.AppCompat.Light">
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="titleTextAppearance">@style/ToolbarTextAppearance</item>
+        <item name="actionOverflowMenuStyle">@style/cabOverFlow</item>
         <item name="actionMenuTextAppearance">@style/actionMenuTextAppearance</item>
         <item name="actionModeBackground">@color/color_primary_dark</item>
         <item name="actionMenuTextColor">@android:color/white</item>
