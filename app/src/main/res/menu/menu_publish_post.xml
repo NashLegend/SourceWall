@@ -6,7 +6,7 @@
         android:id="@+id/action_anon"
         android:checkable="true"
         android:title="@string/anon"
-        app:actionViewClass="android.widget.CheckBox"
+        app:actionViewClass="android.support.v7.widget.AppCompatCheckBox"
         app:showAsAction="always" />
     <item
         android:id="@+id/action_reload_csrf"

@@ -795,6 +795,7 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
         checkBox.setPadding(padding, 0, padding * 2, 0);
         checkBox.setText(R.string.anon);
         checkBox.setTextColor(Color.parseColor("#ffffff"));
+        checkBox.setBackgroundColor(0);
         return true;
     }
 
