@@ -68,14 +68,15 @@ public class MDUtil {
      * UBB文本描述格式转换为Html格式图片 [image]http://xxx[/image]
      */
     public static String UBB2HtmlImage(String ubb) {
-        return ubb.replaceAll("\\[image\\]([^\\]]*?)\\[/image\\]", "<img src=\"" + "$1" + "\" style=\"max-width:100%;\">");
+        return ubb.replaceAll("\\[image\\]([^\\]]*?)\\[/image\\]", "<img src=\"" + "$1" + "\" style=\"max-width:100%;\">")
+                .replaceAll("\\[img\\]([^\\]]*?)\\[/img\\]", "<img src=\"" + "$1" + "\" style=\"max-width:100%;\">");
     }
 
     /**
-     * UBB文本描述格式转换为Html格式链接 [url=""]title[/url]
+     * UBB文本描述格式转换为Html格式链接 [url=""]title[/url],可以不带引号
      */
     public static String UBB2HtmlLink(String ubb) {
-        return ubb.replaceAll("\\[url=\"(.*?)\"\\](.*?)\\[/url\\]", "<a href=\"" + "$1" + "\">" + "$2" + "</a>");
+        return ubb.replaceAll("\\[url=\"?(.*?)\"?\\](.*?)\\[/url\\]", "<a href=\"" + "$1" + "\">" + "$2" + "</a>");
     }
 
     /**
