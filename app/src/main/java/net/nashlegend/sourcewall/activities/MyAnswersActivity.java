@@ -62,7 +62,7 @@ public class MyAnswersActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (preparingToScrollToHead) {
-                    listView.setSelection(0);
+                    listView.smoothScrollByOffset(-Integer.MAX_VALUE);
                 } else {
                     preparingToScrollToHead = true;
                     new Handler().postDelayed(new Runnable() {

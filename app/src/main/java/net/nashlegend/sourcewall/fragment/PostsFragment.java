@@ -169,7 +169,7 @@ public class PostsFragment extends BaseFragment implements ReloadListener, OnRef
     }
 
     public void scrollToHead() {
-        listView.setSelection(0);
+        listView.smoothScrollByOffset(-Integer.MAX_VALUE);
     }
 
     @Override

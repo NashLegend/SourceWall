@@ -216,7 +216,7 @@ public class NoticesFragment extends BaseFragment implements IChannelsFragment, 
 
     @Override
     public void scrollToHead() {
-        listView.setSelection(0);
+        listView.smoothScrollByOffset(-Integer.MAX_VALUE);
     }
 
 }

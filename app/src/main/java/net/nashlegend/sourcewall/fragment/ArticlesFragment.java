@@ -111,7 +111,7 @@ public class ArticlesFragment extends BaseFragment implements ReloadListener, On
     }
 
     public void scrollToHead() {
-        listView.setSelection(0);
+        listView.smoothScrollByOffset(-Integer.MAX_VALUE);
     }
 
     @Override

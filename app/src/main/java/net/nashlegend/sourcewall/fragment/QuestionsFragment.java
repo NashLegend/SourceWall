@@ -183,7 +183,7 @@ public class QuestionsFragment extends BaseFragment implements ReloadListener, O
     }
 
     public void scrollToHead() {
-        listView.setSelection(0);
+        listView.smoothScrollByOffset(-Integer.MAX_VALUE);
     }
 
     @Override
