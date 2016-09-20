@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/parentPanel"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bg_tag_toast"
         android:gravity="center"
-        android:minHeight="90dp"
+        android:minHeight="56dp"
         android:minWidth="120dp"
         android:orientation="vertical"
         android:paddingBottom="15dp"
@@ -26,7 +26,8 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textColor="@android:color/white"
-            android:textSize="18dp" />
+            android:textSize="18dp"
+            tools:text="@string/sample_author" />
 
     </LinearLayout>
 

@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import net.nashlegend.sourcewall.BuildConfig;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.data.Config;
 import net.nashlegend.sourcewall.data.Consts.ImageLoadMode;
@@ -25,6 +26,7 @@ import net.nashlegend.sourcewall.data.Tail;
 import net.nashlegend.sourcewall.events.LoginStateChangedEvent;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.PrefsUtil;
+import net.nashlegend.sourcewall.util.UpdateChecker;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;
 
 import de.greenrobot.event.EventBus;
@@ -67,7 +69,10 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         View replyModeView = findViewById(R.id.layout_reply_mode);
         View customTailView = findViewById(R.id.layout_custom_tail);
         View logInOutView = findViewById(R.id.layout_log_in_out);
+        View updateView = findViewById(R.id.layout_app_update);
         View aboutView = findViewById(R.id.layout_about_app);
+        TextView updateText = (TextView) findViewById(R.id.text_app_version);
+
         imageText = (TextView) findViewById(R.id.text_image_mode);
         logText = (TextView) findViewById(R.id.text_log_in_out);
         tailsView = findViewById(R.id.layout_tails);
@@ -108,9 +113,11 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         replyModeView.setOnClickListener(this);
         customTailView.setOnClickListener(this);
         logInOutView.setOnClickListener(this);
+        updateView.setOnClickListener(this);
         aboutView.setOnClickListener(this);
         tailsView.setVisibility(View.GONE);
         modesView.setVisibility(View.GONE);
+        updateText.setText("当前版本 v" + BuildConfig.VERSION_NAME);
     }
 
 
@@ -182,6 +189,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             case R.id.layout_log_in_out:
                 toggleLoginState();
                 break;
+            case R.id.layout_app_update:
+                checkUpdate();
+                break;
             case R.id.layout_about_app:
                 showAboutApp();
                 break;
@@ -238,6 +248,10 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         } else {
             startOneActivity(new Intent(this, LoginActivity.class));
         }
+    }
+
+    private void checkUpdate() {
+        UpdateChecker.getInstance(this, null).checkForUpdate();
     }
 
     private void showAboutApp() {

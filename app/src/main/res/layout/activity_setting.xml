@@ -184,8 +184,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
                     android:layout_marginLeft="6dp"
+                    android:layout_marginTop="5dp"
                     android:lineSpacingExtra="@dimen/lineSpacingExtra"
                     android:text="@string/hint_simple_reply" />
             </LinearLayout>
@@ -360,6 +360,54 @@
                     android:layout_marginRight="1dp"
                     android:gravity="center"
                     android:maxLines="1" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/splitter_height"
+                android:layout_marginLeft="@dimen/list_item_padding_horizontal"
+                android:layout_marginRight="@dimen/list_item_padding_horizontal"
+                android:layout_weight="0"
+                android:background="@color/splitter_color_grey" />
+
+            <RelativeLayout
+                android:id="@+id/layout_app_update"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:paddingBottom="@dimen/list_item_padding_vertical"
+                android:paddingLeft="@dimen/setting_padding_left"
+                android:paddingRight="@dimen/list_item_padding_horizontal"
+                android:paddingTop="@dimen/list_item_padding_vertical">
+
+                <TextView
+                    android:id="@+id/text_app_update"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/check_update"
+                    android:textColor="@color/text_color_primary"
+                    android:textSize="16dp" />
+
+                <TextView
+                    android:id="@+id/text_app_version"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/text_app_update"
+                    android:layout_marginLeft="12dp"
+                    android:layout_toRightOf="@id/text_app_update"
+                    android:textColor="@color/text_color_primary"
+                    android:textSize="14dp"
+                    tools:text="2.0.0" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="6dp"
+                    android:background="@drawable/chevron_right"
+                    android:visibility="gone" />
             </RelativeLayout>
 
             <View

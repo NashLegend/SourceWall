@@ -39,7 +39,7 @@ public class APIBase {
     public static void checkForUpdate(RequestCallBack<UpdateInfo> callBack) {
         new RequestBuilder<UpdateInfo>()
                 .get()
-                .url("")
+                .url("https://raw.githubusercontent.com/NashLegend/SourceWall/master/update.json")
                 .parser(new UpdateInfoParser())
                 .callback(callBack)
                 .requestAsync();
