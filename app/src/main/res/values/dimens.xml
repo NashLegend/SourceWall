@@ -37,7 +37,7 @@
     <dimen name="lineSpacingExtra">6dp</dimen>
 
     <!--Post-->
-    <dimen name="post_item_title_margin_bottom">7dp</dimen>
+    <dimen name="post_item_title_margin_bottom">8dp</dimen>
     <dimen name="post_view_title_margin_bottom">4dp</dimen>
 
     <dimen name="shadow_down_height">4dp</dimen>

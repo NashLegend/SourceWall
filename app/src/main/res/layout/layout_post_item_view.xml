@@ -59,7 +59,7 @@
             android:layout_marginRight="@dimen/list_item_text_text_gap"
             android:ellipsize="end"
             android:maxLines="1"
-            android:maxWidth="96dp"
+            android:maxWidth="120dp"
             android:textColor="@color/author_color"
             android:textSize="@dimen/text_author_view_font_size_dimen"
             tools:text="@string/sample_group" />

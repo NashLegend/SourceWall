@@ -54,6 +54,7 @@ public class PostListItemView extends AceView<Post> {
         replyView.setText(String.valueOf(mPost.getReplyNum()));
         likesView.setText(String.valueOf(mPost.getLikeNum()));
         if (TextUtils.isEmpty(mPost.getAuthor().getName())) {
+            groupView.setMaxWidth(Integer.MAX_VALUE);
             authorView.setVisibility(GONE);
         } else {
             authorView.setVisibility(VISIBLE);
@@ -75,7 +76,7 @@ public class PostListItemView extends AceView<Post> {
             dateView.setVisibility(GONE);
         }
 
-        if (mPost.isStick()) {
+        if (mPost.isStick() && mPost.isFeatured()) {
             sticky.setVisibility(VISIBLE);
         } else {
             sticky.setVisibility(GONE);
