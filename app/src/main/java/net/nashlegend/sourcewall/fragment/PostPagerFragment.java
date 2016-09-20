@@ -17,11 +17,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.BaseActivity;
@@ -35,6 +39,7 @@ import net.nashlegend.sourcewall.data.Consts.RequestCode;
 import net.nashlegend.sourcewall.data.database.GroupHelper;
 import net.nashlegend.sourcewall.data.database.gen.MyGroup;
 import net.nashlegend.sourcewall.events.GroupFetchedEvent;
+import net.nashlegend.sourcewall.events.ShowHideEvent;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
@@ -68,6 +73,8 @@ public class PostPagerFragment extends BaseFragment {
     ImageView showMore;
     @BindView(R.id.button_write)
     View btnWrite;
+    @BindView(R.id.layout_operation)
+    FloatingActionsMenu fabMenu;
 
     @BindView(R.id.plastic_scroller)
     ScrollView scrollView;
@@ -471,6 +478,41 @@ public class PostPagerFragment extends BaseFragment {
         return fragment instanceof PostsFragment && ((PostsFragment) fragment).reTap();
     }
 
+    public void onEventMainThread(ShowHideEvent event) {
+        if (event.section == SubItem.Section_Post) {
+            if (event.show) {
+                showSearch();
+            } else {
+                hideSearch();
+            }
+        }
+    }
+
+    ObjectAnimator hideAnimator;
+    ObjectAnimator showAnimator;
+
+    private void hideSearch() {
+        UiUtil.dismissAnimator(showAnimator);
+        if (hideAnimator != null && hideAnimator.isRunning()) {
+            return;
+        }
+        fabMenu.collapse();
+        hideAnimator = ObjectAnimator.ofFloat(fabMenu, "translationY", fabMenu.getTranslationY(), fabMenu.getHeight());
+        hideAnimator.setInterpolator(new AccelerateInterpolator(1.3f));
+        hideAnimator.setDuration(400);
+        hideAnimator.start();
+    }
+
+    private void showSearch() {
+        UiUtil.dismissAnimator(hideAnimator);
+        if (showAnimator != null && showAnimator.isRunning()) {
+            return;
+        }
+        showAnimator = ObjectAnimator.ofFloat(fabMenu, "translationY", fabMenu.getTranslationY(), 0);
+        showAnimator.setInterpolator(new DecelerateInterpolator());
+        showAnimator.setDuration(400);
+        showAnimator.start();
+    }
 
     class PostPagerAdapter extends FakeFragmentStatePagerAdapter {
 

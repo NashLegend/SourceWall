@@ -29,6 +29,7 @@ import net.nashlegend.sourcewall.data.ChannelHelper;
 import net.nashlegend.sourcewall.data.Consts.Keys;
 import net.nashlegend.sourcewall.data.database.AskTagHelper;
 import net.nashlegend.sourcewall.data.database.gen.AskTag;
+import net.nashlegend.sourcewall.events.ShowHideEvent;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
@@ -45,6 +46,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.greenrobot.event.EventBus;
 import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -59,6 +61,8 @@ public class QuestionPagerFragment extends BaseFragment {
     ViewPager viewPager;
     @BindView(R.id.show_more)
     ImageView showMore;
+    @BindView(R.id.button_search)
+    View searchButton;
 
     @BindView(R.id.plastic_scroller)
     ScrollView scrollView;
@@ -86,6 +90,7 @@ public class QuestionPagerFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        EventBus.getDefault().register(this);
         if (layoutView == null) {
             layoutView = inflater.inflate(R.layout.fragment_question_pager, container, false);
             ButterKnife.bind(this, layoutView);
@@ -127,6 +132,12 @@ public class QuestionPagerFragment extends BaseFragment {
             }
         }
         return layoutView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroyView();
     }
 
     @Override
@@ -413,6 +424,39 @@ public class QuestionPagerFragment extends BaseFragment {
         }
         Fragment fragment = adapter.getFragmentAt(viewPager.getCurrentItem());
         return fragment instanceof QuestionsFragment && ((QuestionsFragment) fragment).reTap();
+    }
+
+    public void onEventMainThread(ShowHideEvent event) {
+        if (event.section == SubItem.Section_Question) {
+            if (event.show) {
+                showSearch();
+            } else {
+                hideSearch();
+            }
+        }
+    }
+
+    ObjectAnimator hideAnimator;
+    ObjectAnimator showAnimator;
+
+    private void hideSearch() {
+        UiUtil.dismissAnimator(showAnimator);
+        if (hideAnimator != null && hideAnimator.isRunning()) {
+            return;
+        }
+        hideAnimator = ObjectAnimator.ofFloat(searchButton, "translationY", searchButton.getTranslationY(), searchButton.getHeight());
+        hideAnimator.setDuration(300);
+        hideAnimator.start();
+    }
+
+    private void showSearch() {
+        UiUtil.dismissAnimator(hideAnimator);
+        if (showAnimator != null && showAnimator.isRunning()) {
+            return;
+        }
+        showAnimator = ObjectAnimator.ofFloat(searchButton, "translationY", searchButton.getTranslationY(), 0);
+        showAnimator.setDuration(300);
+        showAnimator.start();
     }
 
     class QuestionPagerAdapter extends FakeFragmentStatePagerAdapter {

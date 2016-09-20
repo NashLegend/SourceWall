@@ -1,5 +1,6 @@
 package net.nashlegend.sourcewall.util;
 
+import android.animation.Animator;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -111,6 +112,16 @@ public class UiUtil {
         try {
             if (dialog != null && dialog.isShowing()) {
                 dialog.dismiss();
+            }
+        } catch (Exception ignored) {
+
+        }
+    }
+
+    public static void dismissAnimator(Animator animator) {
+        try {
+            if (animator != null && animator.isRunning()) {
+                animator.cancel();
             }
         } catch (Exception ignored) {
 

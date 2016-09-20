@@ -86,10 +86,10 @@ public class ProfileFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        EventBus.getDefault().register(this);
         if (layoutView == null) {
             layoutView = inflater.inflate(R.layout.fragment_profile, container, false);
             ButterKnife.bind(this, layoutView);
-            EventBus.getDefault().register(this);
             initView();
         } else {
             if (layoutView.getParent() != null) {

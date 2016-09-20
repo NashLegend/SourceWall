@@ -16,10 +16,12 @@ import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.ArticleActivity;
 import net.nashlegend.sourcewall.adapters.ArticleAdapter;
 import net.nashlegend.sourcewall.data.Consts.Extras;
+import net.nashlegend.sourcewall.events.ShowHideEvent;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.ArticleAPI;
+import net.nashlegend.sourcewall.util.AutoHideUtil;
 import net.nashlegend.sourcewall.view.ArticleListItemView;
 import net.nashlegend.sourcewall.view.common.LoadingView;
 import net.nashlegend.sourcewall.view.common.LoadingView.ReloadListener;
@@ -30,6 +32,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.greenrobot.event.EventBus;
 import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -83,6 +86,22 @@ public class ArticlesFragment extends BaseFragment implements ReloadListener, On
         listView.setOnRefreshListener(this);
         listView.setOnItemClickListener(this);
         loadOver();
+        AutoHideUtil.applyListViewAutoHide(getActivity(), listView, (int) getResources().getDimension(R.dimen.actionbar_height), false,
+                new AutoHideUtil.AutoHideListener() {
+                    @Override
+                    public void animateHide() {
+                        if (getUserVisibleHint()) {
+                            EventBus.getDefault().post(new ShowHideEvent(SubItem.Section_Article, false));
+                        }
+                    }
+
+                    @Override
+                    public void animateBack() {
+                        if (getUserVisibleHint()) {
+                            EventBus.getDefault().post(new ShowHideEvent(SubItem.Section_Article, true));
+                        }
+                    }
+                });
         return layoutView;
     }
 

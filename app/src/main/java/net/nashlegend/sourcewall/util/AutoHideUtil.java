@@ -45,8 +45,20 @@ public class AutoHideUtil {
      * @param headerHeight 顶部元素的高度
      */
     public static void applyListViewAutoHide(Context context, ListView listView, int headerHeight, AutoHideListener autoHideListener) {
+        applyListViewAutoHide(context, listView, headerHeight, true, autoHideListener);
+    }
+
+    /**
+     * AutoHideUtil.applyListViewAutoHide()是一个帮助类，以快速实现MainActivity里面的滑动隐藏方法
+     * 不需要用户在方法中提供要隐藏的Header和Footer，具体隐藏方法要在用户在回调中实现
+     *
+     * @param context      上下文
+     * @param listView     滚动的ListView
+     * @param headerHeight 顶部元素的高度
+     */
+    public static void applyListViewAutoHide(Context context, ListView listView, int headerHeight, boolean addHeader, AutoHideListener autoHideListener) {
         ListViewAutoHideToolWithCallBack tool = new ListViewAutoHideToolWithCallBack();
-        tool.applyAutoHide(context, listView, headerHeight, autoHideListener);
+        tool.applyAutoHide(context, listView, headerHeight, addHeader, autoHideListener);
     }
 
     private static class ListViewAutoHideTool {
@@ -199,21 +211,23 @@ public class AutoHideUtil {
         ListView listView;
         int touchSlop = 10;
         AutoHideListener autoHideListener;
+        int numInvisible = 2;
 
         public ListViewAutoHideToolWithCallBack() {
 
         }
 
-        public void applyAutoHide(Context context, ListView listView, int headerHeight, AutoHideListener autoHideListener) {
+        public void applyAutoHide(Context context, ListView listView, int headerHeight, boolean addHeader, AutoHideListener autoHideListener) {
             touchSlop = (int) (ViewConfiguration.get(context).getScaledTouchSlop() * 0.9);
             this.listView = listView;
             this.autoHideListener = autoHideListener;
-
-            View header = new View(listView.getContext());
-            header.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, headerHeight));
-            header.setBackgroundColor(Color.parseColor("#00000000"));
-            listView.addHeaderView(header);
-
+            if (addHeader) {
+                View header = new View(listView.getContext());
+                header.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, headerHeight));
+                header.setBackgroundColor(Color.parseColor("#00000000"));
+                listView.addHeaderView(header);
+            }
+            numInvisible = listView.getHeaderViewsCount();
             listView.setOnScrollListener(onScrollListener);
             listView.setOnTouchListener(onTouchListener);
         }
@@ -249,7 +263,7 @@ public class AutoHideUtil {
                         if (lastY < 0) {
                             lastY = event.getY();
                         }
-                        if (listView.getFirstVisiblePosition() > 1) {
+                        if (listView.getFirstVisiblePosition() >= numInvisible) {
                             float tmpCurrentY = event.getY();
                             if (Math.abs(tmpCurrentY - lastY) > touchSlop) {
                                 currentY = tmpCurrentY;
@@ -287,10 +301,9 @@ public class AutoHideUtil {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (firstVisibleItem == 0 || firstVisibleItem == 1) {
+                if (firstVisibleItem < numInvisible) {
                     animateBack();
-                }
-                if (firstVisibleItem > 1) {
+                } else {
                     if (firstVisibleItem > lastPosition && state == SCROLL_STATE_FLING) {
                         animateHide();
                     }

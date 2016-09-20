@@ -15,10 +15,12 @@ import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.PostActivity;
 import net.nashlegend.sourcewall.adapters.PostAdapter;
 import net.nashlegend.sourcewall.data.Consts.Extras;
+import net.nashlegend.sourcewall.events.ShowHideEvent;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.PostAPI;
+import net.nashlegend.sourcewall.util.AutoHideUtil;
 import net.nashlegend.sourcewall.view.PostListItemView;
 import net.nashlegend.sourcewall.view.common.LoadingView;
 import net.nashlegend.sourcewall.view.common.LoadingView.ReloadListener;
@@ -29,6 +31,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.greenrobot.event.EventBus;
 import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -114,6 +117,22 @@ public class PostsFragment extends BaseFragment implements ReloadListener, OnRef
             }
         });
         loadOver();
+        AutoHideUtil.applyListViewAutoHide(getActivity(), listView, (int) getResources().getDimension(R.dimen.actionbar_height), false,
+                new AutoHideUtil.AutoHideListener() {
+                    @Override
+                    public void animateHide() {
+                        if (getUserVisibleHint()) {
+                            EventBus.getDefault().post(new ShowHideEvent(SubItem.Section_Post, false));
+                        }
+                    }
+
+                    @Override
+                    public void animateBack() {
+                        if (getUserVisibleHint()) {
+                            EventBus.getDefault().post(new ShowHideEvent(SubItem.Section_Post, true));
+                        }
+                    }
+                });
         return layoutView;
     }
 

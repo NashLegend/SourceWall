@@ -16,10 +16,12 @@ import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.QuestionActivity;
 import net.nashlegend.sourcewall.adapters.QuestionAdapter;
 import net.nashlegend.sourcewall.data.Consts.Extras;
+import net.nashlegend.sourcewall.events.ShowHideEvent;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
+import net.nashlegend.sourcewall.util.AutoHideUtil;
 import net.nashlegend.sourcewall.util.ErrorUtils;
 import net.nashlegend.sourcewall.view.QuestionListItemView;
 import net.nashlegend.sourcewall.view.common.LoadingView;
@@ -32,6 +34,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.greenrobot.event.EventBus;
 import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -123,9 +126,23 @@ public class QuestionsFragment extends BaseFragment implements ReloadListener, O
                 return false;
             }
         });
-
         loadOver();
+        AutoHideUtil.applyListViewAutoHide(getActivity(), listView, (int) getResources().getDimension(R.dimen.actionbar_height), false,
+                new AutoHideUtil.AutoHideListener() {
+                    @Override
+                    public void animateHide() {
+                        if (getUserVisibleHint()) {
+                            EventBus.getDefault().post(new ShowHideEvent(SubItem.Section_Question, false));
+                        }
+                    }
 
+                    @Override
+                    public void animateBack() {
+                        if (getUserVisibleHint()) {
+                            EventBus.getDefault().post(new ShowHideEvent(SubItem.Section_Question, true));
+                        }
+                    }
+                });
         return layoutView;
     }
 
