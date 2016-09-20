@@ -15,7 +15,8 @@
         android:background="@color/webview_background"
         android:paddingLeft="@dimen/list_item_padding_horizontal"
         android:paddingRight="@dimen/list_item_padding_horizontal"
-        android:paddingTop="10dp">
+        android:paddingTop="10dp"
+        android:scrollbarStyle="outsideOverlay">
 
         <LinearLayout
             android:id="@+id/web_holder"
