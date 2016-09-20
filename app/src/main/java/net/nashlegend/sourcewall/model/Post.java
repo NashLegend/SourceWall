@@ -26,9 +26,12 @@ public class Post extends AceModel {
     private String date = "";
     private boolean featured = false;//是否展现在集合列表还是单个小组。true表示展示在单个小组列表中
     private boolean desc = false;
-
+    private boolean isStick = false;//是否是置顶贴
     private ArrayList<UComment> hotComments = new ArrayList<>();
     private ArrayList<UComment> comments = new ArrayList<>();
+
+    public Post() {
+    }
 
     public static Post fromJson(JSONObject postResult) throws Exception {
         Post detail = new Post();
@@ -51,6 +54,7 @@ public class Post extends AceModel {
         detail.setDate(APIBase.parseDate(date));
         detail.setContent(content);
         detail.setReplyNum(reply_num);
+        detail.setStick(postResult.optBoolean("is_stick"));
         return detail;
     }
 
@@ -194,7 +198,12 @@ public class Post extends AceModel {
         this.desc = desc;
     }
 
-    public Post() {
+    public boolean isStick() {
+        return isStick;
+    }
+
+    public void setStick(boolean stick) {
+        isStick = stick;
     }
 
     @Override
@@ -218,6 +227,7 @@ public class Post extends AceModel {
         dest.writeString(this.date);
         dest.writeByte(this.featured ? (byte) 1 : (byte) 0);
         dest.writeByte(this.desc ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.isStick ? (byte) 1 : (byte) 0);
         dest.writeTypedList(this.hotComments);
         dest.writeTypedList(this.comments);
     }
@@ -237,6 +247,7 @@ public class Post extends AceModel {
         this.date = in.readString();
         this.featured = in.readByte() != 0;
         this.desc = in.readByte() != 0;
+        this.isStick = in.readByte() != 0;
         this.hotComments = in.createTypedArrayList(UComment.CREATOR);
         this.comments = in.createTypedArrayList(UComment.CREATOR);
     }

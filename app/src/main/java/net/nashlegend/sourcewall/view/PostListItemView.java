@@ -22,6 +22,7 @@ public class PostListItemView extends AceView<Post> {
     private TextView replyView;
     private TextView likesView;
     private TextView groupView;
+    private TextView sticky;
 
     public PostListItemView(Context context) {
         super(context);
@@ -33,6 +34,7 @@ public class PostListItemView extends AceView<Post> {
         replyView = (TextView) findViewById(R.id.text_replies_num);
         likesView = (TextView) findViewById(R.id.text_like_num);
         groupView = (TextView) findViewById(R.id.text_group);
+        sticky = (TextView) findViewById(R.id.tag_sticky);
     }
 
     public PostListItemView(Context context, AttributeSet attrs) {
@@ -71,6 +73,12 @@ public class PostListItemView extends AceView<Post> {
             groupView.setText(mPost.getGroupName());
             groupView.setVisibility(VISIBLE);
             dateView.setVisibility(GONE);
+        }
+
+        if (mPost.isStick()) {
+            sticky.setVisibility(VISIBLE);
+        } else {
+            sticky.setVisibility(GONE);
         }
 
     }
