@@ -565,7 +565,7 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
     private void loadReplies(int offset) {
         int limit = 20;
         if (loadDesc) {
-            //因为无法保证获取回复的数据，所以只能采取一次全部加载的方式,但是又不能超过5000，这是服务器的限制
+            //因为无法保证获取回复的数据，所以只能采取一次全部加载的方式，但是又不能超过5000，这是服务器的限制
             if (article.getCommentNum() <= 0) {
                 limit = 4999;
                 offset = 0;

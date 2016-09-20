@@ -19,7 +19,7 @@ public class SubItem extends AceModel {
     public static final int Section_Favor = 3;
 
     private int section;//分组 比如科学人、小组、问答
-    private int type;//类型,比如Type_Collections,Type_Single_Channel
+    private int type;//类型，比如Type_Collections,Type_Single_Channel
     private String name = "";//名字 比如Geek笑点低
     private String value = "";//id 比如63
 
