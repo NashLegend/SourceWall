@@ -1,7 +1,7 @@
 {
-  "vn": "2.0.0",
-  "vc": 20160910,
-  "ur": "http://app.mi.com/download/87827",
-  "sz": 2480920,
-  "if": "stabilization"
+  "versionName": "2.0.0",
+  "versionCode": 20160910,
+  "url": "http://app.mi.com/download/87827",
+  "size": 2480920,
+  "updateInfo": "stabilization"
 }

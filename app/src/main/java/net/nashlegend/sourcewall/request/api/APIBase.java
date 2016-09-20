@@ -9,6 +9,7 @@ import net.nashlegend.sourcewall.model.AceModel;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.Question;
+import net.nashlegend.sourcewall.model.UpdateInfo;
 import net.nashlegend.sourcewall.request.HttpUtil;
 import net.nashlegend.sourcewall.request.JsonHandler;
 import net.nashlegend.sourcewall.request.NetworkTask;
@@ -16,6 +17,7 @@ import net.nashlegend.sourcewall.request.RequestBuilder;
 import net.nashlegend.sourcewall.request.RequestObject.RequestCallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.parsers.ImageUploadParser;
+import net.nashlegend.sourcewall.request.parsers.UpdateInfoParser;
 import net.nashlegend.sourcewall.util.DeviceUtil;
 import net.nashlegend.sourcewall.util.ImageUtils;
 
@@ -33,6 +35,15 @@ import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class APIBase {
+
+    public static void checkForUpdate(RequestCallBack<UpdateInfo> callBack) {
+        new RequestBuilder<UpdateInfo>()
+                .get()
+                .url("")
+                .parser(new UpdateInfoParser())
+                .callback(callBack)
+                .requestAsync();
+    }
 
     /**
      * 统一回复，回复主题站、贴子、问题
