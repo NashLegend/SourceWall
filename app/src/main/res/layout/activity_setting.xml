@@ -78,8 +78,7 @@
                 android:paddingBottom="@dimen/list_item_padding_vertical"
                 android:paddingLeft="@dimen/setting_padding_left"
                 android:paddingRight="@dimen/list_item_padding_horizontal"
-                android:visibility="gone"
-                tools:visibility="visible">
+                android:visibility="gone">
 
                 <RadioGroup
                     android:layout_width="match_parent"
@@ -171,8 +170,7 @@
                 android:paddingBottom="@dimen/list_item_padding_vertical"
                 android:paddingLeft="@dimen/setting_padding_left"
                 android:paddingRight="@dimen/list_item_padding_horizontal"
-                android:visibility="gone"
-                tools:visibility="visible">
+                android:visibility="gone">
 
                 <CheckBox
                     android:id="@+id/check_simple"
@@ -238,8 +236,7 @@
                     android:orientation="vertical"
                     android:paddingBottom="@dimen/list_item_padding_vertical"
                     android:paddingRight="@dimen/list_item_padding_horizontal"
-                    android:visibility="gone"
-                    tools:visibility="visible">
+                    android:visibility="gone">
 
                     <RadioGroup
                         android:layout_width="match_parent"
@@ -370,12 +367,13 @@
                 android:layout_weight="0"
                 android:background="@color/splitter_color_grey" />
 
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/layout_app_update"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?android:attr/selectableItemBackground"
                 android:clickable="true"
+                android:orientation="horizontal"
                 android:paddingBottom="@dimen/list_item_padding_vertical"
                 android:paddingLeft="@dimen/setting_padding_left"
                 android:paddingRight="@dimen/list_item_padding_horizontal"
@@ -385,7 +383,6 @@
                     android:id="@+id/text_app_update"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
                     android:text="@string/check_update"
                     android:textColor="@color/text_color_primary"
                     android:textSize="16dp" />
@@ -394,21 +391,11 @@
                     android:id="@+id/text_app_version"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignBottom="@id/text_app_update"
-                    android:layout_marginLeft="12dp"
-                    android:layout_toRightOf="@id/text_app_update"
-                    android:textColor="@color/text_color_primary"
-                    android:textSize="14dp"
+                    android:layout_marginLeft="8dp"
+                    android:textColor="@color/reply_hint"
+                    android:textSize="12dp"
                     tools:text="2.0.0" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="6dp"
-                    android:background="@drawable/chevron_right"
-                    android:visibility="gone" />
-            </RelativeLayout>
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"

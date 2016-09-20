@@ -1,9 +1,11 @@
 package net.nashlegend.sourcewall.activities;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
@@ -24,8 +26,10 @@ import net.nashlegend.sourcewall.data.Consts.TailType;
 import net.nashlegend.sourcewall.data.Mob;
 import net.nashlegend.sourcewall.data.Tail;
 import net.nashlegend.sourcewall.events.LoginStateChangedEvent;
+import net.nashlegend.sourcewall.model.UpdateInfo;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.PrefsUtil;
+import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.util.UpdateChecker;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;
 
@@ -250,8 +254,39 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
+    ProgressDialog updateDialog = null;
+    boolean cancelled = false;
+
     private void checkUpdate() {
-        UpdateChecker.getInstance(this, null).checkForUpdate();
+        UpdateChecker.UpdateDelegate delegate = new UpdateChecker.UpdateDelegate() {
+            @Override
+            public void beforeCheckUpdate() {
+                UiUtil.dismissDialog(updateDialog);
+                updateDialog = new ProgressDialog(SettingActivity.this);
+                updateDialog.setCanceledOnTouchOutside(false);
+                updateDialog.setCancelable(true);
+                updateDialog.setMessage(getString(R.string.checking_update_wait_a_moment));
+                updateDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        cancelled = true;
+                    }
+                });
+                updateDialog.show();
+            }
+
+            @Override
+            public void afterCheckForUpdate() {
+                UiUtil.dismissDialog(updateDialog);
+            }
+
+            @Override
+            public boolean shouldInterceptUpdate(@NonNull UpdateInfo updateInfo) {
+                return cancelled;
+            }
+        };
+
+        UpdateChecker.getInstance(this, delegate).checkForUpdate();
     }
 
     private void showAboutApp() {
