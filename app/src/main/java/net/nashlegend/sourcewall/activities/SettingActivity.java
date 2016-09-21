@@ -75,6 +75,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         View logInOutView = findViewById(R.id.layout_log_in_out);
         View updateView = findViewById(R.id.layout_app_update);
         View aboutView = findViewById(R.id.layout_about_app);
+        View feedbackView = findViewById(R.id.layout_feedback);
         TextView updateText = (TextView) findViewById(R.id.text_app_version);
 
         imageText = (TextView) findViewById(R.id.text_image_mode);
@@ -119,6 +120,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         logInOutView.setOnClickListener(this);
         updateView.setOnClickListener(this);
         aboutView.setOnClickListener(this);
+        feedbackView.setOnClickListener(this);
         tailsView.setVisibility(View.GONE);
         modesView.setVisibility(View.GONE);
         updateText.setText("当前版本 v" + BuildConfig.VERSION_NAME);
@@ -199,6 +201,17 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             case R.id.layout_about_app:
                 showAboutApp();
                 break;
+            case R.id.layout_feedback:
+                openFeedBack();
+                break;
+        }
+    }
+
+    private void openFeedBack() {
+        if (UserAPI.isLoggedIn()) {
+            UrlCheckUtil.redirectRequest("http://m.guokr.com/post/663512/");
+        } else {
+            UrlCheckUtil.openWithBrowser("http://m.guokr.com/post/663512/");
         }
     }
 
