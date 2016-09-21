@@ -59,8 +59,7 @@ public class AnswerListItemView extends AceView<Answer> {
         } else {
             avatar.setImageResource(R.drawable.default_avatar);
         }
-        String simplifiedStr = RegUtil.tryGetStringByLength(RegUtil.html2PlainTextWithImageTag(answer.getContent()), 100);
-        contentView.setText(simplifiedStr);
+        contentView.setText(answer.getSimplifiedContent());
     }
 
     @Override

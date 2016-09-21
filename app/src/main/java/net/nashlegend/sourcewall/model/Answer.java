@@ -3,6 +3,7 @@ package net.nashlegend.sourcewall.model;
 import android.os.Parcel;
 
 import net.nashlegend.sourcewall.request.api.APIBase;
+import net.nashlegend.sourcewall.util.RegUtil;
 
 import org.json.JSONObject;
 
@@ -11,7 +12,11 @@ import org.json.JSONObject;
  */
 public class Answer extends AceModel {
 
+    private static int maxImageWidth = 240;
+    private static String prefix = "<div class=\"ZoomBox\"><div class=\"content-zoom ZoomIn\">";
+    private static String suffix = "</div></div>";
     private String content = "";
+    private String simplifiedContent = "";
     private String date_created = "";
     private String date_modified = "";
     private Author author;
@@ -27,9 +32,8 @@ public class Answer extends AceModel {
     private boolean hasThanked = false;
     private boolean isContentComplex = false;
 
-    private static int maxImageWidth = 240;
-    private static String prefix = "<div class=\"ZoomBox\"><div class=\"content-zoom ZoomIn\">";
-    private static String suffix = "</div></div>";
+    public Answer() {
+    }
 
     public static Answer fromJson(JSONObject answerObject) throws Exception {
         String hostTitle = "";
@@ -102,6 +106,7 @@ public class Answer extends AceModel {
         answer.setAuthor(Author.fromJson(authorObject));
         answer.setCommentNum(replies_count);
         answer.setContent(content.replaceAll("<img .*?/>", prefix + "$0" + suffix).replaceAll("style=\"max-width: \\d+px\"", "style=\"max-width: " + maxImageWidth + "px\""));
+        answer.setSimplifiedContent(RegUtil.tryGetStringByLength(RegUtil.html2PlainTextWithImageTag(answer.getContent()), 100));
         answer.setDate_created(date_created);
         answer.setDate_modified(date_modified);
         answer.setHasDownVoted(current_user_has_opposed);
@@ -238,7 +243,12 @@ public class Answer extends AceModel {
         this.question = question;
     }
 
-    public Answer() {
+    public String getSimplifiedContent() {
+        return simplifiedContent;
+    }
+
+    public void setSimplifiedContent(String simplifiedContent) {
+        this.simplifiedContent = simplifiedContent;
     }
 
     @Override
@@ -249,6 +259,7 @@ public class Answer extends AceModel {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.content);
+        dest.writeString(this.simplifiedContent);
         dest.writeString(this.date_created);
         dest.writeString(this.date_modified);
         dest.writeParcelable(this.author, flags);
@@ -267,6 +278,7 @@ public class Answer extends AceModel {
 
     protected Answer(Parcel in) {
         this.content = in.readString();
+        this.simplifiedContent = in.readString();
         this.date_created = in.readString();
         this.date_modified = in.readString();
         this.author = in.readParcelable(Author.class.getClassLoader());

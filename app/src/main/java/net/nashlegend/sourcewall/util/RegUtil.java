@@ -32,7 +32,7 @@ public class RegUtil {
      * @return
      */
     public static String html2PlainTextWithImageTag(String content) {
-        return Html.fromHtml(content.replaceAll("<img .*?/>|<img.*?>.*?</img>", "[图片]")).toString().replaceAll(OBJ, "").replaceAll("\n", "");
+        return Html.fromHtml(content.replaceAll("<img .*?/>|<img.*?>.*?</img>", "[图片]")).toString().replaceAll(OBJ, "[图片]").replaceAll("\n", "");
     }
 
     /**
@@ -42,7 +42,7 @@ public class RegUtil {
      * @return
      */
     public static String html2PlainText(String content) {
-        return Html.fromHtml(content).toString().replaceAll(OBJ, "").replaceAll("\n", "");
+        return Html.fromHtml(content).toString().replaceAll(OBJ, "[图片]").replaceAll("\n", "");
     }
 
     /**
