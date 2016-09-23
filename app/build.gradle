@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
+//apply plugin: 'me.tatarka.retrolambda'
 
 android {
 
@@ -72,6 +73,11 @@ android {
             manifestPlaceholders = [CHANNEL_NAME: "github"]
         }
     }
+
+//    compileOptions {
+//        sourceCompatibility JavaVersion.VERSION_1_8
+//        targetCompatibility JavaVersion.VERSION_1_8
+//    }
 
     packagingOptions {
         exclude 'META-INF/NOTICE.txt'
