@@ -89,6 +89,7 @@ public class UrlCheckUtil {
                                 intent.setClass(App.getApp(), SingleReplyActivity.class);
                                 intent.setData(replyUri);
                                 App.getApp().startActivity(intent);
+                                return true;
                             }
                         } else if (url.matches("^http://(www|m).guokr.com/article/\\d+.*")) {
                             //url.matches("^http://(www|m).guokr.com/article/\\d+[/]?$",http://www.guokr.com/article/123456/
@@ -98,6 +99,7 @@ public class UrlCheckUtil {
                             article.setId(segments.get(1));
                             intent.putExtra(Extras.Extra_Article, article);
                             App.getApp().startActivity(intent);
+                            return true;
                         }
                     } else if (segments.size() == 3) {
                         //跳转.http://www.guokr.com/article/reply/123456
@@ -105,6 +107,7 @@ public class UrlCheckUtil {
                             intent.setClass(App.getApp(), SingleReplyActivity.class);
                             intent.setData(uri);
                             App.getApp().startActivity(intent);
+                            return true;
                         }
                     }
                     break;
@@ -119,6 +122,7 @@ public class UrlCheckUtil {
                                 intent.setClass(App.getApp(), SingleReplyActivity.class);
                                 intent.setData(replyUri);
                                 App.getApp().startActivity(intent);
+                                return true;
                             }
                         } else if (url.matches("^http://(www|m).guokr.com/post/\\d+.*")) {
                             //http://www.guokr.com/post/123456/
@@ -127,6 +131,7 @@ public class UrlCheckUtil {
                             post.setId(segments.get(1));
                             intent.putExtra(Extras.Extra_Post, post);
                             App.getApp().startActivity(intent);
+                            return true;
                         }
                     } else if (segments.size() == 3) {
                         //跳转
@@ -134,6 +139,7 @@ public class UrlCheckUtil {
                             intent.setClass(App.getApp(), SingleReplyActivity.class);
                             intent.setData(uri);
                             App.getApp().startActivity(intent);
+                            return true;
                         }
                     } else if (segments.size() == 4) {
                         //跳转
@@ -142,6 +148,7 @@ public class UrlCheckUtil {
                             intent.setClass(App.getApp(), SingleReplyActivity.class);
                             intent.setData(uri);
                             App.getApp().startActivity(intent);
+                            return true;
                         }
                     }
                     break;
@@ -151,6 +158,7 @@ public class UrlCheckUtil {
                         SubItem subItem = new SubItem(SubItem.Section_Post, SubItem.Type_Collections, "小组热贴", "hot_posts");
                         intent.putExtra(Extras.Extra_SubItem, subItem);
                         App.getApp().startActivity(intent);
+                        return true;
                     } else if (segments.size() == 2) {
                         if (url.matches("^http://(www|m).guokr.com/group/(\\d+)/?$")) {
                             //http://www.guokr.com/group/63/
@@ -158,12 +166,14 @@ public class UrlCheckUtil {
                             intent.setClass(App.getApp(), PostListActivity.class);
                             intent.putExtra(Extras.Extra_SubItem_ID, groupId);
                             App.getApp().startActivity(intent);
+                            return true;
                         } else if (url.matches("^http://(www|m).guokr.com/group/hot_posts/?$")) {
                             //http://www.guokr.com/group/hot_posts/
                             intent.setClass(App.getApp(), PostListActivity.class);
                             SubItem subItem = new SubItem(SubItem.Section_Post, SubItem.Type_Collections, "小组热贴", "hot_posts");
                             intent.putExtra(Extras.Extra_SubItem, subItem);
                             App.getApp().startActivity(intent);
+                            return true;
                         }
                     } else if (segments.size() == 3) {
                         if (url.matches("^http://(www|m).guokr.com/group/user/recent_replies/?$")) {
@@ -172,9 +182,11 @@ public class UrlCheckUtil {
                                 SubItem subItem = new SubItem(SubItem.Section_Post, SubItem.Type_Collections, "我的小组", "hot_posts");
                                 intent.putExtra(Extras.Extra_SubItem, subItem);
                                 App.getApp().startActivity(intent);
+                                return true;
                             } else {
                                 intent.setClass(App.getApp(), LoginActivity.class);
                                 App.getApp().startActivity(intent);
+                                return true;
                             }
                         }
                     }
@@ -190,6 +202,7 @@ public class UrlCheckUtil {
                                 intent.setClass(App.getApp(), AnswerActivity.class);
                                 intent.setData(answerUri);
                                 App.getApp().startActivity(intent);
+                                return true;
                             }
                         } else if (url.matches("^http://(www|m).guokr.com/question/\\d+.*$")) {
                             //http://www.guokr.com/question/123456
@@ -198,6 +211,7 @@ public class UrlCheckUtil {
                             question.setId(segments.get(1));
                             intent.putExtra(Extras.Extra_Question, question);
                             App.getApp().startActivity(intent);
+                            return true;
                         }
                     }
                     break;
@@ -210,6 +224,7 @@ public class UrlCheckUtil {
                             intent.setClass(App.getApp(), AnswerActivity.class);
                             intent.setData(uri);
                             App.getApp().startActivity(intent);
+                            return true;
                         }
                     } else if (segments.size() == 2) {
                         //http://www.guokr.com/answer/654321/
@@ -217,14 +232,15 @@ public class UrlCheckUtil {
                             intent.setClass(App.getApp(), AnswerActivity.class);
                             intent.setData(uri);
                             App.getApp().startActivity(intent);
+                            return true;
                         }
                     }
                     break;
                 default:
                     flag = false;
-                    UrlCheckUtil.openWithBrowser(uri);
                     break;
             }
+            UrlCheckUtil.openWithBrowser(uri);
         } else {
             flag = false;
             openWithBrowser(uri);
