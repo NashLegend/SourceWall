@@ -18,9 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import com.davemorrissey.labs.subscaleview.ImageSource;
-import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
-import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView.AnimationBuilder;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import net.nashlegend.sourcewall.R;
@@ -30,6 +27,8 @@ import net.nashlegend.sourcewall.util.DisplayUtil;
 import net.nashlegend.sourcewall.util.ErrorUtils;
 import net.nashlegend.sourcewall.util.ImageUtils;
 import net.nashlegend.sourcewall.view.common.LoadingView;
+import net.nashlegend.sourcewall.view.common.ScaledImage.ImageSource;
+import net.nashlegend.sourcewall.view.common.ScaledImage.SubsamplingScaleImageView;
 import net.nashlegend.sourcewall.view.common.ScalingImage;
 
 import java.io.File;
@@ -195,7 +194,7 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
             scale = averageDpi / doubleTapZoomDpi;
         }
         PointF center = new PointF(scalingImage.getSWidth() / 2f, 0);
-        AnimationBuilder animationBuilder = scalingImage.animateScaleAndCenter(scale, center);
+        SubsamplingScaleImageView.AnimationBuilder animationBuilder = scalingImage.animateScaleAndCenter(scale, center);
         animationBuilder.withDuration(500).start();
     }
 
@@ -223,6 +222,11 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
 
         @Override
         public void onTileLoadError(Exception e) {
+
+        }
+
+        @Override
+        public void onPreviewReleased() {
 
         }
     }

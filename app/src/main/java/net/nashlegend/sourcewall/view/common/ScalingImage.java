@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import net.nashlegend.sourcewall.view.common.ScaledImage.SubsamplingScaleImageView;
 
 /**
  * Created by NashLegend on 2015/10/20 0020.

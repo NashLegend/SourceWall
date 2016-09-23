@@ -94,7 +94,6 @@ dependencies {
     compile deps.RxJava
     compile deps.Jsoup
     compile deps.Fab
-    compile deps.ScaleImage
     compile deps.GifDrawable
     compile deps.ImageLoader
     compile deps.RxBinding
