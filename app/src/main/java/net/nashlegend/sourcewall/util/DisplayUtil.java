@@ -73,6 +73,18 @@ public class DisplayUtil {
     }
 
     /**
+     * 返回真实屏幕像素密度
+     *
+     * @param context
+     * @return
+     */
+    public static float getRealPixelDensity(Context context) {
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        float averageDpi = (metrics.xdpi + metrics.ydpi) / 2.0F;
+        return averageDpi / 160f;
+    }
+
+    /**
      * 返回状态栏高度
      *
      * @param activity

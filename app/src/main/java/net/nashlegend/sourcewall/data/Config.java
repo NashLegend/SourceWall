@@ -14,7 +14,8 @@ import net.nashlegend.sourcewall.util.PrefsUtil;
 public class Config {
 
     public final static long throttleSpan = 500;
-    public final static float longImageRatio = 2f;//长宽比超过此值，则认为是超长图
+    public final static float longImageRatio = 2f;//长宽比超过此值，则认为是长图
+    public final static float SUPER_LONG_IMAGE_RATIO = 3f;//长宽比超过此值，则认为是超长图,会自动滚动到顶部
     public final static int ExitTapsGap = 1200;
 
     /**
