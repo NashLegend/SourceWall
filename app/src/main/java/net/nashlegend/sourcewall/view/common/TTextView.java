@@ -407,7 +407,7 @@ public class TTextView extends TextView {
          */
         private Drawable getOnlineOrCachedDrawable(String source) {
             someImageLoaded = true;
-            float stretch = DisplayUtil.getPixelDensity(getApp());
+            float stretch = getResources().getDisplayMetrics().densityDpi / 120f;
             Drawable drawable = null;
             try {
                 if (source.startsWith("http")) {
