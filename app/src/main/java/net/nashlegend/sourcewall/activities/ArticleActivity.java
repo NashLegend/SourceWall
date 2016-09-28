@@ -37,6 +37,7 @@ import net.nashlegend.sourcewall.dialogs.ReportDialog;
 import net.nashlegend.sourcewall.dialogs.ReportDialog.ReportReasonListener;
 import net.nashlegend.sourcewall.events.ArticleFinishLoadingLatestRepliesEvent;
 import net.nashlegend.sourcewall.events.ArticleStartLoadingLatestRepliesEvent;
+import net.nashlegend.sourcewall.events.Emitter;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.UComment;
 import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
@@ -61,7 +62,6 @@ import net.nashlegend.sourcewall.view.common.listview.LListView.OnRefreshListene
 
 import java.util.ArrayList;
 
-import de.greenrobot.event.EventBus;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
@@ -159,12 +159,12 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
         floatingActionsMenu.setVisibility(View.GONE);
         loadData(-1);
 
-        EventBus.getDefault().register(this);
+        Emitter.register(this);
     }
 
     @Override
     protected void onDestroy() {
-        EventBus.getDefault().unregister(this);
+        Emitter.unregister(this);
         super.onDestroy();
     }
 

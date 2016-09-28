@@ -26,8 +26,6 @@ import static android.support.v7.app.AppCompatDelegate.setDefaultNightMode;
 public class App extends Application {
 
     private static App application;
-    private static DaoMaster daoMaster;
-    private static DaoSession daoSession;
 
     @Override
     public void onCreate() {
@@ -57,21 +55,6 @@ public class App extends Application {
 
     public static boolean isNightMode() {
         return (getApp().getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
-    }
-
-    public static DaoMaster getDaoMaster() {
-        if (daoMaster == null) {
-            DaoMaster.OpenHelper helper = new DaoMaster.DevOpenHelper(application, BaseDB.DB_NAME, null);
-            daoMaster = new DaoMaster(helper.getWritableDatabase());
-        }
-        return daoMaster;
-    }
-
-    public static DaoSession getDaoSession() {
-        if (daoSession == null) {
-            daoSession = getDaoMaster().newSession();
-        }
-        return daoSession;
     }
 
     public static int getVersionInt() {

@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.NoticeAdapter;
 import net.nashlegend.sourcewall.data.Mob;
+import net.nashlegend.sourcewall.events.Emitter;
 import net.nashlegend.sourcewall.events.NoticeNumChangedEvent;
 import net.nashlegend.sourcewall.model.Notice;
 import net.nashlegend.sourcewall.model.SubItem;
@@ -34,7 +35,6 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import de.greenrobot.event.EventBus;
 
 /**
  * Created by NashLegend on 2015/2/12 0012
@@ -106,7 +106,7 @@ public class NoticesFragment extends BaseFragment implements IChannelsFragment, 
                 if (result.size() == 0 && resumeTime == 1) {
                     toast(R.string.no_notice);
                 }
-                EventBus.getDefault().post(new NoticeNumChangedEvent(result.size()));
+                Emitter.emit(new NoticeNumChangedEvent(result.size()));
                 adapter.setList(result);
                 adapter.notifyDataSetInvalidated();
                 listView.setCanPullToRefresh(true);
@@ -178,7 +178,7 @@ public class NoticesFragment extends BaseFragment implements IChannelsFragment, 
                 listView.doneOperation();
                 adapter.clear();
                 adapter.notifyDataSetInvalidated();
-                EventBus.getDefault().post(new NoticeNumChangedEvent(0));
+                Emitter.emit(new NoticeNumChangedEvent(0));
             }
         });
 

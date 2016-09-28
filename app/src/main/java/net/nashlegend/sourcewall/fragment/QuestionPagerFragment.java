@@ -29,6 +29,7 @@ import net.nashlegend.sourcewall.data.ChannelHelper;
 import net.nashlegend.sourcewall.data.Consts.Keys;
 import net.nashlegend.sourcewall.data.database.AskTagHelper;
 import net.nashlegend.sourcewall.data.database.gen.AskTag;
+import net.nashlegend.sourcewall.events.Emitter;
 import net.nashlegend.sourcewall.events.ShowHideEvent;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.api.QuestionAPI;
@@ -46,7 +47,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.greenrobot.event.EventBus;
 import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -90,7 +90,7 @@ public class QuestionPagerFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        EventBus.getDefault().register(this);
+        Emitter.register(this);
         if (layoutView == null) {
             layoutView = inflater.inflate(R.layout.fragment_question_pager, container, false);
             ButterKnife.bind(this, layoutView);
@@ -136,7 +136,7 @@ public class QuestionPagerFragment extends BaseFragment {
 
     @Override
     public void onDestroyView() {
-        EventBus.getDefault().unregister(this);
+        Emitter.unregister(this);
         super.onDestroyView();
     }
 

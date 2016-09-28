@@ -16,6 +16,7 @@ import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.ArticleActivity;
 import net.nashlegend.sourcewall.adapters.ArticleAdapter;
 import net.nashlegend.sourcewall.data.Consts.Extras;
+import net.nashlegend.sourcewall.events.Emitter;
 import net.nashlegend.sourcewall.events.ShowHideEvent;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.SubItem;
@@ -32,7 +33,6 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import de.greenrobot.event.EventBus;
 import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -91,14 +91,14 @@ public class ArticlesFragment extends BaseFragment implements ReloadListener, On
                     @Override
                     public void animateHide() {
                         if (getUserVisibleHint()) {
-                            EventBus.getDefault().post(new ShowHideEvent(SubItem.Section_Article, false));
+                            Emitter.emit(new ShowHideEvent(SubItem.Section_Article, false));
                         }
                     }
 
                     @Override
                     public void animateBack() {
                         if (getUserVisibleHint()) {
-                            EventBus.getDefault().post(new ShowHideEvent(SubItem.Section_Article, true));
+                            Emitter.emit(new ShowHideEvent(SubItem.Section_Article, true));
                         }
                     }
                 });

@@ -8,6 +8,7 @@ import android.view.View;
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.data.Config;
 import net.nashlegend.sourcewall.data.Consts.Keys;
+import net.nashlegend.sourcewall.events.Emitter;
 import net.nashlegend.sourcewall.events.NoticeNumChangedEvent;
 import net.nashlegend.sourcewall.fragment.ArticlePagerFragment;
 import net.nashlegend.sourcewall.fragment.BaseFragment;
@@ -25,7 +26,6 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.greenrobot.event.EventBus;
 
 import static net.nashlegend.sourcewall.data.Consts.Keys.Key_Show_Group_First_Homepage;
 
@@ -71,7 +71,7 @@ public class MainActivity extends BaseActivity {
             crtIndex = 0;
         }
         onBarClick(bars.get(crtIndex).getId());
-        EventBus.getDefault().register(this);
+        Emitter.register(this);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        EventBus.getDefault().unregister(this);
+        Emitter.unregister(this);
         super.onDestroy();
     }
 
@@ -94,12 +94,12 @@ public class MainActivity extends BaseActivity {
         MessageAPI.getReminderAndNoticeNum(new SimpleCallBack<ReminderNoticeNum>() {
             @Override
             public void onFailure() {
-                EventBus.getDefault().post(new NoticeNumChangedEvent(0));
+                Emitter.emit(new NoticeNumChangedEvent(0));
             }
 
             @Override
             public void onSuccess(@NonNull ReminderNoticeNum result) {
-                EventBus.getDefault().post(new NoticeNumChangedEvent(result.getNotice_num()));
+                Emitter.emit(new NoticeNumChangedEvent(result.getNotice_num()));
             }
         });
     }

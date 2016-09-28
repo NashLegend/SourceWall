@@ -19,12 +19,12 @@ import de.greenrobot.dao.query.QueryBuilder;
 public class AskTagHelper {
 
     public static long getAskTagsNumber() {
-        AskTagDao tagDao = App.getDaoSession().getAskTagDao();
+        AskTagDao tagDao = BaseDB.getDaoSession().getAskTagDao();
         return tagDao.count();
     }
 
     public static List<AskTag> getAllMyTags() {
-        AskTagDao tagDao = App.getDaoSession().getAskTagDao();
+        AskTagDao tagDao = BaseDB.getDaoSession().getAskTagDao();
         QueryBuilder<AskTag> builder = tagDao.queryBuilder().
                 orderAsc(AskTagDao.Properties.Order);
         List<AskTag> list = builder.list();
@@ -32,7 +32,7 @@ public class AskTagHelper {
     }
 
     public static List<SubItem> getAllMyTagSubItems() {
-        AskTagDao tagDao = App.getDaoSession().getAskTagDao();
+        AskTagDao tagDao = BaseDB.getDaoSession().getAskTagDao();
         QueryBuilder<AskTag> builder = tagDao.queryBuilder().
                 orderAsc(AskTagDao.Properties.Order);
         List<AskTag> askTags = builder.list();
@@ -46,14 +46,14 @@ public class AskTagHelper {
     }
 
     public static List<AskTag> getSelectedTags() {
-        AskTagDao tagDao = App.getDaoSession().getAskTagDao();
+        AskTagDao tagDao = BaseDB.getDaoSession().getAskTagDao();
         QueryBuilder<AskTag> builder = tagDao.queryBuilder().where(AskTagDao.Properties.Selected.eq(true)).
                 orderAsc(AskTagDao.Properties.Order);
         return builder.list();
     }
 
     public static List<SubItem> getSelectedQuestionSubItems() {
-        AskTagDao tagDao = App.getDaoSession().getAskTagDao();
+        AskTagDao tagDao = BaseDB.getDaoSession().getAskTagDao();
         QueryBuilder<AskTag> builder = tagDao.queryBuilder().where(AskTagDao.Properties.Selected.eq(true)).
                 orderAsc(AskTagDao.Properties.Order);
         List<AskTag> askTags = builder.list();
@@ -67,7 +67,7 @@ public class AskTagHelper {
     }
 
     public static List<AskTag> getUnselectedTags() {
-        AskTagDao tagDao = App.getDaoSession().getAskTagDao();
+        AskTagDao tagDao = BaseDB.getDaoSession().getAskTagDao();
         QueryBuilder<AskTag> builder = tagDao.queryBuilder().
                 where(AskTagDao.Properties.Selected.eq(false)).
                 orderAsc(AskTagDao.Properties.Order);
@@ -75,17 +75,17 @@ public class AskTagHelper {
     }
 
     public static void putAllMyTags(List<AskTag> myTags) {
-        App.getDaoSession().getDatabase().beginTransaction();
+        BaseDB.getDaoSession().getDatabase().beginTransaction();
         try {
-            AskTagDao tagDao = App.getDaoSession().getAskTagDao();
+            AskTagDao tagDao = BaseDB.getDaoSession().getAskTagDao();
             tagDao.deleteAll();
             tagDao.insertInTx(myTags);
-            App.getDaoSession().getDatabase().setTransactionSuccessful();
+            BaseDB.getDaoSession().getDatabase().setTransactionSuccessful();
             PrefsUtil.saveLong(Keys.Key_Last_Ask_Tags_Version, System.currentTimeMillis());
         } catch (Exception e) {
             ErrorUtils.onException(e);
         } finally {
-            App.getDaoSession().getDatabase().endTransaction();
+            BaseDB.getDaoSession().getDatabase().endTransaction();
         }
     }
 
@@ -95,26 +95,26 @@ public class AskTagHelper {
      * @param myTags tag
      */
     public static void putUnselectedTags(List<AskTag> myTags) {
-        App.getDaoSession().getDatabase().beginTransaction();
+        BaseDB.getDaoSession().getDatabase().beginTransaction();
         try {
             List<AskTag> tags = getSelectedTags();
             tags.addAll(myTags);
             for (int i = 0; i < tags.size(); i++) {
                 tags.get(i).setId(null);
             }
-            AskTagDao tagDao = App.getDaoSession().getAskTagDao();
+            AskTagDao tagDao = BaseDB.getDaoSession().getAskTagDao();
             tagDao.deleteAll();
             tagDao.insertInTx(tags);
-            App.getDaoSession().getDatabase().setTransactionSuccessful();
+            BaseDB.getDaoSession().getDatabase().setTransactionSuccessful();
         } catch (Exception e) {
             ErrorUtils.onException(e);
         } finally {
-            App.getDaoSession().getDatabase().endTransaction();
+            BaseDB.getDaoSession().getDatabase().endTransaction();
         }
     }
 
     public static void clearAllMyTags() {
-        AskTagDao tagDao = App.getDaoSession().getAskTagDao();
+        AskTagDao tagDao = BaseDB.getDaoSession().getAskTagDao();
         tagDao.deleteAll();
         PrefsUtil.saveLong(Keys.Key_Last_Ask_Tags_Version, System.currentTimeMillis());
     }

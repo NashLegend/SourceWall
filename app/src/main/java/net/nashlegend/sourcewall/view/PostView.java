@@ -13,6 +13,7 @@ import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.adapters.PostDetailAdapter;
 import net.nashlegend.sourcewall.data.Config;
 import net.nashlegend.sourcewall.data.Consts.Web;
+import net.nashlegend.sourcewall.events.Emitter;
 import net.nashlegend.sourcewall.events.PostFinishLoadingLatestRepliesEvent;
 import net.nashlegend.sourcewall.events.PostStartLoadingLatestRepliesEvent;
 import net.nashlegend.sourcewall.model.Post;
@@ -26,7 +27,6 @@ import net.nashlegend.sourcewall.view.common.WWebView;
 
 import java.util.ArrayList;
 
-import de.greenrobot.event.EventBus;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -104,7 +104,7 @@ public class PostView extends AceView<Post> {
             return;
         }
 
-        EventBus.getDefault().post(new PostStartLoadingLatestRepliesEvent(post));
+        Emitter.emit(new PostStartLoadingLatestRepliesEvent(post));
 
         loadDesc.findViewById(R.id.text_header_load_hint).setVisibility(View.INVISIBLE);
         loadDesc.findViewById(R.id.progress_header_loading).setVisibility(View.VISIBLE);
@@ -115,12 +115,12 @@ public class PostView extends AceView<Post> {
                 .subscribe(new Observer<ResponseObject<ArrayList<UComment>>>() {
                     @Override
                     public void onCompleted() {
-                        EventBus.getDefault().post(new PostFinishLoadingLatestRepliesEvent(post));
+                        Emitter.emit(new PostFinishLoadingLatestRepliesEvent(post));
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        EventBus.getDefault().post(new PostFinishLoadingLatestRepliesEvent(post));
+                        Emitter.emit(new PostFinishLoadingLatestRepliesEvent(post));
                     }
 
                     @Override

@@ -15,6 +15,7 @@ import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.PostActivity;
 import net.nashlegend.sourcewall.adapters.PostAdapter;
 import net.nashlegend.sourcewall.data.Consts.Extras;
+import net.nashlegend.sourcewall.events.Emitter;
 import net.nashlegend.sourcewall.events.ShowHideEvent;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.SubItem;
@@ -31,7 +32,6 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import de.greenrobot.event.EventBus;
 import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -122,14 +122,14 @@ public class PostsFragment extends BaseFragment implements ReloadListener, OnRef
                     @Override
                     public void animateHide() {
                         if (getUserVisibleHint()) {
-                            EventBus.getDefault().post(new ShowHideEvent(SubItem.Section_Post, false));
+                            Emitter.emit(new ShowHideEvent(SubItem.Section_Post, false));
                         }
                     }
 
                     @Override
                     public void animateBack() {
                         if (getUserVisibleHint()) {
-                            EventBus.getDefault().post(new ShowHideEvent(SubItem.Section_Post, true));
+                            Emitter.emit(new ShowHideEvent(SubItem.Section_Post, true));
                         }
                     }
                 });

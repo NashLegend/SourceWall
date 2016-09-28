@@ -19,12 +19,12 @@ import de.greenrobot.dao.query.QueryBuilder;
 public class GroupHelper {
 
     public static long getMyGroupsNumber() {
-        MyGroupDao myGroupDao = App.getDaoSession().getMyGroupDao();
+        MyGroupDao myGroupDao = BaseDB.getDaoSession().getMyGroupDao();
         return myGroupDao.count();
     }
 
     public static List<MyGroup> getAllMyGroups() {
-        MyGroupDao myGroupDao = App.getDaoSession().getMyGroupDao();
+        MyGroupDao myGroupDao = BaseDB.getDaoSession().getMyGroupDao();
         QueryBuilder<MyGroup> builder = myGroupDao.queryBuilder().
                 orderAsc(MyGroupDao.Properties.Order);
         List<MyGroup> list = builder.list();
@@ -43,7 +43,7 @@ public class GroupHelper {
     }
 
     public static List<MyGroup> getSelectedGroups() {
-        MyGroupDao myGroupDao = App.getDaoSession().getMyGroupDao();
+        MyGroupDao myGroupDao = BaseDB.getDaoSession().getMyGroupDao();
         QueryBuilder<MyGroup> builder = myGroupDao.queryBuilder().where(MyGroupDao.Properties.Selected.eq(true)).
                 orderAsc(MyGroupDao.Properties.Order);
         return builder.list();
@@ -61,7 +61,7 @@ public class GroupHelper {
     }
 
     public static List<MyGroup> getUnselectedGroups() {
-        MyGroupDao myGroupDao = App.getDaoSession().getMyGroupDao();
+        MyGroupDao myGroupDao = BaseDB.getDaoSession().getMyGroupDao();
         QueryBuilder<MyGroup> builder = myGroupDao.queryBuilder().
                 where(MyGroupDao.Properties.Selected.eq(false)).
                 orderAsc(MyGroupDao.Properties.Order);
@@ -69,17 +69,17 @@ public class GroupHelper {
     }
 
     public static void putAllMyGroups(List<MyGroup> myGroups) {
-        App.getDaoSession().getDatabase().beginTransaction();
+        BaseDB.getDaoSession().getDatabase().beginTransaction();
         try {
-            MyGroupDao myGroupDao = App.getDaoSession().getMyGroupDao();
+            MyGroupDao myGroupDao = BaseDB.getDaoSession().getMyGroupDao();
             myGroupDao.deleteAll();
             myGroupDao.insertInTx(myGroups);
-            App.getDaoSession().getDatabase().setTransactionSuccessful();
+            BaseDB.getDaoSession().getDatabase().setTransactionSuccessful();
             PrefsUtil.saveLong(Keys.Key_Last_Post_Groups_Version, System.currentTimeMillis());
         } catch (Exception e) {
             ErrorUtils.onException(e);
         } finally {
-            App.getDaoSession().getDatabase().endTransaction();
+            BaseDB.getDaoSession().getDatabase().endTransaction();
         }
     }
 
@@ -89,26 +89,26 @@ public class GroupHelper {
      * @param myGroups
      */
     public static void putUnselectedGroups(List<MyGroup> myGroups) {
-        App.getDaoSession().getDatabase().beginTransaction();
+        BaseDB.getDaoSession().getDatabase().beginTransaction();
         try {
             List<MyGroup> groups = getSelectedGroups();
             groups.addAll(myGroups);
             for (int i = 0; i < groups.size(); i++) {
                 groups.get(i).setId(null);
             }
-            MyGroupDao myGroupDao = App.getDaoSession().getMyGroupDao();
+            MyGroupDao myGroupDao = BaseDB.getDaoSession().getMyGroupDao();
             myGroupDao.deleteAll();
             myGroupDao.insertInTx(groups);
-            App.getDaoSession().getDatabase().setTransactionSuccessful();
+            BaseDB.getDaoSession().getDatabase().setTransactionSuccessful();
         } catch (Exception e) {
             ErrorUtils.onException(e);
         } finally {
-            App.getDaoSession().getDatabase().endTransaction();
+            BaseDB.getDaoSession().getDatabase().endTransaction();
         }
     }
 
     public static void clearAllMyGroups() {
-        MyGroupDao myGroupDao = App.getDaoSession().getMyGroupDao();
+        MyGroupDao myGroupDao = BaseDB.getDaoSession().getMyGroupDao();
         myGroupDao.deleteAll();
         PrefsUtil.saveLong(Keys.Key_Last_Post_Groups_Version, System.currentTimeMillis());
     }

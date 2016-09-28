@@ -38,7 +38,9 @@ import net.nashlegend.sourcewall.data.Consts.Keys;
 import net.nashlegend.sourcewall.data.Consts.RequestCode;
 import net.nashlegend.sourcewall.data.database.GroupHelper;
 import net.nashlegend.sourcewall.data.database.gen.MyGroup;
+import net.nashlegend.sourcewall.events.Emitter;
 import net.nashlegend.sourcewall.events.GroupFetchedEvent;
+import net.nashlegend.sourcewall.events.LoginStateChangedEvent;
 import net.nashlegend.sourcewall.events.ShowHideEvent;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.api.PostAPI;
@@ -56,7 +58,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.greenrobot.event.EventBus;
 import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -104,7 +105,7 @@ public class PostPagerFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        EventBus.getDefault().register(this);
+        Emitter.register(this);
         if (layoutView == null) {
             layoutView = inflater.inflate(R.layout.fragment_post_pager, container, false);
             ButterKnife.bind(this, layoutView);
@@ -146,16 +147,14 @@ public class PostPagerFragment extends BaseFragment {
             }
         }
         if (shouldNotifyDataSetChanged) {
-            subItems = ChannelHelper.getGroupSectionsByUserState();
-            adapter.notifyDataSetChanged();
-            shouldNotifyDataSetChanged = false;
+            update();
         }
         return layoutView;
     }
 
     @Override
     public void onDestroyView() {
-        EventBus.getDefault().unregister(this);
+        Emitter.unregister(this);
         super.onDestroyView();
     }
 
@@ -390,6 +389,10 @@ public class PostPagerFragment extends BaseFragment {
     }
 
     private void update() {
+        if (adapter == null) {
+            return;
+        }
+
         SubItem subItem = null;
         if (viewPager.getCurrentItem() < subItems.size()) {
             subItem = subItems.get(viewPager.getCurrentItem());
@@ -397,6 +400,7 @@ public class PostPagerFragment extends BaseFragment {
 
         subItems = ChannelHelper.getGroupSectionsByUserState();
         adapter.notifyDataSetChanged();
+        shouldNotifyDataSetChanged = false;
 
         if (subItem != null) {
             for (int i = 0; i < subItems.size(); i++) {
@@ -406,6 +410,7 @@ public class PostPagerFragment extends BaseFragment {
                 }
             }
         }
+
         viewPager.post(new Runnable() {
             @Override
             public void run() {
@@ -415,7 +420,6 @@ public class PostPagerFragment extends BaseFragment {
                 }
             }
         });
-        shouldNotifyDataSetChanged = false;
     }
 
     ProgressDialog progressDialog;
@@ -462,11 +466,15 @@ public class PostPagerFragment extends BaseFragment {
         if (!isAdded()) {
             return;
         }
-        subItems = ChannelHelper.getGroupSectionsByUserState();
-        if (adapter != null) {
-            adapter.notifyDataSetChanged();
-            shouldNotifyDataSetChanged = false;
+        update();
+    }
+
+
+    public void onEventMainThread(LoginStateChangedEvent e) {
+        if (!isAdded()) {
+            return;
         }
+        update();
     }
 
     @Override

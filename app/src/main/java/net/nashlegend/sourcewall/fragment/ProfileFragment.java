@@ -29,6 +29,7 @@ import net.nashlegend.sourcewall.data.Config;
 import net.nashlegend.sourcewall.data.Consts.Keys;
 import net.nashlegend.sourcewall.data.Consts.RequestCode;
 import net.nashlegend.sourcewall.data.Mob;
+import net.nashlegend.sourcewall.events.Emitter;
 import net.nashlegend.sourcewall.events.LoginStateChangedEvent;
 import net.nashlegend.sourcewall.events.NoticeNumChangedEvent;
 import net.nashlegend.sourcewall.model.ReminderNoticeNum;
@@ -44,7 +45,6 @@ import net.nashlegend.sourcewall.util.PrefsUtil;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.greenrobot.event.EventBus;
 
 public class ProfileFragment extends BaseFragment {
 
@@ -86,7 +86,7 @@ public class ProfileFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        EventBus.getDefault().register(this);
+        Emitter.register(this);
         if (layoutView == null) {
             layoutView = inflater.inflate(R.layout.fragment_profile, container, false);
             ButterKnife.bind(this, layoutView);
@@ -101,7 +101,7 @@ public class ProfileFragment extends BaseFragment {
 
     @Override
     public void onDestroyView() {
-        EventBus.getDefault().unregister(this);
+        Emitter.unregister(this);
         super.onDestroyView();
     }
 
@@ -178,12 +178,12 @@ public class ProfileFragment extends BaseFragment {
         MessageAPI.getReminderAndNoticeNum(new SimpleCallBack<ReminderNoticeNum>() {
             @Override
             public void onFailure() {
-                EventBus.getDefault().post(new NoticeNumChangedEvent(0));
+                Emitter.emit(new NoticeNumChangedEvent(0));
             }
 
             @Override
             public void onSuccess(@NonNull ReminderNoticeNum result) {
-                EventBus.getDefault().post(new NoticeNumChangedEvent(result.getNotice_num()));
+                Emitter.emit(new NoticeNumChangedEvent(result.getNotice_num()));
             }
         });
     }

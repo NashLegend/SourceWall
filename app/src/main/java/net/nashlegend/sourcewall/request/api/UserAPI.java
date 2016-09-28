@@ -7,7 +7,9 @@ import android.webkit.CookieSyncManager;
 import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.data.Consts.Keys;
 import net.nashlegend.sourcewall.data.database.BasketHelper;
+import net.nashlegend.sourcewall.events.Emitter;
 import net.nashlegend.sourcewall.events.LoginStateChangedEvent;
+import net.nashlegend.sourcewall.fragment.PostPagerFragment;
 import net.nashlegend.sourcewall.model.UserInfo;
 import net.nashlegend.sourcewall.request.HttpUtil;
 import net.nashlegend.sourcewall.request.NetworkTask;
@@ -17,8 +19,6 @@ import net.nashlegend.sourcewall.request.RequestObject.RequestCallBack;
 import net.nashlegend.sourcewall.request.parsers.BooleanParser;
 import net.nashlegend.sourcewall.request.parsers.UserInfoParser;
 import net.nashlegend.sourcewall.util.PrefsUtil;
-
-import de.greenrobot.event.EventBus;
 
 /**
  * Created by NashLegend on 2014/11/25 0025
@@ -140,7 +140,8 @@ public class UserAPI extends APIBase {
         CookieSyncManager.getInstance().sync();
         HttpUtil.clearCookies();
         BasketHelper.clearAllMyBaskets();
-        EventBus.getDefault().post(new LoginStateChangedEvent());
+        PostPagerFragment.shouldNotifyDataSetChanged = true;
+        Emitter.emit(new LoginStateChangedEvent());
     }
 
     /**

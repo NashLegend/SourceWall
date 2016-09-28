@@ -6,7 +6,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +14,7 @@ import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.activities.SearchActivity;
 import net.nashlegend.sourcewall.adapters.FakeFragmentStatePagerAdapter;
 import net.nashlegend.sourcewall.data.ChannelHelper;
+import net.nashlegend.sourcewall.events.Emitter;
 import net.nashlegend.sourcewall.events.ShowHideEvent;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.util.UiUtil;
@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.greenrobot.event.EventBus;
 
 public class ArticlePagerFragment extends BaseFragment {
     View layoutView;
@@ -57,7 +56,7 @@ public class ArticlePagerFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        EventBus.getDefault().register(this);
+        Emitter.register(this);
         if (layoutView == null) {
             layoutView = inflater.inflate(R.layout.fragment_article_pager, container, false);
             ButterKnife.bind(this, layoutView);
@@ -74,7 +73,7 @@ public class ArticlePagerFragment extends BaseFragment {
 
     @Override
     public void onDestroyView() {
-        EventBus.getDefault().unregister(this);
+        Emitter.unregister(this);
         super.onDestroyView();
     }
 

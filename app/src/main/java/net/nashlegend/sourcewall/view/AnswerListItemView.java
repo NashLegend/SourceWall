@@ -13,7 +13,6 @@ import net.nashlegend.sourcewall.data.Config;
 import net.nashlegend.sourcewall.model.Answer;
 import net.nashlegend.sourcewall.util.DateTimeUtil;
 import net.nashlegend.sourcewall.util.ImageUtils;
-import net.nashlegend.sourcewall.util.RegUtil;
 
 /**
  * Created by NashLegend on 2014/9/18 0018

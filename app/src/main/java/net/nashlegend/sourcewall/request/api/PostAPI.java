@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import net.nashlegend.sourcewall.data.Mob;
 import net.nashlegend.sourcewall.data.database.GroupHelper;
 import net.nashlegend.sourcewall.data.database.gen.MyGroup;
+import net.nashlegend.sourcewall.events.Emitter;
 import net.nashlegend.sourcewall.events.GroupFetchedEvent;
 import net.nashlegend.sourcewall.fragment.PostPagerFragment;
 import net.nashlegend.sourcewall.model.Post;
@@ -43,7 +44,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import de.greenrobot.event.EventBus;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscription;
@@ -348,7 +348,7 @@ public class PostAPI extends APIBase {
             @Override
             public void onNext(ArrayList<MyGroup> myGroups) {
                 PostPagerFragment.shouldNotifyDataSetChanged = true;
-                EventBus.getDefault().post(new GroupFetchedEvent());
+                Emitter.emit(new GroupFetchedEvent());
             }
         });
     }

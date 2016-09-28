@@ -9,12 +9,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import net.nashlegend.sourcewall.R;
+import net.nashlegend.sourcewall.events.Emitter;
 import net.nashlegend.sourcewall.model.Basket;
 import net.nashlegend.sourcewall.request.NetworkTask;
 import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
 import net.nashlegend.sourcewall.request.api.FavorAPI;
-
-import de.greenrobot.event.EventBus;
 
 /**
  * Created by NashLegend on 2014/12/2 0002
@@ -41,13 +40,13 @@ public class BasketItemView extends AceView<Basket> implements View.OnClickListe
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        EventBus.getDefault().unregister(this);
+        Emitter.unregister(this);
     }
 
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        EventBus.getDefault().register(this);
+        Emitter.register(this);
     }
 
     public void onEventMainThread(Basket basket) {
@@ -130,6 +129,6 @@ public class BasketItemView extends AceView<Basket> implements View.OnClickListe
     }
 
     public void postBasketChanged(Basket basket) {
-        EventBus.getDefault().post(basket);
+        Emitter.emit(basket);
     }
 }

@@ -19,14 +19,13 @@ import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.data.Consts.Keys;
 import net.nashlegend.sourcewall.data.Consts.Web;
 import net.nashlegend.sourcewall.data.Mob;
+import net.nashlegend.sourcewall.events.Emitter;
 import net.nashlegend.sourcewall.events.LoginStateChangedEvent;
 import net.nashlegend.sourcewall.request.HttpUtil;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.PrefsUtil;
 import net.nashlegend.sourcewall.util.UiUtil;
-
-import de.greenrobot.event.EventBus;
 
 public class LoginActivity extends BaseActivity {
 
@@ -205,7 +204,7 @@ public class LoginActivity extends BaseActivity {
     private void delayFinish() {
         if (UserAPI.isLoggedIn()) {
             PostAPI.getAllMyGroupsAndMergeAndNotify();
-            EventBus.getDefault().post(new LoginStateChangedEvent());
+            Emitter.emit(new LoginStateChangedEvent());
         }
         new Handler().postDelayed(new Runnable() {
             @Override

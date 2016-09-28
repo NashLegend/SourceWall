@@ -20,7 +20,7 @@ import de.greenrobot.dao.query.QueryBuilder;
 public class BasketHelper {
 
     public static long getBasketsNumber() {
-        MyBasketDao basketDao = App.getDaoSession().getMyBasketDao();
+        MyBasketDao basketDao = BaseDB.getDaoSession().getMyBasketDao();
         return basketDao.count();
     }
 
@@ -36,12 +36,12 @@ public class BasketHelper {
     }
 
     public static List<MyBasket> getAllMyBaskets() {
-        MyBasketDao basketDao = App.getDaoSession().getMyBasketDao();
+        MyBasketDao basketDao = BaseDB.getDaoSession().getMyBasketDao();
         return basketDao.loadAll();
     }
 
     public static List<MyBasket> getSelectedBaskets() {
-        MyBasketDao basketDao = App.getDaoSession().getMyBasketDao();
+        MyBasketDao basketDao = BaseDB.getDaoSession().getMyBasketDao();
         QueryBuilder<MyBasket> builder = basketDao.queryBuilder()
                 .where(MyBasketDao.Properties.Selected.eq(true)).
                         orderAsc(MyBasketDao.Properties.Order);
@@ -60,7 +60,7 @@ public class BasketHelper {
     }
 
     public static List<MyBasket> getUnselectedBaskets() {
-        MyBasketDao basketDao = App.getDaoSession().getMyBasketDao();
+        MyBasketDao basketDao = BaseDB.getDaoSession().getMyBasketDao();
         QueryBuilder<MyBasket> builder = basketDao.queryBuilder().
                 where(MyBasketDao.Properties.Selected.eq(false)).
                 orderAsc(MyBasketDao.Properties.Order);
@@ -85,17 +85,17 @@ public class BasketHelper {
     }
 
     public static void putAllMyBaskets(List<MyBasket> myBaskets) {
-        App.getDaoSession().getDatabase().beginTransaction();
+        BaseDB.getDaoSession().getDatabase().beginTransaction();
         try {
-            MyBasketDao basketDao = App.getDaoSession().getMyBasketDao();
+            MyBasketDao basketDao = BaseDB.getDaoSession().getMyBasketDao();
             basketDao.deleteAll();
             basketDao.insertInTx(myBaskets);
-            App.getDaoSession().getDatabase().setTransactionSuccessful();
+            BaseDB.getDaoSession().getDatabase().setTransactionSuccessful();
             PrefsUtil.saveLong(Keys.Key_Last_Basket_Version, System.currentTimeMillis());
         } catch (Exception e) {
             ErrorUtils.onException(e);
         } finally {
-            App.getDaoSession().getDatabase().endTransaction();
+            BaseDB.getDaoSession().getDatabase().endTransaction();
         }
     }
 
@@ -105,26 +105,26 @@ public class BasketHelper {
      * @param myBaskets myBaskets
      */
     public static void putUnselectedBaskets(List<MyBasket> myBaskets) {
-        App.getDaoSession().getDatabase().beginTransaction();
+        BaseDB.getDaoSession().getDatabase().beginTransaction();
         try {
             List<MyBasket> baskets = getSelectedBaskets();
             baskets.addAll(myBaskets);
             for (int i = 0; i < baskets.size(); i++) {
                 baskets.get(i).setId(null);
             }
-            MyBasketDao basketDao = App.getDaoSession().getMyBasketDao();
+            MyBasketDao basketDao = BaseDB.getDaoSession().getMyBasketDao();
             basketDao.deleteAll();
             basketDao.insertInTx(baskets);
-            App.getDaoSession().getDatabase().setTransactionSuccessful();
+            BaseDB.getDaoSession().getDatabase().setTransactionSuccessful();
         } catch (Exception e) {
             ErrorUtils.onException(e);
         } finally {
-            App.getDaoSession().getDatabase().endTransaction();
+            BaseDB.getDaoSession().getDatabase().endTransaction();
         }
     }
 
     public static void clearAllMyBaskets() {
-        MyBasketDao basketDao = App.getDaoSession().getMyBasketDao();
+        MyBasketDao basketDao = BaseDB.getDaoSession().getMyBasketDao();
         basketDao.deleteAll();
         PrefsUtil.saveLong(Keys.Key_Last_Basket_Version, System.currentTimeMillis());
     }

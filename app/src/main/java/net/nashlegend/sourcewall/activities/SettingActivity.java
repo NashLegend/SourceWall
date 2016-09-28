@@ -25,15 +25,15 @@ import net.nashlegend.sourcewall.data.Consts.Keys;
 import net.nashlegend.sourcewall.data.Consts.TailType;
 import net.nashlegend.sourcewall.data.Mob;
 import net.nashlegend.sourcewall.data.Tail;
+import net.nashlegend.sourcewall.events.Emitter;
 import net.nashlegend.sourcewall.events.LoginStateChangedEvent;
+import net.nashlegend.sourcewall.fragment.PostPagerFragment;
 import net.nashlegend.sourcewall.model.UpdateInfo;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.PrefsUtil;
 import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.util.UpdateChecker;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;
-
-import de.greenrobot.event.EventBus;
 
 public class SettingActivity extends BaseActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     private TextView imageText;
@@ -256,7 +256,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                             UserAPI.logout();
                             Mob.onEvent(Mob.Event_Logout);
                             logText.setText(R.string.log_in);
-                            EventBus.getDefault().post(new LoginStateChangedEvent());
+                            PostPagerFragment.shouldNotifyDataSetChanged = true;
+                            Emitter.emit(new LoginStateChangedEvent());
                         }
                     })
                     .setNegativeButton(R.string.cancel, null)

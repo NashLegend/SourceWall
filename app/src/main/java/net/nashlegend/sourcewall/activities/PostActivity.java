@@ -33,6 +33,7 @@ import net.nashlegend.sourcewall.data.Consts.RequestCode;
 import net.nashlegend.sourcewall.data.Mob;
 import net.nashlegend.sourcewall.dialogs.FavorDialog;
 import net.nashlegend.sourcewall.dialogs.ReportDialog;
+import net.nashlegend.sourcewall.events.Emitter;
 import net.nashlegend.sourcewall.events.PostFinishLoadingLatestRepliesEvent;
 import net.nashlegend.sourcewall.events.PostStartLoadingLatestRepliesEvent;
 import net.nashlegend.sourcewall.model.Post;
@@ -58,7 +59,6 @@ import net.nashlegend.sourcewall.view.common.listview.LListView;
 
 import java.util.ArrayList;
 
-import de.greenrobot.event.EventBus;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
@@ -151,12 +151,12 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
         floatingActionsMenu.setVisibility(View.GONE);
         loadData(-1);
 
-        EventBus.getDefault().register(this);
+        Emitter.register(this);
     }
 
     @Override
     protected void onDestroy() {
-        EventBus.getDefault().unregister(this);
+        Emitter.unregister(this);
         super.onDestroy();
     }
 
