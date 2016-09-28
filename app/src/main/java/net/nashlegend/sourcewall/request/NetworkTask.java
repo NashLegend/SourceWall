@@ -388,8 +388,11 @@ public class NetworkTask<T> {
                                 JsonHandler.handleRequestException(e, responseObject);
                             }
                         }
-                        if (!responseObject.ok && responseObject.isCached) {
-                            removeCache();
+                        if (!responseObject.ok) {
+                            ErrorUtils.dumpRequest(responseObject);
+                            if (responseObject.isCached) {
+                                removeCache();
+                            }
                         }
                         return responseObject;
                     }
@@ -512,8 +515,8 @@ public class NetworkTask<T> {
                         JsonHandler.handleRequestException(e, responseObject);
                     }
                 }
-                if (!responseObject.ok && responseObject.throwable != null) {
-                    ErrorUtils.dumpRequestError(responseObject.throwable, responseObject);
+                if (!responseObject.ok) {
+                    ErrorUtils.dumpRequest(responseObject);
                 }
             }
             return responseObject;
