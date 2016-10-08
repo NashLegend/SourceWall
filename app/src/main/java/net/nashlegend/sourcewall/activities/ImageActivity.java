@@ -32,7 +32,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ImageActivity extends BaseActivity {
-
+    public static final int THROTTLE = 800;
     ArrayList<String> images;
     ViewPager pager;
     ImageAdapter adapter;
@@ -40,6 +40,7 @@ public class ImageActivity extends BaseActivity {
     ImageButton downloadButton;
     View head;
     int imageCount = 0;
+    long bootTime = 0;
 
     @Override
     public void setTheme(int resId) {
@@ -50,6 +51,7 @@ public class ImageActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
+        bootTime = System.currentTimeMillis();
         setSwipeEnabled(false);
         head = findViewById(R.id.layoutHead);
         indicator = (TextView) findViewById(R.id.tvIndicator);
@@ -109,6 +111,12 @@ public class ImageActivity extends BaseActivity {
     private void download() {
         Mob.onEvent(Mob.Event_Download_Image_In_Pager);
         new DownloadTask().execute(images.get(pager.getCurrentItem()));
+    }
+
+    public void tapFinish() {
+        if (System.currentTimeMillis() - bootTime > THROTTLE) {
+            finish();
+        }
     }
 
     @Override

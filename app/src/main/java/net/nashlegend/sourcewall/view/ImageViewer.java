@@ -1,6 +1,5 @@
 package net.nashlegend.sourcewall.view;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,6 +20,7 @@ import android.widget.FrameLayout;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import net.nashlegend.sourcewall.R;
+import net.nashlegend.sourcewall.activities.ImageActivity;
 import net.nashlegend.sourcewall.data.Config;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.util.DisplayUtil;
@@ -142,8 +142,8 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
 
     private void tapFinish() {
         Context ctx = getContext();
-        if (ctx instanceof Activity) {
-            ((Activity) ctx).finish();
+        if (ctx instanceof ImageActivity) {
+            ((ImageActivity) ctx).tapFinish();
         }
     }
 
