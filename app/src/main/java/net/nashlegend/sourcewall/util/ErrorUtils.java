@@ -33,7 +33,7 @@ public class ErrorUtils {
     }
 
     public static void onException(Throwable e, String message) {
-        if (BuildConfig.DEBUG && e != null && message != null) {
+        if (BuildConfig.DEBUG && e != null) {
             Logger.e(e, message);
         }
     }
