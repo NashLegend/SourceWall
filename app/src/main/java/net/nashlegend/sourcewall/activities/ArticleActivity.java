@@ -387,6 +387,7 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
     private void copyComment(UComment comment) {
         ClipboardManager manager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
         manager.setPrimaryClip(ClipData.newPlainText(null, RegUtil.html2PlainText(comment.getContent())));
+        toast(R.string.copy_success);
     }
 
     private void onReplyItemClick(final View view, int position, long id) {

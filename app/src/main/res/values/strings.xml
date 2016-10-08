@@ -201,5 +201,6 @@
     <string name="checking_update_wait_a_moment">正在检查更新，请稍候……</string>
     <string name="sticky">置顶</string>
     <string name="feedback">意见与建议</string>
+    <string name="copy_success">已复制</string>
 
 </resources>
