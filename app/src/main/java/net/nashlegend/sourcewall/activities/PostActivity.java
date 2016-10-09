@@ -343,6 +343,10 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
     }
 
     private void replyPost(UComment comment) {
+        if (!post.is_replyable()) {
+            ToastUtil.toastBigSingleton("本贴无法回复");
+            return;
+        }
         if (!UserAPI.isLoggedIn()) {
             gotoLogin();
         } else {

@@ -27,6 +27,7 @@ public class Post extends AceModel {
     private boolean featured = false;//是否展现在集合列表还是单个小组。true表示展示在单个小组列表中
     private boolean desc = false;
     private boolean isStick = false;//是否是置顶贴
+    private boolean is_replyable = true;//是否可回复
     private ArrayList<UComment> hotComments = new ArrayList<>();
     private ArrayList<UComment> comments = new ArrayList<>();
 
@@ -55,6 +56,7 @@ public class Post extends AceModel {
         detail.setContent(content);
         detail.setReplyNum(reply_num);
         detail.setStick(postResult.optBoolean("is_stick"));
+        detail.setIs_replyable(postResult.optBoolean("is_replyable", true));
         return detail;
     }
 
@@ -206,6 +208,14 @@ public class Post extends AceModel {
         isStick = stick;
     }
 
+    public boolean is_replyable() {
+        return is_replyable;
+    }
+
+    public void setIs_replyable(boolean is_replyable) {
+        this.is_replyable = is_replyable;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -228,6 +238,7 @@ public class Post extends AceModel {
         dest.writeByte(this.featured ? (byte) 1 : (byte) 0);
         dest.writeByte(this.desc ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isStick ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.is_replyable ? (byte) 1 : (byte) 0);
         dest.writeTypedList(this.hotComments);
         dest.writeTypedList(this.comments);
     }
@@ -248,6 +259,7 @@ public class Post extends AceModel {
         this.featured = in.readByte() != 0;
         this.desc = in.readByte() != 0;
         this.isStick = in.readByte() != 0;
+        this.is_replyable = in.readByte() != 0;
         this.hotComments = in.createTypedArrayList(UComment.CREATOR);
         this.comments = in.createTypedArrayList(UComment.CREATOR);
     }
