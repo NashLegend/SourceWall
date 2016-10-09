@@ -126,7 +126,7 @@ public class JsonHandler {
         responseObject.code = error_code;
         switch (responseObject.code) {
             case ResponseCode.CODE_TOKEN_INVALID:
-                ToastUtil.toastSingleton(R.string.token_invalid);
+                ToastUtil.toastBigSingleton(R.string.token_invalid);
                 UserAPI.logout();
                 break;
             default:
