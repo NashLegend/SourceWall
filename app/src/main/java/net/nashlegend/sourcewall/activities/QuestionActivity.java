@@ -406,7 +406,7 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
                         if (result.ok) {
                             progressBar.setVisibility(View.VISIBLE);
                             floatingActionsMenu.setVisibility(View.VISIBLE);
-                            loadingView.onLoadSuccess();
+                            loadingView.onSuccess();
                             question = result.result;
                             adapter.add(0, question);
                             adapter.notifyDataSetChanged();
@@ -416,7 +416,7 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
                                 toastSingleton(R.string.question_404);
                                 finish();
                             } else {
-                                loadingView.onLoadFailed();
+                                loadingView.onFailed();
                                 toastSingleton(getString(R.string.load_failed));
                             }
                         }
@@ -430,7 +430,7 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
                 .doOnUnsubscribe(new Action0() {
                     @Override
                     public void call() {
-                        loadingView.onLoadSuccess();
+                        loadingView.onSuccess();
                         listView.doneOperation();
                     }
                 })
@@ -453,7 +453,7 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
                         }
                         progressBar.setVisibility(View.GONE);
                         if (result.ok) {
-                            loadingView.onLoadSuccess();
+                            loadingView.onSuccess();
                             ArrayList<Answer> ars = result.result;
                             if (ars.size() > 0) {
                                 adapter.addAll(ars);
@@ -465,7 +465,7 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
                                 finish();
                             } else {
                                 toastSingleton(getString(R.string.load_failed));
-                                loadingView.onLoadFailed();
+                                loadingView.onFailed();
                             }
                         }
                         if (adapter.getCount() > 0) {

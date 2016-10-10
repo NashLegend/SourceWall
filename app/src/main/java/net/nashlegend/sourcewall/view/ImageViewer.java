@@ -94,7 +94,7 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
     }
 
     public void load(String imageUrl) {
-        loadingView.startLoading();
+        loadingView.onLoading();
         url = imageUrl;
         if (url.startsWith("http")) {
             task = new LoaderTask();
@@ -107,9 +107,9 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
                 Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
                 scalingImage.setImage(ImageSource.bitmap(bitmap));
                 properScale(bitmap);
-                loadingView.onLoadSuccess();
+                loadingView.onSuccess();
             } catch (Exception e) {
-                loadingView.onLoadFailed();
+                loadingView.onFailed();
             }
         }
     }
@@ -259,7 +259,7 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
         @Override
         protected void onPostExecute(ResponseObject<File> result) {
             if (result.ok) {
-                loadingView.onLoadSuccess();
+                loadingView.onSuccess();
                 String realLink = url.replaceAll("\\?.*$", "");
                 String suffix = "";
                 int offset = realLink.lastIndexOf(".");
@@ -298,7 +298,7 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
                     properScale(result.result);
                 }
             } else {
-                loadingView.onLoadFailed();
+                loadingView.onFailed();
             }
         }
     }

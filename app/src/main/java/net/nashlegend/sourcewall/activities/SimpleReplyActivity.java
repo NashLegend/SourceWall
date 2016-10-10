@@ -247,13 +247,13 @@ public class SimpleReplyActivity extends BaseActivity implements OnRefreshListen
             @Override
             public void onFailure() {
                 toast(R.string.load_failed);
-                loadingView.onLoadFailed();
+                loadingView.onFailed();
                 listView.doneOperation();
             }
 
             @Override
             public void onSuccess(@NonNull ArrayList<UComment> result) {
-                loadingView.onLoadSuccess();
+                loadingView.onSuccess();
                 if (offset == 0) {
                     //Refresh
                     if (result.size() > 0) {

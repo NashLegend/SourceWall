@@ -150,7 +150,7 @@ public class SearchActivity extends BaseActivity {
             task.cancel();
         }
         if (page == 1) {
-            viewLoading.startLoading();
+            viewLoading.onLoading();
             adapter.clear();
             adapter.notifyDataSetChanged();
         }
@@ -158,7 +158,7 @@ public class SearchActivity extends BaseActivity {
             @Override
             public void onFailure() {
                 if (page == 1) {
-                    viewLoading.onLoadFailed();
+                    viewLoading.onLoading();
                 }
                 toast("加载失败");
                 listSearch.doneOperation();
@@ -170,7 +170,7 @@ public class SearchActivity extends BaseActivity {
                     return;
                 }
                 if (page == 1) {
-                    viewLoading.onLoadSuccess();
+                    viewLoading.onSuccess();
                     if (result.size() == 0) {
                         toast("没有搜索到结果");
                     }

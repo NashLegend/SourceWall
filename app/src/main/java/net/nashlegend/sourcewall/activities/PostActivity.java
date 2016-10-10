@@ -288,7 +288,7 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
     public void startLoadDesc() {
         Mob.onEvent(Mob.Event_Reverse_Read_Post);
         loadDesc = true;
-        loadingView.startLoading();
+        loadingView.onLoading();
         listView.setCanPullToLoadMore(false);
         setMenuVisibility();
         if (adapter.getCount() > 0 && adapter.getList().get(0) instanceof Post) {
@@ -310,7 +310,7 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
     private void startLoadAcs() {
         Mob.onEvent(Mob.Event_Normal_Read_Post);
         loadDesc = false;
-        loadingView.startLoading();
+        loadingView.onLoading();
         listView.setCanPullToLoadMore(false);
         setMenuVisibility();
         if (adapter.getCount() > 0 && adapter.getList().get(0) instanceof Post) {
@@ -614,7 +614,7 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
                         if (result.ok) {
                             progressBar.setVisibility(View.VISIBLE);
                             floatingActionsMenu.setVisibility(View.VISIBLE);
-                            loadingView.onLoadSuccess();
+                            loadingView.onSuccess();
                             post = result.result;
                             post.setDesc(loadDesc);
                             adapter.add(0, post);
@@ -625,7 +625,7 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
                                 toastSingleton(R.string.post_404);
                                 finish();
                             } else {
-                                loadingView.onLoadFailed();
+                                loadingView.onFailed();
                                 toastSingleton(getString(R.string.load_failed));
                                 progressBar.setVisibility(View.GONE);
                             }
@@ -652,7 +652,7 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
                 .doOnUnsubscribe(new Action0() {
                     @Override
                     public void call() {
-                        loadingView.onLoadSuccess();
+                        loadingView.onSuccess();
                         listView.doneOperation();
                     }
                 })
@@ -687,7 +687,7 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
                             return;
                         }
                         if (result.ok) {
-                            loadingView.onLoadSuccess();
+                            loadingView.onSuccess();
                             ArrayList<UComment> ars = result.result;
                             if (ars.size() > 0) {
                                 if (loadDesc) {
@@ -703,7 +703,7 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
                                 finish();
                             } else {
                                 toastSingleton(getString(R.string.load_failed));
-                                loadingView.onLoadFailed();
+                                loadingView.onFailed();
                             }
                         }
                         if (adapter.getCount() > 0) {

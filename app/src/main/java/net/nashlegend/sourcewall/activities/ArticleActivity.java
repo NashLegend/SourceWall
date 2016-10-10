@@ -472,7 +472,7 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
     public void startLoadDesc() {
         Mob.onEvent(Mob.Event_Reverse_Read_Article);
         loadDesc = true;
-        loadingView.startLoading();
+        loadingView.onLoading();
         listView.setCanPullToLoadMore(false);
         setMenuVisibility();
         if (adapter.getCount() > 0 && adapter.getList().get(0) instanceof Article) {
@@ -494,7 +494,7 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
     private void startLoadAcs() {
         Mob.onEvent(Mob.Event_Normal_Read_Article);
         loadDesc = false;
-        loadingView.startLoading();
+        loadingView.onLoading();
         listView.setCanPullToLoadMore(false);
         setMenuVisibility();
         if (adapter.getCount() > 0 && adapter.getList().get(0) instanceof Article) {
@@ -539,7 +539,7 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
                         if (result.ok) {
                             progressBar.setVisibility(View.VISIBLE);
                             floatingActionsMenu.setVisibility(View.VISIBLE);
-                            loadingView.onLoadSuccess();
+                            loadingView.onSuccess();
                             Article tmpArticle = result.result;
                             tmpArticle.setUrl(article.getUrl());
                             tmpArticle.setSummary(article.getSummary());
@@ -556,7 +556,7 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
                             } else {
                                 progressBar.setVisibility(View.GONE);
                                 toastSingleton(getString(R.string.load_failed));
-                                loadingView.onLoadFailed();
+                                loadingView.onFailed();
                             }
                         }
                     }
@@ -588,7 +588,7 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
                 .doOnUnsubscribe(new Action0() {
                     @Override
                     public void call() {
-                        loadingView.onLoadSuccess();
+                        loadingView.onSuccess();
                         listView.doneOperation();
                     }
                 })
@@ -610,7 +610,7 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
                             return;
                         }
                         if (result.ok) {
-                            loadingView.onLoadSuccess();
+                            loadingView.onSuccess();
                             if (result.result.size() > 0) {
                                 if (loadDesc) {
                                     adapter.addAllReversely(result.result);
@@ -628,7 +628,7 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
                                 finish();
                             } else {
                                 toastSingleton(getString(R.string.load_failed));
-                                loadingView.onLoadFailed();
+                                loadingView.onFailed();
                             }
                         }
                         if (adapter.getCount() > 0) {

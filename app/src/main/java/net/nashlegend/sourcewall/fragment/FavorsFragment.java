@@ -89,7 +89,7 @@ public class FavorsFragment extends BaseFragment implements OnRefreshListener, R
 
     private void loadOver() {
         loadData(0);
-        loadingView.startLoading();
+        loadingView.onLoading();
     }
 
     private void loadData(int offset) {
@@ -113,7 +113,7 @@ public class FavorsFragment extends BaseFragment implements OnRefreshListener, R
 
     public void resetData(SubItem subItem) {
         if (subItem.equals(this.subItem)) {
-            loadingView.onLoadSuccess();
+            loadingView.onSuccess();
             if (adapter == null || adapter.getCount() == 0) {
                 triggerRefresh();
             }
@@ -144,7 +144,7 @@ public class FavorsFragment extends BaseFragment implements OnRefreshListener, R
                 .doOnUnsubscribe(new Action0() {
                     @Override
                     public void call() {
-                        loadingView.onLoadSuccess();
+                        loadingView.onSuccess();
                         if (adapter.getCount() > 0) {
                             listView.setCanPullToLoadMore(true);
                             listView.setCanPullToRefresh(true);
@@ -173,7 +173,7 @@ public class FavorsFragment extends BaseFragment implements OnRefreshListener, R
                                 ArrayList<Favor> ars = result.result;
                                 if (ars.size() > 0) {
                                     progressBar.setVisibility(View.VISIBLE);
-                                    loadingView.onLoadSuccess();
+                                    loadingView.onSuccess();
                                     adapter.addAll(ars);
                                     adapter.notifyDataSetChanged();
                                 }
@@ -182,7 +182,7 @@ public class FavorsFragment extends BaseFragment implements OnRefreshListener, R
                             listView.doneOperation();
                             progressBar.setVisibility(View.GONE);
                             if (result.ok) {
-                                loadingView.onLoadSuccess();
+                                loadingView.onSuccess();
                                 ArrayList<Favor> ars = result.result;
                                 if (offset > 0) {
                                     if (ars.size() > 0) {
@@ -197,7 +197,7 @@ public class FavorsFragment extends BaseFragment implements OnRefreshListener, R
                                 }
                             } else {
                                 toast(R.string.load_failed);
-                                loadingView.onLoadFailed();
+                                loadingView.onFailed();
                             }
                             if (adapter.getCount() > 0) {
                                 listView.setCanPullToLoadMore(true);

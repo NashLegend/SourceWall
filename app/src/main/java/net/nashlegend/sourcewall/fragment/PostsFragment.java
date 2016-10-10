@@ -138,7 +138,7 @@ public class PostsFragment extends BaseFragment implements ReloadListener, OnRef
 
     private void loadOver() {
         loadData(0);
-        loadingView.startLoading();
+        loadingView.onLoading();
     }
 
     private void loadData(int offset) {
@@ -205,7 +205,7 @@ public class PostsFragment extends BaseFragment implements ReloadListener, OnRef
                 .doOnUnsubscribe(new Action0() {
                     @Override
                     public void call() {
-                        loadingView.onLoadSuccess();
+                        loadingView.onSuccess();
                         listView.doneOperation();
                         if (currentPage > 0) {
                             showHeader();
@@ -239,7 +239,7 @@ public class PostsFragment extends BaseFragment implements ReloadListener, OnRef
                                 ArrayList<Post> ars = result.result;
                                 if (ars.size() > 0) {
                                     progressBar.setVisibility(View.VISIBLE);
-                                    loadingView.onLoadSuccess();
+                                    loadingView.onSuccess();
                                     adapter.addAll(ars);
                                     adapter.notifyDataSetChanged();
                                 }
@@ -248,7 +248,7 @@ public class PostsFragment extends BaseFragment implements ReloadListener, OnRef
                             listView.doneOperation();
                             progressBar.setVisibility(View.GONE);
                             if (result.ok) {
-                                loadingView.onLoadSuccess();
+                                loadingView.onSuccess();
                                 ArrayList<Post> ars = result.result;
                                 if (ars.size() > 0) {
                                     currentPage = loadedPage;
@@ -260,7 +260,7 @@ public class PostsFragment extends BaseFragment implements ReloadListener, OnRef
                                 }
                             } else {
                                 toastSingleton(R.string.load_failed);
-                                loadingView.onLoadFailed();
+                                loadingView.onFailed();
                             }
                             if (currentPage > 0) {
                                 showHeader();

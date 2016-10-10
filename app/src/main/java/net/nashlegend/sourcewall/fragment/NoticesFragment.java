@@ -94,7 +94,7 @@ public class NoticesFragment extends BaseFragment implements IChannelsFragment, 
         networkTask = MessageAPI.getNoticeList(new SimpleCallBack<ArrayList<Notice>>() {
             @Override
             public void onFailure() {
-                loadingView.onLoadFailed();
+                loadingView.onFailed();
                 toast(R.string.load_failed);
                 listView.setCanPullToRefresh(true);
                 listView.doneOperation();
@@ -102,7 +102,7 @@ public class NoticesFragment extends BaseFragment implements IChannelsFragment, 
 
             @Override
             public void onSuccess(@NonNull ArrayList<Notice> result) {
-                loadingView.onLoadSuccess();
+                loadingView.onSuccess();
                 if (result.size() == 0 && resumeTime == 1) {
                     toast(R.string.no_notice);
                 }

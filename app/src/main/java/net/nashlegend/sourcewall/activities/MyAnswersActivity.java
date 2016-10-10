@@ -114,12 +114,12 @@ public class MyAnswersActivity extends BaseActivity {
             }
         });
         loadOver();
-        loadingView.startLoading();
+        loadingView.onLoading();
     }
 
     private void loadOver() {
         loadData(0);
-        loadingView.startLoading();
+        loadingView.onLoading();
     }
 
     private void loadData(int offset) {
@@ -131,7 +131,7 @@ public class MyAnswersActivity extends BaseActivity {
             @Override
             public void onFailure(@NonNull ResponseObject<ArrayList<Answer>> result) {
                 toast(R.string.load_failed);
-                loadingView.onLoadFailed();
+                loadingView.onFailed();
             }
 
             @Override
@@ -140,7 +140,7 @@ public class MyAnswersActivity extends BaseActivity {
                     return;
                 }
                 listView.doneOperation();
-                loadingView.onLoadSuccess();
+                loadingView.onSuccess();
                 for (Answer answer : result) {
                     answer.getAuthor().setName(UserAPI.getName());
                 }

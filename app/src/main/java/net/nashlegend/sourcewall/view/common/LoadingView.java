@@ -1,14 +1,11 @@
 package net.nashlegend.sourcewall.view.common;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build;
+import android.content.res.TypedArray;
+import android.support.annotation.LayoutRes;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.ProgressBar;
 
 import net.nashlegend.sourcewall.R;
 
@@ -16,40 +13,47 @@ import net.nashlegend.sourcewall.R;
  * Created by NashLegend on 2014/12/26 0026
  */
 public class LoadingView extends FrameLayout {
-    ProgressBar progressBar;
-    ImageButton loadingButton;
+    View loadingView;
+    View reloadView;
+    View emptyView;
     ReloadListener reloadListener;
 
     public LoadingView(Context context) {
-        super(context);
-        initView(context);
+        this(context, null);
     }
 
     public LoadingView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initView(context);
+        int layout = R.layout.layout_loading;
+        if (attrs != null) {
+            TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.LoadingView);
+            int indexCount = a.getIndexCount();
+            for (int i = 0; i < indexCount; i++) {
+                int index = a.getIndex(i);
+                if (index == R.styleable.LoadingView_layout) {
+                    layout = a.getResourceId(index, R.layout.layout_loading);
+                }
+            }
+            a.recycle();
+        }
+        initView(layout);
     }
 
-    public LoadingView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+    private void initView(int id) {
+        initLayout(id);
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public LoadingView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-    }
-
-    private void initView(Context context) {
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.layout_loading, this);
-        progressBar = (ProgressBar) findViewById(R.id.progress_loading);
-        loadingButton = (ImageButton) findViewById(R.id.button_reload);
-        loadingButton.setOnClickListener(new OnClickListener() {
+    public void initLayout(@LayoutRes int id) {
+        removeAllViews();
+        View.inflate(getContext(), id, this);
+        emptyView = findViewById(R.id.empty_view);
+        loadingView = findViewById(R.id.loading_view);
+        reloadView = findViewById(R.id.reload_view);
+        reloadView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (reloadListener != null) {
-                    progressBar.setVisibility(VISIBLE);
-                    loadingButton.setVisibility(GONE);
+                    onLoading();
                     reloadListener.reload();
                 }
             }
@@ -64,24 +68,34 @@ public class LoadingView extends FrameLayout {
         return getVisibility() == VISIBLE;
     }
 
-    public void startLoading() {
-        progressBar.setVisibility(VISIBLE);
-        loadingButton.setVisibility(GONE);
+    public void onLoading() {
+        loadingView.setVisibility(VISIBLE);
+        reloadView.setVisibility(GONE);
+        emptyView.setVisibility(GONE);
         setVisibility(VISIBLE);
     }
 
-    public void onLoadFailed() {
-        progressBar.setVisibility(GONE);
-        loadingButton.setVisibility(VISIBLE);
-    }
-
-    public void onLoadSuccess() {
-        progressBar.setVisibility(VISIBLE);
-        loadingButton.setVisibility(GONE);
+    public void onSuccess() {
+        loadingView.setVisibility(VISIBLE);
+        reloadView.setVisibility(GONE);
+        emptyView.setVisibility(GONE);
         setVisibility(GONE);
     }
 
-    public static interface ReloadListener {
+    public void onFailed() {
+        loadingView.setVisibility(GONE);
+        emptyView.setVisibility(GONE);
+        reloadView.setVisibility(VISIBLE);
+    }
+
+    public void onEmpty() {
+        loadingView.setVisibility(GONE);
+        reloadView.setVisibility(GONE);
+        emptyView.setVisibility(VISIBLE);
+        setVisibility(VISIBLE);
+    }
+
+    public interface ReloadListener {
         void reload();
     }
 }

@@ -187,14 +187,14 @@ public class SingleReplyActivity extends BaseActivity implements View.OnClickLis
 
                     @Override
                     public void onError(Throwable e) {
-                        loadingView.onLoadFailed();
+                        loadingView.onFailed();
                     }
 
                     @Override
                     public void onNext(ResponseObject<UComment> response) {
                         if (response.ok) {
                             floatingActionsMenu.setVisibility(View.VISIBLE);
-                            loadingView.onLoadSuccess();
+                            loadingView.onSuccess();
                             data = response.result;
                             if (UserAPI.getUserID().equals(data.getAuthor().getId())) {
                                 deleteButton.setVisibility(View.VISIBLE);
@@ -220,7 +220,7 @@ public class SingleReplyActivity extends BaseActivity implements View.OnClickLis
                                 toastSingleton(R.string.page_404);
                                 finish();
                             } else {
-                                loadingView.onLoadFailed();
+                                loadingView.onFailed();
                             }
                         }
 

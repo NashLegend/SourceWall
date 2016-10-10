@@ -111,13 +111,13 @@ public class MyPostsActivity extends BaseActivity {
             }
         });
         loadOver();
-        loadingView.startLoading();
+        loadingView.onLoading();
     }
 
 
     private void loadOver() {
         loadData(0);
-        loadingView.startLoading();
+        loadingView.onLoading();
     }
 
     private void loadData(int offset) {
@@ -129,7 +129,7 @@ public class MyPostsActivity extends BaseActivity {
             @Override
             public void onFailure(@NonNull ResponseObject<ArrayList<Post>> result) {
                 toast(R.string.load_failed);
-                loadingView.onLoadFailed();
+                loadingView.onFailed();
             }
 
             @Override
@@ -138,7 +138,7 @@ public class MyPostsActivity extends BaseActivity {
                     return;
                 }
                 listView.doneOperation();
-                loadingView.onLoadSuccess();
+                loadingView.onSuccess();
                 if (offset > 0) {
                     adapter.addAll(result);
                 } else {

@@ -7,15 +7,22 @@
     android:gravity="center">
 
     <ProgressBar
-        android:id="@+id/progress_loading"
+        android:id="@+id/loading_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <ImageButton
-        android:id="@+id/button_reload"
+        android:id="@+id/reload_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/transparent"
+        android:background="?attr/background_selectable_borderless"
         android:src="@drawable/refresh_big"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
         android:visibility="gone" />
 </RelativeLayout>

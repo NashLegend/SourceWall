@@ -142,7 +142,7 @@ public class AnswerActivity extends BaseActivity implements View.OnClickListener
         QuestionAPI.getSingleAnswerFromRedirectUrl(redirectUri.toString(), new SimpleCallBack<Answer>() {
             @Override
             public void onFailure(@NonNull ResponseObject<Answer> result) {
-                loadingView.onLoadFailed();
+                loadingView.onFailed();
                 if (result.statusCode == 404) {
                     toastSingleton(R.string.article_404);
                     finish();
@@ -152,7 +152,7 @@ public class AnswerActivity extends BaseActivity implements View.OnClickListener
             @Override
             public void onSuccess(@NonNull Answer result) {
                 floatingActionsMenu.setVisibility(View.VISIBLE);
-                loadingView.onLoadSuccess();
+                loadingView.onSuccess();
                 answer = result;
                 question = new Question();
                 question.setTitle(answer.getQuestion());

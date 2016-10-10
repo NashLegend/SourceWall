@@ -63,11 +63,11 @@ public class MyFavorsActivity extends BaseActivity {
     }
 
     private void loadBaskets() {
-        loadingView.startLoading();
+        loadingView.onLoading();
         FavorAPI.getBaskets(new SimpleCallBack<ArrayList<Basket>>() {
             @Override
             public void onFailure() {
-                loadingView.onLoadFailed();
+                loadingView.onFailed();
             }
 
             @Override
@@ -87,7 +87,7 @@ public class MyFavorsActivity extends BaseActivity {
         if (isFinishing()) {
             return;
         }
-        loadingView.onLoadSuccess();
+        loadingView.onSuccess();
         if (fetchedSubItems == null || fetchedSubItems.size() == 0) {
             ToastUtil.toastBigSingleton("还没有创建果篮 0.0 ");
             finish();
