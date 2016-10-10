@@ -16,6 +16,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -45,6 +46,7 @@ import static net.nashlegend.sourcewall.data.Config.SUPER_LONG_IMAGE_RATIO;
 public class ImageViewer extends FrameLayout implements LoadingView.ReloadListener, View.OnClickListener {
     ScalingImage scalingImage;
     GifImageView gifImageView;
+    ImageView imageView;
     LoadingView loadingView;
     LoaderTask task;
     String url = "";
@@ -73,8 +75,7 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
         gestureDetector = new GestureDetector(getContext(), gestureListener);
         scalingImage = (ScalingImage) findViewById(R.id.zoom_image);
         gifImageView = (GifImageView) findViewById(R.id.gifImage);
-        gifImageView.setVisibility(GONE);
-        scalingImage.setVisibility(GONE);
+        imageView = (ImageView) findViewById(R.id.imageView);
         scalingImage.setMinimumDpi(doubleTapZoomDpi);
         scalingImage.setDoubleTapZoomDpi(doubleTapZoomDpi);
         loadingView = (LoadingView) findViewById(R.id.image_loading);
@@ -86,11 +87,29 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
             public void onReady() {
                 scrollToTopWhileLong();
             }
+
+            @Override
+            public void onImageLoadError(Exception e) {
+                switch2Normal();
+            }
         });
         gifImageView.setOnTouchListener(touchListener);
         this.setOnTouchListener(touchListener);
         gifImageView.setOnClickListener(this);
         setOnClickListener(this);
+    }
+
+    private void switch2Normal() {
+        gifImageView.setVisibility(GONE);
+        scalingImage.setVisibility(GONE);
+        imageView.setVisibility(VISIBLE);
+        try {
+            File file = ImageLoader.getInstance().getDiskCache().get(url);
+            Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+            imageView.setImageBitmap(bitmap);
+        } catch (Exception e) {
+            ErrorUtils.onException(e);
+        }
     }
 
     public void load(String imageUrl) {
@@ -268,7 +287,6 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
                 }
                 if ("gif".equalsIgnoreCase(suffix)) {
                     gifImageView.setVisibility(VISIBLE);
-                    scalingImage.setVisibility(GONE);
                     try {
                         GifDrawable gifDrawable = new GifDrawable(result.result);
                         int initWidth = gifDrawable.getIntrinsicWidth();
@@ -292,7 +310,6 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
                         ErrorUtils.onException(e);
                     }
                 } else {
-                    gifImageView.setVisibility(GONE);
                     scalingImage.setVisibility(VISIBLE);
                     scalingImage.setImage(ImageSource.uri(Uri.fromFile(result.result)));
                     properScale(result.result);

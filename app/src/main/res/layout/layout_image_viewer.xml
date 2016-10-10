@@ -7,13 +7,20 @@
     <net.nashlegend.sourcewall.view.common.ScalingImage
         android:id="@+id/zoom_image"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/gifImage"
-        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 
     <net.nashlegend.sourcewall.view.common.LoadingView
         android:id="@+id/image_loading"
