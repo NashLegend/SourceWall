@@ -1,19 +1,20 @@
 package net.nashlegend.sourcewall;
 
+import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatDelegate;
+import android.text.TextUtils;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.squareup.leakcanary.LeakCanary;
 
 import net.nashlegend.sourcewall.data.Consts.Keys;
-import net.nashlegend.sourcewall.data.database.BaseDB;
-import net.nashlegend.sourcewall.data.database.gen.DaoMaster;
-import net.nashlegend.sourcewall.data.database.gen.DaoSession;
 import net.nashlegend.sourcewall.util.ErrorUtils;
 import net.nashlegend.sourcewall.util.ImageUtils;
 import net.nashlegend.sourcewall.util.PrefsUtil;
@@ -36,7 +37,13 @@ public class App extends Application {
             setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
         super.onCreate();
-        initImageLoader(this);
+        if (isMainProcess()) {
+            initImageLoader(this);
+            if (LeakCanary.isInAnalyzerProcess(this)) {
+                return;
+            }
+            LeakCanary.install(this);
+        }
     }
 
     public static void initImageLoader(Context context) {
@@ -66,5 +73,29 @@ public class App extends Application {
             ErrorUtils.onException(e);
         }
         return 1;
+    }
+
+    /**
+     * 判定是否是本地主进程
+     */
+    public static boolean isMainProcess() {
+        String processName = getCurProcessName();
+        return !TextUtils.isEmpty(processName) && !processName.contains(":");
+    }
+
+    @Nullable
+    private static String getCurProcessName() {
+        try {
+            int pid = android.os.Process.myPid();
+            ActivityManager mActivityManager = (ActivityManager) App.getApp().getSystemService(Context.ACTIVITY_SERVICE);
+            for (ActivityManager.RunningAppProcessInfo appProcess : mActivityManager.getRunningAppProcesses()) {
+                if (appProcess.pid == pid) {
+                    return appProcess.processName;
+                }
+            }
+        } catch (Exception ignored) {
+
+        }
+        return null;
     }
 }
