@@ -204,6 +204,11 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
             case R.id.action_load_desc:
                 startLoadDesc();
                 break;
+            case R.id.action_goto_group:
+                if (post != null && !TextUtils.isEmpty(post.getGroupID())) {
+                    UrlCheckUtil.redirectRequest("http://m.guokr.com/group/" + post.getGroupID() + "/");
+                }
+                break;
             case R.id.action_open_in_browser:
                 if (!TextUtils.isEmpty(post.getUrl())) {
                     Mob.onEvent(Mob.Event_Open_Post_In_Browser);
@@ -312,7 +317,6 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
         loadDesc = false;
         loadingView.onLoading();
         listView.setCanPullToLoadMore(false);
-        setMenuVisibility();
         if (adapter.getCount() > 0 && adapter.getList().get(0) instanceof Post) {
             post = (Post) adapter.getList().get(0);
             post.setDesc(loadDesc);
@@ -324,6 +328,7 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
             loadData(-1);
         }
         adapter.notifyDataSetChanged();
+        setMenuVisibility();
     }
 
     private void setMenuVisibility() {
@@ -334,6 +339,11 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
             } else {
                 menu.findItem(R.id.action_load_acs).setVisible(false);
                 menu.findItem(R.id.action_load_desc).setVisible(true);
+            }
+            if (post != null && !post.isFeatured() && !TextUtils.isEmpty(post.getGroupID())) {
+                menu.findItem(R.id.action_goto_group).setVisible(true);
+            } else {
+                menu.findItem(R.id.action_goto_group).setVisible(false);
             }
         }
     }
@@ -615,6 +625,7 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
                             progressBar.setVisibility(View.VISIBLE);
                             floatingActionsMenu.setVisibility(View.VISIBLE);
                             loadingView.onSuccess();
+                            result.result.setFeatured(post != null && post.isFeatured());
                             post = result.result;
                             post.setDesc(loadDesc);
                             adapter.add(0, post);
@@ -630,6 +641,7 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
                                 progressBar.setVisibility(View.GONE);
                             }
                         }
+                        setMenuVisibility();
                     }
                 });
     }

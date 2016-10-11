@@ -24,17 +24,22 @@
         app:showAsAction="never" />
     <item
         android:id="@+id/action_load_acs"
-        android:orderInCategory="105"
+        android:orderInCategory="106"
         android:title="@string/action_load_acs"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_goto_group"
+        android:orderInCategory="107"
+        android:title="@string/action_goto_group"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_open_in_browser"
         android:title="@string/open_in_browser"
-        android:orderInCategory="106"
+        android:orderInCategory="108"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_report"
-        android:orderInCategory="108"
+        android:orderInCategory="109"
         android:title="@string/report"
         app:showAsAction="never" />
 </menu>

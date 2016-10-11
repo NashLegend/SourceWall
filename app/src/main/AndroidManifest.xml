@@ -28,7 +28,7 @@
         </activity>
         <activity
             android:name=".activities.PostListActivity"
-            android:label="@string/title_activity_post_list"
+            android:label="@string/post"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.Browser"
