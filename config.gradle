@@ -24,9 +24,9 @@ ext {
             Umeng              : "com.umeng.analytics:analytics:latest.integration",
             OKHttp             : "com.squareup.okhttp3:okhttp:3.4.1",
             OKHttpUrlConnection: 'com.squareup.okhttp3:okhttp-urlconnection:3.4.1',
-            LeakCanaryDebug    : 'com.squareup.leakcanary:leakcanary-android:1.4-beta2',
-            LeakCanaryRelease  : 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2',
-            LeakCanaryTest     : 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2',
+            LeakCanaryDebug    : 'com.squareup.leakcanary:leakcanary-android:1.5',
+            LeakCanaryRelease  : 'com.squareup.leakcanary:leakcanary-android-no-op:1.5',
+            LeakCanaryTest     : 'com.squareup.leakcanary:leakcanary-android-no-op:1.5',
             JavaPoet           : 'com.squareup:javapoet:1.6.1',
             ImageLoader        : "com.nostra13.universalimageloader:universal-image-loader:1.9.5",
             ButterKnife        : "com.jakewharton:butterknife:8.4.0",
@@ -55,9 +55,9 @@ ext {
 
     built = [
             applicationId    : "net.nashlegend.sourcewall",
-            versionCode      : 20160929,
+            versionCode      : 20161011,
             versionName      : "2.0.5",
-            buildToolsVersion: "24.0.2",
+            buildToolsVersion: "24.0.3",
             compileSdkVersion: 24,
             minSdkVersion    : 15,
             targetSdkVersion : 22
