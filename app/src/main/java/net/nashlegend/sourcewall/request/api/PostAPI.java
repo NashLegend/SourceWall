@@ -32,11 +32,13 @@ import net.nashlegend.sourcewall.request.parsers.PublishPostParser;
 import net.nashlegend.sourcewall.request.parsers.StringParser;
 import net.nashlegend.sourcewall.simple.SimpleSubscriber;
 import net.nashlegend.sourcewall.util.MDUtil;
+import net.nashlegend.sourcewall.util.TextUtil;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -274,6 +276,7 @@ public class PostAPI extends APIBase {
     }
 
     public static Observable<ArrayList<MyGroup>> getAllMyGroupsAndMerge() {
+        final Collator collator = Collator.getInstance();
         return PostAPI
                 .getAllMyGroups()
                 .flatMap(new Func1<ResponseObject<ArrayList<SubItem>>, Observable<ArrayList<SubItem>>>() {
@@ -291,7 +294,28 @@ public class PostAPI extends APIBase {
                         Collections.sort(subItems, new Comparator<SubItem>() {
                             @Override
                             public int compare(SubItem o1, SubItem o2) {
-                                return o1.getName().compareTo(o2.getName());
+                                String s1 = o1.getName();
+                                String s2 = o2.getName();
+
+                                boolean aStartsWithLetter = (s1.length() > 0) &&
+                                        Character.isLetterOrDigit(s1.codePointAt(0));
+                                boolean bStartsWithLetter = (s2.length() > 0) &&
+                                        Character.isLetterOrDigit(s2.codePointAt(0));
+
+                                boolean aStartsWithAlphabet = (s1.length() > 0) &&
+                                        TextUtil.isAlphabetic(s1.charAt(0));
+                                boolean bStartsWithAlphabet = (s2.length() > 0) &&
+                                        TextUtil.isAlphabetic(s2.charAt(0));
+
+                                if (aStartsWithLetter && !bStartsWithLetter) {
+                                    return 1;
+                                } else if (!aStartsWithLetter && bStartsWithLetter) {
+                                    return -1;
+                                } else if (aStartsWithAlphabet || bStartsWithAlphabet) {
+                                    return s1.compareTo(s2);
+                                }
+
+                                return collator.compare(s1, s2);
                             }
                         });
                         return subItems;
