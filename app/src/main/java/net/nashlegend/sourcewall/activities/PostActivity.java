@@ -628,7 +628,8 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
                             result.result.setFeatured(post != null && post.isFeatured());
                             post = result.result;
                             post.setDesc(loadDesc);
-                            adapter.add(0, post);
+                            adapter.clear();
+                            adapter.add(post);
                             adapter.notifyDataSetChanged();
                             loadReplies(0);
                         } else {
