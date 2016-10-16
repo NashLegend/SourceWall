@@ -32,9 +32,10 @@ android {
     }
 
     buildTypes {
+        debug {
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
         release {
-            minifyEnabled true
-            shrinkResources true
             manifestPlaceholders = [
                     WEIXIN_APP_ID: keys.WEIXIN_APP_ID_RELEASE,
                     WEIBO_APP_KEY: keys.WEIBO_APP_KEY,
