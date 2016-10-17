@@ -1,7 +1,7 @@
 {
   "versionName": "2.0.6",
-  "versionCode": 20161011,
-  "url": "http://f5.market.xiaomi.com/download/AppStore/0ba0b4395b04c17445272f1cb39c2202261415662/net.nashlegend.sourcewall.apk",
-  "size": 3367970,
+  "versionCode": 20161016,
+  "url": "http://f4.market.mi-img.com/download/AppStore/0713c47d3ec095b372056d5f7f348d5eb744040d5/net.nashlegend.sourcewall.apk",
+  "size": 3441702,
   "updateInfo": "1. 5.0以下版本样式修正;\n2. 显著减少查看超大图片时的内存占用;\n3. 添加意见反馈;\n4. 优化问题列表滑动性能;\n5. 可以在帖子中打开所在小组;\n6. 添加置顶标志;\n7. 可以通过应用内链接直接打开小组;\n8. 长图打开时自动滚动到顶部;\n9. 图片显示为OBJ的问题;\n"
 }
