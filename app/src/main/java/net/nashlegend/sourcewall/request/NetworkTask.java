@@ -430,6 +430,7 @@ public class NetworkTask<T> {
      */
     public Subscription requestRx() {
         subscription = flatMap()
+                .takeLast(1)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<ResponseObject<T>>() {
                     @Override
