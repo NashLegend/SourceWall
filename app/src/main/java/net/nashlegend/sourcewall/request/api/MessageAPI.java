@@ -7,7 +7,7 @@ import net.nashlegend.sourcewall.model.ReminderNoticeNum;
 import net.nashlegend.sourcewall.request.NetworkTask;
 import net.nashlegend.sourcewall.request.ParamsMap;
 import net.nashlegend.sourcewall.request.RequestBuilder;
-import net.nashlegend.sourcewall.request.RequestObject.RequestCallBack;
+import net.nashlegend.sourcewall.request.RequestCallBack;
 import net.nashlegend.sourcewall.request.parsers.BooleanParser;
 import net.nashlegend.sourcewall.request.parsers.IgnoreNoticeParser;
 import net.nashlegend.sourcewall.request.parsers.MessageListParser;

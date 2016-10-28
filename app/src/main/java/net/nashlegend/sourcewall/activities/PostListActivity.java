@@ -9,8 +9,8 @@ import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.data.Consts;
 import net.nashlegend.sourcewall.fragment.PostsFragment;
 import net.nashlegend.sourcewall.model.SubItem;
-import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
+import net.nashlegend.sourcewall.request.SimpleCallBack;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 
 //from http://m.guokr.com/group/376/ or http://www.guokr.com/group/376/

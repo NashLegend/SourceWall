@@ -19,7 +19,7 @@ import net.nashlegend.sourcewall.adapters.AceAdapter;
 import net.nashlegend.sourcewall.data.Mob;
 import net.nashlegend.sourcewall.model.SearchItem;
 import net.nashlegend.sourcewall.request.NetworkTask;
-import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
+import net.nashlegend.sourcewall.request.SimpleCallBack;
 import net.nashlegend.sourcewall.request.api.SearchAPI;
 import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;

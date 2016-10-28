@@ -16,7 +16,7 @@ import net.nashlegend.sourcewall.fragment.PostPagerFragment;
 import net.nashlegend.sourcewall.fragment.ProfileFragment;
 import net.nashlegend.sourcewall.fragment.QuestionPagerFragment;
 import net.nashlegend.sourcewall.model.ReminderNoticeNum;
-import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
+import net.nashlegend.sourcewall.request.SimpleCallBack;
 import net.nashlegend.sourcewall.request.api.MessageAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.PrefsUtil;

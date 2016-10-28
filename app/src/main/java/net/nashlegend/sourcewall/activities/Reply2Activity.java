@@ -42,7 +42,7 @@ import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.Post;
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.model.UComment;
-import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
+import net.nashlegend.sourcewall.request.SimpleCallBack;
 import net.nashlegend.sourcewall.request.api.APIBase;
 import net.nashlegend.sourcewall.util.DisplayUtil;
 import net.nashlegend.sourcewall.util.ErrorUtils;

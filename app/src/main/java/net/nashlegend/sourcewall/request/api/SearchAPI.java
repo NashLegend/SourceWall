@@ -3,7 +3,7 @@ package net.nashlegend.sourcewall.request.api;
 import net.nashlegend.sourcewall.model.SearchItem;
 import net.nashlegend.sourcewall.request.NetworkTask;
 import net.nashlegend.sourcewall.request.RequestBuilder;
-import net.nashlegend.sourcewall.request.RequestObject.RequestCallBack;
+import net.nashlegend.sourcewall.request.RequestCallBack;
 import net.nashlegend.sourcewall.request.parsers.SearchListParser;
 
 import java.util.ArrayList;

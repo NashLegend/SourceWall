@@ -2,7 +2,7 @@ package net.nashlegend.sourcewall.request;
 
 import android.support.annotation.NonNull;
 
-import net.nashlegend.sourcewall.request.RequestObject.RequestType;
+import net.nashlegend.sourcewall.BuildConfig;
 import net.nashlegend.sourcewall.request.cache.CacheHeaderUtil;
 import net.nashlegend.sourcewall.request.cache.RequestCache;
 import net.nashlegend.sourcewall.request.interceptors.DownloadProgressInterceptor;
@@ -373,6 +373,16 @@ public class NetworkTask<T> {
                         return Observable.just("Error Occurred!");
                     }
                 })
+                .map(new Func1<String, String>() {
+                    @Override
+                    public String call(String s) {
+                        //debug模式下可返回fakeBody
+                        if (BuildConfig.DEBUG && request.fakeResponse != null) {
+                            return request.fakeResponse;
+                        }
+                        return s;
+                    }
+                })
                 .map(new Func1<String, ResponseObject<T>>() {
                     @Override
                     public ResponseObject<T> call(String string) {
@@ -466,17 +476,13 @@ public class NetworkTask<T> {
         return this;
     }
 
-    private boolean shouldHandNotifier(Throwable exception, ResponseObject responseObject) {
-        return responseObject.code != ResponseCode.CODE_TOKEN_INVALID
+    private boolean shouldRetry(Throwable exception, ResponseObject response) {
+        return response.code != ResponseCode.CODE_TOKEN_INVALID
                 && call != null
                 && !call.isCanceled()
                 && crtTime < request.maxRetryTimes
                 && !(exception instanceof InterruptedIOException)
-                && (responseObject.statusCode < 300 || responseObject.statusCode >= 500);
-    }
-
-    public void notifyAction() {
-        crtTime++;
+                && (response.statusCode < 300 || response.statusCode >= 500);
     }
 
     /**
@@ -486,7 +492,7 @@ public class NetworkTask<T> {
         try {
             Call call = syncRequest();
             Response response = call.execute();
-            if (request.requestType == RequestObject.RequestType.DOWNLOAD) {
+            if (request.requestType == RequestType.DOWNLOAD) {
                 File downloadedFile = new File(request.downloadFilePath);
                 BufferedSink sink = null;
                 try {
@@ -535,8 +541,8 @@ public class NetworkTask<T> {
                     .flatMap(new Func1<Throwable, Observable<?>>() {
                         @Override
                         public Observable<?> call(Throwable throwable) {
-                            if (shouldHandNotifier(throwable, responseObject)) {
-                                notifyAction();
+                            if (shouldRetry(throwable, responseObject)) {
+                                crtTime++;
                                 return Observable.timer(request.maxRetryTimes, MILLISECONDS);
                             } else {
                                 return Observable.error(throwable);

@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
 
 import net.nashlegend.sourcewall.BuildConfig;
 import net.nashlegend.sourcewall.model.UpdateInfo;
-import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
+import net.nashlegend.sourcewall.request.SimpleCallBack;
 import net.nashlegend.sourcewall.request.api.APIBase;
 
 import static android.text.TextUtils.isEmpty;

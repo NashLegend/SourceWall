@@ -2,7 +2,7 @@ package net.nashlegend.sourcewall.request.interceptors;
 
 import android.support.annotation.Nullable;
 
-import net.nashlegend.sourcewall.request.RequestObject.RequestCallBack;
+import net.nashlegend.sourcewall.request.RequestCallBack;
 
 import java.io.IOException;
 

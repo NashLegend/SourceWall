@@ -139,29 +139,29 @@ public class JsonHandler {
      * 处理所有请求的错误信息
      *
      * @param e              要处理的错误信息
-     * @param responseObject ResponseObject
+     * @param response ResponseObject
      */
-    public static void handleRequestException(Throwable e, ResponseObject responseObject) {
-        responseObject.ok = false;
-        responseObject.throwable = e;
+    public static void handleRequestException(Throwable e, ResponseObject response) {
+        response.ok = false;
+        response.throwable = e;
         if (e == null) {
-            responseObject.error_message = "unknown";
+            response.error_message = "unknown";
         } else {
             ErrorUtils.onException(e);
-            responseObject.error_message = e.getMessage();
+            response.error_message = e.getMessage();
             if (e instanceof IOException) {
                 if (e instanceof SocketTimeoutException) {
-                    responseObject.error = ResponseError.TIME_OUT;
+                    response.error = ResponseError.TIME_OUT;
                 } else {
-                    responseObject.error = ResponseError.NETWORK_ERROR;
+                    response.error = ResponseError.NETWORK_ERROR;
                 }
                 if ("Cancelled".equals(e.getMessage())) {
-                    responseObject.error = ResponseError.CANCELLED;
+                    response.error = ResponseError.CANCELLED;
                 }
             } else if (e instanceof JSONException) {
-                responseObject.error = ResponseError.JSON_ERROR;
+                response.error = ResponseError.JSON_ERROR;
             } else {
-                responseObject.error = ResponseError.UNKNOWN;
+                response.error = ResponseError.UNKNOWN;
             }
         }
     }

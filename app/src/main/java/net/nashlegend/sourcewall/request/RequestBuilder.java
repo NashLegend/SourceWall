@@ -2,8 +2,6 @@ package net.nashlegend.sourcewall.request;
 
 import android.support.annotation.NonNull;
 
-import net.nashlegend.sourcewall.request.RequestObject.RequestCallBack;
-import net.nashlegend.sourcewall.request.RequestObject.RequestType;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.request.parsers.Parser;
 import net.nashlegend.sourcewall.request.parsers.StringParser;
@@ -30,7 +28,7 @@ public class RequestBuilder<T> {
 
     private boolean useToken = true;//是否使用token，默认使用
 
-    public static void sampleRequest(RequestObject.CallBack<String> callBack) {
+    public static void sampleRequest(CallBack<String> callBack) {
         new RequestBuilder<String>()
                 .get()
                 .url("http://bbs.hupu.com/bxj")

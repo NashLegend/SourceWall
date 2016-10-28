@@ -10,7 +10,7 @@ import net.nashlegend.sourcewall.data.ChannelHelper;
 import net.nashlegend.sourcewall.data.database.BasketHelper;
 import net.nashlegend.sourcewall.model.Basket;
 import net.nashlegend.sourcewall.model.SubItem;
-import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
+import net.nashlegend.sourcewall.request.SimpleCallBack;
 import net.nashlegend.sourcewall.request.api.FavorAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.view.GroupItemView;

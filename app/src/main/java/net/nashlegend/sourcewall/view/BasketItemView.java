@@ -12,7 +12,7 @@ import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.events.Emitter;
 import net.nashlegend.sourcewall.model.Basket;
 import net.nashlegend.sourcewall.request.NetworkTask;
-import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
+import net.nashlegend.sourcewall.request.SimpleCallBack;
 import net.nashlegend.sourcewall.request.api.FavorAPI;
 
 /**

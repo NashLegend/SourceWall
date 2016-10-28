@@ -308,7 +308,7 @@ public class RequestDelegate {
                 case HEAD:
                     return null;
                 case POST:
-                    if (object.requestType == RequestObject.RequestType.UPLOAD) {
+                    if (object.requestType == RequestType.UPLOAD) {
                         return getMultipartBody(object.mediaType, object.uploadFileKey, object.uploadFilePath, object.params);
                     }
                 case PUT:

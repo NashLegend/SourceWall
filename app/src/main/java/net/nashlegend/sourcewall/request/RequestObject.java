@@ -1,7 +1,6 @@
 package net.nashlegend.sourcewall.request;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import net.nashlegend.sourcewall.request.parsers.Parser;
 
@@ -54,7 +53,7 @@ public class RequestObject<T> {
     /**
      * 缓存时间，如果上次保存的缓存时间与本次请求的时间差相差超过了cacheTimeOut，则重新请求一次
      * <p>
-     * 果壳貌似本身并没有Cache-Control，或者Cache-Control的max-age=0 所以这里的缓存是本地缓存
+     * 与Cache-Control没有关系
      */
     protected long cacheTimeOut = -1;//如果是-1则表示永不超时
 
@@ -63,7 +62,7 @@ public class RequestObject<T> {
         this.headers = new Headers.Builder();
     }
 
-    public void copyPartFrom(@NonNull RequestObject<?> object) {
+    public RequestObject<T> copyPartFrom(@NonNull RequestObject<?> object) {
         params.clear();
         for (int i = 0; i < object.params.size(); i++) {
             Param param = object.params.get(i);
@@ -74,6 +73,7 @@ public class RequestObject<T> {
         tag = object.tag;
         uploadFileKey = object.uploadFileKey;
         mediaType = object.mediaType;
+        return this;
     }
 
     public String dump() {
@@ -88,119 +88,4 @@ public class RequestObject<T> {
         }
         return err.toString();
     }
-
-    /**
-     * http 请求方法
-     */
-    public interface RequestType {
-        int PLAIN = 0;
-        int UPLOAD = 1;
-        /**
-         * 理论上说下载返回结果没法用Parser，如果需要Parser，那么parse的是downloadFilePath
-         * 所以建议使用DirectlyStringParser,因为在onNext中返回了downloadFilePath
-         */
-        int DOWNLOAD = 2;
-    }
-
-
-    /**
-     * http 请求基本回调
-     *
-     * @param <T>
-     */
-    public static class SimpleCallBack<T> implements RequestCallBack<T> {
-        @Override
-        public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<T> result) {
-            onFailure(result);
-        }
-
-        @Override
-        public void onSuccess(@NonNull T result, @NonNull ResponseObject<T> detailed) {
-            onSuccess(result);
-        }
-
-
-        @Override
-        public void onRequestProgress(long current, long total) {
-
-        }
-
-        @Override
-        public void onResponseProgress(long current, long total, boolean done) {
-
-        }
-
-        public void onSuccess(@NonNull T result) {
-            onSuccess();
-        }
-
-        public void onSuccess() {
-
-        }
-
-        public void onFailure(@NonNull ResponseObject<T> result) {
-            onFailure();
-        }
-
-        public void onFailure() {
-
-        }
-    }
-
-    /**
-     * http 请求基本回调
-     *
-     * @param <T>
-     */
-    public static abstract class CallBack<T> implements RequestCallBack<T> {
-        @Override
-        public void onRequestProgress(long current, long total) {
-
-        }
-
-        @Override
-        public void onResponseProgress(long current, long total, boolean done) {
-
-        }
-    }
-
-    /**
-     * http 请求的完整回调
-     *
-     * @param <T>
-     */
-    public interface RequestCallBack<T> {
-        /**
-         * result不可能为空
-         *
-         * @param e
-         * @param result
-         */
-        void onFailure(@Nullable Throwable e, @NonNull ResponseObject<T> result);
-
-        /**
-         * 如果执行到此处，ok必然为true,{@link ResponseObject#result}必然不为null
-         *
-         * @param result
-         * @param detailed
-         */
-        void onSuccess(@NonNull T result, @NonNull ResponseObject<T> detailed);
-
-        /**
-         * 请求的进度,非UI线程
-         *
-         * @param current
-         * @param total
-         */
-        void onRequestProgress(long current, long total);
-
-        /**
-         * 响应的进度,非UI线程
-         *
-         * @param current
-         * @param total
-         */
-        void onResponseProgress(long current, long total, boolean done);
-    }
-
 }

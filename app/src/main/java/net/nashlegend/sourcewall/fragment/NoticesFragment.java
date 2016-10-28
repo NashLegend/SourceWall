@@ -21,7 +21,7 @@ import net.nashlegend.sourcewall.events.NoticeNumChangedEvent;
 import net.nashlegend.sourcewall.model.Notice;
 import net.nashlegend.sourcewall.model.SubItem;
 import net.nashlegend.sourcewall.request.NetworkTask;
-import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
+import net.nashlegend.sourcewall.request.SimpleCallBack;
 import net.nashlegend.sourcewall.request.api.MessageAPI;
 import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;

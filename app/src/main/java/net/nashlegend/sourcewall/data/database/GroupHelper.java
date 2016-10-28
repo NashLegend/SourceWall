@@ -1,6 +1,5 @@
 package net.nashlegend.sourcewall.data.database;
 
-import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.data.Consts.Keys;
 import net.nashlegend.sourcewall.data.database.gen.MyGroup;
 import net.nashlegend.sourcewall.data.database.gen.MyGroupDao;

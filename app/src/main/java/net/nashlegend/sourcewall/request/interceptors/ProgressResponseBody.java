@@ -2,7 +2,7 @@ package net.nashlegend.sourcewall.request.interceptors;
 
 import android.support.annotation.Nullable;
 
-import net.nashlegend.sourcewall.request.RequestObject;
+import net.nashlegend.sourcewall.request.RequestCallBack;
 
 import java.io.IOException;
 
@@ -23,7 +23,7 @@ public class ProgressResponseBody extends ResponseBody {
     private final ResponseBody responseBody;
     //进度回调接口
     @Nullable
-    private final RequestObject.RequestCallBack callBack;
+    private final RequestCallBack callBack;
     //包装完成的BufferedSource
     private BufferedSource bufferedSource;
 
@@ -33,7 +33,7 @@ public class ProgressResponseBody extends ResponseBody {
      * @param responseBody 待包装的响应体
      * @param callBack
      */
-    public ProgressResponseBody(ResponseBody responseBody, @Nullable RequestObject.RequestCallBack callBack) {
+    public ProgressResponseBody(ResponseBody responseBody, @Nullable RequestCallBack callBack) {
         this.responseBody = responseBody;
         this.callBack = callBack;
     }

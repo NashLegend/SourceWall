@@ -13,7 +13,7 @@ import net.nashlegend.sourcewall.data.Mob;
 import net.nashlegend.sourcewall.events.Emitter;
 import net.nashlegend.sourcewall.events.NoticeNumChangedEvent;
 import net.nashlegend.sourcewall.model.Notice;
-import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
+import net.nashlegend.sourcewall.request.SimpleCallBack;
 import net.nashlegend.sourcewall.request.api.MessageAPI;
 
 import java.util.ArrayList;

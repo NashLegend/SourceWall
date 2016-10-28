@@ -26,7 +26,7 @@ public class ResponseObject<T> {
      * @param object
      * @return
      */
-    public void copyPartFrom(@NonNull ResponseObject object) {
+    public ResponseObject<T> copyPartFrom(@NonNull ResponseObject object) {
         requestObject = new RequestObject<>();
         if (object.requestObject != null) {
             requestObject.copyPartFrom(object.requestObject);
@@ -38,6 +38,7 @@ public class ResponseObject<T> {
         error_message = object.error_message;
         code = object.code;
         message = object.message;
+        return this;
     }
 
     @Override

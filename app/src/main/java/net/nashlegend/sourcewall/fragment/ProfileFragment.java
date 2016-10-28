@@ -34,9 +34,9 @@ import net.nashlegend.sourcewall.events.LoginStateChangedEvent;
 import net.nashlegend.sourcewall.events.NoticeNumChangedEvent;
 import net.nashlegend.sourcewall.model.ReminderNoticeNum;
 import net.nashlegend.sourcewall.model.UserInfo;
-import net.nashlegend.sourcewall.request.RequestObject;
-import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
+import net.nashlegend.sourcewall.request.CallBack;
 import net.nashlegend.sourcewall.request.ResponseObject;
+import net.nashlegend.sourcewall.request.SimpleCallBack;
 import net.nashlegend.sourcewall.request.api.MessageAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.ImageUtils;
@@ -215,7 +215,7 @@ public class ProfileFragment extends BaseFragment {
             if (TextUtils.isEmpty(nameString)) {
                 userName.setText(R.string.loading);
             }
-            UserAPI.getUserInfoByUkey(UserAPI.getUkey(), new RequestObject.CallBack<UserInfo>() {
+            UserAPI.getUserInfoByUkey(UserAPI.getUkey(), new CallBack<UserInfo>() {
                 @Override
                 public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<UserInfo> result) {
                     String nameString = UserAPI.getName();

@@ -14,7 +14,7 @@ import net.nashlegend.sourcewall.data.Mob;
 import net.nashlegend.sourcewall.fragment.FavorsFragment;
 import net.nashlegend.sourcewall.model.Basket;
 import net.nashlegend.sourcewall.model.SubItem;
-import net.nashlegend.sourcewall.request.RequestObject.SimpleCallBack;
+import net.nashlegend.sourcewall.request.SimpleCallBack;
 import net.nashlegend.sourcewall.request.api.FavorAPI;
 import net.nashlegend.sourcewall.util.ToastUtil;
 import net.nashlegend.sourcewall.view.common.LoadingView;
