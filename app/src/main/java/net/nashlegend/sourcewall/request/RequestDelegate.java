@@ -2,8 +2,6 @@ package net.nashlegend.sourcewall.request;
 
 import android.support.annotation.NonNull;
 
-import net.nashlegend.sourcewall.request.RequestObject.Method;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +15,11 @@ import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
+
+import static net.nashlegend.sourcewall.request.Method.DELETE;
+import static net.nashlegend.sourcewall.request.Method.GET;
+import static net.nashlegend.sourcewall.request.Method.POST;
+import static net.nashlegend.sourcewall.request.Method.PUT;
 
 /**
  * Created by NashLegend on 16/3/16.
@@ -34,7 +37,7 @@ public class RequestDelegate {
     }
 
     public Call get(String url, Object tag) throws Exception {
-        return requestSync(Method.GET, null, url, tag);
+        return requestSync(GET.value(), null, url, tag);
     }
 
     public Call get(String url, List<Param> params, Object tag) throws Exception {
@@ -46,7 +49,7 @@ public class RequestDelegate {
     }
 
     public Call post(String url, List<Param> params, Object tag) throws Exception {
-        return requestSync(Method.POST, getFormBody(params), url, tag);
+        return requestSync(POST.value(), getFormBody(params), url, tag);
     }
 
     public Call put(RequestObject<?> request) throws Exception {
@@ -54,7 +57,7 @@ public class RequestDelegate {
     }
 
     public Call put(String url, List<Param> params, Object tag) throws Exception {
-        return requestSync(Method.PUT, getFormBody(params), url, tag);
+        return requestSync(PUT.value(), getFormBody(params), url, tag);
     }
 
     public Call delete(RequestObject<?> request) throws Exception {
@@ -65,7 +68,7 @@ public class RequestDelegate {
      * Delete 也是需要RequestBody的，然而这里并没有……
      */
     public Call delete(String url, Object tag) throws Exception {
-        return requestSync(Method.DELETE, RequestBody.create(null, new byte[0]), url, tag);
+        return requestSync(DELETE.value(), RequestBody.create(null, new byte[0]), url, tag);
     }
 
     public Call delete(String url, List<Param> params, Object tag) throws Exception {
@@ -90,7 +93,7 @@ public class RequestDelegate {
     public Call upload(String url, String fileKey, String filePath,
                        List<Param> params, MediaType mediaType) throws Exception {
         MultipartBody body = getMultipartBody(mediaType, fileKey, filePath, params);
-        return requestSync(Method.POST, body, url, null);
+        return requestSync(POST.value(), body, url, null);
     }
 
     public Call getAsync(RequestObject<?> request, Callback defCallBack) {
@@ -98,7 +101,7 @@ public class RequestDelegate {
     }
 
     public Call getAsync(String url, Callback defCallBack, Object tag) {
-        return requestAsync(Method.GET, null, url, tag, defCallBack);
+        return requestAsync(GET.value(), null, url, tag, defCallBack);
     }
 
     public Call getAsync(String url, List<Param> params, Callback defCallBack, Object tag) {
@@ -110,7 +113,7 @@ public class RequestDelegate {
     }
 
     public Call postAsync(String url, List<Param> params, Callback defCallBack, Object tag) {
-        return requestAsync(Method.POST, getFormBody(params), url, tag, defCallBack);
+        return requestAsync(POST.value(), getFormBody(params), url, tag, defCallBack);
     }
 
     public Call putAsync(RequestObject<?> request, Callback defCallBack) {
@@ -118,7 +121,7 @@ public class RequestDelegate {
     }
 
     public Call putAsync(String url, List<Param> params, Callback defCallBack, Object tag) {
-        return requestAsync(Method.PUT, getFormBody(params), url, tag, defCallBack);
+        return requestAsync(PUT.value(), getFormBody(params), url, tag, defCallBack);
     }
 
     public Call deleteAsync(RequestObject<?> request, Callback defCallBack) {
@@ -129,7 +132,7 @@ public class RequestDelegate {
      * Delete 也是需要RequestBody的，然而这里并没有,所以给个默认的……
      */
     public Call deleteAsync(String url, Callback defCallBack, Object tag) {
-        return requestAsync(Method.DELETE, RequestBody.create(null, new byte[0]), url, tag, defCallBack);
+        return requestAsync(DELETE.value(), RequestBody.create(null, new byte[0]), url, tag, defCallBack);
     }
 
     public Call deleteAsync(String url, List<Param> params, Callback defCallBack, Object tag) {
@@ -161,7 +164,7 @@ public class RequestDelegate {
     public Call uploadAsync(String uploadUrl, String fileKey, String filePath,
                             List<Param> params, MediaType mediaType, Callback callBack) {
         MultipartBody body = getMultipartBody(mediaType, fileKey, filePath, params);
-        return requestAsync(Method.POST, body, uploadUrl, null, callBack);
+        return requestAsync(POST.value(), body, uploadUrl, null, callBack);
     }
 
     private String combine(String url, List<Param> params) {
@@ -260,8 +263,7 @@ public class RequestDelegate {
     }
 
     public Call requestSync(Request request, Object tag) {
-        Call call = httpClient.newCall(request);
-        return call;
+        return httpClient.newCall(request);
     }
 
     private Call getCall(String method, RequestBody body, String url, Object tag) {
@@ -270,25 +272,24 @@ public class RequestDelegate {
     }
 
     public Request getRequest(RequestObject<?> object) {
-        Request.Builder build = new Request.Builder()
-                .method(object.method, getBody(object))
+        Request.Builder builder = new Request.Builder()
+                .method(object.method.value(), getBody(object))
                 .url(getUrl(object))
                 .tag(object.tag);
         if (object.headers != null) {
-            build.headers(object.headers.build());
+            builder.headers(object.headers.build());
         }
         if (object.cacheControl != null) {
-            build.cacheControl(object.cacheControl);
+            builder.cacheControl(object.cacheControl);
         }
-        Request request = build.build();
-        return request;
+        return builder.build();
     }
 
     private String getUrl(RequestObject<?> object) {
         switch (object.method) {
-            case Method.GET:
-            case Method.HEAD:
-            case Method.DELETE:
+            case GET:
+            case HEAD:
+            case DELETE:
                 return combine(object.url, object.params);
             default:
                 if (object.requestBody != null) {
@@ -303,17 +304,17 @@ public class RequestDelegate {
             return object.requestBody;
         } else {
             switch (object.method) {
-                case Method.GET:
-                case Method.HEAD:
+                case GET:
+                case HEAD:
                     return null;
-                case Method.POST:
+                case POST:
                     if (object.requestType == RequestObject.RequestType.UPLOAD) {
                         return getMultipartBody(object.mediaType, object.uploadFileKey, object.uploadFilePath, object.params);
                     }
-                case Method.PUT:
-                case Method.PATCH:
+                case PUT:
+                case PATCH:
                     return getFormBody(object.params);
-                case Method.DELETE:
+                case DELETE:
                     return null;
                 default:
                     return null;

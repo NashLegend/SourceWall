@@ -2,6 +2,7 @@ package net.nashlegend.sourcewall.util;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.orhanobut.logger.Logger;
 
@@ -13,9 +14,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -72,41 +70,29 @@ public class ErrorUtils {
             } catch (Exception e) {
                 ErrorUtils.onException(e);
             } finally {
-                try {
-                    if (out != null) {
-                        out.close();
-                    }
-                    if (writer != null) {
-                        writer.close();
-                    }
-                } catch (Exception e) {
-                    ErrorUtils.onException(e);
-                }
+                IOUtil.closeQuietly(out);
+                IOUtil.closeQuietly(writer);
             }
         }
     }
 
-    private static String getRequestInfo(@NonNull ResponseObject responseObject) {
-        StringBuilder err = new StringBuilder();
+    private static String getRequestInfo(@NonNull ResponseObject response) {
+        StringBuilder builder = new StringBuilder();
         try {
-            err.append("Is Wifi Connected:").append(DeviceUtil.isWifiConnected()).append("\n");
-            err.append("Is Mobile Network Connected:").append(DeviceUtil.isMobileNetworkConnected()).append("\n\n");
-            err.append(responseObject.dump());
-            if (responseObject.throwable != null) {
-                err.append("\n================================= \n\n");
-                final Writer result = new StringWriter();
-                final PrintWriter printWriter = new PrintWriter(result);
-                responseObject.throwable.printStackTrace(printWriter);
-                err.append(result.toString()).append("\n\n");
-                result.close();
-                printWriter.close();
+            builder.append("Is Wifi Connected:").append(DeviceUtil.isWifiConnected()).append("\n");
+            builder.append("Is Mobile Network Connected:").append(DeviceUtil.isMobileNetworkConnected()).append("\n\n");
+            builder.append(response.dump());
+            if (response.throwable != null) {
+                builder.append("\n================================= \n\n")
+                        .append(Log.getStackTraceString(response.throwable))
+                        .append("\n\n");
             }
             if (BuildConfig.DEBUG) {
-                Logger.e(err.toString());
+                Logger.e(builder.toString());
             }
         } catch (Exception e) {
             ErrorUtils.onException(e);
         }
-        return err.toString();
+        return builder.toString();
     }
 }

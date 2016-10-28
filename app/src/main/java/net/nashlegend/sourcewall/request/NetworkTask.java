@@ -2,7 +2,6 @@ package net.nashlegend.sourcewall.request;
 
 import android.support.annotation.NonNull;
 
-import net.nashlegend.sourcewall.request.RequestObject.Method;
 import net.nashlegend.sourcewall.request.RequestObject.RequestType;
 import net.nashlegend.sourcewall.request.cache.CacheHeaderUtil;
 import net.nashlegend.sourcewall.request.cache.RequestCache;
@@ -10,6 +9,7 @@ import net.nashlegend.sourcewall.request.interceptors.DownloadProgressIntercepto
 import net.nashlegend.sourcewall.request.interceptors.GzipRequestInterceptor;
 import net.nashlegend.sourcewall.request.interceptors.UploadProgressInterceptor;
 import net.nashlegend.sourcewall.util.ErrorUtils;
+import net.nashlegend.sourcewall.util.IOUtil;
 
 import java.io.File;
 import java.io.InterruptedIOException;
@@ -233,13 +233,13 @@ public class NetworkTask<T> {
     private Call requestSync() throws Exception {
         Call call;
         switch (request.method) {
-            case Method.GET:
+            case GET:
                 call = getDelegate().get(request);
                 break;
-            case Method.PUT:
+            case PUT:
                 call = getDelegate().put(request);
                 break;
-            case Method.DELETE:
+            case DELETE:
                 call = getDelegate().delete(request);
                 break;
             default:
@@ -333,9 +333,7 @@ public class NetworkTask<T> {
                                     responseObject.ok = false;
                                     throwable = e;
                                 } finally {
-                                    if (sink != null) {
-                                        sink.close();
-                                    }
+                                    IOUtil.closeQuietly(sink);
                                 }
                                 if (responseObject.ok) {
                                     subscriber.onNext(request.downloadFilePath);
@@ -498,9 +496,7 @@ public class NetworkTask<T> {
                 } catch (Exception e) {
                     responseObject.ok = false;
                 } finally {
-                    if (sink != null) {
-                        sink.close();
-                    }
+                    IOUtil.closeQuietly(sink);
                 }
                 if (responseObject.ok) {
                     responseObject.body = request.downloadFilePath;

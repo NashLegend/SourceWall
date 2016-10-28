@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.neenbedankt.android-apt'
 //apply plugin: 'me.tatarka.retrolambda'
 
 android {
@@ -114,7 +113,7 @@ dependencies {
     releaseCompile deps.LeakCanaryRelease
     testCompile deps.LeakCanaryTest
 
-    apt deps.ButterKnifeCompiler
+    annotationProcessor deps.ButterKnifeCompiler
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-all:2.0.2-beta'

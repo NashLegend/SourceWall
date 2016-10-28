@@ -1,9 +1,7 @@
 package net.nashlegend.sourcewall.request;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.StringDef;
 
-import net.nashlegend.sourcewall.request.RequestObject.Method;
 import net.nashlegend.sourcewall.request.RequestObject.RequestCallBack;
 import net.nashlegend.sourcewall.request.RequestObject.RequestType;
 import net.nashlegend.sourcewall.request.api.UserAPI;
@@ -27,10 +25,6 @@ import rx.Subscription;
  * 默认callback执行在主线程上
  */
 public class RequestBuilder<T> {
-
-    @StringDef({Method.GET, Method.POST, Method.PUT, Method.DELETE, Method.HEAD, Method.PATCH})
-    public @interface MethodDef {
-    }
 
     private RequestObject<T> request = new RequestObject<>();
 
@@ -58,7 +52,7 @@ public class RequestBuilder<T> {
      * @param method
      * @return
      */
-    public RequestBuilder<T> method(@MethodDef String method) {
+    public RequestBuilder<T> method(Method method) {
         request.method = method;
         return this;
     }

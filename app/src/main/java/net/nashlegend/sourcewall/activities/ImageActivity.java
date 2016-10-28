@@ -18,6 +18,7 @@ import net.nashlegend.sourcewall.data.Consts.Extras;
 import net.nashlegend.sourcewall.data.Mob;
 import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.util.ErrorUtils;
+import net.nashlegend.sourcewall.util.IOUtil;
 import net.nashlegend.sourcewall.util.ImageUtils;
 
 import java.io.BufferedInputStream;
@@ -235,17 +236,7 @@ public class ImageActivity extends BaseActivity {
             copyOK = false;
             ErrorUtils.onException(e);
         } finally {
-            try {
-                if (inputStream != null) {
-                    inputStream.close();
-                }
-                if (outputStream != null) {
-                    outputStream.close();
-                }
-            } catch (Exception e) {
-                copyOK = false;
-                ErrorUtils.onException(e);
-            }
+            copyOK = copyOK && IOUtil.closeQuietly(inputStream) && IOUtil.closeQuietly(outputStream);
         }
 
         return copyOK;

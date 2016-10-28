@@ -24,7 +24,7 @@ public class RequestObject<T> {
     public static final String DefaultTag = "RequestObject";
 
     public String url = "";
-    public String method = Method.GET;
+    public Method method = Method.GET;
     public Object tag = DefaultTag;
     public RequestBody requestBody;
     public Headers.Builder headers;
@@ -44,27 +44,25 @@ public class RequestObject<T> {
     public String downloadFilePath = "";
 
     /**
-     * 是否优先使用缓存，如果useCachedFirst为true，那么useCachedIfFailed就为false了
-     * 仅仅在使用Rx时有效，与useCacheIfFailed互斥
+     * 是否优先使用缓存，与useCacheIfFailed互斥
      */
     protected boolean useCachedFirst = false;
     /**
-     * 请求失败时是否使用缓存，如果为true，那么将使用缓存，请求成功的话也会将成功的数据缓存下来,
-     * 与useCachedFirst互斥
+     * 请求失败时是否使用缓存代理，与useCachedFirst互斥
      */
     protected boolean useCachedIfFailed = false;
     /**
      * 缓存时间，如果上次保存的缓存时间与本次请求的时间差相差超过了cacheTimeOut，则重新请求一次
+     * <p>
+     * 果壳貌似本身并没有Cache-Control，或者Cache-Control的max-age=0 所以这里的缓存是本地缓存
      */
     protected long cacheTimeOut = -1;//如果是-1则表示永不超时
-    /*果壳貌似本身并没有Cache-Control，或者Cache-Control的max-age=0 所以这里的缓存是本地缓存*/
 
     public RequestObject() {
         this.method = Method.GET;
         this.headers = new Headers.Builder();
     }
 
-    @SuppressWarnings("unchecked")
     public void copyPartFrom(@NonNull RequestObject<?> object) {
         params.clear();
         for (int i = 0; i < object.params.size(); i++) {
@@ -78,7 +76,6 @@ public class RequestObject<T> {
         mediaType = object.mediaType;
     }
 
-    @SuppressWarnings("StringBufferReplaceableByString")
     public String dump() {
         StringBuilder err = new StringBuilder();
         err.append("\t\t").append("params").append(":").append(Urls.getQueryString(params)).append("\n");
@@ -90,18 +87,6 @@ public class RequestObject<T> {
             err.append("\t\t").append("mediaType").append(":").append(mediaType).append("\n");
         }
         return err.toString();
-    }
-
-    /**
-     * http 请求方法
-     */
-    public static class Method {
-        public static final String GET = "GET";//must no body
-        public static final String POST = "POST";//must body
-        public static final String DELETE = "DELETE";//may body
-        public static final String PUT = "PUT";//must body
-        public static final String HEAD = "HEAD";//must no body
-        public static final String PATCH = "PATCH";//must body
     }
 
     /**

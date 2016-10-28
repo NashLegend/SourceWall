@@ -10,9 +10,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.nio.charset.Charset;
 
@@ -48,35 +45,11 @@ public class CrashReporter implements UncaughtExceptionHandler {
         long threadId = thread.getId();
         infoString += ("ThreadInfo : Thread.getName()=" + thread.getName()
                 + " id=" + threadId + " state=" + thread.getState() + "\n");
-        try {
-            final Writer result = new StringWriter();
-            final PrintWriter printWriter = new PrintWriter(result);
-            ex.printStackTrace(printWriter);
-            String stacktrace = result.toString();
-            infoString += stacktrace;
-
-            infoString += "\n";
-            infoString += "Cause : \n";
-            infoString += "======= \n";
-
-            Throwable cause = ex.getCause();
-            while (cause != null) {
-                cause.printStackTrace(printWriter);
-                infoString += result.toString();
-                cause = cause.getCause();
-            }
-            result.close();
-            printWriter.close();
-        } catch (Exception ignored) {
-
-        }
-
+        infoString += Log.getStackTraceString(ex);
         if (BuildConfig.DEBUG) {
             Log.e("crash", infoString);
         }
-
         writeCrashLog(infoString);
-
         if (onCrashListener != null) {
             onCrashListener.onCrash(infoString, thread, ex);
         }
