@@ -1,5 +1,7 @@
 package net.nashlegend.sourcewall.request;
 
+import android.support.annotation.NonNull;
+
 import net.nashlegend.sourcewall.R;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.ErrorUtils;
@@ -17,20 +19,22 @@ import java.net.SocketTimeoutException;
  */
 public class JsonHandler {
 
-    public static JSONObject getJsonObject(JSONObject jsonObject, String key) throws JSONException {
-        if ((jsonObject.has(key)) && (!jsonObject.isNull(key))) {
-            return jsonObject.getJSONObject(key);
-        } else {
-            return new JSONObject();
+    @NonNull
+    public static JSONObject getJsonObjectSafely(JSONObject jsonObject, String key) throws JSONException {
+        JSONObject subObject = jsonObject.optJSONObject(key);
+        if (subObject == null) {
+            subObject = new JSONObject();
         }
+        return subObject;
     }
 
-    public static JSONArray getJsonArray(JSONObject jsonObject, String key) throws JSONException {
-        if ((jsonObject.has(key)) && (!jsonObject.isNull(key))) {
-            return jsonObject.getJSONArray(key);
-        } else {
-            return new JSONArray();
+    @NonNull
+    public static JSONArray getJsonArraySafely(JSONObject jsonObject, String key) throws JSONException {
+        JSONArray jsonArray = jsonObject.optJSONArray(key);
+        if (jsonArray == null) {
+            jsonArray = new JSONArray();
         }
+        return jsonArray;
     }
 
     /**
@@ -45,7 +49,7 @@ public class JsonHandler {
         JSONObject object = new JSONObject(json);
         if (object.optBoolean("ok")) {
             responseObject.ok = true;
-            return getJsonObject(object, "result");
+            return getJsonObjectSafely(object, "result");
         } else {
             handleBadJson(object, responseObject);
         }
@@ -64,7 +68,7 @@ public class JsonHandler {
         JSONObject object = new JSONObject(json);
         if (object.optBoolean("ok")) {
             responseObject.ok = true;
-            return getJsonArray(object, "result");
+            return getJsonArraySafely(object, "result");
         } else {
             handleBadJson(object, responseObject);
         }
@@ -138,7 +142,7 @@ public class JsonHandler {
     /**
      * 处理所有请求的错误信息
      *
-     * @param e              要处理的错误信息
+     * @param e        要处理的错误信息
      * @param response ResponseObject
      */
     public static void handleRequestException(Throwable e, ResponseObject response) {

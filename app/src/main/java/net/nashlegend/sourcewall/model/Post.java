@@ -44,7 +44,7 @@ public class Post extends AceModel {
         int recommendNum = postResult.optInt("recommends_count");
         int reply_num = postResult.optInt("replies_count");
         Author author = Author.fromJson(postResult.optJSONObject("author"));
-        JSONObject groupObject = JsonHandler.getJsonObject(postResult, "group");
+        JSONObject groupObject = JsonHandler.getJsonObjectSafely(postResult, "group");
         String groupName = groupObject.optString("name");
         String groupID = postResult.optString("group_id");
         detail.setGroupID(groupID);

@@ -16,7 +16,7 @@ public class IgnoreNoticeParser implements Parser<ArrayList<Notice>> {
     @Override
     public ArrayList<Notice> parse(String response, ResponseObject<ArrayList<Notice>> responseObject) throws Exception {
         JSONObject nObject = JsonHandler.getUniversalJsonObject(response, responseObject);
-        JSONArray notices = JsonHandler.getJsonArray(nObject, "list");
+        JSONArray notices = JsonHandler.getJsonArraySafely(nObject, "list");
         if (notices == null) throw new NullPointerException("notices is null");
         ArrayList<Notice> noticeList = new ArrayList<>();
         for (int i = 0; i < notices.length(); i++) {
