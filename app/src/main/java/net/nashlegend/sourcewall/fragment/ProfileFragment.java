@@ -4,7 +4,6 @@ package net.nashlegend.sourcewall.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatDelegate;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -34,8 +33,6 @@ import net.nashlegend.sourcewall.events.LoginStateChangedEvent;
 import net.nashlegend.sourcewall.events.NoticeNumChangedEvent;
 import net.nashlegend.sourcewall.model.ReminderNoticeNum;
 import net.nashlegend.sourcewall.model.UserInfo;
-import net.nashlegend.sourcewall.request.CallBack;
-import net.nashlegend.sourcewall.request.ResponseObject;
 import net.nashlegend.sourcewall.request.SimpleCallBack;
 import net.nashlegend.sourcewall.request.api.MessageAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
@@ -215,9 +212,9 @@ public class ProfileFragment extends BaseFragment {
             if (TextUtils.isEmpty(nameString)) {
                 userName.setText(R.string.loading);
             }
-            UserAPI.getUserInfoByUkey(UserAPI.getUkey(), new CallBack<UserInfo>() {
+            UserAPI.getUserInfoByUkey(UserAPI.getUkey(), new SimpleCallBack<UserInfo>() {
                 @Override
-                public void onFailure(@Nullable Throwable e, @NonNull ResponseObject<UserInfo> result) {
+                public void onFailure() {
                     String nameString = UserAPI.getName();
                     if (TextUtils.isEmpty(nameString)) {
                         userName.setText(R.string.click_to_reload);
@@ -225,7 +222,7 @@ public class ProfileFragment extends BaseFragment {
                 }
 
                 @Override
-                public void onSuccess(@NonNull UserInfo info, @NonNull ResponseObject<UserInfo> detailed) {
+                public void onSuccess(@NonNull UserInfo info) {
                     PrefsUtil.saveString(Keys.Key_User_Name, info.getNickname());
                     PrefsUtil.saveString(Keys.Key_User_ID, info.getId());
                     PrefsUtil.saveString(Keys.Key_User_Avatar, info.getAvatar());
