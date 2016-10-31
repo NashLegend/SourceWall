@@ -1,7 +1,5 @@
 package net.nashlegend.sourcewall.request;
 
-import android.text.TextUtils;
-
 import net.nashlegend.sourcewall.App;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.request.cache.RequestCache;
@@ -92,7 +90,7 @@ public class HttpUtil {
         List<Cookie> cookies = new ArrayList<>();
         boolean hasToken = false;
         boolean hasUkey = false;
-        if (!TextUtils.isEmpty(rawCookie)) {
+        if (!Utils.isEmpty(rawCookie)) {
             String[] rawCookieParams = rawCookie.split(";");
             for (String rawCookieParam : rawCookieParams) {
                 String rawCookieParamNameAndValue[] = rawCookieParam.trim().split("=");
