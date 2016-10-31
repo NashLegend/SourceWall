@@ -36,12 +36,12 @@ public class RequestDelegate {
         return get(request.url, request.params, request.tag);
     }
 
-    public Call get(String url, Object tag) throws Exception {
-        return requestSync(GET.value(), null, url, tag);
-    }
-
     public Call get(String url, List<Param> params, Object tag) throws Exception {
         return get(combine(url, params), tag);
+    }
+
+    public Call get(String url, Object tag) throws Exception {
+        return requestSync(GET.value(), null, url, tag);
     }
 
     public Call post(RequestObject<?> request) throws Exception {

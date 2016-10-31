@@ -7,6 +7,7 @@ import net.nashlegend.sourcewall.request.cache.CacheHeaderUtil;
 import net.nashlegend.sourcewall.request.cache.RequestCache;
 import net.nashlegend.sourcewall.request.interceptors.DownloadProgressInterceptor;
 import net.nashlegend.sourcewall.request.interceptors.GzipRequestInterceptor;
+import net.nashlegend.sourcewall.request.interceptors.SupplyInterceptor;
 import net.nashlegend.sourcewall.request.interceptors.UploadProgressInterceptor;
 import net.nashlegend.sourcewall.util.ErrorUtils;
 import net.nashlegend.sourcewall.util.IOUtil;
@@ -66,6 +67,10 @@ public class NetworkTask<T> {
     synchronized private OkHttpClient getHttpClient() {
         if (okHttpClient == null) {
             OkHttpClient.Builder builder = HttpUtil.getDefaultHttpClient().newBuilder();
+            builder.addInterceptor(new SupplyInterceptor(request));
+            if (request.requestWithGzip) {
+                builder.addInterceptor(new GzipRequestInterceptor()).build();
+            }
             switch (request.requestType) {
                 case RequestType.UPLOAD:
                     builder.readTimeout(SO_TIMEOUT * 10, MILLISECONDS)
@@ -80,9 +85,6 @@ public class NetworkTask<T> {
                 default:
                     //do nothing
                     break;
-            }
-            if (request.requestWithGzip) {
-                builder.addNetworkInterceptor(new GzipRequestInterceptor()).build();
             }
             okHttpClient = builder.build();
         }
