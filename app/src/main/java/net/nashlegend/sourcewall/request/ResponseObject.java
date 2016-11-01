@@ -57,7 +57,7 @@ public class ResponseObject<T> {
         err.append("message").append(":").append(message).append("\n");
         err.append("result").append(":").append(result).append("\n");
         if (requestObject != null) {
-            err.append("request is :\n").append(requestObject.dump()).append("\n").;
+            err.append("request is :\n").append(requestObject.dump()).append("\n");
         }
         if (!Utils.isEmpty(body)) {
             err.append("body:\n\t\t").append(body).append("\n");
