@@ -162,8 +162,7 @@ public class RequestBuilder<T> {
     }
 
     /**
-     * Sets the header named {@code name} to {@code value}. If this request already has any headers
-     * with that name, they are all replaced.
+     * 添加或者修改一条Header
      */
     public RequestBuilder<T> header(String name, String value) {
         request.headers.set(name, value);
@@ -171,24 +170,23 @@ public class RequestBuilder<T> {
     }
 
     /**
-     * Adds a header with {@code name} and {@code value}. Prefer this method for multiply-valued
-     * headers like "Cookie".
-     * <p>
-     * <p>Note that for some headers including {@code Content-Length} and {@code Content-Encoding},
-     * OkHttp may replace {@code value} with a header derived from the request body.
+     * 添加一个Header
      */
     public RequestBuilder<T> addHeader(String name, String value) {
         request.headers.add(name, value);
         return this;
     }
 
+    /**
+     * 删除一个Header
+     */
     public RequestBuilder<T> removeHeader(String name) {
         request.headers.removeAll(name);
         return this;
     }
 
     /**
-     * Removes all headers on this builder and adds {@code headers}.
+     * 将Header替换成设置的headers
      */
     public RequestBuilder<T> headers(Headers headers) {
         request.headers = headers.newBuilder();
@@ -200,6 +198,9 @@ public class RequestBuilder<T> {
         return this;
     }
 
+    /**
+     * 设置请求的body，如果设置了，那么如果设置过参数文件什么的就没用了
+     */
     public RequestBuilder<T> requestBody(RequestBody body) {
         request.requestBody = body;
         return this;
