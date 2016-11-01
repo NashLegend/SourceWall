@@ -402,6 +402,8 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
             if (!comment.getAuthor().getId().equals(UserAPI.getUserID())) {
                 ops.add(getString(R.string.report));
             }
+            System.out.println(comment.getAuthor().getId());
+            System.out.println(UserAPI.getUserID());
             if (comment.getAuthor().getId().equals(UserAPI.getUserID())) {
                 ops.add(getString(R.string.action_delete));
             }

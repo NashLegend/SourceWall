@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -21,7 +22,9 @@ import net.nashlegend.sourcewall.data.Consts.Web;
 import net.nashlegend.sourcewall.data.Mob;
 import net.nashlegend.sourcewall.events.Emitter;
 import net.nashlegend.sourcewall.events.LoginStateChangedEvent;
+import net.nashlegend.sourcewall.model.UserInfo;
 import net.nashlegend.sourcewall.request.HttpUtil;
+import net.nashlegend.sourcewall.request.SimpleCallBack;
 import net.nashlegend.sourcewall.request.api.PostAPI;
 import net.nashlegend.sourcewall.request.api.UserAPI;
 import net.nashlegend.sourcewall.util.PrefsUtil;
@@ -98,16 +101,8 @@ public class LoginActivity extends BaseActivity {
                         UserAPI.setUkey(paramValue);
                         tmpUkey = paramValue;
                     }
-//
-//                    if (Web.Cookie_Token_Key_2.equals(paramName)) {
-//                        UserAPI.setToken2(paramValue);
-//                        tmpToken2 = paramValue;
-//                    }
                 }
             }
-//            return !TextUtils.isEmpty(tmpUkey)
-//                    && !TextUtils.isEmpty(tmpToken)
-//                    && !TextUtils.isEmpty(tmpToken2);
             return !TextUtils.isEmpty(tmpUkey)
                     && !TextUtils.isEmpty(tmpToken);
         } catch (Exception e) {
@@ -202,6 +197,16 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void delayFinish() {
+
+        UserAPI.getUserInfoByUkey(UserAPI.getUkey(), new SimpleCallBack<UserInfo>() {
+            @Override
+            public void onSuccess(@NonNull UserInfo info) {
+                PrefsUtil.saveString(Keys.Key_User_Name, info.getNickname());
+                PrefsUtil.saveString(Keys.Key_User_ID, info.getId());
+                PrefsUtil.saveString(Keys.Key_User_Avatar, info.getAvatar());
+            }
+        });
+
         if (UserAPI.isLoggedIn()) {
             PostAPI.getAllMyGroupsAndMergeAndNotify();
             Emitter.emit(new LoginStateChangedEvent());
