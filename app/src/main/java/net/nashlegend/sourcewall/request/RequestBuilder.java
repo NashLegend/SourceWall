@@ -445,7 +445,7 @@ public class RequestBuilder<T> {
      */
     public Subscription requestRx() {
         addExtras();
-        return new NetworkTask<>(request).requestRx();
+        return new NetworkTask<>(request).requestAsync();
     }
 
 }

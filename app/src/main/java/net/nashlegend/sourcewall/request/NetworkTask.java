@@ -7,7 +7,6 @@ import net.nashlegend.sourcewall.request.cache.CacheHeaderUtil;
 import net.nashlegend.sourcewall.request.cache.RequestCache;
 import net.nashlegend.sourcewall.request.interceptors.DownloadProgressInterceptor;
 import net.nashlegend.sourcewall.request.interceptors.GzipRequestInterceptor;
-import net.nashlegend.sourcewall.request.interceptors.SupplyInterceptor;
 import net.nashlegend.sourcewall.request.interceptors.UploadProgressInterceptor;
 import net.nashlegend.sourcewall.util.ErrorUtils;
 import net.nashlegend.sourcewall.util.IOUtil;
@@ -42,6 +41,8 @@ import static net.nashlegend.sourcewall.request.HttpUtil.WRITE_TIMEOUT;
 
 public class NetworkTask<T> {
 
+    public final ResponseObject<T> responseObject = new ResponseObject<>();
+    public RequestObject<T> request;
     private RequestDelegate delegate;
     private OkHttpClient okHttpClient;
     private int crtTime = 0;//当前重试次数
@@ -50,129 +51,125 @@ public class NetworkTask<T> {
     private String cacheKey = null;
     private boolean dismissed = false;//取消掉一个请求，但是并不中断请求，只是不再执行CallBack,请求完成后无任何动作
 
-    public final ResponseObject<T> responseObject = new ResponseObject<>();
-    public RequestObject<T> request;
-
     public NetworkTask(@NonNull RequestObject<T> request) {
         this.request = request;
     }
 
-    synchronized private RequestDelegate getDelegate() {
-        if (delegate == null) {
-            delegate = new RequestDelegate(getHttpClient());
-        }
-        return delegate;
-    }
-
-    synchronized private OkHttpClient getHttpClient() {
-        if (okHttpClient == null) {
-            OkHttpClient.Builder builder = HttpUtil.getDefaultHttpClient().newBuilder();
-            builder.addInterceptor(new SupplyInterceptor(request));
-            if (request.requestWithGzip) {
-                builder.addInterceptor(new GzipRequestInterceptor()).build();
-            }
-            switch (request.requestType) {
-                case RequestType.UPLOAD:
-                    builder.readTimeout(SO_TIMEOUT * 10, MILLISECONDS)
-                            .writeTimeout(WRITE_TIMEOUT * 10, MILLISECONDS)
-                            .addNetworkInterceptor(new UploadProgressInterceptor(request.callBack));
-                    break;
-                case RequestType.DOWNLOAD:
-                    builder.readTimeout(SO_TIMEOUT * 10, MILLISECONDS)
-                            .writeTimeout(WRITE_TIMEOUT * 50, MILLISECONDS)
-                            .addNetworkInterceptor(new DownloadProgressInterceptor(request.callBack));
-                    break;
-                default:
-                    //do nothing
-                    break;
-            }
-            okHttpClient = builder.build();
-        }
-        return okHttpClient;
+    /**
+     * 通过RxJava的方式执行请求，与requestAsync一样，CallBack执行在主线程上
+     */
+    public NetworkTask<T> startRequestAsync() {
+        requestAsync();
+        return this;
     }
 
     /**
-     * 生成此次请求的缓存key，
-     * key的格式为：Method/{URL}/Params —— Params为a=b&c=d这样，按key排序
-     *
-     * @return
+     * 通过RxJava的方式执行请求，CallBack执行在主线程上
      */
-    private String getCachedKey() {
-        if (cacheKey == null) {
-            synchronized (RequestObject.class) {
-                if (cacheKey == null) {
-                    StringBuilder keyBuilder = new StringBuilder("");
-                    keyBuilder.append(request.method).append("/{").append(request.url).append("}/");
-                    if (request.params.size() > 0) {
-                        ArrayList<Param> entryArrayList = new ArrayList<>();
-                        for (Param param : request.params) {
-                            if (Utils.isEmpty(param.key)) {
-                                continue;
-                            }
-                            entryArrayList.add(param);
-                        }
-                        Collections.sort(entryArrayList, new Comparator<Param>() {
-                            @Override
-                            public int compare(Param lhs, Param rhs) {
-                                return lhs.key.compareTo(rhs.key);
-                            }
-                        });
-                        if (entryArrayList.size() > 0) {
-                            keyBuilder.append("?");
-                            for (Param param : entryArrayList) {
-                                keyBuilder.append(param.key).append("=").append(param.value).append("&");
-                            }
-                            keyBuilder.deleteCharAt(keyBuilder.length() - 1);
+    public Subscription requestAsync() {
+        subscription = flatMap()
+                .takeLast(1)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ResponseObject<T>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        //requestObservable基本走不到onError，因为都已经封好了，否则第二个参数不太好传给别人
+                        if (!dismissed && request.callBack != null) {
+                            request.callBack.onFailure(e, responseObject);
                         }
                     }
-                    cacheKey = keyBuilder.toString();
+
+                    @Override
+                    public void onNext(ResponseObject<T> tResponseObject) {
+                        if (!dismissed && request.callBack != null) {
+                            if (tResponseObject.ok) {
+                                request.callBack.onSuccess(tResponseObject.result, tResponseObject);
+                            } else {
+                                request.callBack.onFailure(tResponseObject.throwable, tResponseObject);
+                            }
+                        }
+                    }
+                });
+        return subscription;
+    }
+
+    /**
+     * 请求缓存数据，如果已经有了缓存，然而还是解析失败了，只可能是版本升级中parser发生了变化
+     *
+     * @return
+     */
+    @NonNull
+    public Observable<ResponseObject<T>> flatMap() {
+        Observable<ResponseObject<T>> observable;
+        if (request.useCachedFirst) {
+            observable = cachedObservable()
+                    .flatMap(new Func1<ResponseObject<T>, Observable<ResponseObject<T>>>() {
+                        @Override
+                        public Observable<ResponseObject<T>> call(ResponseObject<T> r) {
+                            if (r == null) {
+                                return networkObservable();
+                            } else {
+                                return Observable.just(r);
+                            }
+                        }
+                    });
+        } else {
+            observable = networkObservable();
+        }
+        return observable.subscribeOn(Schedulers.io());
+    }
+
+    /**
+     * 同步请求
+     */
+    public ResponseObject<T> startRequestSync() {
+        try {
+            Call call = getCall();
+            Response response = call.execute();
+            if (request.requestType == RequestType.DOWNLOAD) {
+                File downloadedFile = new File(request.downloadFilePath);
+                BufferedSink sink = null;
+                try {
+                    sink = Okio.buffer(Okio.sink(downloadedFile));
+                    sink.writeAll(response.body().source());
+                    responseObject.ok = true;
+                } catch (Exception e) {
+                    responseObject.ok = false;
+                } finally {
+                    IOUtil.closeQuietly(sink);
+                }
+                if (responseObject.ok) {
+                    responseObject.body = request.downloadFilePath;
+                }
+            } else {
+                String result = response.body().string();
+                responseObject.statusCode = response.code();
+                responseObject.body = result;
+                if (responseObject.throwable == null && request.parser != null) {
+                    try {
+                        responseObject.result = request.parser.parse(result, responseObject);
+                    } catch (Exception e) {
+                        JsonHandler.handleRequestException(e, responseObject);
+                    }
+                }
+                if (!responseObject.ok) {
+                    ErrorUtils.dumpRequest(responseObject);
                 }
             }
-        }
-        return cacheKey;
-    }
-
-    private boolean isOutOfDate() {
-        if (request.cacheTimeOut < 0) {
-            return false;
-        } else {
-            return System.currentTimeMillis() - CacheHeaderUtil.readTime(getCachedKey()) > request.cacheTimeOut;
+            return responseObject;
+        } catch (Exception e) {
+            ErrorUtils.onException(e);
+            return responseObject;
         }
     }
 
-    /**
-     * 在缓存中读取数据
-     *
-     * @return
-     */
-    private String readFromCache() {
-        return RequestCache.getInstance().getStringFromCache(getCachedKey());
-    }
-
-    /**
-     * 将数据存入缓存
-     *
-     * @return
-     */
-    private void saveToCache(String data) {
-        if (shouldCache()) {
-            RequestCache.getInstance().addStringToCacheForceUpdate(getCachedKey(), data);
-            CacheHeaderUtil.saveTime(getCachedKey(), System.currentTimeMillis());
-        }
-    }
-
-    /**
-     * 清除缓存
-     *
-     * @return
-     */
-    private void removeCache() {
-        RequestCache.getInstance().removeCache(getCachedKey());
-        CacheHeaderUtil.remove(getCachedKey());
-    }
-
-    private boolean shouldCache() {
-        return request.useCachedIfFailed || request.useCachedFirst;
+    public Subscription getSubscription() {
+        return subscription;
     }
 
     public void cancel() {
@@ -197,58 +194,42 @@ public class NetworkTask<T> {
         return dismissed;
     }
 
-    /**
-     * 同步请求
-     */
-    private Call syncRequest() throws Exception {
-        switch (request.requestType) {
-            case RequestType.PLAIN:
-                return requestSync();
-            case RequestType.UPLOAD:
-                return uploadSync();
-            case RequestType.DOWNLOAD:
-                return downloadSync();
-            default:
-                return requestSync();
+
+    synchronized private RequestDelegate getDelegate() {
+        if (delegate == null) {
+            delegate = new RequestDelegate(getHttpClient());
         }
+        return delegate;
     }
 
-    /**
-     * 同步上传
-     */
-    private Call uploadSync() throws Exception {
-        return getDelegate().upload(request);
-    }
-
-    /**
-     * 同步下载
-     */
-    private Call downloadSync() throws Exception {
-        return requestSync();
-    }
-
-    /**
-     * 同步请求
-     *
-     * @return
-     */
-    private Call requestSync() throws Exception {
-        Call call;
-        switch (request.method) {
-            case GET:
-                call = getDelegate().get(request);
-                break;
-            case PUT:
-                call = getDelegate().put(request);
-                break;
-            case DELETE:
-                call = getDelegate().delete(request);
-                break;
-            default:
-                call = getDelegate().post(request);
-                break;
+    synchronized private OkHttpClient getHttpClient() {
+        if (okHttpClient == null) {
+            OkHttpClient.Builder builder = HttpUtil.getDefaultHttpClient().newBuilder();
+            if (request.requestWithGzip) {
+                builder.addInterceptor(new GzipRequestInterceptor()).build();
+            }
+            switch (request.requestType) {
+                case RequestType.UPLOAD:
+                    builder.readTimeout(SO_TIMEOUT * 10, MILLISECONDS)
+                            .writeTimeout(WRITE_TIMEOUT * 10, MILLISECONDS)
+                            .addNetworkInterceptor(new UploadProgressInterceptor(request.callBack));
+                    break;
+                case RequestType.DOWNLOAD:
+                    builder.readTimeout(SO_TIMEOUT * 10, MILLISECONDS)
+                            .writeTimeout(WRITE_TIMEOUT * 50, MILLISECONDS)
+                            .addNetworkInterceptor(new DownloadProgressInterceptor(request.callBack));
+                    break;
+                default:
+                    //do nothing
+                    break;
+            }
+            okHttpClient = builder.build();
         }
-        return call;
+        return okHttpClient;
+    }
+
+    private Call getCall() throws Exception {
+        return getDelegate().getCall(request);
     }
 
     /**
@@ -319,7 +300,7 @@ public class NetworkTask<T> {
                     public void call(Subscriber<? super String> subscriber) {
                         try {
                             responseObject.isCached = false;
-                            call = syncRequest();
+                            call = getCall();
                             Response response = call.execute();
                             if (request.requestType == RequestType.DOWNLOAD) {
                                 // 下载请求在此处就确定了请求的结果responseObject.ok，可以无parser，
@@ -409,75 +390,6 @@ public class NetworkTask<T> {
                 });
     }
 
-    /**
-     * 请求缓存数据，如果已经有了缓存，然而还是解析失败了，只可能是版本升级中parser发生了变化
-     *
-     * @return
-     */
-    @NonNull
-    public Observable<ResponseObject<T>> flatMap() {
-        Observable<ResponseObject<T>> observable;
-        if (request.useCachedFirst) {
-            observable = cachedObservable()
-                    .flatMap(new Func1<ResponseObject<T>, Observable<ResponseObject<T>>>() {
-                        @Override
-                        public Observable<ResponseObject<T>> call(ResponseObject<T> r) {
-                            if (r == null) {
-                                return networkObservable();
-                            } else {
-                                return Observable.just(r);
-                            }
-                        }
-                    });
-        } else {
-            observable = networkObservable();
-        }
-        return observable.subscribeOn(Schedulers.io());
-    }
-
-    /**
-     * 通过RxJava的方式执行请求，与requestAsync一样，CallBack执行在主线程上
-     */
-    public Subscription requestRx() {
-        subscription = flatMap()
-                .takeLast(1)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<ResponseObject<T>>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        //requestObservable基本走不到onError，因为都已经封好了，否则第二个参数不太好传给别人
-                        if (!dismissed && request.callBack != null) {
-                            request.callBack.onFailure(e, responseObject);
-                        }
-                    }
-
-                    @Override
-                    public void onNext(ResponseObject<T> tResponseObject) {
-                        if (!dismissed && request.callBack != null) {
-                            if (tResponseObject.ok) {
-                                request.callBack.onSuccess(tResponseObject.result, tResponseObject);
-                            } else {
-                                request.callBack.onFailure(tResponseObject.throwable, tResponseObject);
-                            }
-                        }
-                    }
-                });
-        return subscription;
-    }
-
-    /**
-     * 通过RxJava的方式执行请求，与requestAsync一样，CallBack执行在主线程上
-     */
-    public NetworkTask<T> startRequestAsync() {
-        requestRx();
-        return this;
-    }
-
     private boolean shouldRetry(Throwable exception, ResponseObject response) {
         return response.code != ResponseCode.CODE_TOKEN_INVALID
                 && call != null
@@ -487,52 +399,89 @@ public class NetworkTask<T> {
                 && (response.statusCode < 300 || response.statusCode >= 500);
     }
 
+
     /**
-     * 同步请求
+     * 生成此次请求的缓存key，
+     * key的格式为：Method/{URL}/Params —— Params为a=b&c=d这样，按key排序
+     *
+     * @return
      */
-    public ResponseObject<T> startRequestSync() {
-        try {
-            Call call = syncRequest();
-            Response response = call.execute();
-            if (request.requestType == RequestType.DOWNLOAD) {
-                File downloadedFile = new File(request.downloadFilePath);
-                BufferedSink sink = null;
-                try {
-                    sink = Okio.buffer(Okio.sink(downloadedFile));
-                    sink.writeAll(response.body().source());
-                    responseObject.ok = true;
-                } catch (Exception e) {
-                    responseObject.ok = false;
-                } finally {
-                    IOUtil.closeQuietly(sink);
-                }
-                if (responseObject.ok) {
-                    responseObject.body = request.downloadFilePath;
-                }
-            } else {
-                String result = response.body().string();
-                responseObject.statusCode = response.code();
-                responseObject.body = result;
-                if (responseObject.throwable == null && request.parser != null) {
-                    try {
-                        responseObject.result = request.parser.parse(result, responseObject);
-                    } catch (Exception e) {
-                        JsonHandler.handleRequestException(e, responseObject);
+    private String getCachedKey() {
+        if (cacheKey == null) {
+            synchronized (RequestObject.class) {
+                if (cacheKey == null) {
+                    StringBuilder keyBuilder = new StringBuilder("");
+                    keyBuilder.append(request.method).append("/{").append(request.url).append("}/");
+                    if (request.params.size() > 0) {
+                        ArrayList<Param> entryArrayList = new ArrayList<>();
+                        for (Param param : request.params) {
+                            if (Utils.isEmpty(param.key)) {
+                                continue;
+                            }
+                            entryArrayList.add(param);
+                        }
+                        Collections.sort(entryArrayList, new Comparator<Param>() {
+                            @Override
+                            public int compare(Param lhs, Param rhs) {
+                                return lhs.key.compareTo(rhs.key);
+                            }
+                        });
+                        if (entryArrayList.size() > 0) {
+                            keyBuilder.append("?");
+                            for (Param param : entryArrayList) {
+                                keyBuilder.append(param.key).append("=").append(param.value).append("&");
+                            }
+                            keyBuilder.deleteCharAt(keyBuilder.length() - 1);
+                        }
                     }
-                }
-                if (!responseObject.ok) {
-                    ErrorUtils.dumpRequest(responseObject);
+                    cacheKey = keyBuilder.toString();
                 }
             }
-            return responseObject;
-        } catch (Exception e) {
-            ErrorUtils.onException(e);
-            return responseObject;
+        }
+        return cacheKey;
+    }
+
+    private boolean isOutOfDate() {
+        if (request.cacheTimeOut < 0) {
+            return false;
+        } else {
+            return System.currentTimeMillis() - CacheHeaderUtil.readTime(getCachedKey()) > request.cacheTimeOut;
         }
     }
 
-    public Subscription getSubscription() {
-        return subscription;
+    /**
+     * 在缓存中读取数据
+     *
+     * @return
+     */
+    private String readFromCache() {
+        return RequestCache.getInstance().getStringFromCache(getCachedKey());
+    }
+
+    /**
+     * 将数据存入缓存
+     *
+     * @return
+     */
+    private void saveToCache(String data) {
+        if (shouldCache()) {
+            RequestCache.getInstance().addStringToCacheForceUpdate(getCachedKey(), data);
+            CacheHeaderUtil.saveTime(getCachedKey(), System.currentTimeMillis());
+        }
+    }
+
+    /**
+     * 清除缓存
+     *
+     * @return
+     */
+    private void removeCache() {
+        RequestCache.getInstance().removeCache(getCachedKey());
+        CacheHeaderUtil.remove(getCachedKey());
+    }
+
+    private boolean shouldCache() {
+        return request.useCachedIfFailed || request.useCachedFirst;
     }
 
     public class RxRetryHandler implements Func1<Observable<? extends Throwable>, Observable<?>> {

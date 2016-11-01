@@ -12,10 +12,10 @@ import okhttp3.Response;
  * Created by NashLegend on 2016/10/31.
  */
 
-public class SupplyInterceptor implements Interceptor {
+public class SupplierInterceptor implements Interceptor {
     RequestObject requestObject;
 
-    public SupplyInterceptor(RequestObject requestObject) {
+    public SupplierInterceptor(RequestObject requestObject) {
         this.requestObject = requestObject;
     }
 
@@ -27,6 +27,9 @@ public class SupplyInterceptor implements Interceptor {
         }
         if (requestObject.headers != null) {
             newBuilder.headers(requestObject.headers.build());
+        }
+        if (requestObject.requestBody != null) {
+            newBuilder.method(requestObject.method.value(), requestObject.requestBody);
         }
         return chain.proceed(newBuilder.build());
     }
