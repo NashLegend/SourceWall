@@ -56,13 +56,12 @@ public class ResponseObject<T> {
         err.append("code").append(":").append(code).append("\n");
         err.append("message").append(":").append(message).append("\n");
         err.append("result").append(":").append(result).append("\n");
-        if (!Utils.isEmpty(body)) {
-            err.append("\n").append("body:  ").append(body).append("\n");
-        }
         if (requestObject != null) {
-            err.append("requestObject:\n").append(requestObject.dump());
+            err.append("request is :\n").append(requestObject.dump()).append("\n").;
+        }
+        if (!Utils.isEmpty(body)) {
+            err.append("body:\n\t\t").append(body).append("\n");
         }
         return err.toString();
     }
-
 }

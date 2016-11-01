@@ -78,9 +78,9 @@ public class RequestObject<T> {
 
     public String dump() {
         StringBuilder err = new StringBuilder();
-        err.append("\t\t").append("params").append(":").append(Urls.getQueryString(params)).append("\n");
         err.append("\t\t").append("method").append(":").append(method).append("\n");
         err.append("\t\t").append("url").append(":").append(url).append("\n");
+        err.append("\t\t").append("params").append(":").append(Urls.getQueryString(params)).append("\n");
         err.append("\t\t").append("tag").append(":").append(tag).append("\n");
         if (requestType == RequestType.UPLOAD) {
             err.append("\t\t").append("uploadFileKey").append(":").append(uploadFileKey).append("\n");
