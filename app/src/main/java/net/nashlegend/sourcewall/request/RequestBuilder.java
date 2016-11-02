@@ -232,11 +232,11 @@ public class RequestBuilder<T> {
      * 启用伪造数据，不是null则启用，启用后仍然会走正常的请求流程，只是在请求返回后，无论对错，都返回伪造的数据
      * 启用伪造数据时，请添加stopship标志防止打包出去
      *
-     * @param faked
+     * @param mocked
      * @return
      */
-    public RequestBuilder<T> fakeResponse(String faked) {
-        request.fakeResponse = faked;
+    public RequestBuilder<T> mock(String mocked) {
+        request.mockedResponse = mocked;
         return this;
     }
 

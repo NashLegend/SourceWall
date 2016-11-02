@@ -360,8 +360,8 @@ public class NetworkTask<T> {
                     @Override
                     public String call(String s) {
                         //debug模式下可返回fakeBody
-                        if (BuildConfig.DEBUG && request.fakeResponse != null) {
-                            return request.fakeResponse;
+                        if (BuildConfig.DEBUG && request.mockedResponse != null) {
+                            return request.mockedResponse;
                         }
                         return s;
                     }

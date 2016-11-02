@@ -30,7 +30,7 @@ public class RequestObject<T> {
     public CacheControl cacheControl;
 
     public boolean requestWithGzip = false;//是否使用Gzip压缩请求数据
-    public String fakeResponse = null;
+    public String mockedResponse = null;
     public int maxRetryTimes = 0;//最大重试次数
     public int interval = 0;//重试间隔
     public int requestType = RequestType.PLAIN;
