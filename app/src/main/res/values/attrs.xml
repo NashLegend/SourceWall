@@ -14,7 +14,7 @@
     <declare-styleable name="LoadingView">
         <attr name="layout" format="reference" />
     </declare-styleable>
-    
+
     <!--通用-->
     <!--ToolBar-->
     <attr name="toolbarTheme" format="reference" />
