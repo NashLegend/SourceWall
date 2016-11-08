@@ -17,7 +17,8 @@ public class SubItemView extends AceView<SubItem> {
 
     public SubItemView(Context context) {
         super(context);
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(
+                Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_subitem_view, this);
         textView = (TextView) findViewById(R.id.text_subitem);
     }

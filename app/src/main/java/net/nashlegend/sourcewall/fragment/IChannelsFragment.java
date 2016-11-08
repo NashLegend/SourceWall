@@ -12,16 +12,11 @@ import net.nashlegend.sourcewall.model.SubItem;
 public interface IChannelsFragment {
     /**
      * 返回所需的menu id
-     *
-     * @return
      */
     int getFragmentMenu();
 
     /**
      * 接管Activity的Menu生成
-     *
-     * @param inflater
-     * @param menu
      */
     boolean takeOverMenuInflate(MenuInflater inflater, Menu menu);
 

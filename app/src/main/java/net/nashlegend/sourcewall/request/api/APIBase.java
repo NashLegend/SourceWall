@@ -51,13 +51,17 @@ public class APIBase {
      * @return ResponseObject
      */
     @Nullable
-    public static NetworkTask<String> reply(AceModel data, String content, RequestCallBack<String> callBack) {
+    public static NetworkTask<String> reply(AceModel data, String content,
+            RequestCallBack<String> callBack) {
         if (data instanceof Article) {
-            return ArticleAPI.replyArticle(((Article) data).getId(), content + Tail.getSimpleReplyTail(), callBack);
+            return ArticleAPI.replyArticle(((Article) data).getId(),
+                    content + Tail.getSimpleReplyTail(), callBack);
         } else if (data instanceof Post) {
-            return PostAPI.replyPost(((Post) data).getId(), content + Tail.getSimpleReplyTail(), callBack);
+            return PostAPI.replyPost(((Post) data).getId(), content + Tail.getSimpleReplyTail(),
+                    callBack);
         } else if (data instanceof Question) {
-            return QuestionAPI.answerQuestion(((Question) data).getId(), content + Tail.getSimpleReplyTail(), callBack);
+            return QuestionAPI.answerQuestion(((Question) data).getId(),
+                    content + Tail.getSimpleReplyTail(), callBack);
         } else {
             return null;
         }
@@ -69,7 +73,8 @@ public class APIBase {
      * @return ResponseObject
      */
     @Nullable
-    public static Subscription replyHtml(AceModel data, String content, boolean is_anon, RequestCallBack<Boolean> callBack) {
+    public static Subscription replyHtml(AceModel data, String content, boolean is_anon,
+            RequestCallBack<Boolean> callBack) {
         if (data instanceof Article) {
             return ArticleAPI.replyArticleHtml(((Article) data).getId(), content, callBack);
         } else if (data instanceof Post) {
@@ -88,7 +93,8 @@ public class APIBase {
      * @return 返回ResponseObject，resultObject.result是上传后的图片地址，果壳并不会对图片进行压缩
      */
     public static Subscription uploadImage(String path, RequestCallBack<String> callBack) {
-        return uploadImage(path, DeviceUtil.isWifiConnected() ? ZipMode.High : ZipMode.Low, callBack);
+        return uploadImage(path, DeviceUtil.isWifiConnected() ? ZipMode.High : ZipMode.Low,
+                callBack);
     }
 
     /**
@@ -97,7 +103,8 @@ public class APIBase {
      * @param path 要上传图片的路径
      * @return 返回ResponseObject，resultObject.result是上传后的图片地址，果壳并不会对图片进行压缩
      */
-    public static Subscription uploadImage(final String path, final int mode, final RequestCallBack<String> callBack) {
+    public static Subscription uploadImage(final String path, final int mode,
+            final RequestCallBack<String> callBack) {
         return Observable.just(path)
                 .map(new Func1<String, String>() {
                     @Override

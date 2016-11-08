@@ -1,5 +1,8 @@
 package net.nashlegend.sourcewall.activities;
 
+import static net.nashlegend.sourcewall.model.SubItem.Section_Favor;
+import static net.nashlegend.sourcewall.model.SubItem.Type_Single_Channel;
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
@@ -24,9 +27,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static net.nashlegend.sourcewall.model.SubItem.Section_Favor;
-import static net.nashlegend.sourcewall.model.SubItem.Type_Single_Channel;
 
 public class MyFavorsActivity extends BaseActivity {
 
@@ -75,7 +75,8 @@ public class MyFavorsActivity extends BaseActivity {
                 ArrayList<SubItem> fetchedSubItems = new ArrayList<>();
                 for (int i = 0; i < result.size(); i++) {
                     Basket basket = result.get(i);
-                    SubItem subItem = new SubItem(Section_Favor, Type_Single_Channel, basket.getName(), basket.getId());
+                    SubItem subItem = new SubItem(Section_Favor, Type_Single_Channel,
+                            basket.getName(), basket.getId());
                     fetchedSubItems.add(subItem);
                 }
                 onGetBaskets(fetchedSubItems);

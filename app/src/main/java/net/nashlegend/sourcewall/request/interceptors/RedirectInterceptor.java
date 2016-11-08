@@ -19,13 +19,23 @@ public class RedirectInterceptor implements Interceptor {
         if (response.isRedirect()) {
             String tmpUrl = chain.request().url().toString();
             tmpUrl = tmpUrl.replaceAll("\\?.+", "");
-            String article_reply_reg = "^http://(www|m).guokr.com/article/reply/\\d+/$";//http://www.guokr.com/article/reply/2903740/
-            String post_reply_reg = "^http://(www|m).guokr.com/post/reply/\\d+/$";//http://www.guokr.com/post/reply/6148664/
+            String article_reply_reg =
+                    "^http://(www|m).guokr.com/article/reply/\\d+/$";//http://www.guokr
+            // .com/article/reply/2903740/
+            String post_reply_reg =
+                    "^http://(www|m).guokr.com/post/reply/\\d+/$";//http://www.guokr
+            // .com/post/reply/6148664/
             //上面两条，只有通知才会跳到
             String publish_post_reg = "http://www.guokr.com/group/\\d+/post/edit/";//这是发贴的链接跳转
-            String reply_post_reg = "http://(www|m).guokr.com/post/\\d+/";//这是回贴子的链接跳转http://www.guokr.com/post/754909/
-            String reply_article_reg = "http://(www|m).guokr.com/article/\\d+/";//这是回文章的链接跳转http://www.guokr.com/article/441704/
-            String answer_question_reg = "http://(www|m).guokr.com/question/\\d+/";//这是回答问题的链接跳转http://www.guokr.com/question/647230/
+            String reply_post_reg =
+                    "http://(www|m).guokr.com/post/\\d+/";//这是回贴子的链接跳转http://www.guokr
+            // .com/post/754909/
+            String reply_article_reg =
+                    "http://(www|m).guokr.com/article/\\d+/";//这是回文章的链接跳转http://www.guokr
+            // .com/article/441704/
+            String answer_question_reg =
+                    "http://(www|m).guokr.com/question/\\d+/";//这是回答问题的链接跳转http://www.guokr
+            // .com/question/647230/
             boolean flag = tmpUrl.matches(article_reply_reg)
                     || tmpUrl.matches(post_reply_reg)
                     || tmpUrl.matches(publish_post_reg)

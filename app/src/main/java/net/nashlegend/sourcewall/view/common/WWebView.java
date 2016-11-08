@@ -89,7 +89,9 @@ public class WWebView extends WebView {
                 startY = event.getY();
                 break;
             case MotionEvent.ACTION_UP:
-                if (System.currentTimeMillis() - startMills < duration && Math.abs(event.getX() - startX) < distance && Math.abs(event.getY() - startY) < distance) {
+                if (System.currentTimeMillis() - startMills < duration && Math.abs(
+                        event.getX() - startX) < distance && Math.abs(event.getY() - startY)
+                        < distance) {
                     performClick();
                 }
                 startMills = 0;
@@ -169,7 +171,8 @@ public class WWebView extends WebView {
         Mob.onEvent(Mob.Event_Open_Image_From_Browser);
         if (context != null && context instanceof Activity) {
             intent.setClass(context, ImageActivity.class);
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(App.getApp(), R.anim.scale_in_center, 0);
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(App.getApp(),
+                    R.anim.scale_in_center, 0);
             ActivityCompat.startActivity((Activity) context, intent, options.toBundle());
         } else {
             intent.setClass(App.getApp(), ImageActivity.class);

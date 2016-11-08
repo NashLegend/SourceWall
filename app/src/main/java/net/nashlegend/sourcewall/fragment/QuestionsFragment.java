@@ -45,7 +45,8 @@ import rx.functions.Action0;
  * Use the {@link QuestionsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class QuestionsFragment extends BaseFragment implements ReloadListener, OnRefreshListener, OnItemClickListener {
+public class QuestionsFragment extends BaseFragment implements ReloadListener, OnRefreshListener,
+        OnItemClickListener {
     View layoutView;
     private final String HOTTEST = "hottest";
     private final String HIGHLIGHT = "highlight";
@@ -84,7 +85,7 @@ public class QuestionsFragment extends BaseFragment implements ReloadListener, O
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         layoutView = inflater.inflate(R.layout.fragment_questions, container, false);
         ButterKnife.bind(this, layoutView);
         loadingView.setReloadListener(this);
@@ -95,15 +96,16 @@ public class QuestionsFragment extends BaseFragment implements ReloadListener, O
         listView.setOnRefreshListener(this);
         listView.setOnItemClickListener(this);
         listView.addHeaderView(headerView);
-        headerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                if (headerView.getLayoutParams() != null) {
-                    headerView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                    hideHeader();
-                }
-            }
-        });
+        headerView.getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        if (headerView.getLayoutParams() != null) {
+                            headerView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                            hideHeader();
+                        }
+                    }
+                });
         headerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,7 +129,8 @@ public class QuestionsFragment extends BaseFragment implements ReloadListener, O
             }
         });
         loadOver();
-        AutoHideUtil.applyListViewAutoHide(getActivity(), listView, (int) getResources().getDimension(R.dimen.actionbar_height), false,
+        AutoHideUtil.applyListViewAutoHide(getActivity(), listView,
+                (int) getResources().getDimension(R.dimen.actionbar_height), false,
                 new AutoHideUtil.AutoHideListener() {
                     @Override
                     public void animateHide() {
@@ -218,7 +221,8 @@ public class QuestionsFragment extends BaseFragment implements ReloadListener, O
                 observable = QuestionAPI.getHighlightQuestions(loadedPage + 1, useCache);
             }
         } else {
-            observable = QuestionAPI.getQuestionsByTag(subItem.getValue(), loadedPage * 20, useCache);
+            observable = QuestionAPI.getQuestionsByTag(subItem.getValue(), loadedPage * 20,
+                    useCache);
         }
         observable
                 .observeOn(AndroidSchedulers.mainThread())
@@ -294,8 +298,10 @@ public class QuestionsFragment extends BaseFragment implements ReloadListener, O
                                 listView.setCanPullToLoadMore(false);
                                 listView.setCanPullToRefresh(true);
                             }
-                            headerView.findViewById(R.id.text_header_load_hint).setVisibility(View.VISIBLE);
-                            headerView.findViewById(R.id.progress_header_loading).setVisibility(View.GONE);
+                            headerView.findViewById(R.id.text_header_load_hint).setVisibility(
+                                    View.VISIBLE);
+                            headerView.findViewById(R.id.progress_header_loading).setVisibility(
+                                    View.GONE);
                         }
                     }
                 });

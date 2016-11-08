@@ -53,17 +53,20 @@ import rx.schedulers.Schedulers;
 
 public class QuestionAPI extends APIBase {
 
-    public static NetworkTask<Boolean> reportAnswer(String answerId, String reason, RequestCallBack<Boolean> callBack) {
+    public static NetworkTask<Boolean> reportAnswer(String answerId, String reason,
+            RequestCallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/answer/" + answerId + "/redirect/";
         return UserAPI.report(url, reason, callBack);
     }
 
-    public static NetworkTask<Boolean> reportQuestion(String questionId, String reason, RequestCallBack<Boolean> callBack) {
+    public static NetworkTask<Boolean> reportQuestion(String questionId, String reason,
+            RequestCallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/question/" + questionId + "/";
         return UserAPI.report(url, reason, callBack);
     }
 
-    public static NetworkTask<ArrayList<Question>> getQuestionListByUser(String ukey, int offset, RequestCallBack<ArrayList<Question>> callBack) {
+    public static NetworkTask<ArrayList<Question>> getQuestionListByUser(String ukey, int offset,
+            RequestCallBack<ArrayList<Question>> callBack) {
         String url = "http://apis.guokr.com/ask/question.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("retrieve_type", "by_user");
@@ -79,7 +82,8 @@ public class QuestionAPI extends APIBase {
                 .requestAsync();
     }
 
-    public static NetworkTask<ArrayList<Answer>> getAnswerListByUser(String ukey, int offset, RequestCallBack<ArrayList<Answer>> callBack) {
+    public static NetworkTask<ArrayList<Answer>> getAnswerListByUser(String ukey, int offset,
+            RequestCallBack<ArrayList<Answer>> callBack) {
         String url = "http://apis.guokr.com/ask/answer.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("retrieve_type", "by_user");
@@ -99,19 +103,24 @@ public class QuestionAPI extends APIBase {
         return Observable
                 .create(new Observable.OnSubscribe<ResponseObject<ArrayList<SubItem>>>() {
                     @Override
-                    public void call(Subscriber<? super ResponseObject<ArrayList<SubItem>>> subscriber) {
+                    public void call(
+                            Subscriber<? super ResponseObject<ArrayList<SubItem>>> subscriber) {
                         subscriber.onNext(QuestionAPI.getAllMyTags());
                     }
                 })
-                .flatMap(new Func1<ResponseObject<ArrayList<SubItem>>, Observable<ArrayList<SubItem>>>() {
-                    @Override
-                    public Observable<ArrayList<SubItem>> call(ResponseObject<ArrayList<SubItem>> result) {
-                        if (result.ok) {
-                            return Observable.just(result.result);
-                        }
-                        return Observable.error(new IllegalStateException("error occurred"));
-                    }
-                })
+                .flatMap(
+                        new Func1<ResponseObject<ArrayList<SubItem>>,
+                                Observable<ArrayList<SubItem>>>() {
+                            @Override
+                            public Observable<ArrayList<SubItem>> call(
+                                    ResponseObject<ArrayList<SubItem>> result) {
+                                if (result.ok) {
+                                    return Observable.just(result.result);
+                                }
+                                return Observable.error(
+                                        new IllegalStateException("error occurred"));
+                            }
+                        })
                 .map(new Func1<ArrayList<SubItem>, ArrayList<SubItem>>() {
                     @Override
                     public ArrayList<SubItem> call(ArrayList<SubItem> subItems) {
@@ -187,14 +196,16 @@ public class QuestionAPI extends APIBase {
             if (as.size() == 0) {
                 numPages = 1;
             } else {
-                numPages = Integer.valueOf(as.get(0).getElementsByTag("a").last().attr("href").replaceAll("^\\S+?page=", ""));
+                numPages = Integer.valueOf(as.get(0).getElementsByTag("a").last().attr(
+                        "href").replaceAll("^\\S+?page=", ""));
             }
             Elements lis = doc1.getElementsByClass("join-list").get(0).getElementsByTag("li");
             //第一页
             for (int i = 0; i < lis.size(); i++) {
                 Element element = lis.get(i).getElementsByClass("join-list-desc").get(0);
                 String groupName = element.getElementsByTag("a").text();
-                SubItem subItem = new SubItem(SubItem.Section_Question, SubItem.Type_Single_Channel, groupName, groupName);
+                SubItem subItem = new SubItem(SubItem.Section_Question, SubItem.Type_Single_Channel,
+                        groupName, groupName);
                 subItems.add(subItem);
             }
             if (numPages > 1) {
@@ -202,11 +213,13 @@ public class QuestionAPI extends APIBase {
                     Thread.sleep(100);
                     String url = pageUrl + "?page=" + j;
                     Document pageDoc = Jsoup.parse(SimpleHttp.get(url).result);
-                    Elements lis2 = pageDoc.getElementsByClass("join-list").get(0).getElementsByTag("li");
+                    Elements lis2 = pageDoc.getElementsByClass("join-list").get(0).getElementsByTag(
+                            "li");
                     for (int i = 0; i < lis2.size(); i++) {
                         Element element = lis2.get(i).getElementsByClass("join-list-desc").get(0);
                         String groupName = element.getElementsByTag("a").text();
-                        SubItem subItem = new SubItem(SubItem.Section_Question, SubItem.Type_Single_Channel, groupName, groupName);
+                        SubItem subItem = new SubItem(SubItem.Section_Question,
+                                SubItem.Type_Single_Channel, groupName, groupName);
                         subItems.add(subItem);
                     }
                 }
@@ -228,7 +241,8 @@ public class QuestionAPI extends APIBase {
      * @param offset 从第几个开始加载
      * @return ResponseObject
      */
-    public static Observable<ResponseObject<ArrayList<Question>>> getQuestionsByTag(String tag, int offset, boolean useCache) {
+    public static Observable<ResponseObject<ArrayList<Question>>> getQuestionsByTag(String tag,
+            int offset, boolean useCache) {
         String url = "http://apis.guokr.com/ask/question.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("retrieve_type", "by_tag");
@@ -248,10 +262,10 @@ public class QuestionAPI extends APIBase {
     /**
      * 返回热门回答问题列表，解析json获得
      *
-     * @param offset
      * @return ResponseObject
      */
-    public static Observable<ResponseObject<ArrayList<Question>>> getHotQuestions(int offset, boolean useCache) {
+    public static Observable<ResponseObject<ArrayList<Question>>> getHotQuestions(int offset,
+            boolean useCache) {
         String url = "http://apis.guokr.com/ask/question.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("retrieve_type", "hot_question");
@@ -273,7 +287,8 @@ public class QuestionAPI extends APIBase {
      * @param pageNo 页码
      * @return ResponseObject
      */
-    public static Observable<ResponseObject<ArrayList<Question>>> getHighlightQuestions(int pageNo, boolean useCache) {
+    public static Observable<ResponseObject<ArrayList<Question>>> getHighlightQuestions(int pageNo,
+            boolean useCache) {
         String url = "http://m.guokr.com/ask/highlight/?page=" + pageNo;
         return new RequestBuilder<ArrayList<Question>>()
                 .get()
@@ -287,7 +302,6 @@ public class QuestionAPI extends APIBase {
     /**
      * 根据贴子id获取问题内容，json格式
      *
-     * @param id，贴子id
      * @return resultObject
      */
     public static Observable<ResponseObject<Question>> getQuestionDetailByID(String id) {
@@ -308,7 +322,8 @@ public class QuestionAPI extends APIBase {
      * @param offset 从第几个开始加载
      * @return ResponseObject
      */
-    public static Observable<ResponseObject<ArrayList<Answer>>> getQuestionAnswers(final String id, final int offset) {
+    public static Observable<ResponseObject<ArrayList<Answer>>> getQuestionAnswers(final String id,
+            final int offset) {
         String url = "http://apis.guokr.com/ask/answer.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("retrieve_type", "by_question");
@@ -330,7 +345,8 @@ public class QuestionAPI extends APIBase {
      * @param url 评论id
      * @return resultObject resultObject.result是UComment
      */
-    public static NetworkTask<Answer> getSingleAnswerFromRedirectUrl(String url, RequestCallBack<Answer> callBack) {
+    public static NetworkTask<Answer> getSingleAnswerFromRedirectUrl(String url,
+            RequestCallBack<Answer> callBack) {
         //http://www.guokr.com/answer/654321/redirect/
         //http://www.guokr.com/answer/654321/
         return getSingleAnswerByID(url.replaceAll("\\D+", ""), callBack);
@@ -342,7 +358,8 @@ public class QuestionAPI extends APIBase {
      * @param id 评论id
      * @return resultObject resultObject.result是UComment
      */
-    public static NetworkTask<Answer> getSingleAnswerByID(String id, RequestCallBack<Answer> callBack) {
+    public static NetworkTask<Answer> getSingleAnswerByID(String id,
+            RequestCallBack<Answer> callBack) {
         String url = "http://apis.guokr.com/ask/answer/" + id + ".json";
         return new RequestBuilder<Answer>()
                 .get()
@@ -360,7 +377,8 @@ public class QuestionAPI extends APIBase {
      * @param offset 从第几个开始加载
      * @return ResponseObject
      */
-    public static NetworkTask<ArrayList<UComment>> getQuestionComments(String id, int offset, RequestCallBack<ArrayList<UComment>> callBack) {
+    public static NetworkTask<ArrayList<UComment>> getQuestionComments(String id, int offset,
+            RequestCallBack<ArrayList<UComment>> callBack) {
         String url = "http://www.guokr.com/apis/ask/question_reply.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("retrieve_type", "by_question");
@@ -384,7 +402,8 @@ public class QuestionAPI extends APIBase {
      * @param offset 从第几个开始加载
      * @return ResponseObject
      */
-    public static NetworkTask<ArrayList<UComment>> getAnswerComments(String id, int offset, RequestCallBack<ArrayList<UComment>> callBack) {
+    public static NetworkTask<ArrayList<UComment>> getAnswerComments(String id, int offset,
+            RequestCallBack<ArrayList<UComment>> callBack) {
         String url = "http://www.guokr.com/apis/ask/answer_reply.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("retrieve_type", "by_answer");
@@ -407,7 +426,8 @@ public class QuestionAPI extends APIBase {
      * @param content 答案内容
      * @return ResponseObject.result is the reply_id if ok;
      */
-    public static NetworkTask<String> answerQuestion(String id, String content, RequestCallBack<String> callBack) {
+    public static NetworkTask<String> answerQuestion(String id, String content,
+            RequestCallBack<String> callBack) {
         String url = "http://apis.guokr.com/ask/answer.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("question_id", id);
@@ -425,20 +445,22 @@ public class QuestionAPI extends APIBase {
     /**
      * 回复一个文章，模拟网页请求回复
      *
-     * @param id       问题id
-     * @param content  回复内容
-     * @param callBack
+     * @param id      问题id
+     * @param content 回复内容
      * @return ResponseObject.result is the reply_id if ok;
      */
-    public static Subscription answerQuestionHtml(String id, final String content, final RequestCallBack<Boolean> callBack) {
+    public static Subscription answerQuestionHtml(String id, final String content,
+            final RequestCallBack<Boolean> callBack) {
         final String url = "http://www.guokr.com/question/" + id + "/";
         return new RequestBuilder<String>()
                 .get()
                 .url(url)
                 .parser(new Parser<String>() {
                     @Override
-                    public String parse(String response, ResponseObject<String> responseObject) throws Exception {
-                        String str = Jsoup.parse(response).getElementById("csrf_token").attr("value");
+                    public String parse(String response, ResponseObject<String> responseObject)
+                            throws Exception {
+                        String str = Jsoup.parse(response).getElementById("csrf_token").attr(
+                                "value");
                         responseObject.ok = true;
                         return str;
                     }
@@ -446,11 +468,13 @@ public class QuestionAPI extends APIBase {
                 .flatMap()
                 .flatMap(new Func1<ResponseObject<String>, Observable<ResponseObject<Boolean>>>() {
                     @Override
-                    public Observable<ResponseObject<Boolean>> call(ResponseObject<String> response) {
+                    public Observable<ResponseObject<Boolean>> call(
+                            ResponseObject<String> response) {
                         if (response.ok) {
                             final ParamsMap pairs = new ParamsMap();
                             pairs.put("csrf_token", response.result);
-                            pairs.put("content", MDUtil.Markdown2Html(content) + Tail.getComplexReplyTail());
+                            pairs.put("content",
+                                    MDUtil.Markdown2Html(content) + Tail.getComplexReplyTail());
                             pairs.put("captcha", "");
                             return new RequestBuilder<Boolean>()
                                     .post()
@@ -458,11 +482,16 @@ public class QuestionAPI extends APIBase {
                                     .params(pairs)
                                     .parser(new Parser<Boolean>() {
                                         @Override
-                                        public Boolean parse(String response, ResponseObject<Boolean> responseObject) throws Exception {
+                                        public Boolean parse(String response,
+                                                ResponseObject<Boolean> responseObject)
+                                                throws Exception {
                                             try {
                                                 Document document = Jsoup.parse(response);
-                                                String url = document.getElementsByTag("a").get(0).text();
-                                                Matcher matcher = Pattern.compile("/question/(\\d+)/answer/success/").matcher(url);
+                                                String url = document.getElementsByTag("a").get(
+                                                        0).text();
+                                                Matcher matcher = Pattern.compile(
+                                                        "/question/(\\d+)/answer/success/").matcher(
+                                                        url);
                                                 responseObject.ok = matcher.find();
                                             } catch (Exception e) {
                                                 if (response.contains("Redirecting")) {
@@ -533,7 +562,8 @@ public class QuestionAPI extends APIBase {
      * @param opinion 反对或者赞同，参数
      * @return ResponseObject
      */
-    private static void supportOrOpposeAnswer(String id, String opinion, RequestCallBack<Boolean> callBack) {
+    private static void supportOrOpposeAnswer(String id, String opinion,
+            RequestCallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/ask/answer_polling.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("answer_id", id);
@@ -615,7 +645,8 @@ public class QuestionAPI extends APIBase {
      * @param comment    推荐评语
      * @return ResponseObject
      */
-    public static NetworkTask<Boolean> recommendQuestion(String questionID, String title, String summary, String comment, RequestCallBack<Boolean> callBack) {
+    public static NetworkTask<Boolean> recommendQuestion(String questionID, String title,
+            String summary, String comment, RequestCallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/question/" + questionID + "/";
         return UserAPI.recommendLink(url, title, summary, comment, callBack);
     }
@@ -667,7 +698,8 @@ public class QuestionAPI extends APIBase {
      * @param comment    评论内容
      * @return ResponseObject
      */
-    public static NetworkTask<UComment> commentOnQuestion(String questionID, String comment, RequestCallBack<UComment> callBack) {
+    public static NetworkTask<UComment> commentOnQuestion(String questionID, String comment,
+            RequestCallBack<UComment> callBack) {
         String url = "http://www.guokr.com/apis/ask/question_reply.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("question_id", questionID);
@@ -705,7 +737,8 @@ public class QuestionAPI extends APIBase {
      * @param comment  评论内容
      * @return ResponseObject
      */
-    public static NetworkTask<UComment> commentOnAnswer(String answerID, String comment, RequestCallBack<UComment> callBack) {
+    public static NetworkTask<UComment> commentOnAnswer(String answerID, String comment,
+            RequestCallBack<UComment> callBack) {
         String url = "http://www.guokr.com/apis/ask/answer_reply.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("answer_id", answerID);
@@ -755,7 +788,8 @@ public class QuestionAPI extends APIBase {
      * @param tags       标签
      * @return ResponseObject
      */
-    public static ResponseObject<String> publishQuestion(String csrf, String question, String annotation, String[] tags) {
+    public static ResponseObject<String> publishQuestion(String csrf, String question,
+            String annotation, String[] tags) {
         ResponseObject<String> resultObject = new ResponseObject<>();
         String url = "http://www.guokr.com/questions/new/";
         try {

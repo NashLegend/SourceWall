@@ -55,7 +55,7 @@ public class ArticlePagerFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         Emitter.register(this);
         if (layoutView == null) {
             layoutView = inflater.inflate(R.layout.fragment_article_pager, container, false);
@@ -113,7 +113,8 @@ public class ArticlePagerFragment extends BaseFragment {
         if (hideAnimator != null && hideAnimator.isRunning()) {
             return;
         }
-        hideAnimator = ObjectAnimator.ofFloat(searchButton, "translationY", searchButton.getTranslationY(), searchButton.getHeight());
+        hideAnimator = ObjectAnimator.ofFloat(searchButton, "translationY",
+                searchButton.getTranslationY(), searchButton.getHeight());
         hideAnimator.setDuration(300);
         hideAnimator.start();
     }
@@ -123,7 +124,8 @@ public class ArticlePagerFragment extends BaseFragment {
         if (showAnimator != null && showAnimator.isRunning()) {
             return;
         }
-        showAnimator = ObjectAnimator.ofFloat(searchButton, "translationY", searchButton.getTranslationY(), 0);
+        showAnimator = ObjectAnimator.ofFloat(searchButton, "translationY",
+                searchButton.getTranslationY(), 0);
         showAnimator.setDuration(300);
         showAnimator.start();
     }

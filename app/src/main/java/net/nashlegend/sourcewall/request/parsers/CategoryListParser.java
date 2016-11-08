@@ -15,7 +15,8 @@ import java.util.ArrayList;
 
 public class CategoryListParser implements Parser<ArrayList<Category>> {
     @Override
-    public ArrayList<Category> parse(String str, ResponseObject<ArrayList<Category>> responseObject) throws Exception {
+    public ArrayList<Category> parse(String str, ResponseObject<ArrayList<Category>> responseObject)
+            throws Exception {
         JSONArray jsonArray = JsonHandler.getUniversalJsonArray(str, responseObject);
         ArrayList<Category> categories = new ArrayList<>();
         assert jsonArray != null;

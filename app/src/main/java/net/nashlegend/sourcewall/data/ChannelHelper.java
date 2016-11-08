@@ -18,14 +18,18 @@ import java.util.Collections;
 public class ChannelHelper {
 
     public static SubItem getBasketGroup() {
-        return new SubItem(SubItem.Section_Favor, SubItem.Type_Group, App.getApp().getResources().getString(R.string.baskets), "Baskets");
+        return new SubItem(SubItem.Section_Favor, SubItem.Type_Group,
+                App.getApp().getResources().getString(R.string.baskets), "Baskets");
     }
 
     public static ArrayList<SubItem> getSections() {
         SubItem[] items = {
-                new SubItem(SubItem.Section_Article, SubItem.Type_Group, App.getApp().getResources().getString(R.string.article), "Article"),
-                new SubItem(SubItem.Section_Post, SubItem.Type_Group, App.getApp().getResources().getString(R.string.post), "Post"),
-                new SubItem(SubItem.Section_Question, SubItem.Type_Group, App.getApp().getResources().getString(R.string.question), "Question")
+                new SubItem(SubItem.Section_Article, SubItem.Type_Group,
+                        App.getApp().getResources().getString(R.string.article), "Article"),
+                new SubItem(SubItem.Section_Post, SubItem.Type_Group,
+                        App.getApp().getResources().getString(R.string.post), "Post"),
+                new SubItem(SubItem.Section_Question, SubItem.Type_Group,
+                        App.getApp().getResources().getString(R.string.question), "Question")
         };
         ArrayList<SubItem> subItems = new ArrayList<>();
         Collections.addAll(subItems, items);
@@ -38,35 +42,52 @@ public class ChannelHelper {
                 new SubItem(SubItem.Section_Article, SubItem.Type_Single_Channel, "热点", "hot"),
                 new SubItem(SubItem.Section_Article, SubItem.Type_Single_Channel, "前沿", "frontier"),
                 new SubItem(SubItem.Section_Article, SubItem.Type_Single_Channel, "评论", "review"),
-                new SubItem(SubItem.Section_Article, SubItem.Type_Single_Channel, "专访", "interview"),
+                new SubItem(SubItem.Section_Article, SubItem.Type_Single_Channel, "专访",
+                        "interview"),
                 new SubItem(SubItem.Section_Article, SubItem.Type_Single_Channel, "视觉", "visual"),
                 new SubItem(SubItem.Section_Article, SubItem.Type_Single_Channel, "速读", "brief"),
                 new SubItem(SubItem.Section_Article, SubItem.Type_Single_Channel, "谣言粉碎机", "fact"),
                 new SubItem(SubItem.Section_Article, SubItem.Type_Single_Channel, "商业科技", "techb"),
                 new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "物理", "physics"),
                 new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "生物", "biology"),
-                new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "环境", "environment"),
-                new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "天文", "astronomy"),
-                new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "医学", "medicine"),
+                new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "环境",
+                        "environment"),
+                new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "天文",
+                        "astronomy"),
+                new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "医学",
+                        "medicine"),
                 new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "食物", "food"),
-                new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "法证", "forensic"),
+                new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "法证",
+                        "forensic"),
                 new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "性情", "sex"),
                 new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "地学", "earth"),
-                new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "心理", "psychology"),
-                new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "化学", "chemistry"),
-                new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "科幻", "sci-fiction"),
+                new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "心理",
+                        "psychology"),
+                new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "化学",
+                        "chemistry"),
+                new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "科幻",
+                        "sci-fiction"),
                 new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "数学", "math"),
                 new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "DIY", "diy"),
-                new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "农学", "agronomy"),
-                new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "工程", "engineering"),
-                new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "电子", "electronics"),
-                new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "大气", "atmosphere"),
-                new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "教育", "education"),
-                new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "传播", "communication"),
+                new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "农学",
+                        "agronomy"),
+                new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "工程",
+                        "engineering"),
+                new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "电子",
+                        "electronics"),
+                new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "大气",
+                        "atmosphere"),
+                new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "教育",
+                        "education"),
+                new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "传播",
+                        "communication"),
                 new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "社会", "society"),
-                new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "互联网", "internet"),
-                new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "航空航天", "aerospace"),
-                new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "其他", "others"),};
+                new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "互联网",
+                        "internet"),
+                new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "航空航天",
+                        "aerospace"),
+                new SubItem(SubItem.Section_Article, SubItem.Type_Subject_Channel, "其他",
+                        "others"),};
         ArrayList<SubItem> subItems = new ArrayList<>();
         Collections.addAll(subItems, items);
         return subItems;
@@ -95,11 +116,14 @@ public class ChannelHelper {
         //重新加载小组数据库
         ArrayList<SubItem> groupSubItems = new ArrayList<>();
         if (UserAPI.isLoggedIn()) {
-            groupSubItems.add(new SubItem(SubItem.Section_Post, SubItem.Type_Private_Channel, "我的小组", "user_group"));
+            groupSubItems.add(
+                    new SubItem(SubItem.Section_Post, SubItem.Type_Private_Channel, "我的小组",
+                            "user_group"));
         }
         if (GroupHelper.getMyGroupsNumber() > 0) {
             //如果已经加载了栏目
-            groupSubItems.add(new SubItem(SubItem.Section_Post, SubItem.Type_Collections, "小组热贴", "hot_posts"));
+            groupSubItems.add(new SubItem(SubItem.Section_Post, SubItem.Type_Collections, "小组热贴",
+                    "hot_posts"));
             groupSubItems.addAll(GroupHelper.getAllMyGroupSubItems());
         } else {
             groupSubItems.addAll(ChannelHelper.getPosts());
@@ -110,7 +134,8 @@ public class ChannelHelper {
     public static ArrayList<SubItem> getQuestions() {
         SubItem[] items = {
                 new SubItem(SubItem.Section_Question, SubItem.Type_Collections, "热门问答", "hottest"),
-                new SubItem(SubItem.Section_Question, SubItem.Type_Collections, "精彩回答", "highlight"),
+                new SubItem(SubItem.Section_Question, SubItem.Type_Collections, "精彩回答",
+                        "highlight"),
                 new SubItem(SubItem.Section_Question, SubItem.Type_Single_Channel, "生活", "生活"),
                 new SubItem(SubItem.Section_Question, SubItem.Type_Single_Channel, "生物", "生物"),
                 new SubItem(SubItem.Section_Question, SubItem.Type_Single_Channel, "健康", "健康"),
@@ -137,8 +162,12 @@ public class ChannelHelper {
         ArrayList<SubItem> questionSubItems = new ArrayList<>();
         if (AskTagHelper.getAskTagsNumber() > 0) {
             //如果已经加载了栏目
-            questionSubItems.add(new SubItem(SubItem.Section_Question, SubItem.Type_Collections, "热门问答", "hottest"));
-            questionSubItems.add(new SubItem(SubItem.Section_Question, SubItem.Type_Collections, "精彩回答", "highlight"));
+            questionSubItems.add(
+                    new SubItem(SubItem.Section_Question, SubItem.Type_Collections, "热门问答",
+                            "hottest"));
+            questionSubItems.add(
+                    new SubItem(SubItem.Section_Question, SubItem.Type_Collections, "精彩回答",
+                            "highlight"));
             questionSubItems.addAll(AskTagHelper.getAllMyTagSubItems());
         } else {
             questionSubItems.addAll(ChannelHelper.getQuestions());

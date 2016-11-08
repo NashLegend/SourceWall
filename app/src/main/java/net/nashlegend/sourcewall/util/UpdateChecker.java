@@ -1,5 +1,7 @@
 package net.nashlegend.sourcewall.util;
 
+import static android.text.TextUtils.isEmpty;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -10,8 +12,6 @@ import net.nashlegend.sourcewall.model.UpdateInfo;
 import net.nashlegend.sourcewall.request.SimpleCallBack;
 import net.nashlegend.sourcewall.request.api.APIBase;
 
-import static android.text.TextUtils.isEmpty;
-
 /**
  * Created by NashLegend on 16/4/9.
  */
@@ -20,7 +20,8 @@ public class UpdateChecker {
     Activity activity;
     UpdateDelegate delegate;
 
-    public static UpdateChecker getInstance(@NonNull final Activity activity, UpdateDelegate delegate) {
+    public static UpdateChecker getInstance(@NonNull final Activity activity,
+            UpdateDelegate delegate) {
         return new UpdateChecker(activity, delegate);
     }
 
@@ -69,7 +70,8 @@ public class UpdateChecker {
             @Override
             public void onSuccess(@NonNull final UpdateInfo info) {
                 delegate.afterCheckForUpdate();
-                if (activity == null || activity.isFinishing() || delegate.shouldInterceptUpdate(info)) {
+                if (activity == null || activity.isFinishing() || delegate.shouldInterceptUpdate(
+                        info)) {
                     return;
                 }
                 if (info.getVersionCode() > BuildConfig.VERSION_CODE && !isEmpty(info.getUrl())) {
@@ -82,7 +84,8 @@ public class UpdateChecker {
                                 }
                             })
                             .setNegativeButton("下次再说", null)
-                            .setMessage(!isEmpty(info.getUpdateInfo()) ? "本次更新内容：\n\n" + info.getUpdateInfo() : "")
+                            .setMessage(!isEmpty(info.getUpdateInfo()) ? "本次更新内容：\n\n"
+                                    + info.getUpdateInfo() : "")
                             .show();
                 } else {
                     ToastUtil.toastBigSingleton("已经是最新版本");

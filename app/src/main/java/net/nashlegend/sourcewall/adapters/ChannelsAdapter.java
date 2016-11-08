@@ -74,7 +74,8 @@ public class ChannelsAdapter extends BaseExpandableListAdapter {
 
     @Override
     public long getChildId(int groupPosition, int childPosition) {
-        return (groupList.get(groupPosition).getName() + "_/_" + subLists.get(groupPosition).get(childPosition).getName()).hashCode();
+        return (groupList.get(groupPosition).getName() + "_/_" + subLists.get(groupPosition).get(
+                childPosition).getName()).hashCode();
     }
 
     @Override
@@ -83,7 +84,8 @@ public class ChannelsAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+    public View getGroupView(int groupPosition, boolean isExpanded, View convertView,
+            ViewGroup parent) {
         if (convertView == null) {
             convertView = new GroupItemView(mContext);
         }
@@ -92,7 +94,8 @@ public class ChannelsAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+    public View getChildView(int groupPosition, int childPosition, boolean isLastChild,
+            View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = new SubItemView(mContext);
         }
@@ -145,7 +148,8 @@ public class ChannelsAdapter extends BaseExpandableListAdapter {
                 ArrayList<SubItem> basketSubItems = new ArrayList<>();
                 for (int i = 0; i < baskets.size(); i++) {
                     Basket basket = baskets.get(i);
-                    SubItem basketSubItem = new SubItem(SubItem.Section_Favor, SubItem.Type_Single_Channel, basket.getName(), basket.getId());
+                    SubItem basketSubItem = new SubItem(SubItem.Section_Favor,
+                            SubItem.Type_Single_Channel, basket.getName(), basket.getId());
                     basketSubItems.add(basketSubItem);
                 }
                 groupList.add(ChannelHelper.getBasketGroup());

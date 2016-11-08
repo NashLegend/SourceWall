@@ -24,13 +24,15 @@ public class MessageCenterActivity extends BaseActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         noticesFragment = new NoticesFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.message_container, noticesFragment).commitAllowingStateLoss();
+        getSupportFragmentManager().beginTransaction().add(R.id.message_container,
+                noticesFragment).commitAllowingStateLoss();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_message_center, menu);
-        if (noticesFragment == null || !noticesFragment.takeOverMenuInflate(getMenuInflater(), menu)) {
+        if (noticesFragment == null || !noticesFragment.takeOverMenuInflate(getMenuInflater(),
+                menu)) {
             getMenuInflater().inflate(R.menu.menu_message_center, menu);
         }
         return true;
@@ -42,7 +44,8 @@ public class MessageCenterActivity extends BaseActivity {
             finish();
             return super.onOptionsItemSelected(item);
         } else {
-            return noticesFragment != null && noticesFragment.takeOverOptionsItemSelect(item) || super.onOptionsItemSelected(item);
+            return noticesFragment != null && noticesFragment.takeOverOptionsItemSelect(item)
+                    || super.onOptionsItemSelected(item);
         }
     }
 }

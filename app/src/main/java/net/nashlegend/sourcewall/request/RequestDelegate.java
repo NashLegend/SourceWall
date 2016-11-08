@@ -71,7 +71,8 @@ public class RequestDelegate {
                     return null;
                 case POST:
                     if (object.requestType == RequestType.UPLOAD) {
-                        return getMultipartBody(object.mediaType, object.uploadFileKey, object.uploadFilePath, object.params);
+                        return getMultipartBody(object.mediaType, object.uploadFileKey,
+                                object.uploadFilePath, object.params);
                     }
                 case PUT:
                 case PATCH:
@@ -86,9 +87,6 @@ public class RequestDelegate {
 
     /**
      * 生成表单body
-     *
-     * @param params
-     * @return
      */
     private FormBody getFormBody(List<Param> params) {
         FormBody.Builder builder = new FormBody.Builder();
@@ -106,7 +104,8 @@ public class RequestDelegate {
     /**
      * 上传单个文件的生成的body
      */
-    private MultipartBody getMultipartBody(MediaType mediaType, String fileKey, String filePath, List<Param> params) {
+    private MultipartBody getMultipartBody(MediaType mediaType, String fileKey, String filePath,
+            List<Param> params) {
         ArrayList<Param> fileParam = new ArrayList<>();
         fileParam.add(new Param(fileKey, filePath));
         return getMultipartBody(mediaType, fileParam, params);
@@ -115,7 +114,8 @@ public class RequestDelegate {
     /**
      * 上传多个文件生成的body
      */
-    private MultipartBody getMultipartBody(MediaType mediaType, List<Param> fileParams, List<Param> params) {
+    private MultipartBody getMultipartBody(MediaType mediaType, List<Param> fileParams,
+            List<Param> params) {
         MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
         if (fileParams != null && fileParams.size() > 0) {
             for (Param param : fileParams) {
@@ -124,7 +124,8 @@ public class RequestDelegate {
                 }
                 File file = new File(param.value);
                 if (file.exists() && !file.isDirectory() && file.length() > 0) {
-                    builder.addFormDataPart(param.key, file.getName(), RequestBody.create(mediaType, file));
+                    builder.addFormDataPart(param.key, file.getName(),
+                            RequestBody.create(mediaType, file));
                 }
             }
         }

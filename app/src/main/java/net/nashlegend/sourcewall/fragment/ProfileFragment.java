@@ -82,7 +82,8 @@ public class ProfileFragment extends BaseFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
         Emitter.register(this);
         if (layoutView == null) {
             layoutView = inflater.inflate(R.layout.fragment_profile, container, false);
@@ -104,7 +105,8 @@ public class ProfileFragment extends BaseFragment {
 
     private void initView() {
         if (UserAPI.isLoggedIn()) {
-            ImageLoader.getInstance().displayImage(UserAPI.getUserAvatar(), imageAvatar, ImageUtils.bigAvatarOptions);
+            ImageLoader.getInstance().displayImage(UserAPI.getUserAvatar(), imageAvatar,
+                    ImageUtils.bigAvatarOptions);
             userName.setText(UserAPI.getName());
             loginLayout.setVisibility(View.VISIBLE);
             loadUserInfo();
@@ -194,7 +196,8 @@ public class ProfileFragment extends BaseFragment {
     }
 
     private void onLogin() {
-        ImageLoader.getInstance().displayImage(UserAPI.getUserAvatar(), imageAvatar, ImageUtils.bigAvatarOptions);
+        ImageLoader.getInstance().displayImage(UserAPI.getUserAvatar(), imageAvatar,
+                ImageUtils.bigAvatarOptions);
         userName.setText(UserAPI.getName());
         loginLayout.setVisibility(View.VISIBLE);
         loadUserInfo();
@@ -227,7 +230,8 @@ public class ProfileFragment extends BaseFragment {
                     PrefsUtil.saveString(Keys.Key_User_ID, info.getId());
                     PrefsUtil.saveString(Keys.Key_User_Avatar, info.getAvatar());
                     if (Config.shouldLoadImage()) {
-                        ImageLoader.getInstance().displayImage(info.getAvatar(), imageAvatar, ImageUtils.avatarOptions);
+                        ImageLoader.getInstance().displayImage(info.getAvatar(), imageAvatar,
+                                ImageUtils.avatarOptions);
                     } else {
                         imageAvatar.setImageResource(R.drawable.ic_default_avatar_96dp);
                     }

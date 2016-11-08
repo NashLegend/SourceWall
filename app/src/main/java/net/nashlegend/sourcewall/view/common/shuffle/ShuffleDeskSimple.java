@@ -27,7 +27,8 @@ public class ShuffleDeskSimple extends RelativeLayout {
 
     public ShuffleDeskSimple(Context context, ScrollView scrollView) {
         super(context);
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(
+                Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_shuffle_simple, this);
         this.scrollView = scrollView;
         this.deskHeader = findViewById(R.id.desk_header);
@@ -40,7 +41,8 @@ public class ShuffleDeskSimple extends RelativeLayout {
         ShuffleDesk.vGap = dip2px(ShuffleDesk.vGapDip, getContext());
         ShuffleDesk.hGap = dip2px(ShuffleDesk.hGapDip, getContext());
 
-        ShuffleDesk.buttonCellWidth = DisplayUtil.getScreenWidth(getContext()) / ShuffleDesk.Columns;
+        ShuffleDesk.buttonCellWidth = DisplayUtil.getScreenWidth(getContext())
+                / ShuffleDesk.Columns;
         ShuffleDesk.buttonHeight = dip2px(ShuffleDesk.buttonHeightDip, getContext());
 
         ShuffleDesk.buttonWidth = ShuffleDesk.buttonCellWidth - ShuffleDesk.hGap * 2;

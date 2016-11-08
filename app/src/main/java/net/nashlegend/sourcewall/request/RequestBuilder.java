@@ -46,9 +46,6 @@ public class RequestBuilder<T> {
      * {@link Method#DELETE}
      * {@link Method#HEAD}
      * {@link Method#PATCH}
-     *
-     * @param method
-     * @return
      */
     public RequestBuilder<T> method(Method method) {
         request.method = method;
@@ -57,8 +54,6 @@ public class RequestBuilder<T> {
 
     /**
      * 设置请求方法get
-     *
-     * @return
      */
     public RequestBuilder<T> get() {
         return method(Method.GET);
@@ -66,8 +61,6 @@ public class RequestBuilder<T> {
 
     /**
      * 设置请求方法post
-     *
-     * @return
      */
     public RequestBuilder<T> post() {
         return method(Method.POST);
@@ -75,8 +68,6 @@ public class RequestBuilder<T> {
 
     /**
      * 设置请求方法put
-     *
-     * @return
      */
     public RequestBuilder<T> put() {
         return method(Method.PUT);
@@ -84,8 +75,6 @@ public class RequestBuilder<T> {
 
     /**
      * 设置请求方法delete
-     *
-     * @return
      */
     public RequestBuilder<T> delete() {
         return method(Method.DELETE);
@@ -93,9 +82,6 @@ public class RequestBuilder<T> {
 
     /**
      * 设置键值对请求参数，如果之前曾经设置过，则将会清空之前的参数
-     *
-     * @param params
-     * @return
      */
     public RequestBuilder<T> params(List<Param> params) {
         request.params.clear();
@@ -107,9 +93,6 @@ public class RequestBuilder<T> {
 
     /**
      * 设置键值对请求参数，如果之前曾经设置过，则将会清空之前的参数
-     *
-     * @param params
-     * @return
      */
     public RequestBuilder<T> params(HashMap<String, String> params) {
         if (params == null) {
@@ -124,9 +107,6 @@ public class RequestBuilder<T> {
 
     /**
      * 设置键值对请求参数，如果之前曾经设置过，则将会清空之前的参数
-     *
-     * @param params
-     * @return
      */
     public RequestBuilder<T> params(ParamsMap params) {
         request.params.clear();
@@ -138,9 +118,6 @@ public class RequestBuilder<T> {
 
     /**
      * 在当前参数的基础上再添加几个键值对请求参数
-     *
-     * @param params
-     * @return
      */
     public RequestBuilder<T> addParams(List<Param> params) {
         if (params != null) {
@@ -151,10 +128,6 @@ public class RequestBuilder<T> {
 
     /**
      * 在当前参数的基础上添加一条键值对请求参数
-     *
-     * @param key
-     * @param value
-     * @return
      */
     public RequestBuilder<T> addParam(String key, Object value) {
         request.params.add(new Param(key, value));
@@ -208,9 +181,6 @@ public class RequestBuilder<T> {
 
     /**
      * 如果不设置parser或者callback则不会收到回调
-     *
-     * @param parser
-     * @return
      */
     public RequestBuilder<T> parser(Parser<T> parser) {
         request.parser = parser;
@@ -219,9 +189,6 @@ public class RequestBuilder<T> {
 
     /**
      * 是否将请求数据进行Gzip压缩，默认为false
-     *
-     * @param requestWithGzip
-     * @return
      */
     public RequestBuilder<T> requestWithGzip(boolean requestWithGzip) {
         request.requestWithGzip = requestWithGzip;
@@ -231,9 +198,6 @@ public class RequestBuilder<T> {
     /**
      * 启用伪造数据，不是null则启用，启用后仍然会走正常的请求流程，只是在请求返回后，无论对错，都返回伪造的数据
      * 启用伪造数据时，请添加stopship标志防止打包出去
-     *
-     * @param mocked
-     * @return
      */
     public RequestBuilder<T> mock(String mocked) {
         request.mockedResponse = mocked;
@@ -245,7 +209,6 @@ public class RequestBuilder<T> {
      *
      * @param maxTimes 重试次数，不包括原本的第一次请求
      * @param interval 请求间隔
-     * @return
      */
     public RequestBuilder<T> retry(int maxTimes, int interval) {
         if (maxTimes > 0) {
@@ -257,9 +220,6 @@ public class RequestBuilder<T> {
 
     /**
      * 设置请求地址,地址可以自带参数
-     *
-     * @param url
-     * @return
      */
     public RequestBuilder<T> url(@NonNull String url) {
         request.url = url;
@@ -268,9 +228,6 @@ public class RequestBuilder<T> {
 
     /**
      * 设置是否使用token，默认为true，即使用token
-     *
-     * @param use
-     * @return
      */
     public RequestBuilder<T> withToken(boolean use) {
         useToken = use;
@@ -279,9 +236,6 @@ public class RequestBuilder<T> {
 
     /**
      * 上传文件的Key
-     *
-     * @param key
-     * @return
      */
     public RequestBuilder<T> uploadFileKey(@NonNull String key) {
         request.uploadFileKey = key;
@@ -290,9 +244,6 @@ public class RequestBuilder<T> {
 
     /**
      * 设置请求的mediaType
-     *
-     * @param mediaType
-     * @return
      */
     public RequestBuilder<T> mediaType(@NonNull String mediaType) {
         request.mediaType = MediaType.parse(mediaType);
@@ -301,9 +252,6 @@ public class RequestBuilder<T> {
 
     /**
      * 设置请求的mediaType
-     *
-     * @param mediaType
-     * @return
      */
     public RequestBuilder<T> mediaType(@NonNull MediaType mediaType) {
         request.mediaType = mediaType;
@@ -312,9 +260,6 @@ public class RequestBuilder<T> {
 
     /**
      * 如果加载失败，是否使用缓存，默认为false，不使用缓存
-     *
-     * @param useCache
-     * @return
      */
     public RequestBuilder<T> useCacheIfFailed(boolean useCache) {
         request.useCachedIfFailed = useCache;
@@ -329,7 +274,6 @@ public class RequestBuilder<T> {
      * 仅在使用Rx时有效，与useCacheIfFailed互斥
      *
      * @param useCache 是否优先使用缓存,默认超时时间为永不超时
-     * @return
      */
     public RequestBuilder<T> useCacheFirst(boolean useCache) {
         request.useCachedFirst = useCache;
@@ -345,7 +289,6 @@ public class RequestBuilder<T> {
      *
      * @param useCache 是否优化使用缓存
      * @param timeOut  缓存超时时间,小于0表示永不超时,如果超时,可能会按次序返回两次结果
-     * @return
      */
     public RequestBuilder<T> useCacheFirst(boolean useCache, long timeOut) {
         request.useCachedFirst = useCache;
@@ -358,9 +301,6 @@ public class RequestBuilder<T> {
 
     /**
      * 缓存超时时间
-     *
-     * @param timeOut
-     * @return
      */
     public RequestBuilder<T> cacheTimeOut(long timeOut) {
         request.cacheTimeOut = timeOut;
@@ -369,9 +309,6 @@ public class RequestBuilder<T> {
 
     /**
      * 设置请求成功或者失败后的回调，如果没有parser，将不会回调
-     *
-     * @param callBack
-     * @return
      */
     public RequestBuilder<T> callback(RequestCallBack<T> callBack) {
         request.callBack = callBack;
@@ -380,9 +317,6 @@ public class RequestBuilder<T> {
 
     /**
      * 设置请求的tag，可通过tag
-     *
-     * @param tag
-     * @return
      */
     public RequestBuilder<T> tag(Object tag) {
         request.tag = tag;

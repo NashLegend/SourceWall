@@ -14,7 +14,8 @@ import java.util.ArrayList;
  */
 public class NoticeListParser implements Parser<ArrayList<Notice>> {
     @Override
-    public ArrayList<Notice> parse(String response, ResponseObject<ArrayList<Notice>> responseObject) throws Exception {
+    public ArrayList<Notice> parse(String response,
+            ResponseObject<ArrayList<Notice>> responseObject) throws Exception {
         JSONArray notices = JsonHandler.getUniversalJsonArray(response, responseObject);
         if (notices == null) throw new NullPointerException("notices is null");
         ArrayList<Notice> noticeList = new ArrayList<>();

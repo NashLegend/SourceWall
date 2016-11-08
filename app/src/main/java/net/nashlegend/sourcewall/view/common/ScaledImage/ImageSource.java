@@ -9,7 +9,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
 /**
- * Helper class used to set the source and additional attributes from a variety of sources. Supports
+ * Helper class used to set the source and additional attributes from a variety of sources.
+ * Supports
  * use of a bitmap, asset, resource, external file or any other URI.
  * <p>
  * When you are using a preview image, you must set the dimensions of the full size image on the
@@ -66,7 +67,8 @@ public final class ImageSource {
     }
 
     /**
-     * Create an instance from a resource. The correct resource for the device screen resolution will be used.
+     * Create an instance from a resource. The correct resource for the device screen resolution
+     * will be used.
      *
      * @param resId resource ID.
      */
@@ -87,7 +89,8 @@ public final class ImageSource {
     }
 
     /**
-     * Create an instance from a URI. If the URI does not start with a scheme, it's assumed to be the URI
+     * Create an instance from a URI. If the URI does not start with a scheme, it's assumed to be
+     * the URI
      * of a file.
      *
      * @param uri image URI.
@@ -130,7 +133,8 @@ public final class ImageSource {
     }
 
     /**
-     * Provide a loaded and cached bitmap for display. This bitmap will not be recycled when it is no
+     * Provide a loaded and cached bitmap for display. This bitmap will not be recycled when it is
+     * no
      * longer needed. Use this method if you loaded the bitmap with an image loader such as Picasso
      * or Volley.
      *
@@ -144,7 +148,8 @@ public final class ImageSource {
     }
 
     /**
-     * Enable tiling of the image. This does not apply to preview images which are always loaded as a single bitmap.,
+     * Enable tiling of the image. This does not apply to preview images which are always loaded as
+     * a single bitmap.,
      * and tiling cannot be disabled when displaying a region of the source image.
      *
      * @return this instance for chaining.
@@ -154,7 +159,8 @@ public final class ImageSource {
     }
 
     /**
-     * Disable tiling of the image. This does not apply to preview images which are always loaded as a single bitmap,
+     * Disable tiling of the image. This does not apply to preview images which are always loaded as
+     * a single bitmap,
      * and tiling cannot be disabled when displaying a region of the source image.
      *
      * @return this instance for chaining.
@@ -164,7 +170,8 @@ public final class ImageSource {
     }
 
     /**
-     * Enable or disable tiling of the image. This does not apply to preview images which are always loaded as a single bitmap,
+     * Enable or disable tiling of the image. This does not apply to preview images which are always
+     * loaded as a single bitmap,
      * and tiling cannot be disabled when displaying a region of the source image.
      *
      * @return this instance for chaining.
@@ -175,7 +182,8 @@ public final class ImageSource {
     }
 
     /**
-     * Use a region of the source image. Region must be set independently for the full size image and the preview if
+     * Use a region of the source image. Region must be set independently for the full size image
+     * and the preview if
      * you are using one.
      *
      * @return this instance for chaining.
@@ -187,9 +195,12 @@ public final class ImageSource {
     }
 
     /**
-     * Declare the dimensions of the image. This is only required for a full size image, when you are specifying a URI
-     * and also a preview image. When displaying a bitmap object, or not using a preview, you do not need to declare
-     * the image dimensions. Note if the declared dimensions are found to be incorrect, the view will reset.
+     * Declare the dimensions of the image. This is only required for a full size image, when you
+     * are specifying a URI
+     * and also a preview image. When displaying a bitmap object, or not using a preview, you do not
+     * need to declare
+     * the image dimensions. Note if the declared dimensions are found to be incorrect, the view
+     * will reset.
      *
      * @return this instance for chaining.
      */

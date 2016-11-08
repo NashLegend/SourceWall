@@ -1,5 +1,7 @@
 package net.nashlegend.sourcewall.activities;
 
+import static net.nashlegend.sourcewall.data.Consts.Keys.Key_Show_Group_First_Homepage;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -26,8 +28,6 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-import static net.nashlegend.sourcewall.data.Consts.Keys.Key_Show_Group_First_Homepage;
 
 public class MainActivity extends BaseActivity {
 
@@ -78,7 +78,8 @@ public class MainActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         if (UserAPI.isLoggedIn()) {
-            if (crtFragment != profileFragment && !PrefsUtil.readBoolean(Keys.Key_I_Hate_Badge, false)) {
+            if (crtFragment != profileFragment && !PrefsUtil.readBoolean(Keys.Key_I_Hate_Badge,
+                    false)) {
                 checkUnread();
             }
         }

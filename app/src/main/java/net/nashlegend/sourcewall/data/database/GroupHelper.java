@@ -35,7 +35,8 @@ public class GroupHelper {
         ArrayList<SubItem> subItems = new ArrayList<>();
         for (int i = 0; i < groups.size(); i++) {
             MyGroup myGroup = groups.get(i);
-            SubItem subItem = new SubItem(myGroup.getSection(), myGroup.getType(), myGroup.getName(), myGroup.getValue());
+            SubItem subItem = new SubItem(myGroup.getSection(), myGroup.getType(),
+                    myGroup.getName(), myGroup.getValue());
             subItems.add(subItem);
         }
         return subItems;
@@ -43,7 +44,8 @@ public class GroupHelper {
 
     public static List<MyGroup> getSelectedGroups() {
         MyGroupDao myGroupDao = BaseDB.getDaoSession().getMyGroupDao();
-        QueryBuilder<MyGroup> builder = myGroupDao.queryBuilder().where(MyGroupDao.Properties.Selected.eq(true)).
+        QueryBuilder<MyGroup> builder = myGroupDao.queryBuilder().where(
+                MyGroupDao.Properties.Selected.eq(true)).
                 orderAsc(MyGroupDao.Properties.Order);
         return builder.list();
     }
@@ -53,7 +55,8 @@ public class GroupHelper {
         ArrayList<SubItem> subItems = new ArrayList<>();
         for (int i = 0; i < groups.size(); i++) {
             MyGroup myGroup = groups.get(i);
-            SubItem subItem = new SubItem(myGroup.getSection(), myGroup.getType(), myGroup.getName(), myGroup.getValue());
+            SubItem subItem = new SubItem(myGroup.getSection(), myGroup.getType(),
+                    myGroup.getName(), myGroup.getValue());
             subItems.add(subItem);
         }
         return subItems;
@@ -84,8 +87,6 @@ public class GroupHelper {
 
     /**
      * 调整未选中项的顺序，不修改Key_Last_Post_Groups_Version
-     *
-     * @param myGroups
      */
     public static void putUnselectedGroups(List<MyGroup> myGroups) {
         BaseDB.getDaoSession().getDatabase().beginTransaction();

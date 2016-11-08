@@ -38,7 +38,8 @@ public abstract class MovableButton<T> extends RelativeLayout {
 
     public MovableButton(Context context) {
         super(context);
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(
+                Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.button_movable, this);
         button = (Button) findViewById(R.id.button_mov);
         imageView = (ImageView) findViewById(R.id.section_new_hint);
@@ -70,14 +71,18 @@ public abstract class MovableButton<T> extends RelativeLayout {
         if (Build.VERSION.SDK_INT < ShuffleDesk.animateVersion) {
             LayoutParams params = (LayoutParams) getLayoutParams();
             params.leftMargin = ShuffleDesk.buttonCellWidth * targetPosition.x + ShuffleDesk.hGap;
-            params.topMargin = ShuffleDesk.buttonCellHeight * targetPosition.y + anchorPoint.y + ShuffleDesk.vGap;
+            params.topMargin = ShuffleDesk.buttonCellHeight * targetPosition.y + anchorPoint.y
+                    + ShuffleDesk.vGap;
             setLayoutParams(params);
         } else {
             if (animator != null && ((ValueAnimator) animator).isRunning()) {
                 ((ValueAnimator) animator).cancel();
             }
-            PropertyValuesHolder holderx = PropertyValuesHolder.ofFloat("x", getX(), ShuffleDesk.buttonCellWidth * targetPosition.x + ShuffleDesk.hGap);
-            PropertyValuesHolder holdery = PropertyValuesHolder.ofFloat("y", getY(), ShuffleDesk.buttonCellHeight * targetPosition.y + anchorPoint.y + ShuffleDesk.vGap);
+            PropertyValuesHolder holderx = PropertyValuesHolder.ofFloat("x", getX(),
+                    ShuffleDesk.buttonCellWidth * targetPosition.x + ShuffleDesk.hGap);
+            PropertyValuesHolder holdery = PropertyValuesHolder.ofFloat("y", getY(),
+                    ShuffleDesk.buttonCellHeight * targetPosition.y + anchorPoint.y
+                            + ShuffleDesk.vGap);
             animator = ObjectAnimator.ofPropertyValuesHolder(this, holderx, holdery);
             ((ObjectAnimator) animator).setDuration(300);
             ((ObjectAnimator) animator).start();

@@ -27,7 +27,8 @@ public class MyBasket {
         this.id = id;
     }
 
-    public MyBasket(Long id, int section, int type, String name, String value, String categoryId, String categoryName, boolean selected, int order) {
+    public MyBasket(Long id, int section, int type, String name, String value, String categoryId,
+            String categoryName, boolean selected, int order) {
         this.id = id;
         this.section = section;
         this.type = type;

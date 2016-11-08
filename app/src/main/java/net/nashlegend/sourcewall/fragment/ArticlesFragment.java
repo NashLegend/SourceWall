@@ -43,7 +43,8 @@ import rx.functions.Action0;
  * Use the {@link ArticlesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ArticlesFragment extends BaseFragment implements ReloadListener, OnRefreshListener, OnItemClickListener {
+public class ArticlesFragment extends BaseFragment implements ReloadListener, OnRefreshListener,
+        OnItemClickListener {
     View layoutView;
     @BindView(R.id.list_articles)
     LListView listView;
@@ -76,7 +77,8 @@ public class ArticlesFragment extends BaseFragment implements ReloadListener, On
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
         layoutView = inflater.inflate(R.layout.fragment_articles, container, false);
         ButterKnife.bind(this, layoutView);
         loadingView.setReloadListener(this);
@@ -86,7 +88,8 @@ public class ArticlesFragment extends BaseFragment implements ReloadListener, On
         listView.setOnRefreshListener(this);
         listView.setOnItemClickListener(this);
         loadOver();
-        AutoHideUtil.applyListViewAutoHide(getActivity(), listView, (int) getResources().getDimension(R.dimen.actionbar_height), false,
+        AutoHideUtil.applyListViewAutoHide(getActivity(), listView,
+                (int) getResources().getDimension(R.dimen.actionbar_height), false,
                 new AutoHideUtil.AutoHideListener() {
                     @Override
                     public void animateHide() {
@@ -140,7 +143,8 @@ public class ArticlesFragment extends BaseFragment implements ReloadListener, On
 
     private void loadArticles(final int offset) {
         Observable<ResponseObject<ArrayList<Article>>> observable =
-                ArticleAPI.getArticleList(subItem.getType(), subItem.getValue(), offset, offset == 0 && adapter.getList().size() == 0);
+                ArticleAPI.getArticleList(subItem.getType(), subItem.getValue(), offset,
+                        offset == 0 && adapter.getList().size() == 0);
         observable
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnUnsubscribe(new Action0() {

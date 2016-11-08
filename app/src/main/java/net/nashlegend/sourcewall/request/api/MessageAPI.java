@@ -25,11 +25,9 @@ public class MessageAPI extends APIBase {
 
     /**
      * 获取通知和站内信数量
-     *
-     * @param callBack
-     * @return
      */
-    public static NetworkTask<ReminderNoticeNum> getReminderAndNoticeNum(RequestCallBack<ReminderNoticeNum> callBack) {
+    public static NetworkTask<ReminderNoticeNum> getReminderAndNoticeNum(
+            RequestCallBack<ReminderNoticeNum> callBack) {
         String url = "http://www.guokr.com/apis/community/rn_num.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("_", String.valueOf(System.currentTimeMillis()));
@@ -44,12 +42,9 @@ public class MessageAPI extends APIBase {
 
     /**
      * 获取提醒列表
-     *
-     * @param offset
-     * @param callBack
-     * @return
      */
-    public static NetworkTask<ArrayList<Reminder>> getReminderList(int offset, RequestCallBack<ArrayList<Reminder>> callBack) {
+    public static NetworkTask<ArrayList<Reminder>> getReminderList(int offset,
+            RequestCallBack<ArrayList<Reminder>> callBack) {
         String url = "http://www.guokr.com/apis/community/reminder.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("_", System.currentTimeMillis() + "");
@@ -66,11 +61,9 @@ public class MessageAPI extends APIBase {
 
     /**
      * 获取通知详情列表，一次性取得全部
-     *
-     * @param callBack
-     * @return
      */
-    public static NetworkTask<ArrayList<Notice>> getNoticeList(RequestCallBack<ArrayList<Notice>> callBack) {
+    public static NetworkTask<ArrayList<Notice>> getNoticeList(
+            RequestCallBack<ArrayList<Notice>> callBack) {
         String url = "http://www.guokr.com/apis/community/notice.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("_", System.currentTimeMillis() + "");
@@ -87,9 +80,6 @@ public class MessageAPI extends APIBase {
 
     /**
      * 忽略所有消息，相当于ignoreOneNotice("")
-     *
-     * @param callBack
-     * @return
      */
     public static NetworkTask<Boolean> ignoreAllNotice(RequestCallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/community/notice_ignore.json";
@@ -103,12 +93,9 @@ public class MessageAPI extends APIBase {
 
     /**
      * 忽略一条通知消息，返回的是剩余的通知详情列表
-     *
-     * @param noticeID
-     * @param callBack
-     * @return
      */
-    public static NetworkTask<ArrayList<Notice>> ignoreOneNotice(String noticeID, RequestCallBack<ArrayList<Notice>> callBack) {
+    public static NetworkTask<ArrayList<Notice>> ignoreOneNotice(String noticeID,
+            RequestCallBack<ArrayList<Notice>> callBack) {
         String url = "http://www.guokr.com/apis/community/notice_ignore.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("nid", noticeID);
@@ -134,11 +121,10 @@ public class MessageAPI extends APIBase {
     /**
      * 获取站内信详情列表，与某人的对话只显示最近一条。目前还不知道获取对话接口
      *
-     * @param offset
-     * @param callBack
      * @return RequestObject
      */
-    public static NetworkTask<ArrayList<Message>> getMessageList(int offset, RequestCallBack<ArrayList<Message>> callBack) {
+    public static NetworkTask<ArrayList<Message>> getMessageList(int offset,
+            RequestCallBack<ArrayList<Message>> callBack) {
         String url = "http://www.guokr.com/apis/community/user/message.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("limit", "20");
@@ -155,8 +141,6 @@ public class MessageAPI extends APIBase {
     /**
      * 根据id获取一条站内信
      *
-     * @param id
-     * @param callBack
      * @return RequestObject
      */
     public static NetworkTask<Message> getOneMessage(String id, RequestCallBack<Message> callBack) {

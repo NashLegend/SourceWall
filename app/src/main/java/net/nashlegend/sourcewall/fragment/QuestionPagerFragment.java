@@ -89,7 +89,7 @@ public class QuestionPagerFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         Emitter.register(this);
         if (layoutView == null) {
             layoutView = inflater.inflate(R.layout.fragment_question_pager, container, false);
@@ -106,7 +106,8 @@ public class QuestionPagerFragment extends BaseFragment {
                     onSectionButtonClicked((AskTagMovableButton) btn);
                 }
             });
-            ((TextView) deskSimple.findViewById(R.id.tip_of_more_sections)).setText(R.string.tip_of_more_tags);
+            ((TextView) deskSimple.findViewById(R.id.tip_of_more_sections)).setText(
+                    R.string.tip_of_more_tags);
             manageButton = (Button) deskSimple.findViewById(R.id.button_manage_my_sections);
             manageButton.setText(R.string.reload_all_tags);
             manageButton.setVisibility(View.INVISIBLE);
@@ -116,16 +117,19 @@ public class QuestionPagerFragment extends BaseFragment {
                     reloadFromNet();
                 }
             });
-            moreSectionsLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    if (moreSectionsLayout.getHeight() > 0) {
-                        moreSectionsLayout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                        moreSectionsLayout.setTranslationY(-moreSectionsLayout.getHeight());
-                        moreSectionsLayout.setVisibility(View.VISIBLE);
-                    }
-                }
-            });
+            moreSectionsLayout.getViewTreeObserver().addOnGlobalLayoutListener(
+                    new ViewTreeObserver.OnGlobalLayoutListener() {
+                        @Override
+                        public void onGlobalLayout() {
+                            if (moreSectionsLayout.getHeight() > 0) {
+                                moreSectionsLayout.getViewTreeObserver()
+                                        .removeGlobalOnLayoutListener(
+                                        this);
+                                moreSectionsLayout.setTranslationY(-moreSectionsLayout.getHeight());
+                                moreSectionsLayout.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    });
         } else {
             if (layoutView.getParent() != null) {
                 ((ViewGroup) layoutView.getParent()).removeView(layoutView);
@@ -181,7 +185,8 @@ public class QuestionPagerFragment extends BaseFragment {
 
     private void onSectionButtonClicked(AskTagMovableButton button) {
         AskTag askTag = button.getSection();
-        SubItem subItem = new SubItem(askTag.getSection(), askTag.getType(), askTag.getName(), askTag.getValue());
+        SubItem subItem = new SubItem(askTag.getSection(), askTag.getType(), askTag.getName(),
+                askTag.getValue());
         hideMoreSections();
         for (int i = 0; i < subItems.size(); i++) {
             if (subItems.get(i).getValue().equals(subItem.getValue())) {
@@ -222,13 +227,15 @@ public class QuestionPagerFragment extends BaseFragment {
             animatorSet.cancel();
         }
         animatorSet = new AnimatorSet();
-        ObjectAnimator layoutAnimator = ObjectAnimator.ofFloat(moreSectionsLayout, "translationY", moreSectionsLayout.getTranslationY(), 0);
+        ObjectAnimator layoutAnimator = ObjectAnimator.ofFloat(moreSectionsLayout, "translationY",
+                moreSectionsLayout.getTranslationY(), 0);
         layoutAnimator.setInterpolator(new FastOutSlowInInterpolator());
 
         ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(moreSectionsLayout, "alpha", 0.0f, 1);
         alphaAnimator.setInterpolator(new FastOutSlowInInterpolator());
 
-        ObjectAnimator imageAnimator = ObjectAnimator.ofFloat(showMore, "rotation", showMore.getRotation(), 180);
+        ObjectAnimator imageAnimator = ObjectAnimator.ofFloat(showMore, "rotation",
+                showMore.getRotation(), 180);
         imageAnimator.setInterpolator(new FastOutSlowInInterpolator());
 
         ArrayList<Animator> animators = new ArrayList<>();
@@ -268,18 +275,20 @@ public class QuestionPagerFragment extends BaseFragment {
                 .Builder(getActivity())
                 .setTitle(R.string.hint)
                 .setMessage(R.string.ok_to_load_tags)
-                .setPositiveButton(R.string.confirm_to_load_my_tags, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        reloadFromNet();
-                    }
-                })
-                .setNegativeButton(R.string.use_default_tags, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        hideMoreSections();
-                    }
-                })
+                .setPositiveButton(R.string.confirm_to_load_my_tags,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                reloadFromNet();
+                            }
+                        })
+                .setNegativeButton(R.string.use_default_tags,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                hideMoreSections();
+                            }
+                        })
                 .setOnCancelListener(new DialogInterface.OnCancelListener() {
                     @Override
                     public void onCancel(DialogInterface dialog) {
@@ -309,7 +318,8 @@ public class QuestionPagerFragment extends BaseFragment {
         ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(moreSectionsLayout, "alpha", 1, 0.0f);
         alphaAnimator.setInterpolator(new FastOutSlowInInterpolator());
 
-        ObjectAnimator imageAnimator = ObjectAnimator.ofFloat(showMore, "rotation", showMore.getRotation(), 360);
+        ObjectAnimator imageAnimator = ObjectAnimator.ofFloat(showMore, "rotation",
+                showMore.getRotation(), 360);
         imageAnimator.setInterpolator(new FastOutSlowInInterpolator());
 
         ArrayList<Animator> animators = new ArrayList<>();
@@ -444,7 +454,8 @@ public class QuestionPagerFragment extends BaseFragment {
         if (hideAnimator != null && hideAnimator.isRunning()) {
             return;
         }
-        hideAnimator = ObjectAnimator.ofFloat(searchButton, "translationY", searchButton.getTranslationY(), searchButton.getHeight());
+        hideAnimator = ObjectAnimator.ofFloat(searchButton, "translationY",
+                searchButton.getTranslationY(), searchButton.getHeight());
         hideAnimator.setDuration(300);
         hideAnimator.start();
     }
@@ -454,7 +465,8 @@ public class QuestionPagerFragment extends BaseFragment {
         if (showAnimator != null && showAnimator.isRunning()) {
             return;
         }
-        showAnimator = ObjectAnimator.ofFloat(searchButton, "translationY", searchButton.getTranslationY(), 0);
+        showAnimator = ObjectAnimator.ofFloat(searchButton, "translationY",
+                searchButton.getTranslationY(), 0);
         showAnimator.setDuration(300);
         showAnimator.start();
     }

@@ -15,7 +15,8 @@ public class SimpleHttp {
         return get(url, params, true);
     }
 
-    public static ResponseObject<String> get(String url, ParamsMap params, boolean needToken) throws Exception {
+    public static ResponseObject<String> get(String url, ParamsMap params, boolean needToken)
+            throws Exception {
         return new RequestBuilder<String>().get().url(url).params(params)
                 .withToken(needToken).parser(new StringParser()).requestSync();
     }
@@ -24,7 +25,8 @@ public class SimpleHttp {
         return post(url, params, true);
     }
 
-    public static ResponseObject<String> post(String url, ParamsMap params, boolean needToken) throws Exception {
+    public static ResponseObject<String> post(String url, ParamsMap params, boolean needToken)
+            throws Exception {
         return new RequestBuilder<String>().post().url(url).params(params)
                 .withToken(needToken).parser(new StringParser()).requestSync();
     }
@@ -37,7 +39,8 @@ public class SimpleHttp {
         return put(url, params, true);
     }
 
-    public static ResponseObject<String> put(String url, ParamsMap params, boolean needToken) throws Exception {
+    public static ResponseObject<String> put(String url, ParamsMap params, boolean needToken)
+            throws Exception {
         return new RequestBuilder<String>().put().url(url).params(params)
                 .withToken(needToken).parser(new StringParser()).requestSync();
     }
@@ -50,7 +53,8 @@ public class SimpleHttp {
         return delete(url, params, true);
     }
 
-    public static ResponseObject<String> delete(String url, ParamsMap params, boolean needToken) throws Exception {
+    public static ResponseObject<String> delete(String url, ParamsMap params, boolean needToken)
+            throws Exception {
         return new RequestBuilder<String>().delete().url(url).params(params)
                 .withToken(needToken).parser(new StringParser()).requestSync();
     }

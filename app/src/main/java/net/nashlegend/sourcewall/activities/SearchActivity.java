@@ -107,7 +107,8 @@ public class SearchActivity extends BaseActivity {
         btnSearchAll.performClick();
     }
 
-    @OnClick({R.id.btn_search_all, R.id.btn_search_article, R.id.btn_search_post, R.id.btn_search_question, R.id.btn_search_blog})
+    @OnClick({R.id.btn_search_all, R.id.btn_search_article, R.id.btn_search_post,
+            R.id.btn_search_question, R.id.btn_search_blog})
     public void onClick(View view) {
         if (view.isSelected()) {
             return;
@@ -154,44 +155,45 @@ public class SearchActivity extends BaseActivity {
             adapter.clear();
             adapter.notifyDataSetChanged();
         }
-        task = SearchAPI.getSearchedItems(type, page, searchText.getText().toString().trim(), new SimpleCallBack<ArrayList<SearchItem>>() {
-            @Override
-            public void onFailure() {
-                if (page == 1) {
-                    viewLoading.onLoading();
-                }
-                toast("加载失败");
-                listSearch.doneOperation();
-            }
+        task = SearchAPI.getSearchedItems(type, page, searchText.getText().toString().trim(),
+                new SimpleCallBack<ArrayList<SearchItem>>() {
+                    @Override
+                    public void onFailure() {
+                        if (page == 1) {
+                            viewLoading.onLoading();
+                        }
+                        toast("加载失败");
+                        listSearch.doneOperation();
+                    }
 
-            @Override
-            public void onSuccess(@NonNull ArrayList<SearchItem> result) {
-                if (isFinishing()) {
-                    return;
-                }
-                if (page == 1) {
-                    viewLoading.onSuccess();
-                    if (result.size() == 0) {
-                        toast("没有搜索到结果");
+                    @Override
+                    public void onSuccess(@NonNull ArrayList<SearchItem> result) {
+                        if (isFinishing()) {
+                            return;
+                        }
+                        if (page == 1) {
+                            viewLoading.onSuccess();
+                            if (result.size() == 0) {
+                                toast("没有搜索到结果");
+                            }
+                        } else {
+                            if (result.size() == 0) {
+                                toast("下面没有了");
+                            }
+                        }
+                        listSearch.doneOperation();
+                        listSearch.setCanPullToLoadMore(true);
+                        if (page == 1) {
+                            adapter.setList(result);
+                        } else {
+                            adapter.addAll(result);
+                        }
+                        adapter.notifyDataSetChanged();
+                        if (result.size() > 0) {
+                            crtPage = page;
+                        }
                     }
-                } else {
-                    if (result.size() == 0) {
-                        toast("下面没有了");
-                    }
-                }
-                listSearch.doneOperation();
-                listSearch.setCanPullToLoadMore(true);
-                if (page == 1) {
-                    adapter.setList(result);
-                } else {
-                    adapter.addAll(result);
-                }
-                adapter.notifyDataSetChanged();
-                if (result.size() > 0) {
-                    crtPage = page;
-                }
-            }
-        });
+                });
     }
 
     class SearchAdapter extends AceAdapter<SearchItem> {

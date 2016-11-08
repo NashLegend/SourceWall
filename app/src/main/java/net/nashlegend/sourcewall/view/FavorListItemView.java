@@ -25,7 +25,8 @@ public class FavorListItemView extends AceView<Favor> {
 
     public FavorListItemView(Context context) {
         super(context);
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(
+                Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_favor_item_view, this);
         ButterKnife.bind(this);
     }

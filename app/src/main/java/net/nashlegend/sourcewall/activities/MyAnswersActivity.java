@@ -78,7 +78,8 @@ public class MyAnswersActivity extends BaseActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         headerHeight = (int) getResources().getDimension(R.dimen.actionbar_height);
-        AutoHideUtil.applyListViewAutoHide(this, listView, (int) getResources().getDimension(R.dimen.actionbar_height), autoHideListener);
+        AutoHideUtil.applyListViewAutoHide(this, listView,
+                (int) getResources().getDimension(R.dimen.actionbar_height), autoHideListener);
 
         listView.setCanPullToRefresh(false);
         listView.setCanPullToLoadMore(false);
@@ -101,7 +102,8 @@ public class MyAnswersActivity extends BaseActivity {
                 if (view instanceof AnswerListItemView) {
                     Intent intent = new Intent();
                     intent.setClass(MyAnswersActivity.this, AnswerActivity.class);
-                    Uri answerUri = Uri.parse("http://www.guokr.com/answer/" + ((AnswerListItemView) view).getData().getID() + "/redirect/");
+                    Uri answerUri = Uri.parse("http://www.guokr.com/answer/"
+                            + ((AnswerListItemView) view).getData().getID() + "/redirect/");
                     intent.setData(answerUri);
                     startOneActivity(intent);
                 }
@@ -127,38 +129,39 @@ public class MyAnswersActivity extends BaseActivity {
     }
 
     private void loadAnswers(final int offset) {
-        QuestionAPI.getAnswerListByUser(UserAPI.getUkey(), offset, new SimpleCallBack<ArrayList<Answer>>() {
-            @Override
-            public void onFailure(@NonNull ResponseObject<ArrayList<Answer>> result) {
-                toast(R.string.load_failed);
-                loadingView.onFailed();
-            }
+        QuestionAPI.getAnswerListByUser(UserAPI.getUkey(), offset,
+                new SimpleCallBack<ArrayList<Answer>>() {
+                    @Override
+                    public void onFailure(@NonNull ResponseObject<ArrayList<Answer>> result) {
+                        toast(R.string.load_failed);
+                        loadingView.onFailed();
+                    }
 
-            @Override
-            public void onSuccess(@NonNull ArrayList<Answer> result) {
-                if (isFinishing()) {
-                    return;
-                }
-                listView.doneOperation();
-                loadingView.onSuccess();
-                for (Answer answer : result) {
-                    answer.getAuthor().setName(UserAPI.getName());
-                }
-                if (offset > 0) {
-                    adapter.addAll(result);
-                } else {
-                    adapter.setList(result);
-                }
-                adapter.notifyDataSetChanged();
-                if (adapter.getCount() > 0) {
-                    listView.setCanPullToLoadMore(true);
-                    listView.setCanPullToRefresh(false);
-                } else {
-                    listView.setCanPullToLoadMore(false);
-                    listView.setCanPullToRefresh(false);
-                }
-            }
-        });
+                    @Override
+                    public void onSuccess(@NonNull ArrayList<Answer> result) {
+                        if (isFinishing()) {
+                            return;
+                        }
+                        listView.doneOperation();
+                        loadingView.onSuccess();
+                        for (Answer answer : result) {
+                            answer.getAuthor().setName(UserAPI.getName());
+                        }
+                        if (offset > 0) {
+                            adapter.addAll(result);
+                        } else {
+                            adapter.setList(result);
+                        }
+                        adapter.notifyDataSetChanged();
+                        if (adapter.getCount() > 0) {
+                            listView.setCanPullToLoadMore(true);
+                            listView.setCanPullToRefresh(false);
+                        } else {
+                            listView.setCanPullToLoadMore(false);
+                            listView.setCanPullToRefresh(false);
+                        }
+                    }
+                });
     }
 
     @Override
@@ -182,7 +185,8 @@ public class MyAnswersActivity extends BaseActivity {
             }
             if (hideAnimatorSet == null || !hideAnimatorSet.isRunning()) {
                 hideAnimatorSet = new AnimatorSet();
-                ObjectAnimator headerAnimator = ObjectAnimator.ofFloat(appbar, "translationY", appbar.getTranslationY(), -headerHeight);
+                ObjectAnimator headerAnimator = ObjectAnimator.ofFloat(appbar, "translationY",
+                        appbar.getTranslationY(), -headerHeight);
                 ArrayList<Animator> animators = new ArrayList<>();
                 animators.add(headerAnimator);
                 hideAnimatorSet.setDuration(300);
@@ -198,7 +202,8 @@ public class MyAnswersActivity extends BaseActivity {
             }
             if (backAnimatorSet == null || !backAnimatorSet.isRunning()) {
                 backAnimatorSet = new AnimatorSet();
-                ObjectAnimator headerAnimator = ObjectAnimator.ofFloat(appbar, "translationY", appbar.getTranslationY(), 0f);
+                ObjectAnimator headerAnimator = ObjectAnimator.ofFloat(appbar, "translationY",
+                        appbar.getTranslationY(), 0f);
                 ArrayList<Animator> animators = new ArrayList<>();
                 animators.add(headerAnimator);
                 backAnimatorSet.setDuration(300);

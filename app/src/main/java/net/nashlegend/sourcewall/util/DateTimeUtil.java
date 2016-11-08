@@ -15,9 +15,6 @@ public class DateTimeUtil {
 
     /**
      * 此时间是否是当天
-     *
-     * @param timeInMills
-     * @return
      */
     public static boolean isTimeToday(long timeInMills) {
         GregorianCalendar past = new GregorianCalendar(Locale.CHINA);
@@ -30,8 +27,6 @@ public class DateTimeUtil {
 
     /**
      * 返回yyyy-MM-dd
-     *
-     * @return
      */
     public static String generateDayTime() {
         String timeStamp;
@@ -47,8 +42,6 @@ public class DateTimeUtil {
 
     /**
      * 返回yyyy-MM-dd HH:mm:ss SSS
-     *
-     * @return
      */
     public static String generateTimeStamp() {
         String timeStamp;
@@ -64,7 +57,6 @@ public class DateTimeUtil {
 
     /**
      * @param time 秒
-     * @return
      */
     public static String secondsToHHMMSS(int time) {
         String hh = "00";
@@ -95,12 +87,15 @@ public class DateTimeUtil {
                 int yearDiff = calendar.get(Calendar.YEAR) - today.get(Calendar.YEAR);
                 if (yearDiff == 1) {
                     int max = today.isLeapYear(today.get(Calendar.YEAR)) ? 366 : 365;
-                    diff = calendar.get(Calendar.DAY_OF_YEAR) + max - today.get(Calendar.DAY_OF_YEAR);
+                    diff = calendar.get(Calendar.DAY_OF_YEAR) + max - today.get(
+                            Calendar.DAY_OF_YEAR);
                 } else if (yearDiff == -1) {
                     int max = calendar.isLeapYear(calendar.get(Calendar.YEAR)) ? 366 : 365;
-                    diff = calendar.get(Calendar.DAY_OF_YEAR) - max - today.get(Calendar.DAY_OF_YEAR);
+                    diff = calendar.get(Calendar.DAY_OF_YEAR) - max - today.get(
+                            Calendar.DAY_OF_YEAR);
                 } else {
-                    diff = (int) (calendar.getTimeInMillis() / 86400000 - new GregorianCalendar().getTimeInMillis() / 86400000);
+                    diff = (int) (calendar.getTimeInMillis() / 86400000
+                            - new GregorianCalendar().getTimeInMillis() / 86400000);
                 }
             }
 
@@ -111,7 +106,8 @@ public class DateTimeUtil {
                 formatOutput = new SimpleDateFormat("前天 HH:mm", Locale.CHINA);
             } else if (diff == 0) {
                 formatOutput = new SimpleDateFormat("今天 HH:mm", Locale.CHINA);
-            } else if (new GregorianCalendar(Locale.CHINA).get(Calendar.YEAR) != calendar.get(Calendar.YEAR)) {
+            } else if (new GregorianCalendar(Locale.CHINA).get(Calendar.YEAR) != calendar.get(
+                    Calendar.YEAR)) {
                 formatOutput = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
             }
             return formatOutput.format(date);

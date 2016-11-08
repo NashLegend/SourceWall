@@ -11,21 +11,14 @@ public class Urls {
 
     /**
      * 将地址与参数拼合,地址本身可以含有参数
-     *
-     * @param url
-     * @param param
-     * @return
      */
     public static String combine(String url, Param param) {
-        return HttpUrl.parse(url).newBuilder().addQueryParameter(param.key, param.value).build().toString();
+        return HttpUrl.parse(url).newBuilder().addQueryParameter(param.key,
+                param.value).build().toString();
     }
 
     /**
      * 将地址与参数拼合,地址本身可以含有参数
-     *
-     * @param url
-     * @param params
-     * @return
      */
     public static String combine(String url, List<Param> params) {
         HttpUrl.Builder builder = HttpUrl.parse(url).newBuilder();
@@ -40,9 +33,6 @@ public class Urls {
 
     /**
      * 生成queryString,如:a=b&c=d&e=f
-     *
-     * @param params
-     * @return
      */
     public static String getQueryString(List<Param> params) {
         StringBuilder paramString = new StringBuilder("");

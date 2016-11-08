@@ -1,9 +1,9 @@
 package net.nashlegend.sourcewall.request.parsers;
 
+import static net.nashlegend.sourcewall.request.JsonHandler.getUniversalJsonObject;
+
 import net.nashlegend.sourcewall.model.Question;
 import net.nashlegend.sourcewall.request.ResponseObject;
-
-import static net.nashlegend.sourcewall.request.JsonHandler.getUniversalJsonObject;
 
 /**
  * Created by NashLegend on 16/7/8.

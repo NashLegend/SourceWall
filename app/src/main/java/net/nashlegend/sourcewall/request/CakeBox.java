@@ -1,5 +1,8 @@
 package net.nashlegend.sourcewall.request;
 
+import static okhttp3.internal.Util.delimiterOffset;
+import static okhttp3.internal.Util.trimSubstring;
+
 import java.io.IOException;
 import java.net.CookieHandler;
 import java.net.HttpCookie;
@@ -12,9 +15,6 @@ import java.util.Map;
 import okhttp3.Cookie;
 import okhttp3.CookieJar;
 import okhttp3.HttpUrl;
-
-import static okhttp3.internal.Util.delimiterOffset;
-import static okhttp3.internal.Util.trimSubstring;
 
 /**
  * A cookie jar that delegates to a {@link java.net.CookieHandler}.
@@ -33,11 +33,13 @@ public final class CakeBox implements CookieJar {
             for (Cookie cookie : cookies) {
                 cookieStrings.add(cookie.toString());
             }
-            Map<String, List<String>> multimap = Collections.singletonMap("Set-Cookie", cookieStrings);
+            Map<String, List<String>> multimap = Collections.singletonMap("Set-Cookie",
+                    cookieStrings);
             try {
                 cookieHandler.put(URI.create("http://" + url.host()), multimap);
             } catch (IOException e) {
-                System.err.println("Saving cookies failed for " + url.resolve("/...") + " " + e.getMessage());
+                System.err.println(
+                        "Saving cookies failed for " + url.resolve("/...") + " " + e.getMessage());
             }
         }
     }
@@ -50,7 +52,8 @@ public final class CakeBox implements CookieJar {
         try {
             cookieHeaders = cookieHandler.get(URI.create("http://" + url.host()), headers);
         } catch (IOException e) {
-            System.err.println("Loading cookies failed for " + url.resolve("/...") + " " + e.getMessage());
+            System.err.println(
+                    "Loading cookies failed for " + url.resolve("/...") + " " + e.getMessage());
             return Collections.emptyList();
         }
 

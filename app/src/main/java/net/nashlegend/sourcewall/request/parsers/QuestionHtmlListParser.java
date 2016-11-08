@@ -10,7 +10,8 @@ import java.util.ArrayList;
  */
 public class QuestionHtmlListParser implements Parser<ArrayList<Question>> {
     @Override
-    public ArrayList<Question> parse(String response, ResponseObject<ArrayList<Question>> responseObject) throws Exception {
+    public ArrayList<Question> parse(String response,
+            ResponseObject<ArrayList<Question>> responseObject) throws Exception {
         ArrayList<Question> questions = Question.fromHtmlList(response);
         responseObject.ok = true;
         return questions;

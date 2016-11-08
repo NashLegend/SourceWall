@@ -14,7 +14,8 @@ import net.nashlegend.sourcewall.util.PrefsUtil;
 public class Tail {
 
     public final static String defaultDisplayName = "果壳的壳";
-    public final static String defaultUrl = "https://github.com/NashLegend/SourceWall/blob/master/README.md";
+    public final static String defaultUrl =
+            "https://github.com/NashLegend/SourceWall/blob/master/README.md";
     public final static String altUrl = "http://www.guokr.com/blog/798434/";
 
     /**
@@ -24,7 +25,8 @@ public class Tail {
      */
     public static String getComplexReplyTail() {
         String tail = "";
-        switch (PrefsUtil.readInt(Consts.Keys.Key_Use_Tail_Type, Consts.TailType.Type_Use_Default_Tail)) {
+        switch (PrefsUtil.readInt(Consts.Keys.Key_Use_Tail_Type,
+                Consts.TailType.Type_Use_Default_Tail)) {
             case Consts.TailType.Type_Use_Default_Tail:
                 tail = getDefaultComplexTail();
                 break;
@@ -44,7 +46,8 @@ public class Tail {
      * @return 默认尾巴
      */
     public static String getDefaultComplexTail() {
-        return "<p>   </p><blockquote>来自 <a href=\"" + getUrl() + "\" target=\"_blank\">" + defaultDisplayName + "</a></blockquote>";
+        return "<p>   </p><blockquote>来自 <a href=\"" + getUrl() + "\" target=\"_blank\">"
+                + defaultDisplayName + "</a></blockquote>";
     }
 
     /**
@@ -53,8 +56,10 @@ public class Tail {
      * @return 手机尾巴
      */
     private static String getPhoneComplexTail() {
-        String mTypeString = android.os.Build.MODEL == null ? App.getApp().getString(R.string.unknown_phone) : android.os.Build.MODEL;
-        return "<p/>  </p><blockquote>来自 <a href=\"" + getUrl() + "\" target=\"_blank\">" + mTypeString + "</a></blockquote>";
+        String mTypeString = android.os.Build.MODEL == null ? App.getApp().getString(
+                R.string.unknown_phone) : android.os.Build.MODEL;
+        return "<p/>  </p><blockquote>来自 <a href=\"" + getUrl() + "\" target=\"_blank\">"
+                + mTypeString + "</a></blockquote>";
     }
 
     /**
@@ -78,7 +83,8 @@ public class Tail {
      */
     public static String getSimpleReplyTail() {
         String tail = "";
-        switch (PrefsUtil.readInt(Consts.Keys.Key_Use_Tail_Type, Consts.TailType.Type_Use_Default_Tail)) {
+        switch (PrefsUtil.readInt(Consts.Keys.Key_Use_Tail_Type,
+                Consts.TailType.Type_Use_Default_Tail)) {
             case Consts.TailType.Type_Use_Default_Tail:
                 tail = getDefaultSimpleTail();
                 break;
@@ -98,7 +104,8 @@ public class Tail {
      * @return 手机尾巴
      */
     private static String getPhoneSimpleTail() {
-        String mTypeString = android.os.Build.MODEL == null ? App.getApp().getString(R.string.unknown_phone) : android.os.Build.MODEL;
+        String mTypeString = android.os.Build.MODEL == null ? App.getApp().getString(
+                R.string.unknown_phone) : android.os.Build.MODEL;
         return "\n\n[blockquote]来自 [url=" + getUrl() + "]" + mTypeString + "[/url][/blockquote]";
     }
 
@@ -109,7 +116,8 @@ public class Tail {
      * @return 默认尾巴
      */
     private static String getDefaultSimpleTail() {
-        return "\n\n[blockquote]来自 [url=" + getUrl() + "]" + defaultDisplayName + "[/url][/blockquote]";
+        return "\n\n[blockquote]来自 [url=" + getUrl() + "]" + defaultDisplayName
+                + "[/url][/blockquote]";
     }
 
     /**
@@ -129,7 +137,8 @@ public class Tail {
     }
 
     public static String getPhonePlainTail() {
-        String mTypeString = android.os.Build.MODEL == null ? App.getApp().getString(R.string.unknown_phone) : android.os.Build.MODEL;
+        String mTypeString = android.os.Build.MODEL == null ? App.getApp().getString(
+                R.string.unknown_phone) : android.os.Build.MODEL;
         return "来自 " + mTypeString;
     }
 

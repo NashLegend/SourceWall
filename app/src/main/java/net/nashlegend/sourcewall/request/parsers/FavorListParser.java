@@ -14,7 +14,8 @@ import java.util.ArrayList;
  */
 public class FavorListParser implements Parser<ArrayList<Favor>> {
     @Override
-    public ArrayList<Favor> parse(String jString, ResponseObject<ArrayList<Favor>> responseObject) throws Exception {
+    public ArrayList<Favor> parse(String jString, ResponseObject<ArrayList<Favor>> responseObject)
+            throws Exception {
         ArrayList<Favor> articleList = new ArrayList<>();
         JSONArray favors = JsonHandler.getUniversalJsonArray(jString, responseObject);
         assert favors != null;

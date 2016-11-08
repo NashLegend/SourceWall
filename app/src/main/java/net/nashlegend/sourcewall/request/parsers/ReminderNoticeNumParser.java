@@ -9,7 +9,9 @@ import net.nashlegend.sourcewall.request.ResponseObject;
  */
 public class ReminderNoticeNumParser implements Parser<ReminderNoticeNum> {
     @Override
-    public ReminderNoticeNum parse(String jString, ResponseObject<ReminderNoticeNum> responseObject) throws Exception {
-        return ReminderNoticeNum.fromJson(JsonHandler.getUniversalJsonObject(jString, responseObject));
+    public ReminderNoticeNum parse(String jString, ResponseObject<ReminderNoticeNum> responseObject)
+            throws Exception {
+        return ReminderNoticeNum.fromJson(
+                JsonHandler.getUniversalJsonObject(jString, responseObject));
     }
 }

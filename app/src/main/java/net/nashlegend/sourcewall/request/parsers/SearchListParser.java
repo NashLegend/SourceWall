@@ -15,7 +15,8 @@ import java.util.ArrayList;
  */
 public class SearchListParser implements Parser<ArrayList<SearchItem>> {
     @Override
-    public ArrayList<SearchItem> parse(String jString, ResponseObject<ArrayList<SearchItem>> responseObject) throws Exception {
+    public ArrayList<SearchItem> parse(String jString,
+            ResponseObject<ArrayList<SearchItem>> responseObject) throws Exception {
         Document document = Jsoup.parse(jString);
         Elements elements = document.getElementsByClass("title-detail");
         ArrayList<SearchItem> searchItemArrayList = new ArrayList<>();

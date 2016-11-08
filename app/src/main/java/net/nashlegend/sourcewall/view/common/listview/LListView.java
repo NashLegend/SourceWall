@@ -167,15 +167,18 @@ public class LListView extends ListView {
     }
 
     private int getState() {
-        return headerView.getState() == State_Normal ? footerView.getState() : headerView.getState();
+        return headerView.getState() == State_Normal ? footerView.getState()
+                : headerView.getState();
     }
 
     private boolean checkRefreshable() {
-        return canPullToRefresh && getChildAt(0) instanceof LListHeader && getState() != State_Loading_More;
+        return canPullToRefresh && getChildAt(0) instanceof LListHeader
+                && getState() != State_Loading_More;
     }
 
     private boolean checkLoadable() {
-        return canPullToLoadMore && this.getChildAt(getChildCount() - 1) instanceof LListFooter && getState() != State_Refreshing;
+        return canPullToLoadMore && this.getChildAt(getChildCount() - 1) instanceof LListFooter
+                && getState() != State_Refreshing;
     }
 
     public static interface OnRefreshListener {

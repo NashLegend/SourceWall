@@ -1,5 +1,7 @@
 package net.nashlegend.sourcewall;
 
+import static android.support.v7.app.AppCompatDelegate.setDefaultNightMode;
+
 import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
@@ -18,8 +20,6 @@ import net.nashlegend.sourcewall.data.Consts.Keys;
 import net.nashlegend.sourcewall.util.ErrorUtils;
 import net.nashlegend.sourcewall.util.ImageUtils;
 import net.nashlegend.sourcewall.util.PrefsUtil;
-
-import static android.support.v7.app.AppCompatDelegate.setDefaultNightMode;
 
 /**
  * Created by NashLegend on 2014/9/24 0024
@@ -61,7 +61,8 @@ public class App extends Application {
     }
 
     public static boolean isNightMode() {
-        return (getApp().getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+        return (getApp().getResources().getConfiguration().uiMode
+                & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
     }
 
     public static int getVersionInt() {
@@ -87,8 +88,10 @@ public class App extends Application {
     private static String getCurProcessName() {
         try {
             int pid = android.os.Process.myPid();
-            ActivityManager mActivityManager = (ActivityManager) App.getApp().getSystemService(Context.ACTIVITY_SERVICE);
-            for (ActivityManager.RunningAppProcessInfo appProcess : mActivityManager.getRunningAppProcesses()) {
+            ActivityManager mActivityManager = (ActivityManager) App.getApp().getSystemService(
+                    Context.ACTIVITY_SERVICE);
+            for (ActivityManager.RunningAppProcessInfo appProcess : mActivityManager
+                    .getRunningAppProcesses()) {
                 if (appProcess.pid == pid) {
                     return appProcess.processName;
                 }

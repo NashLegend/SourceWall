@@ -45,7 +45,8 @@ public class PostView extends AceView<Post> {
 
     public PostView(Context context) {
         super(context);
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(
+                Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_post_view, this);
         titleView = (TextView) findViewById(R.id.text_title);
         contentView = (WWebView) findViewById(R.id.web_content);
@@ -75,7 +76,8 @@ public class PostView extends AceView<Post> {
             contentView.setPrimarySource(post.getContent());
             contentView.loadDataWithBaseURL(Web.Base_Url, html, "text/html", "charset=UTF-8", null);
             if (Config.shouldLoadImage()) {
-                ImageLoader.getInstance().displayImage(post.getAuthor().getAvatar(), avatarImage, ImageUtils.avatarOptions);
+                ImageLoader.getInstance().displayImage(post.getAuthor().getAvatar(), avatarImage,
+                        ImageUtils.avatarOptions);
             } else {
                 avatarImage.setImageResource(R.drawable.default_avatar);
             }
@@ -125,8 +127,10 @@ public class PostView extends AceView<Post> {
 
                     @Override
                     public void onNext(ResponseObject<ArrayList<UComment>> result) {
-                        loadDesc.findViewById(R.id.text_header_load_hint).setVisibility(View.VISIBLE);
-                        loadDesc.findViewById(R.id.progress_header_loading).setVisibility(View.INVISIBLE);
+                        loadDesc.findViewById(R.id.text_header_load_hint).setVisibility(
+                                View.VISIBLE);
+                        loadDesc.findViewById(R.id.progress_header_loading).setVisibility(
+                                View.INVISIBLE);
                         if (result.ok) {
                             ArrayList<UComment> ars = result.result;
                             if (ars.size() > 0) {

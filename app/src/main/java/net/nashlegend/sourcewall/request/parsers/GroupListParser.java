@@ -15,13 +15,15 @@ import java.util.ArrayList;
 
 public class GroupListParser implements Parser<ArrayList<SubItem>> {
     @Override
-    public ArrayList<SubItem> parse(String response, ResponseObject<ArrayList<SubItem>> responseObject) throws Exception {
+    public ArrayList<SubItem> parse(String response,
+            ResponseObject<ArrayList<SubItem>> responseObject) throws Exception {
         ArrayList<SubItem> list = new ArrayList<>();
         JSONArray subItems = JsonHandler.getUniversalJsonArray(response, responseObject);
         assert subItems != null;
         for (int i = 0; i < subItems.length(); i++) {
             JSONObject jo = subItems.getJSONObject(i).optJSONObject("group");
-            SubItem subItem = new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, jo.optString("name"), jo.optString("id"));
+            SubItem subItem = new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel,
+                    jo.optString("name"), jo.optString("id"));
             list.add(subItem);
         }
         return list;

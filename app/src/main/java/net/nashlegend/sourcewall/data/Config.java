@@ -20,11 +20,10 @@ public class Config {
 
     /**
      * 是否使用Html方式回复
-     *
-     * @return
      */
     public static Class<? extends BaseActivity> getReplyActivity() {
-        return PrefsUtil.readBoolean(Keys.Key_Reply_With_Simple, false) ? ReplyActivity.class : Reply2Activity.class;
+        return PrefsUtil.readBoolean(Keys.Key_Reply_With_Simple, false) ? ReplyActivity.class
+                : Reply2Activity.class;
     }
 
     public static boolean shouldLoadImage() {

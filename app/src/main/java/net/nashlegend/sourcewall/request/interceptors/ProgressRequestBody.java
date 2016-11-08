@@ -31,7 +31,6 @@ public class ProgressRequestBody extends RequestBody {
      * 构造函数，赋值
      *
      * @param requestBody 待包装的请求体
-     * @param callBack
      */
     public ProgressRequestBody(RequestBody requestBody, @Nullable RequestCallBack callBack) {
         this.requestBody = requestBody;

@@ -10,7 +10,8 @@ import org.json.JSONObject;
  */
 public class UpdateInfoParser implements Parser<UpdateInfo> {
     @Override
-    public UpdateInfo parse(String str, ResponseObject<UpdateInfo> responseObject) throws Exception {
+    public UpdateInfo parse(String str, ResponseObject<UpdateInfo> responseObject)
+            throws Exception {
         UpdateInfo info = UpdateInfo.fromJson(new JSONObject(str));
         responseObject.ok = true;
         return info;

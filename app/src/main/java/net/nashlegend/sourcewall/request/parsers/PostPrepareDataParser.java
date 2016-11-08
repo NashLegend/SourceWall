@@ -19,7 +19,8 @@ import java.util.ArrayList;
 
 public class PostPrepareDataParser implements Parser<PrepareData> {
     @Override
-    public PrepareData parse(String str, ResponseObject<PrepareData> responseObject) throws Exception {
+    public PrepareData parse(String str, ResponseObject<PrepareData> responseObject)
+            throws Exception {
         Document doc = Jsoup.parse(str);
         Element selects = doc.getElementById("topic");
         ArrayList<Param> pairs = new ArrayList<>();

@@ -10,7 +10,8 @@ import net.nashlegend.sourcewall.request.ResponseObject;
 
 public class UserInfoParser implements Parser<UserInfo> {
     @Override
-    public UserInfo parse(String response, ResponseObject<UserInfo> responseObject) throws Exception {
+    public UserInfo parse(String response, ResponseObject<UserInfo> responseObject)
+            throws Exception {
         return UserInfo.fromJson(JsonHandler.getUniversalJsonObject(response, responseObject));
     }
 }

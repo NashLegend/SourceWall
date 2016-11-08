@@ -27,7 +27,8 @@ public class SimpleCommentItemView extends AceView<UComment> {
 
     public SimpleCommentItemView(Context context) {
         super(context);
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(
+                Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_simple_comment_item_view, this);
         contentView = (TextView) findViewById(R.id.text_comment);
         authorView = (TextView) findViewById(R.id.text_author);
@@ -50,7 +51,8 @@ public class SimpleCommentItemView extends AceView<UComment> {
         dateView.setText(DateTimeUtil.time2HumanReadable(comment.getDate()));
         contentView.setText(comment.getContent());
         if (Config.shouldLoadImage()) {
-            ImageLoader.getInstance().displayImage(comment.getAuthor().getAvatar(), avatarImage, ImageUtils.avatarOptions);
+            ImageLoader.getInstance().displayImage(comment.getAuthor().getAvatar(), avatarImage,
+                    ImageUtils.avatarOptions);
         } else {
             avatarImage.setImageResource(R.drawable.default_avatar);
         }

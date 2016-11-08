@@ -28,7 +28,8 @@ public class AnswerListItemView extends AceView<Answer> {
 
     public AnswerListItemView(Context context) {
         super(context);
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(
+                Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_answer_item_view, this);
         contentView = (TextView) findViewById(R.id.web_content);
         authorView = (TextView) findViewById(R.id.text_author);
@@ -54,7 +55,8 @@ public class AnswerListItemView extends AceView<Answer> {
         authorTitleView.setText(answer.getAuthor().getTitle());
         dateView.setText(DateTimeUtil.time2HumanReadable(answer.getDate_created()));
         if (Config.shouldLoadImage()) {
-            ImageLoader.getInstance().displayImage(answer.getAuthor().getAvatar(), avatar, ImageUtils.avatarOptions);
+            ImageLoader.getInstance().displayImage(answer.getAuthor().getAvatar(), avatar,
+                    ImageUtils.avatarOptions);
         } else {
             avatar.setImageResource(R.drawable.default_avatar);
         }

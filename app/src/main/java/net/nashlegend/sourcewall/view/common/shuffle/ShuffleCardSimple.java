@@ -70,7 +70,8 @@ public class ShuffleCardSimple extends ShuffleCard {
 
     private PointF getCurrentButtonCenter() {
         if (currentButton != null) {
-            return new PointF(currentButton.getXX() + currentButton.getWidth() / 2, currentButton.getYY() + currentButton.getHeight() / 2);
+            return new PointF(currentButton.getXX() + currentButton.getWidth() / 2,
+                    currentButton.getYY() + currentButton.getHeight() / 2);
         } else {
             return null;
         }
@@ -255,7 +256,8 @@ public class ShuffleCardSimple extends ShuffleCard {
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            if ((currentButton == null && event.getAction() == MotionEvent.ACTION_DOWN) || currentButton == v) {
+            if ((currentButton == null && event.getAction() == MotionEvent.ACTION_DOWN)
+                    || currentButton == v) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         if (currentButton == null) {
@@ -282,14 +284,16 @@ public class ShuffleCardSimple extends ShuffleCard {
                             int span = 0;
                             if (rawY - ShuffleDesk.buttonHeight / 2 < top) {
                                 //速度小于0
-                                span = (int) (-minScrollSpeed + rawY - ShuffleDesk.buttonHeight / 2 - top);
+                                span = (int) (-minScrollSpeed + rawY - ShuffleDesk.buttonHeight / 2
+                                        - top);
                                 if (span < -maxScrollSpeed) {
                                     span = -maxScrollSpeed;
                                 }
                                 scrollView.scrollBy(0, span);
                                 offset = 0;
                             } else if (rawY + ShuffleDesk.buttonHeight / 2 > bottom) {
-                                span = (int) (minScrollSpeed + rawY + ShuffleDesk.buttonHeight / 2 - bottom);
+                                span = (int) (minScrollSpeed + rawY + ShuffleDesk.buttonHeight / 2
+                                        - bottom);
                                 if (span > maxScrollSpeed) {
                                     span = maxScrollSpeed;
                                 }

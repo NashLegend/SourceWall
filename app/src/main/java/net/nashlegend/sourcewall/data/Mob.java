@@ -16,9 +16,12 @@ public class Mob {
     public static final String Event_Modify_Tail = "Event_Modify_Tail";//修改小尾巴
     public static final String Event_Switch_Day_Night_Mode = "Event_Switch_Day_Night_Mode";//切换日夜模式
 
-    public static final String Event_Open_Image_From_Browser = "Event_Open_Image_From_Browser";//在WebView打开图片页面
-    public static final String Event_Open_Image_From_TextView = "Event_Open_Image_From_TextView";//在TextView打开图片页面
-    public static final String Event_Download_Image_In_Pager = "Event_Download_Image_In_Pager";//在ImageActivity下载图片
+    public static final String Event_Open_Image_From_Browser = "Event_Open_Image_From_Browser";
+//在WebView打开图片页面
+    public static final String Event_Open_Image_From_TextView = "Event_Open_Image_From_TextView";
+//在TextView打开图片页面
+    public static final String Event_Download_Image_In_Pager = "Event_Download_Image_In_Pager";
+//在ImageActivity下载图片
 
     //科学人
     public static final String Event_Open_Article = "Event_Open_Article";//打开文章
@@ -27,10 +30,14 @@ public class Mob {
     public static final String Event_Favor_Article = "Event_Favor_Article";//收藏文章
     public static final String Event_Recommend_Article = "Event_Recommend_Article";//推荐文章
     public static final String Event_Reply_Article = "Event_Reply_Article";//回复文章
-    public static final String Event_Share_Article_To_Wechat_Circle = "Event_Share_Article_To_Wechat_Circle";//分享文章到朋友圈
-    public static final String Event_Share_Article_To_Wechat_friend = "Event_Share_Article_To_Wechat_friend";//分享文章给微信朋友
-    public static final String Event_Share_Article_To_Weibo = "Event_Share_Article_To_Weibo";//分享文章到新浪微博
-    public static final String Event_Open_Article_In_Browser = "Event_Open_Article_In_Browser";//打浏览器中打开文章
+    public static final String Event_Share_Article_To_Wechat_Circle =
+            "Event_Share_Article_To_Wechat_Circle";//分享文章到朋友圈
+    public static final String Event_Share_Article_To_Wechat_friend =
+            "Event_Share_Article_To_Wechat_friend";//分享文章给微信朋友
+    public static final String Event_Share_Article_To_Weibo = "Event_Share_Article_To_Weibo";
+//分享文章到新浪微博
+    public static final String Event_Open_Article_In_Browser = "Event_Open_Article_In_Browser";
+//打浏览器中打开文章
 
     //小组
     public static final String Event_Open_Post = "Event_Open_Post";//打开贴子
@@ -40,8 +47,10 @@ public class Mob {
     public static final String Event_Favor_Post = "Event_Favor_Post";//收藏贴子
     public static final String Event_Reply_Post = "Event_Reply_Post";//回复贴子
     public static final String Event_Reply_Post_Anon = "Event_Reply_Post_Anon";//匿名回复贴子
-    public static final String Event_Share_Post_To_Wechat_Circle = "Event_Share_Post_To_Wechat_Circle";//分享贴子到朋友圈
-    public static final String Event_Share_Post_To_Wechat_friend = "Event_Share_Post_To_Wechat_friend";//分享贴子到微信好友
+    public static final String Event_Share_Post_To_Wechat_Circle =
+            "Event_Share_Post_To_Wechat_Circle";//分享贴子到朋友圈
+    public static final String Event_Share_Post_To_Wechat_friend =
+            "Event_Share_Post_To_Wechat_friend";//分享贴子到微信好友
     public static final String Event_Share_Post_To_Weibo = "Event_Share_Post_To_Weibo";//分享贴子到新浪微博
     public static final String Event_Open_Post_In_Browser = "Event_Open_Post_In_Browser";//打浏览器中打开贴子
     public static final String Event_Publish_Post = "Event_Publish_Post";//用户发贴
@@ -58,9 +67,12 @@ public class Mob {
     public static final String Event_Answer_Question = "Event_Answer_Question";//回答问题
     public static final String Event_Follow_Question = "Event_Follow_Question";//关注问题
     public static final String Event_Unfollow_Question = "Event_Unfollow_Question";//取关问题
-    public static final String Event_Share_Question_To_Wechat_Circle = "Event_Share_Question_To_Wechat_Circle";//分享问题到朋友圈
-    public static final String Event_Share_Question_To_Wechat_friend = "Event_Share_Question_To_Wechat_friend";//分享问题到微信好友
-    public static final String Event_Share_Question_To_Weibo = "Event_Share_Question_To_Weibo";//分享问题到新浪微博
+    public static final String Event_Share_Question_To_Wechat_Circle =
+            "Event_Share_Question_To_Wechat_Circle";//分享问题到朋友圈
+    public static final String Event_Share_Question_To_Wechat_friend =
+            "Event_Share_Question_To_Wechat_friend";//分享问题到微信好友
+    public static final String Event_Share_Question_To_Weibo = "Event_Share_Question_To_Weibo";
+//分享问题到新浪微博
     public static final String Event_Open_Question_In_Browser = "Event_Open_Question_In_Browser";
     public static final String Event_Open_Answer = "Event_Open_Answer";//打开答案
     public static final String Event_Open_Answer_Comment = "Event_Open_Answer_Comment";//打开答案评论

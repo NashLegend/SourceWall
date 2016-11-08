@@ -7,11 +7,16 @@ package net.nashlegend.sourcewall.data;
 public class Consts {
 
     public static final class Actions {
-        public static final String Action_Start_Loading_Latest = "sourcewall.action.start.loading.latest";
-        public static final String Action_Finish_Loading_Latest = "sourcewall.action.end.loading.latest";
-        public static final String Action_Open_Articles_Fragment = "sourcewall.action.open.articles.fragment";
-        public static final String Action_Open_Posts_Fragment = "sourcewall.action.open.posts.fragment";
-        public static final String Action_Open_Questions_Fragment = "sourcewall.action.open.questions.fragment";
+        public static final String Action_Start_Loading_Latest =
+                "sourcewall.action.start.loading.latest";
+        public static final String Action_Finish_Loading_Latest =
+                "sourcewall.action.end.loading.latest";
+        public static final String Action_Open_Articles_Fragment =
+                "sourcewall.action.open.articles.fragment";
+        public static final String Action_Open_Posts_Fragment =
+                "sourcewall.action.open.posts.fragment";
+        public static final String Action_Open_Questions_Fragment =
+                "sourcewall.action.open.questions.fragment";
     }
 
 
@@ -25,17 +30,22 @@ public class Consts {
         public static final String Extra_Answer = "sourcewall.extra.answer";
         public static final String Extra_SubItem = "sourcewall.extra.subitem";
         public static final String Extra_SubItem_ID = "sourcewall.extra.subitem.id";
-        public static final String Extra_Should_Invalidate_Menu = "sourcewall.extra.should.invalidate.menu";
-        public static final String Extra_Should_Load_Before_Shuffle = "sourcewall.extra.should.load.before.shuffle";
+        public static final String Extra_Should_Invalidate_Menu =
+                "sourcewall.extra.should.invalidate.menu";
+        public static final String Extra_Should_Load_Before_Shuffle =
+                "sourcewall.extra.should.load.before.shuffle";
         public static final String Extra_Redirect_Uri = "sourcewall.extra.redirect.url";//通知的跳转链接
         public static final String Extra_Notice_Id = "sourcewall.extra.notice.id";//通知id
-        public static final String Extra_Image_String_Array = "sourcewall.extra.image.string.array";//图片Activity接收的图片地址们
-        public static final String Extra_Image_Current_Position = "sourcewall.extra.image.current.position";//图片Activity刚进入时打开的图片
+        public static final String Extra_Image_String_Array = "sourcewall.extra.image.string.array";
+//图片Activity接收的图片地址们
+        public static final String Extra_Image_Current_Position =
+                "sourcewall.extra.image.current.position";//图片Activity刚进入时打开的图片
         public static final String Extra_Shared_Url = "sourcewall.extra.share.url";//分享的url地址
         public static final String Extra_Shared_Title = "sourcewall.extra.share.title";//分享的标题
         public static final String Extra_Shared_Summary = "sourcewall.extra.share.summary";//分享的标题
         public static final String Extra_Shared_Bitmap = "sourcewall.extra.share.bitmap";//分享的图片
-        public static final String Extra_Activity_Hashcode = "sourcewall.extra.activity.hashcode";//分享的图片
+        public static final String Extra_Activity_Hashcode = "sourcewall.extra.activity.hashcode";
+//分享的图片
     }
 
     public static final class Keys {
@@ -48,27 +58,38 @@ public class Consts {
         public static final String Key_User_ID = "sourcewall.key.user.id";
         public static final String Key_User_Avatar = "sourcewall.key.user.avatar";
         public static final String Key_Is_Night_Mode = "sourcewall.key.is.night.mode";
-        public static final String Key_Last_Post_Groups_Version = "sourcewall.key.last.post.groups.version";
-        public static final String Key_Last_Ask_Tags_Version = "sourcewall.key.last.ask.tag.groups.version";
-        public static final String Key_Last_Basket_Version = "sourcewall.key.last.basket.groups.version";
+        public static final String Key_Last_Post_Groups_Version =
+                "sourcewall.key.last.post.groups.version";
+        public static final String Key_Last_Ask_Tags_Version =
+                "sourcewall.key.last.ask.tag.groups.version";
+        public static final String Key_Last_Basket_Version =
+                "sourcewall.key.last.basket.groups.version";
         public static final String Key_Image_Load_Mode = "sourcewall.key.image.load.mode";
-        public static final String Key_Image_No_Load_Homepage = "sourcewall.key.image.no.load.homepage";
-        public static final String Key_Show_Group_First_Homepage = "sourcewall.key.show.group.first.homepage";
+        public static final String Key_Image_No_Load_Homepage =
+                "sourcewall.key.image.no.load.homepage";
+        public static final String Key_Show_Group_First_Homepage =
+                "sourcewall.key.show.group.first.homepage";
         public static final String Key_I_Hate_Badge = "sourcewall.key.i.hate.badge";
         public static final String Key_Reply_With_Simple = "sourcewall.key.reply.with.simple";
         public static final String Key_Use_Tail_Type = "sourcewall.key.use.tail.type";
         public static final String Key_Custom_Tail = "sourcewall.key.custom.tail";
         public static final String Key_Swipe_Any_Where = "sourcewall.key.swipe_any_where";
-        public static final String Key_User_Has_Learned_Load_My_Groups = "sourcewall.key.user.has.learned.load.my.groups";
-        public static final String Key_User_Has_Learned_Load_My_Tags = "sourcewall.key.user.has.learned.load.my.tags";
-        public static final String Key_User_Has_Learned_Add_Image = "sourcewall.key.user.has.learned.add.image";
+        public static final String Key_User_Has_Learned_Load_My_Groups =
+                "sourcewall.key.user.has.learned.load.my.groups";
+        public static final String Key_User_Has_Learned_Load_My_Tags =
+                "sourcewall.key.user.has.learned.load.my.tags";
+        public static final String Key_User_Has_Learned_Add_Image =
+                "sourcewall.key.user.has.learned.add.image";
 
         // 保存SharedPreferences的Key，用于保存草稿
         public static final String Key_Sketch_Article_Reply = "sourcewall.key.sketch.article.reply";
         public static final String Key_Sketch_Post_Reply = "sourcewall.key.sketch.post.reply";
-        public static final String Key_Sketch_Question_Answer = "sourcewall.key.sketch.question.answer";
-        public static final String Key_Sketch_Publish_Post_Title = "sourcewall.key.sketch.publish.post.title";
-        public static final String Key_Sketch_Publish_Post_Content = "sourcewall.key.sketch.publish.post.content";
+        public static final String Key_Sketch_Question_Answer =
+                "sourcewall.key.sketch.question.answer";
+        public static final String Key_Sketch_Publish_Post_Title =
+                "sourcewall.key.sketch.publish.post.title";
+        public static final String Key_Sketch_Publish_Post_Content =
+                "sourcewall.key.sketch.publish.post.content";
     }
 
     public static final class RequestCode {

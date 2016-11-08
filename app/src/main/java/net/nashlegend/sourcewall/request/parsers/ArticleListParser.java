@@ -14,7 +14,8 @@ import java.util.ArrayList;
  */
 public class ArticleListParser implements Parser<ArrayList<Article>> {
     @Override
-    public ArrayList<Article> parse(String jString, ResponseObject<ArrayList<Article>> responseObject) throws Exception {
+    public ArrayList<Article> parse(String jString,
+            ResponseObject<ArrayList<Article>> responseObject) throws Exception {
         ArrayList<Article> articleList = new ArrayList<>();
         JSONArray articles = JsonHandler.getUniversalJsonArray(jString, responseObject);
         assert articles != null;

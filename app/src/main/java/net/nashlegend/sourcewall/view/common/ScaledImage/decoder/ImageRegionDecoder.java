@@ -7,7 +7,8 @@ import android.graphics.Rect;
 import android.net.Uri;
 
 /**
- * Interface for image decoding classes, allowing the default {@link android.graphics.BitmapRegionDecoder}
+ * Interface for image decoding classes, allowing the default {@link
+ * android.graphics.BitmapRegionDecoder}
  * based on the Skia library to be replaced with a custom class.
  */
 public interface ImageRegionDecoder {
@@ -27,9 +28,12 @@ public interface ImageRegionDecoder {
     Point init(Context context, Uri uri) throws Exception;
 
     /**
-     * Decode a region of the image with the given sample size. This method is called off the UI thread so it can safely
-     * load the image on the current thread. It is called from an {@link android.os.AsyncTask} running in a single
-     * threaded executor, and while a synchronization lock is held on this object, so will never be called concurrently
+     * Decode a region of the image with the given sample size. This method is called off the UI
+     * thread so it can safely
+     * load the image on the current thread. It is called from an {@link android.os.AsyncTask}
+     * running in a single
+     * threaded executor, and while a synchronization lock is held on this object, so will never be
+     * called concurrently
      * even if the decoder implementation supports it.
      *
      * @param sRect      Source image rectangle to decode.
@@ -46,7 +50,8 @@ public interface ImageRegionDecoder {
     boolean isReady();
 
     /**
-     * This method will be called when the decoder is no longer required. It should clean up any resources still in use.
+     * This method will be called when the decoder is no longer required. It should clean up any
+     * resources still in use.
      */
     void recycle();
 

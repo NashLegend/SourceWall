@@ -173,7 +173,9 @@ public class LoginActivity extends BaseActivity {
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String lazyLoad = "http://m.guokr.com/sso/mobile/?suppress_prompt=1&lazy=y&success=http%3A%2F%2Fm.guokr.com%2F";
+                        String lazyLoad =
+                                "http://m.guokr"
+                                        + ".com/sso/mobile/?suppress_prompt=1&lazy=y&success=http%3A%2F%2Fm.guokr.com%2F";
                         webView.loadUrl(lazyLoad);
                     }
                 })

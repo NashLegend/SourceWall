@@ -48,22 +48,28 @@ public class ErrorUtils {
             OutputStreamWriter writer = null;
             BufferedWriter out = null;
             try {
-                SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss.SSS", Locale.CHINA);
+                SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss.SSS",
+                        Locale.CHINA);
                 GregorianCalendar calendar = new GregorianCalendar();
                 String tempName = format.format(new Date(calendar.getTimeInMillis()));
-                if (responseObject.requestObject != null && responseObject.requestObject.url != null) {
-                    tempName += "_" + responseObject.requestObject.url.replaceAll("/", "_").replaceAll(":", "") + ".txt";
+                if (responseObject.requestObject != null
+                        && responseObject.requestObject.url != null) {
+                    tempName += "_" + responseObject.requestObject.url.replaceAll("/",
+                            "_").replaceAll(":", "") + ".txt";
                 } else {
                     tempName += "_other" + ".txt";
                 }
-                File file = new File(App.getApp().getExternalFilesDir("log" + File.separator + "request"), tempName);
+                File file = new File(
+                        App.getApp().getExternalFilesDir("log" + File.separator + "request"),
+                        tempName);
                 if (file.exists()) {
                     file.delete();
                 } else {
                     file.getParentFile().mkdirs();
                 }
                 file.createNewFile();
-                writer = new OutputStreamWriter(new FileOutputStream(file), Charset.forName("utf-8"));
+                writer = new OutputStreamWriter(new FileOutputStream(file),
+                        Charset.forName("utf-8"));
                 out = new BufferedWriter(writer, 4196);
                 out.write(info);
                 out.flush();
@@ -80,7 +86,8 @@ public class ErrorUtils {
         StringBuilder builder = new StringBuilder();
         try {
             builder.append("Is Wifi Connected:").append(DeviceUtil.isWifiConnected()).append("\n");
-            builder.append("Is Mobile Network Connected:").append(DeviceUtil.isMobileNetworkConnected()).append("\n\n");
+            builder.append("Is Mobile Network Connected:").append(
+                    DeviceUtil.isMobileNetworkConnected()).append("\n\n");
             builder.append(response.dump());
             if (response.throwable != null) {
                 builder.append("\n================================= \n\n")

@@ -17,7 +17,8 @@ import java.util.regex.Pattern;
  */
 public class PostHtmlListParser implements Parser<ArrayList<Post>> {
     @Override
-    public ArrayList<Post> parse(String html, ResponseObject<ArrayList<Post>> responseObject) throws Exception {
+    public ArrayList<Post> parse(String html, ResponseObject<ArrayList<Post>> responseObject)
+            throws Exception {
         ArrayList<Post> list = new ArrayList<>();
         Document doc = Jsoup.parse(html);
         Elements elements = doc.getElementsByClass(" post-index-list");
@@ -29,8 +30,10 @@ public class PostHtmlListParser implements Parser<ArrayList<Post>> {
                 String postTitle = link.text();
                 String postUrl = link.attr("href");
                 String postImageUrl = "";
-                int postLike = Integer.valueOf(aPostlist.getElementsByClass("like-num").text().replaceAll("\\D*", ""));
-                int postComm = Integer.valueOf(aPostlist.getElementsByClass("post-reply-num").text().replaceAll("\\D*", ""));
+                int postLike = Integer.valueOf(aPostlist.getElementsByClass(
+                        "like-num").text().replaceAll("\\D*", ""));
+                int postComm = Integer.valueOf(aPostlist.getElementsByClass(
+                        "post-reply-num").text().replaceAll("\\D*", ""));
                 String content = aPostlist.getElementsByClass("post-info-content").text();
                 String reg = "(\\S+)\\s+发表于\\s+(\\S+)";
                 Matcher matcher = Pattern.compile(reg).matcher(content);

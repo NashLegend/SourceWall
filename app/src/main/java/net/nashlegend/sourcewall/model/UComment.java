@@ -26,10 +26,6 @@ public class UComment extends AceModel {
 
     /**
      * 缺少articleId与articleTitle
-     *
-     * @param replyObject
-     * @return
-     * @throws Exception
      */
     public static UComment fromArticleJson(JSONObject replyObject) throws Exception {
         UComment comment = new UComment();
@@ -48,7 +44,8 @@ public class UComment extends AceModel {
         return comment;
     }
 
-    public static UComment fromArticleJson(String article_id, String article_title, JSONObject replyObject) throws Exception {
+    public static UComment fromArticleJson(String article_id, String article_title,
+            JSONObject replyObject) throws Exception {
         UComment comment = fromArticleJson(replyObject);
         comment.setHostID(article_id);
         comment.setHostTitle(article_title);

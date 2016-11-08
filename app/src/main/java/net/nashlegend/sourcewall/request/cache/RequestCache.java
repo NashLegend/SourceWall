@@ -84,7 +84,8 @@ public class RequestCache {
                     }
                     if (getUsableSpace(diskCacheDir) > mCacheParams.diskCacheSize) {
                         try {
-                            mDiskLruCache = DiskLruCache.open(diskCacheDir, App.getVersionInt(), 1, mCacheParams.diskCacheSize);
+                            mDiskLruCache = DiskLruCache.open(diskCacheDir, App.getVersionInt(), 1,
+                                    mCacheParams.diskCacheSize);
                         } catch (final IOException e) {
                             mCacheParams.diskCacheDir = null;
                         }
@@ -136,13 +137,11 @@ public class RequestCache {
 
     /**
      * 返回缓存的文件地址
-     *
-     * @param data
-     * @return
      */
     @Nullable
     public String getCachedFile(String data) {
-        File file = new File(getDiskCacheDir(App.getApp(), "request.cache"), hashKeyForDisk(data) + ".0");
+        File file = new File(getDiskCacheDir(App.getApp(), "request.cache"),
+                hashKeyForDisk(data) + ".0");
         if (file.exists()) {
             return file.getAbsolutePath();
         } else {
@@ -338,7 +337,8 @@ public class RequestCache {
 
         public void setMemCacheSizePercent(float percent) {
             if (percent < 0.01f || percent > 0.8f) {
-                throw new IllegalArgumentException("setMemCacheSizePercent - percent must be " + "between 0.01 and 0.8 (inclusive)");
+                throw new IllegalArgumentException("setMemCacheSizePercent - percent must be "
+                        + "between 0.01 and 0.8 (inclusive)");
             }
             memCacheSize = Math.round(percent * Runtime.getRuntime().maxMemory() / 1024);
         }
@@ -346,7 +346,8 @@ public class RequestCache {
 
     public static File getDiskCacheDir(Context context, String uniqueName) {
         File file = null;
-        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) || !isExternalStorageRemovable()) {
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
+                || !isExternalStorageRemovable()) {
             file = getExternalCacheDir(context);
         }
         if (file == null || (!file.exists() && !file.mkdirs())) {

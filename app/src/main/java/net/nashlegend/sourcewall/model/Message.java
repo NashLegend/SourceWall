@@ -45,8 +45,6 @@ public class Message extends AceModel {
 
     /**
      * html格式
-     *
-     * @return
      */
     public String getContent() {
         return content;

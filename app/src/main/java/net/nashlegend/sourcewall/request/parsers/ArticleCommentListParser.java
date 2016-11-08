@@ -24,7 +24,8 @@ public class ArticleCommentListParser implements Parser<ArrayList<UComment>> {
     }
 
     @Override
-    public ArrayList<UComment> parse(String response, ResponseObject<ArrayList<UComment>> responseObject) throws Exception {
+    public ArrayList<UComment> parse(String response,
+            ResponseObject<ArrayList<UComment>> responseObject) throws Exception {
         ArrayList<UComment> list = new ArrayList<>();
         JSONArray articles = JsonHandler.getUniversalJsonArray(response, responseObject);
         if (articles != null) {

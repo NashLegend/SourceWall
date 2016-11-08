@@ -6,8 +6,6 @@ import android.support.annotation.Nullable;
 
 /**
  * http 请求基本回调
- *
- * @param <T>
  */
 public class SimpleCallBack<T> implements RequestCallBack<T> {
     @Override

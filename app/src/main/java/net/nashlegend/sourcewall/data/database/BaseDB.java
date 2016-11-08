@@ -17,7 +17,8 @@ public class BaseDB {
 
     public static DaoMaster getDaoMaster() {
         if (daoMaster == null) {
-            DaoMaster.OpenHelper helper = new DaoMaster.DevOpenHelper(App.getApp(), BaseDB.DB_NAME, null);
+            DaoMaster.OpenHelper helper = new DaoMaster.DevOpenHelper(App.getApp(), BaseDB.DB_NAME,
+                    null);
             daoMaster = new DaoMaster(helper.getWritableDatabase());
         }
         return daoMaster;

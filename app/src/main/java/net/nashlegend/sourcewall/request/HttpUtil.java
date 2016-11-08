@@ -104,14 +104,17 @@ public class HttpUtil {
                 } else if ("_32353_ukey".equals(paramName) && paramValue.length() > 0) {
                     hasUkey = true;
                 }
-                cookies.add(new Cookie.Builder().domain("guokr.com").name(paramName).value(paramValue).build());
+                cookies.add(new Cookie.Builder().domain("guokr.com").name(paramName).value(
+                        paramValue).build());
             }
         }
         if (!hasToken) {
-            cookies.add(new Cookie.Builder().domain("guokr.com").name("_32353_access_token").value(UserAPI.getToken()).build());
+            cookies.add(new Cookie.Builder().domain("guokr.com").name("_32353_access_token").value(
+                    UserAPI.getToken()).build());
         }
         if (!hasUkey) {
-            cookies.add(new Cookie.Builder().domain("guokr.com").name("_32353_ukey").value(UserAPI.getUkey()).build());
+            cookies.add(new Cookie.Builder().domain("guokr.com").name("_32353_ukey").value(
+                    UserAPI.getUkey()).build());
         }
         client.cookieJar().saveFromResponse(HttpUrl.parse("http://www.guokr.com/"), cookies);
         client.cookieJar().saveFromResponse(HttpUrl.parse("http://apis.guokr.com/"), cookies);

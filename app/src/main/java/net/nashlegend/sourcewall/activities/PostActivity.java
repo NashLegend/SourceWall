@@ -64,7 +64,8 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Func1;
 
-public class PostActivity extends BaseActivity implements LListView.OnRefreshListener, View.OnClickListener, LoadingView.ReloadListener {
+public class PostActivity extends BaseActivity implements LListView.OnRefreshListener,
+        View.OnClickListener, LoadingView.ReloadListener {
     private LListView listView;
     private final PostDetailAdapter adapter;
     private Post post;
@@ -139,7 +140,8 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
 
         floatingActionsMenu = (FloatingActionsMenu) findViewById(R.id.layout_operation);
         FloatingActionButton replyButton = (FloatingActionButton) findViewById(R.id.button_reply);
-        FloatingActionButton recomButton = (FloatingActionButton) findViewById(R.id.button_recommend);
+        FloatingActionButton recomButton = (FloatingActionButton) findViewById(
+                R.id.button_recommend);
         FloatingActionButton favorButton = (FloatingActionButton) findViewById(R.id.button_favor);
 
         replyButton.setOnClickListener(this);
@@ -147,7 +149,8 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
         favorButton.setOnClickListener(this);
 
         headerHeight = (int) getResources().getDimension(R.dimen.actionbar_height);
-        AutoHideUtil.applyListViewAutoHide(this, listView, (int) getResources().getDimension(R.dimen.actionbar_height), autoHideListener);
+        AutoHideUtil.applyListViewAutoHide(this, listView,
+                (int) getResources().getDimension(R.dimen.actionbar_height), autoHideListener);
         floatingActionsMenu.setVisibility(View.GONE);
         loadData(-1);
 
@@ -206,7 +209,8 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
                 break;
             case R.id.action_goto_group:
                 if (post != null && !TextUtils.isEmpty(post.getGroupID())) {
-                    UrlCheckUtil.redirectRequest("http://m.guokr.com/group/" + post.getGroupID() + "/");
+                    UrlCheckUtil.redirectRequest(
+                            "http://m.guokr.com/group/" + post.getGroupID() + "/");
                 }
                 break;
             case R.id.action_open_in_browser:
@@ -217,11 +221,13 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
                 break;
             case R.id.action_share_to_wechat_circle:
                 Mob.onEvent(Mob.Event_Share_Post_To_Wechat_Circle);
-                ShareUtil.shareToWeiXinCircle(App.getApp(), post.getUrl(), post.getTitle(), post.getTitle(), null);
+                ShareUtil.shareToWeiXinCircle(App.getApp(), post.getUrl(), post.getTitle(),
+                        post.getTitle(), null);
                 break;
             case R.id.action_share_to_wechat_friends:
                 Mob.onEvent(Mob.Event_Share_Post_To_Wechat_friend);
-                ShareUtil.shareToWeiXinFriends(App.getApp(), post.getUrl(), post.getTitle(), post.getTitle(), null);
+                ShareUtil.shareToWeiXinFriends(App.getApp(), post.getUrl(), post.getTitle(),
+                        post.getTitle(), null);
                 break;
             case R.id.action_share_to_weibo:
                 Mob.onEvent(Mob.Event_Share_Post_To_Weibo);
@@ -421,18 +427,19 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
                 .setReasonListener(new ReportDialog.ReportReasonListener() {
                     @Override
                     public void onGetReason(final Dialog dia, String reason) {
-                        PostAPI.reportReply(uComment.getID(), reason, new SimpleCallBack<Boolean>() {
-                            @Override
-                            public void onFailure() {
-                                ToastUtil.toastBigSingleton("举报未遂……");
-                            }
+                        PostAPI.reportReply(uComment.getID(), reason,
+                                new SimpleCallBack<Boolean>() {
+                                    @Override
+                                    public void onFailure() {
+                                        ToastUtil.toastBigSingleton("举报未遂……");
+                                    }
 
-                            @Override
-                            public void onSuccess() {
-                                UiUtil.dismissDialog(dia);
-                                ToastUtil.toastBigSingleton("举报成功");
-                            }
-                        });
+                                    @Override
+                                    public void onSuccess() {
+                                        UiUtil.dismissDialog(dia);
+                                        ToastUtil.toastBigSingleton("举报成功");
+                                    }
+                                });
                     }
                 })
                 .create()
@@ -494,7 +501,8 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
 
     private void copyComment(UComment comment) {
         ClipboardManager manager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-        manager.setPrimaryClip(ClipData.newPlainText(null, RegUtil.html2PlainText(comment.getContent())));
+        manager.setPrimaryClip(
+                ClipData.newPlainText(null, RegUtil.html2PlainText(comment.getContent())));
         toast(R.string.copy_success);
     }
 
@@ -572,9 +580,13 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
             }
             if (hideAnimatorSet == null || !hideAnimatorSet.isRunning()) {
                 hideAnimatorSet = new AnimatorSet();
-                ObjectAnimator headerAnimator = ObjectAnimator.ofFloat(appbar, "translationY", appbar.getTranslationY(), -headerHeight);
-                ObjectAnimator header2Animator = ObjectAnimator.ofFloat(progressBar, "translationY", progressBar.getTranslationY(), -headerHeight);
-                ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(floatingActionsMenu, "translationY", floatingActionsMenu.getTranslationY(), floatingActionsMenu.getHeight());
+                ObjectAnimator headerAnimator = ObjectAnimator.ofFloat(appbar, "translationY",
+                        appbar.getTranslationY(), -headerHeight);
+                ObjectAnimator header2Animator = ObjectAnimator.ofFloat(progressBar, "translationY",
+                        progressBar.getTranslationY(), -headerHeight);
+                ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(floatingActionsMenu,
+                        "translationY", floatingActionsMenu.getTranslationY(),
+                        floatingActionsMenu.getHeight());
                 ArrayList<Animator> animators = new ArrayList<>();
                 animators.add(headerAnimator);
                 animators.add(header2Animator);
@@ -592,9 +604,12 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
             }
             if (backAnimatorSet == null || !backAnimatorSet.isRunning()) {
                 backAnimatorSet = new AnimatorSet();
-                ObjectAnimator headerAnimator = ObjectAnimator.ofFloat(appbar, "translationY", appbar.getTranslationY(), 0f);
-                ObjectAnimator header2Animator = ObjectAnimator.ofFloat(progressBar, "translationY", progressBar.getTranslationY(), 0f);
-                ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(floatingActionsMenu, "translationY", floatingActionsMenu.getTranslationY(), 0f);
+                ObjectAnimator headerAnimator = ObjectAnimator.ofFloat(appbar, "translationY",
+                        appbar.getTranslationY(), 0f);
+                ObjectAnimator header2Animator = ObjectAnimator.ofFloat(progressBar, "translationY",
+                        progressBar.getTranslationY(), 0f);
+                ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(floatingActionsMenu,
+                        "translationY", floatingActionsMenu.getTranslationY(), 0f);
                 ArrayList<Animator> animators = new ArrayList<>();
                 animators.add(headerAnimator);
                 animators.add(header2Animator);
@@ -669,14 +684,20 @@ public class PostActivity extends BaseActivity implements LListView.OnRefreshLis
                         listView.doneOperation();
                     }
                 })
-                .map(new Func1<ResponseObject<ArrayList<UComment>>, ResponseObject<ArrayList<UComment>>>() {
+                .map(new Func1<ResponseObject<ArrayList<UComment>>,
+                        ResponseObject<ArrayList<UComment>>>() {
                     @Override
-                    public ResponseObject<ArrayList<UComment>> call(ResponseObject<ArrayList<UComment>> responseObject) {
+                    public ResponseObject<ArrayList<UComment>> call(
+                            ResponseObject<ArrayList<UComment>> responseObject) {
                         if (responseObject.ok && responseObject.result != null) {
                             for (UComment comment : responseObject.result) {
-                                String cid = comment.getAuthor().isExists() ? comment.getAuthor().getId() : null;
+                                String cid =
+                                        comment.getAuthor().isExists() ? comment.getAuthor().getId()
+                                                : null;
                                 String hid = post == null ? null : post.getAuthor().getId();
-                                comment.setHostAuthor(!"蒙面超人".equals(comment.getAuthor().getName()) && cid != null && cid.length() > 3 && cid.equals(hid));
+                                comment.setHostAuthor(
+                                        !"蒙面超人".equals(comment.getAuthor().getName()) && cid != null
+                                                && cid.length() > 3 && cid.equals(hid));
                             }
                         }
                         return responseObject;

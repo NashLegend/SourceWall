@@ -36,7 +36,8 @@ import rx.functions.Action0;
 /**
  * Created by NashLegend on 2014/9/18 0018
  */
-public class FavorsFragment extends BaseFragment implements OnRefreshListener, ReloadListener, OnItemClickListener {
+public class FavorsFragment extends BaseFragment implements OnRefreshListener, ReloadListener,
+        OnItemClickListener {
 
     View layoutView;
     @BindView(R.id.list_favors)
@@ -66,7 +67,8 @@ public class FavorsFragment extends BaseFragment implements OnRefreshListener, R
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
         if (layoutView == null) {
             layoutView = inflater.inflate(R.layout.fragment_favors, container, false);
             ButterKnife.bind(this, layoutView);
@@ -138,7 +140,8 @@ public class FavorsFragment extends BaseFragment implements OnRefreshListener, R
 
     private void loadFavors(final int offset) {
         Observable<ResponseObject<ArrayList<Favor>>> observable =
-                FavorAPI.getFavorList(subItem.getValue(), offset, offset == 0 && adapter.getList().size() == 0);
+                FavorAPI.getFavorList(subItem.getValue(), offset,
+                        offset == 0 && adapter.getList().size() == 0);
         observable
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnUnsubscribe(new Action0() {

@@ -59,7 +59,8 @@ public class PostListActivity extends BaseActivity {
                     toastSingleton("小组不存在");
                     finish();
                 } else {
-                    SubItem subItem = new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, "某小组", subId);
+                    SubItem subItem = new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel,
+                            "某小组", subId);
                     onGetSubItem(subItem);
                     toastSingleton("获取小组信息失败");
                 }
@@ -67,7 +68,8 @@ public class PostListActivity extends BaseActivity {
 
             @Override
             public void onSuccess(@NonNull String result) {
-                SubItem subItem = new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel, result, subId);
+                SubItem subItem = new SubItem(SubItem.Section_Post, SubItem.Type_Single_Channel,
+                        result, subId);
                 onGetSubItem(subItem);
             }
         });

@@ -94,9 +94,11 @@ public class InputDialog extends Dialog {
 
         public InputDialog create() {
             dialog = new InputDialog(mContext);
-            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Service.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(
+                    Service.LAYOUT_INFLATER_SERVICE);
             View layout = inflater.inflate(resID, null);
-            dialog.setContentView(layout, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+            dialog.setContentView(layout,
+                    new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
             dialog.setCancelable(cancelable);
             dialog.setTitle(title);
             dialog.setCanceledOnTouchOutside(canceledOnTouchOutside);

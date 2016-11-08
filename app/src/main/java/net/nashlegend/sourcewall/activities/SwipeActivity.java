@@ -147,7 +147,8 @@ public class SwipeActivity extends AppCompatActivity {
         startActivityForResult(intent, requestCode, R.anim.slide_in_right, 0);
     }
 
-    public void startActivityForResult(Intent intent, int requestCode, int enterAnim, int exitAnim) {
+    public void startActivityForResult(Intent intent, int requestCode, int enterAnim,
+            int exitAnim) {
         try {
             super.startActivityForResult(intent, requestCode);
         } catch (Exception e) {
@@ -254,13 +255,15 @@ public class SwipeActivity extends AppCompatActivity {
                     }
                 } else if (ev.getAction() == MotionEvent.ACTION_DOWN
                         && ev.getX() < sideWidth
-                        && ev.getY() > DisplayUtil.getStatusBarHeight(SwipeActivity.this) + getResources().getDimension(R.dimen.actionbar_height)) {
+                        && ev.getY() > DisplayUtil.getStatusBarHeight(SwipeActivity.this)
+                        + getResources().getDimension(R.dimen.actionbar_height)) {
                     canSwipe = true;
                     tracker = VelocityTracker.obtain();
                     return true;
                 }
             }
-            if (ev.getAction() == MotionEvent.ACTION_UP || ev.getAction() == MotionEvent.ACTION_CANCEL) {
+            if (ev.getAction() == MotionEvent.ACTION_UP
+                    || ev.getAction() == MotionEvent.ACTION_CANCEL) {
                 ignoreSwipe = false;
             }
             return super.dispatchTouchEvent(ev);
@@ -367,7 +370,9 @@ public class SwipeActivity extends AppCompatActivity {
         private void animateFinish(boolean withVel) {
             cancelPotentialAnimation();
             animator = ObjectAnimator.ofFloat(this, "contentX", getContentX(), screenWidth);
-            int tmpDuration = withVel ? ((int) (duration * (screenWidth - getContentX()) / screenWidth)) : duration;
+            int tmpDuration =
+                    withVel ? ((int) (duration * (screenWidth - getContentX()) / screenWidth))
+                            : duration;
             if (tmpDuration < 100) {
                 tmpDuration = 100;
             }
@@ -405,13 +410,15 @@ public class SwipeActivity extends AppCompatActivity {
 
         private void animateFromVelocity(float v) {
             if (v > 0) {
-                if (getContentX() < screenWidth / 3 && v * duration / 1000 + getContentX() < screenWidth / 3) {
+                if (getContentX() < screenWidth / 3
+                        && v * duration / 1000 + getContentX() < screenWidth / 3) {
                     animateBack(false);
                 } else {
                     animateFinish(true);
                 }
             } else {
-                if (getContentX() > screenWidth / 3 && v * duration / 1000 + getContentX() > screenWidth / 3) {
+                if (getContentX() > screenWidth / 3
+                        && v * duration / 1000 + getContentX() > screenWidth / 3) {
                     animateFinish(false);
                 } else {
                     animateBack(true);

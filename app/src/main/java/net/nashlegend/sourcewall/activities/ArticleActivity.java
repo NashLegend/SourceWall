@@ -66,7 +66,8 @@ import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 
-public class ArticleActivity extends BaseActivity implements OnRefreshListener, OnClickListener, ReloadListener {
+public class ArticleActivity extends BaseActivity implements OnRefreshListener, OnClickListener,
+        ReloadListener {
 
     private LListView listView;
     private ArticleDetailAdapter adapter;
@@ -102,7 +103,8 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
         setSupportActionBar(toolbar);
         floatingActionsMenu = (FloatingActionsMenu) findViewById(R.id.layout_operation);
         FloatingActionButton replyButton = (FloatingActionButton) findViewById(R.id.button_reply);
-        FloatingActionButton recomButton = (FloatingActionButton) findViewById(R.id.button_recommend);
+        FloatingActionButton recomButton = (FloatingActionButton) findViewById(
+                R.id.button_recommend);
         FloatingActionButton favorButton = (FloatingActionButton) findViewById(R.id.button_favor);
         loadingView = (LoadingView) findViewById(R.id.article_progress_loading);
         progressBar = (ProgressBar) findViewById(R.id.article_loading);
@@ -155,7 +157,8 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
         }
 
         headerHeight = (int) getResources().getDimension(R.dimen.actionbar_height);
-        AutoHideUtil.applyListViewAutoHide(this, listView, (int) getResources().getDimension(R.dimen.actionbar_height), autoHideListener);
+        AutoHideUtil.applyListViewAutoHide(this, listView,
+                (int) getResources().getDimension(R.dimen.actionbar_height), autoHideListener);
         floatingActionsMenu.setVisibility(View.GONE);
         loadData(-1);
 
@@ -169,13 +172,15 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
     }
 
     public void onEventMainThread(ArticleStartLoadingLatestRepliesEvent event) {
-        if (event.article != null && article != null && Utils.equals(event.article.getId(), article.getId())) {
+        if (event.article != null && article != null && Utils.equals(event.article.getId(),
+                article.getId())) {
             onStartLoadingLatest();
         }
     }
 
     public void onEventMainThread(ArticleFinishLoadingLatestRepliesEvent event) {
-        if (event.article != null && article != null && Utils.equals(event.article.getId(), article.getId())) {
+        if (event.article != null && article != null && Utils.equals(event.article.getId(),
+                article.getId())) {
             onFinishLoadingLatest();
         }
     }
@@ -242,17 +247,18 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
     }
 
     private void confirmRecommend(String comment) {
-        ArticleAPI.recommendArticle(article.getId(), article.getTitle(), article.getSummary(), comment, new SimpleCallBack<Boolean>() {
-            @Override
-            public void onFailure() {
-                toast(R.string.recommend_failed);
-            }
+        ArticleAPI.recommendArticle(article.getId(), article.getTitle(), article.getSummary(),
+                comment, new SimpleCallBack<Boolean>() {
+                    @Override
+                    public void onFailure() {
+                        toast(R.string.recommend_failed);
+                    }
 
-            @Override
-            public void onSuccess() {
-                toast(R.string.recommend_ok);
-            }
-        });
+                    @Override
+                    public void onSuccess() {
+                        toast(R.string.recommend_ok);
+                    }
+                });
     }
 
     private void favor() {
@@ -288,15 +294,18 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
                 break;
             case R.id.action_share_to_wechat_circle:
                 Mob.onEvent(Mob.Event_Share_Article_To_Wechat_Circle);
-                ShareUtil.shareToWeiXinCircle(App.getApp(), article.getUrl(), article.getTitle(), article.getSummary(), null);
+                ShareUtil.shareToWeiXinCircle(App.getApp(), article.getUrl(), article.getTitle(),
+                        article.getSummary(), null);
                 break;
             case R.id.action_share_to_wechat_friends:
                 Mob.onEvent(Mob.Event_Share_Article_To_Wechat_friend);
-                ShareUtil.shareToWeiXinFriends(App.getApp(), article.getUrl(), article.getTitle(), article.getSummary(), null);
+                ShareUtil.shareToWeiXinFriends(App.getApp(), article.getUrl(), article.getTitle(),
+                        article.getSummary(), null);
                 break;
             case R.id.action_share_to_weibo:
                 Mob.onEvent(Mob.Event_Share_Article_To_Weibo);
-                ShareUtil.shareToWeibo(this, article.getUrl(), article.getTitle(), article.getSummary(), null);
+                ShareUtil.shareToWeibo(this, article.getUrl(), article.getTitle(),
+                        article.getSummary(), null);
                 break;
             case R.id.action_open_in_browser:
                 if (!TextUtils.isEmpty(article.getUrl())) {
@@ -344,18 +353,19 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
                 .setReasonListener(new ReportReasonListener() {
                     @Override
                     public void onGetReason(final Dialog dia, String reason) {
-                        ArticleAPI.reportReply(uComment.getID(), reason, new SimpleCallBack<Boolean>() {
-                            @Override
-                            public void onFailure() {
-                                ToastUtil.toastBigSingleton("举报未遂……");
-                            }
+                        ArticleAPI.reportReply(uComment.getID(), reason,
+                                new SimpleCallBack<Boolean>() {
+                                    @Override
+                                    public void onFailure() {
+                                        ToastUtil.toastBigSingleton("举报未遂……");
+                                    }
 
-                            @Override
-                            public void onSuccess() {
-                                UiUtil.dismissDialog(dia);
-                                ToastUtil.toastBigSingleton("举报成功");
-                            }
-                        });
+                                    @Override
+                                    public void onSuccess() {
+                                        UiUtil.dismissDialog(dia);
+                                        ToastUtil.toastBigSingleton("举报成功");
+                                    }
+                                });
                     }
                 })
                 .create()
@@ -386,7 +396,8 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
 
     private void copyComment(UComment comment) {
         ClipboardManager manager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-        manager.setPrimaryClip(ClipData.newPlainText(null, RegUtil.html2PlainText(comment.getContent())));
+        manager.setPrimaryClip(
+                ClipData.newPlainText(null, RegUtil.html2PlainText(comment.getContent())));
         toast(R.string.copy_success);
     }
 
@@ -676,9 +687,13 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
             }
             if (hideAnimatorSet == null || !hideAnimatorSet.isRunning()) {
                 hideAnimatorSet = new AnimatorSet();
-                ObjectAnimator headerAnimator = ObjectAnimator.ofFloat(appbar, "translationY", appbar.getTranslationY(), -headerHeight);
-                ObjectAnimator header2Animator = ObjectAnimator.ofFloat(progressBar, "translationY", progressBar.getTranslationY(), -headerHeight);
-                ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(floatingActionsMenu, "translationY", floatingActionsMenu.getTranslationY(), floatingActionsMenu.getHeight());
+                ObjectAnimator headerAnimator = ObjectAnimator.ofFloat(appbar, "translationY",
+                        appbar.getTranslationY(), -headerHeight);
+                ObjectAnimator header2Animator = ObjectAnimator.ofFloat(progressBar, "translationY",
+                        progressBar.getTranslationY(), -headerHeight);
+                ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(floatingActionsMenu,
+                        "translationY", floatingActionsMenu.getTranslationY(),
+                        floatingActionsMenu.getHeight());
                 ArrayList<Animator> animators = new ArrayList<>();
                 animators.add(headerAnimator);
                 animators.add(header2Animator);
@@ -696,9 +711,12 @@ public class ArticleActivity extends BaseActivity implements OnRefreshListener, 
             }
             if (backAnimatorSet == null || !backAnimatorSet.isRunning()) {
                 backAnimatorSet = new AnimatorSet();
-                ObjectAnimator headerAnimator = ObjectAnimator.ofFloat(appbar, "translationY", appbar.getTranslationY(), 0f);
-                ObjectAnimator header2Animator = ObjectAnimator.ofFloat(progressBar, "translationY", progressBar.getTranslationY(), 0f);
-                ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(floatingActionsMenu, "translationY", floatingActionsMenu.getTranslationY(), 0f);
+                ObjectAnimator headerAnimator = ObjectAnimator.ofFloat(appbar, "translationY",
+                        appbar.getTranslationY(), 0f);
+                ObjectAnimator header2Animator = ObjectAnimator.ofFloat(progressBar, "translationY",
+                        progressBar.getTranslationY(), 0f);
+                ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(floatingActionsMenu,
+                        "translationY", floatingActionsMenu.getTranslationY(), 0f);
                 ArrayList<Animator> animators = new ArrayList<>();
                 animators.add(headerAnimator);
                 animators.add(header2Animator);

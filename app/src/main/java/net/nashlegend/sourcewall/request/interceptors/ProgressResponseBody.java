@@ -31,7 +31,6 @@ public class ProgressResponseBody extends ResponseBody {
      * 构造函数，赋值
      *
      * @param responseBody 待包装的响应体
-     * @param callBack
      */
     public ProgressResponseBody(ResponseBody responseBody, @Nullable RequestCallBack callBack) {
         this.responseBody = responseBody;
@@ -94,7 +93,8 @@ public class ProgressResponseBody extends ResponseBody {
                 totalBytesRead += bytesRead != -1 ? bytesRead : 0;
                 //回调，如果contentLength()不知道长度，会返回-1
                 if (callBack != null) {
-                    callBack.onResponseProgress(totalBytesRead, responseBody.contentLength(), bytesRead == -1);
+                    callBack.onResponseProgress(totalBytesRead, responseBody.contentLength(),
+                            bytesRead == -1);
                 }
                 return bytesRead;
             }

@@ -16,7 +16,8 @@ import java.util.ArrayList;
 public class PostCommentListParser implements Parser<ArrayList<UComment>> {
 
     @Override
-    public ArrayList<UComment> parse(String response, ResponseObject<ArrayList<UComment>> responseObject) throws Exception {
+    public ArrayList<UComment> parse(String response,
+            ResponseObject<ArrayList<UComment>> responseObject) throws Exception {
         ArrayList<UComment> list = new ArrayList<>();
         JSONArray comments = JsonHandler.getUniversalJsonArray(response, responseObject);
         assert comments != null;

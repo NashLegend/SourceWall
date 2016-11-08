@@ -44,7 +44,8 @@ public class ArticleAPI extends APIBase {
 
     }
 
-    public static NetworkTask<Boolean> reportReply(String replyId, String reason, RequestCallBack<Boolean> callBack) {
+    public static NetworkTask<Boolean> reportReply(String replyId, String reason,
+            RequestCallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/article/reply/" + replyId + "/";
         return UserAPI.report(url, reason, callBack);
     }
@@ -54,11 +55,10 @@ public class ArticleAPI extends APIBase {
      *
      * @param type     文章类型
      * @param key      文章类型的key，如果是科学人首页则可以不取
-     * @param offset
      * @param useCache 是否使用cache
-     * @return
      */
-    public static Observable<ResponseObject<ArrayList<Article>>> getArticleList(int type, String key, int offset, boolean useCache) {
+    public static Observable<ResponseObject<ArrayList<Article>>> getArticleList(int type,
+            String key, int offset, boolean useCache) {
         String url = "http://www.guokr.com/apis/minisite/article.json";
         ParamsMap pairs = new ParamsMap();
         switch (type) {
@@ -89,9 +89,6 @@ public class ArticleAPI extends APIBase {
 
     /**
      * 此处默认会取缓存，如果没有变动的话
-     *
-     * @param id
-     * @return
      */
     public static Observable<ResponseObject<Article>> getArticleDetail(String id) {
         String url = "http://www.guokr.com/article/" + id + "/";
@@ -109,10 +106,10 @@ public class ArticleAPI extends APIBase {
      *
      * @param id     article ID
      * @param offset 从第几个开始加载
-     * @param limit
      * @return ResponseObject
      */
-    public static Observable<ResponseObject<ArrayList<UComment>>> getArticleReplies(final String id, final int offset, int limit) {
+    public static Observable<ResponseObject<ArrayList<UComment>>> getArticleReplies(final String id,
+            final int offset, int limit) {
         String url = "http://apis.guokr.com/minisite/article_reply.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("article_id", id);
@@ -134,7 +131,8 @@ public class ArticleAPI extends APIBase {
      * @param aid        article ID
      * @return ResponseObject
      */
-    private static ArrayList<UComment> getArticleHotComments(Element hotElement, String aid) throws Exception {
+    private static ArrayList<UComment> getArticleHotComments(Element hotElement, String aid)
+            throws Exception {
         ArrayList<UComment> list = new ArrayList<>();
         Elements comments = hotElement.getElementsByTag("li");
         if (comments != null && comments.size() > 0) {
@@ -146,10 +144,12 @@ public class ArticleAPI extends APIBase {
                 Author author = new Author();
                 author.setName(tmp.getElementsByTag("a").get(0).attr("title"));
                 author.setId(tmp.getElementsByTag("a").get(0).attr("href").replaceAll("\\D+", ""));
-                author.setAvatar(tmp.getElementsByTag("img").get(0).attr("src").replaceAll("\\?.*$", ""));
+                author.setAvatar(tmp.getElementsByTag("img").get(0).attr("src").replaceAll("\\?.*$",
+                        ""));
                 String likeNum = element.getElementsByClass("cmt-do-num").get(0).text();
                 String date = element.getElementsByClass("cmt-info").get(0).text();
-                String content = element.select(".cmt-content").select(".gbbcode-content").select(".cmtContent").get(0).outerHtml();
+                String content = element.select(".cmt-content").select(".gbbcode-content").select(
+                        ".cmtContent").get(0).outerHtml();
                 Elements tmpElements = element.getElementsByClass("cmt-auth");
                 if (tmpElements != null && tmpElements.size() > 0) {
                     author.setTitle(element.getElementsByClass("cmt-auth").get(0).attr("title"));
@@ -192,22 +192,31 @@ public class ArticleAPI extends APIBase {
                 .flatMap()
                 .flatMap(new Func1<ResponseObject<String>, Observable<ResponseObject<UComment>>>() {
                     @Override
-                    public Observable<ResponseObject<UComment>> call(ResponseObject<String> response) {
+                    public Observable<ResponseObject<UComment>> call(
+                            ResponseObject<String> response) {
                         Document document = Jsoup.parse(response.result);
                         Elements elements = document.getElementsByTag("a");
                         if (elements.size() == 1) {
-                            Matcher matcher = Pattern.compile("^/article/(\\d+)/.*#reply(\\d+)$").matcher(elements.get(0).text());
+                            Matcher matcher = Pattern.compile(
+                                    "^/article/(\\d+)/.*#reply(\\d+)$").matcher(
+                                    elements.get(0).text());
                             if (matcher.find()) {
                                 String article_id = matcher.group(1);
                                 String reply_id = matcher.group(2);
-                                return Observable.zip(getArticleSimpleByID(article_id), getSingleCommentByID(reply_id),
-                                        new Func2<ResponseObject<Article>, ResponseObject<UComment>, ResponseObject<UComment>>() {
+                                return Observable.zip(getArticleSimpleByID(article_id),
+                                        getSingleCommentByID(reply_id),
+                                        new Func2<ResponseObject<Article>,
+                                                ResponseObject<UComment>,
+                                                ResponseObject<UComment>>() {
                                             @Override
-                                            public ResponseObject<UComment> call(ResponseObject<Article> article, ResponseObject<UComment> comment) {
+                                            public ResponseObject<UComment> call(
+                                                    ResponseObject<Article> article,
+                                                    ResponseObject<UComment> comment) {
                                                 if (article.ok && comment.ok) {
                                                     UComment uComment = comment.result;
                                                     uComment.setHostID(article.result.getId());
-                                                    uComment.setHostTitle(article.result.getTitle());
+                                                    uComment.setHostTitle(
+                                                            article.result.getTitle());
                                                 } else {
                                                     if (!article.ok) {
                                                         comment.statusCode = article.statusCode;
@@ -244,12 +253,14 @@ public class ArticleAPI extends APIBase {
      * @param notice_id 通知id
      * @return resultObject resultObject.result是UComment
      */
-    public static Observable<ResponseObject<UComment>> getSingleCommentByNoticeID(String notice_id) {
+    public static Observable<ResponseObject<UComment>> getSingleCommentByNoticeID(
+            String notice_id) {
         String notice_url = "http://www.guokr.com/user/notice/" + notice_id + "/";
         return getSingleComment(notice_url);
     }
 
-    public static Observable<ResponseObject<UComment>> getSingleCommentFromRedirectUrl(String reply_url) {
+    public static Observable<ResponseObject<UComment>> getSingleCommentFromRedirectUrl(
+            String reply_url) {
         return getSingleComment(reply_url);
     }
 
@@ -278,7 +289,8 @@ public class ArticleAPI extends APIBase {
      * @param comment   推荐评语
      * @return ResponseObject
      */
-    public static NetworkTask<Boolean> recommendArticle(String articleID, String title, String summary, String comment, RequestCallBack<Boolean> callBack) {
+    public static NetworkTask<Boolean> recommendArticle(String articleID, String title,
+            String summary, String comment, RequestCallBack<Boolean> callBack) {
         String articleUrl = "http://www.guokr.com/article/" + articleID + "/";
         return UserAPI.recommendLink(articleUrl, title, summary, comment, callBack);
     }
@@ -307,7 +319,8 @@ public class ArticleAPI extends APIBase {
      * @param id 评论id
      * @return ResponseObject
      */
-    public static NetworkTask<Boolean> deleteMyComment(String id, RequestCallBack<Boolean> callBack) {
+    public static NetworkTask<Boolean> deleteMyComment(String id,
+            RequestCallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/minisite/article_reply.json";
         return new RequestBuilder<Boolean>()
                 .delete()
@@ -325,7 +338,8 @@ public class ArticleAPI extends APIBase {
      * @param content 回复内容
      * @return ResponseObject.result is the reply_id if ok;
      */
-    public static NetworkTask<String> replyArticle(String id, String content, RequestCallBack<String> callBack) {
+    public static NetworkTask<String> replyArticle(String id, String content,
+            RequestCallBack<String> callBack) {
         String url = "http://apis.guokr.com/minisite/article_reply.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("article_id", id);
@@ -346,15 +360,18 @@ public class ArticleAPI extends APIBase {
      * @param content 回复内容
      * @return ResponseObject.result is the reply_id if ok;
      */
-    public static Subscription replyArticleHtml(String id, final String content, final RequestCallBack<Boolean> callBack) {
+    public static Subscription replyArticleHtml(String id, final String content,
+            final RequestCallBack<Boolean> callBack) {
         final String url = "http://www.guokr.com/article/" + id + "/";
         return new RequestBuilder<String>()
                 .get()
                 .url(url)
                 .parser(new Parser<String>() {
                     @Override
-                    public String parse(String response, ResponseObject<String> responseObject) throws Exception {
-                        String str = Jsoup.parse(response).getElementById("csrf_token").attr("value");
+                    public String parse(String response, ResponseObject<String> responseObject)
+                            throws Exception {
+                        String str = Jsoup.parse(response).getElementById("csrf_token").attr(
+                                "value");
                         responseObject.ok = true;
                         return str;
                     }
@@ -362,11 +379,13 @@ public class ArticleAPI extends APIBase {
                 .flatMap()
                 .flatMap(new Func1<ResponseObject<String>, Observable<ResponseObject<Boolean>>>() {
                     @Override
-                    public Observable<ResponseObject<Boolean>> call(ResponseObject<String> response) {
+                    public Observable<ResponseObject<Boolean>> call(
+                            ResponseObject<String> response) {
                         if (response.ok) {
                             final ParamsMap pairs = new ParamsMap();
                             pairs.put("csrf_token", response.result);
-                            pairs.put("reply", MDUtil.Markdown2Html(content) + Tail.getComplexReplyTail());
+                            pairs.put("reply",
+                                    MDUtil.Markdown2Html(content) + Tail.getComplexReplyTail());
                             pairs.put("captcha", "");
                             return new RequestBuilder<Boolean>()
                                     .post()
@@ -374,11 +393,15 @@ public class ArticleAPI extends APIBase {
                                     .params(pairs)
                                     .parser(new Parser<Boolean>() {
                                         @Override
-                                        public Boolean parse(String response, ResponseObject<Boolean> responseObject) throws Exception {
+                                        public Boolean parse(String response,
+                                                ResponseObject<Boolean> responseObject)
+                                                throws Exception {
                                             try {
                                                 Document document = Jsoup.parse(response);
-                                                String url = document.getElementsByTag("a").get(0).text();
-                                                Matcher matcher = Pattern.compile("/article/(\\d+)/").matcher(url);
+                                                String url = document.getElementsByTag("a").get(
+                                                        0).text();
+                                                Matcher matcher = Pattern.compile(
+                                                        "/article/(\\d+)/").matcher(url);
                                                 responseObject.ok = matcher.find();
                                             } catch (Exception e) {
                                                 if (response.contains("Redirecting")) {

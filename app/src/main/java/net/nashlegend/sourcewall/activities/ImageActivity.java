@@ -86,7 +86,8 @@ public class ImageActivity extends BaseActivity {
 
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            public void onPageScrolled(int position, float positionOffset,
+                    int positionOffsetPixels) {
 
             }
 
@@ -132,14 +133,16 @@ public class ImageActivity extends BaseActivity {
         protected ResponseObject<String> doInBackground(String... params) {
             ResponseObject<String> resultObject = new ResponseObject<>();
             if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-                File folder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), getString(R.string.app_name));
+                File folder = new File(Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_PICTURES), getString(R.string.app_name));
                 if ((folder.exists() || !folder.exists() && folder.mkdirs())) {
                     String url = params[0];
                     if (url.startsWith("http")) {
 
                         File srcFile = ImageLoader.getInstance().getDiskCache().get(url);
                         if (srcFile == null || !srcFile.exists()) {
-                            ImageLoader.getInstance().loadImageSync(url, ImageUtils.downloadOptions);
+                            ImageLoader.getInstance().loadImageSync(url,
+                                    ImageUtils.downloadOptions);
                             srcFile = ImageLoader.getInstance().getDiskCache().get(url);
                         }
 
@@ -147,7 +150,8 @@ public class ImageActivity extends BaseActivity {
                             String trimmedUrl = url.replaceAll("\\?.+", "");
                             String suffix = ".jpg";
                             if (trimmedUrl.lastIndexOf(".") > 0) {
-                                suffix = trimmedUrl.substring(trimmedUrl.lastIndexOf(".")).toLowerCase();
+                                suffix = trimmedUrl.substring(
+                                        trimmedUrl.lastIndexOf(".")).toLowerCase();
                                 if (suffix.length() > 5 || suffix.length() <= 1) {
                                     suffix = ".jpg";
                                 }
@@ -159,13 +163,16 @@ public class ImageActivity extends BaseActivity {
                     } else if (url.startsWith("data:image/")) {
                         try {
                             url = URLDecoder.decode(url, "utf-8");
-                            Matcher matcher = Pattern.compile("data:image/(\\w{3,4});base64").matcher(url);
+                            Matcher matcher = Pattern.compile(
+                                    "data:image/(\\w{3,4});base64").matcher(url);
                             String suffix = ".jpg";
                             if (matcher.find()) {
                                 suffix = matcher.group(1);
                             }
-                            File destFile = new File(folder, System.currentTimeMillis() + "." + suffix);
-                            String encodedBitmap = url.replaceAll("data:image/\\w{3,4};base64,", "");
+                            File destFile = new File(folder,
+                                    System.currentTimeMillis() + "." + suffix);
+                            String encodedBitmap = url.replaceAll("data:image/\\w{3,4};base64,",
+                                    "");
                             byte[] data = Base64.decode(encodedBitmap, Base64.DEFAULT);
                             FileOutputStream outputStream = new FileOutputStream(destFile);
                             outputStream.write(data);
@@ -185,8 +192,10 @@ public class ImageActivity extends BaseActivity {
         @Override
         protected void onPostExecute(ResponseObject<String> result) {
             if (result.ok) {
-                MediaScannerConnection.scanFile(ImageActivity.this, new String[]{result.result}, null, null);
-                toastSingleton(getString(R.string.hint_download_successfully_to) + new File(result.result).getParent());
+                MediaScannerConnection.scanFile(ImageActivity.this, new String[]{result.result},
+                        null, null);
+                toastSingleton(getString(R.string.hint_download_successfully_to) + new File(
+                        result.result).getParent());
             } else {
                 toastSingleton(R.string.hint_download_failed);
             }
@@ -236,7 +245,8 @@ public class ImageActivity extends BaseActivity {
             copyOK = false;
             ErrorUtils.onException(e);
         } finally {
-            copyOK = copyOK && IOUtil.closeQuietly(inputStream) && IOUtil.closeQuietly(outputStream);
+            copyOK = copyOK && IOUtil.closeQuietly(inputStream) && IOUtil.closeQuietly(
+                    outputStream);
         }
 
         return copyOK;

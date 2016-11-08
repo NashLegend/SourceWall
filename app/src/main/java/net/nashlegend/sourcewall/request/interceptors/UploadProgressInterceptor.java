@@ -23,7 +23,8 @@ public class UploadProgressInterceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request originalRequest = chain.request();
-        ProgressRequestBody progressRequestBody = new ProgressRequestBody(originalRequest.body(), callBack);
+        ProgressRequestBody progressRequestBody = new ProgressRequestBody(originalRequest.body(),
+                callBack);
         Request compressedRequest = originalRequest.newBuilder()
                 .method(originalRequest.method(), progressRequestBody)
                 .build();

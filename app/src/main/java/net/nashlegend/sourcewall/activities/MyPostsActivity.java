@@ -76,7 +76,8 @@ public class MyPostsActivity extends BaseActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         headerHeight = (int) getResources().getDimension(R.dimen.actionbar_height);
-        AutoHideUtil.applyListViewAutoHide(this, listView, (int) getResources().getDimension(R.dimen.actionbar_height), autoHideListener);
+        AutoHideUtil.applyListViewAutoHide(this, listView,
+                (int) getResources().getDimension(R.dimen.actionbar_height), autoHideListener);
 
         listView.setCanPullToRefresh(false);
         listView.setCanPullToLoadMore(false);
@@ -177,7 +178,8 @@ public class MyPostsActivity extends BaseActivity {
             }
             if (hideAnimatorSet == null || !hideAnimatorSet.isRunning()) {
                 hideAnimatorSet = new AnimatorSet();
-                ObjectAnimator headerAnimator = ObjectAnimator.ofFloat(appbar, "translationY", appbar.getTranslationY(), -headerHeight);
+                ObjectAnimator headerAnimator = ObjectAnimator.ofFloat(appbar, "translationY",
+                        appbar.getTranslationY(), -headerHeight);
                 ArrayList<Animator> animators = new ArrayList<>();
                 animators.add(headerAnimator);
                 hideAnimatorSet.setDuration(300);
@@ -193,7 +195,8 @@ public class MyPostsActivity extends BaseActivity {
             }
             if (backAnimatorSet == null || !backAnimatorSet.isRunning()) {
                 backAnimatorSet = new AnimatorSet();
-                ObjectAnimator headerAnimator = ObjectAnimator.ofFloat(appbar, "translationY", appbar.getTranslationY(), 0f);
+                ObjectAnimator headerAnimator = ObjectAnimator.ofFloat(appbar, "translationY",
+                        appbar.getTranslationY(), 0f);
                 ArrayList<Animator> animators = new ArrayList<>();
                 animators.add(headerAnimator);
                 backAnimatorSet.setDuration(300);

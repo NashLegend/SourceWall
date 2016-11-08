@@ -39,7 +39,8 @@ public class Post extends AceModel {
         String postID = postResult.getString("id");
         String title = postResult.getString("title");
         String date = postResult.optString("date_created");
-        String content = "<div id=\"postContent\" class=\"html-text-mixin gbbcode-content\">" + postResult.optString("html") + "</div>";
+        String content = "<div id=\"postContent\" class=\"html-text-mixin gbbcode-content\">"
+                + postResult.optString("html") + "</div>";
         //int likeNum = getJsonInt(postResult, "");//取不到like数量
         int recommendNum = postResult.optInt("recommends_count");
         int reply_num = postResult.optInt("replies_count");

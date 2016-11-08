@@ -31,7 +31,8 @@ public class MediumListItemView extends AceView<UComment> {
 
     public MediumListItemView(Context context) {
         super(context);
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(
+                Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_medium_comment_item_view, this);
         contentView = (TTextView) findViewById(R.id.text_content);
         authorView = (TextView) findViewById(R.id.text_author);
@@ -65,7 +66,8 @@ public class MediumListItemView extends AceView<UComment> {
         floorView.setText(comment.getFloor());
         contentView.loadHtml(comment.getContent());
         if (Config.shouldLoadImage()) {
-            ImageLoader.getInstance().displayImage(comment.getAuthor().getAvatar(), avatarImage, ImageUtils.avatarOptions);
+            ImageLoader.getInstance().displayImage(comment.getAuthor().getAvatar(), avatarImage,
+                    ImageUtils.avatarOptions);
         } else {
             avatarImage.setImageResource(R.drawable.default_avatar);
         }

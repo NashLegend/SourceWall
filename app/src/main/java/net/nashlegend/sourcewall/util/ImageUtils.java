@@ -72,7 +72,6 @@ public class ImageUtils {
      *
      * @param path 要压缩的图片路径
      * @return 是否成功压缩
-     * @throws IOException
      */
     public static String compressImage(final String path, int mode) {
         if (FileUtil.getFileSuffix(new File(path)).equals("gif")) {
@@ -119,13 +118,15 @@ public class ImageUtils {
             if (mode != ZipMode.High) {
                 int finalWidth = finalBitmap.getWidth();
                 int finalHeight = finalBitmap.getHeight();
-                float scale = (finalWidth < finalHeight) ? maxSize / finalWidth : maxSize / finalHeight;
+                float scale =
+                        (finalWidth < finalHeight) ? maxSize / finalWidth : maxSize / finalHeight;
                 if (scale > 1) {
                     scale = 1;
                 }
                 Matrix matrix = new Matrix();
                 matrix.setScale(scale, scale);
-                finalBitmap = Bitmap.createBitmap(finalBitmap, 0, 0, finalWidth, finalHeight, matrix, false);
+                finalBitmap = Bitmap.createBitmap(finalBitmap, 0, 0, finalWidth, finalHeight,
+                        matrix, false);
             }
             String parentPath;
             File pFile = null;
@@ -136,12 +137,14 @@ public class ImageUtils {
                 pFile = App.getApp().getCacheDir();
             }
             parentPath = pFile.getAbsolutePath();
-            String cachePath = new File(parentPath, System.currentTimeMillis() + ".jpg").getAbsolutePath();
+            String cachePath = new File(parentPath,
+                    System.currentTimeMillis() + ".jpg").getAbsolutePath();
             FileOutputStream outputStream = null;
             boolean ok = false;
             try {
                 outputStream = new FileOutputStream(cachePath);
-                finalBitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);//jpg速度远快于png，并且体积要小
+                finalBitmap.compress(Bitmap.CompressFormat.JPEG, quality,
+                        outputStream);//jpg速度远快于png，并且体积要小
                 outputStream.flush();
                 ok = true;
             } catch (IOException e) {
@@ -170,7 +173,6 @@ public class ImageUtils {
      *
      * @param path 要压缩的图片路径
      * @return 是否成功压缩
-     * @throws IOException
      */
     public static String compressImage(String path) {
         return compressImage(path, ZipMode.Low);
@@ -179,17 +181,18 @@ public class ImageUtils {
     /**
      * 将图片转换为圆角, 当radiusRat为半径时为圆形.
      *
-     * @param bitmap
      * @param strokeColor 边框颜色
      * @param strokeWidth 边框宽度
      * @param isCircle    是否圆形
      * @return 转换后的bitmap
      */
-    public static Bitmap convertImgRound(Bitmap bitmap, int strokeColor, float strokeWidth, boolean isCircle) {
+    public static Bitmap convertImgRound(Bitmap bitmap, int strokeColor, float strokeWidth,
+            boolean isCircle) {
         Bitmap roundBitmap = null;
         if (bitmap != null) {
             // 画图
-            roundBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+            roundBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(),
+                    Bitmap.Config.ARGB_8888);
             Canvas userIconCanvas = new Canvas(roundBitmap);
             Paint userIconPaint = new Paint();
             userIconPaint.setAntiAlias(true);

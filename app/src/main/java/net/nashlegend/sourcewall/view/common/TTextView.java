@@ -1,5 +1,7 @@
 package net.nashlegend.sourcewall.view.common;
 
+import static net.nashlegend.sourcewall.App.getApp;
+
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
@@ -57,8 +59,6 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static net.nashlegend.sourcewall.App.getApp;
 
 /**
  * Created by NashLegend on 2015/1/13 0013
@@ -182,8 +182,10 @@ public class TTextView extends TextView {
                     Mob.onEvent(Mob.Event_Open_Image_From_TextView);
                     if (context != null && context instanceof Activity) {
                         intent.setClass(context, ImageActivity.class);
-                        ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(getApp(), R.anim.scale_in_center, 0);
-                        ActivityCompat.startActivity((Activity) context, intent, options.toBundle());
+                        ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
+                                getApp(), R.anim.scale_in_center, 0);
+                        ActivityCompat.startActivity((Activity) context, intent,
+                                options.toBundle());
                     } else {
                         intent.setClass(getApp(), ImageActivity.class);
                         getApp().startActivity(intent);
@@ -234,9 +236,6 @@ public class TTextView extends TextView {
 
     /**
      * 获取空白的图片，在图片加载完成前或者无图模式下用
-     *
-     * @param source
-     * @return
      */
     private Drawable getEmptyDrawable(String source) {
         //这是图片格式
@@ -293,7 +292,9 @@ public class TTextView extends TextView {
             if (guessWidth > 0) {
                 rawWidth = guessWidth;
             } else {
-                rawWidth = (int) (DisplayUtil.getScreenWidth(getContext()) - getApp().getResources().getDimension(R.dimen.list_item_padding_horizontal) * 2);
+                rawWidth = (int) (DisplayUtil.getScreenWidth(getContext())
+                        - getApp().getResources().getDimension(R.dimen.list_item_padding_horizontal)
+                        * 2);
                 guessWidth = rawWidth;
             }
         }
@@ -315,7 +316,8 @@ public class TTextView extends TextView {
         }
 
         @Override
-        public boolean onTouchEvent(@NonNull TextView widget, @NonNull Spannable spannable, @NonNull MotionEvent event) {
+        public boolean onTouchEvent(@NonNull TextView widget, @NonNull Spannable spannable,
+                @NonNull MotionEvent event) {
             int action = event.getAction();
             if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_DOWN) {
                 int x = (int) event.getX();
@@ -332,7 +334,8 @@ public class TTextView extends TextView {
                     if (action == MotionEvent.ACTION_UP) {
                         handleURLSpanClick(link[0]);
                     } else {
-                        Selection.setSelection(spannable, spannable.getSpanStart(link[0]), spannable.getSpanEnd(link[0]));
+                        Selection.setSelection(spannable, spannable.getSpanStart(link[0]),
+                                spannable.getSpanEnd(link[0]));
                     }
                     if (widget instanceof TTextView) {
                         ((TTextView) widget).linkHit = true;
@@ -342,7 +345,8 @@ public class TTextView extends TextView {
                     Selection.removeSelection(spannable);
                     ImageSpan[] images = spannable.getSpans(off, off, ImageSpan.class);
                     if (images.length > 0) {
-                        ImageSpan span = images[images.length - 1];//0貌似有时不太管用，images[images.length-1]应该可以解决
+                        ImageSpan span =
+                                images[images.length - 1];//0貌似有时不太管用，images[images.length-1]应该可以解决
                         if (action == MotionEvent.ACTION_UP) {
                             handleImageSpanClick(widget, span);
                         }
@@ -401,9 +405,6 @@ public class TTextView extends TextView {
 
         /**
          * 获取在线或者缓存的图片，有图模式用
-         *
-         * @param source
-         * @return
          */
         private Drawable getOnlineOrCachedDrawable(String source) {
             someImageLoaded = true;
@@ -415,9 +416,11 @@ public class TTextView extends TextView {
                     Bitmap bitmap;
                     maxWidth = getMaxImageWidth();
                     if (point != null && point.x > 0 && point.y > 0) {
-                        bitmap = ImageLoader.getInstance().loadImageSync(source, new ImageSize(point.x, point.y));
+                        bitmap = ImageLoader.getInstance().loadImageSync(source,
+                                new ImageSize(point.x, point.y));
                     } else {
-                        bitmap = ImageLoader.getInstance().loadImageSync(source, new ImageSize((int) Math.min(maxWidth, maxWidth * ImageDensity / stretch), 4096));
+                        bitmap = ImageLoader.getInstance().loadImageSync(source, new ImageSize(
+                                (int) Math.min(maxWidth, maxWidth * ImageDensity / stretch), 4096));
                     }
                     if (bitmap != null) {
                         String reg = ".+/w/(\\d+)/h/(\\d+)";
@@ -444,13 +447,16 @@ public class TTextView extends TextView {
                             suffix = realLink.substring(offset + 1);
                         }
                         if ("gif".equalsIgnoreCase(suffix)) {
-                            Bitmap tmpBitmap = Bitmap.createBitmap((int) width, (int) height, Bitmap.Config.ARGB_8888);
-                            Bitmap indBitmap = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.gif_text);
+                            Bitmap tmpBitmap = Bitmap.createBitmap((int) width, (int) height,
+                                    Bitmap.Config.ARGB_8888);
+                            Bitmap indBitmap = BitmapFactory.decodeResource(
+                                    getContext().getResources(), R.drawable.gif_text);
                             Canvas canvas = new Canvas(tmpBitmap);
                             Matrix matrix = new Matrix();
                             matrix.setScale(width / bitmap.getWidth(), height / bitmap.getHeight());
                             canvas.drawBitmap(bitmap, matrix, null);
-                            if (width > 2 * indBitmap.getWidth() && height > 2 * indBitmap.getHeight()) {
+                            if (width > 2 * indBitmap.getWidth()
+                                    && height > 2 * indBitmap.getHeight()) {
                                 canvas.drawBitmap(indBitmap, 0, 0, null);
                             }
                             drawable = new BitmapDrawable(getContext().getResources(), tmpBitmap);
@@ -498,9 +504,6 @@ public class TTextView extends TextView {
 
         /**
          * 获取空白的或者缓存的图片，在无图模式中使用
-         *
-         * @param source
-         * @return
          */
         private Drawable getEmptyOrCachedDrawable(String source) {
             //是否有缓存

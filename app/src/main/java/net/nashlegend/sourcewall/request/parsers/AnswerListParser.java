@@ -14,7 +14,8 @@ import java.util.ArrayList;
  */
 public class AnswerListParser implements Parser<ArrayList<Answer>> {
     @Override
-    public ArrayList<Answer> parse(String response, ResponseObject<ArrayList<Answer>> responseObject) throws Exception {
+    public ArrayList<Answer> parse(String response,
+            ResponseObject<ArrayList<Answer>> responseObject) throws Exception {
         ArrayList<Answer> answers = new ArrayList<>();
         JSONArray comments = JsonHandler.getUniversalJsonArray(response, responseObject);
         for (int i = 0; i < comments.length(); i++) {

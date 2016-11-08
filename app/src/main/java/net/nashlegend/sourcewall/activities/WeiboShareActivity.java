@@ -74,7 +74,8 @@ public class WeiboShareActivity extends BaseActivity implements IWeiboHandler.Re
         mediaObject.description = summary;
         mediaObject.actionUrl = url;
         mediaObject.defaultText = summary;
-        mediaObject.setThumbImage(BitmapFactory.decodeResource(getResources(), R.drawable.ic_guokr_logo));
+        mediaObject.setThumbImage(
+                BitmapFactory.decodeResource(getResources(), R.drawable.ic_guokr_logo));
         TextObject textObject = new TextObject();
         textObject.text = summary;
         WeiboMultiMessage weiboMessage = new WeiboMultiMessage();
@@ -84,7 +85,8 @@ public class WeiboShareActivity extends BaseActivity implements IWeiboHandler.Re
         request.transaction = String.valueOf(System.currentTimeMillis());
         request.multiMessage = weiboMessage;
 
-        AuthInfo authInfo = new AuthInfo(this, ShareUtil.getWeiboAppKey(), ShareUtil.REDIRECT_URL, ShareUtil.SCOPE);
+        AuthInfo authInfo = new AuthInfo(this, ShareUtil.getWeiboAppKey(), ShareUtil.REDIRECT_URL,
+                ShareUtil.SCOPE);
         Oauth2AccessToken accessToken = AccessTokenKeeper.readAccessToken(getApplicationContext());
         String token = "";
         if (accessToken != null) {
@@ -126,7 +128,9 @@ public class WeiboShareActivity extends BaseActivity implements IWeiboHandler.Re
                 Toast.makeText(this, R.string.ERR_USER_CANCEL, Toast.LENGTH_LONG).show();
                 break;
             case WBConstants.ErrorCode.ERR_FAIL:
-                Toast.makeText(this, getString(R.string.ERR_SENT_FAILED) + " : " + baseResponse.errMsg, Toast.LENGTH_LONG).show();
+                Toast.makeText(this,
+                        getString(R.string.ERR_SENT_FAILED) + " : " + baseResponse.errMsg,
+                        Toast.LENGTH_LONG).show();
                 break;
         }
         finish();

@@ -44,7 +44,8 @@ public class ShuffleDesk extends RelativeLayout {
     }
 
     private void initView(Context context) {
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(
+                Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_shuffle, this);
 
         candidateLayout = (LinearLayout) findViewById(R.id.CandidateLayout);

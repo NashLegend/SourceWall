@@ -1,5 +1,7 @@
 package net.nashlegend.sourcewall.activities;
 
+import static android.view.inputmethod.InputMethodManager.HIDE_NOT_ALWAYS;
+
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ClipData;
@@ -69,8 +71,6 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
-
-import static android.view.inputmethod.InputMethodManager.HIDE_NOT_ALWAYS;
 
 
 /**
@@ -166,11 +166,13 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
                         .getAllMyGroupsAndMerge()
                         .flatMap(new Func1<ArrayList<MyGroup>, Observable<List<SubItem>>>() {
                             @Override
-                            public Observable<List<SubItem>> call(ArrayList<MyGroup> responseObject) {
+                            public Observable<List<SubItem>> call(
+                                    ArrayList<MyGroup> responseObject) {
                                 if (responseObject.size() > 0) {
                                     return Observable.just(GroupHelper.getAllMyGroupSubItems());
                                 } else {
-                                    return Observable.error(new IllegalStateException("No Data Received"));
+                                    return Observable.error(
+                                            new IllegalStateException("No Data Received"));
                                 }
                             }
                         })
@@ -248,15 +250,18 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
         }
         String sketchTitle = "";
         String sketchContent = "";
-        sketchTitle = SketchUtil.readString(Keys.Key_Sketch_Publish_Post_Title + "_" + subItem.getValue(), "");
-        sketchContent = SketchUtil.readString(Keys.Key_Sketch_Publish_Post_Content + "_" + subItem.getValue(), "");
+        sketchTitle = SketchUtil.readString(
+                Keys.Key_Sketch_Publish_Post_Title + "_" + subItem.getValue(), "");
+        sketchContent = SketchUtil.readString(
+                Keys.Key_Sketch_Publish_Post_Content + "_" + subItem.getValue(), "");
         titleEditText.setText(sketchTitle);
         bodyEditText.setText(restore2Spanned(sketchContent));
     }
 
     public SpannableString restore2Spanned(String str) {
         SpannableString spanned = new SpannableString(str);
-        String regImageAndLinkString = "(\\!\\[[^\\]]*?\\]\\((.*?)\\))|(\\[([^\\]]*?)\\]\\((.*?)\\))";
+        String regImageAndLinkString =
+                "(\\!\\[[^\\]]*?\\]\\((.*?)\\))|(\\[([^\\]]*?)\\]\\((.*?)\\))";
         Matcher matcher = Pattern.compile(regImageAndLinkString).matcher(str);
         while (matcher.find()) {
             int start = matcher.start();
@@ -272,7 +277,8 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
             //matcher.group(5)表示匹配到的超链接地址字符串;
             if (!TextUtils.isEmpty(matcher.group(1))) {
                 //String imageUrl = matcher.group(2);
-                Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_txt_image_16dp);
+                Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(),
+                        R.drawable.ic_txt_image_16dp);
                 ImageSpan imageSpan = getImageSpan("图片链接...", sourceBitmap);
                 spanned.setSpan(imageSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             } else {
@@ -281,7 +287,8 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
                 if (!linkUrl.startsWith("http")) {
                     linkUrl = "http://" + linkUrl;
                 }
-                Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_link_16dp);
+                Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(),
+                        R.drawable.ic_link_16dp);
                 String displayed;
                 if (TextUtils.isEmpty(linkTitle.trim())) {
                     Uri uri = Uri.parse(linkUrl);
@@ -314,7 +321,8 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
         float totalWidth = textPaint.measureText(displayed);
 
         //生成对应尺寸的bitmap
-        Bitmap bitmap = Bitmap.createBitmap((int) (totalWidth + textFrom + textEndSpan), height, Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap((int) (totalWidth + textFrom + textEndSpan), height,
+                Bitmap.Config.ARGB_8888);
 
         //缩放sourceBitmap
         Matrix matrix = new Matrix();
@@ -349,12 +357,17 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
 
     private void saveSketch() {
         if (!replyOK && subItem != null) {
-            if (!TextUtils.isEmpty(titleEditText.getText().toString().trim()) || !TextUtils.isEmpty(bodyEditText.getText().toString().trim())) {
+            if (!TextUtils.isEmpty(titleEditText.getText().toString().trim()) || !TextUtils.isEmpty(
+                    bodyEditText.getText().toString().trim())) {
                 String sketchTitle = titleEditText.getText().toString();
                 String sketchContent = bodyEditText.getText().toString();
-                SketchUtil.saveString(Keys.Key_Sketch_Publish_Post_Title + "_" + subItem.getValue(), sketchTitle);
-                SketchUtil.saveString(Keys.Key_Sketch_Publish_Post_Content + "_" + subItem.getValue(), sketchContent);
-            } else if (TextUtils.isEmpty(titleEditText.getText().toString().trim()) && TextUtils.isEmpty(bodyEditText.getText().toString().trim())) {
+                SketchUtil.saveString(Keys.Key_Sketch_Publish_Post_Title + "_" + subItem.getValue(),
+                        sketchTitle);
+                SketchUtil.saveString(
+                        Keys.Key_Sketch_Publish_Post_Content + "_" + subItem.getValue(),
+                        sketchContent);
+            } else if (TextUtils.isEmpty(titleEditText.getText().toString().trim())
+                    && TextUtils.isEmpty(bodyEditText.getText().toString().trim())) {
                 tryClearSketch();
             }
         }
@@ -404,7 +417,8 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void invokeImageDialog() {
-        String[] ways = {getString(R.string.add_image_from_disk), getString(R.string.add_image_from_camera), getString(R.string.add_image_from_link)};
+        String[] ways = {getString(R.string.add_image_from_disk), getString(
+                R.string.add_image_from_camera), getString(R.string.add_image_from_link)};
         new AlertDialog.Builder(this)
                 .setTitle(R.string.way_to_add_image)
                 .setItems(ways, new DialogInterface.OnClickListener() {
@@ -415,7 +429,8 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
                                 Intent intent = new Intent();
                                 intent.setType("image/*");
                                 intent.setAction(Intent.ACTION_GET_CONTENT);
-                                startOneActivityForResult(intent, RequestCode.Code_Invoke_Image_Selector);
+                                startOneActivityForResult(intent,
+                                        RequestCode.Code_Invoke_Image_Selector);
                                 break;
                             case 1:
                                 invokeCamera();
@@ -518,12 +533,14 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
         }
         String imgTag = "![](" + url + ")";
         SpannableString spanned = new SpannableString(imgTag);
-        Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_txt_image_16dp);
+        Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(),
+                R.drawable.ic_txt_image_16dp);
         String displayed = "图片链接...";
         ImageSpan imageSpan = getImageSpan(displayed, sourceBitmap);
         spanned.setSpan(imageSpan, 0, imgTag.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         int start = bodyEditText.getSelectionStart();
-        bodyEditText.getText().insert(start, " ").insert(start + 1, spanned).insert(start + 1 + imgTag.length(), " ");
+        bodyEditText.getText().insert(start, " ").insert(start + 1, spanned).insert(
+                start + 1 + imgTag.length(), " ");
         resetImageButtons();
     }
 
@@ -570,7 +587,8 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
                     String result = "[" + title + "](" + url + ")";
 
                     SpannableString spanned = new SpannableString(result);
-                    Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_link_16dp);
+                    Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(),
+                            R.drawable.ic_link_16dp);
                     String displayed;
                     if (TextUtils.isEmpty(title.trim())) {
                         Uri uri = Uri.parse(url);
@@ -583,9 +601,11 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
                         displayed = title;
                     }
                     ImageSpan imageSpan = getImageSpan(displayed, sourceBitmap);
-                    spanned.setSpan(imageSpan, 0, result.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    spanned.setSpan(imageSpan, 0, result.length(),
+                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     int start = bodyEditText.getSelectionStart();
-                    bodyEditText.getText().insert(start, " ").insert(start + 1, spanned).insert(start + 1 + result.length(), " ");
+                    bodyEditText.getText().insert(start, " ").insert(start + 1, spanned).insert(
+                            start + 1 + result.length(), " ");
                 }
             }
         });
@@ -625,7 +645,8 @@ public class PublishPostActivity extends BaseActivity implements View.OnClickLis
         try {
             if (getCurrentFocus() != null) {
                 ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
-                        .hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), HIDE_NOT_ALWAYS);
+                        .hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                                HIDE_NOT_ALWAYS);
             }
         } catch (Exception e) {
             ErrorUtils.onException(e);

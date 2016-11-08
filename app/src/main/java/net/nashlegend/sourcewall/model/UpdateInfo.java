@@ -91,15 +91,16 @@ public class UpdateInfo implements Parcelable {
         this.size = in.readLong();
     }
 
-    public static final Parcelable.Creator<UpdateInfo> CREATOR = new Parcelable.Creator<UpdateInfo>() {
-        @Override
-        public UpdateInfo createFromParcel(Parcel source) {
-            return new UpdateInfo(source);
-        }
+    public static final Parcelable.Creator<UpdateInfo> CREATOR =
+            new Parcelable.Creator<UpdateInfo>() {
+                @Override
+                public UpdateInfo createFromParcel(Parcel source) {
+                    return new UpdateInfo(source);
+                }
 
-        @Override
-        public UpdateInfo[] newArray(int size) {
-            return new UpdateInfo[size];
-        }
-    };
+                @Override
+                public UpdateInfo[] newArray(int size) {
+                    return new UpdateInfo[size];
+                }
+            };
 }

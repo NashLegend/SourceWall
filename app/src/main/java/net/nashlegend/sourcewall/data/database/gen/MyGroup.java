@@ -28,7 +28,8 @@ public class MyGroup {
         this.id = id;
     }
 
-    public MyGroup(Long id, int section, int type, String name, String value, boolean selected, int order) {
+    public MyGroup(Long id, int section, int type, String name, String value, boolean selected,
+            int order) {
         this.id = id;
         this.section = section;
         this.type = type;

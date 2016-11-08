@@ -49,7 +49,8 @@ import net.nashlegend.sourcewall.view.common.WWebView;
 
 import java.util.ArrayList;
 
-public class AnswerActivity extends BaseActivity implements View.OnClickListener, LoadingView.ReloadListener {
+public class AnswerActivity extends BaseActivity implements View.OnClickListener,
+        LoadingView.ReloadListener {
 
     private View rootView;
     private View authorLayout;
@@ -139,27 +140,28 @@ public class AnswerActivity extends BaseActivity implements View.OnClickListener
         if (!TextUtils.isEmpty(notice_id)) {
             MessageAPI.ignoreOneNotice(notice_id);
         }
-        QuestionAPI.getSingleAnswerFromRedirectUrl(redirectUri.toString(), new SimpleCallBack<Answer>() {
-            @Override
-            public void onFailure(@NonNull ResponseObject<Answer> result) {
-                loadingView.onFailed();
-                if (result.statusCode == 404) {
-                    toastSingleton(R.string.article_404);
-                    finish();
-                }
-            }
+        QuestionAPI.getSingleAnswerFromRedirectUrl(redirectUri.toString(),
+                new SimpleCallBack<Answer>() {
+                    @Override
+                    public void onFailure(@NonNull ResponseObject<Answer> result) {
+                        loadingView.onFailed();
+                        if (result.statusCode == 404) {
+                            toastSingleton(R.string.article_404);
+                            finish();
+                        }
+                    }
 
-            @Override
-            public void onSuccess(@NonNull Answer result) {
-                floatingActionsMenu.setVisibility(View.VISIBLE);
-                loadingView.onSuccess();
-                answer = result;
-                question = new Question();
-                question.setTitle(answer.getQuestion());
-                question.setId(answer.getQuestionID());
-                initData();
-            }
-        });
+                    @Override
+                    public void onSuccess(@NonNull Answer result) {
+                        floatingActionsMenu.setVisibility(View.VISIBLE);
+                        loadingView.onSuccess();
+                        answer = result;
+                        question = new Question();
+                        question.setTitle(answer.getQuestion());
+                        question.setId(answer.getQuestionID());
+                        initData();
+                    }
+                });
 
     }
 
@@ -179,24 +181,27 @@ public class AnswerActivity extends BaseActivity implements View.OnClickListener
             thankButton.setIcon(R.drawable.heart_outline);
         }
         if (Config.shouldLoadImage()) {
-            ImageLoader.getInstance().displayImage(answer.getAuthor().getAvatar(), avatar, ImageUtils.avatarOptions);
+            ImageLoader.getInstance().displayImage(answer.getAuthor().getAvatar(), avatar,
+                    ImageUtils.avatarOptions);
         } else {
             avatar.setImageResource(R.drawable.default_avatar);
         }
-        rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                if (authorLayout.getHeight() > 0) {
-                    rootView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                    topBarHeight = appbar.getHeight() + questionText.getHeight();
-                    headerHeight = topBarHeight + authorLayout.getHeight();
-                    ViewGroup.LayoutParams params = headerHolder.getLayoutParams();
-                    params.height = headerHeight;
-                    scrollView.applyAutoHide(AnswerActivity.this, topBarHeight, autoHideListener);
-                    loadHtml();
-                }
-            }
-        });
+        rootView.getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        if (authorLayout.getHeight() > 0) {
+                            rootView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                            topBarHeight = appbar.getHeight() + questionText.getHeight();
+                            headerHeight = topBarHeight + authorLayout.getHeight();
+                            ViewGroup.LayoutParams params = headerHolder.getLayoutParams();
+                            params.height = headerHeight;
+                            scrollView.applyAutoHide(AnswerActivity.this, topBarHeight,
+                                    autoHideListener);
+                            loadHtml();
+                        }
+                    }
+                });
         webView.setExtWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
@@ -256,10 +261,14 @@ public class AnswerActivity extends BaseActivity implements View.OnClickListener
             }
             if (backAnimatorSet == null || !backAnimatorSet.isRunning()) {
                 backAnimatorSet = new AnimatorSet();
-                ObjectAnimator toolBarAnimator = ObjectAnimator.ofFloat(appbar, "translationY", appbar.getTranslationY(), 0f);
-                ObjectAnimator titleAnimator = ObjectAnimator.ofFloat(questionText, "translationY", questionText.getTranslationY(), 0f);
-                ObjectAnimator authorAnimator = ObjectAnimator.ofFloat(authorLayout, "translationY", authorLayout.getTranslationY(), 0f);
-                ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(floatingActionsMenu, "translationY", floatingActionsMenu.getTranslationY(), 0f);
+                ObjectAnimator toolBarAnimator = ObjectAnimator.ofFloat(appbar, "translationY",
+                        appbar.getTranslationY(), 0f);
+                ObjectAnimator titleAnimator = ObjectAnimator.ofFloat(questionText, "translationY",
+                        questionText.getTranslationY(), 0f);
+                ObjectAnimator authorAnimator = ObjectAnimator.ofFloat(authorLayout, "translationY",
+                        authorLayout.getTranslationY(), 0f);
+                ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(floatingActionsMenu,
+                        "translationY", floatingActionsMenu.getTranslationY(), 0f);
                 ArrayList<Animator> animators = new ArrayList<>();
                 animators.add(toolBarAnimator);
                 animators.add(titleAnimator);
@@ -278,9 +287,11 @@ public class AnswerActivity extends BaseActivity implements View.OnClickListener
             if (hideAnimatorSet != null && hideAnimatorSet.isRunning()) {
                 hideAnimatorSet.cancel();
             }
-            if ((backAnimatorSet == null || !backAnimatorSet.isRunning()) && (backFooterAnimatorSet == null || !backFooterAnimatorSet.isRunning())) {
+            if ((backAnimatorSet == null || !backAnimatorSet.isRunning()) && (
+                    backFooterAnimatorSet == null || !backFooterAnimatorSet.isRunning())) {
                 backFooterAnimatorSet = new AnimatorSet();
-                ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(floatingActionsMenu, "translationY", floatingActionsMenu.getTranslationY(), 0f);
+                ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(floatingActionsMenu,
+                        "translationY", floatingActionsMenu.getTranslationY(), 0f);
                 ArrayList<Animator> animators = new ArrayList<>();
                 animators.add(footerAnimator);
                 backFooterAnimatorSet.setDuration(300);
@@ -301,10 +312,15 @@ public class AnswerActivity extends BaseActivity implements View.OnClickListener
             }
             if (hideAnimatorSet == null || !hideAnimatorSet.isRunning()) {
                 hideAnimatorSet = new AnimatorSet();
-                ObjectAnimator toolBarAnimator = ObjectAnimator.ofFloat(appbar, "translationY", appbar.getTranslationY(), -appbar.getBottom());
-                ObjectAnimator titleAnimator = ObjectAnimator.ofFloat(questionText, "translationY", questionText.getTranslationY(), -questionText.getBottom());
-                ObjectAnimator authorAnimator = ObjectAnimator.ofFloat(authorLayout, "translationY", authorLayout.getTranslationY(), -authorLayout.getTop());
-                ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(floatingActionsMenu, "translationY", floatingActionsMenu.getTranslationY(), floatingActionsMenu.getHeight());
+                ObjectAnimator toolBarAnimator = ObjectAnimator.ofFloat(appbar, "translationY",
+                        appbar.getTranslationY(), -appbar.getBottom());
+                ObjectAnimator titleAnimator = ObjectAnimator.ofFloat(questionText, "translationY",
+                        questionText.getTranslationY(), -questionText.getBottom());
+                ObjectAnimator authorAnimator = ObjectAnimator.ofFloat(authorLayout, "translationY",
+                        authorLayout.getTranslationY(), -authorLayout.getTop());
+                ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(floatingActionsMenu,
+                        "translationY", floatingActionsMenu.getTranslationY(),
+                        floatingActionsMenu.getHeight());
                 ArrayList<Animator> animators = new ArrayList<>();
                 animators.add(toolBarAnimator);
                 animators.add(titleAnimator);
@@ -365,22 +381,24 @@ public class AnswerActivity extends BaseActivity implements View.OnClickListener
         if (!UserAPI.isLoggedIn()) {
             gotoLogin();
         } else {
-            String[] operations = {getString(R.string.action_support), getString(R.string.action_oppose)};
-            new AlertDialog.Builder(this).setTitle("").setItems(operations, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Boolean support = which == 0;
-                    if (answer.isHasUpVoted() && support) {
-                        toastSingleton(R.string.has_supported);
-                        return;
-                    }
-                    if (answer.isHasDownVoted() && !support) {
-                        toastSingleton(R.string.has_opposed);
-                        return;
-                    }
-                    supportOrNot(support);
-                }
-            }).create().show();
+            String[] operations = {getString(R.string.action_support), getString(
+                    R.string.action_oppose)};
+            new AlertDialog.Builder(this).setTitle("").setItems(operations,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Boolean support = which == 0;
+                            if (answer.isHasUpVoted() && support) {
+                                toastSingleton(R.string.has_supported);
+                                return;
+                            }
+                            if (answer.isHasDownVoted() && !support) {
+                                toastSingleton(R.string.has_opposed);
+                                return;
+                            }
+                            supportOrNot(support);
+                        }
+                    }).create().show();
         }
     }
 

@@ -28,7 +28,8 @@ public class UserAPI extends APIBase {
     public static boolean isLoggedIn() {
         String token = getToken();
         String ukey = getUkey();
-        return !TextUtils.isEmpty(ukey) && ukey.length() == 6 && !TextUtils.isEmpty(token) && token.length() == 64;
+        return !TextUtils.isEmpty(ukey) && ukey.length() == 6 && !TextUtils.isEmpty(token)
+                && token.length() == 64;
     }
 
     public static String base36Encode(long id) {
@@ -43,13 +44,9 @@ public class UserAPI extends APIBase {
 
     /**
      * 举报
-     *
-     * @param url
-     * @param reason
-     * @param callBack
-     * @return
      */
-    public static NetworkTask<Boolean> report(String url, String reason, RequestCallBack<Boolean> callBack) {
+    public static NetworkTask<Boolean> report(String url, String reason,
+            RequestCallBack<Boolean> callBack) {
         return new RequestBuilder<Boolean>()
                 .post()
                 .url("http://www.guokr.com/apis/censor/report.json")
@@ -61,7 +58,8 @@ public class UserAPI extends APIBase {
     }
 
     public static String getUserInfoString() {
-        return "用户名：" + UserAPI.getName() + "\n用户key：" + getUkey() + "\n用户ID：" + UserAPI.getUserID() + "\n";
+        return "用户名：" + UserAPI.getName() + "\n用户key：" + getUkey() + "\n用户ID：" + UserAPI.getUserID()
+                + "\n";
     }
 
     /**
@@ -70,7 +68,8 @@ public class UserAPI extends APIBase {
      * @param ukey 用户ukey
      * @return ResponseObject
      */
-    public static NetworkTask<UserInfo> getUserInfoByUkey(String ukey, RequestCallBack<UserInfo> callBack) {
+    public static NetworkTask<UserInfo> getUserInfoByUkey(String ukey,
+            RequestCallBack<UserInfo> callBack) {
         String url = "http://apis.guokr.com/community/user/" + ukey + ".json";
         return new RequestBuilder<UserInfo>()
                 .get()
@@ -87,7 +86,8 @@ public class UserAPI extends APIBase {
      * @param id 用户id
      * @return ResponseObject
      */
-    public static NetworkTask<UserInfo> getUserInfoByID(String id, RequestCallBack<UserInfo> callBack) {
+    public static NetworkTask<UserInfo> getUserInfoByID(String id,
+            RequestCallBack<UserInfo> callBack) {
         return getUserInfoByUkey(base36Encode(Long.valueOf(id)), callBack);
     }
 
@@ -100,7 +100,8 @@ public class UserAPI extends APIBase {
      * @param comment 评语
      * @return ResponseObject
      */
-    public static NetworkTask<Boolean> recommendLink(String link, String title, String summary, String comment, RequestCallBack<Boolean> callBack) {
+    public static NetworkTask<Boolean> recommendLink(String link, String title, String summary,
+            String comment, RequestCallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/community/user/recommend.json";
         if (TextUtils.isEmpty(summary)) {
             summary = title;
@@ -155,8 +156,6 @@ public class UserAPI extends APIBase {
 
     /**
      * 保存用户token
-     *
-     * @param token
      */
     public static void setToken(String token) {
         PrefsUtil.saveString(Keys.Key_Access_Token, token);
@@ -174,8 +173,6 @@ public class UserAPI extends APIBase {
 
     /**
      * 保存用户token
-     *
-     * @param token
      */
     public static void setToken2(String token) {
         PrefsUtil.saveString(Keys.Key_Access_Token_2, token);

@@ -93,9 +93,6 @@ public class CrashReporter implements UncaughtExceptionHandler {
 
     /**
      * 读取存储在磁盘上的Error Log;
-     *
-     * @param context
-     * @return
      */
     public static String getCrashLog(Context context) {
         String CrashLog = "";
@@ -127,9 +124,6 @@ public class CrashReporter implements UncaughtExceptionHandler {
 
     /**
      * 返回Crash Log文件；
-     *
-     * @param context
-     * @return
      */
     public static File getCrashLogFile(Context context) {
         return new File(context.getExternalFilesDir("log"), "crashLog");
@@ -149,8 +143,6 @@ public class CrashReporter implements UncaughtExceptionHandler {
 
     /**
      * 设置崩溃时的回调
-     *
-     * @param crashListener
      */
     public void setOnCrashListener(CrashListener crashListener) {
         onCrashListener = crashListener;

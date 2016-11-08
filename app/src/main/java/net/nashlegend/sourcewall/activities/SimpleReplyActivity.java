@@ -39,7 +39,8 @@ import net.nashlegend.sourcewall.view.common.listview.LListView.OnRefreshListene
 
 import java.util.ArrayList;
 
-public class SimpleReplyActivity extends BaseActivity implements OnRefreshListener, OnClickListener, ReloadListener {
+public class SimpleReplyActivity extends BaseActivity implements OnRefreshListener, OnClickListener,
+        ReloadListener {
 
     private AceModel aceModel;
     private LListView listView;
@@ -138,7 +139,8 @@ public class SimpleReplyActivity extends BaseActivity implements OnRefreshListen
 
     private void onReplyItemClick(final View view) {
         if (view instanceof SimpleCommentItemView) {
-            textReply.setHint("回复@" + ((SimpleCommentItemView) view).getData().getAuthor().getName() + "：");
+            textReply.setHint(
+                    "回复@" + ((SimpleCommentItemView) view).getData().getAuthor().getName() + "：");
             mMenu.findItem(R.id.action_cancel_simple_reply).setVisible(true);
         }
     }
@@ -205,9 +207,11 @@ public class SimpleReplyActivity extends BaseActivity implements OnRefreshListen
 
                 NetworkTask<UComment> networkTask = null;
                 if (aceModel instanceof Question) {
-                    networkTask = QuestionAPI.commentOnQuestion(((Question) aceModel).getId(), content, callBack);
+                    networkTask = QuestionAPI.commentOnQuestion(((Question) aceModel).getId(),
+                            content, callBack);
                 } else if (aceModel instanceof Answer) {
-                    networkTask = QuestionAPI.commentOnAnswer(((Answer) aceModel).getID(), content, callBack);
+                    networkTask = QuestionAPI.commentOnAnswer(((Answer) aceModel).getID(), content,
+                            callBack);
                 }
 
                 if (networkTask != null) {
@@ -230,7 +234,9 @@ public class SimpleReplyActivity extends BaseActivity implements OnRefreshListen
     private void hideInput() {
         try {
             if (getCurrentFocus() != null) {
-                ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                ((InputMethodManager) getSystemService(
+                        INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
+                        getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
             }
         } catch (Exception e) {
             ErrorUtils.onException(e);

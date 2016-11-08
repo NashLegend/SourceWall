@@ -131,9 +131,11 @@ public class TextHtmlHelper {
                     Point point = ImageSizeMap.get(source);
                     Bitmap bitmap;
                     if (point != null && point.x > 0 && point.y > 0) {
-                        bitmap = ImageLoader.getInstance().loadImageSync(source, new ImageSize(point.x, point.y));
+                        bitmap = ImageLoader.getInstance().loadImageSync(source,
+                                new ImageSize(point.x, point.y));
                     } else {
-                        bitmap = ImageLoader.getInstance().loadImageSync(source, new ImageSize((int) maxWidth, 2046));
+                        bitmap = ImageLoader.getInstance().loadImageSync(source,
+                                new ImageSize((int) maxWidth, 2046));
                     }
                     if (bitmap != null) {
                         String reg = ".+/w/(\\d+)/h/(\\d+)";
@@ -160,13 +162,16 @@ public class TextHtmlHelper {
                             suffix = realLink.substring(offset + 1);
                         }
                         if ("gif".equals(suffix)) {
-                            Bitmap tmpBitmap = Bitmap.createBitmap((int) width, (int) height, Bitmap.Config.ARGB_8888);
-                            Bitmap indBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.gif_text);
+                            Bitmap tmpBitmap = Bitmap.createBitmap((int) width, (int) height,
+                                    Bitmap.Config.ARGB_8888);
+                            Bitmap indBitmap = BitmapFactory.decodeResource(context.getResources(),
+                                    R.drawable.gif_text);
                             Canvas canvas = new Canvas(tmpBitmap);
                             Matrix matrix = new Matrix();
                             matrix.setScale(width / bitmap.getWidth(), height / bitmap.getHeight());
                             canvas.drawBitmap(bitmap, matrix, null);
-                            if (width > 2 * indBitmap.getWidth() && height > 2 * indBitmap.getHeight()) {
+                            if (width > 2 * indBitmap.getWidth()
+                                    && height > 2 * indBitmap.getHeight()) {
                                 canvas.drawBitmap(indBitmap, 0, 0, null);
                             }
                             drawable = new BitmapDrawable(context.getResources(), tmpBitmap);

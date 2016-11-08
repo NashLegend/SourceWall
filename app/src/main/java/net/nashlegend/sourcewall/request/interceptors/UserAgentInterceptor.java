@@ -1,13 +1,13 @@
 package net.nashlegend.sourcewall.request.interceptors;
 
+import static net.nashlegend.sourcewall.BuildConfig.VERSION_CODE;
+import static net.nashlegend.sourcewall.BuildConfig.VERSION_NAME;
+
 import java.io.IOException;
 
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
-
-import static net.nashlegend.sourcewall.BuildConfig.VERSION_CODE;
-import static net.nashlegend.sourcewall.BuildConfig.VERSION_NAME;
 
 /**
  * Created by NashLegend on 16/6/29.
@@ -22,8 +22,6 @@ public class UserAgentInterceptor implements Interceptor {
 
     /**
      * 返回默认的UserAgent
-     *
-     * @return
      */
     private String getDefaultUserAgent() {
         if (userAgent == null) {

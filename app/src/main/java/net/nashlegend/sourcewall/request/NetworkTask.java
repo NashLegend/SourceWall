@@ -1,5 +1,10 @@
 package net.nashlegend.sourcewall.request;
 
+import static net.nashlegend.sourcewall.request.HttpUtil.SO_TIMEOUT;
+import static net.nashlegend.sourcewall.request.HttpUtil.WRITE_TIMEOUT;
+
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+
 import android.support.annotation.NonNull;
 
 import net.nashlegend.sourcewall.BuildConfig;
@@ -30,10 +35,6 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.exceptions.Exceptions;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
-
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static net.nashlegend.sourcewall.request.HttpUtil.SO_TIMEOUT;
-import static net.nashlegend.sourcewall.request.HttpUtil.WRITE_TIMEOUT;
 
 /**
  * Created by NashLegend on 16/7/6.
@@ -90,7 +91,8 @@ public class NetworkTask<T> {
                             if (tResponseObject.ok) {
                                 request.callBack.onSuccess(tResponseObject.result, tResponseObject);
                             } else {
-                                request.callBack.onFailure(tResponseObject.throwable, tResponseObject);
+                                request.callBack.onFailure(tResponseObject.throwable,
+                                        tResponseObject);
                             }
                         }
                     }
@@ -100,8 +102,6 @@ public class NetworkTask<T> {
 
     /**
      * 请求缓存数据，如果已经有了缓存，然而还是解析失败了，只可能是版本升级中parser发生了变化
-     *
-     * @return
      */
     @NonNull
     public Observable<ResponseObject<T>> flatMap() {
@@ -217,7 +217,8 @@ public class NetworkTask<T> {
                 case RequestType.DOWNLOAD:
                     builder.readTimeout(SO_TIMEOUT * 10, MILLISECONDS)
                             .writeTimeout(WRITE_TIMEOUT * 50, MILLISECONDS)
-                            .addNetworkInterceptor(new DownloadProgressInterceptor(request.callBack));
+                            .addNetworkInterceptor(
+                                    new DownloadProgressInterceptor(request.callBack));
                     break;
                 default:
                     //do nothing
@@ -234,8 +235,6 @@ public class NetworkTask<T> {
 
     /**
      * 请求缓存数据，如果已经有了缓存，然而还是解析失败了，只可能是版本升级中parser发生了变化
-     *
-     * @return
      */
     @NonNull
     private Observable<ResponseObject<T>> cachedObservable() {
@@ -289,8 +288,6 @@ public class NetworkTask<T> {
 
     /**
      * 请求网络返回数据
-     *
-     * @return
      */
     @NonNull
     private Observable<ResponseObject<T>> networkObservable() {
@@ -371,7 +368,8 @@ public class NetworkTask<T> {
                     public ResponseObject<T> call(String string) {
                         if (responseObject.throwable == null && request.parser != null) {
                             try {
-                                responseObject.result = request.parser.parse(string, responseObject);
+                                responseObject.result = request.parser.parse(string,
+                                        responseObject);
                                 if (responseObject.ok && !responseObject.isCached) {
                                     saveToCache(string);
                                 }
@@ -403,8 +401,6 @@ public class NetworkTask<T> {
     /**
      * 生成此次请求的缓存key，
      * key的格式为：Method/{URL}/Params —— Params为a=b&c=d这样，按key排序
-     *
-     * @return
      */
     private String getCachedKey() {
         if (cacheKey == null) {
@@ -429,7 +425,8 @@ public class NetworkTask<T> {
                         if (entryArrayList.size() > 0) {
                             keyBuilder.append("?");
                             for (Param param : entryArrayList) {
-                                keyBuilder.append(param.key).append("=").append(param.value).append("&");
+                                keyBuilder.append(param.key).append("=").append(param.value).append(
+                                        "&");
                             }
                             keyBuilder.deleteCharAt(keyBuilder.length() - 1);
                         }
@@ -445,14 +442,13 @@ public class NetworkTask<T> {
         if (request.cacheTimeOut < 0) {
             return false;
         } else {
-            return System.currentTimeMillis() - CacheHeaderUtil.readTime(getCachedKey()) > request.cacheTimeOut;
+            return System.currentTimeMillis() - CacheHeaderUtil.readTime(getCachedKey())
+                    > request.cacheTimeOut;
         }
     }
 
     /**
      * 在缓存中读取数据
-     *
-     * @return
      */
     private String readFromCache() {
         return RequestCache.getInstance().getStringFromCache(getCachedKey());
@@ -460,8 +456,6 @@ public class NetworkTask<T> {
 
     /**
      * 将数据存入缓存
-     *
-     * @return
      */
     private void saveToCache(String data) {
         if (shouldCache()) {
@@ -472,8 +466,6 @@ public class NetworkTask<T> {
 
     /**
      * 清除缓存
-     *
-     * @return
      */
     private void removeCache() {
         RequestCache.getInstance().removeCache(getCachedKey());

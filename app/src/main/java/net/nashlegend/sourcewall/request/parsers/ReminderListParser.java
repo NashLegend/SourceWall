@@ -13,7 +13,8 @@ import java.util.ArrayList;
  */
 public class ReminderListParser implements Parser<ArrayList<Reminder>> {
     @Override
-    public ArrayList<Reminder> parse(String str, ResponseObject<ArrayList<Reminder>> responseObject) throws Exception {
+    public ArrayList<Reminder> parse(String str, ResponseObject<ArrayList<Reminder>> responseObject)
+            throws Exception {
         JSONArray reminders = JsonHandler.getUniversalJsonArray(str, responseObject);
         if (reminders == null) throw new NullPointerException("reminders is null");
         ArrayList<Reminder> noticeList = new ArrayList<>();

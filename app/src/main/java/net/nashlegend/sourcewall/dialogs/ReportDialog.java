@@ -61,16 +61,19 @@ public class ReportDialog extends Dialog {
 
         public ReportDialog create() {
             dialog = new ReportDialog(mContext);
-            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Service.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(
+                    Service.LAYOUT_INFLATER_SERVICE);
             View layout = inflater.inflate(resID, null);
-            dialog.setContentView(layout, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+            dialog.setContentView(layout,
+                    new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
             dialog.setTitle(title);
 
             final EditText inputText = (EditText) layout.findViewById(R.id.text_other_reason);
             final RadioButton adButton = (RadioButton) layout.findViewById(R.id.btn_ad);
             final RadioButton portButton = (RadioButton) layout.findViewById(R.id.btn_porn);
             final RadioButton attackButton = (RadioButton) layout.findViewById(R.id.btn_attack);
-            final RadioButton copyRightButton = (RadioButton) layout.findViewById(R.id.btn_copy_right);
+            final RadioButton copyRightButton = (RadioButton) layout.findViewById(
+                    R.id.btn_copy_right);
             final RadioButton otherButton = (RadioButton) layout.findViewById(R.id.btn_other);
 
             Button okayButton = (Button) layout.findViewById(R.id.button_dialog_input_ok);

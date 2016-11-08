@@ -34,7 +34,8 @@ public class Question extends AceModel {
     private int answerNum = 0;
 
     private static final int maxImageWidth = 240;
-    private static final String prefix = "<div class=\"ZoomBox\"><div class=\"content-zoom ZoomIn\">";
+    private static final String prefix =
+            "<div class=\"ZoomBox\"><div class=\"content-zoom ZoomIn\">";
     private static final String suffix = "</div></div>";
 
     public static Question fromJson(JSONObject result) throws Exception {
@@ -43,7 +44,9 @@ public class Question extends AceModel {
         question.setAnswerNum(result.optInt("answers_count"));
         question.setCommentNum(result.optInt("replies_count"));
         question.setAuthor(Author.fromJson(result.optJSONObject("author")));
-        question.setContent(result.optString("annotation_html").replaceAll("<img .*?/>", prefix + "$0" + suffix).replaceAll("style=\"max-width: \\d+px\"", "style=\"max-width: " + maxImageWidth + "px\""));
+        question.setContent(result.optString("annotation_html").replaceAll("<img .*?/>",
+                prefix + "$0" + suffix).replaceAll("style=\"max-width: \\d+px\"",
+                "style=\"max-width: " + maxImageWidth + "px\""));
         question.setDate(APIBase.parseDate(result.optString("date_created")));
         question.setFollowNum(result.optInt("followers_count"));
         question.setId(result.getString("id"));

@@ -30,16 +30,21 @@ public class UiUtil {
     private static void fixedAccessibilityInjectorException(WebView webView) {
         try {
             if (Build.VERSION.SDK_INT == 17) {
-                Object webViewProvider = WebView.class.getMethod("getWebViewProvider").invoke(webView);
-                Method getAccessibilityInjector = webViewProvider.getClass().getDeclaredMethod("getAccessibilityInjector");
+                Object webViewProvider = WebView.class.getMethod("getWebViewProvider").invoke(
+                        webView);
+                Method getAccessibilityInjector = webViewProvider.getClass().getDeclaredMethod(
+                        "getAccessibilityInjector");
                 getAccessibilityInjector.setAccessible(true);
                 Object accessibilityInjector = getAccessibilityInjector.invoke(webViewProvider);
                 getAccessibilityInjector.setAccessible(false);
-                Field mAccessibilityManagerField = accessibilityInjector.getClass().getDeclaredField("mAccessibilityManager");
+                Field mAccessibilityManagerField =
+                        accessibilityInjector.getClass().getDeclaredField("mAccessibilityManager");
                 mAccessibilityManagerField.setAccessible(true);
-                Object mAccessibilityManager = mAccessibilityManagerField.get(accessibilityInjector);
+                Object mAccessibilityManager = mAccessibilityManagerField.get(
+                        accessibilityInjector);
                 mAccessibilityManagerField.setAccessible(false);
-                Field mIsEnabledField = mAccessibilityManager.getClass().getDeclaredField("mIsEnabled");
+                Field mIsEnabledField = mAccessibilityManager.getClass().getDeclaredField(
+                        "mIsEnabled");
                 mIsEnabledField.setAccessible(true);
                 mIsEnabledField.set(mAccessibilityManager, false);
                 mIsEnabledField.setAccessible(false);
@@ -53,7 +58,8 @@ public class UiUtil {
         try {
             if (Build.VERSION.SDK_INT == 17/*4.2 (Build.VERSION_CODES.JELLY_BEAN_MR1)*/) {
                 try {
-                    AccessibilityManager am = (AccessibilityManager) App.getApp().getSystemService(Context.ACCESSIBILITY_SERVICE);
+                    AccessibilityManager am = (AccessibilityManager) App.getApp().getSystemService(
+                            Context.ACCESSIBILITY_SERVICE);
                     if (!am.isEnabled()) {
                         return;
                     }
@@ -76,7 +82,8 @@ public class UiUtil {
             }
             ((InputMethodManager) activity.getSystemService
                     (Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
-                    activity.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                    activity.getCurrentFocus().getWindowToken(),
+                    InputMethodManager.HIDE_NOT_ALWAYS);
         } catch (Exception e) {
             ErrorUtils.onException(e);
         }
@@ -90,8 +97,6 @@ public class UiUtil {
      * if(shouldThrottle()){
      * return;
      * }
-     *
-     * @return
      */
     public static boolean shouldThrottle() {
         long crtTime = System.currentTimeMillis();

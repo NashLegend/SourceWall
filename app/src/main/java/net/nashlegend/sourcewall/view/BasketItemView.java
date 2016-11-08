@@ -29,7 +29,8 @@ public class BasketItemView extends AceView<Basket> implements View.OnClickListe
 
     public BasketItemView(Context context) {
         super(context);
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(
+                Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_basket_item_view, this);
         textView = (TextView) findViewById(R.id.text_basket_name);
         button = (ImageButton) findViewById(R.id.button_add_2_favor);

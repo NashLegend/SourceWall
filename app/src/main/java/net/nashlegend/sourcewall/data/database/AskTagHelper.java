@@ -38,7 +38,8 @@ public class AskTagHelper {
         ArrayList<SubItem> subItems = new ArrayList<>();
         for (int i = 0; i < askTags.size(); i++) {
             AskTag tag = askTags.get(i);
-            SubItem subItem = new SubItem(tag.getSection(), tag.getType(), tag.getName(), tag.getValue());
+            SubItem subItem = new SubItem(tag.getSection(), tag.getType(), tag.getName(),
+                    tag.getValue());
             subItems.add(subItem);
         }
         return subItems;
@@ -46,20 +47,23 @@ public class AskTagHelper {
 
     public static List<AskTag> getSelectedTags() {
         AskTagDao tagDao = BaseDB.getDaoSession().getAskTagDao();
-        QueryBuilder<AskTag> builder = tagDao.queryBuilder().where(AskTagDao.Properties.Selected.eq(true)).
+        QueryBuilder<AskTag> builder = tagDao.queryBuilder().where(
+                AskTagDao.Properties.Selected.eq(true)).
                 orderAsc(AskTagDao.Properties.Order);
         return builder.list();
     }
 
     public static List<SubItem> getSelectedQuestionSubItems() {
         AskTagDao tagDao = BaseDB.getDaoSession().getAskTagDao();
-        QueryBuilder<AskTag> builder = tagDao.queryBuilder().where(AskTagDao.Properties.Selected.eq(true)).
+        QueryBuilder<AskTag> builder = tagDao.queryBuilder().where(
+                AskTagDao.Properties.Selected.eq(true)).
                 orderAsc(AskTagDao.Properties.Order);
         List<AskTag> askTags = builder.list();
         ArrayList<SubItem> subItems = new ArrayList<>();
         for (int i = 0; i < askTags.size(); i++) {
             AskTag tag = askTags.get(i);
-            SubItem subItem = new SubItem(tag.getSection(), tag.getType(), tag.getName(), tag.getValue());
+            SubItem subItem = new SubItem(tag.getSection(), tag.getType(), tag.getName(),
+                    tag.getValue());
             subItems.add(subItem);
         }
         return subItems;

@@ -104,7 +104,7 @@ public class PostPagerFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         Emitter.register(this);
         if (layoutView == null) {
             layoutView = inflater.inflate(R.layout.fragment_post_pager, container, false);
@@ -121,7 +121,8 @@ public class PostPagerFragment extends BaseFragment {
                     onSectionButtonClicked((GroupMovableButton) btn);
                 }
             });
-            ((TextView) deskSimple.findViewById(R.id.tip_of_more_sections)).setText(R.string.tip_of_more_groups);
+            ((TextView) deskSimple.findViewById(R.id.tip_of_more_sections)).setText(
+                    R.string.tip_of_more_groups);
             manageButton = (Button) deskSimple.findViewById(R.id.button_manage_my_sections);
             manageButton.setText(R.string.reload_all_groups);
             manageButton.setVisibility(View.INVISIBLE);
@@ -131,16 +132,19 @@ public class PostPagerFragment extends BaseFragment {
                     reloadFromNet();
                 }
             });
-            moreSectionsLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    if (moreSectionsLayout.getHeight() > 0) {
-                        moreSectionsLayout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                        moreSectionsLayout.setTranslationY(-moreSectionsLayout.getHeight());
-                        moreSectionsLayout.setVisibility(View.VISIBLE);
-                    }
-                }
-            });
+            moreSectionsLayout.getViewTreeObserver().addOnGlobalLayoutListener(
+                    new ViewTreeObserver.OnGlobalLayoutListener() {
+                        @Override
+                        public void onGlobalLayout() {
+                            if (moreSectionsLayout.getHeight() > 0) {
+                                moreSectionsLayout.getViewTreeObserver()
+                                        .removeGlobalOnLayoutListener(
+                                        this);
+                                moreSectionsLayout.setTranslationY(-moreSectionsLayout.getHeight());
+                                moreSectionsLayout.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    });
         } else {
             if (layoutView.getParent() != null) {
                 ((ViewGroup) layoutView.getParent()).removeView(layoutView);
@@ -220,7 +224,8 @@ public class PostPagerFragment extends BaseFragment {
 
     private void onSectionButtonClicked(GroupMovableButton button) {
         MyGroup myGroup = button.getSection();
-        SubItem subItem = new SubItem(myGroup.getSection(), myGroup.getType(), myGroup.getName(), myGroup.getValue());
+        SubItem subItem = new SubItem(myGroup.getSection(), myGroup.getType(), myGroup.getName(),
+                myGroup.getValue());
         hideMoreSections();
         for (int i = 0; i < subItems.size(); i++) {
             if (subItems.get(i).getValue().equals(subItem.getValue())) {
@@ -261,13 +266,15 @@ public class PostPagerFragment extends BaseFragment {
             animatorSet.cancel();
         }
         animatorSet = new AnimatorSet();
-        ObjectAnimator layoutAnimator = ObjectAnimator.ofFloat(moreSectionsLayout, "translationY", moreSectionsLayout.getTranslationY(), 0);
+        ObjectAnimator layoutAnimator = ObjectAnimator.ofFloat(moreSectionsLayout, "translationY",
+                moreSectionsLayout.getTranslationY(), 0);
         layoutAnimator.setInterpolator(new FastOutSlowInInterpolator());
 
         ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(moreSectionsLayout, "alpha", 0.0f, 1);
         alphaAnimator.setInterpolator(new FastOutSlowInInterpolator());
 
-        ObjectAnimator imageAnimator = ObjectAnimator.ofFloat(showMore, "rotation", showMore.getRotation(), 180);
+        ObjectAnimator imageAnimator = ObjectAnimator.ofFloat(showMore, "rotation",
+                showMore.getRotation(), 180);
         imageAnimator.setInterpolator(new FastOutSlowInInterpolator());
 
         ArrayList<Animator> animators = new ArrayList<>();
@@ -307,18 +314,20 @@ public class PostPagerFragment extends BaseFragment {
                 .Builder(getActivity())
                 .setTitle(R.string.hint)
                 .setMessage(R.string.ok_to_load_groups)
-                .setPositiveButton(R.string.confirm_to_load_my_groups, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        reloadFromNet();
-                    }
-                })
-                .setNegativeButton(R.string.use_default_groups, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        hideMoreSections();
-                    }
-                })
+                .setPositiveButton(R.string.confirm_to_load_my_groups,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                reloadFromNet();
+                            }
+                        })
+                .setNegativeButton(R.string.use_default_groups,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                hideMoreSections();
+                            }
+                        })
                 .setOnCancelListener(new DialogInterface.OnCancelListener() {
                     @Override
                     public void onCancel(DialogInterface dialog) {
@@ -348,7 +357,8 @@ public class PostPagerFragment extends BaseFragment {
         ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(moreSectionsLayout, "alpha", 1, 0.0f);
         alphaAnimator.setInterpolator(new FastOutSlowInInterpolator());
 
-        ObjectAnimator imageAnimator = ObjectAnimator.ofFloat(showMore, "rotation", showMore.getRotation(), 360);
+        ObjectAnimator imageAnimator = ObjectAnimator.ofFloat(showMore, "rotation",
+                showMore.getRotation(), 360);
         imageAnimator.setInterpolator(new FastOutSlowInInterpolator());
 
         ArrayList<Animator> animators = new ArrayList<>();
@@ -505,7 +515,8 @@ public class PostPagerFragment extends BaseFragment {
             return;
         }
         fabMenu.collapse();
-        hideAnimator = ObjectAnimator.ofFloat(fabMenu, "translationY", fabMenu.getTranslationY(), fabMenu.getHeight());
+        hideAnimator = ObjectAnimator.ofFloat(fabMenu, "translationY", fabMenu.getTranslationY(),
+                fabMenu.getHeight());
         hideAnimator.setInterpolator(new AccelerateInterpolator(1.3f));
         hideAnimator.setDuration(400);
         hideAnimator.start();
@@ -516,7 +527,8 @@ public class PostPagerFragment extends BaseFragment {
         if (showAnimator != null && showAnimator.isRunning()) {
             return;
         }
-        showAnimator = ObjectAnimator.ofFloat(fabMenu, "translationY", fabMenu.getTranslationY(), 0);
+        showAnimator = ObjectAnimator.ofFloat(fabMenu, "translationY", fabMenu.getTranslationY(),
+                0);
         showAnimator.setInterpolator(new DecelerateInterpolator());
         showAnimator.setDuration(400);
         showAnimator.start();

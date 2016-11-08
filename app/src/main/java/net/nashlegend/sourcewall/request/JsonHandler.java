@@ -20,7 +20,8 @@ import java.net.SocketTimeoutException;
 public class JsonHandler {
 
     @NonNull
-    public static JSONObject getJsonObjectSafely(JSONObject jsonObject, String key) throws JSONException {
+    public static JSONObject getJsonObjectSafely(JSONObject jsonObject, String key)
+            throws JSONException {
         JSONObject subObject = jsonObject.optJSONObject(key);
         if (subObject == null) {
             subObject = new JSONObject();
@@ -29,7 +30,8 @@ public class JsonHandler {
     }
 
     @NonNull
-    public static JSONArray getJsonArraySafely(JSONObject jsonObject, String key) throws JSONException {
+    public static JSONArray getJsonArraySafely(JSONObject jsonObject, String key)
+            throws JSONException {
         JSONArray jsonArray = jsonObject.optJSONArray(key);
         if (jsonArray == null) {
             jsonArray = new JSONArray();
@@ -43,9 +45,9 @@ public class JsonHandler {
      *
      * @param json 要进行json解析的文本内容
      * @return JSONObject
-     * @throws JSONException
      */
-    public static JSONObject getUniversalJsonObject(String json, ResponseObject responseObject) throws JSONException {
+    public static JSONObject getUniversalJsonObject(String json, ResponseObject responseObject)
+            throws JSONException {
         JSONObject object = new JSONObject(json);
         if (object.optBoolean("ok")) {
             responseObject.ok = true;
@@ -62,9 +64,9 @@ public class JsonHandler {
      *
      * @param json 要进行json解析的文本内容
      * @return JSONArray
-     * @throws JSONException
      */
-    public static JSONArray getUniversalJsonArray(String json, ResponseObject responseObject) throws JSONException {
+    public static JSONArray getUniversalJsonArray(String json, ResponseObject responseObject)
+            throws JSONException {
         JSONObject object = new JSONObject(json);
         if (object.optBoolean("ok")) {
             responseObject.ok = true;
@@ -81,9 +83,9 @@ public class JsonHandler {
      *
      * @param json 要进行json解析的文本内容
      * @return 是否为true
-     * @throws JSONException
      */
-    public static boolean getUniversalJsonSimpleBoolean(String json, ResponseObject responseObject) throws JSONException {
+    public static boolean getUniversalJsonSimpleBoolean(String json, ResponseObject responseObject)
+            throws JSONException {
         JSONObject object = new JSONObject(json);
         if (object.optBoolean("ok")) {
             responseObject.ok = true;
@@ -102,7 +104,6 @@ public class JsonHandler {
      *
      * @param json 要进行json解析的文本内容
      * @return 是否为true
-     * @throws JSONException
      */
     public static String getUniversalJsonSimpleString(String json, ResponseObject
             responseObject) throws JSONException {
@@ -118,12 +119,9 @@ public class JsonHandler {
 
     /**
      * Bad Json指返回结果不为true的，而不是格式不对的
-     *
-     * @param object
-     * @param responseObject
-     * @throws JSONException
      */
-    public static void handleBadJson(JSONObject object, ResponseObject responseObject) throws JSONException {
+    public static void handleBadJson(JSONObject object, ResponseObject responseObject)
+            throws JSONException {
         responseObject.ok = false;
         int error_code = object.optInt("error_code", ResponseCode.CODE_UNKNOWN);
         responseObject.message = object.optString("error");

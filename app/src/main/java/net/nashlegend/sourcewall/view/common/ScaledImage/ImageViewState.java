@@ -21,7 +21,8 @@ import android.graphics.PointF;
 import java.io.Serializable;
 
 /**
- * Wraps the scale, center and orientation of a displayed image for easy restoration on screen rotate.
+ * Wraps the scale, center and orientation of a displayed image for easy restoration on screen
+ * rotate.
  */
 public class ImageViewState implements Serializable {
 

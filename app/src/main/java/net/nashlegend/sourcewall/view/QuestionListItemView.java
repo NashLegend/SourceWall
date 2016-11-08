@@ -18,7 +18,8 @@ public class QuestionListItemView extends AceView<Question> {
 
     public QuestionListItemView(Context context) {
         super(context);
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(
+                Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_question_item_view, this);
         titleView = (TextView) findViewById(R.id.text_title);
         summaryView = (TextView) findViewById(R.id.text_summary);

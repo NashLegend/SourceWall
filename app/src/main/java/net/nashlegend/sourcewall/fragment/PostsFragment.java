@@ -37,7 +37,8 @@ import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 
-public class PostsFragment extends BaseFragment implements ReloadListener, OnRefreshListener, OnItemClickListener {
+public class PostsFragment extends BaseFragment implements ReloadListener, OnRefreshListener,
+        OnItemClickListener {
     View layoutView;
     @BindView(R.id.list_posts)
     LListView listView;
@@ -73,7 +74,7 @@ public class PostsFragment extends BaseFragment implements ReloadListener, OnRef
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         layoutView = inflater.inflate(R.layout.fragment_posts, container, false);
         ButterKnife.bind(this, layoutView);
         subItem = getArguments().getParcelable(Extras.Extra_SubItem);
@@ -85,15 +86,16 @@ public class PostsFragment extends BaseFragment implements ReloadListener, OnRef
         listView.setOnItemClickListener(this);
 
         listView.addHeaderView(headerView);
-        headerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                if (headerView.getLayoutParams() != null) {
-                    headerView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                    hideHeader();
-                }
-            }
-        });
+        headerView.getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        if (headerView.getLayoutParams() != null) {
+                            headerView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                            hideHeader();
+                        }
+                    }
+                });
         headerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,7 +119,8 @@ public class PostsFragment extends BaseFragment implements ReloadListener, OnRef
             }
         });
         loadOver();
-        AutoHideUtil.applyListViewAutoHide(getActivity(), listView, (int) getResources().getDimension(R.dimen.actionbar_height), false,
+        AutoHideUtil.applyListViewAutoHide(getActivity(), listView,
+                (int) getResources().getDimension(R.dimen.actionbar_height), false,
                 new AutoHideUtil.AutoHideListener() {
                     @Override
                     public void animateHide() {
@@ -274,8 +277,10 @@ public class PostsFragment extends BaseFragment implements ReloadListener, OnRef
                                 listView.setCanPullToLoadMore(false);
                                 listView.setCanPullToRefresh(true);
                             }
-                            headerView.findViewById(R.id.text_header_load_hint).setVisibility(View.VISIBLE);
-                            headerView.findViewById(R.id.progress_header_loading).setVisibility(View.GONE);
+                            headerView.findViewById(R.id.text_header_load_hint).setVisibility(
+                                    View.VISIBLE);
+                            headerView.findViewById(R.id.progress_header_loading).setVisibility(
+                                    View.GONE);
                         }
                     }
                 });

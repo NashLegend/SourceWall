@@ -1,5 +1,7 @@
 package net.nashlegend.sourcewall.view;
 
+import static net.nashlegend.sourcewall.util.DisplayUtil.getScreenWidth;
+
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -13,8 +15,6 @@ import net.nashlegend.sourcewall.data.Config;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.util.DateTimeUtil;
 import net.nashlegend.sourcewall.util.ImageUtils;
-
-import static net.nashlegend.sourcewall.util.DisplayUtil.getScreenWidth;
 
 /**
  * Created by NashLegend on 2014/9/18 0018
@@ -31,7 +31,8 @@ public class ArticleListItemView extends AceView<Article> {
 
     public ArticleListItemView(Context context) {
         super(context);
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(
+                Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_article_item_view, this);
         titleView = (TextView) findViewById(R.id.text_title);
         contentView = (TextView) findViewById(R.id.text_content);
@@ -69,11 +70,14 @@ public class ArticleListItemView extends AceView<Article> {
             titleImage.setVisibility(GONE);
             titleImage.setImageBitmap(null);
         } else {
-            if (!TextUtils.isEmpty(article.getImageUrl()) && Config.shouldLoadImage() && Config.shouldLoadHomepageImage()) {
-                int width = (int) (getScreenWidth(getContext()) - getResources().getDimension(R.dimen.list_item_padding_horizontal) * 2);
+            if (!TextUtils.isEmpty(article.getImageUrl()) && Config.shouldLoadImage()
+                    && Config.shouldLoadHomepageImage()) {
+                int width = (int) (getScreenWidth(getContext()) - getResources().getDimension(
+                        R.dimen.list_item_padding_horizontal) * 2);
                 titleImage.setFixedWidth(width);
                 titleImage.setVisibility(VISIBLE);
-                ImageLoader.getInstance().displayImage(article.getImageUrl(), titleImage, ImageUtils.articleTitleImageOptions);
+                ImageLoader.getInstance().displayImage(article.getImageUrl(), titleImage,
+                        ImageUtils.articleTitleImageOptions);
             } else {
                 titleImage.setVisibility(GONE);
                 titleImage.setImageBitmap(null);

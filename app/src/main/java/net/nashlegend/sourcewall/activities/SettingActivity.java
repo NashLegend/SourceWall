@@ -35,7 +35,8 @@ import net.nashlegend.sourcewall.util.UiUtil;
 import net.nashlegend.sourcewall.util.UpdateChecker;
 import net.nashlegend.sourcewall.util.UrlCheckUtil;
 
-public class SettingActivity extends BaseActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class SettingActivity extends BaseActivity implements View.OnClickListener,
+        CompoundButton.OnCheckedChangeListener {
     private TextView imageText;
     private TextView logText;
     private View tailsView;
@@ -304,7 +305,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void showAboutApp() {
-        UrlCheckUtil.openWithBrowser("https://github.com/NashLegend/SourceWall/blob/master/README.md");
+        UrlCheckUtil.openWithBrowser(
+                "https://github.com/NashLegend/SourceWall/blob/master/README.md");
     }
 
     @Override

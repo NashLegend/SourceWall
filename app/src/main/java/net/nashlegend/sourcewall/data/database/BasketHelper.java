@@ -28,7 +28,8 @@ public class BasketHelper {
         ArrayList<SubItem> subItems = new ArrayList<>();
         for (int i = 0; i < MyBaskets.size(); i++) {
             MyBasket basket = MyBaskets.get(i);
-            SubItem subItem = new SubItem(basket.getSection(), basket.getType(), basket.getName(), basket.getValue());
+            SubItem subItem = new SubItem(basket.getSection(), basket.getType(), basket.getName(),
+                    basket.getValue());
             subItems.add(subItem);
         }
         return subItems;
@@ -52,7 +53,8 @@ public class BasketHelper {
         ArrayList<SubItem> subItems = new ArrayList<>();
         for (int i = 0; i < MyBaskets.size(); i++) {
             MyBasket basket = MyBaskets.get(i);
-            SubItem subItem = new SubItem(basket.getSection(), basket.getType(), basket.getName(), basket.getValue());
+            SubItem subItem = new SubItem(basket.getSection(), basket.getType(), basket.getName(),
+                    basket.getValue());
             subItems.add(subItem);
         }
         return subItems;

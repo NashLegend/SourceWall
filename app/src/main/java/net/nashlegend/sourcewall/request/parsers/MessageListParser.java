@@ -14,7 +14,8 @@ import java.util.ArrayList;
  */
 public class MessageListParser implements Parser<ArrayList<Message>> {
     @Override
-    public ArrayList<Message> parse(String str, ResponseObject<ArrayList<Message>> responseObject) throws Exception {
+    public ArrayList<Message> parse(String str, ResponseObject<ArrayList<Message>> responseObject)
+            throws Exception {
         JSONArray notices = JsonHandler.getUniversalJsonArray(str, responseObject);
         ArrayList<Message> noticeList = new ArrayList<>();
         assert notices != null;

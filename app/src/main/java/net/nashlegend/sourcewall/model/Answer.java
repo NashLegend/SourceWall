@@ -63,7 +63,8 @@ public class Answer extends AceModel {
         Answer answer = new Answer();
         answer.setAuthor(Author.fromJson(authorObject));
         answer.setCommentNum(replies_count);
-        answer.setContent(content.replaceAll("<img .*?/>", prefix + "$0" + suffix).replaceAll("style=\"max-width: \\d+px\"", "style=\"max-width: " + maxImageWidth + "px\""));
+        answer.setContent(content.replaceAll("<img .*?/>", prefix + "$0" + suffix).replaceAll(
+                "style=\"max-width: \\d+px\"", "style=\"max-width: " + maxImageWidth + "px\""));
         answer.setDate_created(date_created);
         answer.setDate_modified(date_modified);
         answer.setHasDownVoted(current_user_has_opposed);
@@ -105,8 +106,10 @@ public class Answer extends AceModel {
         Answer answer = new Answer();
         answer.setAuthor(Author.fromJson(authorObject));
         answer.setCommentNum(replies_count);
-        answer.setContent(content.replaceAll("<img .*?/>", prefix + "$0" + suffix).replaceAll("style=\"max-width: \\d+px\"", "style=\"max-width: " + maxImageWidth + "px\""));
-        answer.setSimplifiedContent(RegUtil.tryGetStringByLength(RegUtil.html2PlainTextWithImageTag(answer.getContent()), 100));
+        answer.setContent(content.replaceAll("<img .*?/>", prefix + "$0" + suffix).replaceAll(
+                "style=\"max-width: \\d+px\"", "style=\"max-width: " + maxImageWidth + "px\""));
+        answer.setSimplifiedContent(RegUtil.tryGetStringByLength(
+                RegUtil.html2PlainTextWithImageTag(answer.getContent()), 100));
         answer.setDate_created(date_created);
         answer.setDate_modified(date_modified);
         answer.setHasDownVoted(current_user_has_opposed);

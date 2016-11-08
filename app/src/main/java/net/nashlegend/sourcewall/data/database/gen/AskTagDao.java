@@ -23,11 +23,13 @@ public class AskTagDao extends AbstractDao<AskTag, Long> {
      */
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Section = new Property(1, int.class, "section", false, "SECTION");
+        public final static Property Section = new Property(1, int.class, "section", false,
+                "SECTION");
         public final static Property Type = new Property(2, int.class, "type", false, "TYPE");
         public final static Property Name = new Property(3, String.class, "name", false, "NAME");
         public final static Property Value = new Property(4, String.class, "value", false, "VALUE");
-        public final static Property Selected = new Property(5, boolean.class, "selected", false, "SELECTED");
+        public final static Property Selected = new Property(5, boolean.class, "selected", false,
+                "SELECTED");
         public final static Property Order = new Property(6, int.class, "order", false, "ORDER");
     }
 

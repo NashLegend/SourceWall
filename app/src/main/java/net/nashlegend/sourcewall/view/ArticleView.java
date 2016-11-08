@@ -59,7 +59,8 @@ public class ArticleView extends AceView<Article> {
     }
 
     private void initViews() {
-        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(
+                Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_article_view, this);
         titleView = (TextView) findViewById(R.id.text_title);
         contentView = (WWebView) findViewById(R.id.web_content);
@@ -121,8 +122,10 @@ public class ArticleView extends AceView<Article> {
 
                     @Override
                     public void onNext(ResponseObject<ArrayList<UComment>> result) {
-                        loadDesc.findViewById(R.id.text_header_load_hint).setVisibility(View.VISIBLE);
-                        loadDesc.findViewById(R.id.progress_header_loading).setVisibility(View.INVISIBLE);
+                        loadDesc.findViewById(R.id.text_header_load_hint).setVisibility(
+                                View.VISIBLE);
+                        loadDesc.findViewById(R.id.progress_header_loading).setVisibility(
+                                View.INVISIBLE);
                         if (result.ok) {
                             ArrayList<UComment> ars = result.result;
                             if (ars.size() > 0) {

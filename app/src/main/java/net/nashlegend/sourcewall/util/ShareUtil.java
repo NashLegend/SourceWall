@@ -27,10 +27,13 @@ public class ShareUtil {
     public static final String WEIXIN_APP_ID_DEBUG = "wxb38f35b29cf6703d";
     public static final String WEIXIN_APP_ID_RELEASE = "wx6383bc21d7a89367";
     public static final String WEIBO_APP_KEY = "2946702059";
-    public static final String SCOPE = "email,direct_messages_read,direct_messages_write," + "friendships_groups_read,friendships_groups_write,statuses_to_me_read," + "follow_app_official_microblog," + "invitation_write";
+    public static final String SCOPE = "email,direct_messages_read,direct_messages_write,"
+            + "friendships_groups_read,friendships_groups_write,statuses_to_me_read,"
+            + "follow_app_official_microblog," + "invitation_write";
     public static final String REDIRECT_URL = "http://www.sina.com";
 
-    public static void shareToWeiXinCircle(Context context, String url, String title, String summary, Bitmap bitmap) {
+    public static void shareToWeiXinCircle(Context context, String url, String title,
+            String summary, Bitmap bitmap) {
         String appid = getWeixinAppId();
         IWXAPI api = WXAPIFactory.createWXAPI(context, appid, false);
         if (api.isWXAppInstalled()) {
@@ -50,7 +53,8 @@ public class ShareUtil {
         }
     }
 
-    public static void shareToWeiXinFriends(Context context, String url, String title, String summary, Bitmap bitmap) {
+    public static void shareToWeiXinFriends(Context context, String url, String title,
+            String summary, Bitmap bitmap) {
         String appid = getWeixinAppId();
         IWXAPI api = WXAPIFactory.createWXAPI(context, appid, false);
         if (api.isWXAppInstalled()) {
@@ -70,7 +74,8 @@ public class ShareUtil {
         }
     }
 
-    public static void shareToWeibo(Activity context, String url, String title, String summary, Bitmap bitmap) {
+    public static void shareToWeibo(Activity context, String url, String title, String summary,
+            Bitmap bitmap) {
         Intent intent = new Intent(context, WeiboShareActivity.class);
         intent.putExtra(Extras.Extra_Shared_Title, title);
         intent.putExtra(Extras.Extra_Shared_Summary, summary);

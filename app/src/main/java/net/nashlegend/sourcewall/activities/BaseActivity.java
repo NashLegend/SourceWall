@@ -102,8 +102,6 @@ public abstract class BaseActivity extends SwipeActivity {
 
     /**
      * 返回发起请求的类
-     *
-     * @return
      */
     @NonNull
     public String getRequestFrom() {
@@ -118,8 +116,6 @@ public abstract class BaseActivity extends SwipeActivity {
 
     /**
      * 返回发起请求的requestCode
-     *
-     * @return
      */
     public int getRequestCode() {
         int code = -1;

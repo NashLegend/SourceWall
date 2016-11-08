@@ -43,7 +43,8 @@ public class NoticeView extends AceView<Notice> implements View.OnClickListener 
     }
 
     private void initViews() {
-        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(
+                Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_notice_view, this);
         noticeText = (TextView) findViewById(R.id.text_notice);
         findViewById(R.id.btn_ignore).setOnClickListener(this);

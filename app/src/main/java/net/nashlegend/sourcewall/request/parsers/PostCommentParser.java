@@ -12,7 +12,8 @@ import org.json.JSONObject;
 
 public class PostCommentParser implements Parser<UComment> {
     @Override
-    public UComment parse(String response, ResponseObject<UComment> responseObject) throws Exception {
+    public UComment parse(String response, ResponseObject<UComment> responseObject)
+            throws Exception {
         JSONObject replyObject = JsonHandler.getUniversalJsonObject(response, responseObject);
         return UComment.fromPostJson(replyObject);
     }

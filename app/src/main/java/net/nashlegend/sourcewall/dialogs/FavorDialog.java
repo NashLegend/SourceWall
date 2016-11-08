@@ -57,7 +57,9 @@ public class FavorDialog extends Dialog {
             dialog.setTitle(title);
             dialog.setCancelable(cancelable);
             dialog.setCanceledOnTouchOutside(canceledOnTouchOutside);
-            dialog.setContentView(basketsView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            dialog.setContentView(basketsView,
+                    new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT));
             okButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

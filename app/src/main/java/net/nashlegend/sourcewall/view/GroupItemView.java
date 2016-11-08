@@ -16,7 +16,8 @@ public class GroupItemView extends AceView<SubItem> {
 
     public GroupItemView(Context context) {
         super(context);
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(
+                Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_group_item_view, this);
         textView = (TextView) findViewById(R.id.text_subitem);
     }

@@ -29,7 +29,8 @@ public class LListFooter extends FrameLayout {
         this.listView = listView;
         Release_Height = (int) (DisplayUtil.getPixelDensity(context) * Release_Height_In_DP);
         Loading_Height = (int) (DisplayUtil.getPixelDensity(context) * Loading_Height_In_DP);
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(
+                Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_footer_view, this);
         tvHint = (TextView) findViewById(R.id.text_footer_hint);
         setClickable(true);

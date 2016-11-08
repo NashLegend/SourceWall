@@ -26,7 +26,8 @@ public class SearchAPI {
      * @return NetworkTask<ArrayList<SearchItem>>
      */
     public static NetworkTask<ArrayList<SearchItem>>
-    getSearchedItems(String type, int page, String keyword, RequestCallBack<ArrayList<SearchItem>> callBack) {
+    getSearchedItems(String type, int page, String keyword,
+            RequestCallBack<ArrayList<SearchItem>> callBack) {
         String url = "http://m.guokr.com/search/" + type + "/";
         return new RequestBuilder<ArrayList<SearchItem>>()
                 .get()

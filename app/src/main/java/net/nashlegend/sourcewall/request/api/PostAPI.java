@@ -1,5 +1,8 @@
 package net.nashlegend.sourcewall.request.api;
 
+import static net.nashlegend.sourcewall.data.Tail.getComplexReplyTail;
+import static net.nashlegend.sourcewall.data.Tail.getDefaultComplexTail;
+
 import android.net.Uri;
 import android.text.TextUtils;
 
@@ -53,13 +56,11 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-import static net.nashlegend.sourcewall.data.Tail.getComplexReplyTail;
-import static net.nashlegend.sourcewall.data.Tail.getDefaultComplexTail;
-
 public class PostAPI extends APIBase {
 
 
-    public static NetworkTask<String> getGroupNameById(String id, RequestCallBack<String> callBack) {
+    public static NetworkTask<String> getGroupNameById(String id,
+            RequestCallBack<String> callBack) {
         String url = "http://m.guokr.com/group/" + id.trim() + "/";
         return new RequestBuilder<String>()
                 .get()
@@ -68,8 +69,10 @@ public class PostAPI extends APIBase {
                 .useCacheFirst(true, Integer.MAX_VALUE)
                 .parser(new Parser<String>() {
                     @Override
-                    public String parse(String response, ResponseObject<String> responseObject) throws Exception {
-                        String name = Jsoup.parse(response).getElementsByClass("group-name").text().trim();
+                    public String parse(String response, ResponseObject<String> responseObject)
+                            throws Exception {
+                        String name = Jsoup.parse(response).getElementsByClass(
+                                "group-name").text().trim();
                         responseObject.ok = true;
                         return name;
                     }
@@ -77,17 +80,20 @@ public class PostAPI extends APIBase {
                 .requestAsync();
     }
 
-    public static NetworkTask<Boolean> reportPost(String postId, String reason, RequestCallBack<Boolean> callBack) {
+    public static NetworkTask<Boolean> reportPost(String postId, String reason,
+            RequestCallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/post/" + postId + "/";
         return UserAPI.report(url, reason, callBack);
     }
 
-    public static NetworkTask<Boolean> reportReply(String replyId, String reason, RequestCallBack<Boolean> callBack) {
+    public static NetworkTask<Boolean> reportReply(String replyId, String reason,
+            RequestCallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/post/reply/" + replyId + "/";
         return UserAPI.report(url, reason, callBack);
     }
 
-    public static NetworkTask<ArrayList<Post>> getPostListByUser(String ukey, int offset, RequestCallBack<ArrayList<Post>> callBack) {
+    public static NetworkTask<ArrayList<Post>> getPostListByUser(String ukey, int offset,
+            RequestCallBack<ArrayList<Post>> callBack) {
         String url = "http://apis.guokr.com/group/post.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("retrieve_type", "by_user");
@@ -104,7 +110,8 @@ public class PostAPI extends APIBase {
                 .requestAsync();
     }
 
-    public static Observable<ResponseObject<ArrayList<Post>>> getPostList(final int type, String key, int page, boolean useCache) {
+    public static Observable<ResponseObject<ArrayList<Post>>> getPostList(final int type,
+            String key, int page, boolean useCache) {
         String url = "http://apis.guokr.com/group/post.json";
         ParamsMap pairs = new ParamsMap();
         long timeout = 600000;
@@ -131,7 +138,8 @@ public class PostAPI extends APIBase {
                 .cacheTimeOut(timeout)
                 .parser(new Parser<ArrayList<Post>>() {
                     @Override
-                    public ArrayList<Post> parse(String response, ResponseObject<ArrayList<Post>> responseObject) throws Exception {
+                    public ArrayList<Post> parse(String response,
+                            ResponseObject<ArrayList<Post>> responseObject) throws Exception {
                         PostListParser parser = new PostListParser();
                         ArrayList<Post> posts = parser.parse(response, responseObject);
                         if (type == SubItem.Type_Single_Channel) {
@@ -148,13 +156,10 @@ public class PostAPI extends APIBase {
     /**
      * 与getPostList相同,只是加载热门时使用Html加载
      *
-     * @param type
-     * @param key
-     * @param page     从0开始
-     * @param useCache
-     * @return
+     * @param page 从0开始
      */
-    public static Observable<ResponseObject<ArrayList<Post>>> getPostListHotHtml(final int type, String key, int page, boolean useCache) {
+    public static Observable<ResponseObject<ArrayList<Post>>> getPostListHotHtml(final int type,
+            String key, int page, boolean useCache) {
         String url = "http://apis.guokr.com/group/post.json";
         ParamsMap pairs = new ParamsMap();
         long timeout = 600000;
@@ -184,7 +189,8 @@ public class PostAPI extends APIBase {
                 .cacheTimeOut(timeout)
                 .parser(new Parser<ArrayList<Post>>() {
                     @Override
-                    public ArrayList<Post> parse(String response, ResponseObject<ArrayList<Post>> responseObject) throws Exception {
+                    public ArrayList<Post> parse(String response,
+                            ResponseObject<ArrayList<Post>> responseObject) throws Exception {
                         Parser<ArrayList<Post>> parser = null;
                         if (type == SubItem.Type_Collections) {
                             parser = new PostHtmlListParser();
@@ -205,15 +211,11 @@ public class PostAPI extends APIBase {
 
     /**
      * 如果碰到热贴,先取html的,失败后才取json的,暂不用
-     *
-     * @param type
-     * @param key
-     * @param page
-     * @param useCache
-     * @return
      */
-    public static Observable<ResponseObject<ArrayList<Post>>> getPostListMerge(int type, String key, int page, boolean useCache) {
-        Observable<ResponseObject<ArrayList<Post>>> html = getPostListHotHtml(type, key, page, useCache);
+    public static Observable<ResponseObject<ArrayList<Post>>> getPostListMerge(int type, String key,
+            int page, boolean useCache) {
+        Observable<ResponseObject<ArrayList<Post>>> html = getPostListHotHtml(type, key, page,
+                useCache);
         Observable<ResponseObject<ArrayList<Post>>> json = getPostList(type, key, page, useCache);
         return Observable.concat(html, json)
                 .first(new Func1<ResponseObject<ArrayList<Post>>, Boolean>() {
@@ -279,15 +281,19 @@ public class PostAPI extends APIBase {
         final Collator collator = Collator.getInstance();
         return PostAPI
                 .getAllMyGroups()
-                .flatMap(new Func1<ResponseObject<ArrayList<SubItem>>, Observable<ArrayList<SubItem>>>() {
-                    @Override
-                    public Observable<ArrayList<SubItem>> call(ResponseObject<ArrayList<SubItem>> result) {
-                        if (result.ok) {
-                            return Observable.just(result.result);
-                        }
-                        return Observable.error(new IllegalStateException("error occurred"));
-                    }
-                })
+                .flatMap(
+                        new Func1<ResponseObject<ArrayList<SubItem>>,
+                                Observable<ArrayList<SubItem>>>() {
+                            @Override
+                            public Observable<ArrayList<SubItem>> call(
+                                    ResponseObject<ArrayList<SubItem>> result) {
+                                if (result.ok) {
+                                    return Observable.just(result.result);
+                                }
+                                return Observable.error(
+                                        new IllegalStateException("error occurred"));
+                            }
+                        })
                 .map(new Func1<ArrayList<SubItem>, ArrayList<SubItem>>() {
                     @Override
                     public ArrayList<SubItem> call(ArrayList<SubItem> subItems) {
@@ -380,7 +386,6 @@ public class PostAPI extends APIBase {
     /**
      * 根据贴子id获取贴子内容，json格式
      *
-     * @param id，贴子id
      * @return resultObject
      */
     public static Observable<ResponseObject<Post>> getPostDetailByID(String id) {
@@ -399,10 +404,10 @@ public class PostAPI extends APIBase {
      *
      * @param id     article ID
      * @param offset 从第几个开始加载
-     * @param limit
      * @return ResponseObject
      */
-    public static Observable<ResponseObject<ArrayList<UComment>>> getPostReplies(final String id, final int offset, int limit) {
+    public static Observable<ResponseObject<ArrayList<UComment>>> getPostReplies(final String id,
+            final int offset, int limit) {
         String url = "http://apis.guokr.com/group/post_reply.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("retrieve_type", "by_post");
@@ -445,7 +450,8 @@ public class PostAPI extends APIBase {
      * @param content 回复内容
      * @return ResponseObject.result is the reply_id if ok;
      */
-    public static NetworkTask<String> replyPost(String id, String content, RequestCallBack<String> callBack) {
+    public static NetworkTask<String> replyPost(String id, String content,
+            RequestCallBack<String> callBack) {
         String url = "http://apis.guokr.com/group/post_reply.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("post_id", id);
@@ -466,15 +472,18 @@ public class PostAPI extends APIBase {
      * @param content 回复内容
      * @return ResponseObject.result is the reply_id if ok;
      */
-    public static Subscription replyPostHtml(String id, final String content, final boolean is_anon, final RequestCallBack<Boolean> callBack) {
+    public static Subscription replyPostHtml(String id, final String content, final boolean is_anon,
+            final RequestCallBack<Boolean> callBack) {
         final String url = "http://www.guokr.com/post/" + id + "/";
         return new RequestBuilder<String>()
                 .get()
                 .url(url)
                 .parser(new Parser<String>() {
                     @Override
-                    public String parse(String response, ResponseObject<String> responseObject) throws Exception {
-                        String str = Jsoup.parse(response).getElementById("csrf_token").attr("value");
+                    public String parse(String response, ResponseObject<String> responseObject)
+                            throws Exception {
+                        String str = Jsoup.parse(response).getElementById("csrf_token").attr(
+                                "value");
                         responseObject.ok = true;
                         return str;
                     }
@@ -482,7 +491,8 @@ public class PostAPI extends APIBase {
                 .flatMap()
                 .flatMap(new Func1<ResponseObject<String>, Observable<ResponseObject<Boolean>>>() {
                     @Override
-                    public Observable<ResponseObject<Boolean>> call(ResponseObject<String> response) {
+                    public Observable<ResponseObject<Boolean>> call(
+                            ResponseObject<String> response) {
                         if (response.ok) {
                             final ParamsMap pairs = new ParamsMap();
                             pairs.put("csrf_token", response.result);
@@ -502,11 +512,15 @@ public class PostAPI extends APIBase {
                                     .params(pairs)
                                     .parser(new Parser<Boolean>() {
                                         @Override
-                                        public Boolean parse(String response, ResponseObject<Boolean> responseObject) throws Exception {
+                                        public Boolean parse(String response,
+                                                ResponseObject<Boolean> responseObject)
+                                                throws Exception {
                                             try {
                                                 Document document = Jsoup.parse(response);
-                                                String url = document.getElementsByTag("a").get(0).text();
-                                                Matcher matcher = Pattern.compile("/post/(\\d+)/").matcher(url);
+                                                String url = document.getElementsByTag("a").get(
+                                                        0).text();
+                                                Matcher matcher = Pattern.compile(
+                                                        "/post/(\\d+)/").matcher(url);
                                                 responseObject.ok = matcher.find();
                                             } catch (Exception e) {
                                                 if (response.contains("Redirecting")) {
@@ -572,13 +586,15 @@ public class PostAPI extends APIBase {
                         Document document = Jsoup.parse(response.result);
                         Elements elements = document.getElementsByTag("a");
                         if (elements.size() == 1) {
-                            Matcher matcher = Pattern.compile("^/post/(\\d+)/.*#(\\d+)$").matcher(elements.get(0).text());
+                            Matcher matcher = Pattern.compile("^/post/(\\d+)/.*#(\\d+)$").matcher(
+                                    elements.get(0).text());
                             if (matcher.find()) {
                                 String reply_id = matcher.group(2);
                                 return Observable.just(reply_id);
                             }
                         }
-                        return Observable.error(new IllegalStateException("not a correct redirect content"));
+                        return Observable.error(
+                                new IllegalStateException("not a correct redirect content"));
                     }
                 })
                 .flatMap(new Func1<String, Observable<ResponseObject<UComment>>>() {
@@ -631,7 +647,8 @@ public class PostAPI extends APIBase {
      * @param id 评论id
      * @return resultObject
      */
-    public static NetworkTask<Boolean> deleteMyComment(String id, RequestCallBack<Boolean> callBack) {
+    public static NetworkTask<Boolean> deleteMyComment(String id,
+            RequestCallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/group/post_reply.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("reply_id", id);
@@ -671,7 +688,8 @@ public class PostAPI extends APIBase {
      * @param group_id 小组id
      * @return resultObject
      */
-    public static NetworkTask<PrepareData> getPostPrepareData(String group_id, RequestCallBack<PrepareData> callBack) {
+    public static NetworkTask<PrepareData> getPostPrepareData(String group_id,
+            RequestCallBack<PrepareData> callBack) {
         String url = "http://www.guokr.com/group/" + group_id + "/post/edit/";
         return new RequestBuilder<PrepareData>()
                 .get()
@@ -695,7 +713,7 @@ public class PostAPI extends APIBase {
      * @return resultObject
      */
     public static NetworkTask<String> publishPost(String group_id, String csrf, String title,
-                                                  String body, String topic, boolean is_anon, RequestCallBack<String> callBack) {
+            String body, String topic, boolean is_anon, RequestCallBack<String> callBack) {
         String url = "http://www.guokr.com/group/" + group_id + "/post/edit/";
         ParamsMap pairs = new ParamsMap();
         pairs.put("csrf_token", csrf);
@@ -721,11 +739,10 @@ public class PostAPI extends APIBase {
     /**
      * 删贴
      *
-     * @param post_id
-     * @param callBack
      * @return resultObject
      */
-    public static NetworkTask<Boolean> deletePost(String post_id, RequestCallBack<Boolean> callBack) {
+    public static NetworkTask<Boolean> deletePost(String post_id,
+            RequestCallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/group/post.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("reason", "");

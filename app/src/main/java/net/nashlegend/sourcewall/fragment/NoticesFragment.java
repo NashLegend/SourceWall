@@ -39,7 +39,8 @@ import butterknife.ButterKnife;
 /**
  * Created by NashLegend on 2015/2/12 0012
  */
-public class NoticesFragment extends BaseFragment implements IChannelsFragment, OnRefreshListener, ReloadListener {
+public class NoticesFragment extends BaseFragment implements IChannelsFragment, OnRefreshListener,
+        ReloadListener {
 
     @BindView(R.id.notice_list)
     LListView listView;
@@ -52,7 +53,8 @@ public class NoticesFragment extends BaseFragment implements IChannelsFragment, 
     private int resumeTime = 0;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notice_list, container, false);
         ButterKnife.bind(this, view);
         loadingView.setReloadListener(this);
@@ -164,23 +166,24 @@ public class NoticesFragment extends BaseFragment implements IChannelsFragment, 
     }
 
     private void ignoreAll() {
-        final NetworkTask ignoreNetworkTask = MessageAPI.ignoreAllNotice(new SimpleCallBack<Boolean>() {
-            @Override
-            public void onFailure() {
-                UiUtil.dismissDialog(progressDialog);
-                toast("忽略未遂");
-            }
+        final NetworkTask ignoreNetworkTask = MessageAPI.ignoreAllNotice(
+                new SimpleCallBack<Boolean>() {
+                    @Override
+                    public void onFailure() {
+                        UiUtil.dismissDialog(progressDialog);
+                        toast("忽略未遂");
+                    }
 
-            @Override
-            public void onSuccess() {
-                UiUtil.dismissDialog(progressDialog);
-                listView.setCanPullToRefresh(true);
-                listView.doneOperation();
-                adapter.clear();
-                adapter.notifyDataSetInvalidated();
-                Emitter.emit(new NoticeNumChangedEvent(0));
-            }
-        });
+                    @Override
+                    public void onSuccess() {
+                        UiUtil.dismissDialog(progressDialog);
+                        listView.setCanPullToRefresh(true);
+                        listView.doneOperation();
+                        adapter.clear();
+                        adapter.notifyDataSetInvalidated();
+                        Emitter.emit(new NoticeNumChangedEvent(0));
+                    }
+                });
 
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setCanceledOnTouchOutside(false);

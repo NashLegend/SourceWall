@@ -110,26 +110,29 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void invokeImageDialog() {
-        String[] ways = {getString(R.string.add_image_from_disk), getString(R.string.add_image_from_camera), getString(R.string.add_image_from_link)};
-        new AlertDialog.Builder(this).setTitle(R.string.way_to_add_image).setItems(ways, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case 0:
-                        Intent intent = new Intent();
-                        intent.setType("image/*");
-                        intent.setAction(Intent.ACTION_GET_CONTENT);
-                        startOneActivityForResult(intent, RequestCode.Code_Invoke_Image_Selector);
-                        break;
-                    case 1:
-                        invokeCamera();
-                        break;
-                    case 2:
-                        invokeImageUrlDialog();
-                        break;
-                }
-            }
-        }).create().show();
+        String[] ways = {getString(R.string.add_image_from_disk), getString(
+                R.string.add_image_from_camera), getString(R.string.add_image_from_link)};
+        new AlertDialog.Builder(this).setTitle(R.string.way_to_add_image).setItems(ways,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 0:
+                                Intent intent = new Intent();
+                                intent.setType("image/*");
+                                intent.setAction(Intent.ACTION_GET_CONTENT);
+                                startOneActivityForResult(intent,
+                                        RequestCode.Code_Invoke_Image_Selector);
+                                break;
+                            case 1:
+                                invokeCamera();
+                                break;
+                            case 2:
+                                invokeImageUrlDialog();
+                                break;
+                        }
+                    }
+                }).create().show();
     }
 
     private String getPossibleUrlFromClipBoard() {
@@ -221,12 +224,14 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
         }
         String imgTag = "[image]" + url + "[/image]";
         SpannableString spanned = new SpannableString(imgTag);
-        Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_txt_image_16dp);
+        Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(),
+                R.drawable.ic_txt_image_16dp);
         String displayed = "图片链接...";
         ImageSpan imageSpan = getImageSpan(displayed, sourceBitmap);
         spanned.setSpan(imageSpan, 0, imgTag.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         int start = editText.getSelectionStart();
-        editText.getText().insert(start, " ").insert(start + 1, spanned).insert(start + 1 + imgTag.length(), " ");
+        editText.getText().insert(start, " ").insert(start + 1, spanned).insert(
+                start + 1 + imgTag.length(), " ");
         resetImageButtons();
     }
 
@@ -272,7 +277,8 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
                     String title = d.InputString2;
                     String result = "[url=" + url + "]" + title + "[/url]";
                     SpannableString spanned = new SpannableString(result);
-                    Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_link_16dp);
+                    Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(),
+                            R.drawable.ic_link_16dp);
                     String displayed;
                     if (TextUtils.isEmpty(title.trim())) {
                         Uri uri = Uri.parse(url);
@@ -285,9 +291,11 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
                         displayed = title;
                     }
                     ImageSpan imageSpan = getImageSpan(displayed, sourceBitmap);
-                    spanned.setSpan(imageSpan, 0, result.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    spanned.setSpan(imageSpan, 0, result.length(),
+                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     int start = editText.getSelectionStart();
-                    editText.getText().insert(start, " ").insert(start + 1, spanned).insert(start + 1 + result.length(), " ");
+                    editText.getText().insert(start, " ").insert(start + 1, spanned).insert(
+                            start + 1 + result.length(), " ");
                 }
             }
         });
@@ -307,23 +315,24 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
         if (comment != null) {
             header = "[blockquote]" + hostText.getText() + "[/blockquote]";
         }
-        final NetworkTask<String> task = APIBase.reply(aceModel, header + rep, new SimpleCallBack<String>() {
-            @Override
-            public void onFailure() {
-                UiUtil.dismissDialog(progressDialog);
-                toast(R.string.reply_failed);
-            }
+        final NetworkTask<String> task = APIBase.reply(aceModel, header + rep,
+                new SimpleCallBack<String>() {
+                    @Override
+                    public void onFailure() {
+                        UiUtil.dismissDialog(progressDialog);
+                        toast(R.string.reply_failed);
+                    }
 
-            @Override
-            public void onSuccess() {
-                UiUtil.dismissDialog(progressDialog);
-                toast(R.string.reply_ok);
-                setResult(RESULT_OK);
-                replyOK = true;
-                tryClearSketch();
-                finish();
-            }
-        });
+                    @Override
+                    public void onSuccess() {
+                        UiUtil.dismissDialog(progressDialog);
+                        toast(R.string.reply_ok);
+                        setResult(RESULT_OK);
+                        replyOK = true;
+                        tryClearSketch();
+                        finish();
+                    }
+                });
         if (task != null) {
             progressDialog = new ProgressDialog(ReplyActivity.this);
             progressDialog.setCanceledOnTouchOutside(false);
@@ -365,11 +374,14 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
         String content = "";
         if (aceModel != null) {
             if (aceModel instanceof Article) {
-                content = SketchUtil.readString(Keys.Key_Sketch_Article_Reply + "_" + ((Article) aceModel).getId(), "");
+                content = SketchUtil.readString(
+                        Keys.Key_Sketch_Article_Reply + "_" + ((Article) aceModel).getId(), "");
             } else if (aceModel instanceof Post) {
-                content = SketchUtil.readString(Keys.Key_Sketch_Post_Reply + "_" + ((Post) aceModel).getId(), "");
+                content = SketchUtil.readString(
+                        Keys.Key_Sketch_Post_Reply + "_" + ((Post) aceModel).getId(), "");
             } else if (aceModel instanceof Question) {
-                content = SketchUtil.readString(Keys.Key_Sketch_Question_Answer + "_" + ((Question) aceModel).getId(), "");
+                content = SketchUtil.readString(
+                        Keys.Key_Sketch_Question_Answer + "_" + ((Question) aceModel).getId(), "");
             }
         }
         editText.setText(restore2Spanned(content));
@@ -377,7 +389,9 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
 
     public SpannableString restore2Spanned(String str) {
         SpannableString spanned = new SpannableString(str);
-        String regImageAndLinkString = "(\\[image\\]([^\\[\\]]?)\\[/image\\])|(\\[url=([^\\[\\]]*)\\]([^\\[\\]]*)\\[/url\\])";
+        String regImageAndLinkString =
+                "(\\[image\\]([^\\[\\]]?)\\[/image\\])|(\\[url=([^\\[\\]]*)\\]([^\\[\\]]*)"
+                        + "\\[/url\\])";
         Matcher matcher = Pattern.compile(regImageAndLinkString).matcher(str);
         while (matcher.find()) {
             int start = matcher.start();
@@ -394,7 +408,8 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
             //4和5与PublishPostActivity的顺序相反
             if (!TextUtils.isEmpty(matcher.group(1))) {
                 //String imageUrl = matcher.group(2);
-                Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_txt_image_16dp);
+                Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(),
+                        R.drawable.ic_txt_image_16dp);
                 ImageSpan imageSpan = getImageSpan("图片链接...", sourceBitmap);
                 spanned.setSpan(imageSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             } else {
@@ -403,7 +418,8 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
                 if (!linkUrl.startsWith("http")) {
                     linkUrl = "http://" + linkUrl;
                 }
-                Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_link_16dp);
+                Bitmap sourceBitmap = BitmapFactory.decodeResource(getResources(),
+                        R.drawable.ic_link_16dp);
                 String displayed;
                 if (TextUtils.isEmpty(linkTitle.trim())) {
                     Uri uri = Uri.parse(linkUrl);
@@ -436,7 +452,8 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
         float totalWidth = textPaint.measureText(displayed);
 
         //生成对应尺寸的bitmap
-        Bitmap bitmap = Bitmap.createBitmap((int) (totalWidth + textFrom + textEndSpan), height, Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap((int) (totalWidth + textFrom + textEndSpan), height,
+                Bitmap.Config.ARGB_8888);
 
         //缩放sourceBitmap
         Matrix matrix = new Matrix();
@@ -470,19 +487,25 @@ public class ReplyActivity extends BaseActivity implements View.OnClickListener 
         } else if (aceModel instanceof Post) {
             SketchUtil.remove(Keys.Key_Sketch_Post_Reply + "_" + ((Post) aceModel).getId());
         } else if (aceModel instanceof Question) {
-            SketchUtil.remove(Keys.Key_Sketch_Question_Answer + "_" + ((Question) aceModel).getId());
+            SketchUtil.remove(
+                    Keys.Key_Sketch_Question_Answer + "_" + ((Question) aceModel).getId());
         }
     }
 
     private void saveSketch() {
-        if (!replyOK && !TextUtils.isEmpty(editText.getText().toString().trim()) && aceModel != null) {
+        if (!replyOK && !TextUtils.isEmpty(editText.getText().toString().trim())
+                && aceModel != null) {
             String sketch = editText.getText().toString();
             if (aceModel instanceof Article) {
-                SketchUtil.saveString(Keys.Key_Sketch_Article_Reply + "_" + ((Article) aceModel).getId(), sketch);
+                SketchUtil.saveString(
+                        Keys.Key_Sketch_Article_Reply + "_" + ((Article) aceModel).getId(), sketch);
             } else if (aceModel instanceof Post) {
-                SketchUtil.saveString(Keys.Key_Sketch_Post_Reply + "_" + ((Post) aceModel).getId(), sketch);
+                SketchUtil.saveString(Keys.Key_Sketch_Post_Reply + "_" + ((Post) aceModel).getId(),
+                        sketch);
             } else if (aceModel instanceof Question) {
-                SketchUtil.saveString(Keys.Key_Sketch_Question_Answer + "_" + ((Question) aceModel).getId(), sketch);
+                SketchUtil.saveString(
+                        Keys.Key_Sketch_Question_Answer + "_" + ((Question) aceModel).getId(),
+                        sketch);
             }
         } else if (!replyOK && TextUtils.isEmpty(editText.getText().toString().trim())) {
             tryClearSketch();

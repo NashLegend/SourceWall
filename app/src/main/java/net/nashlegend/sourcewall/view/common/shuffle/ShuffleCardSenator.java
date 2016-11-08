@@ -121,7 +121,8 @@ public class ShuffleCardSenator extends ShuffleCard {
 
     private PointF getCurrentButtonCenter() {
         if (currentButton != null) {
-            return new PointF(currentButton.getXX() + currentButton.getWidth() / 2, currentButton.getYY() + currentButton.getHeight() / 2);
+            return new PointF(currentButton.getXX() + currentButton.getWidth() / 2,
+                    currentButton.getYY() + currentButton.getHeight() / 2);
         } else {
             return null;
         }
@@ -278,7 +279,8 @@ public class ShuffleCardSenator extends ShuffleCard {
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            if ((currentButton == null && event.getAction() == MotionEvent.ACTION_DOWN) || currentButton == v) {
+            if ((currentButton == null && event.getAction() == MotionEvent.ACTION_DOWN)
+                    || currentButton == v) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         if (currentButton == null) {

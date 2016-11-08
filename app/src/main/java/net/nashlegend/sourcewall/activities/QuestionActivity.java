@@ -53,7 +53,8 @@ import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 
-public class QuestionActivity extends BaseActivity implements LListView.OnRefreshListener, View.OnClickListener, LoadingView.ReloadListener {
+public class QuestionActivity extends BaseActivity implements LListView.OnRefreshListener,
+        View.OnClickListener, LoadingView.ReloadListener {
 
     private LListView listView;
     private QuestionDetailAdapter adapter;
@@ -110,7 +111,8 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
 
         floatingActionsMenu = (FloatingActionsMenu) findViewById(R.id.layout_operation);
         FloatingActionButton replyButton = (FloatingActionButton) findViewById(R.id.button_reply);
-        FloatingActionButton recomButton = (FloatingActionButton) findViewById(R.id.button_recommend);
+        FloatingActionButton recomButton = (FloatingActionButton) findViewById(
+                R.id.button_recommend);
         FloatingActionButton favorButton = (FloatingActionButton) findViewById(R.id.button_favor);
 
         replyButton.setOnClickListener(this);
@@ -118,7 +120,8 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
         favorButton.setOnClickListener(this);
 
         headerHeight = (int) getResources().getDimension(R.dimen.actionbar_height);
-        AutoHideUtil.applyListViewAutoHide(this, listView, (int) getResources().getDimension(R.dimen.actionbar_height), autoHideListener);
+        AutoHideUtil.applyListViewAutoHide(this, listView,
+                (int) getResources().getDimension(R.dimen.actionbar_height), autoHideListener);
         floatingActionsMenu.setVisibility(View.GONE);
         loadData(-1);
     }
@@ -144,18 +147,19 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
                 .setReasonListener(new ReportDialog.ReportReasonListener() {
                     @Override
                     public void onGetReason(final Dialog dia, String reason) {
-                        QuestionAPI.reportQuestion(question.getId(), reason, new SimpleCallBack<Boolean>() {
-                            @Override
-                            public void onFailure() {
-                                ToastUtil.toastBigSingleton("举报未遂……");
-                            }
+                        QuestionAPI.reportQuestion(question.getId(), reason,
+                                new SimpleCallBack<Boolean>() {
+                                    @Override
+                                    public void onFailure() {
+                                        ToastUtil.toastBigSingleton("举报未遂……");
+                                    }
 
-                            @Override
-                            public void onSuccess() {
-                                UiUtil.dismissDialog(dia);
-                                ToastUtil.toastBigSingleton("举报成功");
-                            }
-                        });
+                                    @Override
+                                    public void onSuccess() {
+                                        UiUtil.dismissDialog(dia);
+                                        ToastUtil.toastBigSingleton("举报成功");
+                                    }
+                                });
                     }
                 })
                 .create()
@@ -196,15 +200,18 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
                 break;
             case R.id.action_share_to_wechat_circle:
                 Mob.onEvent(Mob.Event_Share_Question_To_Wechat_Circle);
-                ShareUtil.shareToWeiXinCircle(App.getApp(), question.getUrl(), question.getTitle(), question.getSummary(), null);
+                ShareUtil.shareToWeiXinCircle(App.getApp(), question.getUrl(), question.getTitle(),
+                        question.getSummary(), null);
                 break;
             case R.id.action_share_to_wechat_friends:
                 Mob.onEvent(Mob.Event_Share_Question_To_Wechat_friend);
-                ShareUtil.shareToWeiXinFriends(App.getApp(), question.getUrl(), question.getTitle(), question.getSummary(), null);
+                ShareUtil.shareToWeiXinFriends(App.getApp(), question.getUrl(), question.getTitle(),
+                        question.getSummary(), null);
                 break;
             case R.id.action_share_to_weibo:
                 Mob.onEvent(Mob.Event_Share_Question_To_Weibo);
-                ShareUtil.shareToWeibo(this, question.getUrl(), question.getTitle(), question.getSummary(), null);
+                ShareUtil.shareToWeibo(this, question.getUrl(), question.getTitle(),
+                        question.getSummary(), null);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -285,17 +292,18 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
     }
 
     private void confirmRecommend(String comment) {
-        QuestionAPI.recommendQuestion(question.getId(), question.getTitle(), question.getSummary(), comment, new SimpleCallBack<Boolean>() {
-            @Override
-            public void onFailure() {
-                toast(R.string.recommend_failed);
-            }
+        QuestionAPI.recommendQuestion(question.getId(), question.getTitle(), question.getSummary(),
+                comment, new SimpleCallBack<Boolean>() {
+                    @Override
+                    public void onFailure() {
+                        toast(R.string.recommend_failed);
+                    }
 
-            @Override
-            public void onSuccess(@NonNull Boolean result) {
-                toast(R.string.recommend_ok);
-            }
-        });
+                    @Override
+                    public void onSuccess(@NonNull Boolean result) {
+                        toast(R.string.recommend_ok);
+                    }
+                });
     }
 
     private void answerQuestion() {
@@ -355,9 +363,13 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
             }
             if (hideAnimatorSet == null || !hideAnimatorSet.isRunning()) {
                 hideAnimatorSet = new AnimatorSet();
-                ObjectAnimator headerAnimator = ObjectAnimator.ofFloat(appbar, "translationY", appbar.getTranslationY(), -headerHeight);
-                ObjectAnimator header2Animator = ObjectAnimator.ofFloat(progressBar, "translationY", progressBar.getTranslationY(), -headerHeight);
-                ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(floatingActionsMenu, "translationY", floatingActionsMenu.getTranslationY(), floatingActionsMenu.getHeight());
+                ObjectAnimator headerAnimator = ObjectAnimator.ofFloat(appbar, "translationY",
+                        appbar.getTranslationY(), -headerHeight);
+                ObjectAnimator header2Animator = ObjectAnimator.ofFloat(progressBar, "translationY",
+                        progressBar.getTranslationY(), -headerHeight);
+                ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(floatingActionsMenu,
+                        "translationY", floatingActionsMenu.getTranslationY(),
+                        floatingActionsMenu.getHeight());
                 ArrayList<Animator> animators = new ArrayList<>();
                 animators.add(headerAnimator);
                 animators.add(header2Animator);
@@ -375,9 +387,12 @@ public class QuestionActivity extends BaseActivity implements LListView.OnRefres
             }
             if (backAnimatorSet == null || !backAnimatorSet.isRunning()) {
                 backAnimatorSet = new AnimatorSet();
-                ObjectAnimator headerAnimator = ObjectAnimator.ofFloat(appbar, "translationY", appbar.getTranslationY(), 0f);
-                ObjectAnimator header2Animator = ObjectAnimator.ofFloat(progressBar, "translationY", progressBar.getTranslationY(), 0f);
-                ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(floatingActionsMenu, "translationY", floatingActionsMenu.getTranslationY(), 0f);
+                ObjectAnimator headerAnimator = ObjectAnimator.ofFloat(appbar, "translationY",
+                        appbar.getTranslationY(), 0f);
+                ObjectAnimator header2Animator = ObjectAnimator.ofFloat(progressBar, "translationY",
+                        progressBar.getTranslationY(), 0f);
+                ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(floatingActionsMenu,
+                        "translationY", floatingActionsMenu.getTranslationY(), 0f);
                 ArrayList<Animator> animators = new ArrayList<>();
                 animators.add(headerAnimator);
                 animators.add(header2Animator);

@@ -25,7 +25,8 @@ public class AskTag {
         this.id = id;
     }
 
-    public AskTag(Long id, int section, int type, String name, String value, boolean selected, int order) {
+    public AskTag(Long id, int section, int type, String name, String value, boolean selected,
+            int order) {
         this.id = id;
         this.section = section;
         this.type = type;

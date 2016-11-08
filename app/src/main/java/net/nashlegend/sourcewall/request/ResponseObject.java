@@ -22,9 +22,6 @@ public class ResponseObject<T> {
 
     /**
      * 从一个ResponseObject中复制一部分，类型可能不一样，但是其他参数一样，用于ResponseObject类型转换
-     *
-     * @param object
-     * @return
      */
     public ResponseObject<T> copyPartFrom(@NonNull ResponseObject object) {
         requestObject = new RequestObject<>();

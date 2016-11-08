@@ -1,5 +1,7 @@
 package net.nashlegend.sourcewall.view;
 
+import static net.nashlegend.sourcewall.data.Config.SUPER_LONG_IMAGE_RATIO;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -38,12 +40,11 @@ import java.net.URLDecoder;
 import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageView;
 
-import static net.nashlegend.sourcewall.data.Config.SUPER_LONG_IMAGE_RATIO;
-
 /**
  * Created by NashLegend on 2015/3/31 0031
  */
-public class ImageViewer extends FrameLayout implements LoadingView.ReloadListener, View.OnClickListener {
+public class ImageViewer extends FrameLayout implements LoadingView.ReloadListener,
+        View.OnClickListener {
     ScalingImage scalingImage;
     GifImageView gifImageView;
     ImageView imageView;
@@ -70,7 +71,8 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
 
     public ImageViewer(final Context context) {
         super(context);
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(
+                Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.layout_image_viewer, this);
         gestureDetector = new GestureDetector(getContext(), gestureListener);
         scalingImage = (ScalingImage) findViewById(R.id.zoom_image);
@@ -213,7 +215,8 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
             scale = averageDpi / doubleTapZoomDpi;
         }
         PointF center = new PointF(scalingImage.getSWidth() / 2f, 0);
-        SubsamplingScaleImageView.AnimationBuilder animationBuilder = scalingImage.animateScaleAndCenter(scale, center);
+        SubsamplingScaleImageView.AnimationBuilder animationBuilder =
+                scalingImage.animateScaleAndCenter(scale, center);
         animationBuilder.withDuration(500).start();
     }
 
@@ -294,7 +297,8 @@ public class ImageViewer extends FrameLayout implements LoadingView.ReloadListen
                         if (initWidth > 0 && initHeight > 0) {
                             //以96dpi或者更高dpi显示gif图，以不超出屏幕为准
                             float rat = DisplayUtil.getPixelDensity(getContext()) * 1.66f;
-                            int minScaledWidth = (int) (DisplayUtil.getScreenWidth(getContext()) / rat);
+                            int minScaledWidth = (int) (DisplayUtil.getScreenWidth(getContext())
+                                    / rat);
                             if (minScaledWidth > initWidth) {
                                 //如果gif宽度不足以占满屏幕宽度
                                 ViewGroup.LayoutParams params = gifImageView.getLayoutParams();

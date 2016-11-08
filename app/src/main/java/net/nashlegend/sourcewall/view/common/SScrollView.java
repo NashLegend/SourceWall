@@ -70,7 +70,8 @@ public class SScrollView extends ScrollView {
         void animateBackFooter();
     }
 
-    public void applyAutoHide(Context context, int headerHeight, AutoHideListener autoHideListener) {
+    public void applyAutoHide(Context context, int headerHeight,
+            AutoHideListener autoHideListener) {
         touchSlop = (int) (ViewConfiguration.get(context).getScaledTouchSlop() * 0.9);
         this.autoHideListener = autoHideListener;
         this.headerHeight = headerHeight;

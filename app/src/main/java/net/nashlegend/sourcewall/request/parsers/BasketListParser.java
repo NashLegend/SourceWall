@@ -14,7 +14,8 @@ import java.util.ArrayList;
 
 public class BasketListParser implements Parser<ArrayList<Basket>> {
     @Override
-    public ArrayList<Basket> parse(String response, ResponseObject<ArrayList<Basket>> responseObject) throws Exception {
+    public ArrayList<Basket> parse(String response,
+            ResponseObject<ArrayList<Basket>> responseObject) throws Exception {
         JSONArray jsonArray = JsonHandler.getUniversalJsonArray(response, responseObject);
         if (jsonArray == null) throw new NullPointerException("basket list is null");
         ArrayList<Basket> baskets = new ArrayList<>();

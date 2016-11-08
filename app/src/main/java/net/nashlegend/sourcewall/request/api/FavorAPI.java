@@ -26,12 +26,10 @@ public class FavorAPI extends APIBase {
     /**
      * 返回文章列表
      *
-     * @param basketId
-     * @param offset
      * @param useCache 是否使用cache
-     * @return
      */
-    public static Observable<ResponseObject<ArrayList<Favor>>> getFavorList(String basketId, int offset, boolean useCache) {
+    public static Observable<ResponseObject<ArrayList<Favor>>> getFavorList(String basketId,
+            int offset, boolean useCache) {
         String url = "http://apis.guokr.com/favorite/link.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("retrieve_type", "by_basket");
@@ -52,13 +50,12 @@ public class FavorAPI extends APIBase {
     /**
      * 收藏一个链接，理论是任意链接都行，吧……
      *
-     * @param link     链接地址
-     * @param title    链接标题
-     * @param basket
-     * @param callBack
+     * @param link  链接地址
+     * @param title 链接标题
      * @return ResponseObject
      */
-    public static NetworkTask<Boolean> favorLink(String link, String title, Basket basket, RequestCallBack<Boolean> callBack) {
+    public static NetworkTask<Boolean> favorLink(String link, String title, Basket basket,
+            RequestCallBack<Boolean> callBack) {
         String url = "http://www.guokr.com/apis/favorite/link.json";
         ParamsMap params = new ParamsMap();
         params.put("basket_id", basket.getId());
@@ -78,7 +75,8 @@ public class FavorAPI extends APIBase {
      *
      * @return ResponseObject.result is ArrayList[Basket]
      */
-    public static NetworkTask<ArrayList<Basket>> getBaskets(RequestCallBack<ArrayList<Basket>> callBack) {
+    public static NetworkTask<ArrayList<Basket>> getBaskets(
+            RequestCallBack<ArrayList<Basket>> callBack) {
         String url = "http://www.guokr.com/apis/favorite/basket.json";
         ParamsMap pairs = new ParamsMap();
         pairs.put("t", System.currentTimeMillis() + "");
@@ -123,7 +121,8 @@ public class FavorAPI extends APIBase {
      *
      * @return ResponseObject
      */
-    public static NetworkTask<ArrayList<Category>> getCategoryList(RequestCallBack<ArrayList<Category>> callBack) {
+    public static NetworkTask<ArrayList<Category>> getCategoryList(
+            RequestCallBack<ArrayList<Category>> callBack) {
         String url = "http://www.guokr.com/apis/favorite/category.json";
         return new RequestBuilder<ArrayList<Category>>()
                 .get()

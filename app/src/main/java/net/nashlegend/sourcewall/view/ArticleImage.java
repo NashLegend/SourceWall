@@ -42,8 +42,10 @@ public class ArticleImage extends ImageView {
 
     @Override
     public void setImageDrawable(Drawable drawable) {
-        if (drawable != null && drawable.getIntrinsicWidth() > 0 && drawable.getIntrinsicHeight() > 0 && fixedWidth > 0) {
-            int fixedHeight = fixedWidth * drawable.getIntrinsicHeight() / drawable.getIntrinsicWidth();
+        if (drawable != null && drawable.getIntrinsicWidth() > 0
+                && drawable.getIntrinsicHeight() > 0 && fixedWidth > 0) {
+            int fixedHeight =
+                    fixedWidth * drawable.getIntrinsicHeight() / drawable.getIntrinsicWidth();
             drawable.setBounds(0, 0, fixedWidth, fixedHeight);
             ViewGroup.LayoutParams params = getLayoutParams();
             if (params != null) {

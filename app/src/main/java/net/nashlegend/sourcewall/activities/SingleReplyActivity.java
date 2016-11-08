@@ -53,7 +53,8 @@ import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class SingleReplyActivity extends BaseActivity implements View.OnClickListener, LoadingView.ReloadListener {
+public class SingleReplyActivity extends BaseActivity implements View.OnClickListener,
+        LoadingView.ReloadListener {
 
     private View rootView;
     private View authorLayout;
@@ -124,7 +125,8 @@ public class SingleReplyActivity extends BaseActivity implements View.OnClickLis
         if (redirectUri != null) {
             List<String> segments = redirectUri.getPathSegments();
             String hostString = redirectUri.getHost();
-            if (("www.guokr.com".equals(hostString) || "m.guokr.com".equals(hostString)) && (segments != null && segments.size() >= 3)) {
+            if (("www.guokr.com".equals(hostString) || "m.guokr.com".equals(hostString)) && (
+                    segments != null && segments.size() >= 3)) {
                 loadingView.setVisibility(View.VISIBLE);
                 String sect = segments.get(0);
                 switch (sect) {
@@ -248,25 +250,28 @@ public class SingleReplyActivity extends BaseActivity implements View.OnClickLis
             likeButton.setIcon(R.drawable.heart_outline);
         }
         if (Config.shouldLoadImage()) {
-            ImageLoader.getInstance().displayImage(data.getAuthor().getAvatar(), avatar, ImageUtils.avatarOptions);
+            ImageLoader.getInstance().displayImage(data.getAuthor().getAvatar(), avatar,
+                    ImageUtils.avatarOptions);
         } else {
             avatar.setImageResource(R.drawable.default_avatar);
         }
-        rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                if (authorLayout.getHeight() > 0) {
-                    //noinspection deprecation
-                    rootView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                    topBarHeight = appbar.getHeight() + hostTitle.getHeight();
-                    headerHeight = topBarHeight + authorLayout.getHeight();
-                    ViewGroup.LayoutParams params = headerHolder.getLayoutParams();
-                    params.height = headerHeight;
-                    scrollView.applyAutoHide(SingleReplyActivity.this, topBarHeight, autoHideListener);
-                    loadHtml();
-                }
-            }
-        });
+        rootView.getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        if (authorLayout.getHeight() > 0) {
+                            //noinspection deprecation
+                            rootView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                            topBarHeight = appbar.getHeight() + hostTitle.getHeight();
+                            headerHeight = topBarHeight + authorLayout.getHeight();
+                            ViewGroup.LayoutParams params = headerHolder.getLayoutParams();
+                            params.height = headerHeight;
+                            scrollView.applyAutoHide(SingleReplyActivity.this, topBarHeight,
+                                    autoHideListener);
+                            loadHtml();
+                        }
+                    }
+                });
         webView.setExtWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
@@ -322,10 +327,14 @@ public class SingleReplyActivity extends BaseActivity implements View.OnClickLis
             }
             if (backAnimatorSet == null || !backAnimatorSet.isRunning()) {
                 backAnimatorSet = new AnimatorSet();
-                ObjectAnimator toolBarAnimator = ObjectAnimator.ofFloat(appbar, "translationY", appbar.getTranslationY(), 0f);
-                ObjectAnimator titleAnimator = ObjectAnimator.ofFloat(hostTitle, "translationY", hostTitle.getTranslationY(), 0f);
-                ObjectAnimator authorAnimator = ObjectAnimator.ofFloat(authorLayout, "translationY", authorLayout.getTranslationY(), 0f);
-                ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(floatingActionsMenu, "translationY", floatingActionsMenu.getTranslationY(), 0f);
+                ObjectAnimator toolBarAnimator = ObjectAnimator.ofFloat(appbar, "translationY",
+                        appbar.getTranslationY(), 0f);
+                ObjectAnimator titleAnimator = ObjectAnimator.ofFloat(hostTitle, "translationY",
+                        hostTitle.getTranslationY(), 0f);
+                ObjectAnimator authorAnimator = ObjectAnimator.ofFloat(authorLayout, "translationY",
+                        authorLayout.getTranslationY(), 0f);
+                ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(floatingActionsMenu,
+                        "translationY", floatingActionsMenu.getTranslationY(), 0f);
                 ArrayList<Animator> animators = new ArrayList<>();
                 animators.add(toolBarAnimator);
                 animators.add(titleAnimator);
@@ -344,9 +353,11 @@ public class SingleReplyActivity extends BaseActivity implements View.OnClickLis
             if (hideAnimatorSet != null && hideAnimatorSet.isRunning()) {
                 hideAnimatorSet.cancel();
             }
-            if ((backAnimatorSet == null || !backAnimatorSet.isRunning()) && (backFooterAnimatorSet == null || !backFooterAnimatorSet.isRunning())) {
+            if ((backAnimatorSet == null || !backAnimatorSet.isRunning()) && (
+                    backFooterAnimatorSet == null || !backFooterAnimatorSet.isRunning())) {
                 backFooterAnimatorSet = new AnimatorSet();
-                ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(floatingActionsMenu, "translationY", floatingActionsMenu.getTranslationY(), 0f);
+                ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(floatingActionsMenu,
+                        "translationY", floatingActionsMenu.getTranslationY(), 0f);
                 ArrayList<Animator> animators = new ArrayList<>();
                 animators.add(footerAnimator);
                 backFooterAnimatorSet.setDuration(300);
@@ -367,10 +378,15 @@ public class SingleReplyActivity extends BaseActivity implements View.OnClickLis
             }
             if (hideAnimatorSet == null || !hideAnimatorSet.isRunning()) {
                 hideAnimatorSet = new AnimatorSet();
-                ObjectAnimator toolBarAnimator = ObjectAnimator.ofFloat(appbar, "translationY", appbar.getTranslationY(), -appbar.getBottom());
-                ObjectAnimator titleAnimator = ObjectAnimator.ofFloat(hostTitle, "translationY", hostTitle.getTranslationY(), -hostTitle.getBottom());
-                ObjectAnimator authorAnimator = ObjectAnimator.ofFloat(authorLayout, "translationY", authorLayout.getTranslationY(), -authorLayout.getTop());
-                ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(floatingActionsMenu, "translationY", floatingActionsMenu.getTranslationY(), floatingActionsMenu.getHeight());
+                ObjectAnimator toolBarAnimator = ObjectAnimator.ofFloat(appbar, "translationY",
+                        appbar.getTranslationY(), -appbar.getBottom());
+                ObjectAnimator titleAnimator = ObjectAnimator.ofFloat(hostTitle, "translationY",
+                        hostTitle.getTranslationY(), -hostTitle.getBottom());
+                ObjectAnimator authorAnimator = ObjectAnimator.ofFloat(authorLayout, "translationY",
+                        authorLayout.getTranslationY(), -authorLayout.getTop());
+                ObjectAnimator footerAnimator = ObjectAnimator.ofFloat(floatingActionsMenu,
+                        "translationY", floatingActionsMenu.getTranslationY(),
+                        floatingActionsMenu.getHeight());
                 ArrayList<Animator> animators = new ArrayList<>();
                 animators.add(toolBarAnimator);
                 animators.add(titleAnimator);

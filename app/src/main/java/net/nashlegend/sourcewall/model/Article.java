@@ -54,7 +54,8 @@ public class Article extends AceModel {
         Document doc = Jsoup.parse(html);
         //replaceAll("line-height: normal;","");只是简单的处理，以防止Article样式不正确，字体过于紧凑
         //可能还有其他样式没有被我发现，所以加一个 TODO
-        String articleContent = doc.getElementById("articleContent").outerHtml().replaceAll("line-height: normal;", "");
+        String articleContent = doc.getElementById("articleContent").outerHtml().replaceAll(
+                "line-height: normal;", "");
         String copyright = doc.getElementsByClass("copyright").outerHtml();
         article.setContent(articleContent + copyright);
         article.setId(id);

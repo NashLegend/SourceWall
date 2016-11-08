@@ -75,7 +75,9 @@ public class SkiaImageDecoder implements ImageDecoder {
             }
         }
         if (bitmap == null) {
-            throw new RuntimeException("Skia image region decoder returned null bitmap - image format may not be supported");
+            throw new RuntimeException(
+                    "Skia image region decoder returned null bitmap - image format may not be "
+                            + "supported");
         }
         return bitmap;
     }

@@ -48,7 +48,8 @@ public class BasketsView extends FrameLayout implements View.OnClickListener {
 
     public BasketsView(Context context) {
         super(context);
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(
+                Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.dialog_baskets, this);
         nameText = (TextView) findViewById(R.id.text_create_basket_name);
         introText = (TextView) findViewById(R.id.text_create_basket_introduction);
@@ -140,7 +141,8 @@ public class BasketsView extends FrameLayout implements View.OnClickListener {
                 for (int i = 0; i < categories.size(); i++) {
                     items[i] = categories.get(i).getName();
                 }
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(), R.layout.simple_spinner_item, items);
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(),
+                        R.layout.simple_spinner_item, items);
                 spinner.setAdapter(arrayAdapter);
             }
         });
@@ -174,8 +176,10 @@ public class BasketsView extends FrameLayout implements View.OnClickListener {
                 break;
             case R.id.button_create_basket:
                 String cateID = "-1";
-                if (categories != null && categories.size() > 0 && spinner.getSelectedItemPosition() >= 0) {
-                    cateID = String.valueOf(categories.get(spinner.getSelectedItemPosition()).getId());
+                if (categories != null && categories.size() > 0
+                        && spinner.getSelectedItemPosition() >= 0) {
+                    cateID = String.valueOf(
+                            categories.get(spinner.getSelectedItemPosition()).getId());
                 }
                 createBasket(nameText.getText().toString(), introText.getText().toString(), cateID);
                 break;

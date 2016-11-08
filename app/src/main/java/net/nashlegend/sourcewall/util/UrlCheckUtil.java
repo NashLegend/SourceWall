@@ -70,7 +70,8 @@ public class UrlCheckUtil {
         String host = uri.getHost();
         String url = uri.toString();
         List<String> segments = uri.getPathSegments();
-        if ((host.equals("www.guokr.com") || host.equals("m.guokr.com")) && (segments != null && segments.size() >= 1)) {
+        if ((host.equals("www.guokr.com") || host.equals("m.guokr.com")) && (segments != null
+                && segments.size() >= 1)) {
             String section = segments.get(0);
             Intent intent = new Intent();
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -78,22 +79,29 @@ public class UrlCheckUtil {
             switch (section) {
                 case "article":
                     if (segments.size() == 2) {
-                        if (url.matches("^http://(www|m).guokr.com/article/(\\d+)/.*reply(\\d+)$")) {
+                        if (url.matches(
+                                "^http://(www|m).guokr.com/article/(\\d+)/.*reply(\\d+)$")) {
                             //http://www.guokr.com/article/439937/#reply2903572
                             //http://www.guokr.com/article/439937/?page=2#reply2904015
-                            Matcher matcher = Pattern.compile("^http://(www|m).guokr.com/article/(\\d+)/.*reply(\\d+)$").matcher(url);
+                            Matcher matcher = Pattern.compile(
+                                    "^http://(www|m).guokr.com/article/(\\d+)/.*reply(\\d+)$")
+                                    .matcher(
+                                    url);
                             if (matcher.find()) {
                                 String reply_id = matcher.group(3);
                                 //http://www.guokr.com/article/reply/2907293/
-                                Uri replyUri = Uri.parse("http://www.guokr.com/article/reply/" + reply_id + "/");
+                                Uri replyUri = Uri.parse(
+                                        "http://www.guokr.com/article/reply/" + reply_id + "/");
                                 intent.setClass(App.getApp(), SingleReplyActivity.class);
                                 intent.setData(replyUri);
                                 App.getApp().startActivity(intent);
                                 return true;
                             }
                         } else if (url.matches("^http://(www|m).guokr.com/article/\\d+.*")) {
-                            //url.matches("^http://(www|m).guokr.com/article/\\d+[/]?$",http://www.guokr.com/article/123456/
-                            //url.matches("^http://(www|m).guokr.com/article/\\d+.*"),http://www.guokr.com/article/438683/#comments
+                            //url.matches("^http://(www|m).guokr.com/article/\\d+[/]?$",
+                            // http://www.guokr.com/article/123456/
+                            //url.matches("^http://(www|m).guokr.com/article/\\d+.*"),http://www
+                            // .guokr.com/article/438683/#comments
                             intent.setClass(App.getApp(), ArticleActivity.class);
                             Article article = new Article();
                             article.setId(segments.get(1));
@@ -115,10 +123,13 @@ public class UrlCheckUtil {
                     if (segments.size() == 2) {
                         if (url.matches("^http://(www|m).guokr.com/post/(\\d+)/.*#(\\d+)$")) {
                             //http://www.guokr.com/post/662632/#6155334
-                            Matcher matcher = Pattern.compile("^http://(www|m).guokr.com/post/(\\d+)/.*#(\\d+)$").matcher(url);
+                            Matcher matcher = Pattern.compile(
+                                    "^http://(www|m).guokr.com/post/(\\d+)/.*#(\\d+)$").matcher(
+                                    url);
                             if (matcher.find()) {
                                 String reply_id = matcher.group(3);
-                                Uri replyUri = Uri.parse("http://www.guokr.com/post/reply/" + reply_id + "/");
+                                Uri replyUri = Uri.parse(
+                                        "http://www.guokr.com/post/reply/" + reply_id + "/");
                                 intent.setClass(App.getApp(), SingleReplyActivity.class);
                                 intent.setData(replyUri);
                                 App.getApp().startActivity(intent);
@@ -155,7 +166,8 @@ public class UrlCheckUtil {
                 case "group":
                     if (segments.size() == 1) {
                         intent.setClass(App.getApp(), PostListActivity.class);
-                        SubItem subItem = new SubItem(SubItem.Section_Post, SubItem.Type_Collections, "小组热贴", "hot_posts");
+                        SubItem subItem = new SubItem(SubItem.Section_Post,
+                                SubItem.Type_Collections, "小组热贴", "hot_posts");
                         intent.putExtra(Extras.Extra_SubItem, subItem);
                         App.getApp().startActivity(intent);
                         return true;
@@ -170,7 +182,8 @@ public class UrlCheckUtil {
                         } else if (url.matches("^http://(www|m).guokr.com/group/hot_posts/?$")) {
                             //http://www.guokr.com/group/hot_posts/
                             intent.setClass(App.getApp(), PostListActivity.class);
-                            SubItem subItem = new SubItem(SubItem.Section_Post, SubItem.Type_Collections, "小组热贴", "hot_posts");
+                            SubItem subItem = new SubItem(SubItem.Section_Post,
+                                    SubItem.Type_Collections, "小组热贴", "hot_posts");
                             intent.putExtra(Extras.Extra_SubItem, subItem);
                             App.getApp().startActivity(intent);
                             return true;
@@ -179,7 +192,8 @@ public class UrlCheckUtil {
                         if (url.matches("^http://(www|m).guokr.com/group/user/recent_replies/?$")) {
                             if (UserAPI.isLoggedIn()) {
                                 intent.setClass(App.getApp(), PostListActivity.class);
-                                SubItem subItem = new SubItem(SubItem.Section_Post, SubItem.Type_Collections, "我的小组", "hot_posts");
+                                SubItem subItem = new SubItem(SubItem.Section_Post,
+                                        SubItem.Type_Collections, "我的小组", "hot_posts");
                                 intent.putExtra(Extras.Extra_SubItem, subItem);
                                 App.getApp().startActivity(intent);
                                 return true;
@@ -193,12 +207,17 @@ public class UrlCheckUtil {
                     break;
                 case "question":
                     if (segments.size() == 2) {
-                        if (url.matches("^http://(www|m).guokr.com/question/(\\d+)/.*answer(\\d+)$")) {
+                        if (url.matches(
+                                "^http://(www|m).guokr.com/question/(\\d+)/.*answer(\\d+)$")) {
                             //http://www.guokr.com/question/123456/#answer654321
-                            Matcher matcher = Pattern.compile("^http://(www|m).guokr.com/question/(\\d+)/.*answer(\\d+)$").matcher(url);
+                            Matcher matcher = Pattern.compile(
+                                    "^http://(www|m).guokr.com/question/(\\d+)/.*answer(\\d+)$")
+                                    .matcher(
+                                    url);
                             if (matcher.find()) {
                                 String answer_id = matcher.group(3);
-                                Uri answerUri = Uri.parse("http://www.guokr.com/answer/" + answer_id + "/redirect/");
+                                Uri answerUri = Uri.parse(
+                                        "http://www.guokr.com/answer/" + answer_id + "/redirect/");
                                 intent.setClass(App.getApp(), AnswerActivity.class);
                                 intent.setData(answerUri);
                                 App.getApp().startActivity(intent);
