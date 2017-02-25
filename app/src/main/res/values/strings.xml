@@ -203,5 +203,6 @@
     <string name="feedback">意见与建议</string>
     <string name="copy_success">已复制</string>
     <string name="action_goto_group">前往小组</string>
+    <string name="user_center">个人中心</string>
 
 </resources>

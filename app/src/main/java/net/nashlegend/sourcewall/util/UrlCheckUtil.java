@@ -14,6 +14,7 @@ import net.nashlegend.sourcewall.activities.PostActivity;
 import net.nashlegend.sourcewall.activities.PostListActivity;
 import net.nashlegend.sourcewall.activities.QuestionActivity;
 import net.nashlegend.sourcewall.activities.SingleReplyActivity;
+import net.nashlegend.sourcewall.activities.UserActivity;
 import net.nashlegend.sourcewall.data.Consts.Extras;
 import net.nashlegend.sourcewall.model.Article;
 import net.nashlegend.sourcewall.model.Post;
@@ -85,8 +86,7 @@ public class UrlCheckUtil {
                             //http://www.guokr.com/article/439937/?page=2#reply2904015
                             Matcher matcher = Pattern.compile(
                                     "^http://(www|m).guokr.com/article/(\\d+)/.*reply(\\d+)$")
-                                    .matcher(
-                                    url);
+                                    .matcher(url);
                             if (matcher.find()) {
                                 String reply_id = matcher.group(3);
                                 //http://www.guokr.com/article/reply/2907293/
@@ -202,6 +202,13 @@ public class UrlCheckUtil {
                                 App.getApp().startActivity(intent);
                                 return true;
                             }
+                        } else if (url.matches("^http://(www|m).guokr.com/group/i/\\d+/?")) {
+                            //http://www.guokr.com/group/i/123456/
+                            String userId = segments.get(2);
+                            intent = new Intent(App.getApp(), UserActivity.class);
+                            intent.putExtra(Extras.Extra_User_ID, userId);
+                            App.getApp().startActivity(intent);
+                            return true;
                         }
                     }
                     break;
@@ -212,8 +219,7 @@ public class UrlCheckUtil {
                             //http://www.guokr.com/question/123456/#answer654321
                             Matcher matcher = Pattern.compile(
                                     "^http://(www|m).guokr.com/question/(\\d+)/.*answer(\\d+)$")
-                                    .matcher(
-                                    url);
+                                    .matcher(url);
                             if (matcher.find()) {
                                 String answer_id = matcher.group(3);
                                 Uri answerUri = Uri.parse(
@@ -250,6 +256,18 @@ public class UrlCheckUtil {
                         if (url.matches("^http://(www|m).guokr.com/answer/\\d+[/]?$")) {
                             intent.setClass(App.getApp(), AnswerActivity.class);
                             intent.setData(uri);
+                            App.getApp().startActivity(intent);
+                            return true;
+                        }
+                    }
+                    break;
+                case "ask":
+                    if (segments.size() == 3) {
+                        if (url.matches("^http://(www|m).guokr.com/ask/i/\\d+/?")) {
+                            //http://www.guokr.com/ask/i/123456/
+                            String userId = segments.get(2);
+                            intent = new Intent(App.getApp(), UserActivity.class);
+                            intent.putExtra(Extras.Extra_User_ID, userId);
                             App.getApp().startActivity(intent);
                             return true;
                         }

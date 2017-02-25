@@ -109,6 +109,9 @@
             android:name=".activities.MessageCenterActivity"
             android:label="@string/title_activity_message_center"
             android:screenOrientation="portrait" />
+        <activity android:name=".activities.UserActivity"
+            android:label="@string/user_center"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activities.ImageActivity"
             android:label="@string/title_activity_image"

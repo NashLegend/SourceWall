@@ -1,6 +1,6 @@
 import java.text.SimpleDateFormat
 
-def supportVersion = "24.2.1"
+def supportVersion = "25.2.0"
 
 def releaseTime() {
     def format = new SimpleDateFormat("yyyyMMdd", Locale.CHINA);
@@ -57,8 +57,8 @@ ext {
             applicationId    : "net.nashlegend.sourcewall",
             versionCode      : 20161016,
             versionName      : "2.0.6",
-            buildToolsVersion: "24.0.3",
-            compileSdkVersion: 24,
+            buildToolsVersion: "25.0.2",
+            compileSdkVersion: 25,
             minSdkVersion    : 15,
             targetSdkVersion : 22
     ]

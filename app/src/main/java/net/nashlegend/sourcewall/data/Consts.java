@@ -30,6 +30,8 @@ public class Consts {
         public static final String Extra_Answer = "sourcewall.extra.answer";
         public static final String Extra_SubItem = "sourcewall.extra.subitem";
         public static final String Extra_SubItem_ID = "sourcewall.extra.subitem.id";
+        public static final String Extra_User_ID = "sourcewall.extra.user.id";
+        public static final String Extra_User = "sourcewall.extra.user";
         public static final String Extra_Should_Invalidate_Menu =
                 "sourcewall.extra.should.invalidate.menu";
         public static final String Extra_Should_Load_Before_Shuffle =
