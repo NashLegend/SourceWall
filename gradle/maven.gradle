@@ -1,8 +1,0 @@
-//uploadArchives {
-//    repositories.mavenDeployer {
-//        repository(url: REPO_URL)
-//        pom.groupId = GROUP
-//        pom.artifactId = PROJ_ARTIFACTID
-//        pom.version = VERSION_NAME
-//    }
-//}
